@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Amaze File Utilities</string>
+    <string name="app_version" translatable="false">v1.0</string>
+    <string name="image_viewer">Amaze Image Viewer</string>
+    <string name="welcome_launcher">Thank you for purchasing Amaze File Utilities. Your support is greatly appreciated.
+        Feel free to contact us on our telegram channel @AmazeFileManager
+    </string>
+    <string name="instruction">Instruction - This is just a plugin, no need to open again and again.
+        Simply choose \'Amaze Image Viewer\' or \'Amaze Music Player\'
+        when opening your media files from any file manager</string>
+    <string name="please_rate">Please rate</string>
+    <string name="intent_image_viewer">Amaze Image Viewer</string>
 </resources>

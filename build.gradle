@@ -19,13 +19,6 @@ plugins {
 }
 
 allprojects {
-
-    repositories {
-        google()
-        maven { url "https://jitpack.io" }
-        maven { url "https://jcenter.bintray.com" }
-        mavenCentral()
-    }
     tasks.withType(Test) {
         maxParallelForks = 4
         maxHeapSize = "4g"
@@ -50,8 +43,4 @@ spotless {
         indentWithSpaces()
         endWithNewline()
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
