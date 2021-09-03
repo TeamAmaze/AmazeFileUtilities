@@ -1,5 +1,6 @@
 package com.amaze.fileutilities.image_viewer
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
