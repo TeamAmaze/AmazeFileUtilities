@@ -60,10 +60,8 @@ class ImageViewerFragment : Fragment(R.layout.quick_view_fragment) {
         val textView = constraintLayout.findViewById<TextView>(R.id.textView)
         textView.text = DocumentFile.fromSingleUri(requireContext(), localTypeModel.uri)?.name
 
-        runAfterSizeComputed(constraintLayout) {
-            val imageView = constraintLayout.findViewById<ImageView>(R.id.imageView)
-            Glide.with(this).load(localTypeModel.uri).into(imageView)
-        }
+        val imageView = constraintLayout.findViewById<ImageView>(R.id.imageView)
+        Glide.with(this).load(localTypeModel.uri.toString()).into(imageView)
     }
 
     private fun runAfterSizeComputed(view: View, f: () -> Unit) {
