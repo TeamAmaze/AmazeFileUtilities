@@ -5,14 +5,15 @@ import com.amaze.fileutilities.getSiblingUriFiles
 import com.amaze.fileutilities.isImageMimeType
 
 class ImageViewerViewModel : ViewModel() {
-    private lateinit var imageModelList: ArrayList<LocalImageModel>
+    private var imageModelList: ArrayList<LocalImageModel>? = null
 
-    fun getSiblingImageModels(imageModel: LocalImageModel): ArrayList<LocalImageModel> {
-        if (!this::imageModelList.isInitialized) {
-            imageModelList = ArrayList()
-            imageModelList.addAll(imageModel.uri.getSiblingUriFiles()
-                ?.filter { it -> it.isImageMimeType() }
-                ?.map { it -> LocalImageModel(it, "") }?.asReversed()!!)
+    fun getSiblingImageModels(imageModel: LocalImageModel): ArrayList<LocalImageModel>? {
+        if (imageModelList == null) {
+            imageModel.uri.getSiblingUriFiles()?.run {
+                imageModelList = ArrayList()
+                imageModelList?.addAll(this.filter { it.isImageMimeType() }
+                    .map { LocalImageModel(it, "") }.asReversed())
+            }
         }
         return imageModelList
     }

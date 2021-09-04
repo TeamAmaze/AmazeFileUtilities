@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.amaze.fileutilities.R
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ImageViewerActivity : AppCompatActivity(R.layout.image_viewer_activity) {
 
@@ -17,8 +19,11 @@ class ImageViewerActivity : AppCompatActivity(R.layout.image_viewer_activity) {
 
         val imageModel = intent.extras?.getParcelable<LocalImageModel>(ImageViewerFragment.VIEW_TYPE_ARGUMENT)
         mPager = findViewById(R.id.pager)
-        val pagerAdapter = ImageViewerAdapter(supportFragmentManager, lifecycle,
-            viewModel.getSiblingImageModels(imageModel!!))
-        mPager.adapter = pagerAdapter
+        viewModel.getSiblingImageModels(imageModel!!).let {
+            val pagerAdapter = ImageViewerAdapter(supportFragmentManager,
+                lifecycle, it ?: Collections.singletonList(imageModel)
+            )
+            mPager.adapter = pagerAdapter
+        }
     }
 }

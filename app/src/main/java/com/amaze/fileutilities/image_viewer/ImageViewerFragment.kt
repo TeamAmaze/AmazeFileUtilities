@@ -1,7 +1,6 @@
 package com.amaze.fileutilities.image_viewer
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -47,10 +46,7 @@ class ImageViewerFragment : Fragment(R.layout.quick_view_fragment) {
             }
             startActivity(intent)
         }
-        when(quickViewType) {
-            is LocalImageModel -> showImage(quickViewType, constraintLayout)
-            else -> TODO()
-        }
+        quickViewType?.let { showImage(it, constraintLayout) }
     }
 
     private fun showImage(localTypeModel: LocalImageModel, constraintLayout: ConstraintLayout) {
@@ -62,21 +58,5 @@ class ImageViewerFragment : Fragment(R.layout.quick_view_fragment) {
 
         val imageView = constraintLayout.findViewById<ImageView>(R.id.imageView)
         Glide.with(this).load(localTypeModel.uri.toString()).into(imageView)
-    }
-
-    private fun runAfterSizeComputed(view: View, f: () -> Unit) {
-        view.viewTreeObserver.addOnGlobalLayoutListener(
-            object : ViewTreeObserver.OnGlobalLayoutListener {
-                override fun onGlobalLayout() {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        view.viewTreeObserver
-                            .removeOnGlobalLayoutListener(this)
-                    } else {
-                        view.viewTreeObserver
-                            .removeGlobalOnLayoutListener(this)
-                    }
-                    f()
-                }
-            })
     }
 }
