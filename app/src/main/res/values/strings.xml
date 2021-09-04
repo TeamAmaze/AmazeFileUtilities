@@ -10,4 +10,10 @@
         when opening your media files from any file manager</string>
     <string name="please_rate">Please rate</string>
     <string name="intent_image_viewer">Amaze Image Viewer</string>
+    <string name="grantfailed">Storage permission not granted</string>
+    <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
+    <string name="grant_permission">Grant permission</string>
+    <string name="grant">Grant</string>
+    <string name="cancel">Cancel</string>
+    <string name="storage_permission_granted">Storage permission granted</string>
 </resources>

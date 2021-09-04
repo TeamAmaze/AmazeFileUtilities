@@ -1,14 +1,14 @@
 package com.amaze.fileutilities.image_viewer
 
+import android.os.Build
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
 import java.util.*
-import kotlin.collections.ArrayList
 
-class ImageViewerActivity : AppCompatActivity(R.layout.image_viewer_activity) {
+class ImageViewerActivity : PermissionActivity(R.layout.image_viewer_activity) {
 
     private lateinit var mPager: ViewPager2
     private lateinit var viewModel: ImageViewerViewModel
@@ -19,11 +19,20 @@ class ImageViewerActivity : AppCompatActivity(R.layout.image_viewer_activity) {
 
         val imageModel = intent.extras?.getParcelable<LocalImageModel>(ImageViewerFragment.VIEW_TYPE_ARGUMENT)
         mPager = findViewById(R.id.pager)
+        triggerPermissionCheck()
         viewModel.getSiblingImageModels(imageModel!!).let {
             val pagerAdapter = ImageViewerAdapter(supportFragmentManager,
                 lifecycle, it ?: Collections.singletonList(imageModel)
             )
             mPager.adapter = pagerAdapter
+        }
+    }
+
+    private fun triggerPermissionCheck() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkStoragePermission()) {
+            buildExplicitPermissionAlertDialog {
+                startExplicitPermissionActivity()
+            }.show()
         }
     }
 }
