@@ -9,7 +9,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 class ImageViewerAdapter(
     fragmentManager: FragmentManager,
     lifecycle: Lifecycle,
-    private val imageModel: ArrayList<LocalImageModel>)
+    private val imageModel: List<LocalImageModel>)
     : FragmentStateAdapter(fragmentManager, lifecycle) {
 
     override fun getItemCount(): Int {
