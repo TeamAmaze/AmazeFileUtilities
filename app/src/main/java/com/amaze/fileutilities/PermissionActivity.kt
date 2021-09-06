@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 
 open class PermissionActivity(layout: Int = 0): AppCompatActivity(layout), ActivityCompat.OnRequestPermissionsResultCallback {
-    val permissionCode = 0
+    private val permissionCode = 0
     var onPermissionGrantedCallback: OnPermissionGrantedCallback? = null
 
     override fun onRequestPermissionsResult(
@@ -62,16 +62,19 @@ open class PermissionActivity(layout: Int = 0): AppCompatActivity(layout), Activ
         )
     }
 
-    fun buildExplicitPermissionAlertDialog(callback: () -> Unit): AlertDialog.Builder {
+    fun buildExplicitPermissionAlertDialog(grantCallback: () -> Unit, cancelCallback: () -> Unit): AlertDialog.Builder {
         val builder: AlertDialog.Builder = this.let {
             AlertDialog.Builder(it)
         }
         builder.setMessage(R.string.grant_storage_read_permission)
             .setTitle(R.string.grant_permission)
-            .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+            .setNegativeButton(R.string.cancel) { dialog, _ -> run {
+                cancelCallback.invoke()
+                dialog.cancel()
+            } }
             .setPositiveButton(R.string.grant) { dialog, _ ->
                 run {
-                    callback.invoke()
+                    grantCallback.invoke()
                     dialog.cancel()
                 }
             }.setCancelable(false)
@@ -98,11 +101,13 @@ open class PermissionActivity(layout: Int = 0): AppCompatActivity(layout), Activ
         this.onPermissionGrantedCallback = onPermissionGrantedCallback
         when {
             ActivityCompat.shouldShowRequestPermissionRationale(this, permission) -> {
-                buildExplicitPermissionAlertDialog {
+                buildExplicitPermissionAlertDialog ({
                     ActivityCompat.requestPermissions(
                         this@PermissionActivity, arrayOf(permission), code
                     )
-                }.show()
+                }, {
+                    onPermissionGrantedCallback.onPermissionNotGranted()
+                }).show()
             }
             isInitialStart -> {
                 ActivityCompat.requestPermissions(this, arrayOf(permission), code)

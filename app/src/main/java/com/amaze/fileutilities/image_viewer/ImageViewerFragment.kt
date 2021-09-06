@@ -39,12 +39,14 @@ class ImageViewerFragment : Fragment(R.layout.quick_view_fragment) {
 
         val constraintLayout = view.findViewById<ConstraintLayout>(R.id.frameLayout)
         val quickViewType = requireArguments().getParcelable<LocalImageModel>(VIEW_TYPE_ARGUMENT)
-        constraintLayout.setOnClickListener {
-            activity?.finish()
-            val intent = Intent(requireContext(), ImageViewerActivity::class.java).apply {
-                putExtra(VIEW_TYPE_ARGUMENT, quickViewType)
+        if (activity is ImageViewerDialogActivity) {
+            constraintLayout.setOnClickListener {
+                activity?.finish()
+                val intent = Intent(requireContext(), ImageViewerActivity::class.java).apply {
+                    putExtra(VIEW_TYPE_ARGUMENT, quickViewType)
+                }
+                startActivity(intent)
             }
-            startActivity(intent)
         }
         quickViewType?.let { showImage(it, constraintLayout) }
     }

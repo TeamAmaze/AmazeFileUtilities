@@ -9,9 +9,14 @@ fun Uri.getSiblingUriFiles() : ArrayList<Uri>? {
         val currentPath = File(this.path?.substring(this.path?.indexOf("/", 1)!!+1))
         if (currentPath.exists()) {
             val parent = currentPath.parentFile
-            val siblings: ArrayList<Uri> = ArrayList()
-            for (currentSibling in parent.listFiles()) {
-                siblings.add(Uri.parse(currentSibling.path))
+            var siblings: ArrayList<Uri>? = null
+            parent.listFiles()?.run {
+                if (this.isNotEmpty()) {
+                    siblings = ArrayList()
+                    for (currentSibling in this) {
+                        siblings!!.add(Uri.parse(currentSibling.path))
+                    }
+                }
             }
             return siblings
         }

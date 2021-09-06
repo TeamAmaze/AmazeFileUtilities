@@ -30,9 +30,11 @@ class ImageViewerActivity : PermissionActivity(R.layout.image_viewer_activity) {
 
     private fun triggerPermissionCheck() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkStoragePermission()) {
-            buildExplicitPermissionAlertDialog {
+            buildExplicitPermissionAlertDialog ({
                 startExplicitPermissionActivity()
-            }.show()
+            }, {
+                // do nothing
+            }).show()
         }
     }
 }
