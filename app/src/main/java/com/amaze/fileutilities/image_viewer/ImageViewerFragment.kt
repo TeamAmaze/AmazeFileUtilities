@@ -11,6 +11,8 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.Fragment
 import com.amaze.fileutilities.R
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.github.chrisbanes.photoview.PhotoView
 
 class ImageViewerFragment : Fragment(R.layout.quick_view_fragment) {
 
@@ -39,13 +41,18 @@ class ImageViewerFragment : Fragment(R.layout.quick_view_fragment) {
 
         val constraintLayout = view.findViewById<ConstraintLayout>(R.id.frameLayout)
         val quickViewType = requireArguments().getParcelable<LocalImageModel>(VIEW_TYPE_ARGUMENT)
+        val imageView = constraintLayout.findViewById<PhotoView>(R.id.imageView)
         if (activity is ImageViewerDialogActivity) {
-            constraintLayout.setOnClickListener {
+            imageView.setOnClickListener {
                 activity?.finish()
                 val intent = Intent(requireContext(), ImageViewerActivity::class.java).apply {
                     putExtra(VIEW_TYPE_ARGUMENT, quickViewType)
                 }
                 startActivity(intent)
+            }
+        } else if (activity is ImageViewerActivity) {
+            imageView.setOnClickListener {
+                ImageMetadataSheet.showMetadata(quickViewType!!, requireActivity().supportFragmentManager)
             }
         }
         quickViewType?.let { showImage(it, constraintLayout) }
@@ -58,7 +65,7 @@ class ImageViewerFragment : Fragment(R.layout.quick_view_fragment) {
         val textView = constraintLayout.findViewById<TextView>(R.id.textView)
         textView.text = DocumentFile.fromSingleUri(requireContext(), localTypeModel.uri)?.name
 
-        val imageView = constraintLayout.findViewById<ImageView>(R.id.imageView)
+        val imageView = constraintLayout.findViewById<PhotoView>(R.id.imageView)
         Glide.with(this).load(localTypeModel.uri.toString()).into(imageView)
     }
 }

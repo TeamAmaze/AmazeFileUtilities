@@ -71,6 +71,14 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 
+    // https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor
+    implementation group: 'com.drewnoakes', name: 'metadata-extractor', version: '2.16.0'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-imaging
+//    implementation group: 'org.apache.commons', name: 'commons-imaging', version: '1.0-alpha2'
+
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

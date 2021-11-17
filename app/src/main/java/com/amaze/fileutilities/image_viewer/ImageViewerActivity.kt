@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
+import java.io.File
 import java.util.*
 
 class ImageViewerActivity : PermissionActivity(R.layout.image_viewer_activity) {
@@ -25,6 +26,16 @@ class ImageViewerActivity : PermissionActivity(R.layout.image_viewer_activity) {
                 lifecycle, it ?: Collections.singletonList(imageModel)
             )
             mPager.adapter = pagerAdapter
+            if (it != null) {
+                var position = 0
+                for (i in it.indices) {
+                    if (File(it[i].uri.path).name.equals(File(imageModel.uri.path).name)) {
+                        position = i
+                        break
+                    }
+                }
+                mPager.currentItem = position
+            }
         }
     }
 

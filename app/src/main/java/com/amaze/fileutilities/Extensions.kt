@@ -1,6 +1,7 @@
 package com.amaze.fileutilities
 
 import android.net.Uri
+import android.util.Log
 import java.io.File
 import java.lang.Exception
 
@@ -21,6 +22,7 @@ fun Uri.getSiblingUriFiles() : ArrayList<Uri>? {
             return siblings
         }
     } catch (exception: Exception) {
+        Log.w(javaClass.simpleName, "Failed to get siblings", exception)
         return null
     }
     return null
