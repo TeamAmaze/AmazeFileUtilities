@@ -4,6 +4,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.drew.imaging.ImageMetadataReader
+import java.io.File
 
 
 class ImageViewerAdapter(
@@ -17,6 +19,11 @@ class ImageViewerAdapter(
     }
 
     override fun createFragment(position: Int): Fragment {
+
+        /*val imageMetadata = Imaging.getMetadata(File(imageModel[position].uri.path!!))
+        if (imageMetadata is JpegImageMetadata) {
+
+        }*/
         return ImageViewerFragment.newInstance(imageModel[position])
     }
 }

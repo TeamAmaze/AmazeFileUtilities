@@ -2,4 +2,6 @@
 <resources>
     <dimen name="zero_dp">0dp</dimen>
     <dimen name="material_generic">16dp</dimen>
+
+    <dimen name="material_sheet_peek_height">400dp</dimen>
 </resources>

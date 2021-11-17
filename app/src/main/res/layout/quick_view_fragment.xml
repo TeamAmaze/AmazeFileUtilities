@@ -10,10 +10,7 @@
     android:layout_centerInParent="true"
     android:layout_centerVertical="true"
     android:clickable="true"
-    android:clipToPadding="false"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp"
-    android:paddingBottom="12dp">
+    android:clipToPadding="false">
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -31,17 +28,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minWidth="@dimen/material_sheet_peek_height"
+        android:minHeight="@dimen/material_sheet_peek_height"
         android:adjustViewBounds="true"
         android:padding="8dp"
         android:scaleType="fitCenter"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         tools:src="@tools:sample/backgrounds/scenic" />
 
