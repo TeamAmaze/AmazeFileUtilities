@@ -10,11 +10,17 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.Fragment
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.databinding.QuickViewFragmentBinding
+import com.amaze.fileutilities.databinding.VideoPlayerDialogActivityBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.chrisbanes.photoview.PhotoView
 
 class ImageViewerFragment : Fragment(R.layout.quick_view_fragment) {
+
+    private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
+        QuickViewFragmentBinding.inflate(layoutInflater)
+    }
 
     companion object {
         const val VIEW_TYPE_ARGUMENT = "ImageViewerFragment.viewTypeArgument"
@@ -36,14 +42,22 @@ class ImageViewerFragment : Fragment(R.layout.quick_view_fragment) {
         }
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return viewBinding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val constraintLayout = view.findViewById<ConstraintLayout>(R.id.frameLayout)
+//        val constraintLayout = view.findViewById<ConstraintLayout>(R.id.frameLayout)
         val quickViewType = requireArguments().getParcelable<LocalImageModel>(VIEW_TYPE_ARGUMENT)
-        val imageView = constraintLayout.findViewById<PhotoView>(R.id.imageView)
+//        val imageView = constraintLayout.findViewById<PhotoView>(R.id.imageView)
         if (activity is ImageViewerDialogActivity) {
-            imageView.setOnClickListener {
+            viewBinding.imageView.setOnClickListener {
                 activity?.finish()
                 val intent = Intent(requireContext(), ImageViewerActivity::class.java).apply {
                     putExtra(VIEW_TYPE_ARGUMENT, quickViewType)
@@ -51,21 +65,21 @@ class ImageViewerFragment : Fragment(R.layout.quick_view_fragment) {
                 startActivity(intent)
             }
         } else if (activity is ImageViewerActivity) {
-            imageView.setOnClickListener {
+            viewBinding.imageView.setOnClickListener {
                 ImageMetadataSheet.showMetadata(quickViewType!!, requireActivity().supportFragmentManager)
             }
         }
-        quickViewType?.let { showImage(it, constraintLayout) }
+        quickViewType?.let { showImage(it) }
     }
 
-    private fun showImage(localTypeModel: LocalImageModel, constraintLayout: ConstraintLayout) {
+    private fun showImage(localTypeModel: LocalImageModel) {
         Log.i(javaClass.simpleName, "Show image in fragment ${localTypeModel.uri.path} " +
                 "and mimetype ${localTypeModel.mimeType}")
 
-        val textView = constraintLayout.findViewById<TextView>(R.id.textView)
-        textView.text = DocumentFile.fromSingleUri(requireContext(), localTypeModel.uri)?.name
+        viewBinding.textView.text = DocumentFile.fromSingleUri(requireContext(), localTypeModel.uri)?.name
 
-        val imageView = constraintLayout.findViewById<PhotoView>(R.id.imageView)
-        Glide.with(this).load(localTypeModel.uri.toString()).into(imageView)
+        Glide.with(this).load(localTypeModel.uri.toString())
+            .thumbnail(Glide.with(this).load(resources.getDrawable(R.drawable.about_header)))
+            .into(viewBinding.imageView)
     }
 }
