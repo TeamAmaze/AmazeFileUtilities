@@ -4,15 +4,22 @@ import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
+import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 
-open class PermissionActivity(layout: Int = 0): AppCompatActivity(layout), ActivityCompat.OnRequestPermissionsResultCallback {
+open class PermissionActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
     private val permissionCode = 0
     var onPermissionGrantedCallback: OnPermissionGrantedCallback? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        triggerPermissionCheck()
+    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -34,6 +41,15 @@ open class PermissionActivity(layout: Int = 0): AppCompatActivity(layout), Activ
         }
     }
 
+    private fun triggerPermissionCheck() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkStoragePermission()) {
+            buildExplicitPermissionAlertDialog ({
+                startExplicitPermissionActivity()
+            }, {
+                // do nothing
+            }).show()
+        }
+    }
 
     fun checkStoragePermission(): Boolean {
         // Verify that all required contact permissions have been granted.

@@ -1,18 +1,25 @@
 package com.amaze.fileutilities.image_viewer
 
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
+import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.databinding.ImageViewerDialogActivityBinding
+import com.amaze.fileutilities.databinding.VideoPlayerDialogActivityBinding
 
-class ImageViewerDialogActivity: AppCompatActivity(R.layout.image_viewer_dialog_activity) {
+class ImageViewerDialogActivity: PermissionActivity() {
+
+    private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
+        ImageViewerDialogActivityBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(viewBinding.root)
         if (savedInstanceState == null) {
             val mimeType = intent.type
             val imageUri = intent.data

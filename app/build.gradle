@@ -24,6 +24,7 @@ android {
         targetSdk 30
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -49,7 +50,7 @@ android {
         }
 
         release {
-            minifyEnabled true
+            minifyEnabled false
         }
     }
 
@@ -78,6 +79,7 @@ dependencies {
 //    implementation group: 'org.apache.commons', name: 'commons-imaging', version: '1.0-alpha2'
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+    implementation 'com.google.android.exoplayer:exoplayer:2.16.0'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

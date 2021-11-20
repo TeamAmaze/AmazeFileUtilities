@@ -1,4 +1,4 @@
-package com.amaze.fileutilities.image_viewer
+package com.amaze.fileutilities.video_player
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
@@ -6,12 +6,14 @@ import androidx.viewpager2.widget.ViewPager2
 import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.GenericPagerViewerActivityBinding
+import com.amaze.fileutilities.databinding.VideoPlayerDialogActivityBinding
 import java.io.File
 import java.util.*
 
-class ImageViewerActivity : PermissionActivity() {
+class VideoPlayerActivity: PermissionActivity() {
 
-    private lateinit var viewModel: ImageViewerViewModel
+    private lateinit var viewModel: VideoPlayerViewModel
+
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         GenericPagerViewerActivityBinding.inflate(layoutInflater)
     }
@@ -19,18 +21,18 @@ class ImageViewerActivity : PermissionActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
-        viewModel = ViewModelProvider(this).get(ImageViewerViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(VideoPlayerViewModel::class.java)
 
-        val imageModel = intent.extras?.getParcelable<LocalImageModel>(ImageViewerFragment.VIEW_TYPE_ARGUMENT)
-        viewModel.getSiblingImageModels(imageModel!!).let {
-            val pagerAdapter = ImageViewerAdapter(supportFragmentManager,
-                lifecycle, it ?: Collections.singletonList(imageModel)
+        val videoModel = intent.extras?.getParcelable<LocalVideoModel>(VideoPlayerFragment.VIEW_TYPE_ARGUMENT)
+        viewModel.getSiblingVideoModels(videoModel!!).let {
+            val pagerAdapter = VideoPlayerAdapter(supportFragmentManager,
+                lifecycle, it ?: Collections.singletonList(videoModel)
             )
             viewBinding.pager.adapter = pagerAdapter
             if (it != null) {
                 var position = 0
                 for (i in it.indices) {
-                    if (File(it[i].uri.path).name.equals(File(imageModel.uri.path).name)) {
+                    if (File(it[i].uri.path).name.equals(File(videoModel.uri.path).name)) {
                         position = i
                         break
                     }

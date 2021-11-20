@@ -40,3 +40,13 @@ fun Uri.isImageMimeType(): Boolean {
             this.path?.endsWith("svg")!! ||
             this.path?.endsWith("webp")!!
 }
+
+fun Uri.isVideoMimeType(): Boolean {
+    return this.path?.endsWith("mp4")!! ||
+            this.path?.endsWith("mkv")!! ||
+            this.path?.endsWith("webm")!! ||
+            this.path?.endsWith("mpa")!! ||
+            this.path?.endsWith("flv")!! ||
+            this.path?.endsWith("mts")!! ||
+            this.path?.endsWith("jpgv")!!
+}
