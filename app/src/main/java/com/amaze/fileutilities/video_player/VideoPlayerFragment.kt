@@ -1,12 +1,14 @@
 package com.amaze.fileutilities.video_player
 
-import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.WindowCompat
+import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
@@ -16,12 +18,14 @@ import com.amaze.fileutilities.databinding.VideoPlayerFragmentBinding
 import com.amaze.fileutilities.image_viewer.*
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.util.Util
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+import com.google.android.exoplayer2.ui.PlayerView
 
 class VideoPlayerFragment : Fragment() {
 
     private var player: ExoPlayer? = null
     private var viewModel: VideoPlayerFragmentViewModel? = null
+    var scaleGestureDetector: ScaleGestureDetector? = null
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         VideoPlayerFragmentBinding.inflate(layoutInflater)
@@ -57,27 +61,21 @@ class VideoPlayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val videoModel = requireArguments().getParcelable<LocalVideoModel>(VIEW_TYPE_ARGUMENT)
         viewModel = ViewModelProvider(this).get(VideoPlayerFragmentViewModel::class.java)
+        viewModel?.videoModel = requireArguments().getParcelable(VIEW_TYPE_ARGUMENT)
         player = ExoPlayer.Builder(requireContext()).build().also {
             exoPlayer ->
             viewBinding.videoView.player = exoPlayer
-            val mediaItem = MediaItem.fromUri(videoModel!!.uri)
+            val mediaItem = MediaItem.fromUri(viewModel?.videoModel!!.uri)
             exoPlayer.setMediaItem(mediaItem)
             initializePlayer()
+            scaleGestureDetector = ScaleGestureDetector(requireContext(),
+                CustomOnScaleGestureListener(viewBinding.videoView))
         }
         if (activity is VideoPlayerDialogActivity) {
-            viewBinding.root.setOnClickListener {
-                activity?.finish()
-                val intent = Intent(requireContext(), VideoPlayerActivity::class.java).apply {
-                    putExtra(VIEW_TYPE_ARGUMENT, videoModel)
-                }
-                startActivity(intent)
-            }
-            viewBinding.videoView.setShowNextButton(false)
-            viewBinding.videoView.setShowPreviousButton(false)
+            handleViewPlayerDialogActivityResources()
         } else if (activity is VideoPlayerActivity) {
-            hideSystemUi()
+            handleVideoPlayerActivityResources()
         }
     }
 
@@ -93,7 +91,7 @@ class VideoPlayerFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-        releasePlayer()
+        pausePlayer()
     }
 
     override fun onStop() {
@@ -101,11 +99,65 @@ class VideoPlayerFragment : Fragment() {
         releasePlayer()
     }
 
-    private fun hideSystemUi() {
-        WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
-        WindowInsetsControllerCompat(requireActivity().window, viewBinding.root).let { controller ->
-            controller.hide(WindowInsetsCompat.Type.systemBars())
-            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+    private fun handleViewPlayerDialogActivityResources() {
+        viewBinding.videoView.findViewById<ConstraintLayout>(R.id.top_bar_video_player).visibility = View.GONE
+        viewBinding.videoView.findViewById<ImageView>(R.id.exo_fullscreen_icon).visibility = View.VISIBLE
+        viewBinding.videoView.findViewById<ImageView>(R.id.exo_fullscreen_icon).setOnClickListener {
+            val intent = Intent(requireContext(), VideoPlayerActivity::class.java).apply {
+                putExtra(VIEW_TYPE_ARGUMENT, viewModel?.videoModel)
+            }
+            startActivity(intent)
+            activity?.finish()
+        }
+        viewBinding.videoView.setShowNextButton(false)
+        viewBinding.videoView.setShowPreviousButton(false)
+    }
+
+    private fun handleVideoPlayerActivityResources() {
+//        hideSystemUi()
+        viewBinding.videoView.findViewById<ConstraintLayout>(R.id.top_bar_video_player).visibility = View.VISIBLE
+        viewBinding.videoView.findViewById<ImageView>(R.id.exo_fullscreen_icon).visibility = View.GONE
+        viewBinding.videoView.findViewById<ImageView>(R.id.fit_to_screen_video_player).setOnClickListener {
+            viewModel?.fitToScreen?.also {
+                if (!it) {
+                    viewBinding.videoView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+                    viewModel?.fitToScreen= true
+                } else {
+                    viewBinding.videoView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
+                    viewModel?.fitToScreen = false
+                }
+            }
+        }
+        viewBinding.videoView.findViewById<ImageView>(R.id.orientation_video_player).setOnClickListener {
+            viewModel?.fullscreen?.also {
+                if (!it) {
+                    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    viewModel?.fullscreen = true
+                } else {
+                    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                    viewModel?.fullscreen = false
+                }
+            }
+        }
+        viewBinding.videoView.findViewById<ImageView>(R.id.back_video_player).setOnClickListener {
+            requireActivity().onBackPressed()
+        }
+        viewBinding.videoView.setControllerVisibilityListener {
+            refactorSystemUi(it == View.GONE)
+        }
+    }
+
+    private fun refactorSystemUi(hide: Boolean) {
+        if (hide) {
+            WindowInsetsControllerCompat(requireActivity().window, viewBinding.root).let { controller ->
+                controller.hide(WindowInsetsCompat.Type.systemBars())
+                controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        } else {
+            WindowInsetsControllerCompat(requireActivity().window, viewBinding.root).let { controller ->
+                controller.show(WindowInsetsCompat.Type.systemBars())
+                controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
+            }
         }
     }
 
@@ -121,6 +173,18 @@ class VideoPlayerFragment : Fragment() {
         player = null
     }
 
+    private fun pausePlayer() {
+        player?.run {
+            viewModel?.also {
+                it.playbackPosition = this.currentPosition
+                it.currentWindow = this.currentWindowIndex
+                it.playWhenReady = this.playWhenReady
+                this.playWhenReady = false
+                it.playWhenReady = false
+            }
+        }
+    }
+
     private fun initializePlayer() {
         player?.let {
             exoPlayer ->
@@ -128,6 +192,32 @@ class VideoPlayerFragment : Fragment() {
                 exoPlayer.playWhenReady = it.playWhenReady
                 exoPlayer.seekTo(it.currentWindow, it.playbackPosition)
                 exoPlayer.prepare()
+            }
+        }
+    }
+
+    private class CustomOnScaleGestureListener(
+        private val player: PlayerView
+    ) : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+        private var scaleFactor = 0f
+
+        override fun onScale(
+            detector: ScaleGestureDetector
+        ): Boolean {
+            scaleFactor = detector.scaleFactor
+            return true
+        }
+
+        override fun onScaleBegin(
+            detector: ScaleGestureDetector
+        ) : Boolean{
+            return true
+        }
+        override fun onScaleEnd(detector: ScaleGestureDetector) {
+            if (scaleFactor > 1) {
+                player.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+            } else {
+                player.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
             }
         }
     }

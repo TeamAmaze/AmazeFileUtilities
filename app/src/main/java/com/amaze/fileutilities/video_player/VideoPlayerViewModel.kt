@@ -3,9 +3,11 @@ package com.amaze.fileutilities.video_player
 import androidx.lifecycle.ViewModel
 import com.amaze.fileutilities.getSiblingUriFiles
 import com.amaze.fileutilities.isVideoMimeType
+import java.lang.ref.WeakReference
 
 class VideoPlayerViewModel : ViewModel() {
     private var localVideoModelList: ArrayList<LocalVideoModel>? = null
+    val playerFragmentMap = mutableMapOf<Int, WeakReference<VideoPlayerFragment>>()
 
     fun getSiblingVideoModels(videoModel: LocalVideoModel): ArrayList<LocalVideoModel>? {
         if (localVideoModelList == null) {

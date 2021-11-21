@@ -32,4 +32,9 @@
         <item name="behavior_peekHeight">@dimen/material_sheet_peek_height</item>
         <item name="behavior_hideable">false</item>
     </style>
+
+    <style name="Theme.AmazeFileUtilities.FullScreen" parent="Theme.AmazeFileUtilities">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>
