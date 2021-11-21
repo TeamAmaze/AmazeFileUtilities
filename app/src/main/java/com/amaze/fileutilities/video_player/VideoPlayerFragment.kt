@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.ScaleGestureDetector
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.R
@@ -114,7 +116,10 @@ class VideoPlayerFragment : Fragment() {
     }
 
     private fun handleVideoPlayerActivityResources() {
-//        hideSystemUi()
+        viewBinding.videoView.updateLayoutParams {
+            width = FrameLayout.LayoutParams.MATCH_PARENT
+            height = FrameLayout.LayoutParams.MATCH_PARENT
+        }
         viewBinding.videoView.findViewById<ConstraintLayout>(R.id.top_bar_video_player).visibility = View.VISIBLE
         viewBinding.videoView.findViewById<ImageView>(R.id.exo_fullscreen_icon).visibility = View.GONE
         viewBinding.videoView.findViewById<ImageView>(R.id.fit_to_screen_video_player).setOnClickListener {

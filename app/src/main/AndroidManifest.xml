@@ -50,7 +50,6 @@
             </intent-filter>
         </activity>
 
-
         <activity android:name=".video_player.VideoPlayerDialogActivity"
             android:label="@string/video_player"
             android:theme="@style/Theme.AppCompat.Dialog"
@@ -63,11 +62,30 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".audio_player.AudioPlayerDialogActivity"
+            android:theme="@style/Theme.AppCompat.Dialog"
+            android:exported="true">
+            <intent-filter android:label="@string/audio_player" tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+                <data android:mimeType="audio/*" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".image_viewer.ImageViewerActivity"
             android:label="@string/image_viewer" android:theme="@style/Theme.AppCompat" />
 
         <activity android:name=".video_player.VideoPlayerActivity"
             android:label="@string/video_player"
             android:theme="@style/Theme.AmazeFileUtilities.FullScreen" />
+
+        <service android:name=".audio_player.AudioPlayerService"
+            android:exported="true"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.media.browse.MediaBrowserService"/>
+            </intent-filter>
+        </service>
     </application>
 </manifest>
