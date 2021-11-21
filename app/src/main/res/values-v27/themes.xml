@@ -2,5 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.AmazeFileUtilities.FullScreen" parent="Theme.AmazeFileUtilities">
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 </resources>
