@@ -11,6 +11,25 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class LocalAudioModel(
-    var uri: Uri,
-    val mimeType: String
-) : Parcelable
+    private var uri: Uri,
+    private val mimeType: String
+) : Parcelable, AudioModel {
+    override fun getUri(): Uri {
+        return uri
+    }
+
+    override fun getName(): String {
+        return uri.path!!
+    }
+
+    override fun getMimeType(): String {
+        return mimeType
+    }
+
+}
+
+interface AudioModel {
+    fun getUri(): Uri
+    fun getName(): String
+    fun getMimeType(): String
+}
