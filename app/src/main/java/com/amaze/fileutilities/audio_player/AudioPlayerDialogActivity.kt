@@ -1,86 +1,38 @@
 package com.amaze.fileutilities.audio_player
 
-import android.content.ComponentName
+import android.content.Intent
+import android.content.ServiceConnection
 import android.media.AudioManager
 import android.os.Bundle
-import android.support.v4.media.MediaBrowserCompat
-import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import android.widget.SeekBar
 import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.AudioPlayerDialogActivityBinding
+import java.lang.ref.WeakReference
+import kotlin.math.ceil
 
-class AudioPlayerDialogActivity: PermissionActivity() {
+class AudioPlayerDialogActivity: PermissionActivity(), OnPlaybackInfoUpdate {
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         AudioPlayerDialogActivityBinding.inflate(layoutInflater)
     }
 
     private lateinit var audioModel: LocalAudioModel
-    private lateinit var mMediaBrowserCompat: MediaBrowserCompat
-    private val connectionCallback: MediaBrowserCompat.ConnectionCallback = object : MediaBrowserCompat.ConnectionCallback() {
-        override fun onConnected() {
-            super.onConnected()
-            mMediaBrowserCompat.sessionToken.also { token ->
-                val mediaController = MediaControllerCompat(this@AudioPlayerDialogActivity, token)
-                MediaControllerCompat.setMediaController(this@AudioPlayerDialogActivity, mediaController)
-            }
-            playPauseBuild()
-            Log.d("onConnected", "Controller Connected")
-        }
-
-        override fun onConnectionFailed() {
-            super.onConnectionFailed()
-            Log.d("onConnectionFailed", "Connection Failed")
-
-        }
-
-    }
-    private val mControllerCallback = object : MediaControllerCompat.Callback() {
-    }
-
-    fun playPauseBuild() {
-        val mediaController = MediaControllerCompat.getMediaController(this@AudioPlayerDialogActivity)
-        viewBinding.playButton.setOnClickListener {
-            val state = mediaController.playbackState.state
-            if (state == PlaybackStateCompat.STATE_PAUSED ||
-                state == PlaybackStateCompat.STATE_STOPPED ||
-                state == PlaybackStateCompat.STATE_NONE
-            ) {
-
-                mediaController.transportControls.playFromUri(audioModel.uri, null)
-                viewBinding.playButton.setImageResource(R.drawable.ic_baseline_pause_32)
-            }
-            else if (state == PlaybackStateCompat.STATE_PLAYING ||
-                state == PlaybackStateCompat.STATE_BUFFERING ||
-                state == PlaybackStateCompat.STATE_CONNECTING
-            ) {
-                mediaController.transportControls.pause()
-                viewBinding.playButton.setImageResource(R.drawable.ic_baseline_play_arrow_32)
-            }
-        }
-        mediaController.registerCallback(mControllerCallback)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        // connect the controllers again to the session
-        // without this connect() you won't be able to start the service neither control it with the controller
-        mMediaBrowserCompat.connect()
-    }
+    private lateinit var audioPlaybackServiceConnection: ServiceConnection
 
     override fun onResume() {
         super.onResume()
         volumeControlStream = AudioManager.STREAM_MUSIC
+
+        val intent = Intent(this, AudioPlayerService::class.java)
+        this.bindService(intent, audioPlaybackServiceConnection, 0)
     }
 
-    override fun onStop() {
-        super.onStop()
-        // Release the resources
-        val controllerCompat = MediaControllerCompat.getMediaController(this)
-        controllerCompat?.unregisterCallback(mControllerCallback)
-        mMediaBrowserCompat.disconnect()
+    override fun onPause() {
+        super.onPause()
+        this.unbindService(audioPlaybackServiceConnection)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,14 +45,87 @@ class AudioPlayerDialogActivity: PermissionActivity() {
                     "and mimetype $mimeType")
             audioModel = LocalAudioModel(uri = audioUri!!, mimeType = mimeType!!)
 
-            val componentName = ComponentName(this, AudioPlayerService::class.java)
-            // initialize the browser
-            mMediaBrowserCompat = MediaBrowserCompat(
-                this, componentName,
-                connectionCallback,
-                null
-            )
             viewBinding.fileName.text = audioUri.path
+            AudioPlayerService.runService(audioUri, null, this)
         }
+        audioPlaybackServiceConnection = AudioPlaybackServiceConnection(WeakReference(this))
+    }
+
+    private fun isMediaStopped(progressHandler: AudioProgressHandler): Boolean {
+        progressHandler.audioPlaybackInfo.playbackState.let {
+            return it == PlaybackStateCompat.STATE_STOPPED ||
+                    it == PlaybackStateCompat.STATE_NONE || progressHandler.isCancelled
+        }
+    }
+
+    private fun isMediaPaused(state: Int): Boolean {
+        state.let {
+            return it == PlaybackStateCompat.STATE_PAUSED
+        }
+    }
+
+    private fun initActionButtons(audioServiceRef: WeakReference<AudioPlayerService>) {
+        viewBinding.let {
+            binding ->
+            audioServiceRef.get()?.also {
+                audioService ->
+                binding.playButton.setOnClickListener {
+                    audioService.playMediaItem()
+                    invalidateActionButtons(audioService.audioProgressHandler!!)
+                }
+                binding.seekbar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                        if (fromUser) {
+//                            mediaController.transportControls.seekTo(progress.toLong())
+                            audioService.seekPlayer(progress.toLong())
+                            val x: Int = ceil(progress / 1000f).toInt()
+
+                            if (x == 0 && !isMediaStopped(audioService.audioProgressHandler!!)) {
+                                viewBinding.seekbar.progress = 0
+                            }
+                        }
+                    }
+
+                    override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    }
+
+                    override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    }
+                })
+            }
+        }
+    }
+
+    private fun invalidateActionButtons(progressHandler: AudioProgressHandler) {
+        progressHandler.audioPlaybackInfo.playbackState.let {
+            playbackState ->
+            if (isMediaStopped(progressHandler) || isMediaPaused(playbackState)) {
+                    viewBinding.playButton.setImageResource(R.drawable.ic_baseline_play_circle_outline_32)
+                }
+            else if (playbackState == PlaybackStateCompat.STATE_PLAYING ||
+                playbackState == PlaybackStateCompat.STATE_BUFFERING ||
+                playbackState == PlaybackStateCompat.STATE_CONNECTING
+            ) {
+                viewBinding.playButton.setImageResource(R.drawable.ic_baseline_pause_circle_outline_32)
+            }
+
+            if (isMediaStopped(progressHandler)) {
+                viewBinding.seekbar.progress = 0
+            }
+        }
+    }
+
+    override fun onPositionUpdate(progressHandler: AudioProgressHandler) {
+        viewBinding.seekbar.progress = progressHandler.audioPlaybackInfo.currentPosition
+        viewBinding.seekbar.max = progressHandler.audioPlaybackInfo.duration
+        onPlaybackStateChanged(progressHandler)
+    }
+
+    override fun onPlaybackStateChanged(progressHandler: AudioProgressHandler) {
+        invalidateActionButtons(progressHandler)
+    }
+
+    override fun setupActionButtons(audioService: WeakReference<AudioPlayerService>) {
+        initActionButtons(audioService)
     }
 }

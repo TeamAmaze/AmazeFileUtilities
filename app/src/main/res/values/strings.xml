@@ -18,5 +18,10 @@
     <string name="grant_permission">Grant permission</string>
     <string name="grant">Grant</string>
     <string name="cancel">Cancel</string>
+    <string name="play">Play</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="channel_name_normal">Amaze File Utilities</string>
     <string name="storage_permission_granted">Storage permission granted</string>
+    <string name="audio_player_service_description">Plays audio for Amaze File Utilities</string>
 </resources>

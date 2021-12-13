@@ -6,6 +6,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.GenericPagerViewerActivityBinding
+import com.amaze.fileutilities.utilis.getSiblingUriFiles
 import java.io.File
 import java.util.*
 
@@ -22,17 +23,19 @@ class ImageViewerActivity : PermissionActivity() {
         viewModel = ViewModelProvider(this).get(ImageViewerViewModel::class.java)
 
         val imageModel = intent.extras?.getParcelable<LocalImageModel>(ImageViewerFragment.VIEW_TYPE_ARGUMENT)
-        viewModel.getSiblingImageModels(imageModel!!).let {
+        viewModel.getSiblingImageModels(imageModel!!, imageModel.uri.getSiblingUriFiles(this)).let {
             val pagerAdapter = ImageViewerAdapter(supportFragmentManager,
                 lifecycle, it ?: Collections.singletonList(imageModel)
             )
             viewBinding.pager.adapter = pagerAdapter
             if (it != null) {
                 var position = 0
-                for (i in it.indices) {
-                    if (File(it[i].uri.path).name.equals(File(imageModel.uri.path).name)) {
-                        position = i
-                        break
+                if (it.size > 1) {
+                    for (i in it.indices) {
+                        if (it[i].uri.path.equals(imageModel.uri.path)) {
+                            position = i
+                            break
+                        }
                     }
                 }
                 viewBinding.pager.currentItem = position

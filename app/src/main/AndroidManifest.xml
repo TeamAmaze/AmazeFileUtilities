@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
         android:name=".AmazeApplication"
@@ -82,6 +83,7 @@
 
         <service android:name=".audio_player.AudioPlayerService"
             android:exported="true"
+            android:description="@string/audio_player_service_description"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService"/>
