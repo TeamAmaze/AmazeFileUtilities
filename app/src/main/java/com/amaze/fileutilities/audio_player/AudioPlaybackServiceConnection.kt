@@ -11,11 +11,11 @@ class AudioPlaybackServiceConnection(private val activityRef: WeakReference<OnPl
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder: ObtainableServiceBinder<out AudioPlayerService?> =
             service as ObtainableServiceBinder<out AudioPlayerService?>
-        val specificService: AudioPlayerService? = binder.service
+        val specificService: ServiceOperationCallback? = binder.service
         specificService?.let {
                 audioPlayerService ->
             activityRef.get()?.apply {
-                audioPlayerService.serviceBinderPlaybackUpdate = activityRef.get()
+                audioPlayerService.getPlaybackInfoUpdateCallback(activityRef.get()!!)
                 activityRef.get()?.setupActionButtons(WeakReference(audioPlayerService))
             }
         }
@@ -24,4 +24,11 @@ class AudioPlaybackServiceConnection(private val activityRef: WeakReference<OnPl
     override fun onServiceDisconnected(name: ComponentName?) {
 
     }
+}
+
+interface ServiceOperationCallback {
+    fun getPlaybackInfoUpdateCallback(onPlaybackInfoUpdate: OnPlaybackInfoUpdate)
+    fun getAudioProgressHandlerCallback(): AudioProgressHandler
+    fun invokePlayPausePlayer()
+    fun invokeSeekPlayer(position: Long)
 }

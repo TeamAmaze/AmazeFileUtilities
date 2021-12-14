@@ -35,6 +35,11 @@ class AudioPlayerDialogActivity: PermissionActivity(), OnPlaybackInfoUpdate {
         this.unbindService(audioPlaybackServiceConnection)
     }
 
+    override fun onStop() {
+        super.onStop()
+        AudioPlayerService.sendCancelBroadcast(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
@@ -64,23 +69,24 @@ class AudioPlayerDialogActivity: PermissionActivity(), OnPlaybackInfoUpdate {
         }
     }
 
-    private fun initActionButtons(audioServiceRef: WeakReference<AudioPlayerService>) {
+    private fun initActionButtons(audioServiceRef: WeakReference<ServiceOperationCallback>) {
         viewBinding.let {
             binding ->
             audioServiceRef.get()?.also {
                 audioService ->
                 binding.playButton.setOnClickListener {
-                    audioService.playMediaItem()
-                    invalidateActionButtons(audioService.audioProgressHandler!!)
+                    audioService.invokePlayPausePlayer()
+                    invalidateActionButtons(audioService.getAudioProgressHandlerCallback())
                 }
                 binding.seekbar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
                     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                         if (fromUser) {
 //                            mediaController.transportControls.seekTo(progress.toLong())
-                            audioService.seekPlayer(progress.toLong())
+//                            audioService.seekPlayer(progress.toLong())
+                            audioService.invokeSeekPlayer(progress.toLong())
                             val x: Int = ceil(progress / 1000f).toInt()
 
-                            if (x == 0 && !isMediaStopped(audioService.audioProgressHandler!!)) {
+                            if (x == 0 && !isMediaStopped(audioService.getAudioProgressHandlerCallback())) {
                                 viewBinding.seekbar.progress = 0
                             }
                         }
@@ -125,7 +131,7 @@ class AudioPlayerDialogActivity: PermissionActivity(), OnPlaybackInfoUpdate {
         invalidateActionButtons(progressHandler)
     }
 
-    override fun setupActionButtons(audioService: WeakReference<AudioPlayerService>) {
+    override fun setupActionButtons(audioService: WeakReference<ServiceOperationCallback>) {
         initActionButtons(audioService)
     }
 }
