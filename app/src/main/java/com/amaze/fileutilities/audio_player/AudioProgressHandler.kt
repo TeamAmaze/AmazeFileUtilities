@@ -39,5 +39,5 @@ data class AudioProgressHandler(var isCancelled: Boolean = false, var uriList: L
 interface OnPlaybackInfoUpdate {
     fun onPositionUpdate(progressHandler: AudioProgressHandler)
     fun onPlaybackStateChanged(progressHandler: AudioProgressHandler)
-    fun setupActionButtons(audioService: WeakReference<AudioPlayerService>)
+    fun setupActionButtons(audioService: WeakReference<ServiceOperationCallback>)
 }
