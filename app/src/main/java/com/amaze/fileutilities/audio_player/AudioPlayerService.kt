@@ -183,6 +183,7 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
     private fun initCurrentUriAndPlayer(uri: Uri) {
         val mediaItem = extractMediaSourceFromUri(uri)
         if (audioProgressHandler != null) {
+            // TODO validate following condition
             if (audioProgressHandler!!.audioPlaybackInfo.audioModel.getUri().path == uri.path) {
                 playMediaItem()
             } else {
@@ -290,7 +291,7 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.albumName)
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.title)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration)
-                .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, (audioProgressHandler.getPlayingIndex(true)
+                .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, (audioProgressHandler.getPlayingIndex(false)
                         + 1).toLong())
                 .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, song.year.toLong())
             val mediaStream = AudioUtils.getMediaStoreAlbumCoverUri(song.audioModel.id)
@@ -398,6 +399,7 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
             }
             setMediaItem(mediaItem)
             prepare()
+            playWhenReady = true
             play()
         }
         updatePlaybackState(true)
@@ -409,9 +411,9 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
             if (isPlaying) {
                 pausePlayer()
             } else {
-                if (audioProgressHandler!!.audioPlaybackInfo.duration.toInt() ==
+                if (audioProgressHandler!!.audioPlaybackInfo.duration.toInt() <=
                     audioProgressHandler!!.audioPlaybackInfo.currentPosition
-                    || audioProgressHandler!!.audioPlaybackInfo.duration == exoPlayer!!.currentPosition) {
+                    || audioProgressHandler!!.audioPlaybackInfo.duration <= exoPlayer!!.currentPosition) {
                     seekTo(0)
                 }
                 exoPlayer?.playWhenReady = true

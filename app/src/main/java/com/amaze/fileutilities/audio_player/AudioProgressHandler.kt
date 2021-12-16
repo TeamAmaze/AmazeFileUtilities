@@ -1,6 +1,7 @@
 package com.amaze.fileutilities.audio_player
 
 import android.net.Uri
+import java.io.File
 import java.lang.ref.WeakReference
 
 data class AudioProgressHandler(var isCancelled: Boolean = false, var uriList: List<Uri>?,
@@ -23,7 +24,7 @@ data class AudioProgressHandler(var isCancelled: Boolean = false, var uriList: L
         if (uriList != null) {
             var index = 0
             for (uri in uriList!!) {
-                if (uri == audioPlaybackInfo.audioModel.getUri()) {
+                if (File(uri.path).name.equals(File(audioPlaybackInfo.audioModel.getUri().path).name)) {
                     return index
                 } else {
                     index++

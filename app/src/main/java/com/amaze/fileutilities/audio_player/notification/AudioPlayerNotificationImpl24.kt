@@ -29,7 +29,7 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
         intent.component = serviceName
         val deleteIntent = PendingIntent.getService(service, 0, intent, 0)
 
-        var bitmap = BitmapFactory.decodeResource(
+        val bitmap = BitmapFactory.decodeResource(
             service.resources,
             R.drawable.ic_baseline_fullscreen_32
         )
