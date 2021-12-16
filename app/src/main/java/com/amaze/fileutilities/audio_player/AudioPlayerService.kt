@@ -3,6 +3,9 @@ package com.amaze.fileutilities.audio_player
 import android.app.PendingIntent
 import android.app.Service
 import android.content.*
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.media.audiofx.AudioEffect
 import android.net.Uri
@@ -15,15 +18,18 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotification
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotificationImpl
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotificationImpl24
 import com.amaze.fileutilities.utilis.ObtainableServiceBinder
+import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.audio.AudioAttributes
+import java.io.File
 import java.lang.ref.WeakReference
 
 class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeatingCallback {
@@ -81,36 +87,77 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
         wakeLock?.setReferenceCounted(false)
         setupMediaSession()
         initNotification()
-        audioPlayerRepeatingRunnable = AudioPlayerRepeatingRunnable(true, WeakReference(this))
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
-            currentUri = it.getParcelableExtra(ARG_URI)
-            uriList = it.getParcelableArrayListExtra(ARG_URI_LIST)
-            if (it.action != null) {
-                when(it.action) {
-                    ACTION_CANCEL -> {
-                        triggerStopEverything()
-                    }
-                    ACTION_PLAY_PAUSE -> {
-                        playMediaItem()
-                    }
-                    ACTION_NEXT -> {
-
-                    }
-                    ACTION_PREVIOUS -> {
-
-                    }
-                    else -> {
-                        initCurrentUriAndPlayer()
+            val intentUri: Uri? = it.getParcelableExtra(ARG_URI)
+            if (currentUri == null && intentUri != null) {
+                currentUri = intentUri
+            }
+            val intentUriList: List<Uri>? = it.getParcelableArrayListExtra(ARG_URI_LIST)
+            if (uriList == null && intentUriList != null) {
+                uriList = intentUriList
+            }
+            if (currentUri == null) {
+                Log.w(javaClass.name, "No intent uri to start audio service")
+                return super.onStartCommand(intent, flags, startId)
+            }
+            when {
+                it.action != null -> {
+                    when(it.action) {
+                        ACTION_CANCEL -> {
+                            triggerStopEverything()
+                        }
+                        ACTION_PLAY_PAUSE -> {
+                            playMediaItem()
+                        }
+                        ACTION_NEXT -> {
+                            uriList?.let {
+                                audioProgressHandler?.let { handler ->
+                                    if (handler.getPlayingIndex(false) < 0) {
+                                        // do nothing
+                                        Toast.makeText(baseContext, resources.getString(R.string.not_allowed),
+                                            Toast.LENGTH_LONG).show()
+                                        return super.onStartCommand(intent, flags, startId)
+                                    }
+                                    if (handler.getPlayingIndex(false) < uriList!!.size-1) {
+                                        handler.playingIndex = handler.getPlayingIndex(false) + 1
+                                    }
+                                    initCurrentUriAndPlayer(uriList!![handler.getPlayingIndex(false)])
+                                }
+                            }
+                        }
+                        ACTION_PREVIOUS -> {
+                            uriList?.let {
+                                audioProgressHandler?.let { handler ->
+                                    if (handler.getPlayingIndex(false) < 0) {
+                                        // do nothing
+                                        Toast.makeText(baseContext, resources.getString(R.string.not_allowed),
+                                            Toast.LENGTH_LONG).show()
+                                        return super.onStartCommand(intent, flags, startId)
+                                    }
+                                    if (handler.getPlayingIndex(false) > 0) {
+                                        handler.playingIndex = handler.getPlayingIndex(false) - 1
+                                    }
+                                    initCurrentUriAndPlayer(uriList!![handler.getPlayingIndex(false)])
+                                }
+                            }
+                        }
+                        else -> {
+                            initCurrentUriAndPlayer(currentUri!!)
+                        }
                     }
                 }
-            } else if (currentUri != null) {
-                initCurrentUriAndPlayer()
+                else -> {
+                    initCurrentUriAndPlayer(currentUri!!)
+                }
             }
         }
 
+        if (audioPlayerRepeatingRunnable == null) {
+            audioPlayerRepeatingRunnable = AudioPlayerRepeatingRunnable(true, WeakReference(this))
+        }
         super.onStartCommand(intent, flags, startId)
         return START_NOT_STICKY
     }
@@ -118,14 +165,13 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
     override fun onDestroy() {
         super.onDestroy()
         Log.i(javaClass.simpleName, "destroying audio player service")
-        stopExoPlayer()
-        stopForeground(true)
-        wakeLock!!.release()
         closeAudioEffectSession()
+        stopExoPlayer()
+        wakeLock!!.release()
         mediaSession?.release()
         playingNotification?.stop()
         getAudioManager().abandonAudioFocus(audioFocusListener)
-        audioPlayerRepeatingRunnable?.cancel(false)
+        audioPlayerRepeatingRunnable?.cancel()
         unregisterReceiver(cancelReceiver)
         unregisterReceiver(pauseReceiver)
     }
@@ -134,35 +180,33 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
         return mBinder
     }
 
-    fun isPlaying(): Boolean {
-        audioProgressHandler?.let {
-            return it.audioPlaybackInfo.playbackState == PlaybackStateCompat.STATE_PLAYING
-        }
-        return false
-    }
-
-    private fun initCurrentUriAndPlayer() {
-        val mediaItem = extractMediaSourceFromUri(currentUri!!)
+    private fun initCurrentUriAndPlayer(uri: Uri) {
+        val mediaItem = extractMediaSourceFromUri(uri)
         if (audioProgressHandler != null) {
-            if (audioProgressHandler!!.audioPlaybackInfo.audioModel.getUri() == currentUri) {
+            if (audioProgressHandler!!.audioPlaybackInfo.audioModel.getUri().path == uri.path) {
                 playMediaItem()
             } else {
+                initAudioPlaybackInfoAndHandler(uri)
                 playMediaItem(mediaItem)
             }
         } else {
+            initAudioPlaybackInfoAndHandler(uri)
             playMediaItem(mediaItem)
         }
-        val audioPlaybackInfo = AudioPlaybackInfo(LocalAudioModel(currentUri!!, ""),
-            exoPlayer!!.duration.toInt(), exoPlayer!!.currentPosition.toInt(), exoPlayer!!.playbackState)
+    }
+
+    private fun initAudioPlaybackInfoAndHandler(uri: Uri) {
+        val audioPlaybackInfo = AudioPlaybackInfo.init(baseContext, uri)
         audioProgressHandler = AudioProgressHandler(false, uriList,
             AudioProgressHandler.INDEX_UNDEFINED, audioPlaybackInfo)
+        audioProgressHandler!!.getPlayingIndex(true)
     }
 
     private var audioFocusListener:AudioManager.OnAudioFocusChangeListener =
         AudioManager.OnAudioFocusChangeListener { focusChange ->
             when (focusChange) {
                 AudioManager.AUDIOFOCUS_GAIN -> {
-                    if (audioProgressHandler!!.audioPlaybackInfo.playbackState != PlaybackStateCompat.STATE_PLAYING
+                    if (!exoPlayer!!.isPlaying
                         && pausedByTransientLossOfFocus) {
                         playMediaItem()
                         pausedByTransientLossOfFocus = false
@@ -175,14 +219,14 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
                     // Lost focus for a short time, but we have to stop
                     // playback. We don't release the media playback because playback
                     // is likely to resume
-                    val wasPlaying: Boolean = audioProgressHandler!!
-                        .audioPlaybackInfo.playbackState == PlaybackStateCompat.STATE_PLAYING
+                    val wasPlaying: Boolean = isPlaying()
                     pausePlayer()
                     pausedByTransientLossOfFocus = wasPlaying
                 }
                 AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
                     // Lost focus for a short time, but it's ok to keep playing
                     // at an attenuated level
+                    pausePlayer()
                 }
             }
         }
@@ -233,30 +277,41 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
     }
 
     private fun updateMediaSessionMetaData() {
-        val song: AudioPlaybackInfo = audioProgressHandler!!.audioPlaybackInfo
-        /*if (song.id === -1) {
-            mediaSession!!.setMetadata(null)
-            return
-        }*/
-        val metaData = MediaMetadataCompat.Builder()
-            .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, song.artistName)
-            .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, song.artistName)
-            .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.albumName)
-            .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.title)
-            .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration.toLong())
-            .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, (audioProgressHandler!!.getPlayingIndex(false)
-                    + 1).toLong())
-            .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, song.year)
-            .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, null)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            audioProgressHandler!!.uriList?.let {
-                metaData.putLong(
-                    MediaMetadataCompat.METADATA_KEY_NUM_TRACKS,
-                    audioProgressHandler!!.uriList!!.size.toLong()
-                )
+        audioProgressHandler?.let {
+            audioProgressHandler ->
+            val song: AudioPlaybackInfo = audioProgressHandler.audioPlaybackInfo
+            /*if (song.id === -1) {
+                mediaSession!!.setMetadata(null)
+                return
+            }*/
+            val metaData = MediaMetadataCompat.Builder()
+                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, song.artistName)
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, song.artistName)
+                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.albumName)
+                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.title)
+                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration)
+                .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, (audioProgressHandler.getPlayingIndex(true)
+                        + 1).toLong())
+                .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, song.year.toLong())
+            val mediaStream = AudioUtils.getMediaStoreAlbumCoverUri(song.audioModel.id)
+            mediaStream?.let {
+                if (File(it.path).exists()) {
+                    metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
+                        BitmapFactory.decodeStream(applicationContext.contentResolver
+                            .openInputStream(it)))
+                }
             }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                audioProgressHandler.uriList?.let {
+                    metaData.putLong(
+                        MediaMetadataCompat.METADATA_KEY_NUM_TRACKS,
+                        audioProgressHandler.uriList!!.size.toLong()
+                    )
+                }
+            }
+            mediaSession!!.setMetadata(metaData.build())
         }
-        mediaSession!!.setMetadata(metaData.build())
     }
 
     private fun getAudioManager(): AudioManager {
@@ -337,38 +392,40 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
             // AudioAttributes here from exoplayer package !!!
             mAttrs?.let { initializeAttributes() }
             setAudioAttributes(mAttrs!!, true)
-            if (requestFocus()) {
-                setMediaItem(mediaItem)
-                prepare()
-                play()
-            } else {
-                Toast.makeText(
-                    baseContext,
-                    resources.getString(R.string.cancel),
-                    Toast.LENGTH_SHORT
-                ).show()
+            if (isPlaying) {
+                stop()
+                clearMediaItems()
             }
+            setMediaItem(mediaItem)
+            prepare()
+            play()
         }
+        updatePlaybackState(true)
+        invalidateNotificationPlayButton()
     }
 
     private fun playMediaItem() {
         exoPlayer?.apply {
-            if (audioProgressHandler!!.audioPlaybackInfo.playbackState == PlaybackStateCompat.STATE_PLAYING) {
+            if (isPlaying) {
                 pausePlayer()
             } else {
+                if (audioProgressHandler!!.audioPlaybackInfo.duration.toInt() ==
+                    audioProgressHandler!!.audioPlaybackInfo.currentPosition
+                    || audioProgressHandler!!.audioPlaybackInfo.duration == exoPlayer!!.currentPosition) {
+                    seekTo(0)
+                }
                 exoPlayer?.playWhenReady = true
                 exoPlayer?.play()
-                updatePlaybackState(PlaybackStateCompat.STATE_PLAYING)
-                updateMediaSessionPlaybackState()
-                updateMediaSessionMetaData()
+                updatePlaybackState(true)
+                invalidateNotificationPlayButton()
             }
-            invalidateNotificationPlayButton()
         }
     }
 
     private fun seekPlayer(position: Long) {
         exoPlayer?.apply {
             seekTo(position)
+            invalidateNotificationPlayButton()
         }
     }
 
@@ -379,27 +436,25 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
     private fun pausePlayer() {
         exoPlayer?.apply {
             playWhenReady = false
-            if (playbackState == PlaybackStateCompat.STATE_PLAYING) {
-                updatePlaybackState(PlaybackStateCompat.STATE_PAUSED)
-                updateMediaSessionPlaybackState()
-                updateMediaSessionMetaData()
-            }
+            updatePlaybackState(false)
+            invalidateNotificationPlayButton()
         }
     }
 
     private fun stopExoPlayer() {
         // release the resources when the service is destroyed
         exoPlayer?.playWhenReady = false
+        updatePlaybackState(false)
+        updateMediaSessionPlaybackState()
         exoPlayer?.release()
         exoPlayer = null
-        updatePlaybackState(PlaybackStateCompat.STATE_NONE)
-        updateMediaSessionPlaybackState()
         audioProgressHandler?.isCancelled = true
     }
 
-    private fun updatePlaybackState(state: Int) {
+    private fun updatePlaybackState(isPlaying: Boolean) {
         audioProgressHandler?.let {
-            it.audioPlaybackInfo.playbackState = state
+            it.audioPlaybackInfo.isPlaying = isPlaying
+            onProgressUpdate(it)
         }
     }
 
@@ -436,19 +491,8 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
     }
 
     private fun invalidateNotificationPlayButton() {
-        /*if (audioProgressHandler!!.audioPlaybackInfo.playbackState == PlaybackStateCompat.STATE_PLAYING) {
-            customSmallContentViews?.setImageViewResource(R.id.action_play_pause, R.drawable.ic_baseline_pause_circle_outline_32)
-            customBigContentViews?.setImageViewResource(R.id.action_play_pause, R.drawable.ic_baseline_pause_circle_outline_32)
-        } else {
-            customSmallContentViews?.setImageViewResource(R.id.action_play_pause, R.drawable.ic_baseline_play_circle_outline_32)
-            customBigContentViews?.setImageViewResource(R.id.action_play_pause, R.drawable.ic_baseline_play_circle_outline_32)
-        }
-        notificationManager.let {
-            notificationManager.notify(
-                NotificationConstants.AUDIO_PLAYER_ID,
-                mBuilder?.build()
-            )
-        }*/
+        updateMediaSessionPlaybackState()
+        updateMediaSessionMetaData()
         playingNotification?.update()
     }
 
@@ -466,6 +510,10 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
 
     override fun getAudioProgressHandlerCallback(): AudioProgressHandler {
         return audioProgressHandler!!
+    }
+
+    override fun getAudioPlaybackInfo(): AudioPlaybackInfo {
+        return audioProgressHandler!!.audioPlaybackInfo
     }
 
     override fun onProgressUpdate(audioProgressHandler: AudioProgressHandler) {
@@ -493,7 +541,10 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
         return exoPlayer!!.contentDuration.toInt()
     }
 
-    override fun getPlaybackState(): Int {
-        return exoPlayer!!.playbackState
+    override fun isPlaying(): Boolean {
+        exoPlayer?.let {
+            return it.isPlaying
+        }
+        return false
     }
 }

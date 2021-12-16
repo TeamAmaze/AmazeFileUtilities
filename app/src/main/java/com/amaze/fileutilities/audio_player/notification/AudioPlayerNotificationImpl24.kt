@@ -15,7 +15,9 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
     @Synchronized
     override fun update() {
         stopped = false
-        val playbackInfo: AudioPlaybackInfo = service.audioProgressHandler!!.audioPlaybackInfo
+
+        val playbackInfo = if (service.audioProgressHandler != null)
+            service.audioProgressHandler!!.audioPlaybackInfo else AudioPlaybackInfo.EMPTY_PLAYBACK
         val isPlaying: Boolean = service.isPlaying()
         val playButtonResId: Int =
             if (isPlaying) R.drawable.ic_baseline_pause_circle_outline_32 else R.drawable.ic_baseline_play_circle_outline_32
@@ -45,7 +47,7 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
             )
         val nextAction: NotificationCompat.Action =
             NotificationCompat.Action(
-                R.drawable.ic_outline_fast_rewind_32,
+                R.drawable.ic_outline_fast_forward_32,
                 service.getString(R.string.next),
                 retrievePlaybackAction(AudioPlayerService.ACTION_NEXT)
             )

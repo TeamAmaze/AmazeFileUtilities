@@ -32,7 +32,7 @@ class VideoPlayerActivity: PermissionActivity() {
                 var position = 0
                 if (it.size > 1) {
                     for (i in it.indices) {
-                        if (it[i].uri.path.equals(videoModel.uri.path)) {
+                        if (File(it[i].uri.path).name.equals(File(videoModel.uri.path).name)) {
                             position = i
                             break
                         }

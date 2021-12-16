@@ -4,7 +4,7 @@ import android.net.Uri
 import java.lang.ref.WeakReference
 
 data class AudioProgressHandler(var isCancelled: Boolean = false, var uriList: List<Uri>?,
-                                private var playingIndex: Int,
+                                var playingIndex: Int,
                                 var audioPlaybackInfo: AudioPlaybackInfo) {
     companion object {
         const val INDEX_UNDEFINED = -3

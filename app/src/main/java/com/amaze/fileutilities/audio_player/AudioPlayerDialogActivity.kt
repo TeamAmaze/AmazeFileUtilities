@@ -7,10 +7,16 @@ import android.os.Bundle
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.widget.SeekBar
+import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.AudioPlayerDialogActivityBinding
+import com.amaze.fileutilities.utilis.getSiblingUriFiles
+import com.amaze.fileutilities.utilis.isAudioMimeType
+import com.amaze.fileutilities.utilis.isVideoMimeType
+import com.amaze.fileutilities.video_player.VideoPlayerViewModel
 import java.lang.ref.WeakReference
+import java.util.stream.Collectors
 import kotlin.math.ceil
 
 class AudioPlayerDialogActivity: PermissionActivity(), OnPlaybackInfoUpdate {
@@ -19,7 +25,7 @@ class AudioPlayerDialogActivity: PermissionActivity(), OnPlaybackInfoUpdate {
         AudioPlayerDialogActivityBinding.inflate(layoutInflater)
     }
 
-    private lateinit var audioModel: LocalAudioModel
+    private lateinit var viewModel: AudioPlayerDialogActivityViewModel
     private lateinit var audioPlaybackServiceConnection: ServiceConnection
 
     override fun onResume() {
@@ -43,30 +49,16 @@ class AudioPlayerDialogActivity: PermissionActivity(), OnPlaybackInfoUpdate {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
+        viewModel = ViewModelProvider(this).get(AudioPlayerDialogActivityViewModel::class.java)
         if (savedInstanceState == null) {
             val mimeType = intent.type
             val audioUri = intent.data
             Log.i(javaClass.simpleName, "Loading audio from path ${audioUri?.path} " +
                     "and mimetype $mimeType")
-            audioModel = LocalAudioModel(uri = audioUri!!, mimeType = mimeType!!)
-
-            viewBinding.fileName.text = audioUri.path
-            AudioPlayerService.runService(audioUri, null, this)
+            viewModel.uriList = ArrayList(audioUri!!.getSiblingUriFiles(this)!!.filter { it.isAudioMimeType() }.asReversed())
+            AudioPlayerService.runService(audioUri, viewModel.uriList, this)
         }
         audioPlaybackServiceConnection = AudioPlaybackServiceConnection(WeakReference(this))
-    }
-
-    private fun isMediaStopped(progressHandler: AudioProgressHandler): Boolean {
-        progressHandler.audioPlaybackInfo.playbackState.let {
-            return it == PlaybackStateCompat.STATE_STOPPED ||
-                    it == PlaybackStateCompat.STATE_NONE || progressHandler.isCancelled
-        }
-    }
-
-    private fun isMediaPaused(state: Int): Boolean {
-        state.let {
-            return it == PlaybackStateCompat.STATE_PAUSED
-        }
     }
 
     private fun initActionButtons(audioServiceRef: WeakReference<ServiceOperationCallback>) {
@@ -86,7 +78,7 @@ class AudioPlayerDialogActivity: PermissionActivity(), OnPlaybackInfoUpdate {
                             audioService.invokeSeekPlayer(progress.toLong())
                             val x: Int = ceil(progress / 1000f).toInt()
 
-                            if (x == 0 && !isMediaStopped(audioService.getAudioProgressHandlerCallback())) {
+                            if (x == 0 && audioService.getAudioProgressHandlerCallback().isCancelled) {
                                 viewBinding.seekbar.progress = 0
                             }
                         }
@@ -98,24 +90,25 @@ class AudioPlayerDialogActivity: PermissionActivity(), OnPlaybackInfoUpdate {
                     override fun onStopTrackingTouch(seekBar: SeekBar?) {
                     }
                 })
+                binding.title.text = audioService.getAudioPlaybackInfo().title
+                binding.album.text = audioService.getAudioPlaybackInfo().albumName
+                binding.artist.text = audioService.getAudioPlaybackInfo().artistName
+                binding.seekbar.max = audioService.getAudioPlaybackInfo().duration.toInt()
             }
         }
     }
 
     private fun invalidateActionButtons(progressHandler: AudioProgressHandler) {
-        progressHandler.audioPlaybackInfo.playbackState.let {
-            playbackState ->
-            if (isMediaStopped(progressHandler) || isMediaPaused(playbackState)) {
+        progressHandler.audioPlaybackInfo.isPlaying.let {
+            isPlaying ->
+            if (progressHandler.isCancelled || !isPlaying) {
                     viewBinding.playButton.setImageResource(R.drawable.ic_baseline_play_circle_outline_32)
                 }
-            else if (playbackState == PlaybackStateCompat.STATE_PLAYING ||
-                playbackState == PlaybackStateCompat.STATE_BUFFERING ||
-                playbackState == PlaybackStateCompat.STATE_CONNECTING
-            ) {
+            else {
                 viewBinding.playButton.setImageResource(R.drawable.ic_baseline_pause_circle_outline_32)
             }
 
-            if (isMediaStopped(progressHandler)) {
+            if (progressHandler.isCancelled) {
                 viewBinding.seekbar.progress = 0
             }
         }
@@ -123,7 +116,10 @@ class AudioPlayerDialogActivity: PermissionActivity(), OnPlaybackInfoUpdate {
 
     override fun onPositionUpdate(progressHandler: AudioProgressHandler) {
         viewBinding.seekbar.progress = progressHandler.audioPlaybackInfo.currentPosition
-        viewBinding.seekbar.max = progressHandler.audioPlaybackInfo.duration
+        viewBinding.title.text = progressHandler.audioPlaybackInfo.title
+        viewBinding.album.text = progressHandler.audioPlaybackInfo.albumName
+        viewBinding.artist.text = progressHandler.audioPlaybackInfo.artistName
+        viewBinding.seekbar.max = progressHandler.audioPlaybackInfo.duration.toInt()
         onPlaybackStateChanged(progressHandler)
     }
 
