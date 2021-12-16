@@ -19,7 +19,9 @@ fun Uri.getSiblingUriFiles(context: Context) : ArrayList<Uri>? {
                     if (this.isNotEmpty()) {
                         siblings = ArrayList()
                         for (currentSibling in this) {
-                            siblings!!.add(Uri.parse(currentSibling.path))
+                            siblings!!.add(Uri.parse(if (!currentSibling.path.startsWith("/"))
+                                "/${currentSibling.path}"
+                            else currentSibling.path))
                         }
                     }
                 }
