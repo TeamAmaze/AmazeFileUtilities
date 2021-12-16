@@ -25,6 +25,7 @@ abstract class AudioPlayerNotification {
     }
 
     abstract fun update()
+
     @Synchronized
     fun stop() {
         stopped = true

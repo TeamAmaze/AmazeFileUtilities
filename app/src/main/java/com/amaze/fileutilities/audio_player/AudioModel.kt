@@ -11,6 +11,7 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class LocalAudioModel(
+    var id: Long,
     private var uri: Uri,
     private val mimeType: String
 ) : Parcelable, AudioModel {

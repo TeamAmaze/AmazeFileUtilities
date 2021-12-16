@@ -29,6 +29,7 @@ class AudioPlaybackServiceConnection(private val activityRef: WeakReference<OnPl
 interface ServiceOperationCallback {
     fun getPlaybackInfoUpdateCallback(onPlaybackInfoUpdate: OnPlaybackInfoUpdate)
     fun getAudioProgressHandlerCallback(): AudioProgressHandler
+    fun getAudioPlaybackInfo(): AudioPlaybackInfo
     fun invokePlayPausePlayer()
     fun invokeSeekPlayer(position: Long)
 }

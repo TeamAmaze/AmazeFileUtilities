@@ -32,7 +32,8 @@ class ImageViewerActivity : PermissionActivity() {
                 var position = 0
                 if (it.size > 1) {
                     for (i in it.indices) {
-                        if (it[i].uri.path.equals(imageModel.uri.path)) {
+                        // TODO: avoid using file
+                        if (File(it[i].uri.path).name.equals(File(imageModel.uri.path).name)) {
                             position = i
                             break
                         }

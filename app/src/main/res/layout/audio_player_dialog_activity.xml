@@ -5,24 +5,41 @@
     android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/material_generic">
+    android:padding="@dimen/eight_dp">
     <TextView
-        android:id="@+id/file_name"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:textStyle="bold"
+        />
+    <TextView
+        android:id="@+id/artist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="@dimen/six_dp"
+        />
+    <TextView
+        android:id="@+id/album"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/artist"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="@dimen/six_dp"
         />
     <SeekBar
         android:id="@+id/seekbar"
-        app:layout_constraintTop_toBottomOf="@id/file_name"
+        app:layout_constraintTop_toBottomOf="@id/album"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/material_generic"
         />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/play_button"
-        app:srcCompat="@drawable/ic_baseline_pause_32"
+        app:srcCompat="@drawable/ic_baseline_pause_circle_outline_32"
         app:fabSize="mini"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
