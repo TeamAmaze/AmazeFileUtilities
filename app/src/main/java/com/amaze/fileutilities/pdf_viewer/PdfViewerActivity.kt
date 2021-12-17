@@ -2,18 +2,19 @@ package com.amaze.fileutilities.pdf_viewer
 
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.PermissionActivity
+import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.PdfViewerActivityBinding
+import com.amaze.fileutilities.image_viewer.ImageViewerViewModel
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
 import com.shockwave.pdfium.PdfDocument
 import com.shockwave.pdfium.PdfDocument.Bookmark
 import java.io.File
-import org.apache.poi.xwpf.extractor.XWPFWordExtractor
-
-import org.apache.poi.xwpf.usermodel.XWPFDocument
-import java.io.FileInputStream
 
 
 class PdfViewerActivity: PermissionActivity(), OnPageChangeListener, OnLoadCompleteListener {
@@ -21,13 +22,13 @@ class PdfViewerActivity: PermissionActivity(), OnPageChangeListener, OnLoadCompl
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         PdfViewerActivityBinding.inflate(layoutInflater)
     }
+    private lateinit var viewModel: PdfViewerActivityViewModel
     private lateinit var pdfModel: LocalPdfModel
-    var pageNumber = 0
-    var pdfFileName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
+        viewModel = ViewModelProvider(this).get(PdfViewerActivityViewModel::class.java)
         if (savedInstanceState == null) {
             val mimeType = intent.type
             val pdfUri = intent.data
@@ -40,20 +41,46 @@ class PdfViewerActivity: PermissionActivity(), OnPageChangeListener, OnLoadCompl
                 .onPageChange(this)
                 .enableAnnotationRendering(true)
                 .onLoad(this)
+                .nightMode(viewModel.nightMode)
                 .scrollHandle(DefaultScrollHandle(this))
                 .load()
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.pdf_activity, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.also {
+            it.findItem(R.id.invert_colors).isChecked = viewModel.nightMode
+        }
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.invert_colors -> {
+                viewModel.nightMode = !viewModel.nightMode
+                viewBinding.pdfView.setNightMode(viewModel.nightMode)
+                item.isChecked = viewModel.nightMode
+                viewBinding.pdfView.loadPages()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onPageChanged(page: Int, pageCount: Int) {
-        pageNumber = page
-        title = String.format("%s %s / %s", pdfFileName, page + 1, pageCount);
+        viewModel.pageNumber = page
+        title = String.format("%s %s / %s", viewModel.pdfFileName, page + 1, pageCount);
     }
 
     override fun loadComplete(nbPages: Int) {
         val meta: PdfDocument.Meta = viewBinding.pdfView.documentMeta
-        pdfFileName = if (meta.title.isEmpty()) File(pdfModel.uri.path).name else meta.title
-        title = String.format("%s %s / %s", pdfFileName, pageNumber + 1, viewBinding.pdfView.pageCount);
+        viewModel.pdfFileName = if (meta.title.isEmpty()) File(pdfModel.uri.path).name else meta.title
+        title = String.format("%s %s / %s", viewModel.pdfFileName, viewModel.pageNumber + 1,
+            viewBinding.pdfView.pageCount);
         printBookmarksTree(viewBinding.pdfView.tableOfContents, "-")
     }
 
