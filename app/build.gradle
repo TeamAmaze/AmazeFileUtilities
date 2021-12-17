@@ -21,7 +21,7 @@ android {
     defaultConfig {
         applicationId "com.amaze.fileutilities"
         minSdk 16
-        targetSdk 30
+        targetSdk 29
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -74,6 +74,7 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 //    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
     implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
+    implementation "com.folioreader:folioreader:0.5.3"
 
     // https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor
     implementation group: 'com.drewnoakes', name: 'metadata-extractor', version: '2.16.0'
@@ -83,9 +84,6 @@ dependencies {
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.google.android.exoplayer:exoplayer:2.16.0'
-    // https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
-//    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.1.0'
-
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
