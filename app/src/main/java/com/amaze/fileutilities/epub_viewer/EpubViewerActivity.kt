@@ -27,8 +27,8 @@ class EpubViewerActivity: PermissionActivity() {
                     "and mimetype $mimeType")
             epubModel = LocalEpubModel(uri = epubUri!!, mimeType = mimeType!!)
             val config: Config = Config()
+                .setAllowedDirection(Config.AllowedDirection.ONLY_HORIZONTAL)
                 .setDirection(Config.Direction.HORIZONTAL)
-                .setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL)
                 .setFontSize(1)
                 .setNightMode(false)
                 .setThemeColorInt(resources.getColor(R.color.blue))
@@ -36,6 +36,7 @@ class EpubViewerActivity: PermissionActivity() {
             FolioReader.get()
                 .setConfig(config, true)
                 .openBook(epubUri.getFileFromUri(this)!!.canonicalPath)
+            finish()
         }
     }
 }

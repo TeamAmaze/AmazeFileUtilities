@@ -70,11 +70,13 @@ dependencies {
     implementation 'androidx.palette:palette:1.0.0'
     //Glide: loads icons seemlessly
     implementation "com.github.bumptech.glide:glide:$glideVersion"
+    implementation 'androidx.webkit:webkit:1.4.0'
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 //    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
     implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
     implementation "com.folioreader:folioreader:0.5.3"
+    implementation 'org.zwobble.mammoth:mammoth:1.4.2'
 
     // https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor
     implementation group: 'com.drewnoakes', name: 'metadata-extractor', version: '2.16.0'

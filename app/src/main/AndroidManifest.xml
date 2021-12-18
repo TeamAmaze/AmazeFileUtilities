@@ -107,6 +107,17 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".docx_viewer.DocxViewerActivity"
+            android:label="@string/docx_viewer" android:theme="@style/Theme.AmazeFileUtilities"
+            android:exported="true">
+            <intent-filter android:label="@string/docx_viewer" tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+                <data android:mimeType="application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+            </intent-filter>
+        </activity>
+
         <service android:name=".audio_player.AudioPlayerService"
             android:exported="true"
             android:description="@string/audio_player_service_description"
