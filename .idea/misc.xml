@@ -17,6 +17,7 @@
         <entry key="app/src/main/res/drawable/rounded_corners.xml" value="0.190625" />
         <entry key="app/src/main/res/layout/audio_player_dialog_activity.xml" value="0.286231884057971" />
         <entry key="app/src/main/res/layout/audio_player_notification.xml" value="0.26811594202898553" />
+        <entry key="app/src/main/res/layout/docx_viewer_activity.xml" value="0.2477355072463768" />
         <entry key="app/src/main/res/layout/epub_viewer_activity.xml" value="0.26313405797101447" />
         <entry key="app/src/main/res/layout/exo_playback_controller_view.xml" value="0.286231884057971" />
         <entry key="app/src/main/res/layout/generic_pager_viewer_activity.xml" value="0.286231884057971" />
@@ -30,6 +31,7 @@
         <entry key="app/src/main/res/layout/progress_dialog.xml" value="0.1734375" />
         <entry key="app/src/main/res/layout/video_player_dialog_activity.xml" value="0.286231884057971" />
         <entry key="app/src/main/res/layout/video_player_fragment.xml" value="0.286231884057971" />
+        <entry key="app/src/main/res/menu/docx_activity.xml" value="0.31875" />
         <entry key="app/src/main/res/menu/pdf_activity.xml" value="0.31875" />
       </map>
     </option>

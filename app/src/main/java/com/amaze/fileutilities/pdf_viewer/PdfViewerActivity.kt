@@ -28,6 +28,7 @@ class PdfViewerActivity: PermissionActivity(), OnPageChangeListener, OnLoadCompl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         viewModel = ViewModelProvider(this).get(PdfViewerActivityViewModel::class.java)
         if (savedInstanceState == null) {
             val mimeType = intent.type
@@ -66,6 +67,9 @@ class PdfViewerActivity: PermissionActivity(), OnPageChangeListener, OnLoadCompl
                 viewBinding.pdfView.setNightMode(viewModel.nightMode)
                 item.isChecked = viewModel.nightMode
                 viewBinding.pdfView.loadPages()
+            }
+            android.R.id.home -> {
+                finish()
             }
         }
         return super.onOptionsItemSelected(item)
