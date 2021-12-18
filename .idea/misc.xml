@@ -15,11 +15,18 @@
         <entry key="app/src/main/res/drawable/ic_outline_fast_rewind_32.xml" value="0.26296296296296295" />
         <entry key="app/src/main/res/drawable/round_button.xml" value="0.2740740740740741" />
         <entry key="app/src/main/res/drawable/rounded_corners.xml" value="0.190625" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/audio_player_dialog_activity.xml" value="0.286231884057971" />
         <entry key="app/src/main/res/layout/audio_player_notification.xml" value="0.26811594202898553" />
         <entry key="app/src/main/res/layout/docx_viewer_activity.xml" value="0.2477355072463768" />
         <entry key="app/src/main/res/layout/epub_viewer_activity.xml" value="0.26313405797101447" />
         <entry key="app/src/main/res/layout/exo_playback_controller_view.xml" value="0.286231884057971" />
+        <entry key="app/src/main/res/layout/fragment_analyse.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.24230072463768115" />
+        <entry key="app/src/main/res/layout/fragment_files.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.24230072463768115" />
+        <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.24230072463768115" />
+        <entry key="app/src/main/res/layout/fragment_transfer.xml" value="0.1" />
         <entry key="app/src/main/res/layout/generic_pager_viewer_activity.xml" value="0.286231884057971" />
         <entry key="app/src/main/res/layout/image_metadata_sheet.xml" value="0.2907608695652174" />
         <entry key="app/src/main/res/layout/image_viewer_activity.xml" value="0.21739130434782608" />
@@ -31,6 +38,7 @@
         <entry key="app/src/main/res/layout/progress_dialog.xml" value="0.1734375" />
         <entry key="app/src/main/res/layout/video_player_dialog_activity.xml" value="0.286231884057971" />
         <entry key="app/src/main/res/layout/video_player_fragment.xml" value="0.286231884057971" />
+        <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.31875" />
         <entry key="app/src/main/res/menu/docx_activity.xml" value="0.31875" />
         <entry key="app/src/main/res/menu/pdf_activity.xml" value="0.31875" />
       </map>

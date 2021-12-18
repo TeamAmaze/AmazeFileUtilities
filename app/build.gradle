@@ -71,6 +71,10 @@ dependencies {
     //Glide: loads icons seemlessly
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     implementation 'androidx.webkit:webkit:1.4.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 //    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'

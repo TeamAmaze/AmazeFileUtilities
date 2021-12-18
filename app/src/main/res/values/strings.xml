@@ -30,4 +30,8 @@
     <string name="audio_player_service_description">Plays audio for Amaze File Utilities</string>
     <string name="invert_colors">Invert colors</string>
     <string name="loading">Loading…</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_analyse">Analyse</string>
+    <string name="title_files">Files</string>
+    <string name="title_transfer">Transfer</string>
 </resources>
