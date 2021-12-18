@@ -532,6 +532,7 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
                 mBuilder?.build()
             )
         }*/
+        updateMediaSessionPlaybackState()
         playingNotification?.update()
     }
 
