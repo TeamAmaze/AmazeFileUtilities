@@ -1,25 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".home_page.ui.dashboard.FilesFragment"
-    android:background="@android:color/transparent"
-    >
-
-    <TextView
-        android:id="@+id/text_dashboard"
+    android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        tools:context=".home_page.ui.files.FilesFragment"
+        android:background="@android:color/transparent"
+        android:padding="@dimen/material_generic_medium"
+        android:orientation="vertical"
+        >
+        <!-- Internal storage -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/files_tab_heights"
+            android:background="@drawable/background_curved"
+            android:orientation="horizontal"
+            android:padding="@dimen/material_generic"
+            >
+            <com.ramijemli.percentagechartview.PercentageChartView
+                android:id="@+id/storage_percent"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                app:pcv_mode="ring"
+                app:pcv_orientation="clockwise"
+                app:pcv_animDuration="800"
+                app:pcv_animInterpolator="accelerate_decelerate"
+                app:pcv_progress="80"
+                app:pcv_startAngle="270"
+                app:pcv_drawBackground="false"
+                app:pcv_typeface="interstellar.ttf"
+                app:pcv_drawBackgroundBar="true"
+                app:pcv_backgroundBarColor="@color/white_translucent_2"
+                app:pcv_textSize="@dimen/eighteen_sp"
+                />
+            <LinearLayout
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginLeft="@dimen/material_generic_medium"
+                android:layout_marginStart="@dimen/material_generic_medium"
+                >
+                <TextView
+                    android:id="@+id/internal_storage_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/twelve_sp"
+                    android:maxLines="1"
+                    android:text="@string/internal_storage"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    />
+                <TextView
+                    android:id="@+id/files_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="49 items"
+                    android:textSize="@dimen/twelve_sp"
+                    android:textColor="@color/gray_text"
+                    />
+                <com.amaze.fileutilities.home_page.ui.CircleColorView
+                    android:id="@+id/used_space"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:titleText="499 GB"
+                    app:titleTextSize="@dimen/twelve_sp"
+                    app:titleTextColor="@color/white_translucent_2"
+                    app:labelColor="@color/blue"
+                    android:layout_marginTop="@dimen/material_generic"
+                    />
+                <com.amaze.fileutilities.home_page.ui.CircleColorView
+                    android:id="@+id/free_space"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/six_dp"
+                    app:titleText="400 GB"
+                    app:titleTextSize="@dimen/twelve_sp"
+                    app:titleTextColor="@color/white_translucent_2"
+                    app:labelColor="@color/white_translucent_2"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+        <!-- images and audio -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/files_tab_heights"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:layout_marginBottom="@dimen/four_dp"
+            >
+            <com.amaze.fileutilities.home_page.ui.MediaTypeView
+                android:id="@+id/images_tab"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="@dimen/files_tab_heights"
+                android:layout_marginRight="@dimen/four_dp"
+                android:layout_marginEnd="@dimen/four_dp"
+                android:layout_weight="0.5"
+                app:title="@string/images"
+                app:mediaImageSrc="@drawable/ic_outline_image_32"
+                app:themeColor="@color/pink"
+                />
+            <com.amaze.fileutilities.home_page.ui.MediaTypeView
+                android:id="@+id/audios_tab"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="@dimen/files_tab_heights"
+                android:layout_marginLeft="@dimen/four_dp"
+                android:layout_marginStart="@dimen/four_dp"
+                android:layout_weight="0.5"
+                app:title="@string/audios"
+                app:mediaImageSrc="@drawable/ic_outline_audio_file_32"
+                app:themeColor="@color/peach"
+                />
+        </LinearLayout>
+
+        <!-- videos and documents -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/files_tab_heights"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginTop="@dimen/four_dp"
+            >
+            <com.amaze.fileutilities.home_page.ui.MediaTypeView
+                android:id="@+id/videos_tab"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="@dimen/four_dp"
+                android:layout_marginEnd="@dimen/four_dp"
+                android:layout_weight="0.5"
+                app:title="@string/videos"
+                app:mediaImageSrc="@drawable/ic_outline_video_library_32"
+                app:themeColor="@color/yellow"
+                />
+            <com.amaze.fileutilities.home_page.ui.MediaTypeView
+                android:id="@+id/documents_tab"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/four_dp"
+                android:layout_marginStart="@dimen/four_dp"
+                android:layout_weight="0.5"
+                app:title="@string/documents"
+                app:mediaImageSrc="@drawable/ic_outline_insert_drive_file_32"
+                app:themeColor="@color/green"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

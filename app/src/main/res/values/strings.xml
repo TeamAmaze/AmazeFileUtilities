@@ -34,4 +34,12 @@
     <string name="title_analyse">Analyse</string>
     <string name="title_files">Files</string>
     <string name="title_transfer">Transfer</string>
+    <string name="internal_storage">Internal Storage</string>
+    <string name="images">Images</string>
+    <string name="audios">Audios</string>
+    <string name="videos">Videos</string>
+    <string name="documents">Documents</string>
+    <string name="num_of_files">%s Files</string>
+    <string name="send">Send</string>
+    <string name="receive">Receive</string>
 </resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleColorView">
+        <attr name="titleText" format="string" localization="suggested" />
+        <attr name="titleTextSize" format="dimension" />
+        <attr name="titleTextColor" format="color" />
+        <attr name="labelColor" format="color" />
+    </declare-styleable>
+    <declare-styleable name="MediaTypeView">
+        <attr name="title" format="string" localization="suggested" />
+        <attr name="mediaImageSrc" format="reference" />
+        <attr name="themeColor" format="color" />
+    </declare-styleable>
+</resources>

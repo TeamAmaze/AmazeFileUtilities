@@ -5,6 +5,8 @@
       <map>
         <entry key="../../.gradle/caches/transforms-3/127790d9c4edc872f777cc4b28fb84b2/transformed/jetified-folioreader-0.5.4/res/layout/progress_dialog.xml" value="0.1734375" />
         <entry key="../../.gradle/caches/transforms-3/990e756c247ccb09b8393b7fb718cb19/transformed/jetified-folioreader-0.5.3/res/layout/progress_dialog.xml" value="0.1734375" />
+        <entry key="app/src/main/res/drawable/background_curved.xml" value="0.24537037037037038" />
+        <entry key="app/src/main/res/drawable/circle_shape.xml" value="0.24537037037037038" />
         <entry key="app/src/main/res/drawable/ic_baseline_arrow_back_32.xml" value="0.24537037037037038" />
         <entry key="app/src/main/res/drawable/ic_baseline_pause_32.xml" value="0.2740740740740741" />
         <entry key="app/src/main/res/drawable/ic_baseline_pause_circle_outline_32.xml" value="0.25925925925925924" />
@@ -16,6 +18,7 @@
         <entry key="app/src/main/res/drawable/round_button.xml" value="0.2740740740740741" />
         <entry key="app/src/main/res/drawable/rounded_corners.xml" value="0.190625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_main_actionbar.xml" value="0.24230072463768115" />
         <entry key="app/src/main/res/layout/audio_player_dialog_activity.xml" value="0.286231884057971" />
         <entry key="app/src/main/res/layout/audio_player_notification.xml" value="0.26811594202898553" />
         <entry key="app/src/main/res/layout/docx_viewer_activity.xml" value="0.2477355072463768" />
@@ -23,7 +26,7 @@
         <entry key="app/src/main/res/layout/exo_playback_controller_view.xml" value="0.286231884057971" />
         <entry key="app/src/main/res/layout/fragment_analyse.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_dashboard.xml" value="0.24230072463768115" />
-        <entry key="app/src/main/res/layout/fragment_files.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_files.xml" value="0.1837337089070031" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.24230072463768115" />
         <entry key="app/src/main/res/layout/fragment_notifications.xml" value="0.24230072463768115" />
         <entry key="app/src/main/res/layout/fragment_transfer.xml" value="0.1" />
@@ -33,6 +36,8 @@
         <entry key="app/src/main/res/layout/image_viewer_dialog_activity.xml" value="0.17447916666666666" />
         <entry key="app/src/main/res/layout/image_viewer_recycler_viewholder.xml" value="0.21739130434782608" />
         <entry key="app/src/main/res/layout/landing_activity.xml" value="0.17447916666666666" />
+        <entry key="app/src/main/res/layout/legend_layout.xml" value="0.24230072463768115" />
+        <entry key="app/src/main/res/layout/media_type_layout.xml" value="0.24230072463768115" />
         <entry key="app/src/main/res/layout/music_player_dialog_activity.xml" value="0.286231884057971" />
         <entry key="app/src/main/res/layout/pdf_viewer_activity.xml" value="0.26313405797101447" />
         <entry key="app/src/main/res/layout/progress_dialog.xml" value="0.1734375" />
