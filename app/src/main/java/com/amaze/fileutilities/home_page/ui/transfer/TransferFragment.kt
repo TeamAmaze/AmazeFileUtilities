@@ -1,4 +1,4 @@
-package com.amaze.fileutilities.home_page.ui.notifications
+package com.amaze.fileutilities.home_page.ui.transfer
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -30,9 +30,9 @@ class TransferFragment : Fragment() {
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
+//        val textView: TextView = binding.textNotifications
         transferViewModel.text.observe(viewLifecycleOwner, Observer {
-            textView.text = it
+//            textView.text = it
         })
         return root
     }

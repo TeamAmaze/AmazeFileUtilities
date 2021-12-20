@@ -3,11 +3,21 @@
     <dimen name="zero_dp">0dp</dimen>
     <dimen name="eight_dp">8dp</dimen>
     <dimen name="material_generic">16dp</dimen>
+    <dimen name="material_generic_medium">32dp</dimen>
+    <dimen name="material_generic_large">72dp</dimen>
     <dimen name="material_sheet_peek_height">400dp</dimen>
+    <dimen name="files_tab_heights">180dp</dimen>
     <dimen name="twelve_dp">12dp</dimen>
     <dimen name="six_dp">6dp</dimen>
-    <dimen name="fourty_eight">48dp</dimen>
+    <dimen name="fourty_eight_dp">48dp</dimen>
+    <dimen name="four_dp">4dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="eighteen_sp">18sp</dimen>
+    <dimen name="fourteen_sp">14sp</dimen>
+    <dimen name="sixteen_sp">16sp</dimen>
+    <dimen name="twelve_sp">12sp</dimen>
+    <dimen name="eight_sp">12sp</dimen>
 </resources>

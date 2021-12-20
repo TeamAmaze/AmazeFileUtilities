@@ -8,5 +8,11 @@
     <color name="blue">#FF4287f5</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white_translucent">#10FFFFFF</color>
+    <color name="white_translucent_2">#30FFFFFF</color>
     <color name="navy_blue">#1a1e34</color>
+    <color name="pink">#bd5dfb</color>
+    <color name="peach">#ff9195</color>
+    <color name="yellow">#fbc33d</color>
+    <color name="green">#85df66</color>
 </resources>

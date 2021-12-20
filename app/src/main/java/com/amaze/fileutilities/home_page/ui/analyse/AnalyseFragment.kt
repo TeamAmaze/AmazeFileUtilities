@@ -1,4 +1,4 @@
-package com.amaze.fileutilities.home_page.ui.home
+package com.amaze.fileutilities.home_page.ui.analyse
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,9 +1,11 @@
 package com.amaze.fileutilities.utilis
 
 import android.content.Context
+import android.content.res.Resources
 import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
+import android.util.DisplayMetrics
 import android.util.Log
 import java.io.File
 import java.lang.Exception
@@ -116,3 +118,9 @@ fun Uri.isAudioMimeType(): Boolean {
             this.path?.endsWith("dca")!! ||
             this.path?.endsWith("opus")!!
 }
+
+val Int.dp get() = this / (Resources.getSystem().displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+val Float.dp get() = this / (Resources.getSystem().displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+
+val Int.px get() = this * Resources.getSystem().displayMetrics.density
+val Float.px get() = this * Resources.getSystem().displayMetrics.density

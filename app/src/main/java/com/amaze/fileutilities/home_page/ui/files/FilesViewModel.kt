@@ -1,13 +1,14 @@
-package com.amaze.fileutilities.home_page.ui.dashboard
+package com.amaze.fileutilities.home_page.ui.files
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.amaze.fileutilities.home_page.ui.CircleColorView
 
 class FilesViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+        value = "4GB Used"
     }
-    val text: LiveData<String> = _text
+    val usedSpace: LiveData<String> = _text
 }

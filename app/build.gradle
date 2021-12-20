@@ -90,6 +90,7 @@ dependencies {
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.google.android.exoplayer:exoplayer:2.16.0'
+    implementation 'com.ramijemli.percentagechartview:percentagechartview:0.3.1'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

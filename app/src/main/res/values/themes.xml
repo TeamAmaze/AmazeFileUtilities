@@ -1,10 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.AmazeFileUtilities" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Theme.AmazeFileUtilities" parent="Theme.MaterialComponents.Light">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/navy_blue</item>
         <item name="colorPrimaryVariant">@color/navy_blue</item>
-        <item name="colorOnPrimary">@color/navy_blue</item>
+        <item name="colorOnPrimary">@color/highlight_yellow</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/blue</item>
         <item name="colorSecondaryVariant">@color/blue</item>
@@ -46,5 +46,13 @@
 
     <style name="ThemeOverlay.Actionbar" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" >
         <item name="android:textColorPrimary">@color/white</item>
+    </style>
+    
+    <style name="MaterialButton.White" parent="Widget.MaterialComponents.Button">x
+        <item name="materialThemeOverlay">@style/MaterialButtonWhiteTheme</item>
+    </style>
+    <style name="MaterialButtonWhiteTheme">
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnPrimary">@color/navy_blue</item>
     </style>
 </resources>

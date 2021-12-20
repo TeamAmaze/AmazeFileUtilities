@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <View
+        android:id="@+id/label_color"
+        android:layout_width="@dimen/material_generic"
+        android:layout_height="@dimen/material_generic"
+        android:layout_weight="1"
+        android:background="@drawable/circle_shape"
+        />
+    <TextView
+        android:id="@+id/label_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/eight_dp"
+        android:layout_marginStart="@dimen/eight_dp"
+        android:textSize="@dimen/twelve_sp"
+        android:layout_weight="2"
+        />
+</merge>
