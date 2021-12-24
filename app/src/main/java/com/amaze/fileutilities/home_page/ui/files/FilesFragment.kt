@@ -35,32 +35,63 @@ class FilesFragment : Fragment() {
 
         _binding = FragmentFilesBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        binding.storagePercent.isSaveEnabled = false
 
-        /*filesViewModel.usedSpace.observe(activity!!.owner, Observer {
-            binding.usedSpace.setColorAndLabel(resources.getColor(R.color.blue), it)
-            binding.freeSpace.setColorAndLabel(resources.getColor(R.color.white_translucent_2), it)
-        })*/
-        filesViewModel.internalStorageStats.observe(viewLifecycleOwner,  Observer {
-            it?.run {
-                val usedSpace = FileUtils.formatStorageLength(this@FilesFragment.requireContext(), it.usedSpace!!)
-                val freeSpace = FileUtils.formatStorageLength(this@FilesFragment.requireContext(), it.freeSpace!!)
+        filesViewModel.run {
+            internalStorageStats.observe(viewLifecycleOwner, {
+                it?.run {
+                    val usedSpace = FileUtils.formatStorageLength(this@FilesFragment.requireContext(), it.usedSpace!!)
+                    val freeSpace = FileUtils.formatStorageLength(this@FilesFragment.requireContext(), it.freeSpace!!)
 //                val totalSpace = FileUtils.formatStorageLength(this@FilesFragment.requireContext(), it.totalSpace!!)
-                binding.usedSpace.setColorAndLabel(colorProvider.provideProgressColor(it.progress.toFloat()), usedSpace)
-                binding.freeSpace.setColorAndLabel(colorProvider.provideBackgroundBarColor(it.progress.toFloat()), freeSpace)
-                binding.storagePercent.setProgress(it.progress.toFloat(), true)
-                if (it.items == 0) {
-                    binding.filesAmount.text = resources.getString(R.string.num_of_files,
-                        resources.getString(R.string.undetermined))
-                } else {
-                    binding.filesAmount.text = resources.getString(R.string.num_of_files, it.items.toString())
+                    binding.usedSpace.setColorAndLabel(colorProvider.provideProgressColor(it.progress.toFloat()), usedSpace)
+                    binding.freeSpace.setColorAndLabel(colorProvider.provideBackgroundBarColor(it.progress.toFloat()), freeSpace)
+                    binding.storagePercent.setProgress(it.progress.toFloat(), true)
+                    if (it.items == 0) {
+                        binding.filesAmount.text = resources.getString(R.string.num_of_files,
+                            resources.getString(R.string.undetermined))
+                    } else {
+                        binding.filesAmount.text = resources.getString(R.string.num_of_files, it.items.toString())
+                    }
                 }
-            }
-        })
+            })
+            usedImagesSummaryTransformations.observe(viewLifecycleOwner, {
+                    storageSummary ->
+                storageSummary?.let {
+                    val usedSpace = FileUtils.formatStorageLength(this@FilesFragment.requireContext(),
+                        storageSummary.usedSpace!!)
+                    binding.imagesTab.setProgress(MediaTypeView.MediaTypeContent(it.items, usedSpace,
+                        it.progress))
+                }
+            })
+            usedAudiosSummaryTransformations.observe(viewLifecycleOwner, {
+                    storageSummary ->
+                storageSummary?.let {
+                    val usedSpace = FileUtils.formatStorageLength(this@FilesFragment.requireContext(),
+                        storageSummary.usedSpace!!)
+                    binding.audiosTab.setProgress(MediaTypeView.MediaTypeContent(it.items, usedSpace, it.progress))
+                }
+            })
+            usedVideosSummaryTransformations.observe(viewLifecycleOwner, {
+                    storageSummary ->
+                storageSummary?.let {
+                    val usedSpace = FileUtils.formatStorageLength(this@FilesFragment.requireContext(),
+                        storageSummary.usedSpace!!)
+                    binding.videosTab.setProgress(MediaTypeView.MediaTypeContent(it.items, usedSpace,
+                        it.progress))
+                }
+            })
+            usedDocsSummaryTransformations.observe(viewLifecycleOwner, {
+                    storageSummary ->
+                storageSummary?.let {
+                    val usedSpace = FileUtils.formatStorageLength(this@FilesFragment.requireContext(),
+                        storageSummary.usedSpace!!)
+                    binding.documentsTab.setProgress(MediaTypeView.MediaTypeContent(it.items, usedSpace,
+                        it.progress))
+                }
+            })
+        }
+
         binding.storagePercent.setAdaptiveColorProvider(colorProvider)
-        binding.imagesTab.setProgress(MediaTypeView.MediaTypeContent(50, 12))
-        binding.audiosTab.setProgress(MediaTypeView.MediaTypeContent(20, 45))
-        binding.videosTab.setProgress(MediaTypeView.MediaTypeContent(560, 67))
-        binding.documentsTab.setProgress(MediaTypeView.MediaTypeContent(650, 23))
         return root
     }
 

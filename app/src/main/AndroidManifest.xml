@@ -36,7 +36,8 @@
             android:name=".home_page.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.AmazeFileUtilities">
+            android:theme="@style/Theme.AmazeFileUtilities"
+            android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -63,8 +63,9 @@ class CursorUtils {
                 .query(MediaStore.Files.getContentUri("external"),
                     projection, null, null, null)
             if (cursor == null) return docs else if (cursor.count > 0 && cursor.moveToFirst()) {
-                callback.getStorageSummary(cursor.count, 0)
+//                callback.getStorageSummary(cursor.count, 0)
                 var longSize = 0L
+                val cursorCount = cursor.count
                 do {
                     val path =
                         cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))
@@ -76,9 +77,9 @@ class CursorUtils {
                         val mediaFileInfo = MediaFileInfo.fromFile(File(path))
                         docs.add(mediaFileInfo)
                         longSize += mediaFileInfo.longSize
-                        callback.getStorageSummary(cursor.count, longSize)
                     }
                 } while (cursor.moveToNext())
+                callback.getStorageSummary(cursorCount, longSize)
             }
             cursor.close()
             docs.sortWith { lhs: MediaFileInfo, rhs: MediaFileInfo ->
@@ -123,8 +124,9 @@ class CursorUtils {
             }
             if (cursor == null) return recentFiles
             if (cursor.count > 0 && cursor.moveToFirst()) {
-                callback.getStorageSummary(cursor.count, 0)
+//                callback.getStorageSummary(cursor.count, 0)
                 var longSize = 0L
+                val cursorCount = cursor.count
                 do {
                     val path =
                         cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))
@@ -133,9 +135,10 @@ class CursorUtils {
                         val mediaFileInfo = MediaFileInfo.fromFile(f)
                         recentFiles.add(mediaFileInfo)
                         longSize += mediaFileInfo.longSize
-                        callback.getStorageSummary(cursor.count, longSize)
+
                     }
                 } while (cursor.moveToNext())
+                callback.getStorageSummary(cursorCount, longSize)
             }
             cursor.close()
             return recentFiles
@@ -172,7 +175,8 @@ class CursorUtils {
                 context.contentResolver.query(contentUri, projection, selection, selectionValues, null)
             val mediaFileInfoFile: ArrayList<MediaFileInfo> = ArrayList()
             if (cursor == null) return mediaFileInfoFile else if (cursor.count > 0 && cursor.moveToFirst()) {
-                storageSummaryCallback.getStorageSummary(cursor.count, 0)
+//                storageSummaryCallback.getStorageSummary(cursor.count, 0)
+                val cursorCount = cursor.count
                 var longSize = 0L
                 do {
                     val path =
@@ -180,8 +184,8 @@ class CursorUtils {
                     val mediaFileInfo = MediaFileInfo.fromFile(File(path))
                     mediaFileInfoFile.add(mediaFileInfo)
                     longSize += mediaFileInfo.longSize
-                    storageSummaryCallback.getStorageSummary(cursor.count, longSize)
                 } while (cursor.moveToNext())
+                storageSummaryCallback.getStorageSummary(cursorCount, longSize)
             }
             cursor.close()
             return mediaFileInfoFile
@@ -192,7 +196,7 @@ class CursorUtils {
                 if (selection != null && selection.trim { it <= ' ' } != "") "$selection AND " else ""
             newSelection += "$dataColumn NOT LIKE ?"
             for (i in 0 until pathCount - 1) {
-                newSelection += " AND " + MediaStore.Audio.AudioColumns.DATA + " NOT LIKE ?"
+                newSelection += " AND $dataColumn NOT LIKE ?"
             }
             return newSelection
         }

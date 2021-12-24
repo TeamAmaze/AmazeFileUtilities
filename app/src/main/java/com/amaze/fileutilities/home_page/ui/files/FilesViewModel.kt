@@ -9,13 +9,15 @@ import com.amaze.fileutilities.home_page.ui.CircleColorView
 import com.amaze.fileutilities.utilis.CursorUtils
 import com.amaze.fileutilities.utilis.FileUtils
 import com.amaze.fileutilities.utilis.StorageDirectoryParcelable
+import kotlinx.coroutines.Dispatchers
 import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 class FilesViewModel(val applicationContext: Application) : AndroidViewModel(applicationContext) {
 
-    val internalStorageStats: LiveData<StorageSummary?> = liveData {
+    val internalStorageStats: LiveData<StorageSummary?> =
+        liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
         emit(null)
         val storageData: StorageDirectoryParcelable? = if (SDK_INT >= N) {
             FileUtils.getStorageDirectoriesNew(applicationContext.applicationContext)
@@ -34,63 +36,97 @@ class FilesViewModel(val applicationContext: Application) : AndroidViewModel(app
         }
     }
 
-    val transformations: LiveData<AggregatedStorageSummary?> = Transformations.switchMap(internalStorageStats,
-        object : androidx.arch.core.util.Function<StorageSummary?, LiveData<AggregatedStorageSummary?>> {
-        override fun apply(input: StorageSummary?): LiveData<AggregatedStorageSummary?> {
-            return getUsedSpaceLiveData(input)
-        }
-    })
+    val usedImagesSummaryTransformations: LiveData<StorageSummary?> =
+        Transformations.switchMap(internalStorageStats) { input -> getImagesSummaryLiveData(input) }
 
-    fun getUsedSpaceLiveData(storageSummary: StorageSummary?): LiveData<AggregatedStorageSummary?> {
-        return liveData {
+    val usedAudiosSummaryTransformations: LiveData<StorageSummary?> =
+        Transformations.switchMap(internalStorageStats) { input -> getAudiosSummaryLiveData(input) }
+
+    val usedVideosSummaryTransformations: LiveData<StorageSummary?> =
+        Transformations.switchMap(internalStorageStats) { input -> getVideosSummaryLiveData(input) }
+
+    val usedDocsSummaryTransformations: LiveData<StorageSummary?> =
+        Transformations.switchMap(internalStorageStats) { input -> getDocumentsSummaryLiveData(input) }
+
+    private fun getImagesSummaryLiveData(storageSummary: StorageSummary?): LiveData<StorageSummary?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             if (storageSummary == null) {
                 return@liveData
             }
-            var imagesStorageSummary = StorageSummary(0, 0, null, null, null)
-            var audiosStorageSummary = StorageSummary(0, 0, null, null, null)
-            var videosStorageSummary = StorageSummary(0,0, null, null, null)
-            var documentsStorageSummary = StorageSummary(0,0, null, null, null)
-            val aggregatedStorageSummary = AggregatedStorageSummary(imagesStorageSummary, audiosStorageSummary,
-                videosStorageSummary, documentsStorageSummary)
+            val imagesStorageSummary = StorageSummary(0, 0, null, null, null)
             CursorUtils.listImages(applicationContext.applicationContext, object : StorageSummaryCallback {
                 override suspend fun getStorageSummary(items: Int, size: Long) {
                     imagesStorageSummary.items = items
-                    imagesStorageSummary.progress = (size / storageSummary.totalSpace!! * 100).toInt()
-                    emit(aggregatedStorageSummary)
+                    imagesStorageSummary.progress = ((size * 100) / storageSummary.totalSpace!!).toInt()
+                    imagesStorageSummary.usedSpace = size
+                    emit(imagesStorageSummary)
                 }
 
                 override suspend fun getMediaFileInfo(mediaFileInfo: MediaFileInfo) {
                     TODO("Not yet implemented")
                 }
             })
+        }
+    }
+
+    private fun getAudiosSummaryLiveData(storageSummary: StorageSummary?): LiveData<StorageSummary?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            if (storageSummary == null) {
+                return@liveData
+            }
+            val audiosStorageSummary = StorageSummary(0, 0, null, null, null)
             CursorUtils.listAudio(applicationContext.applicationContext, object : StorageSummaryCallback {
                 override suspend fun getStorageSummary(items: Int, size: Long) {
                     audiosStorageSummary.items = items
-                    audiosStorageSummary.progress = (size / storageSummary.totalSpace!! * 100).toInt()
-                    emit(aggregatedStorageSummary)
+                    audiosStorageSummary.progress = ((size * 100) / storageSummary.totalSpace!!).toInt()
+                    audiosStorageSummary.usedSpace = size
+                    emit(audiosStorageSummary)
                 }
 
                 override suspend fun getMediaFileInfo(mediaFileInfo: MediaFileInfo) {
                     TODO("Not yet implemented")
                 }
             })
+        }
+    }
+
+    private fun getVideosSummaryLiveData(storageSummary: StorageSummary?): LiveData<StorageSummary?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            if (storageSummary == null) {
+                return@liveData
+            }
+            val videosStorageSummary = StorageSummary(0,0, null, null, null)
             CursorUtils.listVideos(applicationContext.applicationContext, object : StorageSummaryCallback {
                 override suspend fun getStorageSummary(items: Int, size: Long) {
                     videosStorageSummary.items = items
-                    videosStorageSummary.progress = (size / storageSummary.totalSpace!! * 100).toInt()
-                    emit(aggregatedStorageSummary)
+                    videosStorageSummary.progress = ((size * 100) / storageSummary.totalSpace!!).toInt()
+                    videosStorageSummary.usedSpace = size
+                    emit(videosStorageSummary)
                 }
 
                 override suspend fun getMediaFileInfo(mediaFileInfo: MediaFileInfo) {
                     TODO("Not yet implemented")
                 }
             })
+        }
+    }
+
+    private fun getDocumentsSummaryLiveData(storageSummary: StorageSummary?): LiveData<StorageSummary?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            if (storageSummary == null) {
+                return@liveData
+            }
+            val documentsStorageSummary = StorageSummary(0,0, null, null, null)
             CursorUtils.listDocs(applicationContext.applicationContext, object : StorageSummaryCallback {
                 override suspend fun getStorageSummary(items: Int, size: Long) {
                     documentsStorageSummary.items = items
-                    documentsStorageSummary.progress = (size / storageSummary.totalSpace!! * 100).toInt()
-                    emit(aggregatedStorageSummary)
+                    documentsStorageSummary.progress = ((size * 100) / storageSummary.totalSpace!!).toInt()
+                    documentsStorageSummary.usedSpace = size
+                    emit(documentsStorageSummary)
                 }
 
                 override suspend fun getMediaFileInfo(mediaFileInfo: MediaFileInfo) {
@@ -102,12 +138,7 @@ class FilesViewModel(val applicationContext: Application) : AndroidViewModel(app
 
     data class StorageSummary(
         var items: Int, var progress: Int,
-        val usedSpace: Long?, val freeSpace: Long?, val totalSpace: Long?)
-
-    data class AggregatedStorageSummary(val imagesInfo: StorageSummary,
-                               val audiosInfo: StorageSummary,
-                               val videosInfo: StorageSummary,
-                               val documentsInfo: StorageSummary)
+        var usedSpace: Long?, val freeSpace: Long?, val totalSpace: Long?)
 
     interface StorageSummaryCallback {
         suspend fun getStorageSummary(items: Int, size: Long)
