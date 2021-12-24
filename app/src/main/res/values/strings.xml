@@ -40,7 +40,9 @@
     <string name="videos">Videos</string>
     <string name="documents">Documents</string>
     <string name="num_of_files">%s Files</string>
+    <string name="num_of_files_and_size">%s Files | %s</string>
     <string name="send">Send</string>
     <string name="receive">Receive</string>
     <string name="undetermined" translatable="false">--</string>
+    <string name="calculating">Calculating…</string>
 </resources>

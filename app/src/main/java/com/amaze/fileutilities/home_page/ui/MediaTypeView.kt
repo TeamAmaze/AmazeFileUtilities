@@ -55,11 +55,16 @@ class MediaTypeView(context: Context, attrs: AttributeSet?): LinearLayout(contex
         gravity = Gravity.CENTER_VERTICAL
         background = context.resources.getDrawable(R.drawable.background_curved)
         setPadding(16.px.toInt(), 16.px.toInt(), 16.px.toInt(), 16.px.toInt())
+
+        // init values
+        mediaSummaryTextView.text = resources.getString(R.string.calculating)
+        progressPercentTextView.text = "--"
     }
 
     fun setProgress(mediaTypeContent: MediaTypeContent) {
         mediaTypeContent.run {
-            mediaSummaryTextView.text = resources.getString(R.string.num_of_files, itemsCount.toString())
+            mediaSummaryTextView.text = resources.getString(R.string.num_of_files_and_size,
+                itemsCount.toString(), mediaTypeContent.size)
             progressPercentTextView.text = "$progress %"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mediaProgressIndicator.setProgress(progress, true)
@@ -70,5 +75,5 @@ class MediaTypeView(context: Context, attrs: AttributeSet?): LinearLayout(contex
         invalidate()
     }
 
-    data class MediaTypeContent(val itemsCount: Int, val progress: Int)
+    data class MediaTypeContent(val itemsCount: Int, val size: String, val progress: Int)
 }

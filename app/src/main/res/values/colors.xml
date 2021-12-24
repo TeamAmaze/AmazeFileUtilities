@@ -17,4 +17,5 @@
     <color name="green">#85df66</color>
     <color name="orange">#FF7F50</color>
     <color name="red">#FF5733</color>
+    <color name="accent_blue">#2196F3</color>
 </resources>

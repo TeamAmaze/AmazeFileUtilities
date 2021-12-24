@@ -150,5 +150,15 @@
                 app:themeColor="@color/green"
                 />
         </LinearLayout>
+
+        <!-- Recent files -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recentFilesList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:scrollbars="none"
+            android:descendantFocusability="afterDescendants"
+            />
     </LinearLayout>
 </ScrollView>
