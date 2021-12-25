@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,6 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/files_tab_heights"
             android:background="@drawable/background_curved"
+            android:foreground="@drawable/ripple"
             android:orientation="horizontal"
             android:padding="@dimen/material_generic"
             >
@@ -152,6 +153,16 @@
         </LinearLayout>
 
         <!-- Recent files -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/eighteen_sp"
+            android:textStyle="bold"
+            android:text="@string/recent_files"
+            android:layout_marginTop="@dimen/material_generic"
+            android:layout_marginBottom="@dimen/material_generic"
+            />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recentFilesList"
             android:layout_width="match_parent"
@@ -161,4 +172,4 @@
             android:descendantFocusability="afterDescendants"
             />
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

@@ -14,7 +14,11 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentFilesBinding
 import com.amaze.fileutilities.home_page.ui.MediaTypeView
 import androidx.core.graphics.ColorUtils
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.amaze.fileutilities.utilis.FileUtils
+import com.bumptech.glide.Glide
+import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
+import com.bumptech.glide.util.ViewPreloadSizeProvider
 
 import com.ramijemli.percentagechartview.callback.AdaptiveColorProvider
 
@@ -22,6 +26,12 @@ class FilesFragment : Fragment() {
 
     private val filesViewModel: FilesViewModel by activityViewModels()
     private var _binding: FragmentFilesBinding? = null
+    private var mediaFileAdapter: MediaFileAdapter? = null
+    private var preloader: MediaAdapterPreloader? = null
+    private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
+    private var linearLayoutManager: LinearLayoutManager? = null
+
+    private val MAX_PRELOAD = 100
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -55,38 +65,63 @@ class FilesFragment : Fragment() {
                 }
             })
             usedImagesSummaryTransformations.observe(viewLifecycleOwner, {
-                    storageSummary ->
-                storageSummary?.let {
-                    val usedSpace = FileUtils.formatStorageLength(this@FilesFragment.requireContext(),
-                        storageSummary.usedSpace!!)
-                    binding.imagesTab.setProgress(MediaTypeView.MediaTypeContent(it.items, usedSpace,
-                        it.progress))
+                    metaInfoAndSummaryPair ->
+                metaInfoAndSummaryPair?.let {
+                    val storageSummary = metaInfoAndSummaryPair.first
+                    val usedSpace = FileUtils.formatStorageLength(this@FilesFragment.requireContext(), storageSummary.usedSpace!!)
+                    binding.imagesTab.setProgress(MediaTypeView.MediaTypeContent(storageSummary.items, usedSpace,
+                        storageSummary.progress))
                 }
             })
             usedAudiosSummaryTransformations.observe(viewLifecycleOwner, {
-                    storageSummary ->
-                storageSummary?.let {
+                    metaInfoAndSummaryPair ->
+                metaInfoAndSummaryPair?.let {
+                    val storageSummary = metaInfoAndSummaryPair.first
                     val usedSpace = FileUtils.formatStorageLength(this@FilesFragment.requireContext(),
                         storageSummary.usedSpace!!)
-                    binding.audiosTab.setProgress(MediaTypeView.MediaTypeContent(it.items, usedSpace, it.progress))
+                    binding.audiosTab.setProgress(MediaTypeView.MediaTypeContent(storageSummary.items,
+                        usedSpace, storageSummary.progress))
                 }
             })
             usedVideosSummaryTransformations.observe(viewLifecycleOwner, {
-                    storageSummary ->
-                storageSummary?.let {
+                    metaInfoAndSummaryPair ->
+                metaInfoAndSummaryPair?.let {
+                    val storageSummary = metaInfoAndSummaryPair.first
                     val usedSpace = FileUtils.formatStorageLength(this@FilesFragment.requireContext(),
                         storageSummary.usedSpace!!)
-                    binding.videosTab.setProgress(MediaTypeView.MediaTypeContent(it.items, usedSpace,
-                        it.progress))
+                    binding.videosTab.setProgress(MediaTypeView.MediaTypeContent(storageSummary.items,
+                        usedSpace, storageSummary.progress))
                 }
             })
             usedDocsSummaryTransformations.observe(viewLifecycleOwner, {
-                    storageSummary ->
-                storageSummary?.let {
+                    metaInfoAndSummaryPair ->
+                metaInfoAndSummaryPair?.let {
+                    val storageSummary = metaInfoAndSummaryPair.first
                     val usedSpace = FileUtils.formatStorageLength(this@FilesFragment.requireContext(),
                         storageSummary.usedSpace!!)
-                    binding.documentsTab.setProgress(MediaTypeView.MediaTypeContent(it.items, usedSpace,
-                        it.progress))
+                    binding.documentsTab.setProgress(MediaTypeView.MediaTypeContent(storageSummary.items,
+                        usedSpace, storageSummary.progress))
+                }
+            })
+            recentFilesLiveData.observe(viewLifecycleOwner, {
+                mediaFileInfoList ->
+                mediaFileInfoList?.run {
+                    preloader = MediaAdapterPreloader(applicationContext)
+                    val sizeProvider = ViewPreloadSizeProvider<String>()
+                    recyclerViewPreloader = RecyclerViewPreloader(
+                        Glide.with(applicationContext),
+                        preloader!!,
+                        sizeProvider,
+                        MAX_PRELOAD
+                    )
+                    linearLayoutManager = LinearLayoutManager(context)
+                    mediaFileAdapter = MediaFileAdapter(applicationContext, preloader!!,
+                        MediaFileListSorter.SortingPreference(MediaFileListSorter.GROUP_NAME,
+                            MediaFileListSorter.SORT_SIZE, true, true),
+                        this, true)
+                    binding.recentFilesList.addOnScrollListener(recyclerViewPreloader!!)
+                    binding.recentFilesList.layoutManager = linearLayoutManager
+                    binding.recentFilesList.adapter = mediaFileAdapter
                 }
             })
         }

@@ -9,63 +9,77 @@ import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import java.io.File
+import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
 class CursorUtils {
 
     companion object {
-        const val BASE_SELECTION_AUDIO =
+        private const val BASE_SELECTION_AUDIO =
             MediaStore.Audio.AudioColumns.IS_MUSIC + "=1" + " AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''"
 
-        const val BASE_SELECTION_IMAGES = MediaStore.Images.ImageColumns.TITLE + " != ''"
+        private const val BASE_SELECTION_IMAGES = MediaStore.Images.ImageColumns.TITLE + " != ''"
 
-        const val BASE_SELECTION_VIDEOS = MediaStore.Video.VideoColumns.TITLE + " != ''"
+        private const val BASE_SELECTION_VIDEOS = MediaStore.Video.VideoColumns.TITLE + " != ''"
 
-        val BLACKLIST_PATHS_AUDIO = arrayListOf(
+        private val BLACKLIST_PATHS_AUDIO = arrayListOf(
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS).canonicalPath,
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_NOTIFICATIONS).canonicalPath,
             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES).canonicalPath)
 
-        suspend fun listImages(context: Context, callback: SummaryCallbackAlias): ArrayList<MediaFileInfo> {
-            val projection = arrayOf(MediaStore.Images.Media.DATA)
-            return listMediaCommon(context, callback,
+        fun listImages(context: Context): Pair<FilesViewModel.StorageSummary, ArrayList<MediaFileInfo>> {
+            val projection = arrayOf(MediaStore.Images.Media.DATA, MediaStore.Images.ImageColumns.WIDTH,
+                MediaStore.Images.ImageColumns.HEIGHT)
+            return listMediaCommon(context,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 projection,
-                null, null, BASE_SELECTION_IMAGES, null)
+                null, null, BASE_SELECTION_IMAGES, null,
+                MediaFileInfo.MediaType(MediaFileInfo.MEDIA_TYPE_IMAGE))
         }
 
-        suspend fun listVideos(context: Context, callback: SummaryCallbackAlias): ArrayList<MediaFileInfo> {
-            val projection = arrayOf(MediaStore.Video.Media.DATA)
-            return listMediaCommon(context, callback,
+        fun listVideos(context: Context): Pair<FilesViewModel.StorageSummary, ArrayList<MediaFileInfo>> {
+            val projection = arrayOf(MediaStore.Video.Media.DATA,
+                MediaStore.Video.VideoColumns.DURATION,
+                MediaStore.Video.VideoColumns.WIDTH,
+                MediaStore.Video.VideoColumns.HEIGHT)
+            return listMediaCommon(context,
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                projection, null, null, BASE_SELECTION_VIDEOS, null)
+                projection, null, null, BASE_SELECTION_VIDEOS, null,
+                MediaFileInfo.MediaType(MediaFileInfo.MEDIA_TYPE_VIDEO))
         }
 
-        suspend fun listAudio(context: Context, callback: SummaryCallbackAlias): ArrayList<MediaFileInfo> {
-            val projection = arrayOf(MediaStore.Audio.Media.DATA)
-            return listMediaCommon(context, callback,
+        fun listAudio(context: Context): Pair<FilesViewModel.StorageSummary, ArrayList<MediaFileInfo>> {
+            val projection = arrayOf(MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.AudioColumns.DURATION,
+                MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.AudioColumns.ARTIST)
+            return listMediaCommon(context,
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 projection,
                 null,
-                null, BASE_SELECTION_AUDIO, BLACKLIST_PATHS_AUDIO
+                null, BASE_SELECTION_AUDIO, BLACKLIST_PATHS_AUDIO,
+                MediaFileInfo.MediaType(MediaFileInfo.MEDIA_TYPE_AUDIO)
             )
         }
 
-        suspend fun listDocs(context: Context, callback: SummaryCallbackAlias): ArrayList<MediaFileInfo> {
+        fun listDocs(context: Context): Pair<FilesViewModel.StorageSummary, ArrayList<MediaFileInfo>> {
             val docs: ArrayList<MediaFileInfo> = ArrayList()
             val projection = arrayOf(MediaStore.Files.FileColumns.DATA)
             val cursor = context
                 .contentResolver
                 .query(MediaStore.Files.getContentUri("external"),
                     projection, null, null, null)
-            if (cursor == null) return docs else if (cursor.count > 0 && cursor.moveToFirst()) {
+            var cursorCount = 0
+            var longSize = 0L
+            if (cursor == null) {
+                return Pair(FilesViewModel.StorageSummary(0, 0), docs)
+            } else if (cursor.count > 0 && cursor.moveToFirst()) {
 //                callback.getStorageSummary(cursor.count, 0)
-                var longSize = 0L
-                val cursorCount = cursor.count
+                cursorCount = cursor.count
                 do {
                     val path =
                         cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))
@@ -74,21 +88,22 @@ class CursorUtils {
                                 || path.endsWith(".epub")
                                 || path.endsWith(".docx"))
                     ) {
-                        val mediaFileInfo = MediaFileInfo.fromFile(File(path))
+                        val mediaFileInfo = MediaFileInfo.fromFile(File(path),
+                            MediaFileInfo.ExtraInfo(MediaFileInfo.MediaType(MediaFileInfo.MEDIA_TYPE_DOCUMENT),
+                            null, null, null))
                         docs.add(mediaFileInfo)
                         longSize += mediaFileInfo.longSize
                     }
                 } while (cursor.moveToNext())
-                callback.getStorageSummary(cursorCount, longSize)
             }
             cursor.close()
-            docs.sortWith { lhs: MediaFileInfo, rhs: MediaFileInfo ->
+            /*docs.sortWith { lhs: MediaFileInfo, rhs: MediaFileInfo ->
                 -1 * java.lang.Long.valueOf(lhs.date).compareTo(rhs.date)
-            }
-            return docs
+            }*/
+            return Pair(FilesViewModel.StorageSummary(cursorCount, 0, longSize), docs)
         }
 
-        suspend fun listRecentFiles(context: Context, callback: SummaryCallbackAlias): ArrayList<MediaFileInfo> {
+        fun listRecentFiles(context: Context): ArrayList<MediaFileInfo> {
             val recentFiles: ArrayList<MediaFileInfo> = ArrayList(20)
             val projection = arrayOf(
                 MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.DATE_MODIFIED
@@ -96,8 +111,7 @@ class CursorUtils {
             val c = Calendar.getInstance()
             c[Calendar.DAY_OF_YEAR] = c[Calendar.DAY_OF_YEAR] - 2
             val d = c.time
-            val cursor: Cursor?
-            cursor = if (VERSION.SDK_INT >= VERSION_CODES.Q) {
+            val cursor: Cursor? = if (VERSION.SDK_INT >= VERSION_CODES.Q) {
                 val queryArgs = Bundle()
                 queryArgs.putInt(ContentResolver.QUERY_ARG_LIMIT, 20)
                 queryArgs.putStringArray(
@@ -125,32 +139,32 @@ class CursorUtils {
             if (cursor == null) return recentFiles
             if (cursor.count > 0 && cursor.moveToFirst()) {
 //                callback.getStorageSummary(cursor.count, 0)
-                var longSize = 0L
-                val cursorCount = cursor.count
+//                var longSize = 0L
+//                val cursorCount = cursor.count
                 do {
                     val path =
                         cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))
                     val f = File(path)
                     if (d.compareTo(Date(f.lastModified())) != 1 && !f.isDirectory) {
-                        val mediaFileInfo = MediaFileInfo.fromFile(f)
+                        val mediaFileInfo = MediaFileInfo.fromFile(f, queryMetaInfo(cursor,
+                            MediaFileInfo.MediaType(MediaFileInfo.MEDIA_TYPE_UNKNOWN)))
                         recentFiles.add(mediaFileInfo)
-                        longSize += mediaFileInfo.longSize
-
+//                        longSize += mediaFileInfo.longSize
                     }
                 } while (cursor.moveToNext())
-                callback.getStorageSummary(cursorCount, longSize)
+//                callback.getStorageSummary(cursorCount, longSize)
             }
             cursor.close()
             return recentFiles
         }
 
-        private suspend fun listMediaCommon(context: Context, storageSummaryCallback: FilesViewModel.StorageSummaryCallback,
-            contentUri: Uri, projection: Array<String>,
+        private fun listMediaCommon(context: Context,
+                                    contentUri: Uri, projection: Array<String>,
                                     selection: String?,
                                     selectionValues: Array<String?>?,
                                     baseSelection: String?,
-                                    blacklistPaths: ArrayList<String>?
-        ): ArrayList<MediaFileInfo> {
+                                    blacklistPaths: ArrayList<String>?, mediaType: MediaFileInfo.MediaType
+        ): Pair<FilesViewModel.StorageSummary, ArrayList<MediaFileInfo>> {
             var selection = selection
             var selectionValues = selectionValues
             selection = if (selection != null && selection.trim { it <= ' ' } != "") {
@@ -174,21 +188,57 @@ class CursorUtils {
             val cursor =
                 context.contentResolver.query(contentUri, projection, selection, selectionValues, null)
             val mediaFileInfoFile: ArrayList<MediaFileInfo> = ArrayList()
-            if (cursor == null) return mediaFileInfoFile else if (cursor.count > 0 && cursor.moveToFirst()) {
+            var cursorCount = 0
+            var longSize = 0L
+            if (cursor == null) return Pair(
+                FilesViewModel.StorageSummary(0, 0),
+                mediaFileInfoFile) else if (cursor.count > 0 && cursor.moveToFirst()) {
 //                storageSummaryCallback.getStorageSummary(cursor.count, 0)
-                val cursorCount = cursor.count
-                var longSize = 0L
+                cursorCount = cursor.count
                 do {
                     val path =
                         cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))
-                    val mediaFileInfo = MediaFileInfo.fromFile(File(path))
+
+                    val mediaFileInfo = MediaFileInfo.fromFile(File(path), queryMetaInfo(cursor, mediaType))
                     mediaFileInfoFile.add(mediaFileInfo)
                     longSize += mediaFileInfo.longSize
                 } while (cursor.moveToNext())
-                storageSummaryCallback.getStorageSummary(cursorCount, longSize)
             }
             cursor.close()
-            return mediaFileInfoFile
+            return Pair(FilesViewModel.StorageSummary(cursorCount, 0, longSize), mediaFileInfoFile)
+        }
+
+        private fun queryMetaInfo(cursor: Cursor, mediaType: MediaFileInfo.MediaType): MediaFileInfo.ExtraInfo {
+            var audioMetaData: MediaFileInfo.AudioMetaData? = null
+            var imageMetaData: MediaFileInfo.ImageMetaData? = null
+            var videoMetaData: MediaFileInfo.VideoMetaData? = null
+            try {
+                when(mediaType.mediaType) {
+                    MediaFileInfo.MEDIA_TYPE_AUDIO -> {
+                        // audio
+                        val audioDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION))
+                        val audioAlbum = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM))
+                        val audioArtist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST))
+                        audioMetaData = MediaFileInfo.AudioMetaData(audioAlbum, audioArtist, audioDuration)
+                    }
+                    MediaFileInfo.MEDIA_TYPE_VIDEO -> {
+                        // video
+                        val videoWidth = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.VideoColumns.WIDTH))
+                        val videoHeight = cursor.getInt(cursor.getColumnIndex(MediaStore.Video.VideoColumns.HEIGHT))
+                        val videoDuration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION))
+                        videoMetaData = MediaFileInfo.VideoMetaData(videoDuration, videoWidth, videoHeight)
+                    }
+                    MediaFileInfo.MEDIA_TYPE_IMAGE -> {
+                        val imageWidth = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns.WIDTH))
+                        val imageHeight = cursor.getInt(cursor.getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT))
+                        imageMetaData = MediaFileInfo.ImageMetaData(imageWidth, imageHeight)
+                    }
+                }
+            } catch (e: Exception) {
+                Log.w(javaClass.simpleName, "Error while fetching metadata for $mediaType", e)
+            }
+            return MediaFileInfo.ExtraInfo(mediaType,
+                audioMetaData, videoMetaData, imageMetaData)
         }
 
         private fun generateBlacklistSelection(selection: String?, pathCount: Int, dataColumn: String): String {
@@ -216,5 +266,3 @@ class CursorUtils {
         }
     }
 }
-
-typealias SummaryCallbackAlias = FilesViewModel.StorageSummaryCallback

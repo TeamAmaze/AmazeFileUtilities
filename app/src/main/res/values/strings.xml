@@ -45,4 +45,5 @@
     <string name="receive">Receive</string>
     <string name="undetermined" translatable="false">--</string>
     <string name="calculating">Calculating…</string>
+    <string name="recent_files">Recent Files</string>
 </resources>

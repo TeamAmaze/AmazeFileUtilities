@@ -17,6 +17,7 @@
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.190625" />
         <entry key="app/src/main/res/drawable/ic_outline_close_fullscreen_24.xml" value="0.2740740740740741" />
         <entry key="app/src/main/res/drawable/ic_outline_fast_rewind_32.xml" value="0.26296296296296295" />
+        <entry key="app/src/main/res/drawable/ripple.xml" value="0.2638888888888889" />
         <entry key="app/src/main/res/drawable/round_button.xml" value="0.2740740740740741" />
         <entry key="app/src/main/res/drawable/rounded_corners.xml" value="0.190625" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
@@ -42,6 +43,7 @@
         <entry key="app/src/main/res/layout/image_viewer_recycler_viewholder.xml" value="0.21739130434782608" />
         <entry key="app/src/main/res/layout/landing_activity.xml" value="0.17447916666666666" />
         <entry key="app/src/main/res/layout/legend_layout.xml" value="0.24230072463768115" />
+        <entry key="app/src/main/res/layout/list_header.xml" value="0.26992753623188404" />
         <entry key="app/src/main/res/layout/media_type_layout.xml" value="0.24230072463768115" />
         <entry key="app/src/main/res/layout/music_player_dialog_activity.xml" value="0.286231884057971" />
         <entry key="app/src/main/res/layout/pdf_viewer_activity.xml" value="0.26313405797101447" />
