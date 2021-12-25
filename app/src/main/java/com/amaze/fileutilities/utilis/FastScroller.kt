@@ -1,7 +1,16 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.utilis
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
 import android.graphics.drawable.StateListDrawable
@@ -52,13 +61,17 @@ class FastScroller : FrameLayout {
         val recyclerViewOversize: Float // how much is recyclerView bigger than fastScroller
         val recyclerViewAbsoluteScroll: Int
         if (firstVisibleView == null || recyclerView == null) return (-1).toFloat()
-        recyclerViewOversize = (firstVisibleView.height / columns * recyclerView!!.adapter!!
-            .itemCount
-                - heightMinusPadding).toFloat()
-        recyclerViewAbsoluteScroll = (recyclerView!!.getChildLayoutPosition(firstVisibleView)
-                / columns
-                * firstVisibleView.height
-                - firstVisibleView.top)
+        recyclerViewOversize = (
+            firstVisibleView.height / columns * recyclerView!!.adapter!!
+                .itemCount -
+                heightMinusPadding
+            ).toFloat()
+        recyclerViewAbsoluteScroll = (
+            recyclerView!!.getChildLayoutPosition(firstVisibleView) /
+                columns
+                * firstVisibleView.height -
+                firstVisibleView.top
+            )
         return recyclerViewAbsoluteScroll / recyclerViewOversize
     }
 
@@ -129,9 +142,10 @@ class FastScroller : FrameLayout {
 
     private fun invalidateVisibility() {
         visibility =
-            if (recyclerView!!.adapter == null || recyclerView!!.adapter!!.itemCount == 0 || recyclerView!!.getChildAt(
-                    0
-                ) == null || isRecyclerViewScrollable
+            if (recyclerView!!.adapter == null || recyclerView!!.adapter!!.itemCount == 0 ||
+                recyclerView!!.getChildAt(
+                        0
+                    ) == null || isRecyclerViewScrollable
             ) {
                 INVISIBLE
             } else {
@@ -140,11 +154,13 @@ class FastScroller : FrameLayout {
     }
 
     private val isRecyclerViewScrollable: Boolean
-        private get() = (recyclerView!!.getChildAt(0).height
-                * recyclerView!!.adapter!!.itemCount
-                / columns
-                <= heightMinusPadding
-                || recyclerView!!.adapter!!.itemCount / columns < 25)
+        private get() = (
+            recyclerView!!.getChildAt(0).height
+                * recyclerView!!.adapter!!.itemCount /
+                columns
+                <= heightMinusPadding ||
+                recyclerView!!.adapter!!.itemCount / columns < 25
+            )
 
     private fun setRecyclerViewPosition(relativePos: Float) {
         if (recyclerView != null) {
@@ -173,8 +189,15 @@ class FastScroller : FrameLayout {
     fun setPressedHandleColor(i: Int) {
         handle!!.setColorFilter(i)
         val stateListDrawable = StateListDrawable()
-        val drawable = ContextCompat.getDrawable(context, R.drawable.fastscroller_handle_normal)
-        val drawable1 = ContextCompat.getDrawable(context, R.drawable.fastscroller_handle_pressed)
+        val drawable = ContextCompat.getDrawable(
+            context,
+            R.drawable.fastscroller_handle_normal
+        )
+        val drawable1 = ContextCompat.getDrawable(
+            context,
+
+            R.drawable.fastscroller_handle_pressed
+        )
         stateListDrawable.addState(
             PRESSED_ENABLED_STATE_SET,
             InsetDrawable(

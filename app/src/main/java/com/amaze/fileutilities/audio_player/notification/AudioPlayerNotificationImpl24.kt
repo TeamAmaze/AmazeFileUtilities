@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.audio_player.notification
 
 import android.app.PendingIntent
@@ -20,7 +30,11 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
             service.audioProgressHandler!!.audioPlaybackInfo else AudioPlaybackInfo.EMPTY_PLAYBACK
         val isPlaying: Boolean = service.isPlaying()
         val playButtonResId: Int =
-            if (isPlaying) R.drawable.ic_baseline_pause_circle_outline_32 else R.drawable.ic_baseline_play_circle_outline_32
+            if (isPlaying) {
+                R.drawable.ic_baseline_pause_circle_outline_32
+            } else {
+                R.drawable.ic_baseline_play_circle_outline_32
+            }
         val action = Intent(service, AudioPlayerDialogActivity::class.java)
         action.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         val clickIntent = PendingIntent.getActivity(service, 0, action, 0)
@@ -77,7 +91,7 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             builder.color = service.resources.getColor(R.color.blue)
         }
-        if (stopped) return   // notification has been stopped before loading was finished
+        if (stopped) return // notification has been stopped before loading was finished
         updateNotifyModeAndPostNotification(builder.build())
     }
 

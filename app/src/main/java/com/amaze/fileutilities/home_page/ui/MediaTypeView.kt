@@ -1,7 +1,16 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.home_page.ui
 
 import android.content.Context
-import android.graphics.PorterDuff
 import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
@@ -14,7 +23,7 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.px
 import com.google.android.material.progressindicator.LinearProgressIndicator
 
-class MediaTypeView(context: Context, attrs: AttributeSet?): LinearLayout(context, attrs) {
+class MediaTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
     private val typeImageView: ImageView
     private val mediaTitleTextView: TextView
@@ -63,8 +72,10 @@ class MediaTypeView(context: Context, attrs: AttributeSet?): LinearLayout(contex
 
     fun setProgress(mediaTypeContent: MediaTypeContent) {
         mediaTypeContent.run {
-            mediaSummaryTextView.text = resources.getString(R.string.num_of_files_and_size,
-                itemsCount.toString(), mediaTypeContent.size)
+            mediaSummaryTextView.text = resources.getString(
+                R.string.num_of_files_and_size,
+                itemsCount.toString(), mediaTypeContent.size
+            )
             progressPercentTextView.text = "$progress %"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mediaProgressIndicator.setProgress(progress, true)

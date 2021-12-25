@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.pdf_viewer
 
 import android.os.Bundle
@@ -8,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.PdfViewerActivityBinding
-import com.amaze.fileutilities.image_viewer.ImageViewerViewModel
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
@@ -16,8 +25,7 @@ import com.shockwave.pdfium.PdfDocument
 import com.shockwave.pdfium.PdfDocument.Bookmark
 import java.io.File
 
-
-class PdfViewerActivity: PermissionActivity(), OnPageChangeListener, OnLoadCompleteListener {
+class PdfViewerActivity : PermissionActivity(), OnPageChangeListener, OnLoadCompleteListener {
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         PdfViewerActivityBinding.inflate(layoutInflater)
@@ -33,8 +41,11 @@ class PdfViewerActivity: PermissionActivity(), OnPageChangeListener, OnLoadCompl
         if (savedInstanceState == null) {
             val mimeType = intent.type
             val pdfUri = intent.data
-            Log.i(javaClass.simpleName, "Loading pdf from path ${pdfUri?.path} " +
-                    "and mimetype $mimeType")
+            Log.i(
+                javaClass.simpleName,
+                "Loading pdf from path ${pdfUri?.path} " +
+                    "and mimetype $mimeType"
+            )
             pdfModel = LocalPdfModel(uri = pdfUri!!, mimeType = mimeType!!)
             viewBinding.pdfView.fromUri(pdfUri).defaultPage(0)
                 .enableSwipe(true)
@@ -77,14 +88,20 @@ class PdfViewerActivity: PermissionActivity(), OnPageChangeListener, OnLoadCompl
 
     override fun onPageChanged(page: Int, pageCount: Int) {
         viewModel.pageNumber = page
-        title = String.format("%s %s / %s", viewModel.pdfFileName, page + 1, pageCount);
+        title = String.format("%s %s / %s", viewModel.pdfFileName, page + 1, pageCount)
     }
 
     override fun loadComplete(nbPages: Int) {
         val meta: PdfDocument.Meta = viewBinding.pdfView.documentMeta
-        viewModel.pdfFileName = if (meta.title.isEmpty()) File(pdfModel.uri.path).name else meta.title
-        title = String.format("%s %s / %s", viewModel.pdfFileName, viewModel.pageNumber + 1,
-            viewBinding.pdfView.pageCount);
+        viewModel.pdfFileName = if (meta.title.isEmpty()) {
+            File(pdfModel.uri.path).name
+        } else {
+            meta.title
+        }
+        title = String.format(
+            "%s %s / %s", viewModel.pdfFileName, viewModel.pageNumber + 1,
+            viewBinding.pdfView.pageCount
+        )
         printBookmarksTree(viewBinding.pdfView.tableOfContents, "-")
     }
 

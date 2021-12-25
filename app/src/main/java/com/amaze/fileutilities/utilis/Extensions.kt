@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.utilis
 
 import android.content.Context
@@ -10,7 +20,7 @@ import android.util.Log
 import java.io.File
 import java.lang.Exception
 
-fun Uri.getSiblingUriFiles(context: Context) : ArrayList<Uri>? {
+fun Uri.getSiblingUriFiles(context: Context): ArrayList<Uri>? {
     try {
         val currentPath = getFileFromUri(context)
         currentPath?.let {
@@ -21,9 +31,15 @@ fun Uri.getSiblingUriFiles(context: Context) : ArrayList<Uri>? {
                     if (this.isNotEmpty()) {
                         siblings = ArrayList()
                         for (currentSibling in this) {
-                            siblings!!.add(Uri.parse(if (!currentSibling.path.startsWith("/"))
-                                "/${currentSibling.path}"
-                            else currentSibling.path))
+                            siblings!!.add(
+                                Uri.parse(
+                                    if (!currentSibling.path
+                                        .startsWith("/")
+                                    )
+                                        "/${currentSibling.path}"
+                                    else currentSibling.path
+                                )
+                            )
                         }
                     }
                 }
@@ -50,7 +66,11 @@ fun Uri.getFileFromUri(context: Context): File? {
         if (path != null) songFile = File(path)
     }
     if (songFile == null && this.path != null) {
-        songFile = File(this.path?.substring(this.path?.indexOf("/", 1)!!+1))
+        songFile = File(
+            this.path?.substring(
+                this.path?.indexOf("/", 1)!! + 1
+            )
+        )
 //        songFile = File(this.path)
     }
     return songFile
@@ -81,46 +101,52 @@ private fun getContentResolverFilePathFromUri(context: Context, uri: Uri): Strin
 
 fun Uri.isImageMimeType(): Boolean {
     return this.path?.endsWith("jpg")!! ||
-            this.path?.endsWith("jpe")!! ||
-            this.path?.endsWith("jpeg")!! ||
-            this.path?.endsWith("jfif")!! ||
-            this.path?.endsWith("pjpeg")!! ||
-            this.path?.endsWith("pjp")!! ||
-            this.path?.endsWith("gif")!! ||
-            this.path?.endsWith("png")!! ||
-            this.path?.endsWith("svg")!! ||
-            this.path?.endsWith("webp")!!
+        this.path?.endsWith("jpe")!! ||
+        this.path?.endsWith("jpeg")!! ||
+        this.path?.endsWith("jfif")!! ||
+        this.path?.endsWith("pjpeg")!! ||
+        this.path?.endsWith("pjp")!! ||
+        this.path?.endsWith("gif")!! ||
+        this.path?.endsWith("png")!! ||
+        this.path?.endsWith("svg")!! ||
+        this.path?.endsWith("webp")!!
 }
 
 fun Uri.isVideoMimeType(): Boolean {
     return this.path?.endsWith("mp4")!! ||
-            this.path?.endsWith("mkv")!! ||
-            this.path?.endsWith("webm")!! ||
-            this.path?.endsWith("mpa")!! ||
-            this.path?.endsWith("flv")!! ||
-            this.path?.endsWith("mts")!! ||
-            this.path?.endsWith("jpgv")!!
+        this.path?.endsWith("mkv")!! ||
+        this.path?.endsWith("webm")!! ||
+        this.path?.endsWith("mpa")!! ||
+        this.path?.endsWith("flv")!! ||
+        this.path?.endsWith("mts")!! ||
+        this.path?.endsWith("jpgv")!!
 }
 
 fun Uri.isAudioMimeType(): Boolean {
     return this.path?.endsWith("mp3")!! ||
-            this.path?.endsWith("wav")!! ||
-            this.path?.endsWith("ogg")!! ||
-            this.path?.endsWith("mp4")!! ||
-            this.path?.endsWith("m4a")!! ||
-            this.path?.endsWith("fmp4")!! ||
-            this.path?.endsWith("flv")!! ||
-            this.path?.endsWith("flac")!! ||
-            this.path?.endsWith("amr")!! ||
-            this.path?.endsWith("aac")!! ||
-            this.path?.endsWith("ac3")!! ||
-            this.path?.endsWith("eac3")!! ||
-            this.path?.endsWith("dca")!! ||
-            this.path?.endsWith("opus")!!
+        this.path?.endsWith("wav")!! ||
+        this.path?.endsWith("ogg")!! ||
+        this.path?.endsWith("mp4")!! ||
+        this.path?.endsWith("m4a")!! ||
+        this.path?.endsWith("fmp4")!! ||
+        this.path?.endsWith("flv")!! ||
+        this.path?.endsWith("flac")!! ||
+        this.path?.endsWith("amr")!! ||
+        this.path?.endsWith("aac")!! ||
+        this.path?.endsWith("ac3")!! ||
+        this.path?.endsWith("eac3")!! ||
+        this.path?.endsWith("dca")!! ||
+        this.path?.endsWith("opus")!!
 }
 
-val Int.dp get() = this / (Resources.getSystem().displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
-val Float.dp get() = this / (Resources.getSystem().displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+val Int.dp get() = this / (
+    Resources.getSystem().displayMetrics.densityDpi.toFloat() /
+        DisplayMetrics.DENSITY_DEFAULT
+    )
+val Float.dp get() = this / (
+    Resources.getSystem().displayMetrics.densityDpi.toFloat() /
+        DisplayMetrics.DENSITY_DEFAULT
+    )
 
 val Int.px get() = this * Resources.getSystem().displayMetrics.density
 val Float.px get() = this * Resources.getSystem().displayMetrics.density

@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.docx_viewer
 
 import android.os.Bundle
@@ -16,8 +26,7 @@ import com.amaze.fileutilities.databinding.DocxViewerActivityBinding
 import org.zwobble.mammoth.DocumentConverter
 import org.zwobble.mammoth.Result
 
-
-class DocxViewerActivity: PermissionActivity() {
+class DocxViewerActivity : PermissionActivity() {
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         DocxViewerActivityBinding.inflate(layoutInflater)
@@ -33,8 +42,11 @@ class DocxViewerActivity: PermissionActivity() {
         if (savedInstanceState == null) {
             val mimeType = intent.type
             val docxUri = intent.data
-            Log.i(javaClass.simpleName, "Loading docx from path ${docxUri?.path} " +
-                    "and mimetype $mimeType")
+            Log.i(
+                javaClass.simpleName,
+                "Loading docx from path ${docxUri?.path} " +
+                    "and mimetype $mimeType"
+            )
             docxModel = LocalDocxModel(docxUri!!, mimeType!!)
             val converter = DocumentConverter()
             val result: Result<String>? = converter.convertToHtml(docxModel.getInputStream(this))
@@ -45,7 +57,7 @@ class DocxViewerActivity: PermissionActivity() {
                 val base64 = Base64.encodeToString(html.toByteArray(), Base64.NO_PADDING)
                 viewBinding.webview.also {
                     it.loadData(base64, "text/html", "base64")
-                    it.settings.setSupportZoom(true);
+                    it.settings.setSupportZoom(true)
                     it.settings.builtInZoomControls = true
                     it.settings.displayZoomControls = false
                     it.setVerticalScrollBarEnabled(true)
@@ -72,8 +84,10 @@ class DocxViewerActivity: PermissionActivity() {
             R.id.invert_colors -> {
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
                     viewModel.nightMode = !viewModel.nightMode
-                    WebSettingsCompat.setForceDark(viewBinding.webview.settings,
-                        if (viewModel.nightMode) FORCE_DARK_ON else FORCE_DARK_OFF)
+                    WebSettingsCompat.setForceDark(
+                        viewBinding.webview.settings,
+                        if (viewModel.nightMode) FORCE_DARK_ON else FORCE_DARK_OFF
+                    )
                     viewBinding.webview.reload()
                 }
             }

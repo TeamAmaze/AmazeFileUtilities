@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.video_player
 
 import android.os.Bundle
@@ -9,7 +19,7 @@ import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.VideoPlayerDialogActivityBinding
 
-class VideoPlayerDialogActivity: PermissionActivity() {
+class VideoPlayerDialogActivity : PermissionActivity() {
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         VideoPlayerDialogActivityBinding.inflate(layoutInflater)
@@ -22,8 +32,11 @@ class VideoPlayerDialogActivity: PermissionActivity() {
         if (savedInstanceState == null) {
             val mimeType = intent.type
             val videoUri = intent.data
-            Log.i(javaClass.simpleName, "Loading video from path ${videoUri?.path} " +
-                    "and mimetype $mimeType")
+            Log.i(
+                javaClass.simpleName,
+                "Loading video from path ${videoUri?.path} " +
+                    "and mimetype $mimeType"
+            )
             videoModel = LocalVideoModel(uri = videoUri!!, mimeType = mimeType!!)
             val bundle = bundleOf(
                 VideoPlayerFragment.VIEW_TYPE_ARGUMENT to videoModel

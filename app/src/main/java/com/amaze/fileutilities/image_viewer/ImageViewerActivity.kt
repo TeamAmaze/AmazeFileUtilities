@@ -1,10 +1,18 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.image_viewer
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.widget.ViewPager2
 import com.amaze.fileutilities.PermissionActivity
-import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.GenericPagerViewerActivityBinding
 import com.amaze.fileutilities.utilis.getSiblingUriFiles
 import java.io.File
@@ -22,9 +30,16 @@ class ImageViewerActivity : PermissionActivity() {
         setContentView(viewBinding.root)
         viewModel = ViewModelProvider(this).get(ImageViewerViewModel::class.java)
 
-        val imageModel = intent.extras?.getParcelable<LocalImageModel>(ImageViewerFragment.VIEW_TYPE_ARGUMENT)
-        viewModel.getSiblingImageModels(imageModel!!, imageModel.uri.getSiblingUriFiles(this)).let {
-            val pagerAdapter = ImageViewerAdapter(supportFragmentManager,
+        val imageModel = intent.extras?.getParcelable<LocalImageModel>(
+            ImageViewerFragment.VIEW_TYPE_ARGUMENT
+        )
+        viewModel.getSiblingImageModels(
+            imageModel!!,
+            imageModel.uri
+                .getSiblingUriFiles(this)
+        ).let {
+            val pagerAdapter = ImageViewerAdapter(
+                supportFragmentManager,
                 lifecycle, it ?: Collections.singletonList(imageModel)
             )
             viewBinding.pager.adapter = pagerAdapter
