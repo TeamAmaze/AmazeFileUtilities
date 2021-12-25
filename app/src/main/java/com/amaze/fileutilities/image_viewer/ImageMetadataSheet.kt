@@ -1,21 +1,26 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.image_viewer
 
-import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import com.amaze.fileutilities.databinding.ImageMetadataSheetBinding
 import com.drew.imaging.ImageMetadataReader
-import com.drew.metadata.jpeg.JpegDirectory
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.io.File
 
-class ImageMetadataSheet(): BottomSheetDialogFragment() {
-
+class ImageMetadataSheet() : BottomSheetDialogFragment() {
 
     private var localImageModel: LocalImageModel? = null
     private var imageMetadataSheetBinding: ImageMetadataSheetBinding? = null

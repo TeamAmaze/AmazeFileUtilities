@@ -1,11 +1,19 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.audio_player
 
 import android.app.PendingIntent
 import android.app.Service
 import android.content.*
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.media.AudioManager
 import android.media.audiofx.AudioEffect
 import android.net.Uri
@@ -18,13 +26,11 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotification
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotificationImpl
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotificationImpl24
 import com.amaze.fileutilities.utilis.ObtainableServiceBinder
-import com.bumptech.glide.Glide
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -32,7 +38,7 @@ import com.google.android.exoplayer2.audio.AudioAttributes
 import java.io.File
 import java.lang.ref.WeakReference
 
-class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeatingCallback {
+class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatingCallback {
 
     companion object {
         const val TAG_BROADCAST_AUDIO_SERVICE_CANCEL = "audio_service_cancel_broadcast"
@@ -77,9 +83,11 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
         super.onCreate()
         initializePlayer()
         initializeAttributes()
-        registerReceiver(cancelReceiver, IntentFilter(TAG_BROADCAST_AUDIO_SERVICE_CANCEL)
+        registerReceiver(
+            cancelReceiver, IntentFilter(TAG_BROADCAST_AUDIO_SERVICE_CANCEL)
         )
-        registerReceiver(pauseReceiver, IntentFilter(TAG_BROADCAST_AUDIO_SERVICE_PLAY)
+        registerReceiver(
+            pauseReceiver, IntentFilter(TAG_BROADCAST_AUDIO_SERVICE_PLAY)
         )
 
         val powerManager = getSystemService(POWER_SERVICE) as PowerManager
@@ -105,7 +113,7 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
             }
             when {
                 it.action != null -> {
-                    when(it.action) {
+                    when (it.action) {
                         ACTION_CANCEL -> {
                             triggerStopEverything()
                         }
@@ -117,14 +125,25 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
                                 audioProgressHandler?.let { handler ->
                                     if (handler.getPlayingIndex(false) < 0) {
                                         // do nothing
-                                        Toast.makeText(baseContext, resources.getString(R.string.not_allowed),
-                                            Toast.LENGTH_LONG).show()
+                                        Toast.makeText(
+                                            baseContext,
+                                            resources.getString(R.string.not_allowed),
+                                            Toast.LENGTH_LONG
+                                        ).show()
                                         return super.onStartCommand(intent, flags, startId)
                                     }
-                                    if (handler.getPlayingIndex(false) < uriList!!.size-1) {
-                                        handler.playingIndex = handler.getPlayingIndex(false) + 1
+                                    if (handler
+                                        .getPlayingIndex(false) < it.size - 1
+                                    ) {
+                                        handler.playingIndex =
+                                            handler.getPlayingIndex(false) + 1
                                     }
-                                    initCurrentUriAndPlayer(uriList!![handler.getPlayingIndex(false)])
+                                    initCurrentUriAndPlayer(
+                                        it[
+                                            handler
+                                                .getPlayingIndex(false)
+                                        ]
+                                    )
                                 }
                             }
                         }
@@ -133,14 +152,22 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
                                 audioProgressHandler?.let { handler ->
                                     if (handler.getPlayingIndex(false) < 0) {
                                         // do nothing
-                                        Toast.makeText(baseContext, resources.getString(R.string.not_allowed),
-                                            Toast.LENGTH_LONG).show()
+                                        Toast.makeText(
+                                            baseContext, resources.getString(R.string.not_allowed),
+                                            Toast.LENGTH_LONG
+                                        ).show()
                                         return super.onStartCommand(intent, flags, startId)
                                     }
                                     if (handler.getPlayingIndex(false) > 0) {
-                                        handler.playingIndex = handler.getPlayingIndex(false) - 1
+                                        handler.playingIndex = handler
+                                            .getPlayingIndex(false) - 1
                                     }
-                                    initCurrentUriAndPlayer(uriList!![handler.getPlayingIndex(false)])
+                                    initCurrentUriAndPlayer(
+                                        it[
+                                            handler
+                                                .getPlayingIndex(false)
+                                        ]
+                                    )
                                 }
                             }
                         }
@@ -156,7 +183,10 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
         }
 
         if (audioPlayerRepeatingRunnable == null) {
-            audioPlayerRepeatingRunnable = AudioPlayerRepeatingRunnable(true, WeakReference(this))
+            audioPlayerRepeatingRunnable = AudioPlayerRepeatingRunnable(
+                true,
+                WeakReference(this)
+            )
         }
         super.onStartCommand(intent, flags, startId)
         return START_NOT_STICKY
@@ -198,23 +228,27 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
 
     private fun initAudioPlaybackInfoAndHandler(uri: Uri) {
         val audioPlaybackInfo = AudioPlaybackInfo.init(baseContext, uri)
-        audioProgressHandler = AudioProgressHandler(false, uriList,
-            AudioProgressHandler.INDEX_UNDEFINED, audioPlaybackInfo)
+        audioProgressHandler = AudioProgressHandler(
+            false, uriList,
+            AudioProgressHandler.INDEX_UNDEFINED, audioPlaybackInfo
+        )
         audioProgressHandler!!.getPlayingIndex(true)
     }
 
-    private var audioFocusListener:AudioManager.OnAudioFocusChangeListener =
+    private var audioFocusListener: AudioManager.OnAudioFocusChangeListener =
         AudioManager.OnAudioFocusChangeListener { focusChange ->
             when (focusChange) {
                 AudioManager.AUDIOFOCUS_GAIN -> {
-                    if (!exoPlayer!!.isPlaying
-                        && pausedByTransientLossOfFocus) {
+                    if (!exoPlayer!!.isPlaying &&
+                        pausedByTransientLossOfFocus
+                    ) {
                         playMediaItem()
                         pausedByTransientLossOfFocus = false
                     }
                 }
                 AudioManager.AUDIOFOCUS_LOSS ->
-                    // Lost focus for an unbounded amount of time: stop playback and release media playback
+                    // Lost focus for an unbounded amount of time:
+                    // stop playback and release media playback
                     pausePlayer()
                 AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
                     // Lost focus for a short time, but we have to stop
@@ -249,28 +283,40 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
 
     private fun getCancelPendingIntent(): PendingIntent {
         val stopIntent = Intent(TAG_BROADCAST_AUDIO_SERVICE_CANCEL)
-        return PendingIntent.getBroadcast(this, 1234, stopIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getBroadcast(
+            this, 1234, stopIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
     }
 
     private fun getPlayPendingIntent(): PendingIntent {
         val intent = Intent(TAG_BROADCAST_AUDIO_SERVICE_PLAY)
-        return PendingIntent.getBroadcast(this, 1235, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getBroadcast(
+            this, 1235, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
     }
 
-    private val MEDIA_SESSION_ACTIONS = (PlaybackStateCompat.ACTION_PLAY
+    private val MEDIA_SESSION_ACTIONS = (
+        PlaybackStateCompat.ACTION_PLAY
             or PlaybackStateCompat.ACTION_PAUSE
             or PlaybackStateCompat.ACTION_PLAY_PAUSE
             or PlaybackStateCompat.ACTION_SKIP_TO_NEXT
             or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
             or PlaybackStateCompat.ACTION_STOP
-            or PlaybackStateCompat.ACTION_SEEK_TO)
+            or PlaybackStateCompat.ACTION_SEEK_TO
+        )
 
     private fun updateMediaSessionPlaybackState() {
         mediaSession!!.setPlaybackState(
             PlaybackStateCompat.Builder()
                 .setActions(MEDIA_SESSION_ACTIONS)
                 .setState(
-                    if (isPlaying()) PlaybackStateCompat.STATE_PLAYING else PlaybackStateCompat.STATE_PAUSED,
+                    if (isPlaying()) {
+                        PlaybackStateCompat.STATE_PLAYING
+                    } else {
+                        PlaybackStateCompat.STATE_PAUSED
+                    },
                     exoPlayer!!.currentPosition, 1f
                 )
                 .build()
@@ -291,15 +337,21 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
                 .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, song.albumName)
                 .putString(MediaMetadataCompat.METADATA_KEY_TITLE, song.title)
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration)
-                .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, (audioProgressHandler.getPlayingIndex(false)
-                        + 1).toLong())
+                .putLong(
+                    MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER,
+                    (audioProgressHandler.getPlayingIndex(false) + 1).toLong()
+                )
                 .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, song.year.toLong())
             val mediaStream = AudioUtils.getMediaStoreAlbumCoverUri(song.audioModel.id)
             mediaStream?.let {
                 if (File(it.path).exists()) {
-                    metaData.putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
-                        BitmapFactory.decodeStream(applicationContext.contentResolver
-                            .openInputStream(it)))
+                    metaData.putBitmap(
+                        MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
+                        BitmapFactory.decodeStream(
+                            applicationContext.contentResolver
+                                .openInputStream(it)
+                        )
+                    )
                 }
             }
 
@@ -364,8 +416,10 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
             }
 
             override fun onMediaButtonEvent(mediaButtonEvent: Intent): Boolean {
-                return MediaButtonIntentReceiver.handleIntent(this@AudioPlayerService,
-                    mediaButtonEvent)
+                return MediaButtonIntentReceiver.handleIntent(
+                    this@AudioPlayerService,
+                    mediaButtonEvent
+                )
             }
         })
         mediaSession?.setMediaButtonReceiver(mediaButtonReceiverPendingIntent)
@@ -412,8 +466,10 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
                 pausePlayer()
             } else {
                 if (audioProgressHandler!!.audioPlaybackInfo.duration.toInt() <=
-                    audioProgressHandler!!.audioPlaybackInfo.currentPosition
-                    || audioProgressHandler!!.audioPlaybackInfo.duration <= exoPlayer!!.currentPosition) {
+                    audioProgressHandler!!.audioPlaybackInfo.currentPosition ||
+                    audioProgressHandler!!.audioPlaybackInfo.duration <= exoPlayer!!
+                        .currentPosition
+                ) {
                     seekTo(0)
                 }
                 exoPlayer?.playWhenReady = true
@@ -469,7 +525,6 @@ class AudioPlayerService: Service(), ServiceOperationCallback, OnPlayerRepeating
     private fun extractMediaSourceFromUri(uri: Uri): MediaItem {
         return MediaItem.fromUri(uri)
     }
-
 
     private val cancelReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {

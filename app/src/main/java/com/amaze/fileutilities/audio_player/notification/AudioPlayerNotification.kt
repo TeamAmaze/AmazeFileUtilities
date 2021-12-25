@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.audio_player.notification
 
 import android.app.Notification
@@ -18,7 +28,8 @@ abstract class AudioPlayerNotification {
     @Synchronized
     fun init(service: AudioPlayerService) {
         this.service = service
-        notificationManager = service.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
+        notificationManager = service.getSystemService(Context.NOTIFICATION_SERVICE)
+            as NotificationManager?
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()
         }

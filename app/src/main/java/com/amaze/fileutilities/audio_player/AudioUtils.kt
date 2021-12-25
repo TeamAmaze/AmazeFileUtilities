@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.audio_player
 
 import android.content.ContentUris
@@ -12,11 +22,15 @@ class AudioUtils {
 
     companion object {
         val BLACKLIST_PATHS = arrayListOf(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS).canonicalPath,
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_NOTIFICATIONS).canonicalPath,
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES).canonicalPath)
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_ALARMS)
+                .canonicalPath,
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_NOTIFICATIONS)
+                .canonicalPath,
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_RINGTONES)
+                .canonicalPath
+        )
 
-        fun getMediaStoreAlbumCoverUri(albumId: Long): Uri? {
+        fun getMediaStoreAlbumCoverUri(albumId: Long): Uri {
             val sArtworkUri = Uri.parse("content://media/external/audio/albumart")
             return ContentUris.withAppendedId(sArtworkUri, albumId)
         }
@@ -77,7 +91,11 @@ class AudioUtils {
 
         private fun generateBlacklistSelection(selection: String?, pathCount: Int): String {
             var newSelection =
-                if (selection != null && selection.trim { it <= ' ' } != "") "$selection AND " else ""
+                if (selection != null && selection.trim { it <= ' ' } != "") {
+                    "$selection AND "
+                } else {
+                    ""
+                }
             newSelection += AudioColumns.DATA + " NOT LIKE ?"
             for (i in 0 until pathCount - 1) {
                 newSelection += " AND " + AudioColumns.DATA + " NOT LIKE ?"
@@ -92,7 +110,10 @@ class AudioUtils {
             var selectionValues: Array<String?>? = selectionValues
             if (selectionValues == null) selectionValues = arrayOfNulls(0)
             val newSelectionValues = arrayOfNulls<String>(selectionValues.size + paths.size)
-            System.arraycopy(selectionValues, 0, newSelectionValues, 0, selectionValues.size)
+            System.arraycopy(
+                selectionValues, 0, newSelectionValues, 0,
+                selectionValues.size
+            )
             for (i in selectionValues.size until newSelectionValues.size) {
                 newSelectionValues[i] = paths[i - selectionValues.size] + "%"
             }

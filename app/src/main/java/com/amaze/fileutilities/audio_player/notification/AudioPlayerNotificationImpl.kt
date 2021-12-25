@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.audio_player.notification
 
 import android.app.Notification
@@ -23,8 +33,14 @@ class AudioPlayerNotificationImpl : AudioPlayerNotification() {
         stopped = false
         val playbackInfo: AudioPlaybackInfo = service.audioProgressHandler!!.audioPlaybackInfo
         val isPlaying: Boolean = service.isPlaying()
-        val notificationLayout = RemoteViews(service.packageName, R.layout.audio_player_notification)
-        val notificationLayoutBig = RemoteViews(service.packageName, R.layout.audio_player_notification_big)
+        val notificationLayout = RemoteViews(
+            service.packageName,
+            R.layout.audio_player_notification
+        )
+        val notificationLayoutBig = RemoteViews(
+            service.packageName,
+            R.layout.audio_player_notification_big
+        )
         if (TextUtils.isEmpty(playbackInfo.title) && TextUtils.isEmpty(playbackInfo.artistName)) {
             notificationLayout.setViewVisibility(R.id.titles, View.INVISIBLE)
         } else {
@@ -32,9 +48,10 @@ class AudioPlayerNotificationImpl : AudioPlayerNotification() {
             notificationLayout.setTextViewText(R.id.audio_name, playbackInfo.title)
             notificationLayout.setTextViewText(R.id.audio_artist, playbackInfo.artistName)
         }
-        if (TextUtils.isEmpty(playbackInfo.title) && TextUtils.isEmpty(playbackInfo.artistName) && TextUtils.isEmpty(
-                playbackInfo.albumName
-            )
+        if (TextUtils.isEmpty(playbackInfo.title) && TextUtils.isEmpty(playbackInfo.artistName) &&
+            TextUtils.isEmpty(
+                    playbackInfo.albumName
+                )
         ) {
             notificationLayoutBig.setViewVisibility(R.id.titles, View.INVISIBLE)
         } else {
@@ -73,7 +90,10 @@ class AudioPlayerNotificationImpl : AudioPlayerNotification() {
         notificationLayoutBig.setOnClickPendingIntent(R.id.action_previous, pendingIntent)
 
         // Play and pause
-        pendingIntent = buildPendingIntent(service, AudioPlayerService.ACTION_PLAY_PAUSE, serviceName)
+        pendingIntent = buildPendingIntent(
+            service, AudioPlayerService.ACTION_PLAY_PAUSE,
+            serviceName
+        )
         notificationLayout.setOnClickPendingIntent(R.id.action_play_pause, pendingIntent)
         notificationLayoutBig.setOnClickPendingIntent(R.id.action_play_pause, pendingIntent)
 

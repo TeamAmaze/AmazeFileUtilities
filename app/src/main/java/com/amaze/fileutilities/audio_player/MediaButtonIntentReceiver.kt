@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.audio_player
 
 import android.annotation.SuppressLint
@@ -63,8 +73,9 @@ class MediaButtonIntentReceiver : BroadcastReceiver() {
                 var command: String? = null
                 when (keycode) {
                     KeyEvent.KEYCODE_MEDIA_STOP -> command = AudioPlayerService.ACTION_CANCEL
-                    KeyEvent.KEYCODE_HEADSETHOOK, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE -> command =
-                        AudioPlayerService.ACTION_PLAY_PAUSE
+                    KeyEvent.KEYCODE_HEADSETHOOK, KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE ->
+                        command =
+                            AudioPlayerService.ACTION_PLAY_PAUSE
                     KeyEvent.KEYCODE_MEDIA_NEXT -> command = AudioPlayerService.ACTION_NEXT
                     KeyEvent.KEYCODE_MEDIA_PREVIOUS -> command = AudioPlayerService.ACTION_PREVIOUS
                     KeyEvent.KEYCODE_MEDIA_PAUSE -> command = AudioPlayerService.ACTION_PLAY_PAUSE
@@ -80,7 +91,9 @@ class MediaButtonIntentReceiver : BroadcastReceiver() {
 
                             // The service may or may not be running, but we need to send it
                             // a command.
-                            if (keycode == KeyEvent.KEYCODE_HEADSETHOOK || keycode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
+                            if (keycode == KeyEvent.KEYCODE_HEADSETHOOK || keycode
+                                == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE
+                            ) {
                                 if (eventTime - mLastClickTime >= DOUBLE_CLICK) {
                                     mClickCounter = 0
                                 }
@@ -88,7 +101,8 @@ class MediaButtonIntentReceiver : BroadcastReceiver() {
                                 Log.i(TAG, "Got headset click, count = " + mClickCounter)
                                 mHandler.removeMessages(MSG_HEADSET_DOUBLE_CLICK_TIMEOUT)
                                 val msg = mHandler.obtainMessage(
-                                    MSG_HEADSET_DOUBLE_CLICK_TIMEOUT, mClickCounter, 0, context
+                                    MSG_HEADSET_DOUBLE_CLICK_TIMEOUT, mClickCounter, 0,
+                                    context
                                 )
                                 val delay =
                                     if (mClickCounter < 3) DOUBLE_CLICK.toLong() else 0.toLong()
@@ -117,7 +131,8 @@ class MediaButtonIntentReceiver : BroadcastReceiver() {
                 // there is no good way to check whether the app is running so we catch the exception
                 // we do not always want to use startForegroundService() because then one gets an ANR
                 // if no notification is displayed via startForeground()
-                // according to Play analytics this happens a lot, I suppose for example if command = PAUSE
+                // according to Play analytics this happens a lot, I suppose
+                // for example if command = PAUSE
                 context.startService(intent)
             } catch (ignored: IllegalStateException) {
                 ContextCompat.startForegroundService(context, intent)

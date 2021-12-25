@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.video_player
 
 import android.content.Intent
@@ -63,7 +73,8 @@ class VideoPlayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this).get(VideoPlayerFragmentViewModel::class.java)
+        viewModel = ViewModelProvider(this)
+            .get(VideoPlayerFragmentViewModel::class.java)
         viewModel?.videoModel = requireArguments().getParcelable(VIEW_TYPE_ARGUMENT)
         player = ExoPlayer.Builder(requireContext()).build().also {
             exoPlayer ->
@@ -71,8 +82,10 @@ class VideoPlayerFragment : Fragment() {
             val mediaItem = MediaItem.fromUri(viewModel?.videoModel!!.uri)
             exoPlayer.setMediaItem(mediaItem)
             initializePlayer()
-            scaleGestureDetector = ScaleGestureDetector(requireContext(),
-                CustomOnScaleGestureListener(viewBinding.videoView))
+            scaleGestureDetector = ScaleGestureDetector(
+                requireContext(),
+                CustomOnScaleGestureListener(viewBinding.videoView)
+            )
         }
         if (activity is VideoPlayerDialogActivity) {
             handleViewPlayerDialogActivityResources()
@@ -102,15 +115,21 @@ class VideoPlayerFragment : Fragment() {
     }
 
     private fun handleViewPlayerDialogActivityResources() {
-        viewBinding.videoView.findViewById<ConstraintLayout>(R.id.top_bar_video_player).visibility = View.GONE
-        viewBinding.videoView.findViewById<ImageView>(R.id.exo_fullscreen_icon).visibility = View.VISIBLE
-        viewBinding.videoView.findViewById<ImageView>(R.id.exo_fullscreen_icon).setOnClickListener {
-            val intent = Intent(requireContext(), VideoPlayerActivity::class.java).apply {
-                putExtra(VIEW_TYPE_ARGUMENT, viewModel?.videoModel)
+        viewBinding.videoView.findViewById<ConstraintLayout>(R.id.top_bar_video_player)
+            .visibility = View.GONE
+        viewBinding.videoView.findViewById<ImageView>(R.id.exo_fullscreen_icon)
+            .visibility = View.VISIBLE
+        viewBinding.videoView.findViewById<ImageView>(R.id.exo_fullscreen_icon)
+            .setOnClickListener {
+                val intent = Intent(
+                    requireContext(),
+                    VideoPlayerActivity::class.java
+                ).apply {
+                    putExtra(VIEW_TYPE_ARGUMENT, viewModel?.videoModel)
+                }
+                startActivity(intent)
+                activity?.finish()
             }
-            startActivity(intent)
-            activity?.finish()
-        }
         viewBinding.videoView.setShowNextButton(false)
         viewBinding.videoView.setShowPreviousButton(false)
     }
@@ -120,33 +139,42 @@ class VideoPlayerFragment : Fragment() {
             width = FrameLayout.LayoutParams.MATCH_PARENT
             height = FrameLayout.LayoutParams.MATCH_PARENT
         }
-        viewBinding.videoView.findViewById<ConstraintLayout>(R.id.top_bar_video_player).visibility = View.VISIBLE
-        viewBinding.videoView.findViewById<ImageView>(R.id.exo_fullscreen_icon).visibility = View.GONE
-        viewBinding.videoView.findViewById<ImageView>(R.id.fit_to_screen_video_player).setOnClickListener {
-            viewModel?.fitToScreen?.also {
-                if (!it) {
-                    viewBinding.videoView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-                    viewModel?.fitToScreen= true
-                } else {
-                    viewBinding.videoView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
-                    viewModel?.fitToScreen = false
+        viewBinding.videoView.findViewById<ConstraintLayout>(R.id.top_bar_video_player)
+            .visibility = View.VISIBLE
+        viewBinding.videoView.findViewById<ImageView>(R.id.exo_fullscreen_icon)
+            .visibility = View.GONE
+        viewBinding.videoView.findViewById<ImageView>(R.id.fit_to_screen_video_player)
+            .setOnClickListener {
+                viewModel?.fitToScreen?.also {
+                    if (!it) {
+                        viewBinding.videoView.resizeMode =
+                            AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+                        viewModel?.fitToScreen = true
+                    } else {
+                        viewBinding.videoView.resizeMode =
+                            AspectRatioFrameLayout.RESIZE_MODE_FIT
+                        viewModel?.fitToScreen = false
+                    }
                 }
             }
-        }
-        viewBinding.videoView.findViewById<ImageView>(R.id.orientation_video_player).setOnClickListener {
-            viewModel?.fullscreen?.also {
-                if (!it) {
-                    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                    viewModel?.fullscreen = true
-                } else {
-                    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                    viewModel?.fullscreen = false
+        viewBinding.videoView.findViewById<ImageView>(R.id.orientation_video_player)
+            .setOnClickListener {
+                viewModel?.fullscreen?.also {
+                    if (!it) {
+                        requireActivity().requestedOrientation =
+                            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                        viewModel?.fullscreen = true
+                    } else {
+                        requireActivity().requestedOrientation =
+                            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                        viewModel?.fullscreen = false
+                    }
                 }
             }
-        }
-        viewBinding.videoView.findViewById<ImageView>(R.id.back_video_player).setOnClickListener {
-            requireActivity().onBackPressed()
-        }
+        viewBinding.videoView.findViewById<ImageView>(R.id.back_video_player)
+            .setOnClickListener {
+                requireActivity().onBackPressed()
+            }
         viewBinding.videoView.setControllerVisibilityListener {
             refactorSystemUi(it == View.GONE)
         }
@@ -154,14 +182,24 @@ class VideoPlayerFragment : Fragment() {
 
     private fun refactorSystemUi(hide: Boolean) {
         if (hide) {
-            WindowInsetsControllerCompat(requireActivity().window, viewBinding.root).let { controller ->
+            WindowInsetsControllerCompat(
+                requireActivity().window,
+                viewBinding.root
+            ).let {
+                controller ->
                 controller.hide(WindowInsetsCompat.Type.systemBars())
-                controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                controller.systemBarsBehavior = WindowInsetsControllerCompat
+                    .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
         } else {
-            WindowInsetsControllerCompat(requireActivity().window, viewBinding.root).let { controller ->
+            WindowInsetsControllerCompat(
+                requireActivity().window,
+                viewBinding.root
+            ).let {
+                controller ->
                 controller.show(WindowInsetsCompat.Type.systemBars())
-                controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_BARS_BY_TOUCH
+                controller.systemBarsBehavior = WindowInsetsControllerCompat
+                    .BEHAVIOR_SHOW_BARS_BY_TOUCH
             }
         }
     }
@@ -215,7 +253,7 @@ class VideoPlayerFragment : Fragment() {
 
         override fun onScaleBegin(
             detector: ScaleGestureDetector
-        ) : Boolean{
+        ): Boolean {
             return true
         }
         override fun onScaleEnd(detector: ScaleGestureDetector) {

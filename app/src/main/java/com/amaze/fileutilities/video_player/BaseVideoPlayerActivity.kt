@@ -1,10 +1,19 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.video_player
 
-import androidx.fragment.app.FragmentContainerView
 import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
 
-class BaseVideoPlayerActivity: PermissionActivity() {
+class BaseVideoPlayerActivity : PermissionActivity() {
 
     private fun releasePlayer() {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view)

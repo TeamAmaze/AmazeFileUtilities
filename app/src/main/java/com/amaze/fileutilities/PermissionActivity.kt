@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities
 
 import android.Manifest
@@ -12,7 +22,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 
-open class PermissionActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
+open class PermissionActivity :
+    AppCompatActivity(),
+    ActivityCompat.OnRequestPermissionsResultCallback {
     private val permissionCode = 0
     var onPermissionGrantedCallback: OnPermissionGrantedCallback? = null
 
@@ -31,7 +43,10 @@ open class PermissionActivity : AppCompatActivity(), ActivityCompat.OnRequestPer
             if (isGranted(grantResults)) {
                 onPermissionGrantedCallback?.onPermissionGranted()
             } else {
-                Toast.makeText(this, R.string.grantfailed, Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this, R.string.grantfailed,
+                    Toast.LENGTH_SHORT
+                ).show()
                 onPermissionGrantedCallback?.let {
                     requestStoragePermission(
                         it, false
@@ -43,18 +58,26 @@ open class PermissionActivity : AppCompatActivity(), ActivityCompat.OnRequestPer
 
     private fun triggerPermissionCheck() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkStoragePermission()) {
-            buildExplicitPermissionAlertDialog ({
-                startExplicitPermissionActivity()
-            }, {
-                // do nothing
-            }).show()
+            buildExplicitPermissionAlertDialog(
+                {
+                    startExplicitPermissionActivity()
+                },
+                {
+                    // do nothing
+                }
+            ).show()
         }
     }
 
     fun checkStoragePermission(): Boolean {
         // Verify that all required contact permissions have been granted.
-        return (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED)
+        return (
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+                == PackageManager.PERMISSION_GRANTED
+            )
     }
 
     fun requestStoragePermission(
@@ -78,16 +101,21 @@ open class PermissionActivity : AppCompatActivity(), ActivityCompat.OnRequestPer
         )
     }
 
-    fun buildExplicitPermissionAlertDialog(grantCallback: () -> Unit, cancelCallback: () -> Unit): AlertDialog.Builder {
+    fun buildExplicitPermissionAlertDialog(
+        grantCallback: () -> Unit,
+        cancelCallback: () -> Unit
+    ): AlertDialog.Builder {
         val builder: AlertDialog.Builder = this.let {
             AlertDialog.Builder(it)
         }
         builder.setMessage(R.string.grant_storage_read_permission)
             .setTitle(R.string.grant_permission)
-            .setNegativeButton(R.string.cancel) { dialog, _ -> run {
-                cancelCallback.invoke()
-                dialog.cancel()
-            } }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                run {
+                    cancelCallback.invoke()
+                    dialog.cancel()
+                }
+            }
             .setPositiveButton(R.string.grant) { dialog, _ ->
                 run {
                     grantCallback.invoke()
@@ -105,7 +133,8 @@ open class PermissionActivity : AppCompatActivity(), ActivityCompat.OnRequestPer
      * @param rationale MaterialLayout to provide an additional rationale to the user if the
      * permission was not granted and the user would benefit from additional context for the use
      * of the permission. For example, if the request has been denied previously.
-     * @param isInitialStart is the permission being requested for the first time in the application
+     * @param isInitialStart is the permission being requested
+     * for the first time in the application
      * lifecycle
      */
     private fun requestPermission(
@@ -117,13 +146,16 @@ open class PermissionActivity : AppCompatActivity(), ActivityCompat.OnRequestPer
         this.onPermissionGrantedCallback = onPermissionGrantedCallback
         when {
             ActivityCompat.shouldShowRequestPermissionRationale(this, permission) -> {
-                buildExplicitPermissionAlertDialog ({
-                    ActivityCompat.requestPermissions(
-                        this@PermissionActivity, arrayOf(permission), code
-                    )
-                }, {
-                    onPermissionGrantedCallback.onPermissionNotGranted()
-                }).show()
+                buildExplicitPermissionAlertDialog(
+                    {
+                        ActivityCompat.requestPermissions(
+                            this@PermissionActivity, arrayOf(permission), code
+                        )
+                    },
+                    {
+                        onPermissionGrantedCallback.onPermissionNotGranted()
+                    }
+                ).show()
             }
             isInitialStart -> {
                 ActivityCompat.requestPermissions(this, arrayOf(permission), code)

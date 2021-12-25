@@ -1,9 +1,18 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.home_page.ui.files
 
 import android.content.Context
 import com.amaze.fileutilities.utilis.safeLet
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MediaFileListSorter(private val sortingPreference: SortingPreference) :
     Comparator<MediaFileInfo?> {
@@ -16,9 +25,9 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
      */
     override fun compare(file1: MediaFileInfo?, file2: MediaFileInfo?): Int {
         safeLet(file1, file2) {
-                f1, f2 ->
+            f1, f2 ->
             var compareGroupBy = 0
-            when(sortingPreference.groupBy) {
+            when (sortingPreference.groupBy) {
                 GROUP_PARENT -> {
                     compareGroupBy = groupByAsc * f1.listHeader[0].compareTo(f2.listHeader[0])
                 }
@@ -62,10 +71,13 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
         const val GROUP_DATE = 4
         const val GROUP_NAME = 5
 
-        fun generateMediaFileListHeadersAndSort(context: Context, mediaFileList: MutableList<MediaFileInfo>,
-                                                sortingPreference: SortingPreference) {
+        fun generateMediaFileListHeadersAndSort(
+            context: Context,
+            mediaFileList: MutableList<MediaFileInfo>,
+            sortingPreference: SortingPreference
+        ) {
             mediaFileList.forEach {
-                when(sortingPreference.groupBy) {
+                when (sortingPreference.groupBy) {
                     GROUP_PARENT -> {
                         it.listHeader = it.getParentName()
                     }
@@ -81,6 +93,10 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
         }
     }
 
-    data class SortingPreference(val groupBy: Int, val sortBy: Int, val isGroupByAsc: Boolean,
-                                 val isSortByAsc: Boolean)
+    data class SortingPreference(
+        val groupBy: Int,
+        val sortBy: Int,
+        val isGroupByAsc: Boolean,
+        val isSortByAsc: Boolean
+    )
 }

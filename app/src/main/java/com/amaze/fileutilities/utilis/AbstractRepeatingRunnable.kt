@@ -1,16 +1,24 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.utilis
 
-import android.content.Context
 import android.os.CountDownTimer
-import androidx.core.content.ContextCompat
-import androidx.core.os.HandlerCompat
 import java.lang.UnsupportedOperationException
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
 abstract class AbstractRepeatingRunnable(
-    initialDelay: Long, period: Long, unit: TimeUnit, startImmediately: Boolean
+    initialDelay: Long,
+    period: Long,
+    unit: TimeUnit,
+    startImmediately: Boolean
 ) :
     Runnable {
 //    private val handle: ScheduledFuture<*>
@@ -40,7 +48,6 @@ abstract class AbstractRepeatingRunnable(
             override fun onFinish() {
                 // do nothing
             }
-
         }.start()
     }
 }
