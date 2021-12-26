@@ -1,0 +1,44 @@
+name: Android Main CI
+
+on:
+  push:
+    branches:
+      - 'main'
+      - 'release/*'
+
+concurrency:
+  group: build-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check_spotless:
+    name: Check spotless
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: 11
+          cache: 'gradle'
+      - name: Check formatting using spotless
+        run: ./gradlew spotlessCheck
+  build:
+    name: Build debug
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: "temurin"
+          java-version: 11
+          cache: 'gradle'
+      - name: Build with Gradle
+        run: |
+          ./gradlew assembledebug
+        env:
+          TZ: UTC
