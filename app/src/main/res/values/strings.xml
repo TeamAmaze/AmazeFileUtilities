@@ -46,4 +46,5 @@
     <string name="undetermined" translatable="false">--</string>
     <string name="calculating">Calculating…</string>
     <string name="recent_files">Recent Files</string>
+    <string name="no_files">No files</string>
 </resources>

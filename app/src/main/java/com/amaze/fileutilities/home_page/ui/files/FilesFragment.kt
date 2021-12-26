@@ -180,7 +180,14 @@ class FilesFragment : Fragment() {
                 viewLifecycleOwner,
                 {
                     mediaFileInfoList ->
+                    binding.recentFilesInfoText.text = resources.getString(R.string.loading)
                     mediaFileInfoList?.run {
+                        if (this.size == 0) {
+                            binding.recentFilesInfoText.text =
+                                resources.getString(R.string.no_files)
+                        } else {
+                            binding.recentFilesInfoText.visibility = View.GONE
+                        }
                         preloader = MediaAdapterPreloader(applicationContext)
                         val sizeProvider = ViewPreloadSizeProvider<String>()
                         recyclerViewPreloader = RecyclerViewPreloader(

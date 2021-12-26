@@ -160,8 +160,8 @@
             android:textSize="@dimen/eighteen_sp"
             android:textStyle="bold"
             android:text="@string/recent_files"
-            android:layout_marginTop="@dimen/material_generic"
-            android:layout_marginBottom="@dimen/material_generic"
+            android:layout_marginTop="@dimen/material_generic_medium"
+            android:layout_marginBottom="@dimen/four_dp"
             />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recentFilesList"
@@ -170,6 +170,15 @@
             android:divider="@null"
             android:scrollbars="none"
             android:descendantFocusability="afterDescendants"
+            />
+        <TextView
+            android:id="@+id/recentFilesInfoText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/material_generic"
+            android:textSize="@dimen/eighteen_sp"
+            android:textColor="@color/white"
+            android:gravity="center_horizontal"
             />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
