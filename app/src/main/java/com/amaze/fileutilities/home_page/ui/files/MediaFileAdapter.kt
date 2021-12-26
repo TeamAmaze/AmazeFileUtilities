@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.EmptyViewHolder
 import com.amaze.fileutilities.utilis.HeaderViewHolder
+import com.bumptech.glide.Glide
 import kotlin.math.roundToInt
 
 class MediaFileAdapter(
@@ -34,6 +35,9 @@ class MediaFileAdapter(
     private var mediaFileListItems: MutableList<ListItem> = mutableListOf()
         set(value) {
             value.clear()
+            if (mediaFileInfoList.size == 0) {
+                return
+            }
             if (!isRecentFilesList) {
                 MediaFileListSorter.generateMediaFileListHeadersAndSort(
                     context,
@@ -45,7 +49,7 @@ class MediaFileAdapter(
                 if ((lastHeader == null || it.listHeader != lastHeader) &&
                     !isRecentFilesList
                 ) {
-                    value.add(ListItem(null, TYPE_HEADER, it.listHeader))
+                    value.add(ListItem(TYPE_HEADER, it.listHeader))
                     preloader.addItem("")
                     lastHeader = it.listHeader
                 }
@@ -104,44 +108,50 @@ class MediaFileAdapter(
         }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is HeaderViewHolder) {
-            holder.setText(
-                mediaFileListItems[position].header
-                    ?: context.resources.getString(R.string.undetermined)
-            )
-        } else if (holder is MediaInfoRecyclerViewHolder) {
-            mediaFileListItems[position].run {
-                mediaFileInfo?.let {
-                    holder.infoTitle.text = it.title
-                    val formattedDate = it.getModificationDate(context)
-                    val formattedSize = it.getFormattedSize(context)
-                    it.extraInfo?.let {
-                        extraInfo ->
-                        when (extraInfo.mediaType) {
-                            MediaFileInfo.MEDIA_TYPE_IMAGE -> {
-                                holder.infoSummary.text =
-                                    "${it.extraInfo.imageMetaData?.width}" +
-                                    "x${it.extraInfo.imageMetaData?.height}"
-                                preloader.loadImage(it.path, holder.iconView)
-                            }
-                            MediaFileInfo.MEDIA_TYPE_VIDEO -> {
-                                holder.infoSummary.text = "${it.extraInfo.videoMetaData?.width}" +
-                                    "x${it.extraInfo.videoMetaData?.height}"
-                                holder.extraInfo.text =
-                                    it.extraInfo.videoMetaData?.duration?.toString() ?: ""
-                                preloader.loadImage(it.path, holder.iconView)
-                            }
-                            MediaFileInfo.MEDIA_TYPE_AUDIO -> {
-                                holder.infoSummary.text =
-                                    "${it.extraInfo.audioMetaData?.albumName} " +
-                                    "| ${it.extraInfo.audioMetaData?.artistName}"
-                                holder.extraInfo.text =
-                                    it.extraInfo.videoMetaData?.duration?.toString() ?: ""
-                            }
-                            MediaFileInfo.MEDIA_TYPE_UNKNOWN,
-                            MediaFileInfo.MEDIA_TYPE_DOCUMENT -> {
-                                holder.infoSummary.text = "$formattedDate | $formattedSize"
-                                preloader.loadImage(it.path, holder.iconView)
+        when (holder) {
+            is HeaderViewHolder -> {
+                holder.setText(
+                    mediaFileListItems[position].header
+                        ?: context.resources.getString(R.string.undetermined)
+                )
+            }
+            is MediaInfoRecyclerViewHolder -> {
+                mediaFileListItems[position].run {
+                    mediaFileInfo?.let {
+                        holder.infoTitle.text = it.title
+                        Glide.with(context).clear(holder.iconView)
+                        val formattedDate = it.getModificationDate(context)
+                        val formattedSize = it.getFormattedSize(context)
+                        it.extraInfo?.let { extraInfo ->
+                            when (extraInfo.mediaType) {
+                                MediaFileInfo.MEDIA_TYPE_IMAGE -> {
+                                    holder.infoSummary.text =
+                                        "${it.extraInfo.imageMetaData?.width}" +
+                                        "x${it.extraInfo.imageMetaData?.height}"
+                                    preloader.loadImage(it.path, holder.iconView)
+                                }
+                                MediaFileInfo.MEDIA_TYPE_VIDEO -> {
+                                    holder.infoSummary.text =
+                                        "${it.extraInfo.videoMetaData?.width}" +
+                                        "x${it.extraInfo.videoMetaData?.height}"
+                                    holder.extraInfo.text =
+                                        it.extraInfo.videoMetaData?.duration?.toString() ?: ""
+                                    preloader.loadImage(it.path, holder.iconView)
+                                }
+                                MediaFileInfo.MEDIA_TYPE_AUDIO -> {
+                                    holder.infoSummary.text =
+                                        "${it.extraInfo.audioMetaData?.albumName} " +
+                                        "| ${it.extraInfo.audioMetaData?.artistName}"
+                                    holder.extraInfo.text =
+                                        it.extraInfo.videoMetaData?.duration?.toString() ?: ""
+                                }
+                                MediaFileInfo.MEDIA_TYPE_UNKNOWN -> {
+                                    preloader.loadImage(it.path, holder.iconView)
+                                    holder.infoSummary.text = "$formattedDate | $formattedSize"
+                                }
+                                MediaFileInfo.MEDIA_TYPE_DOCUMENT -> {
+                                    holder.infoSummary.text = "$formattedDate | $formattedSize"
+                                }
                             }
                         }
                     }
@@ -152,6 +162,10 @@ class MediaFileAdapter(
 
     override fun getItemCount(): Int {
         return mediaFileListItems.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return mediaFileListItems[position].listItemType
     }
 
     /**
@@ -181,5 +195,9 @@ class MediaFileAdapter(
         var header: String? = null
     ) {
         constructor(listItemType: @ListItemType Int) : this(null, listItemType)
+        constructor(listItemType: @ListItemType Int, header: String) : this(
+            null,
+            listItemType, header
+        )
     }
 }

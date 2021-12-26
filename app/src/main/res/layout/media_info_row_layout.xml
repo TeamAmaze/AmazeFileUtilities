@@ -5,24 +5,26 @@
     android:minHeight="@dimen/minimal_row_size"
     android:clickable="true"
     android:focusable="true"
-    android:paddingLeft="@dimen/material_generic"
-    android:paddingStart="@dimen/material_generic"
-    android:paddingRight="@dimen/material_generic"
-    android:paddingEnd="@dimen/material_generic"
     android:layout_gravity="center_vertical"
-    android:background="@null"
+    android:gravity="center_vertical"
+    android:padding="@dimen/material_generic"
+    android:layout_marginTop="@dimen/eight_dp"
+    android:layout_marginBottom="@dimen/four_dp"
+    android:background="@drawable/background_curved_recents"
     >
     <ImageView
         android:id="@+id/icon_view"
         android:layout_width="@dimen/minimal_icon_size"
         android:layout_height="@dimen/minimal_icon_size"
         android:scaleType="centerCrop"
+        android:layout_marginEnd="@dimen/material_generic"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:background="@drawable/circle_shape"
+        android:gravity="center_vertical"
         />
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_toRightOf="@id/icon_view"
@@ -31,15 +33,18 @@
         >
         <TextView
             android:id="@+id/info_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:textColor="@color/white"
+            android:fadingEdge="horizontal"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:ellipsize="middle"
             android:textSize="@dimen/eighteen_sp"
-            />
+            android:singleLine="true" />
         <TextView
             android:id="@+id/info_summary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:textSize="@dimen/twelve_sp"
             android:textColor="@color/gray_text"
             />

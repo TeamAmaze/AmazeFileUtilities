@@ -10,20 +10,15 @@
 
 package com.amaze.fileutilities.utilis
 
-import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build.VERSION
-import android.os.Build.VERSION_CODES
-import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import java.io.File
-import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -110,7 +105,6 @@ class CursorUtils {
             if (cursor == null) {
                 return Pair(FilesViewModel.StorageSummary(0, 0), docs)
             } else if (cursor.count > 0 && cursor.moveToFirst()) {
-//                callback.getStorageSummary(cursor.count, 0)
                 cursorCount = cursor.count
                 do {
                     val path =
@@ -142,46 +136,39 @@ class CursorUtils {
         }
 
         fun listRecentFiles(context: Context): ArrayList<MediaFileInfo> {
-            val recentFiles: ArrayList<MediaFileInfo> = ArrayList(20)
+            val recentFiles: ArrayList<MediaFileInfo> = ArrayList()
             val projection = arrayOf(
-                MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.DATE_MODIFIED
+                MediaStore.Files.FileColumns.DATA, MediaStore.Files.FileColumns.DATE_MODIFIED,
+                MediaStore.Files.FileColumns.MEDIA_TYPE
             )
             val c = Calendar.getInstance()
             c[Calendar.DAY_OF_YEAR] = c[Calendar.DAY_OF_YEAR] - 2
             val d = c.time
-            val cursor: Cursor? = if (VERSION.SDK_INT >= VERSION_CODES.Q) {
-                val queryArgs = Bundle()
-                queryArgs.putInt(ContentResolver.QUERY_ARG_LIMIT, 20)
-                queryArgs.putStringArray(
-                    ContentResolver.QUERY_ARG_SORT_COLUMNS,
-                    arrayOf(MediaStore.Files.FileColumns.DATE_MODIFIED)
-                )
-                queryArgs.putInt(
-                    ContentResolver.QUERY_ARG_SORT_DIRECTION,
-                    ContentResolver.QUERY_SORT_DIRECTION_DESCENDING
-                )
-                context
-                    .contentResolver
-                    .query(
-                        MediaStore.Files.getContentUri("external"), projection,
-                        queryArgs, null
-                    )
-            } else {
-                context
-                    .contentResolver
-                    .query(
-                        MediaStore.Files.getContentUri("external"),
-                        projection,
-                        null,
-                        null,
-                        MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC LIMIT 20"
-                    )
-            }
-            if (cursor == null) return recentFiles
+
+            /*val mimeTypePdf = MimeTypeMap.getSingleton().getMimeTypeFromExtension("jpg")
+            val mimeTypeEpub = MimeTypeMap.getSingleton().getMimeTypeFromExtension("epub")
+            val mimeTypeDocx = MimeTypeMap.getSingleton().getMimeTypeFromExtension("docx")
+            val selectionArgsPdf = arrayOf(mimeTypePdf, mimeTypeEpub, mimeTypeDocx)
+            val selectionMimeType = MediaStore.Files.FileColumns.MIME_TYPE +
+                    "=(${mimeTypePdf.toString()})"*/
+
+            val selectionArgs: Array<String>? = null // there is no ? in selection so null here
+
+            val selection = MediaStore.Files.FileColumns.MEDIA_TYPE +
+                " IN (${MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE}, " +
+                "${MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO}, " +
+                "${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO})"
+
+            val cursor: Cursor = context
+                .contentResolver
+                .query(
+                    MediaStore.Files.getContentUri("external"),
+                    projection,
+                    selection,
+                    selectionArgs,
+                    MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC LIMIT 20"
+                ) ?: return recentFiles
             if (cursor.count > 0 && cursor.moveToFirst()) {
-//                callback.getStorageSummary(cursor.count, 0)
-//                var longSize = 0L
-//                val cursorCount = cursor.count
                 do {
                     val path =
                         cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))
@@ -195,10 +182,8 @@ class CursorUtils {
                             )
                         )
                         recentFiles.add(mediaFileInfo)
-//                        longSize += mediaFileInfo.longSize
                     }
                 } while (cursor.moveToNext())
-//                callback.getStorageSummary(cursorCount, longSize)
             }
             cursor.close()
             return recentFiles
@@ -356,7 +341,7 @@ class CursorUtils {
         private fun addBlacklistSelectionValues(
             selectionValues: Array<String?>?,
             paths: ArrayList<String>
-        ): Array<String?>? {
+        ): Array<String?> {
             var selectionValues: Array<String?>? = selectionValues
             if (selectionValues == null) selectionValues = arrayOfNulls(0)
             val newSelectionValues = arrayOfNulls<String>(selectionValues.size + paths.size)
