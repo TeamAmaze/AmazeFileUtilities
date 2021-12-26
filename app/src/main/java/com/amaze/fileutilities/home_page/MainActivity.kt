@@ -61,4 +61,8 @@ class MainActivity : PermissionActivity() {
         }
         navView.setupWithNavController(navController)
     }
+
+    fun setCustomTitle(title: String) {
+        actionBarBinding.title.text = title
+    }
 }

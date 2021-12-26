@@ -17,5 +17,5 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class LocalEpubModel(
     var uri: Uri,
-    val mimeType: String
+    val mimeType: String?
 ) : Parcelable

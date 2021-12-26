@@ -12,14 +12,18 @@ package com.amaze.fileutilities.home_page.ui.files
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IntDef
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
+import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.utilis.EmptyViewHolder
 import com.amaze.fileutilities.utilis.HeaderViewHolder
+import com.amaze.fileutilities.video_player.VideoPlayerDialogActivity
 import com.bumptech.glide.Glide
 import kotlin.math.roundToInt
 
@@ -118,39 +122,34 @@ class MediaFileAdapter(
             is MediaInfoRecyclerViewHolder -> {
                 mediaFileListItems[position].run {
                     mediaFileInfo?.let {
-                        holder.infoTitle.text = it.title
+                        mediaFileInfo ->
+                        holder.infoTitle.text = mediaFileInfo.title
                         Glide.with(context).clear(holder.iconView)
-                        val formattedDate = it.getModificationDate(context)
-                        val formattedSize = it.getFormattedSize(context)
-                        it.extraInfo?.let { extraInfo ->
+                        val formattedDate = mediaFileInfo.getModificationDate(context)
+                        val formattedSize = mediaFileInfo.getFormattedSize(context)
+                        mediaFileInfo.extraInfo?.let { extraInfo ->
                             when (extraInfo.mediaType) {
                                 MediaFileInfo.MEDIA_TYPE_IMAGE -> {
-                                    holder.infoSummary.text =
-                                        "${it.extraInfo.imageMetaData?.width}" +
-                                        "x${it.extraInfo.imageMetaData?.height}"
-                                    preloader.loadImage(it.path, holder.iconView)
+                                    processImageMediaInfo(holder, mediaFileInfo)
                                 }
                                 MediaFileInfo.MEDIA_TYPE_VIDEO -> {
-                                    holder.infoSummary.text =
-                                        "${it.extraInfo.videoMetaData?.width}" +
-                                        "x${it.extraInfo.videoMetaData?.height}"
-                                    holder.extraInfo.text =
-                                        it.extraInfo.videoMetaData?.duration?.toString() ?: ""
-                                    preloader.loadImage(it.path, holder.iconView)
+                                    processVideoMediaInfo(holder, mediaFileInfo)
                                 }
                                 MediaFileInfo.MEDIA_TYPE_AUDIO -> {
-                                    holder.infoSummary.text =
-                                        "${it.extraInfo.audioMetaData?.albumName} " +
-                                        "| ${it.extraInfo.audioMetaData?.artistName}"
-                                    holder.extraInfo.text =
-                                        it.extraInfo.videoMetaData?.duration?.toString() ?: ""
+                                    processAudioMediaInfo(holder, mediaFileInfo)
                                 }
                                 MediaFileInfo.MEDIA_TYPE_UNKNOWN -> {
-                                    preloader.loadImage(it.path, holder.iconView)
+                                    preloader.loadImage(mediaFileInfo.path, holder.iconView)
                                     holder.infoSummary.text = "$formattedDate | $formattedSize"
+                                    holder.root.setOnClickListener {
+                                        startExternalViewAction(mediaFileInfo)
+                                    }
                                 }
                                 MediaFileInfo.MEDIA_TYPE_DOCUMENT -> {
                                     holder.infoSummary.text = "$formattedDate | $formattedSize"
+                                    holder.root.setOnClickListener {
+                                        startExternalViewAction(mediaFileInfo)
+                                    }
                                 }
                             }
                         }
@@ -178,6 +177,54 @@ class MediaFileAdapter(
             addAll(data)
             mediaFileListItems = mutableListOf()
             notifyDataSetChanged()
+        }
+    }
+
+    private fun startExternalViewAction(mediaFileInfo: MediaFileInfo) {
+        val intent = Intent()
+        intent.data = mediaFileInfo.getContentUri(context)
+        intent.action = Intent.ACTION_VIEW
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+    }
+
+    private fun processImageMediaInfo(holder: MediaInfoRecyclerViewHolder, mediaFileInfo: MediaFileInfo) {
+        holder.infoSummary.text =
+            "${mediaFileInfo.extraInfo!!.imageMetaData?.width}" +
+                    "x${mediaFileInfo.extraInfo.imageMetaData?.height}"
+        preloader.loadImage(mediaFileInfo.path, holder.iconView)
+        holder.root.setOnClickListener {
+            val intent = Intent(context, ImageViewerDialogActivity::class.java)
+            intent.data = mediaFileInfo.getContentUri(context)
+            context.startActivity(intent)
+        }
+    }
+
+    private fun processAudioMediaInfo(holder: MediaInfoRecyclerViewHolder, mediaFileInfo: MediaFileInfo) {
+        holder.infoSummary.text =
+            "${mediaFileInfo.extraInfo!!.audioMetaData?.albumName} " +
+                    "| ${mediaFileInfo.extraInfo.audioMetaData?.artistName}"
+        holder.extraInfo.text =
+            mediaFileInfo.extraInfo.videoMetaData?.duration?.toString() ?: ""
+        holder.root.setOnClickListener {
+            val intent = Intent(context, AudioPlayerDialogActivity::class.java)
+            intent.data = mediaFileInfo.getContentUri(context)
+            context.startActivity(intent)
+        }
+    }
+
+    private fun processVideoMediaInfo(holder: MediaInfoRecyclerViewHolder, mediaFileInfo: MediaFileInfo) {
+        holder.infoSummary.text =
+            "${mediaFileInfo.extraInfo!!.videoMetaData?.width}" +
+                    "x${mediaFileInfo.extraInfo.videoMetaData?.height}"
+        holder.extraInfo.text =
+            mediaFileInfo.extraInfo.videoMetaData?.duration?.toString() ?: ""
+        preloader.loadImage(mediaFileInfo.path, holder.iconView)
+        holder.root.setOnClickListener {
+            val intent = Intent(context, VideoPlayerDialogActivity::class.java)
+            intent.data = mediaFileInfo.getContentUri(context)
+            context.startActivity(intent)
         }
     }
 

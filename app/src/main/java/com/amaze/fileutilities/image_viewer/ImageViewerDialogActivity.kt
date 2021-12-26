@@ -38,7 +38,7 @@ class ImageViewerDialogActivity : PermissionActivity() {
             )
             val bundle = bundleOf(
                 ImageViewerFragment.VIEW_TYPE_ARGUMENT
-                    to LocalImageModel(uri = imageUri!!, mimeType = mimeType!!)
+                    to LocalImageModel(uri = imageUri!!, mimeType = mimeType)
             )
             supportFragmentManager.commit {
                 setReorderingAllowed(true)

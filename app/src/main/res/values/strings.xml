@@ -41,10 +41,12 @@
     <string name="documents">Documents</string>
     <string name="num_of_files">%s Files</string>
     <string name="num_of_files_and_size">%s Files | %s</string>
+    <string name="used_space">Used: %s</string>
     <string name="send">Send</string>
     <string name="receive">Receive</string>
     <string name="undetermined" translatable="false">--</string>
     <string name="calculating">Calculating…</string>
     <string name="recent_files">Recent Files</string>
     <string name="no_files">No files</string>
+    <string name="internal_storage_subs">Internal Storage: %s</string>
 </resources>

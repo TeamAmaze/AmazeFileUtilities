@@ -18,6 +18,7 @@
     <dimen name="fifty_six_dp">56dp</dimen>
 
     <dimen name="eighteen_sp">18sp</dimen>
+    <dimen name="thirty_two_sp">32sp</dimen>
     <dimen name="fourteen_sp">14sp</dimen>
     <dimen name="sixteen_sp">16sp</dimen>
     <dimen name="twelve_sp">12sp</dimen>
