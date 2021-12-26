@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical"
+    android:background="@color/navy_blue"
+    >
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listView"
+        android:id="@+id/videosListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="@null"
         android:scrollbars="none"
         android:descendantFocusability="afterDescendants"
+        android:layout_margin="@dimen/material_generic_medium"
         />
-
-    <com.amaze.fileutilities.utilis.FastScroller
-        android:id="@+id/fastscroll"
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_gravity="right"
-        android:layout_height="match_parent"
-        app:layout_constraintRight_toRightOf="parent"
+    <ProgressBar
+        android:id="@+id/loadingProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:gravity="center_horizontal"
         />
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/videosListInfoText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/material_generic"
+        android:textSize="@dimen/eighteen_sp"
+        android:gravity="center_horizontal"
+        />
+</LinearLayout>

@@ -11,9 +11,4 @@
         <attr name="mediaImageSrc" format="reference" />
         <attr name="themeColor" format="color" />
     </declare-styleable>
-    <declare-styleable name="MediaTypeHeaderView">
-        <attr name="typeImageSrc" format="reference" />
-        <attr name="backgroundImageSrc" format="reference" />
-        <attr name="headerThemeColor" format="color" />
-    </declare-styleable>
 </resources>

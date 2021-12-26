@@ -17,12 +17,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IntDef
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
+import com.amaze.fileutilities.home_page.ui.MediaTypeHeaderView
 import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.utilis.EmptyViewHolder
 import com.amaze.fileutilities.utilis.HeaderViewHolder
+import com.amaze.fileutilities.utilis.ListBannerViewHolder
 import com.amaze.fileutilities.video_player.VideoPlayerDialogActivity
 import com.bumptech.glide.Glide
 import kotlin.math.roundToInt
@@ -32,7 +35,8 @@ class MediaFileAdapter(
     val preloader: MediaAdapterPreloader,
     private var sortingPreference: MediaFileListSorter.SortingPreference,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
-    private val isRecentFilesList: Boolean
+    private val mediaType: Int,
+    private val drawBannerCallback: (mediaTypeHeader: MediaTypeHeaderView) -> Unit
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -42,17 +46,15 @@ class MediaFileAdapter(
             if (mediaFileInfoList.size == 0) {
                 return
             }
-            if (!isRecentFilesList) {
-                MediaFileListSorter.generateMediaFileListHeadersAndSort(
-                    context,
-                    mediaFileInfoList, sortingPreference
-                )
-            }
+            MediaFileListSorter.generateMediaFileListHeadersAndSort(
+                context,
+                mediaFileInfoList, sortingPreference
+            )
             var lastHeader: String? = null
+            value.add(ListItem(TYPE_BANNER))
+            preloader.addItem("")
             mediaFileInfoList.forEach {
-                if ((lastHeader == null || it.listHeader != lastHeader) &&
-                    !isRecentFilesList
-                ) {
+                if (lastHeader == null || it.listHeader != lastHeader) {
                     value.add(ListItem(TYPE_HEADER, it.listHeader))
                     preloader.addItem("")
                     lastHeader = it.listHeader
@@ -76,12 +78,20 @@ class MediaFileAdapter(
         const val TYPE_ITEM = 0
         const val TYPE_HEADER = 1
         const val EMPTY_LAST_ITEM = 2
+        const val TYPE_BANNER = 4
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
         RecyclerView.ViewHolder {
             var view = View(context)
             when (viewType) {
+                TYPE_BANNER -> {
+                    view = mInflater.inflate(
+                        R.layout.list_banner_layout, parent,
+                        false
+                    )
+                    return ListBannerViewHolder(view)
+                }
                 TYPE_ITEM -> {
                     view = mInflater.inflate(
                         R.layout.media_info_row_layout, parent,
@@ -115,7 +125,7 @@ class MediaFileAdapter(
         when (holder) {
             is HeaderViewHolder -> {
                 holder.setText(
-                    mediaFileListItems[position].header
+                    mediaFileListItems[position].mediaFileInfo?.listHeader
                         ?: context.resources.getString(R.string.undetermined)
                 )
             }
@@ -138,13 +148,6 @@ class MediaFileAdapter(
                                 MediaFileInfo.MEDIA_TYPE_AUDIO -> {
                                     processAudioMediaInfo(holder, mediaFileInfo)
                                 }
-                                MediaFileInfo.MEDIA_TYPE_UNKNOWN -> {
-                                    preloader.loadImage(mediaFileInfo.path, holder.iconView)
-                                    holder.infoSummary.text = "$formattedDate | $formattedSize"
-                                    holder.root.setOnClickListener {
-                                        startExternalViewAction(mediaFileInfo)
-                                    }
-                                }
                                 MediaFileInfo.MEDIA_TYPE_DOCUMENT -> {
                                     holder.infoSummary.text = "$formattedDate | $formattedSize"
                                     holder.root.setOnClickListener {
@@ -155,6 +158,9 @@ class MediaFileAdapter(
                         }
                     }
                 }
+            }
+            is ListBannerViewHolder -> {
+                setBannerResources(holder)
             }
         }
     }
@@ -180,6 +186,72 @@ class MediaFileAdapter(
         }
     }
 
+    private fun setBannerResources(holder: ListBannerViewHolder) {
+        when (mediaType) {
+            MediaFileInfo.MEDIA_TYPE_AUDIO -> {
+                holder.mediaTypeHeaderView.setHeaderColor(
+                    ResourcesCompat
+                        .getColor(
+                            context.resources,
+                            R.color.peach, context.theme
+                        )
+                )
+                holder.mediaTypeHeaderView.setTypeImageSrc(
+                    ResourcesCompat.getDrawable(
+                        context.resources,
+                        R.drawable.ic_outline_audio_file_32, context.theme
+                    )!!
+                )
+            }
+            MediaFileInfo.MEDIA_TYPE_VIDEO -> {
+                holder.mediaTypeHeaderView.setHeaderColor(
+                    ResourcesCompat
+                        .getColor(
+                            context.resources,
+                            R.color.green, context.theme
+                        )
+                )
+                holder.mediaTypeHeaderView.setTypeImageSrc(
+                    ResourcesCompat.getDrawable(
+                        context.resources,
+                        R.drawable.ic_outline_video_library_32, context.theme
+                    )!!
+                )
+            }
+            MediaFileInfo.MEDIA_TYPE_IMAGE -> {
+                holder.mediaTypeHeaderView.setHeaderColor(
+                    ResourcesCompat
+                        .getColor(
+                            context.resources,
+                            R.color.pink, context.theme
+                        )
+                )
+                holder.mediaTypeHeaderView.setTypeImageSrc(
+                    ResourcesCompat.getDrawable(
+                        context.resources,
+                        R.drawable.ic_outline_image_32, context.theme
+                    )!!
+                )
+            }
+            MediaFileInfo.MEDIA_TYPE_DOCUMENT -> {
+                holder.mediaTypeHeaderView.setHeaderColor(
+                    ResourcesCompat
+                        .getColor(
+                            context.resources,
+                            R.color.peach, context.theme
+                        )
+                )
+                holder.mediaTypeHeaderView.setTypeImageSrc(
+                    ResourcesCompat.getDrawable(
+                        context.resources,
+                        R.drawable.ic_outline_insert_drive_file_32, context.theme
+                    )!!
+                )
+            }
+        }
+        drawBannerCallback.invoke(holder.mediaTypeHeaderView)
+    }
+
     private fun startExternalViewAction(mediaFileInfo: MediaFileInfo) {
         val intent = Intent()
         intent.data = mediaFileInfo.getContentUri(context)
@@ -189,10 +261,13 @@ class MediaFileAdapter(
         context.startActivity(intent)
     }
 
-    private fun processImageMediaInfo(holder: MediaInfoRecyclerViewHolder, mediaFileInfo: MediaFileInfo) {
+    private fun processImageMediaInfo(
+        holder: MediaInfoRecyclerViewHolder,
+        mediaFileInfo: MediaFileInfo
+    ) {
         holder.infoSummary.text =
             "${mediaFileInfo.extraInfo!!.imageMetaData?.width}" +
-                    "x${mediaFileInfo.extraInfo.imageMetaData?.height}"
+            "x${mediaFileInfo.extraInfo.imageMetaData?.height}"
         preloader.loadImage(mediaFileInfo.path, holder.iconView)
         holder.root.setOnClickListener {
             val intent = Intent(context, ImageViewerDialogActivity::class.java)
@@ -201,10 +276,13 @@ class MediaFileAdapter(
         }
     }
 
-    private fun processAudioMediaInfo(holder: MediaInfoRecyclerViewHolder, mediaFileInfo: MediaFileInfo) {
+    private fun processAudioMediaInfo(
+        holder: MediaInfoRecyclerViewHolder,
+        mediaFileInfo: MediaFileInfo
+    ) {
         holder.infoSummary.text =
             "${mediaFileInfo.extraInfo!!.audioMetaData?.albumName} " +
-                    "| ${mediaFileInfo.extraInfo.audioMetaData?.artistName}"
+            "| ${mediaFileInfo.extraInfo.audioMetaData?.artistName}"
         holder.extraInfo.text =
             mediaFileInfo.extraInfo.videoMetaData?.duration?.toString() ?: ""
         holder.root.setOnClickListener {
@@ -214,10 +292,13 @@ class MediaFileAdapter(
         }
     }
 
-    private fun processVideoMediaInfo(holder: MediaInfoRecyclerViewHolder, mediaFileInfo: MediaFileInfo) {
+    private fun processVideoMediaInfo(
+        holder: MediaInfoRecyclerViewHolder,
+        mediaFileInfo: MediaFileInfo
+    ) {
         holder.infoSummary.text =
             "${mediaFileInfo.extraInfo!!.videoMetaData?.width}" +
-                    "x${mediaFileInfo.extraInfo.videoMetaData?.height}"
+            "x${mediaFileInfo.extraInfo.videoMetaData?.height}"
         holder.extraInfo.text =
             mediaFileInfo.extraInfo.videoMetaData?.duration?.toString() ?: ""
         preloader.loadImage(mediaFileInfo.path, holder.iconView)

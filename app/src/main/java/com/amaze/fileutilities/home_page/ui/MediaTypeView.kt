@@ -86,6 +86,10 @@ class MediaTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(conte
         invalidate()
     }
 
-    data class MediaTypeContent(val itemsCount: Int, val size: String, val progress: Int,
-                                val totalSpace: String? = "")
+    data class MediaTypeContent(
+        val itemsCount: Int,
+        val size: String,
+        val progress: Int,
+        val totalSpace: String? = ""
+    )
 }
