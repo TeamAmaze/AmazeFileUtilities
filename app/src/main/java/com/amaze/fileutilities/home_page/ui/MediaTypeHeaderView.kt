@@ -1,6 +1,17 @@
+/*
+ * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.home_page.ui
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
@@ -10,8 +21,6 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.amaze.fileutilities.R
-import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
-import com.amaze.fileutilities.utilis.px
 import com.google.android.material.progressindicator.LinearProgressIndicator
 
 class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
@@ -26,17 +35,6 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
     private val internalStorageTextView: TextView
 
     init {
-        val a = context.obtainStyledAttributes(
-            attrs,
-            R.styleable.MediaTypeHeaderView, 0, 0
-        )
-        val typeImageSrc = a.getDrawable(R.styleable.MediaTypeHeaderView_typeImageSrc)
-        val mediaSrc = a.getDrawable(R.styleable.MediaTypeHeaderView_backgroundImageSrc)
-        val themeColor = a.getColor(
-            R.styleable.MediaTypeHeaderView_headerThemeColor,
-            resources.getColor(R.color.blue)
-        )
-        a.recycle()
         val inflater = context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.media_type_header_layout, this, true)
@@ -45,20 +43,14 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         usedSpaceTextView = infoLayoutParent.findViewById(R.id.usedSpaceTextView)
         progressIndicatorsParent = infoLayoutParent.findViewById(R.id.progressIndicatorsParent)
         mediaProgressIndicator = progressIndicatorsParent.findViewById(R.id.mediaProgress)
-        progressPercentTextView = progressIndicatorsParent.findViewById(R.id.progressPercentTextView)
+        progressPercentTextView = progressIndicatorsParent
+            .findViewById(R.id.progressPercentTextView)
         storageCountsParent = infoLayoutParent.findViewById(R.id.storageCountsParent)
         itemsCountTextView = storageCountsParent.findViewById(R.id.itemsCountTextView)
         internalStorageTextView = storageCountsParent.findViewById(R.id.internalStorageTextView)
 
         orientation = HORIZONTAL
         gravity = Gravity.CENTER_VERTICAL
-        background = context.resources.getDrawable(R.drawable.background_curved)
-//        setPadding(16.px.toInt(), 16.px.toInt(), 16.px.toInt(), 16.px.toInt())
-
-        typeImageView.setImageDrawable(typeImageSrc)
-        typeImageView.setColorFilter(themeColor)
-//        mediaTitleTextView.setTextColor(themeColor)
-//        mediaProgressIndicator.setIndicatorColor(themeColor)
 
         // init values
         usedSpaceTextView.text = resources.getString(R.string.used_space)
@@ -85,5 +77,18 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
             )
         }
         invalidate()
+    }
+
+    fun setTypeImageSrc(imageRes: Drawable) {
+        typeImageView.setImageDrawable(imageRes)
+    }
+
+    fun setMediaImageSrc(mediaRes: Drawable) {
+        background = mediaRes
+    }
+
+    fun setHeaderColor(headerColor: Int) {
+        setBackgroundColor(headerColor)
+        typeImageView.setColorFilter(headerColor)
     }
 }

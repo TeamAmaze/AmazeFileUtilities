@@ -33,7 +33,7 @@ class FilesFragment : Fragment() {
 
     private val filesViewModel: FilesViewModel by activityViewModels()
     private var _binding: FragmentFilesBinding? = null
-    private var mediaFileAdapter: MediaFileAdapter? = null
+    private var mediaFileAdapter: RecentMediaFilesAdapter? = null
     private var preloader: MediaAdapterPreloader? = null
     private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
     private var linearLayoutManager: LinearLayoutManager? = null
@@ -113,7 +113,7 @@ class FilesFragment : Fragment() {
                             )
                         )
                         binding.imagesTab.setOnClickListener {
-                            startImagesListFragment()
+                            startListFragment(ImagesListFragment())
                         }
                     }
                 }
@@ -135,6 +135,9 @@ class FilesFragment : Fragment() {
                                 storageSummary.progress
                             )
                         )
+                        binding.audiosTab.setOnClickListener {
+                            startListFragment(AudiosListFragment())
+                        }
                     }
                 }
             )
@@ -156,6 +159,9 @@ class FilesFragment : Fragment() {
                                     usedSpace, storageSummary.progress
                                 )
                         )
+                        binding.videosTab.setOnClickListener {
+                            startListFragment(VideosListFragment())
+                        }
                     }
                 }
             )
@@ -176,6 +182,9 @@ class FilesFragment : Fragment() {
                                     usedSpace, storageSummary.progress
                                 )
                         )
+                        binding.documentsTab.setOnClickListener {
+                            startListFragment(DocumentsListFragment())
+                        }
                     }
                 }
             )
@@ -200,16 +209,10 @@ class FilesFragment : Fragment() {
                             MAX_PRELOAD
                         )
                         linearLayoutManager = LinearLayoutManager(context)
-                        mediaFileAdapter = MediaFileAdapter(
+                        mediaFileAdapter = RecentMediaFilesAdapter(
                             applicationContext,
                             preloader!!,
-                            MediaFileListSorter.SortingPreference(
-                                MediaFileListSorter.GROUP_NAME,
-                                MediaFileListSorter.SORT_SIZE,
-                                true,
-                                true
-                            ),
-                            this, true
+                            this
                         )
                         binding.recentFilesList
                             .addOnScrollListener(recyclerViewPreloader!!)
@@ -235,10 +238,12 @@ class FilesFragment : Fragment() {
         _binding = null
     }
 
-    private fun startImagesListFragment() {
-        val imagesListFragment = ImagesListFragment()
+    private fun startListFragment(listFragment: Fragment) {
+        val existing = parentFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)
         val transaction = parentFragmentManager.beginTransaction()
-        transaction.replace(R.id.nav_host_fragment_activity_main, imagesListFragment)
+//        transaction.remove(existing!!)
+        transaction.add(R.id.nav_host_fragment_activity_main, listFragment)
+        transaction.addToBackStack(null)
         transaction.commit()
     }
 
