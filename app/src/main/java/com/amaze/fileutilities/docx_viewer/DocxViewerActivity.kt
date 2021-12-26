@@ -47,7 +47,7 @@ class DocxViewerActivity : PermissionActivity() {
                 "Loading docx from path ${docxUri?.path} " +
                     "and mimetype $mimeType"
             )
-            docxModel = LocalDocxModel(docxUri!!, mimeType!!)
+            docxModel = LocalDocxModel(docxUri!!, mimeType)
             val converter = DocumentConverter()
             val result: Result<String>? = converter.convertToHtml(docxModel.getInputStream(this))
             title = docxModel.getName(this)

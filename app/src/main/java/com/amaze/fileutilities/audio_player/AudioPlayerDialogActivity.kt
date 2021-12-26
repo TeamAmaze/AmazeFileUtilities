@@ -49,7 +49,7 @@ class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
 
     override fun onStop() {
         super.onStop()
-        AudioPlayerService.sendCancelBroadcast(this)
+//        AudioPlayerService.sendCancelBroadcast(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

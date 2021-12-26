@@ -21,6 +21,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentFilesBinding
+import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.MediaTypeView
 import com.amaze.fileutilities.utilis.FileUtils
 import com.bumptech.glide.Glide
@@ -61,11 +62,11 @@ class FilesFragment : Fragment() {
                 {
                     it?.run {
                         val usedSpace = FileUtils.formatStorageLength(
-                            this@FilesFragment.requireContext(),
+                            requireContext(),
                             it.usedSpace!!
                         )
                         val freeSpace = FileUtils.formatStorageLength(
-                            this@FilesFragment.requireContext(),
+                            requireContext(),
                             it.freeSpace!!
                         )
                         binding.usedSpace.setColorAndLabel(
@@ -102,7 +103,7 @@ class FilesFragment : Fragment() {
                         val storageSummary = metaInfoAndSummaryPair.first
                         val usedSpace =
                             FileUtils.formatStorageLength(
-                                this@FilesFragment.requireContext(),
+                                requireContext(),
                                 storageSummary.usedSpace!!
                             )
                         binding.imagesTab.setProgress(
@@ -111,6 +112,9 @@ class FilesFragment : Fragment() {
                                 storageSummary.progress
                             )
                         )
+                        binding.imagesTab.setOnClickListener {
+                            startImagesListFragment()
+                        }
                     }
                 }
             )
@@ -122,7 +126,7 @@ class FilesFragment : Fragment() {
                         val storageSummary = metaInfoAndSummaryPair.first
                         val usedSpace = FileUtils
                             .formatStorageLength(
-                                this@FilesFragment.requireContext(),
+                                requireContext(),
                                 storageSummary.usedSpace!!
                             )
                         binding.audiosTab.setProgress(
@@ -142,7 +146,7 @@ class FilesFragment : Fragment() {
                         val storageSummary = metaInfoAndSummaryPair.first
                         val usedSpace = FileUtils
                             .formatStorageLength(
-                                this@FilesFragment.requireContext(),
+                                requireContext(),
                                 storageSummary.usedSpace!!
                             )
                         binding.videosTab.setProgress(
@@ -162,8 +166,7 @@ class FilesFragment : Fragment() {
                     metaInfoAndSummaryPair?.let {
                         val storageSummary = metaInfoAndSummaryPair.first
                         val usedSpace = FileUtils.formatStorageLength(
-                            this@FilesFragment
-                                .requireContext(),
+                            requireContext(),
                             storageSummary.usedSpace!!
                         )
                         binding.documentsTab.setProgress(
@@ -221,12 +224,25 @@ class FilesFragment : Fragment() {
         return root
     }
 
+    override fun onResume() {
+        super.onResume()
+        (requireActivity() as MainActivity)
+            .setCustomTitle(resources.getString(R.string.title_files))
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
-    var colorProvider: AdaptiveColorProvider = object : AdaptiveColorProvider {
+    private fun startImagesListFragment() {
+        val imagesListFragment = ImagesListFragment()
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.replace(R.id.nav_host_fragment_activity_main, imagesListFragment)
+        transaction.commit()
+    }
+
+    private var colorProvider: AdaptiveColorProvider = object : AdaptiveColorProvider {
         override fun provideProgressColor(progress: Float): Int {
             return when {
                 progress <= 25 -> {

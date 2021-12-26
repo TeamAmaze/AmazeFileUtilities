@@ -46,7 +46,7 @@ class PdfViewerActivity : PermissionActivity(), OnPageChangeListener, OnLoadComp
                 "Loading pdf from path ${pdfUri?.path} " +
                     "and mimetype $mimeType"
             )
-            pdfModel = LocalPdfModel(uri = pdfUri!!, mimeType = mimeType!!)
+            pdfModel = LocalPdfModel(uri = pdfUri!!, mimeType = mimeType)
             viewBinding.pdfView.fromUri(pdfUri).defaultPage(0)
                 .enableSwipe(true)
                 .swipeHorizontal(false)

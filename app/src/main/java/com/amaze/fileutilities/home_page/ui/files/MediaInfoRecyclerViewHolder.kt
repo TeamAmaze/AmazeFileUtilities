@@ -12,6 +12,7 @@ package com.amaze.fileutilities.home_page.ui.files
 
 import android.view.View
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
@@ -28,4 +29,7 @@ class MediaInfoRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     @JvmField
     val extraInfo: TextView = view.findViewById(R.id.extra_info)
+
+    @JvmField
+    val root: RelativeLayout = view.findViewById(R.id.row_layout_parent)
 }

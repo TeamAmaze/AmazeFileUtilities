@@ -56,8 +56,8 @@ data class MediaFileInfo(
         return FileUtils.formatStorageLength(context, longSize)
     }
 
-    fun getContentUri(context: Context, file: File): Uri {
-        return FileProvider.getUriForFile(context, context.packageName, file)
+    fun getContentUri(context: Context): Uri {
+        return FileProvider.getUriForFile(context, context.packageName, File(path))
     }
 
     data class ExtraInfo(

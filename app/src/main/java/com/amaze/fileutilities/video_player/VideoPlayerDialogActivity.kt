@@ -37,7 +37,7 @@ class VideoPlayerDialogActivity : PermissionActivity() {
                 "Loading video from path ${videoUri?.path} " +
                     "and mimetype $mimeType"
             )
-            videoModel = LocalVideoModel(uri = videoUri!!, mimeType = mimeType!!)
+            videoModel = LocalVideoModel(uri = videoUri!!, mimeType = mimeType)
             val bundle = bundleOf(
                 VideoPlayerFragment.VIEW_TYPE_ARGUMENT to videoModel
             )

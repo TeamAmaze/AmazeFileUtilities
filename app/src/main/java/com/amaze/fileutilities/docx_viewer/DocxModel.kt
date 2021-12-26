@@ -21,7 +21,7 @@ import java.io.InputStream
 @Parcelize
 data class LocalDocxModel(
     private var uri: Uri,
-    val mimeType: String
+    val mimeType: String?
 ) : Parcelable, DocxModel {
     override fun getInputStream(context: Context): InputStream? {
         return context.contentResolver.openInputStream(uri)
