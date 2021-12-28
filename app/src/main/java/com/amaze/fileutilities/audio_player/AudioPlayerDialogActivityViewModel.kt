@@ -17,6 +17,8 @@ import com.amaze.fileutilities.utilis.isAudioMimeType
 class AudioPlayerDialogActivityViewModel : ViewModel() {
     private var localAudioModelList: ArrayList<LocalAudioModel>? = null
     var uriList: ArrayList<Uri>? = null
+    // approx value if player is playing
+    var isPlaying: Boolean = true
 
     fun getSiblingAudioModels(
         videoModel: LocalAudioModel,

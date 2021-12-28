@@ -25,18 +25,20 @@
         android:clickable="false"
         />
     <LinearLayout
+        android:id="@+id/info_parent"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_toRightOf="@id/icon_view"
         android:layout_toEndOf="@id/icon_view"
+        android:layout_toLeftOf="@id/extra_info"
         android:gravity="center_vertical"
         android:clickable="false"
         >
         <TextView
             android:id="@+id/info_title"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:fadingEdge="horizontal"
             android:marqueeRepeatLimit="marquee_forever"
@@ -46,7 +48,7 @@
         <TextView
             android:id="@+id/info_summary"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textSize="@dimen/twelve_sp"
             android:textColor="@color/gray_text"
             />
@@ -59,5 +61,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:clickable="false"
+        android:textSize="@dimen/twelve_sp"
+        android:textColor="@color/gray_text"
         />
 </RelativeLayout>

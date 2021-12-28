@@ -49,4 +49,6 @@
     <string name="recent_files">Recent Files</string>
     <string name="no_files">No files</string>
     <string name="internal_storage_subs">Internal Storage: %s</string>
+    <string name="action_bar_search_hint">Search for files…</string>
+    <string name="please_wait">Please wait…</string>
 </resources>

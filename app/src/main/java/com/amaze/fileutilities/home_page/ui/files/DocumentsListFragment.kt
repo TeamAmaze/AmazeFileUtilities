@@ -75,7 +75,10 @@ class DocumentsListFragment : Fragment() {
                             requireContext(), storageSummary.totalSpace!!
                         )*/
                         // set list adapter
-                        preloader = MediaAdapterPreloader(requireContext())
+                        preloader = MediaAdapterPreloader(
+                            requireContext(),
+                            R.drawable.ic_outline_insert_drive_file_32
+                        )
                         val sizeProvider = ViewPreloadSizeProvider<String>()
                         recyclerViewPreloader = RecyclerViewPreloader(
                             Glide.with(requireActivity()),

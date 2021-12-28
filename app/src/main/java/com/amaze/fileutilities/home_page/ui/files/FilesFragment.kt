@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -99,6 +100,16 @@ class FilesFragment : Fragment() {
                 viewLifecycleOwner,
                 {
                     metaInfoAndSummaryPair ->
+                    binding.imagesTab.setOnClickListener {
+                        if (metaInfoAndSummaryPair != null) {
+                            startListFragment(ImagesListFragment())
+                        } else {
+                            Toast.makeText(
+                                requireContext(), R.string.please_wait,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
                     metaInfoAndSummaryPair?.let {
                         val storageSummary = metaInfoAndSummaryPair.first
                         val usedSpace =
@@ -112,9 +123,6 @@ class FilesFragment : Fragment() {
                                 storageSummary.progress
                             )
                         )
-                        binding.imagesTab.setOnClickListener {
-                            startListFragment(ImagesListFragment())
-                        }
                     }
                 }
             )
@@ -122,6 +130,16 @@ class FilesFragment : Fragment() {
                 viewLifecycleOwner,
                 {
                     metaInfoAndSummaryPair ->
+                    binding.audiosTab.setOnClickListener {
+                        if (metaInfoAndSummaryPair != null) {
+                            startListFragment(AudiosListFragment())
+                        } else {
+                            Toast.makeText(
+                                requireContext(), R.string.please_wait,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
                     metaInfoAndSummaryPair?.let {
                         val storageSummary = metaInfoAndSummaryPair.first
                         val usedSpace = FileUtils
@@ -135,9 +153,6 @@ class FilesFragment : Fragment() {
                                 storageSummary.progress
                             )
                         )
-                        binding.audiosTab.setOnClickListener {
-                            startListFragment(AudiosListFragment())
-                        }
                     }
                 }
             )
@@ -145,6 +160,16 @@ class FilesFragment : Fragment() {
                 viewLifecycleOwner,
                 {
                     metaInfoAndSummaryPair ->
+                    binding.videosTab.setOnClickListener {
+                        if (metaInfoAndSummaryPair != null) {
+                            startListFragment(VideosListFragment())
+                        } else {
+                            Toast.makeText(
+                                requireContext(), R.string.please_wait,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
                     metaInfoAndSummaryPair?.let {
                         val storageSummary = metaInfoAndSummaryPair.first
                         val usedSpace = FileUtils
@@ -159,9 +184,6 @@ class FilesFragment : Fragment() {
                                     usedSpace, storageSummary.progress
                                 )
                         )
-                        binding.videosTab.setOnClickListener {
-                            startListFragment(VideosListFragment())
-                        }
                     }
                 }
             )
@@ -169,6 +191,16 @@ class FilesFragment : Fragment() {
                 viewLifecycleOwner,
                 {
                     metaInfoAndSummaryPair ->
+                    binding.documentsTab.setOnClickListener {
+                        if (metaInfoAndSummaryPair != null) {
+                            startListFragment(DocumentsListFragment())
+                        } else {
+                            Toast.makeText(
+                                requireContext(), R.string.please_wait,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
                     metaInfoAndSummaryPair?.let {
                         val storageSummary = metaInfoAndSummaryPair.first
                         val usedSpace = FileUtils.formatStorageLength(
@@ -182,9 +214,6 @@ class FilesFragment : Fragment() {
                                     usedSpace, storageSummary.progress
                                 )
                         )
-                        binding.documentsTab.setOnClickListener {
-                            startListFragment(DocumentsListFragment())
-                        }
                     }
                 }
             )
@@ -200,7 +229,10 @@ class FilesFragment : Fragment() {
                         } else {
                             binding.recentFilesInfoText.visibility = View.GONE
                         }
-                        preloader = MediaAdapterPreloader(applicationContext)
+                        preloader = MediaAdapterPreloader(
+                            applicationContext,
+                            R.drawable.ic_outline_insert_drive_file_32
+                        )
                         val sizeProvider = ViewPreloadSizeProvider<String>()
                         recyclerViewPreloader = RecyclerViewPreloader(
                             Glide.with(applicationContext),
@@ -270,7 +302,7 @@ class FilesFragment : Fragment() {
             // 80% darker than progress color.
             // return ColorUtils.blendARGB(provideProgressColor(progress),
             // Color.BLACK, .8f)
-            return resources.getColor(R.color.white_translucent_2)
+            return resources.getColor(R.color.white_grey_1)
         }
 
         override fun provideTextColor(progress: Float): Int {

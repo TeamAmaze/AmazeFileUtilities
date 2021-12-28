@@ -4,7 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/second"
     android:layout_height="@dimen/list_header_height"
-    android:layout_width="match_parent" >
+    android:layout_width="match_parent"
+    android:padding="@dimen/material_generic"
+    >
 
     <TextView
         android:id="@+id/header_title"
