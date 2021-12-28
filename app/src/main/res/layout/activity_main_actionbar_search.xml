@@ -4,33 +4,32 @@
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
     android:layout_gravity="center_horizontal"
+    android:paddingLeft="@dimen/material_generic"
+    android:paddingRight="@dimen/material_generic"
     >
     <ImageView
-        app:srcCompat="@drawable/ic_baseline_notes_32"
+        app:srcCompat="@drawable/ic_baseline_arrow_back_32"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:gravity="center_vertical"
-        android:layout_marginLeft="@dimen/material_generic"
-        android:layout_marginStart="@dimen/material_generic"
         />
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/title"
-        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+    <EditText
+        android:id="@+id/actionBarEditText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal|center_vertical"
-        android:textColor="@color/white" />
+        android:layout_height="match_parent"
+        android:textColor="@color/white"
+        android:hint="@string/action_bar_search_hint"
+        android:textColorHint="@color/white_grey_1"
+        android:background="@drawable/background_curved_recents"
+        />
     <ImageView
-        android:id="@+id/searchActionBar"
-        app:srcCompat="@drawable/ic_baseline_search_32"
+        app:srcCompat="@drawable/ic_outline_keyboard_voice_32"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:gravity="center_vertical"
-        android:layout_marginRight="@dimen/material_generic"
-        android:layout_marginEnd="@dimen/material_generic"
         />
 </RelativeLayout>

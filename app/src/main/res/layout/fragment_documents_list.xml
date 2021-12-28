@@ -13,7 +13,6 @@
         android:divider="@null"
         android:scrollbars="none"
         android:descendantFocusability="afterDescendants"
-        android:layout_margin="@dimen/material_generic_medium"
         />
     <ProgressBar
         android:id="@+id/loadingProgress"

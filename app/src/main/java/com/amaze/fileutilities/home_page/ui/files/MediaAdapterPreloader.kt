@@ -13,11 +13,12 @@ package com.amaze.fileutilities.home_page.ui.files
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
+import com.amaze.fileutilities.R
 import com.bumptech.glide.Glide
 import com.bumptech.glide.ListPreloader.PreloadModelProvider
 import com.bumptech.glide.RequestBuilder
 
-class MediaAdapterPreloader(context: Context) :
+class MediaAdapterPreloader(context: Context, val loadingDrawable: Int) :
     PreloadModelProvider<String> {
     private var request: RequestBuilder<Drawable> = Glide.with(context).asDrawable().fitCenter()
     private var items: MutableList<String>? = null
@@ -35,10 +36,12 @@ class MediaAdapterPreloader(context: Context) :
     }
 
     override fun getPreloadRequestBuilder(item: String): RequestBuilder<*> {
-        return request.clone().load(item)
+        return request.clone().fallback(R.drawable.ic_outline_broken_image_24)
+            .placeholder(loadingDrawable).load(item)
     }
 
     fun loadImage(item: String, v: ImageView) {
-        request.load(item).into(v)
+        request.fallback(R.drawable.ic_outline_broken_image_24)
+            .placeholder(loadingDrawable).load(item).into(v)
     }
 }

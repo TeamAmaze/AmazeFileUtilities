@@ -7,5 +7,5 @@
         android:bottomLeftRadius="@dimen/twenty_four_dp"
         android:bottomRightRadius="@dimen/twenty_four_dp"
         />
-    <solid android:color="@color/white_translucent" />
+    <solid android:color="@color/navy_blue_alt" />
 </shape>

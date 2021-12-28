@@ -38,10 +38,6 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
         val action = Intent(service, AudioPlayerDialogActivity::class.java)
         action.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         val clickIntent = PendingIntent.getActivity(service, 0, action, 0)
-        val serviceName = ComponentName(service, AudioPlayerDialogActivity::class.java)
-        val intent = Intent(AudioPlayerService.ACTION_CANCEL)
-        intent.component = serviceName
-        val deleteIntent = PendingIntent.getService(service, 0, intent, 0)
 
         val bitmap = BitmapFactory.decodeResource(
             service.resources,
@@ -74,7 +70,7 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
                 .setSubText(playbackInfo.albumName)
                 .setLargeIcon(bitmap)
                 .setContentIntent(clickIntent)
-                .setDeleteIntent(deleteIntent)
+                .setDeleteIntent(retrievePlaybackAction(AudioPlayerService.ACTION_CANCEL))
                 .setContentTitle(playbackInfo.title)
                 .setContentText(playbackInfo.artistName)
                 .setOngoing(isPlaying)

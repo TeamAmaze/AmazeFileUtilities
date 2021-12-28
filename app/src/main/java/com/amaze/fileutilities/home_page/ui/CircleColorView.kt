@@ -41,7 +41,7 @@ class CircleColorView(context: Context, attrs: AttributeSet?) : LinearLayout(con
         )
         val titleTextColor = a.getColor(
             R.styleable.CircleColorView_titleTextColor,
-            resources.getColor(R.color.white_translucent_2)
+            resources.getColor(R.color.white_grey_1)
         )
         a.recycle()
         val inflater = context

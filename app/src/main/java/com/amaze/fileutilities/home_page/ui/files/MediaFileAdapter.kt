@@ -21,6 +21,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
+import com.amaze.fileutilities.audio_player.AudioUtils
 import com.amaze.fileutilities.home_page.ui.MediaTypeHeaderView
 import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.utilis.EmptyViewHolder
@@ -208,7 +209,7 @@ class MediaFileAdapter(
                     ResourcesCompat
                         .getColor(
                             context.resources,
-                            R.color.green, context.theme
+                            R.color.yellow, context.theme
                         )
                 )
                 holder.mediaTypeHeaderView.setTypeImageSrc(
@@ -238,7 +239,7 @@ class MediaFileAdapter(
                     ResourcesCompat
                         .getColor(
                             context.resources,
-                            R.color.peach, context.theme
+                            R.color.green, context.theme
                         )
                 )
                 holder.mediaTypeHeaderView.setTypeImageSrc(
@@ -283,8 +284,9 @@ class MediaFileAdapter(
         holder.infoSummary.text =
             "${mediaFileInfo.extraInfo!!.audioMetaData?.albumName} " +
             "| ${mediaFileInfo.extraInfo.audioMetaData?.artistName}"
-        holder.extraInfo.text =
-            mediaFileInfo.extraInfo.videoMetaData?.duration?.toString() ?: ""
+        mediaFileInfo.extraInfo.audioMetaData?.duration?.let {
+            holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
+        }
         holder.root.setOnClickListener {
             val intent = Intent(context, AudioPlayerDialogActivity::class.java)
             intent.data = mediaFileInfo.getContentUri(context)
@@ -299,8 +301,9 @@ class MediaFileAdapter(
         holder.infoSummary.text =
             "${mediaFileInfo.extraInfo!!.videoMetaData?.width}" +
             "x${mediaFileInfo.extraInfo.videoMetaData?.height}"
-        holder.extraInfo.text =
-            mediaFileInfo.extraInfo.videoMetaData?.duration?.toString() ?: ""
+        mediaFileInfo.extraInfo.videoMetaData?.duration?.let {
+            holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
+        }
         preloader.loadImage(mediaFileInfo.path, holder.iconView)
         holder.root.setOnClickListener {
             val intent = Intent(context, VideoPlayerDialogActivity::class.java)

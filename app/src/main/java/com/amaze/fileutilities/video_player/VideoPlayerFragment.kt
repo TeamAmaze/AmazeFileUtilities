@@ -20,20 +20,18 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updateLayoutParams
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.VideoPlayerFragmentBinding
 import com.amaze.fileutilities.image_viewer.*
+import com.amaze.fileutilities.utilis.MediaFragment
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.PlayerView
 
-class VideoPlayerFragment : Fragment() {
+class VideoPlayerFragment : MediaFragment() {
 
     private var player: ExoPlayer? = null
     private var viewModel: VideoPlayerFragmentViewModel? = null
@@ -180,7 +178,11 @@ class VideoPlayerFragment : Fragment() {
         }
     }
 
-    private fun refactorSystemUi(hide: Boolean) {
+    override fun getRootLayout(): View {
+        return viewBinding.root
+    }
+
+    /*private fun refactorSystemUi(hide: Boolean) {
         if (hide) {
             WindowInsetsControllerCompat(
                 requireActivity().window,
@@ -202,7 +204,7 @@ class VideoPlayerFragment : Fragment() {
                     .BEHAVIOR_SHOW_BARS_BY_TOUCH
             }
         }
-    }
+    }*/
 
     private fun releasePlayer() {
         player?.run {

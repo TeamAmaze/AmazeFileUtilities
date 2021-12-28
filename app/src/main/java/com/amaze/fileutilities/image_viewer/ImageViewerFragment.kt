@@ -15,16 +15,18 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.documentfile.provider.DocumentFile
-import androidx.fragment.app.Fragment
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.QuickViewFragmentBinding
+import com.amaze.fileutilities.utilis.MediaFragment
 import com.bumptech.glide.Glide
 
-class ImageViewerFragment : Fragment(R.layout.quick_view_fragment) {
+class ImageViewerFragment : MediaFragment() {
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         QuickViewFragmentBinding.inflate(layoutInflater)
     }
+
+    private var hideToolbars = false
 
     companion object {
         const val VIEW_TYPE_ARGUMENT = "ImageViewerFragment.viewTypeArgument"
@@ -44,6 +46,10 @@ class ImageViewerFragment : Fragment(R.layout.quick_view_fragment) {
                 it.arguments = arguments
             }
         }
+    }
+
+    override fun getRootLayout(): View {
+        return viewBinding.root
     }
 
     override fun onCreateView(
@@ -70,10 +76,15 @@ class ImageViewerFragment : Fragment(R.layout.quick_view_fragment) {
             }
         } else if (activity is ImageViewerActivity) {
             viewBinding.imageView.setOnClickListener {
+                hideToolbars = !hideToolbars
+                refactorSystemUi(hideToolbars)
+            }
+            viewBinding.imageView.setOnLongClickListener {
                 ImageMetadataSheet.showMetadata(
                     quickViewType!!,
                     requireActivity().supportFragmentManager
                 )
+                true
             }
         }
         quickViewType?.let { showImage(it) }

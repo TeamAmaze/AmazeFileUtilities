@@ -49,7 +49,9 @@ class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
 
     override fun onStop() {
         super.onStop()
-//        AudioPlayerService.sendCancelBroadcast(this)
+        if (!viewModel.isPlaying) {
+            AudioPlayerService.sendCancelBroadcast(this)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,6 +123,7 @@ class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
     }
 
     private fun invalidateActionButtons(progressHandler: AudioProgressHandler) {
+        viewModel.isPlaying = progressHandler.audioPlaybackInfo.isPlaying
         progressHandler.audioPlaybackInfo.isPlaying.let {
             isPlaying ->
             if (progressHandler.isCancelled || !isPlaying) {
