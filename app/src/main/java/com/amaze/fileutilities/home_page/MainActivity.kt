@@ -11,30 +11,51 @@
 package com.amaze.fileutilities.home_page
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.KeyEvent
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivityViewModel
 import com.amaze.fileutilities.databinding.ActivityMainActionbarBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
 import com.amaze.fileutilities.databinding.ActivityMainBinding
+import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.view.inputmethod.EditorInfo
+import android.widget.AutoCompleteTextView
+import android.widget.EditText
+import com.amaze.fileutilities.utilis.showToastOnTop
+
 
 class MainActivity : PermissionActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var actionBarBinding: ActivityMainActionbarBinding
     private lateinit var searchActionBarBinding: ActivityMainActionbarSearchBinding
-    var showSearchFragment = false
+//    var showSearchFragment = false
+    private lateinit var viewModel: FilesViewModel
+    private var hasImageResults = false
+    private var hasVideoResults = false
+    private var hasAudioResults = false
+    private var hasDocResults = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
+        viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
         actionBarBinding = ActivityMainActionbarBinding.inflate(layoutInflater)
         searchActionBarBinding = ActivityMainActionbarSearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -67,28 +88,48 @@ class MainActivity : PermissionActivity() {
         }
         navView.setupWithNavController(navController)
 
+        viewModel.usedImagesSummaryTransformations.observe(this, {
+            hasImageResults = it!=null
+        })
+        viewModel.usedVideosSummaryTransformations.observe(this, {
+            hasVideoResults = it!=null
+        })
+        viewModel.usedAudiosSummaryTransformations.observe(this, {
+            hasAudioResults = it!=null
+        })
+        viewModel.usedDocsSummaryTransformations.observe(this, {
+            hasDocResults = it!=null
+        })
+
         actionBarBinding.searchActionBar.setOnClickListener {
-            if (showSearchFragment) {
+            if (hasImageResults && hasAudioResults && hasVideoResults && hasDocResults) {
                 showSearchFragment()
             } else {
-                Toast.makeText(this, R.string.please_wait, Toast.LENGTH_LONG).show()
+                this.showToastOnTop(resources.getString(R.string.please_wait))
             }
         }
     }
 
     fun setCustomTitle(title: String) {
-        actionBarBinding.title.text = title
-    }
-
-    fun invalidateSearchBar(showSearch: Boolean) {
-        if (showSearch) {
-            supportActionBar?.customView = searchActionBarBinding.root
-        } else {
-            supportActionBar?.customView = actionBarBinding.root
+        if (::actionBarBinding.isInitialized) {
+            actionBarBinding.title.text = title
         }
     }
 
-    fun showSearchFragment() {
+    fun invalidateSearchBar(showSearch: Boolean): AutoCompleteTextView? {
+        if (showSearch) {
+            supportActionBar?.customView = searchActionBarBinding.root
+            searchActionBarBinding.backActionBar.setOnClickListener {
+                onBackPressed()
+            }
+            return searchActionBarBinding.actionBarEditText
+        } else {
+            supportActionBar?.customView = actionBarBinding.root
+            return null
+        }
+    }
+
+    private fun showSearchFragment() {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.nav_host_fragment_activity_main, SearchListFragment())
         transaction.addToBackStack(null)

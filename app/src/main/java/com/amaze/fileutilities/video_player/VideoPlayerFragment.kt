@@ -25,13 +25,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.VideoPlayerFragmentBinding
 import com.amaze.fileutilities.image_viewer.*
-import com.amaze.fileutilities.utilis.MediaFragment
+import com.amaze.fileutilities.utilis.AbstractMediaFragment
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.PlayerView
 
-class VideoPlayerFragment : MediaFragment() {
+class VideoPlayerFragment : AbstractMediaFragment() {
 
     private var player: ExoPlayer? = null
     private var viewModel: VideoPlayerFragmentViewModel? = null

@@ -4,32 +4,44 @@
     android:layout_width="match_parent"
     android:layout_height="?actionBarSize"
     android:layout_gravity="center_horizontal"
-    android:paddingLeft="@dimen/material_generic"
-    android:paddingRight="@dimen/material_generic"
+    android:gravity="center_vertical"
+    android:padding="@dimen/two_dp"
     >
     <ImageView
+        android:id="@+id/backActionBar"
         app:srcCompat="@drawable/ic_baseline_arrow_back_32"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:gravity="center_vertical"
+        android:layout_marginRight="@dimen/eight_dp"
+        android:layout_marginEnd="@dimen/eight_dp"
         />
-    <EditText
+    <AutoCompleteTextView
         android:id="@+id/actionBarEditText"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:textColor="@color/white"
         android:hint="@string/action_bar_search_hint"
         android:textColorHint="@color/white_grey_1"
         android:background="@drawable/background_curved_recents"
+        android:layout_toRightOf="@+id/backActionBar"
+        android:layout_toEndOf="@+id/backActionBar"
+        android:layout_toLeftOf="@+id/voiceActionBar"
+        android:layout_toStartOf="@id/voiceActionBar"
+        android:padding="@dimen/material_generic"
+        android:inputType="text"
+        android:imeOptions="actionSend"
+        android:drawableRight="@drawable/ic_round_close_32"
         />
     <ImageView
+        android:id="@+id/voiceActionBar"
         app:srcCompat="@drawable/ic_outline_keyboard_voice_32"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/eight_dp"
+        android:layout_marginStart="@dimen/eight_dp"
         />
 </RelativeLayout>

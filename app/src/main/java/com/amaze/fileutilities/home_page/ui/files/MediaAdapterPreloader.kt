@@ -30,6 +30,10 @@ class MediaAdapterPreloader(context: Context, val loadingDrawable: Int) :
         items!!.add(item)
     }
 
+    fun clear() {
+        items?.clear()
+    }
+
     override fun getPreloadItems(position: Int): List<String> {
         if (items == null) return emptyList()
         return listOf(items!![position])
