@@ -17,10 +17,10 @@ import android.view.*
 import androidx.documentfile.provider.DocumentFile
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.QuickViewFragmentBinding
-import com.amaze.fileutilities.utilis.MediaFragment
+import com.amaze.fileutilities.utilis.AbstractMediaFragment
 import com.bumptech.glide.Glide
 
-class ImageViewerFragment : MediaFragment() {
+class ImageViewerFragment : AbstractMediaFragment() {
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         QuickViewFragmentBinding.inflate(layoutInflater)

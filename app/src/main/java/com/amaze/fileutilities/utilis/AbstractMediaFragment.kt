@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 
-abstract class MediaFragment : Fragment() {
+abstract class AbstractMediaFragment : Fragment() {
 
     abstract fun getRootLayout(): View
 

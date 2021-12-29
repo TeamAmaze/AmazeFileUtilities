@@ -17,6 +17,8 @@ import android.net.Uri
 import android.os.Environment
 import android.util.DisplayMetrics
 import android.util.Log
+import android.view.Gravity
+import android.widget.Toast
 import java.io.File
 import java.lang.Exception
 
@@ -199,3 +201,15 @@ inline fun <T1 : Any, T2 : Any, R : Any> safeLet(
         p2
     ) else null
 }
+
+fun Context.showToastOnTop(message: String) = Toast.makeText(this,
+    message, Toast.LENGTH_SHORT)
+    .apply { setGravity(Gravity.TOP, 16.px.toInt(), 0); show() }
+
+fun Context.showToastInCenter(message: String) = Toast.makeText(this,
+    message, Toast.LENGTH_SHORT)
+    .apply { setGravity(Gravity.CENTER, 0, 0); show() }
+
+fun Context.showToastOnBottom(message: String) = Toast.makeText(this,
+    message, Toast.LENGTH_SHORT)
+    .apply { setGravity(Gravity.BOTTOM, 0, 0); show() }

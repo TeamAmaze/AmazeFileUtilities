@@ -25,6 +25,8 @@ import com.amaze.fileutilities.databinding.FragmentFilesBinding
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.MediaTypeView
 import com.amaze.fileutilities.utilis.FileUtils
+import com.amaze.fileutilities.utilis.showToastInCenter
+import com.amaze.fileutilities.utilis.showToastOnTop
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
@@ -55,8 +57,8 @@ class FilesFragment : Fragment() {
             false
         )
         val root: View = binding.root
+        // needed to avoid NPE in progress library when closing activity
         binding.storagePercent.isSaveEnabled = false
-
         filesViewModel.run {
             internalStorageStats.observe(
                 viewLifecycleOwner,
@@ -104,10 +106,8 @@ class FilesFragment : Fragment() {
                         if (metaInfoAndSummaryPair != null) {
                             startListFragment(ImagesListFragment())
                         } else {
-                            Toast.makeText(
-                                requireContext(), R.string.please_wait,
-                                Toast.LENGTH_LONG
-                            ).show()
+                            requireContext().showToastInCenter(resources
+                                .getString(R.string.please_wait))
                         }
                     }
                     metaInfoAndSummaryPair?.let {
@@ -134,10 +134,8 @@ class FilesFragment : Fragment() {
                         if (metaInfoAndSummaryPair != null) {
                             startListFragment(AudiosListFragment())
                         } else {
-                            Toast.makeText(
-                                requireContext(), R.string.please_wait,
-                                Toast.LENGTH_LONG
-                            ).show()
+                            requireContext().showToastInCenter(resources
+                                .getString(R.string.please_wait))
                         }
                     }
                     metaInfoAndSummaryPair?.let {
@@ -164,10 +162,8 @@ class FilesFragment : Fragment() {
                         if (metaInfoAndSummaryPair != null) {
                             startListFragment(VideosListFragment())
                         } else {
-                            Toast.makeText(
-                                requireContext(), R.string.please_wait,
-                                Toast.LENGTH_LONG
-                            ).show()
+                            requireContext().showToastInCenter(resources
+                                .getString(R.string.please_wait))
                         }
                     }
                     metaInfoAndSummaryPair?.let {
@@ -195,10 +191,8 @@ class FilesFragment : Fragment() {
                         if (metaInfoAndSummaryPair != null) {
                             startListFragment(DocumentsListFragment())
                         } else {
-                            Toast.makeText(
-                                requireContext(), R.string.please_wait,
-                                Toast.LENGTH_LONG
-                            ).show()
+                            requireContext().showToastInCenter(resources
+                                .getString(R.string.please_wait))
                         }
                     }
                     metaInfoAndSummaryPair?.let {
@@ -259,21 +253,13 @@ class FilesFragment : Fragment() {
         return root
     }
 
-    override fun onResume() {
-        super.onResume()
-        (requireActivity() as MainActivity)
-            .setCustomTitle(resources.getString(R.string.title_files))
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     private fun startListFragment(listFragment: Fragment) {
-        val existing = parentFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)
         val transaction = parentFragmentManager.beginTransaction()
-//        transaction.remove(existing!!)
         transaction.add(R.id.nav_host_fragment_activity_main, listFragment)
         transaction.addToBackStack(null)
         transaction.commit()

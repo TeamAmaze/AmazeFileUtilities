@@ -4,7 +4,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/navy_blue</item>
         <item name="colorPrimaryVariant">@color/navy_blue</item>
-        <item name="colorOnPrimary">@color/navy_blue</item>
+        <item name="colorOnPrimary">@color/highlight_yellow</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/blue</item>
         <item name="colorSecondaryVariant">@color/blue</item>
@@ -13,5 +13,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="actionBarTheme">@style/ThemeOverlay.Actionbar</item>
+
+        <item name="colorAccent">@color/highlight_yellow</item>
     </style>
 </resources>

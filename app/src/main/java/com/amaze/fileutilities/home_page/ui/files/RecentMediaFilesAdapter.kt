@@ -121,6 +121,20 @@ class RecentMediaFilesAdapter(
         return mediaFileListItems[position].listItemType
     }
 
+    /**
+     * Set list elements
+     */
+    fun setData(data: List<MediaFileInfo>) {
+        mediaFileInfoList.run {
+            clear()
+            preloader.clear()
+            addAll(data)
+            // triggers set call
+            mediaFileListItems = mutableListOf()
+            notifyDataSetChanged()
+        }
+    }
+
     private fun startExternalViewAction(mediaFileInfo: MediaFileInfo) {
         val intent = Intent()
         intent.data = mediaFileInfo.getContentUri(context)

@@ -2,6 +2,7 @@
 <resources>
     <dimen name="zero_dp">0dp</dimen>
     <dimen name="eight_dp">8dp</dimen>
+    <dimen name="two_dp">2dp</dimen>
     <dimen name="material_generic">16dp</dimen>
     <dimen name="twenty_four_dp">24dp</dimen>
     <dimen name="material_generic_medium">32dp</dimen>

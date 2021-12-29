@@ -122,6 +122,8 @@ class ImagesListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        (requireActivity() as MainActivity)
+            .setCustomTitle(resources.getString(R.string.title_files))
         _binding = null
     }
 }

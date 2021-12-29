@@ -180,8 +180,10 @@ class MediaFileAdapter(
     fun setData(data: List<MediaFileInfo>, sortPref: MediaFileListSorter.SortingPreference) {
         mediaFileInfoList.run {
             clear()
+            preloader.clear()
             sortingPreference = sortPref
             addAll(data)
+            // triggers set call
             mediaFileListItems = mutableListOf()
             notifyDataSetChanged()
         }

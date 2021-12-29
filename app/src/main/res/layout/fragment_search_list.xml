@@ -21,6 +21,7 @@
         android:layout_height="wrap_content"
         android:indeterminate="true"
         android:gravity="center_horizontal"
+        android:visibility="gone"
         />
     <TextView
         android:id="@+id/searchInfoText"
@@ -29,5 +30,6 @@
         android:layout_margin="@dimen/material_generic"
         android:textSize="@dimen/eighteen_sp"
         android:gravity="center_horizontal"
+        android:visibility="gone"
         />
 </LinearLayout>
