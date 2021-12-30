@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModel
 class AnalyseViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+        value = "Analyse your storage"
     }
     val text: LiveData<String> = _text
 }

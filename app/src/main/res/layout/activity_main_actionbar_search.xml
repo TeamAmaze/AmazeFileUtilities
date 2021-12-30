@@ -33,7 +33,7 @@
         android:inputType="text"
         android:imeOptions="actionSend"
         android:drawableRight="@drawable/ic_round_close_32"
-        />
+        android:drawableEnd="@drawable/ic_round_close_32" />
     <ImageView
         android:id="@+id/voiceActionBar"
         app:srcCompat="@drawable/ic_outline_keyboard_voice_32"

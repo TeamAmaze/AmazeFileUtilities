@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".home_page.ui.analyse.AnalyseFragment"
-    android:background="@android:color/transparent">
+    android:background="@null">
 
     <TextView
         android:id="@+id/text_home"
