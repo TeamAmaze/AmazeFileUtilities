@@ -6,6 +6,7 @@
     <dimen name="material_generic">16dp</dimen>
     <dimen name="twenty_four_dp">24dp</dimen>
     <dimen name="material_generic_medium">32dp</dimen>
+    <dimen name="sixty_four_dp">64dp</dimen>
     <dimen name="material_generic_large">72dp</dimen>
     <dimen name="material_sheet_peek_height">400dp</dimen>
     <dimen name="files_tab_heights">180dp</dimen>
@@ -19,6 +20,7 @@
     <dimen name="fifty_six_dp">56dp</dimen>
 
     <dimen name="eighteen_sp">18sp</dimen>
+    <dimen name="twenty_four_sp">24sp</dimen>
     <dimen name="thirty_two_sp">32sp</dimen>
     <dimen name="fourteen_sp">14sp</dimen>
     <dimen name="sixteen_sp">16sp</dimen>

@@ -5,16 +5,17 @@
     android:layout_height="match_parent">
     <ImageView
         android:id="@+id/type_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/fourty_eight_dp"
+        android:layout_height="@dimen/fourty_eight_dp"
+        android:layout_gravity="center_vertical"
         />
     <LinearLayout
         android:id="@+id/infoLayoutParent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="@dimen/material_generic"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/eight_dp"
+        android:layout_marginStart="@dimen/eight_dp"
         >
         <TextView
             android:id="@+id/usedSpaceTextView"
@@ -23,45 +24,50 @@
             android:textStyle="bold"
             android:textAllCaps="true"
             android:textColor="@color/white"
-            android:textSize="@dimen/thirty_two_sp"
+            android:textSize="@dimen/twenty_four_sp"
             android:layout_marginTop="@dimen/material_generic"
+            android:layout_marginBottom="@dimen/material_generic"
             />
         <LinearLayout
             android:id="@+id/progressIndicatorsParent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/four_dp"
+            android:layout_gravity="center_vertical"
+            >
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/mediaProgress"
                 android:layout_width="@dimen/zero_dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.8"
-                app:trackColor="@color/white_grey_1"
                 app:indicatorDirectionLinear="leftToRight"
                 app:indicatorColor="@color/white"
+                app:trackCornerRadius="@dimen/four_dp"
                 app:trackThickness="@dimen/eight_dp"
                 />
             <TextView
                 android:id="@+id/progressPercentTextView"
                 android:layout_width="@dimen/zero_dp"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/eight_sp"
-                android:textColor="@color/gray_text"
+                android:textSize="@dimen/sixteen_sp"
+                android:textColor="@color/white"
                 android:layout_marginLeft="@dimen/four_dp"
                 android:layout_marginStart="@dimen/four_dp"
                 android:layout_weight="0.2"
+                android:gravity="center_vertical"
                 />
         </LinearLayout>
         <RelativeLayout
             android:id="@+id/storageCountsParent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             >
             <TextView
                 android:id="@+id/itemsCountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/eight_sp"
+                android:textSize="@dimen/twelve_sp"
                 android:textColor="@color/white"
                 android:layout_alignParentStart="true"
                 />
@@ -69,8 +75,8 @@
                 android:id="@+id/internalStorageTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/eight_sp"
-                android:textColor="@color/gray_text"
+                android:textSize="@dimen/twelve_sp"
+                android:textColor="@color/white"
                 android:layout_marginLeft="@dimen/four_dp"
                 android:layout_marginStart="@dimen/four_dp"
                 android:layout_alignParentEnd="true"

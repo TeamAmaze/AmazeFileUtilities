@@ -70,9 +70,9 @@ class ImagesListFragment : Fragment() {
                             FileUtils.formatStorageLength(
                                 requireContext(), storageSummary.usedSpace!!
                             )
-                        /*val totalSpace = FileUtils.formatStorageLength(
+                        val totalSpace = FileUtils.formatStorageLength(
                             requireContext(), storageSummary.totalSpace!!
-                        )*/
+                        )
                         // set list adapter
                         preloader = MediaAdapterPreloader(
                             requireContext(),
@@ -100,7 +100,7 @@ class ImagesListFragment : Fragment() {
                             it.setProgress(
                                 MediaTypeView.MediaTypeContent(
                                     storageSummary.items, usedSpace,
-                                    storageSummary.progress, "totalSpace"
+                                    storageSummary.progress, totalSpace
                                 )
                             )
                         }

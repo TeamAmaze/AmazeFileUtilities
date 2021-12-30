@@ -189,6 +189,7 @@ class FilesViewModel(val applicationContext: Application) :
                 val summary = metaInfoAndSummaryPair.first
                 summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
                     .toInt()
+                summary.totalSpace = storageSummary.totalSpace
                 emit(metaInfoAndSummaryPair)
             }
         }
@@ -205,6 +206,7 @@ class FilesViewModel(val applicationContext: Application) :
                 val summary = metaInfoAndSummaryPair.first
                 summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
                     .toInt()
+                summary.totalSpace = storageSummary.totalSpace
                 emit(metaInfoAndSummaryPair)
             }
         }
@@ -221,6 +223,7 @@ class FilesViewModel(val applicationContext: Application) :
                 val summary = metaInfoAndSummaryPair.first
                 summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
                     .toInt()
+                summary.totalSpace = storageSummary.totalSpace
                 emit(metaInfoAndSummaryPair)
             }
         }
@@ -237,6 +240,7 @@ class FilesViewModel(val applicationContext: Application) :
                 val summary = metaInfoAndSummaryPair.first
                 summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
                     .toInt()
+                summary.totalSpace = storageSummary.totalSpace
                 emit(metaInfoAndSummaryPair)
             }
         }
@@ -246,6 +250,6 @@ class FilesViewModel(val applicationContext: Application) :
         var progress: Int,
         var usedSpace: Long? = null,
         val freeSpace: Long? = null,
-        val totalSpace: Long? = null
+        var totalSpace: Long? = null
     )
 }
