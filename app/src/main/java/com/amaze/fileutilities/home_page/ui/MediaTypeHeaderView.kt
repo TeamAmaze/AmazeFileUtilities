@@ -11,15 +11,16 @@
 package com.amaze.fileutilities.home_page.ui
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.graphics.ColorUtils
 import com.amaze.fileutilities.R
 import com.google.android.material.progressindicator.LinearProgressIndicator
 
@@ -50,11 +51,11 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         internalStorageTextView = storageCountsParent.findViewById(R.id.internalStorageTextView)
 
         orientation = HORIZONTAL
-        gravity = Gravity.CENTER_VERTICAL
+//        gravity = Gravity.CENTER_VERTICAL
 
         // init values
         usedSpaceTextView.text = resources.getString(R.string.used_space)
-
+        typeImageView.setColorFilter(context.resources.getColor(R.color.white))
         progressPercentTextView.text = "--"
     }
 
@@ -89,6 +90,9 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
 
     fun setHeaderColor(headerColor: Int) {
         setBackgroundColor(headerColor)
-        typeImageView.setColorFilter(headerColor)
+        mediaProgressIndicator.trackColor = ColorUtils.blendARGB(
+            headerColor,
+            Color.BLACK, .5f
+        )
     }
 }
