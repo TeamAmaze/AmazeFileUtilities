@@ -34,7 +34,7 @@
                 app:pcv_drawBackground="false"
                 app:pcv_typeface="interstellar.ttf"
                 app:pcv_drawBackgroundBar="true"
-                app:pcv_backgroundBarColor="@color/white_grey_1"
+                app:pcv_backgroundBarColor="@color/gray_text"
                 app:pcv_textSize="@dimen/eighteen_sp"
                 />
             <LinearLayout
@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     app:titleText="@string/undetermined"
                     app:titleTextSize="@dimen/twelve_sp"
-                    app:titleTextColor="@color/white_grey_1"
+                    app:titleTextColor="@color/gray_text"
                     app:labelColor="@color/green"
                     android:layout_marginTop="@dimen/material_generic"
                     />
@@ -82,8 +82,8 @@
                     android:layout_marginTop="@dimen/six_dp"
                     app:titleText="@string/undetermined"
                     app:titleTextSize="@dimen/twelve_sp"
-                    app:titleTextColor="@color/white_grey_1"
-                    app:labelColor="@color/white_grey_1"
+                    app:titleTextColor="@color/gray_text"
+                    app:labelColor="@color/gray_text"
                     />
             </LinearLayout>
         </LinearLayout>

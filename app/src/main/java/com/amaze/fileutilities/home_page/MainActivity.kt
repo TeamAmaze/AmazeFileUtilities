@@ -10,9 +10,14 @@
 
 package com.amaze.fileutilities.home_page
 
+import android.R.attr.data
+import android.content.Intent
 import android.os.Bundle
+import android.speech.RecognizerIntent
+import android.view.MotionEvent
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.ActionBar
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -24,7 +29,6 @@ import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
 import com.amaze.fileutilities.databinding.ActivityMainBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
-import com.amaze.fileutilities.utilis.showToastOnTop
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : PermissionActivity() {
@@ -34,10 +38,10 @@ class MainActivity : PermissionActivity() {
     private lateinit var searchActionBarBinding: ActivityMainActionbarSearchBinding
 //    var showSearchFragment = false
     private lateinit var viewModel: FilesViewModel
-    private var hasImageResults = false
-    private var hasVideoResults = false
-    private var hasAudioResults = false
-    private var hasDocResults = false
+
+    companion object {
+        private const val VOICE_REQUEST_CODE = 1000
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,38 +80,24 @@ class MainActivity : PermissionActivity() {
         }
         navView.setupWithNavController(navController)
 
-        viewModel.usedImagesSummaryTransformations.observe(
-            this,
-            {
-                hasImageResults = it != null
-            }
-        )
-        viewModel.usedVideosSummaryTransformations.observe(
-            this,
-            {
-                hasVideoResults = it != null
-            }
-        )
-        viewModel.usedAudiosSummaryTransformations.observe(
-            this,
-            {
-                hasAudioResults = it != null
-            }
-        )
-        viewModel.usedDocsSummaryTransformations.observe(
-            this,
-            {
-                hasDocResults = it != null
-            }
-        )
-
         actionBarBinding.searchActionBar.setOnClickListener {
-            if (hasImageResults && hasAudioResults && hasVideoResults && hasDocResults) {
-                showSearchFragment()
-            } else {
-                this.showToastOnTop(resources.getString(R.string.please_wait))
+            showSearchFragment()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == VOICE_REQUEST_CODE && resultCode == RESULT_OK) {
+            // Populate the wordsList with the String values the recognition engine thought it heard
+            val matches: ArrayList<String>? = data?.getStringArrayListExtra(
+                RecognizerIntent.EXTRA_RESULTS
+            )
+            matches?.let {
+                if (matches.size > 0) {
+                    searchActionBarBinding.actionBarEditText.setText(matches[0])
+                }
             }
         }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     fun setCustomTitle(title: String) {
@@ -117,15 +107,37 @@ class MainActivity : PermissionActivity() {
     }
 
     fun invalidateSearchBar(showSearch: Boolean): AutoCompleteTextView? {
-        if (showSearch) {
-            supportActionBar?.customView = searchActionBarBinding.root
-            searchActionBarBinding.backActionBar.setOnClickListener {
-                onBackPressed()
+        searchActionBarBinding.run {
+            return if (showSearch) {
+                supportActionBar?.customView = root
+                backActionBar.setOnClickListener {
+                    onBackPressed()
+                }
+                actionBarEditText.setOnTouchListener { _, event ->
+                    if (event.action == MotionEvent.ACTION_UP) {
+                        if (event.rawX >= (
+                            actionBarEditText.right -
+                                actionBarEditText.compoundDrawables[2]
+                                    .bounds.width()
+                            )
+                        ) {
+                            actionBarEditText.setText("")
+                            true
+                        }
+                    }
+                    false
+                }
+                voiceActionBar.setOnClickListener {
+                    startVoiceRecognitionActivity()
+                }
+                actionBarEditText
+            } else {
+                actionBarEditText.setText("")
+                actionBarEditText.setAdapter(null)
+                supportActionBar?.customView = actionBarBinding.root
+                actionBarEditText.setOnEditorActionListener(null)
+                null
             }
-            return searchActionBarBinding.actionBarEditText
-        } else {
-            supportActionBar?.customView = actionBarBinding.root
-            return null
         }
     }
 
@@ -134,5 +146,15 @@ class MainActivity : PermissionActivity() {
         transaction.add(R.id.nav_host_fragment_activity_main, SearchListFragment())
         transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    private fun startVoiceRecognitionActivity() {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        intent.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+        )
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice recognition Demo...")
+        startActivityForResult(intent, VOICE_REQUEST_CODE)
     }
 }
