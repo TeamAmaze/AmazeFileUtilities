@@ -11,33 +11,21 @@
 package com.amaze.fileutilities.home_page
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.view.KeyEvent
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.ActionBar
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
-import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivityViewModel
 import com.amaze.fileutilities.databinding.ActivityMainActionbarBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
 import com.amaze.fileutilities.databinding.ActivityMainBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import android.view.inputmethod.EditorInfo
-import android.widget.AutoCompleteTextView
-import android.widget.EditText
 import com.amaze.fileutilities.utilis.showToastOnTop
-
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : PermissionActivity() {
 
@@ -88,18 +76,30 @@ class MainActivity : PermissionActivity() {
         }
         navView.setupWithNavController(navController)
 
-        viewModel.usedImagesSummaryTransformations.observe(this, {
-            hasImageResults = it!=null
-        })
-        viewModel.usedVideosSummaryTransformations.observe(this, {
-            hasVideoResults = it!=null
-        })
-        viewModel.usedAudiosSummaryTransformations.observe(this, {
-            hasAudioResults = it!=null
-        })
-        viewModel.usedDocsSummaryTransformations.observe(this, {
-            hasDocResults = it!=null
-        })
+        viewModel.usedImagesSummaryTransformations.observe(
+            this,
+            {
+                hasImageResults = it != null
+            }
+        )
+        viewModel.usedVideosSummaryTransformations.observe(
+            this,
+            {
+                hasVideoResults = it != null
+            }
+        )
+        viewModel.usedAudiosSummaryTransformations.observe(
+            this,
+            {
+                hasAudioResults = it != null
+            }
+        )
+        viewModel.usedDocsSummaryTransformations.observe(
+            this,
+            {
+                hasDocResults = it != null
+            }
+        )
 
         actionBarBinding.searchActionBar.setOnClickListener {
             if (hasImageResults && hasAudioResults && hasVideoResults && hasDocResults) {

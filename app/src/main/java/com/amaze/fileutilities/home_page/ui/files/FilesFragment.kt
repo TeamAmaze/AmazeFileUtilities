@@ -15,18 +15,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentFilesBinding
-import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.MediaTypeView
 import com.amaze.fileutilities.utilis.FileUtils
 import com.amaze.fileutilities.utilis.showToastInCenter
-import com.amaze.fileutilities.utilis.showToastOnTop
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
@@ -106,8 +103,10 @@ class FilesFragment : Fragment() {
                         if (metaInfoAndSummaryPair != null) {
                             startListFragment(ImagesListFragment())
                         } else {
-                            requireContext().showToastInCenter(resources
-                                .getString(R.string.please_wait))
+                            requireContext().showToastInCenter(
+                                resources
+                                    .getString(R.string.please_wait)
+                            )
                         }
                     }
                     metaInfoAndSummaryPair?.let {
@@ -134,8 +133,10 @@ class FilesFragment : Fragment() {
                         if (metaInfoAndSummaryPair != null) {
                             startListFragment(AudiosListFragment())
                         } else {
-                            requireContext().showToastInCenter(resources
-                                .getString(R.string.please_wait))
+                            requireContext().showToastInCenter(
+                                resources
+                                    .getString(R.string.please_wait)
+                            )
                         }
                     }
                     metaInfoAndSummaryPair?.let {
@@ -162,8 +163,10 @@ class FilesFragment : Fragment() {
                         if (metaInfoAndSummaryPair != null) {
                             startListFragment(VideosListFragment())
                         } else {
-                            requireContext().showToastInCenter(resources
-                                .getString(R.string.please_wait))
+                            requireContext().showToastInCenter(
+                                resources
+                                    .getString(R.string.please_wait)
+                            )
                         }
                     }
                     metaInfoAndSummaryPair?.let {
@@ -191,8 +194,10 @@ class FilesFragment : Fragment() {
                         if (metaInfoAndSummaryPair != null) {
                             startListFragment(DocumentsListFragment())
                         } else {
-                            requireContext().showToastInCenter(resources
-                                .getString(R.string.please_wait))
+                            requireContext().showToastInCenter(
+                                resources
+                                    .getString(R.string.please_wait)
+                            )
                         }
                     }
                     metaInfoAndSummaryPair?.let {

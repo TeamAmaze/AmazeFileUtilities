@@ -31,7 +31,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
 
-class SearchListFragment: Fragment(), TextView.OnEditorActionListener, TextWatcher {
+class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatcher {
     private val filesViewModel: FilesViewModel by activityViewModels()
     private var _binding: FragmentSearchListBinding? = null
     private var searchEditText: AutoCompleteTextView? = null
@@ -44,7 +44,7 @@ class SearchListFragment: Fragment(), TextView.OnEditorActionListener, TextWatch
     companion object {
         const val MAX_PRELOAD = 100
         const val SEARCH_THRESHOLD = 3
-        const val SEARCH_HINT_RESULTS_THRESHOLD = 5
+        const val SEARCH_HINT_RESULTS_THRESHOLD = 3
     }
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -63,12 +63,14 @@ class SearchListFragment: Fragment(), TextView.OnEditorActionListener, TextWatch
         searchEditText = (activity as MainActivity).invalidateSearchBar(true)!!
         searchEditText?.let {
             val adapter: ArrayAdapter<String> =
-                ArrayAdapter<String>(requireContext(),
+                ArrayAdapter<String>(
+                    requireContext(),
                     R.layout.simple_selectable_list_item,
-                    emptyArray())
+                    emptyArray()
+                )
             searchEditText?.setOnEditorActionListener(this)
             searchEditText?.addTextChangedListener(this)
-            searchEditText?.threshold = SEARCH_HINT_RESULTS_THRESHOLD
+//            searchEditText?.threshold = SEARCH_HINT_RESULTS_THRESHOLD
             searchEditText?.setAdapter(adapter)
         }
         preloader = MediaAdapterPreloader(
@@ -99,23 +101,42 @@ class SearchListFragment: Fragment(), TextView.OnEditorActionListener, TextWatch
         _binding = null
     }
 
-    override fun onEditorAction(v: TextView?, actionId: Int,
-                                event: KeyEvent?): Boolean {
+    override fun onEditorAction(
+        v: TextView?,
+        actionId: Int,
+        event: KeyEvent?
+    ): Boolean {
         var handled = false
         if (actionId == EditorInfo.IME_ACTION_SEND) {
             v?.let {
-                if (it.text != null
-                    && it.text.length > SEARCH_THRESHOLD) {
-                    invokeSearch { imagesList, videosList, audiosList, docsList ->
-                        filesViewModel.queryOnAggregatedMediaFiles(it.text.toString(),
-                            imagesList, videosList, audiosList,
-                            docsList).observe(viewLifecycleOwner, {
-                                mediaFileInfoList ->
-                            if (mediaFileInfoList != null) {
-                                mediaFileAdapter?.setData(mediaFileInfoList)
-                            }
-                        })
-                    }
+                if (it.text != null &&
+                    it.text.length > SEARCH_THRESHOLD
+                ) {
+                    invokeSearch(
+                        { imagesList, videosList, audiosList, docsList ->
+                            filesViewModel.queryOnAggregatedMediaFiles(
+                                it.text.toString(),
+                                imagesList, videosList, audiosList,
+                                docsList
+                            ).observe(
+                                viewLifecycleOwner,
+                                {
+                                    mediaFileInfoList ->
+                                    if (mediaFileInfoList != null) {
+                                        showLoadingViews(false)
+                                        mediaFileAdapter?.setData(mediaFileInfoList)
+                                    } else {
+                                        showLoadingViews(true)
+                                    }
+                                }
+                            )
+                        },
+                        {
+                            showLoadingViews(true)
+                        }
+                    )
+                } else {
+                    mediaFileAdapter?.setData(emptyList())
                 }
             }
             handled = true
@@ -127,33 +148,58 @@ class SearchListFragment: Fragment(), TextView.OnEditorActionListener, TextWatch
         s?.let {
             query ->
             if (query.toString().length > SEARCH_THRESHOLD) {
-                invokeSearch { imagesList,
-                               videosList,
-                               audiosList,
-                               docsList ->
-                    filesViewModel.queryHintOnAggregatedMediaFiles(query.toString(),
-                        SEARCH_HINT_RESULTS_THRESHOLD,
-                        imagesList, videosList, audiosList,
-                        docsList).observe(viewLifecycleOwner, {
-                        if (it != null) {
-                            val adapter: ArrayAdapter<String> =
-                                ArrayAdapter<String>(requireContext(),
-                                    R.layout.simple_selectable_list_item, it)
-                            searchEditText?.setAdapter(adapter)
-                        }
-                    })
-                }
+                invokeSearch(
+                    { imagesList,
+                        videosList,
+                        audiosList,
+                        docsList ->
+                        filesViewModel.queryHintOnAggregatedMediaFiles(
+                            query.toString(),
+                            SEARCH_HINT_RESULTS_THRESHOLD,
+                            imagesList, videosList, audiosList,
+                            docsList
+                        ).observe(
+                            viewLifecycleOwner,
+                            {
+                                if (it != null) {
+                                    val adapter: ArrayAdapter<String> =
+                                        ArrayAdapter<String>(
+                                            requireContext(),
+                                            R.layout.simple_selectable_list_item, it
+                                        )
+                                    searchEditText?.setAdapter(adapter)
+                                }
+                            }
+                        )
+                    },
+                    null
+                )
+            } else {
+                val adapter: ArrayAdapter<String> =
+                    ArrayAdapter<String>(
+                        requireContext(),
+                        R.layout.simple_selectable_list_item, emptyArray()
+                    )
+                searchEditText?.setAdapter(adapter)
             }
         }
     }
 
-    override fun beforeTextChanged(s: CharSequence?, start: Int,
-                                   count: Int, after: Int) {
+    override fun beforeTextChanged(
+        s: CharSequence?,
+        start: Int,
+        count: Int,
+        after: Int
+    ) {
         // do nothing
     }
 
-    override fun onTextChanged(s: CharSequence?, start: Int,
-                               before: Int, count: Int) {
+    override fun onTextChanged(
+        s: CharSequence?,
+        start: Int,
+        before: Int,
+        count: Int
+    ) {
         // do nothing
     }
 
@@ -162,36 +208,161 @@ class SearchListFragment: Fragment(), TextView.OnEditorActionListener, TextWatch
         (activity as MainActivity).invalidateSearchBar(false)
     }
 
-    private fun invokeSearch(callback: (imagesList: ArrayList<MediaFileInfo>,
-                                videosList: ArrayList<MediaFileInfo>,
-                                audiosList: ArrayList<MediaFileInfo>,
-                                        docsList: ArrayList<MediaFileInfo>) -> Unit) {
+    private fun invokeSearch(
+        callback: (
+            imagesList: ArrayList<MediaFileInfo>,
+            videosList: ArrayList<MediaFileInfo>,
+            audiosList: ArrayList<MediaFileInfo>,
+            docsList: ArrayList<MediaFileInfo>
+        ) -> Unit,
+        loadingCallback: (() -> Unit)?
+    ) {
         filesViewModel.usedImagesSummaryTransformations
-            .observe(viewLifecycleOwner, {
-                imagesPair ->
-            if (imagesPair?.second != null) {
-                filesViewModel.usedVideosSummaryTransformations
-                    .observe(viewLifecycleOwner, {
+            .observe(
+                viewLifecycleOwner,
+                {
+                    imagesPair ->
+                    imagesPairObserver(imagesPair, callback, loadingCallback)
+                }
+            )
+    }
+
+    private fun imagesPairObserver(
+        imagesPair:
+            Pair<FilesViewModel.StorageSummary,
+                ArrayList<MediaFileInfo>>?,
+        callback: (
+            imagesList: ArrayList<MediaFileInfo>,
+            videosList: ArrayList<MediaFileInfo>,
+            audiosList: ArrayList<MediaFileInfo>,
+            docsList: ArrayList<MediaFileInfo>
+        ) -> Unit,
+        loadingCallback: (() -> Unit)?
+    ) {
+        if (imagesPair?.second != null) {
+            filesViewModel.usedVideosSummaryTransformations
+                .observe(
+                    viewLifecycleOwner,
+                    {
                         videosPair ->
-                    if (videosPair?.second != null) {
-                        filesViewModel.usedAudiosSummaryTransformations
-                            .observe(viewLifecycleOwner, {
-                                audiosPair ->
-                            if (audiosPair?.second != null) {
-                                filesViewModel.usedDocsSummaryTransformations
-                                    .observe(viewLifecycleOwner, {
-                                        docsPair ->
-                                    if (docsPair?.second != null) {
-                                        callback.invoke(imagesPair.second,
-                                            videosPair.second,
-                                            audiosPair.second, docsPair.second)
-                                    }
-                                })
-                            }
-                        })
+                        videosPairObserver(videosPair, imagesPair, callback, loadingCallback)
                     }
-                })
+                )
+        } else {
+            loadingCallback?.invoke()
+        }
+    }
+
+    private fun videosPairObserver(
+        videosPair:
+            Pair<FilesViewModel.StorageSummary,
+                ArrayList<MediaFileInfo>>?,
+        imagesPair:
+            Pair<FilesViewModel.StorageSummary,
+                ArrayList<MediaFileInfo>>,
+        callback: (
+            imagesList: ArrayList<MediaFileInfo>,
+            videosList: ArrayList<MediaFileInfo>,
+            audiosList: ArrayList<MediaFileInfo>,
+            docsList: ArrayList<MediaFileInfo>
+        ) -> Unit,
+        loadingCallback: (() -> Unit)?
+    ) {
+        if (videosPair?.second != null) {
+            filesViewModel.usedAudiosSummaryTransformations
+                .observe(
+                    viewLifecycleOwner,
+                    {
+                        audiosPair ->
+                        audiosPairObserver(
+                            audiosPair, videosPair, imagesPair, callback,
+                            loadingCallback
+                        )
+                    }
+                )
+        } else {
+            loadingCallback?.invoke()
+        }
+    }
+
+    private fun audiosPairObserver(
+        audiosPair:
+            Pair<FilesViewModel.StorageSummary,
+                ArrayList<MediaFileInfo>>?,
+        videosPair:
+            Pair<FilesViewModel.StorageSummary,
+                ArrayList<MediaFileInfo>>,
+        imagesPair:
+            Pair<FilesViewModel.StorageSummary,
+                ArrayList<MediaFileInfo>>,
+        callback: (
+            imagesList: ArrayList<MediaFileInfo>,
+            videosList: ArrayList<MediaFileInfo>,
+            audiosList: ArrayList<MediaFileInfo>,
+            docsList: ArrayList<MediaFileInfo>
+        ) -> Unit,
+        loadingCallback: (() -> Unit)?
+    ) {
+        if (audiosPair?.second != null) {
+            filesViewModel.usedDocsSummaryTransformations
+                .observe(
+                    viewLifecycleOwner,
+                    {
+                        docsPair ->
+                        docsPairObserver(
+                            docsPair, audiosPair, videosPair, imagesPair,
+                            callback, loadingCallback
+                        )
+                    }
+                )
+        } else {
+            loadingCallback?.invoke()
+        }
+    }
+
+    private fun docsPairObserver(
+        docsPair:
+            Pair<FilesViewModel.StorageSummary,
+                ArrayList<MediaFileInfo>>?,
+        audiosPair:
+            Pair<FilesViewModel.StorageSummary,
+                ArrayList<MediaFileInfo>>,
+        videosPair:
+            Pair<FilesViewModel.StorageSummary,
+                ArrayList<MediaFileInfo>>,
+        imagesPair:
+            Pair<FilesViewModel.StorageSummary,
+                ArrayList<MediaFileInfo>>,
+        callback: (
+            imagesList: ArrayList<MediaFileInfo>,
+            videosList: ArrayList<MediaFileInfo>,
+            audiosList: ArrayList<MediaFileInfo>,
+            docsList: ArrayList<MediaFileInfo>
+        ) -> Unit,
+        loadingCallback: (() -> Unit)?
+    ) {
+        if (docsPair?.second != null) {
+            callback.invoke(
+                imagesPair.second,
+                videosPair.second,
+                audiosPair.second, docsPair.second
+            )
+        } else {
+            loadingCallback?.invoke()
+        }
+    }
+
+    private fun showLoadingViews(doShow: Boolean) {
+        binding.run {
+            if (doShow) {
+                searchListView.visibility = View.GONE
+                loadingProgress.visibility = View.VISIBLE
+                searchInfoText.visibility = View.VISIBLE
+            } else {
+                searchListView.visibility = View.VISIBLE
+                loadingProgress.visibility = View.GONE
+                searchInfoText.visibility = View.GONE
             }
-        })
+        }
     }
 }

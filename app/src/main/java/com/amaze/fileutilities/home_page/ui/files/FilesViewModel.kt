@@ -84,93 +84,98 @@ class FilesViewModel(val applicationContext: Application) :
                 getDocumentsSummaryLiveData(input)
             }
 
-    fun queryOnAggregatedMediaFiles(query: String,
-                                    imagesList: ArrayList<MediaFileInfo>,
-                                    videosList: ArrayList<MediaFileInfo>,
-                                    audiosList: ArrayList<MediaFileInfo>,
-                                    docsList: ArrayList<MediaFileInfo>):
-            LiveData<MutableList<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-            emit(null)
-            val mediaFileResults = mutableListOf<MediaFileInfo>()
-            val textResults = mutableListOf<String>()
-            imagesList.forEach {
-                if (it.title.contains(query)) {
-                    mediaFileResults.add(it)
-                    textResults.add(it.title)
+    fun queryOnAggregatedMediaFiles(
+        query: String,
+        imagesList: ArrayList<MediaFileInfo>,
+        videosList: ArrayList<MediaFileInfo>,
+        audiosList: ArrayList<MediaFileInfo>,
+        docsList: ArrayList<MediaFileInfo>
+    ):
+        LiveData<MutableList<MediaFileInfo>?> {
+            return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+                emit(null)
+                val mediaFileResults = mutableListOf<MediaFileInfo>()
+                val textResults = mutableListOf<String>()
+                imagesList.forEach {
+                    if (it.title.contains(query)) {
+                        mediaFileResults.add(it)
+                        textResults.add(it.title)
+                    }
                 }
-            }
-            videosList.forEach {
-                if (it.title.contains(query)) {
-                    mediaFileResults.add(it)
-                    textResults.add(it.title)
+                videosList.forEach {
+                    if (it.title.contains(query)) {
+                        mediaFileResults.add(it)
+                        textResults.add(it.title)
+                    }
                 }
-            }
-            audiosList.forEach {
-                if (it.title.contains(query)) {
-                    mediaFileResults.add(it)
-                    textResults.add(it.title)
+                audiosList.forEach {
+                    if (it.title.contains(query)) {
+                        mediaFileResults.add(it)
+                        textResults.add(it.title)
+                    }
                 }
-            }
-            docsList.forEach {
-                if (it.title.contains(query)) {
-                    mediaFileResults.add(it)
-                    textResults.add(it.title)
+                docsList.forEach {
+                    if (it.title.contains(query)) {
+                        mediaFileResults.add(it)
+                        textResults.add(it.title)
+                    }
                 }
+                emit(mediaFileResults)
             }
-            emit(mediaFileResults)
         }
-    }
 
-    fun queryHintOnAggregatedMediaFiles(query: String, resultsThreshold: Int,
-                                    imagesList: ArrayList<MediaFileInfo>,
-                                    videosList: ArrayList<MediaFileInfo>,
-                                    audiosList: ArrayList<MediaFileInfo>,
-                                    docsList: ArrayList<MediaFileInfo>):
-            LiveData<MutableList<String>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-            emit(null)
-            val textResults = mutableListOf<String>()
-            var currentResultsCount = 0
-            imagesList.forEach il@ {
-                if (currentResultsCount>resultsThreshold) {
-                    return@il
+    fun queryHintOnAggregatedMediaFiles(
+        query: String,
+        resultsThreshold: Int,
+        imagesList: ArrayList<MediaFileInfo>,
+        videosList: ArrayList<MediaFileInfo>,
+        audiosList: ArrayList<MediaFileInfo>,
+        docsList: ArrayList<MediaFileInfo>
+    ):
+        LiveData<MutableList<String>?> {
+            return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+                emit(null)
+                val textResults = mutableListOf<String>()
+                var currentResultsCount = 0
+                imagesList.forEach il@{
+                    if (currentResultsCount> resultsThreshold) {
+                        return@il
+                    }
+                    if (it.title.contains(query)) {
+                        textResults.add(it.title)
+                        currentResultsCount++
+                    }
                 }
-                if (it.title.contains(query)) {
-                    textResults.add(it.title)
-                    currentResultsCount++
+                videosList.forEach vl@{
+                    if (currentResultsCount> resultsThreshold) {
+                        return@vl
+                    }
+                    if (it.title.contains(query)) {
+                        textResults.add(it.title)
+                        currentResultsCount++
+                    }
                 }
+                audiosList.forEach al@{
+                    if (currentResultsCount> resultsThreshold) {
+                        return@al
+                    }
+                    if (it.title.contains(query)) {
+                        textResults.add(it.title)
+                        currentResultsCount++
+                    }
+                }
+                docsList.forEach dl@{
+                    if (currentResultsCount> resultsThreshold) {
+                        return@dl
+                    }
+                    if (it.title.contains(query)) {
+                        textResults.add(it.title)
+                        currentResultsCount++
+                    }
+                }
+                emit(textResults)
             }
-            videosList.forEach vl@ {
-                if (currentResultsCount>resultsThreshold) {
-                    return@vl
-                }
-                if (it.title.contains(query)) {
-                    textResults.add(it.title)
-                    currentResultsCount++
-                }
-            }
-            audiosList.forEach al@ {
-                if (currentResultsCount>resultsThreshold) {
-                    return@al
-                }
-                if (it.title.contains(query)) {
-                    textResults.add(it.title)
-                    currentResultsCount++
-                }
-            }
-            docsList.forEach dl@ {
-                if (currentResultsCount>resultsThreshold) {
-                    return@dl
-                }
-                if (it.title.contains(query)) {
-                    textResults.add(it.title)
-                    currentResultsCount++
-                }
-            }
-            emit(textResults)
         }
-    }
 
     private fun getImagesSummaryLiveData(storageSummary: StorageSummary?):
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
