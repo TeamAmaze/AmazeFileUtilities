@@ -21,19 +21,19 @@ class VideoPlayerViewModel : ViewModel() {
 
     fun getSiblingVideoModels(videoModel: LocalVideoModel, uriList: ArrayList<Uri>?):
         ArrayList<LocalVideoModel>? {
-            if (localVideoModelList == null) {
-                uriList.run {
-                    localVideoModelList = ArrayList()
-                    if (this != null) {
-                        localVideoModelList?.addAll(
-                            this.filter { it.isVideoMimeType() }
-                                .map { LocalVideoModel(it, "") }.asReversed()
-                        )
-                    } else {
-                        localVideoModelList?.add(videoModel)
-                    }
+        if (localVideoModelList == null) {
+            uriList.run {
+                localVideoModelList = ArrayList()
+                if (this != null) {
+                    localVideoModelList?.addAll(
+                        this.filter { it.isVideoMimeType() }
+                            .map { LocalVideoModel(it, "") }.asReversed()
+                    )
+                } else {
+                    localVideoModelList?.add(videoModel)
                 }
             }
-            return localVideoModelList
         }
+        return localVideoModelList
+    }
 }

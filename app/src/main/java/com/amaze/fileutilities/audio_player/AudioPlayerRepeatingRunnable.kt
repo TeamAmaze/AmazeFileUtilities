@@ -37,7 +37,7 @@ class AudioPlayerRepeatingRunnable(
             }
             val audioPlaybackInfo = it.getAudioProgressHandlerCallback().audioPlaybackInfo
             audioPlaybackInfo.currentPosition = it.getPlayerPosition()
-            audioPlaybackInfo.duration = it.getPlayerDuration().toLong()
+            audioPlaybackInfo.duration = it.getPlayerDuration()
             audioPlaybackInfo.isPlaying = it.isPlaying()
             it.onProgressUpdate(it.getAudioProgressHandlerCallback())
         }
@@ -47,7 +47,7 @@ class AudioPlayerRepeatingRunnable(
 interface OnPlayerRepeatingCallback {
     fun getAudioProgressHandlerCallback(): AudioProgressHandler
     fun onProgressUpdate(audioProgressHandler: AudioProgressHandler)
-    fun getPlayerPosition(): Int
-    fun getPlayerDuration(): Int
+    fun getPlayerPosition(): Long
+    fun getPlayerDuration(): Long
     fun isPlaying(): Boolean
 }

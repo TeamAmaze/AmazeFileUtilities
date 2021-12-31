@@ -89,53 +89,53 @@ class FilesViewModel(val applicationContext: Application) :
         searchFilter: SearchListFragment.SearchQueryInput
     ):
         LiveData<MutableList<MediaFileInfo>?> {
-            return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-                emit(null)
-                val mediaFileResults = mutableListOf<MediaFileInfo>()
-                val textResults = mutableListOf<String>()
-                if (searchFilter.searchFilter.searchFilterImages) {
-                    searchFilter.imagesMediaFilesList?.let { mediaInfoList ->
-                        mediaInfoList.forEach {
-                            if (it.title.contains(query)) {
-                                mediaFileResults.add(it)
-                                textResults.add(it.title)
-                            }
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+            emit(null)
+            val mediaFileResults = mutableListOf<MediaFileInfo>()
+            val textResults = mutableListOf<String>()
+            if (searchFilter.searchFilter.searchFilterImages) {
+                searchFilter.imagesMediaFilesList?.let { mediaInfoList ->
+                    mediaInfoList.forEach {
+                        if (it.title.contains(query)) {
+                            mediaFileResults.add(it)
+                            textResults.add(it.title)
                         }
                     }
                 }
-                if (searchFilter.searchFilter.searchFilterVideos) {
-                    searchFilter.videosMediaFilesList?.let { mediaInfoList ->
-                        mediaInfoList.forEach {
-                            if (it.title.contains(query)) {
-                                mediaFileResults.add(it)
-                                textResults.add(it.title)
-                            }
-                        }
-                    }
-                }
-                if (searchFilter.searchFilter.searchFilterAudios) {
-                    searchFilter.audiosMediaFilesList?.let { mediaInfoList ->
-                        mediaInfoList.forEach {
-                            if (it.title.contains(query)) {
-                                mediaFileResults.add(it)
-                                textResults.add(it.title)
-                            }
-                        }
-                    }
-                }
-                if (searchFilter.searchFilter.searchFilterDocuments) {
-                    searchFilter.docsMediaFilesList?.let { mediaInfoList ->
-                        mediaInfoList.forEach {
-                            if (it.title.contains(query)) {
-                                mediaFileResults.add(it)
-                                textResults.add(it.title)
-                            }
-                        }
-                    }
-                }
-                emit(mediaFileResults)
             }
+            if (searchFilter.searchFilter.searchFilterVideos) {
+                searchFilter.videosMediaFilesList?.let { mediaInfoList ->
+                    mediaInfoList.forEach {
+                        if (it.title.contains(query)) {
+                            mediaFileResults.add(it)
+                            textResults.add(it.title)
+                        }
+                    }
+                }
+            }
+            if (searchFilter.searchFilter.searchFilterAudios) {
+                searchFilter.audiosMediaFilesList?.let { mediaInfoList ->
+                    mediaInfoList.forEach {
+                        if (it.title.contains(query)) {
+                            mediaFileResults.add(it)
+                            textResults.add(it.title)
+                        }
+                    }
+                }
+            }
+            if (searchFilter.searchFilter.searchFilterDocuments) {
+                searchFilter.docsMediaFilesList?.let { mediaInfoList ->
+                    mediaInfoList.forEach {
+                        if (it.title.contains(query)) {
+                            mediaFileResults.add(it)
+                            textResults.add(it.title)
+                        }
+                    }
+                }
+            }
+            emit(mediaFileResults)
         }
+    }
 
     fun queryHintOnAggregatedMediaFiles(
         query: String,
@@ -143,135 +143,135 @@ class FilesViewModel(val applicationContext: Application) :
         searchFilter: SearchListFragment.SearchQueryInput
     ):
         LiveData<MutableList<String>?> {
-            return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-                emit(null)
-                val textResults = mutableListOf<String>()
-                var currentResultsCount = 0
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+            emit(null)
+            val textResults = mutableListOf<String>()
+            var currentResultsCount = 0
 
-                if (searchFilter.searchFilter.searchFilterImages) {
-                    searchFilter.imagesMediaFilesList?.let { mediaInfoList ->
-                        mediaInfoList.forEach il@{
-                            if (currentResultsCount> resultsThreshold) {
-                                return@il
-                            }
-                            if (it.title.contains(query)) {
-                                textResults.add(it.title)
-                                currentResultsCount++
-                            }
+            if (searchFilter.searchFilter.searchFilterImages) {
+                searchFilter.imagesMediaFilesList?.let { mediaInfoList ->
+                    mediaInfoList.forEach il@{
+                        if (currentResultsCount> resultsThreshold) {
+                            return@il
+                        }
+                        if (it.title.contains(query)) {
+                            textResults.add(it.title)
+                            currentResultsCount++
                         }
                     }
                 }
-                if (searchFilter.searchFilter.searchFilterVideos) {
-                    searchFilter.videosMediaFilesList?.let { mediaInfoList ->
-                        mediaInfoList.forEach vl@{
-                            if (currentResultsCount> resultsThreshold) {
-                                return@vl
-                            }
-                            if (it.title.contains(query)) {
-                                textResults.add(it.title)
-                                currentResultsCount++
-                            }
-                        }
-                    }
-                }
-                if (searchFilter.searchFilter.searchFilterAudios) {
-                    searchFilter.audiosMediaFilesList?.let { mediaInfoList ->
-                        mediaInfoList.forEach al@{
-                            if (currentResultsCount> resultsThreshold) {
-                                return@al
-                            }
-                            if (it.title.contains(query)) {
-                                textResults.add(it.title)
-                                currentResultsCount++
-                            }
-                        }
-                    }
-                }
-
-                if (searchFilter.searchFilter.searchFilterDocuments) {
-                    searchFilter.docsMediaFilesList?.let { mediaInfoList ->
-                        mediaInfoList.forEach dl@{
-                            if (currentResultsCount> resultsThreshold) {
-                                return@dl
-                            }
-                            if (it.title.contains(query)) {
-                                textResults.add(it.title)
-                                currentResultsCount++
-                            }
-                        }
-                    }
-                }
-                emit(textResults)
             }
+            if (searchFilter.searchFilter.searchFilterVideos) {
+                searchFilter.videosMediaFilesList?.let { mediaInfoList ->
+                    mediaInfoList.forEach vl@{
+                        if (currentResultsCount> resultsThreshold) {
+                            return@vl
+                        }
+                        if (it.title.contains(query)) {
+                            textResults.add(it.title)
+                            currentResultsCount++
+                        }
+                    }
+                }
+            }
+            if (searchFilter.searchFilter.searchFilterAudios) {
+                searchFilter.audiosMediaFilesList?.let { mediaInfoList ->
+                    mediaInfoList.forEach al@{
+                        if (currentResultsCount> resultsThreshold) {
+                            return@al
+                        }
+                        if (it.title.contains(query)) {
+                            textResults.add(it.title)
+                            currentResultsCount++
+                        }
+                    }
+                }
+            }
+
+            if (searchFilter.searchFilter.searchFilterDocuments) {
+                searchFilter.docsMediaFilesList?.let { mediaInfoList ->
+                    mediaInfoList.forEach dl@{
+                        if (currentResultsCount> resultsThreshold) {
+                            return@dl
+                        }
+                        if (it.title.contains(query)) {
+                            textResults.add(it.title)
+                            currentResultsCount++
+                        }
+                    }
+                }
+            }
+            emit(textResults)
         }
+    }
 
     private fun getImagesSummaryLiveData(storageSummary: StorageSummary?):
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
-            return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-                emit(null)
-                if (storageSummary == null) {
-                    return@liveData
-                }
-                val metaInfoAndSummaryPair = CursorUtils
-                    .listImages(applicationContext.applicationContext)
-                val summary = metaInfoAndSummaryPair.first
-                summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
-                    .toInt()
-                summary.totalSpace = storageSummary.totalSpace
-                emit(metaInfoAndSummaryPair)
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            if (storageSummary == null) {
+                return@liveData
             }
+            val metaInfoAndSummaryPair = CursorUtils
+                .listImages(applicationContext.applicationContext)
+            val summary = metaInfoAndSummaryPair.first
+            summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
+                .toInt()
+            summary.totalSpace = storageSummary.totalSpace
+            emit(metaInfoAndSummaryPair)
         }
+    }
 
     private fun getAudiosSummaryLiveData(storageSummary: StorageSummary?):
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
-            return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-                emit(null)
-                if (storageSummary == null) {
-                    return@liveData
-                }
-                val metaInfoAndSummaryPair = CursorUtils
-                    .listAudio(applicationContext.applicationContext)
-                val summary = metaInfoAndSummaryPair.first
-                summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
-                    .toInt()
-                summary.totalSpace = storageSummary.totalSpace
-                emit(metaInfoAndSummaryPair)
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            if (storageSummary == null) {
+                return@liveData
             }
+            val metaInfoAndSummaryPair = CursorUtils
+                .listAudio(applicationContext.applicationContext)
+            val summary = metaInfoAndSummaryPair.first
+            summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
+                .toInt()
+            summary.totalSpace = storageSummary.totalSpace
+            emit(metaInfoAndSummaryPair)
         }
+    }
 
     private fun getVideosSummaryLiveData(storageSummary: StorageSummary?):
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
-            return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-                emit(null)
-                if (storageSummary == null) {
-                    return@liveData
-                }
-                val metaInfoAndSummaryPair = CursorUtils
-                    .listVideos(applicationContext.applicationContext)
-                val summary = metaInfoAndSummaryPair.first
-                summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
-                    .toInt()
-                summary.totalSpace = storageSummary.totalSpace
-                emit(metaInfoAndSummaryPair)
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            if (storageSummary == null) {
+                return@liveData
             }
+            val metaInfoAndSummaryPair = CursorUtils
+                .listVideos(applicationContext.applicationContext)
+            val summary = metaInfoAndSummaryPair.first
+            summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
+                .toInt()
+            summary.totalSpace = storageSummary.totalSpace
+            emit(metaInfoAndSummaryPair)
         }
+    }
 
     private fun getDocumentsSummaryLiveData(storageSummary: StorageSummary?):
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
-            return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-                emit(null)
-                if (storageSummary == null) {
-                    return@liveData
-                }
-                val metaInfoAndSummaryPair = CursorUtils
-                    .listDocs(applicationContext.applicationContext)
-                val summary = metaInfoAndSummaryPair.first
-                summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
-                    .toInt()
-                summary.totalSpace = storageSummary.totalSpace
-                emit(metaInfoAndSummaryPair)
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            if (storageSummary == null) {
+                return@liveData
             }
+            val metaInfoAndSummaryPair = CursorUtils
+                .listDocs(applicationContext.applicationContext)
+            val summary = metaInfoAndSummaryPair.first
+            summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
+                .toInt()
+            summary.totalSpace = storageSummary.totalSpace
+            emit(metaInfoAndSummaryPair)
         }
+    }
 
     data class StorageSummary(
         var items: Int,

@@ -11,7 +11,6 @@
 package com.amaze.fileutilities.home_page.ui.files
 
 import android.content.Context
-import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter.*
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 
 class RecentMediaFilesAdapter(

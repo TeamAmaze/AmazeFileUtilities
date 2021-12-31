@@ -57,7 +57,19 @@ data class AudioProgressHandler(
 }
 
 interface OnPlaybackInfoUpdate {
+
+    /**
+     * Called every x seconds by {@see AudioPlayerRepeatableRunnable}
+     */
     fun onPositionUpdate(progressHandler: AudioProgressHandler)
+
+    /**
+     * Called as soon as the state changes, either through notification or through button
+     */
     fun onPlaybackStateChanged(progressHandler: AudioProgressHandler)
+
+    /**
+     * Called once by service connection to initialize button clicks and other views
+     */
     fun setupActionButtons(audioService: WeakReference<ServiceOperationCallback>)
 }

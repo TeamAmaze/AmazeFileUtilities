@@ -63,7 +63,7 @@ open class PermissionActivity :
                     startExplicitPermissionActivity()
                 },
                 {
-                    // do nothing
+                    finish()
                 }
             ).show()
         }

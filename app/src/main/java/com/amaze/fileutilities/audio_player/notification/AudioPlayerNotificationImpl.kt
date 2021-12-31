@@ -31,7 +31,8 @@ class AudioPlayerNotificationImpl : AudioPlayerNotification() {
     @Synchronized
     override fun update() {
         stopped = false
-        val playbackInfo: AudioPlaybackInfo = service.audioProgressHandler!!.audioPlaybackInfo
+        val playbackInfo = if (service.audioProgressHandler != null)
+            service.audioProgressHandler!!.audioPlaybackInfo else AudioPlaybackInfo.EMPTY_PLAYBACK
         val isPlaying: Boolean = service.isPlaying()
         val notificationLayout = RemoteViews(
             service.packageName,
