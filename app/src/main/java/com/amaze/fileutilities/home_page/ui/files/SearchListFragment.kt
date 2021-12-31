@@ -40,10 +40,8 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
     private var preloader: MediaAdapterPreloader? = null
     private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
     private var linearLayoutManager: LinearLayoutManager? = null
-    private var imagesMediaFilesList: ArrayList<MediaFileInfo>? = null
-    private var videosMediaFilesList: ArrayList<MediaFileInfo>? = null
-    private var audiosMediaFilesList: ArrayList<MediaFileInfo>? = null
-    private var docsMediaFilesList: ArrayList<MediaFileInfo>? = null
+    private val searchQueryInput: SearchQueryInput =
+        SearchQueryInput(searchFilter = SearchFilter())
 
     companion object {
         const val MAX_PRELOAD = 100
@@ -97,9 +95,31 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
             preloader!!,
             mutableListOf()
         )
-        binding.searchListView.addOnScrollListener(recyclerViewPreloader!!)
-        binding.searchListView.layoutManager = linearLayoutManager
-        binding.searchListView.adapter = mediaFileAdapter
+        invalidateFilterButtons()
+        binding.run {
+            searchQueryInput.searchFilter.let {
+                searchFilter ->
+                filterImagesButton.setOnClickListener {
+                    searchFilter.toggleFilterImages()
+                    invalidateFilterButtons()
+                }
+                filterDocumentsButton.setOnClickListener {
+                    searchFilter.toggleFilterDocs()
+                    invalidateFilterButtons()
+                }
+                filterVideosButton.setOnClickListener {
+                    searchFilter.toggleFilterVideos()
+                    invalidateFilterButtons()
+                }
+                filterAudiosButton.setOnClickListener {
+                    searchFilter.toggleFilterAudios()
+                    invalidateFilterButtons()
+                }
+            }
+            searchListView.addOnScrollListener(recyclerViewPreloader!!)
+            searchListView.layoutManager = linearLayoutManager
+            searchListView.adapter = mediaFileAdapter
+        }
         return root
     }
 
@@ -122,15 +142,11 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
                 if (it.text != null &&
                     it.text.length > SEARCH_THRESHOLD
                 ) {
-                    if (imagesMediaFilesList != null &&
-                        videosMediaFilesList != null && audiosMediaFilesList != null &&
-                        docsMediaFilesList != null
-                    ) {
+                    if (searchQueryInput.mediaListsLoaded()) {
                         showLoadingViews(false)
                         filesViewModel.queryOnAggregatedMediaFiles(
                             it.text.toString(),
-                            imagesMediaFilesList!!, videosMediaFilesList!!, audiosMediaFilesList!!,
-                            docsMediaFilesList!!
+                            searchQueryInput
                         ).observe(
                             viewLifecycleOwner,
                             {
@@ -151,10 +167,9 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
                         showLoadingViews(true)
                     }
                 } else {
-                    if (imagesMediaFilesList != null && videosMediaFilesList != null &&
-                        audiosMediaFilesList != null && docsMediaFilesList != null
-                    ) {
+                    if (searchQueryInput.mediaListsLoaded()) {
                         mediaFileAdapter?.setData(emptyList())
+                        searchEditText?.dismissDropDown()
                         showEmptyViews()
                     }
                 }
@@ -168,16 +183,12 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
         s?.let {
             query ->
             if (query.toString().length > SEARCH_HINT_THRESHOLD) {
-                if (imagesMediaFilesList != null &&
-                    videosMediaFilesList != null && audiosMediaFilesList != null &&
-                    docsMediaFilesList != null
-                ) {
+                if (searchQueryInput.mediaListsLoaded()) {
                     showLoadingViews(false)
                     filesViewModel.queryHintOnAggregatedMediaFiles(
                         query.toString(),
                         SEARCH_HINT_RESULTS_THRESHOLD,
-                        imagesMediaFilesList!!, videosMediaFilesList!!, audiosMediaFilesList!!,
-                        docsMediaFilesList!!
+                        searchQueryInput
                     ).observe(
                         viewLifecycleOwner,
                         {
@@ -195,6 +206,7 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
                     showLoadingViews(true)
                 }
             } else {
+                searchEditText?.dismissDropDown()
                 searchEditText?.setAdapter(null)
             }
         }
@@ -319,10 +331,12 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
         if (docsPair?.second != null) {
             showLoadingViews(false)
             showEmptyViews()
-            imagesMediaFilesList = imagesPair.second
-            videosMediaFilesList = videosPair.second
-            audiosMediaFilesList = audiosPair.second
-            docsMediaFilesList = docsPair.second
+            searchQueryInput.run {
+                imagesMediaFilesList = imagesPair.second
+                videosMediaFilesList = videosPair.second
+                audiosMediaFilesList = audiosPair.second
+                docsMediaFilesList = docsPair.second
+            }
         } else {
             showLoadingViews(true)
         }
@@ -334,7 +348,11 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
                 searchListView.visibility = View.GONE
                 loadingProgress.visibility = View.VISIBLE
                 searchInfoText.visibility = View.VISIBLE
-                searchInfoText.text = resources.getString(R.string.loading)
+                if (searchQueryInput.mediaListsLoaded()) {
+                    searchInfoText.text = resources.getString(R.string.loading)
+                } else {
+                    searchInfoText.text = resources.getString(R.string.please_wait)
+                }
             } else {
                 searchListView.visibility = View.VISIBLE
                 loadingProgress.visibility = View.GONE
@@ -350,6 +368,87 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
             emptyResultImage.visibility = View.VISIBLE
             searchInfoText.visibility = View.VISIBLE
             searchInfoText.text = resources.getString(R.string.its_quiet_here)
+        }
+    }
+
+    private fun invalidateFilterButtons() {
+        binding.run {
+            if (searchQueryInput.searchFilter.searchFilterImages) {
+                filterImagesButton.setBackgroundColor(resources.getColor(R.color.white))
+                filterImagesButton.setTextColor(resources.getColor(R.color.navy_blue))
+            } else {
+                filterImagesButton.setBackgroundColor(
+                    resources
+                        .getColor(R.color.white_translucent_2)
+                )
+                filterImagesButton.setTextColor(resources.getColor(R.color.white))
+            }
+            if (searchQueryInput.searchFilter.searchFilterAudios) {
+                filterAudiosButton.setBackgroundColor(resources.getColor(R.color.white))
+                filterAudiosButton.setTextColor(resources.getColor(R.color.navy_blue))
+            } else {
+                filterAudiosButton.setBackgroundColor(
+                    resources
+                        .getColor(R.color.white_translucent_2)
+                )
+                filterAudiosButton.setTextColor(resources.getColor(R.color.white))
+            }
+            if (searchQueryInput.searchFilter.searchFilterVideos) {
+                filterVideosButton.setBackgroundColor(resources.getColor(R.color.white))
+                filterVideosButton.setTextColor(resources.getColor(R.color.navy_blue))
+            } else {
+                filterVideosButton.setBackgroundColor(
+                    resources
+                        .getColor(R.color.white_translucent_2)
+                )
+                filterVideosButton.setTextColor(resources.getColor(R.color.white))
+            }
+            if (searchQueryInput.searchFilter.searchFilterDocuments) {
+                filterDocumentsButton.setBackgroundColor(resources.getColor(R.color.white))
+                filterDocumentsButton.setTextColor(resources.getColor(R.color.navy_blue))
+            } else {
+                filterDocumentsButton.setBackgroundColor(
+                    resources
+                        .getColor(R.color.white_translucent_2)
+                )
+                filterDocumentsButton.setTextColor(resources.getColor(R.color.white))
+            }
+        }
+    }
+
+    data class SearchQueryInput(
+        var imagesMediaFilesList: ArrayList<MediaFileInfo>? = null,
+        var videosMediaFilesList: ArrayList<MediaFileInfo>? = null,
+        var audiosMediaFilesList: ArrayList<MediaFileInfo>? = null,
+        var docsMediaFilesList: ArrayList<MediaFileInfo>? = null,
+        val searchFilter: SearchFilter
+    ) {
+        fun mediaListsLoaded(): Boolean {
+            return imagesMediaFilesList != null && videosMediaFilesList != null &&
+                audiosMediaFilesList != null && docsMediaFilesList != null
+        }
+    }
+
+    data class SearchFilter(
+        var searchFilterImages: Boolean = true,
+        var searchFilterVideos: Boolean = true,
+        var searchFilterAudios: Boolean = true,
+        var searchFilterDocuments: Boolean = true
+    ) {
+        fun toggleFilterImages() {
+            searchFilterImages = !searchFilterImages
+        }
+
+        fun toggleFilterVideos() {
+            searchFilterVideos = !searchFilterVideos
+        }
+
+        fun toggleFilterAudios() {
+            searchFilterAudios = !searchFilterAudios
+        }
+
+        fun toggleFilterDocs() {
+            searchFilterDocuments = !searchFilterDocuments
         }
     }
 }

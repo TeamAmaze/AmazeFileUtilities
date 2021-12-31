@@ -7,6 +7,65 @@
     android:orientation="vertical"
     android:background="@color/navy_blue"
     >
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="?listPreferredItemHeightSmall"
+        android:scrollbars="none"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="@dimen/four_dp"
+            >
+            <Button
+                android:id="@+id/filter_images_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/images"
+                android:layout_marginLeft="@dimen/material_generic"
+                android:layout_marginStart="@dimen/material_generic"
+                app:strokeColor="@color/navy_blue"
+                app:cornerRadius="@dimen/material_generic"
+                app:rippleColor="@color/highlight_yellow"
+                android:textColor="@color/navy_blue"
+                />
+            <Button
+                android:id="@+id/filter_videos_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/videos"
+                android:layout_marginLeft="@dimen/material_generic"
+                android:layout_marginStart="@dimen/material_generic"
+                app:cornerRadius="@dimen/material_generic"
+                app:rippleColor="@color/highlight_yellow"
+                android:textColor="@color/navy_blue"
+                />
+            <Button
+                android:id="@+id/filter_audios_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/audios"
+                android:layout_marginLeft="@dimen/material_generic"
+                android:layout_marginStart="@dimen/material_generic"
+                app:cornerRadius="@dimen/material_generic"
+                app:rippleColor="@color/highlight_yellow"
+                android:textColor="@color/navy_blue"
+                />
+            <Button
+                android:id="@+id/filter_documents_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/documents"
+                android:layout_marginLeft="@dimen/material_generic"
+                android:layout_marginStart="@dimen/material_generic"
+                android:layout_marginRight="@dimen/material_generic"
+                app:cornerRadius="@dimen/material_generic"
+                app:rippleColor="@color/highlight_yellow"
+                android:textColor="@color/navy_blue"
+                />
+        </LinearLayout>
+    </HorizontalScrollView>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchListView"
         android:layout_width="match_parent"

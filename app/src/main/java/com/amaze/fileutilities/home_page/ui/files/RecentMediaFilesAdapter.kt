@@ -31,7 +31,6 @@ class RecentMediaFilesAdapter(
             if (mediaFileInfoList.size != 0) {
                 preloader.addItem("")
                 value.add(ListItem(EMPTY_LAST_ITEM))
-                return
             }
             field = value
         }
