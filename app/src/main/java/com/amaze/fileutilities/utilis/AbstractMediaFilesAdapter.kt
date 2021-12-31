@@ -109,6 +109,7 @@ abstract class AbstractMediaFilesAdapter(
                             }
                             MediaFileInfo.MEDIA_TYPE_DOCUMENT -> {
                                 holder.infoSummary.text = "$formattedDate | $formattedSize"
+                                holder.extraInfo.text = ""
                                 holder.root.setOnClickListener {
                                     startExternalViewAction(mediaFileInfo)
                                 }
@@ -116,6 +117,7 @@ abstract class AbstractMediaFilesAdapter(
                             MediaFileInfo.MEDIA_TYPE_UNKNOWN -> {
                                 superPreloader.loadImage(mediaFileInfo.path, holder.iconView)
                                 holder.infoSummary.text = "$formattedDate | $formattedSize"
+                                holder.extraInfo.text = ""
                                 holder.root.setOnClickListener {
                                     startExternalViewAction(mediaFileInfo)
                                 }
@@ -152,6 +154,7 @@ abstract class AbstractMediaFilesAdapter(
             "${mediaFileInfo.extraInfo!!.imageMetaData?.width}" +
             "x${mediaFileInfo.extraInfo.imageMetaData?.height}"
         superPreloader.loadImage(mediaFileInfo.path, holder.iconView)
+        holder.extraInfo.text = ""
         holder.root.setOnClickListener {
             val intent = Intent(superContext, ImageViewerDialogActivity::class.java)
             intent.data = mediaFileInfo.getContentUri(superContext)

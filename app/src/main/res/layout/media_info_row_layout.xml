@@ -32,6 +32,7 @@
         android:layout_toRightOf="@id/icon_view"
         android:layout_toEndOf="@id/icon_view"
         android:layout_toLeftOf="@id/extra_info"
+        android:layout_toStartOf="@id/extra_info"
         android:gravity="center_vertical"
         android:clickable="false"
         >
@@ -40,7 +41,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:fadingEdge="horizontal"
             android:marqueeRepeatLimit="marquee_forever"
             android:ellipsize="middle"
             android:textSize="@dimen/eighteen_sp"
