@@ -83,7 +83,7 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 //    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
     implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
-    implementation "com.folioreader:folioreader:0.5.3"
+    implementation "com.folioreader:folioreader:0.5.4"
     implementation 'org.zwobble.mammoth:mammoth:1.4.2'
 
     // https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor
@@ -95,6 +95,8 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.google.android.exoplayer:exoplayer:2.16.0'
     implementation 'com.ramijemli.percentagechartview:percentagechartview:0.3.1'
+    implementation  'com.github.massoudss:waveformSeekBar:4.1.0'
+    implementation 'com.github.lincollincol:amplituda:2.1.2'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

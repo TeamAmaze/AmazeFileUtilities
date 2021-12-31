@@ -31,7 +31,7 @@ data class AudioPlaybackInfo(
     var albumName: String = "",
     var artistId: Long = -1,
     var artistName: String = "",
-    var currentPosition: Int = -1,
+    var currentPosition: Long = -1,
     var isPlaying: Boolean = false
 ) : Parcelable {
     companion object {

@@ -591,12 +591,12 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         playingNotification?.update()
     }
 
-    override fun getPlayerPosition(): Int {
-        return exoPlayer!!.currentPosition.toInt()
+    override fun getPlayerPosition(): Long {
+        return exoPlayer!!.currentPosition
     }
 
-    override fun getPlayerDuration(): Int {
-        return exoPlayer!!.contentDuration.toInt()
+    override fun getPlayerDuration(): Long {
+        return exoPlayer!!.contentDuration
     }
 
     override fun isPlaying(): Boolean {

@@ -141,10 +141,7 @@ class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
     }
 
     override fun onPositionUpdate(progressHandler: AudioProgressHandler) {
-        viewBinding.seekbar.progress = progressHandler.audioPlaybackInfo.currentPosition
-        viewBinding.title.text = progressHandler.audioPlaybackInfo.title
-        viewBinding.album.text = progressHandler.audioPlaybackInfo.albumName
-        viewBinding.artist.text = progressHandler.audioPlaybackInfo.artistName
+        viewBinding.seekbar.progress = progressHandler.audioPlaybackInfo.currentPosition.toInt()
         viewBinding.seekbar.max = progressHandler.audioPlaybackInfo.duration.toInt()
         onPlaybackStateChanged(progressHandler)
     }

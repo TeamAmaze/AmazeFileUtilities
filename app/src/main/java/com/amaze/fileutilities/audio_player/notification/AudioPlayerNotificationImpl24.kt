@@ -51,13 +51,13 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
             )
         val previousAction: NotificationCompat.Action =
             NotificationCompat.Action(
-                R.drawable.ic_outline_fast_rewind_32,
+                R.drawable.ic_round_skip_previous_32,
                 service.getString(R.string.previous),
                 retrievePlaybackAction(AudioPlayerService.ACTION_PREVIOUS)
             )
         val nextAction: NotificationCompat.Action =
             NotificationCompat.Action(
-                R.drawable.ic_outline_fast_forward_32,
+                R.drawable.ic_round_skip_next_32,
                 service.getString(R.string.next),
                 retrievePlaybackAction(AudioPlayerService.ACTION_NEXT)
             )

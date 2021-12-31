@@ -48,43 +48,43 @@ abstract class AbstractMediaFilesAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
         RecyclerView.ViewHolder {
-            var view = View(superContext)
-            when (viewType) {
-                TYPE_BANNER -> {
-                    view = mInflater.inflate(
-                        R.layout.list_banner_layout, parent,
-                        false
-                    )
-                    return ListBannerViewHolder(view)
-                }
-                TYPE_ITEM -> {
-                    view = mInflater.inflate(
-                        R.layout.media_info_row_layout, parent,
-                        false
-                    )
-                    return MediaInfoRecyclerViewHolder(view)
-                }
-                TYPE_HEADER -> {
-                    view = mInflater.inflate(
-                        R.layout.list_header, parent,
-                        false
-                    )
-                    return HeaderViewHolder(view)
-                }
-                EMPTY_LAST_ITEM -> {
-                    view.minimumHeight =
-                        (
-                            superContext.resources.getDimension(R.dimen.fifty_six_dp) +
-                                superContext.resources.getDimension(R.dimen.material_generic)
-                            )
-                            .roundToInt()
-                    return EmptyViewHolder(view)
-                }
-                else -> {
-                    throw IllegalStateException("Illegal $viewType in apps adapter")
-                }
+        var view = View(superContext)
+        when (viewType) {
+            TYPE_BANNER -> {
+                view = mInflater.inflate(
+                    R.layout.list_banner_layout, parent,
+                    false
+                )
+                return ListBannerViewHolder(view)
+            }
+            TYPE_ITEM -> {
+                view = mInflater.inflate(
+                    R.layout.media_info_row_layout, parent,
+                    false
+                )
+                return MediaInfoRecyclerViewHolder(view)
+            }
+            TYPE_HEADER -> {
+                view = mInflater.inflate(
+                    R.layout.list_header, parent,
+                    false
+                )
+                return HeaderViewHolder(view)
+            }
+            EMPTY_LAST_ITEM -> {
+                view.minimumHeight =
+                    (
+                        superContext.resources.getDimension(R.dimen.fifty_six_dp) +
+                            superContext.resources.getDimension(R.dimen.material_generic)
+                        )
+                        .roundToInt()
+                return EmptyViewHolder(view)
+            }
+            else -> {
+                throw IllegalStateException("Illegal $viewType in apps adapter")
             }
         }
+    }
 
     @CallSuper
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

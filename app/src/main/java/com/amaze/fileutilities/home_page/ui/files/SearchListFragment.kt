@@ -156,6 +156,7 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
                                     if (mediaFileInfoList.size == 0) {
                                         showEmptyViews()
                                     } else {
+                                        binding.searchListView.scrollToPosition(0)
                                         mediaFileAdapter?.setData(mediaFileInfoList)
                                     }
                                 } else {
