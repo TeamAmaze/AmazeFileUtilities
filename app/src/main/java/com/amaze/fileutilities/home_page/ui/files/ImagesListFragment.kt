@@ -49,6 +49,8 @@ class ImagesListFragment : Fragment() {
             false
         )
         val root: View = binding.root
+        (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.images))
+        (activity as MainActivity).invalidateBottomBar(false)
         filesViewModel.usedImagesSummaryTransformations.observe(
             viewLifecycleOwner,
             {
@@ -115,15 +117,11 @@ class ImagesListFragment : Fragment() {
         return root
     }
 
-    override fun onResume() {
-        super.onResume()
-        (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.images))
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         (requireActivity() as MainActivity)
             .setCustomTitle(resources.getString(R.string.title_files))
+        (activity as MainActivity).invalidateBottomBar(true)
         _binding = null
     }
 }

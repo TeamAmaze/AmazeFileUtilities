@@ -73,8 +73,8 @@ class MediaTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(conte
     fun setProgress(mediaTypeContent: MediaTypeContent) {
         mediaTypeContent.run {
             mediaSummaryTextView.text = resources.getString(
-                R.string.num_of_files_and_size,
-                itemsCount.toString(), mediaTypeContent.size
+                R.string.num_of_files,
+                itemsCount.toString()
             )
             progressPercentTextView.text = "$progress %"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

@@ -47,7 +47,8 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
 
     companion object {
         const val MAX_PRELOAD = 100
-        const val SEARCH_THRESHOLD = 3
+        const val SEARCH_THRESHOLD = 2
+        const val SEARCH_HINT_THRESHOLD = 3
         const val SEARCH_HINT_RESULTS_THRESHOLD = 3
     }
     // This property is only valid between onCreateView and
@@ -66,6 +67,7 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
         val root: View = binding.root
         observeMediaInfoLists()
         searchEditText = (activity as MainActivity).invalidateSearchBar(true)!!
+        (activity as MainActivity).invalidateBottomBar(false)
         searchEditText?.let {
             val adapter: ArrayAdapter<String> =
                 ArrayAdapter<String>(
@@ -75,7 +77,7 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
                 )
             searchEditText?.setOnEditorActionListener(this)
             searchEditText?.addTextChangedListener(this)
-//            searchEditText?.threshold = SEARCH_HINT_RESULTS_THRESHOLD
+            searchEditText?.threshold = 0
             searchEditText?.setAdapter(adapter)
         }
         preloader = MediaAdapterPreloader(
@@ -105,6 +107,7 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
         super.onDestroyView()
         searchEditText?.removeTextChangedListener(this)
         (activity as MainActivity).invalidateSearchBar(false)
+        (activity as MainActivity).invalidateBottomBar(true)
         _binding = null
     }
 
@@ -119,29 +122,6 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
                 if (it.text != null &&
                     it.text.length > SEARCH_THRESHOLD
                 ) {
-                    /*invokeSearch(
-                        { imagesList, videosList, audiosList, docsList ->
-                            filesViewModel.queryOnAggregatedMediaFiles(
-                                it.text.toString(),
-                                imagesList, videosList, audiosList,
-                                docsList
-                            ).observe(
-                                viewLifecycleOwner,
-                                {
-                                    mediaFileInfoList ->
-                                    if (mediaFileInfoList != null) {
-                                        showLoadingViews(false)
-                                        mediaFileAdapter?.setData(mediaFileInfoList)
-                                    } else {
-                                        showLoadingViews(true)
-                                    }
-                                }
-                            )
-                        },
-                        {
-                            showLoadingViews(true)
-                        }
-                    )*/
                     if (imagesMediaFilesList != null &&
                         videosMediaFilesList != null && audiosMediaFilesList != null &&
                         docsMediaFilesList != null
@@ -157,7 +137,11 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
                                 mediaFileInfoList ->
                                 if (mediaFileInfoList != null) {
                                     showLoadingViews(false)
-                                    mediaFileAdapter?.setData(mediaFileInfoList)
+                                    if (mediaFileInfoList.size == 0) {
+                                        showEmptyViews()
+                                    } else {
+                                        mediaFileAdapter?.setData(mediaFileInfoList)
+                                    }
                                 } else {
                                     showLoadingViews(true)
                                 }
@@ -167,7 +151,12 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
                         showLoadingViews(true)
                     }
                 } else {
-                    mediaFileAdapter?.setData(emptyList())
+                    if (imagesMediaFilesList != null && videosMediaFilesList != null &&
+                        audiosMediaFilesList != null && docsMediaFilesList != null
+                    ) {
+                        mediaFileAdapter?.setData(emptyList())
+                        showEmptyViews()
+                    }
                 }
             }
             handled = true
@@ -178,33 +167,7 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
     override fun afterTextChanged(s: Editable?) {
         s?.let {
             query ->
-            if (query.toString().length > SEARCH_THRESHOLD) {
-                /*invokeSearch(
-                    { imagesList,
-                        videosList,
-                        audiosList,
-                        docsList ->
-                        filesViewModel.queryHintOnAggregatedMediaFiles(
-                            query.toString(),
-                            SEARCH_HINT_RESULTS_THRESHOLD,
-                            imagesList, videosList, audiosList,
-                            docsList
-                        ).observe(
-                            viewLifecycleOwner,
-                            {
-                                if (it != null) {
-                                    val adapter: ArrayAdapter<String> =
-                                        ArrayAdapter<String>(
-                                            requireContext(),
-                                            R.layout.custom_simple_selectable_list_item, it
-                                        )
-                                    searchEditText?.setAdapter(adapter)
-                                }
-                            }
-                        )
-                    },
-                    null
-                )*/
+            if (query.toString().length > SEARCH_HINT_THRESHOLD) {
                 if (imagesMediaFilesList != null &&
                     videosMediaFilesList != null && audiosMediaFilesList != null &&
                     docsMediaFilesList != null
@@ -232,12 +195,7 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
                     showLoadingViews(true)
                 }
             } else {
-                val adapter: ArrayAdapter<String> =
-                    ArrayAdapter<String>(
-                        requireContext(),
-                        R.layout.custom_simple_selectable_list_item, emptyArray()
-                    )
-                searchEditText?.setAdapter(adapter)
+                searchEditText?.setAdapter(null)
             }
         }
     }
@@ -258,25 +216,6 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
         count: Int
     ) {
         // do nothing
-    }
-
-    private fun invokeSearch(
-        callback: (
-            imagesList: ArrayList<MediaFileInfo>,
-            videosList: ArrayList<MediaFileInfo>,
-            audiosList: ArrayList<MediaFileInfo>,
-            docsList: ArrayList<MediaFileInfo>
-        ) -> Unit,
-        loadingCallback: (() -> Unit)?
-    ) {
-        filesViewModel.usedImagesSummaryTransformations
-            .observe(
-                viewLifecycleOwner,
-                {
-                    imagesPair ->
-                    imagesPairObserver(imagesPair, callback, loadingCallback)
-                }
-            )
     }
 
     private fun observeMediaInfoLists() {
@@ -379,6 +318,7 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
     ) {
         if (docsPair?.second != null) {
             showLoadingViews(false)
+            showEmptyViews()
             imagesMediaFilesList = imagesPair.second
             videosMediaFilesList = videosPair.second
             audiosMediaFilesList = audiosPair.second
@@ -388,142 +328,28 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
         }
     }
 
-    private fun imagesPairObserver(
-        imagesPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>?,
-        callback: (
-            imagesList: ArrayList<MediaFileInfo>,
-            videosList: ArrayList<MediaFileInfo>,
-            audiosList: ArrayList<MediaFileInfo>,
-            docsList: ArrayList<MediaFileInfo>
-        ) -> Unit,
-        loadingCallback: (() -> Unit)?
-    ) {
-        if (imagesPair?.second != null) {
-            filesViewModel.usedVideosSummaryTransformations
-                .observe(
-                    viewLifecycleOwner,
-                    {
-                        videosPair ->
-                        videosPairObserver(videosPair, imagesPair, callback, loadingCallback)
-                    }
-                )
-        } else {
-            loadingCallback?.invoke()
-        }
-    }
-
-    private fun videosPairObserver(
-        videosPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>?,
-        imagesPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>,
-        callback: (
-            imagesList: ArrayList<MediaFileInfo>,
-            videosList: ArrayList<MediaFileInfo>,
-            audiosList: ArrayList<MediaFileInfo>,
-            docsList: ArrayList<MediaFileInfo>
-        ) -> Unit,
-        loadingCallback: (() -> Unit)?
-    ) {
-        if (videosPair?.second != null) {
-            filesViewModel.usedAudiosSummaryTransformations
-                .observe(
-                    viewLifecycleOwner,
-                    {
-                        audiosPair ->
-                        audiosPairObserver(
-                            audiosPair, videosPair, imagesPair, callback,
-                            loadingCallback
-                        )
-                    }
-                )
-        } else {
-            loadingCallback?.invoke()
-        }
-    }
-
-    private fun audiosPairObserver(
-        audiosPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>?,
-        videosPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>,
-        imagesPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>,
-        callback: (
-            imagesList: ArrayList<MediaFileInfo>,
-            videosList: ArrayList<MediaFileInfo>,
-            audiosList: ArrayList<MediaFileInfo>,
-            docsList: ArrayList<MediaFileInfo>
-        ) -> Unit,
-        loadingCallback: (() -> Unit)?
-    ) {
-        if (audiosPair?.second != null) {
-            filesViewModel.usedDocsSummaryTransformations
-                .observe(
-                    viewLifecycleOwner,
-                    {
-                        docsPair ->
-                        docsPairObserver(
-                            docsPair, audiosPair, videosPair, imagesPair,
-                            callback, loadingCallback
-                        )
-                    }
-                )
-        } else {
-            loadingCallback?.invoke()
-        }
-    }
-
-    private fun docsPairObserver(
-        docsPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>?,
-        audiosPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>,
-        videosPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>,
-        imagesPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>,
-        callback: (
-            imagesList: ArrayList<MediaFileInfo>,
-            videosList: ArrayList<MediaFileInfo>,
-            audiosList: ArrayList<MediaFileInfo>,
-            docsList: ArrayList<MediaFileInfo>
-        ) -> Unit,
-        loadingCallback: (() -> Unit)?
-    ) {
-        if (docsPair?.second != null) {
-            callback.invoke(
-                imagesPair.second,
-                videosPair.second,
-                audiosPair.second, docsPair.second
-            )
-        } else {
-            loadingCallback?.invoke()
-        }
-    }
-
     private fun showLoadingViews(doShow: Boolean) {
         binding.run {
             if (doShow) {
                 searchListView.visibility = View.GONE
                 loadingProgress.visibility = View.VISIBLE
                 searchInfoText.visibility = View.VISIBLE
+                searchInfoText.text = resources.getString(R.string.loading)
             } else {
                 searchListView.visibility = View.VISIBLE
                 loadingProgress.visibility = View.GONE
                 searchInfoText.visibility = View.GONE
+                emptyResultImage.visibility = View.GONE
             }
+        }
+    }
+
+    private fun showEmptyViews() {
+        binding.run {
+            searchListView.visibility = View.GONE
+            emptyResultImage.visibility = View.VISIBLE
+            searchInfoText.visibility = View.VISIBLE
+            searchInfoText.text = resources.getString(R.string.its_quiet_here)
         }
     }
 }

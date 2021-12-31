@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.8"
             app:trackColor="@color/white_grey_1"
+            app:trackCornerRadius="@dimen/two_dp"
             app:indicatorDirectionLinear="leftToRight"
             />
         <TextView
