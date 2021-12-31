@@ -49,6 +49,8 @@ class AudiosListFragment : Fragment() {
             false
         )
         val root: View = binding.root
+        (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.audios))
+        (activity as MainActivity).invalidateBottomBar(false)
         filesViewModel.usedAudiosSummaryTransformations.observe(
             viewLifecycleOwner,
             {
@@ -115,15 +117,11 @@ class AudiosListFragment : Fragment() {
         return root
     }
 
-    override fun onResume() {
-        super.onResume()
-        (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.audios))
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         (requireActivity() as MainActivity)
             .setCustomTitle(resources.getString(R.string.title_files))
+        (activity as MainActivity).invalidateBottomBar(true)
         _binding = null
     }
 }

@@ -10,9 +10,7 @@
 
 package com.amaze.fileutilities.home_page.ui.files
 
-import android.app.Activity
 import android.content.Context
-import android.view.LayoutInflater
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter.*
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 
@@ -26,20 +24,17 @@ class RecentMediaFilesAdapter(
     private var mediaFileListItems: MutableList<ListItem> = mutableListOf()
         set(value) {
             value.clear()
-            if (mediaFileInfoList.size == 0) {
-                return
-            }
             mediaFileInfoList.forEach {
                 value.add(ListItem(it))
                 preloader.addItem(it.path)
             }
-            preloader.addItem("")
-            value.add(ListItem(EMPTY_LAST_ITEM))
+            if (mediaFileInfoList.size != 0) {
+                preloader.addItem("")
+                value.add(ListItem(EMPTY_LAST_ITEM))
+                return
+            }
             field = value
         }
-
-    private val mInflater: LayoutInflater
-        get() = context.getSystemService(Activity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     init {
         mediaFileListItems = mutableListOf()

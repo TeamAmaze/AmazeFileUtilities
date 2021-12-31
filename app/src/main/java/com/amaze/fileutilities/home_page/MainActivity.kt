@@ -15,6 +15,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.MotionEvent
+import android.view.View
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.ActionBar
 import androidx.core.app.ActivityCompat.startActivityForResult
@@ -138,6 +139,14 @@ class MainActivity : PermissionActivity() {
                 actionBarEditText.setOnEditorActionListener(null)
                 null
             }
+        }
+    }
+
+    fun invalidateBottomBar(doShow: Boolean) {
+        if (doShow) {
+            binding.navView.visibility = View.VISIBLE
+        } else {
+            binding.navView.visibility = View.GONE
         }
     }
 

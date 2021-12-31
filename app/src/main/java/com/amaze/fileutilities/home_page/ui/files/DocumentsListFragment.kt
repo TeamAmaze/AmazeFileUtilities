@@ -49,7 +49,8 @@ class DocumentsListFragment : Fragment() {
             false
         )
         val root: View = binding.root
-//        ViewCompat.setNestedScrollingEnabled(binding.imagesListView, false)
+        (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.documents))
+        (activity as MainActivity).invalidateBottomBar(false)
         filesViewModel.usedDocsSummaryTransformations.observe(
             viewLifecycleOwner,
             {
@@ -116,13 +117,11 @@ class DocumentsListFragment : Fragment() {
         return root
     }
 
-    override fun onResume() {
-        super.onResume()
-        (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.documents))
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
+        (requireActivity() as MainActivity)
+            .setCustomTitle(resources.getString(R.string.title_files))
+        (activity as MainActivity).invalidateBottomBar(true)
         _binding = null
     }
 }

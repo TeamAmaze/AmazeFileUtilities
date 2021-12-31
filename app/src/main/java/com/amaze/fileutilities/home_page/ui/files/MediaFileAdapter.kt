@@ -32,9 +32,6 @@ class MediaFileAdapter(
     private var mediaFileListItems: MutableList<ListItem> = mutableListOf()
         set(value) {
             value.clear()
-            if (mediaFileInfoList.size == 0) {
-                return
-            }
             MediaFileListSorter.generateMediaFileListHeadersAndSort(
                 context,
                 mediaFileInfoList, sortingPreference
