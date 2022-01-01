@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,6 +34,7 @@ import com.amaze.fileutilities.utilis.getFileFromUri
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
 import java.lang.ref.WeakReference
@@ -159,6 +161,9 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate {
         (requireActivity() as MainActivity)
             .setCustomTitle(resources.getString(R.string.title_files))
         (activity as MainActivity).invalidateBottomBar(true)
+        if (!isPlaying) {
+            AudioPlayerService.sendCancelBroadcast(requireContext())
+        }
         _binding = null
     }
 
@@ -179,6 +184,7 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate {
                 progressHandler
                     .audioPlaybackInfo.duration
             ) ?: ""
+            timeSummarySmall.text = "${timeElapsed.text} / ${trackLength.text}"
             onPlaybackStateChanged(progressHandler)
         }
     }
@@ -190,17 +196,27 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate {
     override fun setupActionButtons(audioServiceRef: WeakReference<ServiceOperationCallback>) {
         if (!isBottomFragmentVisible) {
             binding.layoutBottomSheet.visibility = View.VISIBLE
+            val params: CoordinatorLayout.LayoutParams = binding.layoutBottomSheet
+                .layoutParams as CoordinatorLayout.LayoutParams
+            val behavior = params.behavior as BottomSheetBehavior
+            behavior.addBottomSheetCallback(bottomSheetCallback)
             isBottomFragmentVisible = true
         }
 
         binding.run {
             val audioService = audioServiceRef.get()
             title.text = audioService?.getAudioPlaybackInfo()?.title
+            titleSmall.text = audioService?.getAudioPlaybackInfo()?.title
             album.text = audioService?.getAudioPlaybackInfo()?.albumName
             artist.text = audioService?.getAudioPlaybackInfo()?.artistName
+            summarySmall.text = "${album.text} | ${artist.text}"
 
             audioService?.let {
                 playButton.setOnClickListener {
+                    audioService.invokePlayPausePlayer()
+                    invalidateActionButtons(audioService.getAudioProgressHandlerCallback())
+                }
+                playButtonSmall.setOnClickListener {
                     audioService.invokePlayPausePlayer()
                     invalidateActionButtons(audioService.getAudioProgressHandlerCallback())
                 }
@@ -221,17 +237,34 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate {
         isPlaying = progressHandler.audioPlaybackInfo.isPlaying
         progressHandler.audioPlaybackInfo.isPlaying.let {
             isPlaying ->
-            if (progressHandler.isCancelled || !isPlaying) {
-                binding.playButton
-                    .setImageResource(R.drawable.ic_round_play_circle_32)
-            } else {
-                binding.playButton
-                    .setImageResource(R.drawable.ic_round_pause_circle_32)
-            }
+            _binding?.let {
+                if (progressHandler.isCancelled || !isPlaying) {
+                    binding.playButton
+                        .setImageResource(R.drawable.ic_round_play_circle_32)
+                    binding.playButtonSmall.setImageResource(R.drawable.ic_round_play_circle_32)
+                } else {
+                    binding.playButton
+                        .setImageResource(R.drawable.ic_round_pause_circle_32)
+                    binding.playButtonSmall.setImageResource(R.drawable.ic_round_pause_circle_32)
+                }
 
-            if (progressHandler.isCancelled) {
-                setSeekbarProgress(0)
+                if (progressHandler.isCancelled) {
+                    setSeekbarProgress(0)
+                }
             }
+        }
+    }
+
+    private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            /*if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                binding.bottomSheetSmall.visibility = View.GONE
+            }*/
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            binding.bottomSheetSmall.alpha = 1 - slideOffset
+            binding.bottomSheetBig.alpha = slideOffset
         }
     }
 
