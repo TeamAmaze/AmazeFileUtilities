@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/second"
     android:layout_height="@dimen/list_header_height"
     android:layout_width="match_parent"
     android:padding="@dimen/material_generic"
+    android:background="@color/navy_blue_alt"
     >
-
     <TextView
         android:id="@+id/header_title"
         android:gravity="center_vertical"

@@ -38,4 +38,46 @@
             />
     </FrameLayout>
 
+    <LinearLayout
+        android:id="@+id/options_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/material_generic_medium"
+        android:paddingStart="@dimen/material_generic_medium"
+        android:background="@color/navy_blue"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        >
+        <TextView
+            android:id="@+id/settings_text"
+            android:layout_width="match_parent"
+            android:layout_height="?listPreferredItemHeightSmall"
+            android:textColor="@color/white"
+            android:textSize="@dimen/eighteen_sp"
+            android:text="@string/settings"
+            android:gravity="center_vertical"
+            />
+        <TextView
+            android:id="@+id/about_text"
+            android:layout_width="match_parent"
+            android:layout_height="?listPreferredItemHeightSmall"
+            android:textColor="@color/white"
+            android:textSize="@dimen/eighteen_sp"
+            android:layout_marginTop="@dimen/eight_dp"
+            android:text="@string/about"
+            android:gravity="center_vertical"
+            />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/options_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/zero_dp"
+        app:layout_constraintTop_toBottomOf="@id/options_root"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/black_70"
+        android:visibility="gone"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

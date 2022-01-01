@@ -6,6 +6,7 @@
     android:layout_gravity="center_horizontal"
     >
     <ImageView
+        android:id="@+id/options_image"
         app:srcCompat="@drawable/ic_baseline_notes_32"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

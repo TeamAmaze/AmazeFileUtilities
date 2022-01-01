@@ -137,7 +137,7 @@
                 android:layout_weight="0.5"
                 app:title="@string/videos"
                 app:mediaImageSrc="@drawable/ic_outline_video_library_32"
-                app:themeColor="@color/yellow"
+                app:themeColor="@color/orange"
                 />
             <com.amaze.fileutilities.home_page.ui.MediaTypeView
                 android:id="@+id/documents_tab"
