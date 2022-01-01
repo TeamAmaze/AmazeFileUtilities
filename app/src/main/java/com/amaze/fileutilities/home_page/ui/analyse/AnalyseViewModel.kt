@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModel
 class AnalyseViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
-        value = "Analyse your storage"
+        value = "[WIP]"
     }
     val text: LiveData<String> = _text
 }
