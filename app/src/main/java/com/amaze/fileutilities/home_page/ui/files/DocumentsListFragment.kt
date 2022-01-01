@@ -110,6 +110,7 @@ class DocumentsListFragment : Fragment() {
                             .addOnScrollListener(recyclerViewPreloader!!)
                         binding.documentsListView.layoutManager = linearLayoutManager
                         binding.documentsListView.adapter = mediaFileAdapter
+                        binding.fastscroll.setRecyclerView(binding.documentsListView, 1)
                     }
                 }
             }

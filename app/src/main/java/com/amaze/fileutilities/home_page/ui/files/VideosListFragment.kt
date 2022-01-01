@@ -110,6 +110,7 @@ class VideosListFragment : Fragment() {
                             .addOnScrollListener(recyclerViewPreloader!!)
                         binding.videosListView.layoutManager = linearLayoutManager
                         binding.videosListView.adapter = mediaFileAdapter
+                        binding.fastscroll.setRecyclerView(binding.videosListView, 1)
                     }
                 }
             }

@@ -1,32 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/navy_blue"
     >
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/documentsListView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"
-        android:scrollbars="none"
-        android:descendantFocusability="afterDescendants"
+        android:orientation="vertical"
+        android:background="@color/navy_blue"
+        >
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/documentsListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null"
+            android:scrollbars="none"
+            android:descendantFocusability="afterDescendants"
+            />
+        <ProgressBar
+            android:id="@+id/loadingProgress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:gravity="center_horizontal"
+            />
+        <TextView
+            android:id="@+id/documentsListInfoText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/material_generic"
+            android:textSize="@dimen/eighteen_sp"
+            android:gravity="center_horizontal"
+            />
+    </LinearLayout>
+    <com.amaze.fileutilities.utilis.FastScroller
+        android:id="@+id/fastscroll"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="match_parent"
         />
-    <ProgressBar
-        android:id="@+id/loadingProgress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:gravity="center_horizontal"
-        />
-    <TextView
-        android:id="@+id/documentsListInfoText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/material_generic"
-        android:textSize="@dimen/eighteen_sp"
-        android:gravity="center_horizontal"
-        />
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

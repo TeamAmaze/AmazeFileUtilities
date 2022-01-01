@@ -18,9 +18,11 @@ import android.os.Environment
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
 import android.widget.Toast
 import java.io.File
-import java.lang.Exception
 
 fun Uri.getSiblingUriFiles(context: Context): ArrayList<Uri>? {
     try {
@@ -219,3 +221,29 @@ fun Context.showToastOnBottom(message: String) = Toast.makeText(
     message, Toast.LENGTH_SHORT
 )
     .apply { setGravity(Gravity.BOTTOM, 0, 0); show() }
+
+fun View.hideFade(duration: Long) {
+    this.animate().alpha(0f).duration = duration
+    this.visibility = View.GONE
+}
+
+fun View.showFade(duration: Long) {
+    this.animate().alpha(1f).duration = duration
+    this.visibility = View.VISIBLE
+}
+
+fun View.hideTranslateY(duration: Long) {
+    val animation: Animation = TranslateAnimation(0f, 0f, 0f, this.y)
+    animation.duration = duration
+    animation.fillAfter = true
+    this.startAnimation(animation)
+    this.visibility = View.INVISIBLE
+}
+
+fun View.showTranslateY(duration: Long) {
+    val animation: Animation = TranslateAnimation(0f, 0f, this.y, 0f)
+    animation.duration = duration
+    animation.fillAfter = true
+    this.startAnimation(animation)
+    this.visibility = View.VISIBLE
+}
