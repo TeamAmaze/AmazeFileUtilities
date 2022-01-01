@@ -46,4 +46,4 @@ jobs:
         run: |
           COMMIT_COUNT=$(git rev-list --count ${GITHUB_REF})
           cp app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/amaze-utils-v0.1-$(echo $COMMIT_COUNT).apk
-          echo $(curl -v -F "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" -F document=@app/build/outputs/apk/debug/amaze-utils-v0.1-$(echo $COMMIT_COUNT).apk https://api.telegram.org/${{ secrets.AMAZE_BOT_ID }}:${{ secrets.TELEGRAM_INTEGRATION_KEY }}/sendDocument)
+          echo $(curl -v -F "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" -F files=@app/build/outputs/apk/debug/amaze-utils-v0.1-$(echo $COMMIT_COUNT).apk https://api.telegram.org/${{ secrets.AMAZE_BOT_ID }}:${{ secrets.TELEGRAM_INTEGRATION_KEY }}/sendDocument)
