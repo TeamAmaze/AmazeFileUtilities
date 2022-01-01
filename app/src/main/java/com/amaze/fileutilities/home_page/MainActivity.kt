@@ -28,6 +28,7 @@ import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
 import com.amaze.fileutilities.databinding.ActivityMainBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
+import com.amaze.fileutilities.home_page.ui.options.AboutActivity
 import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.hideTranslateY
 import com.amaze.fileutilities.utilis.showFade
@@ -97,6 +98,11 @@ class MainActivity : PermissionActivity() {
             isOptionsVisible = !isOptionsVisible
             invalidateOptionsTabs()
         }
+        binding.aboutText.setOnClickListener {
+            startActivity(Intent(this, AboutActivity::class.java))
+            isOptionsVisible = !isOptionsVisible
+            invalidateOptionsTabs()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -112,6 +118,14 @@ class MainActivity : PermissionActivity() {
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        if (isOptionsVisible) {
+            isOptionsVisible = !isOptionsVisible
+            invalidateOptionsTabs()
+        }
     }
 
     fun setCustomTitle(title: String) {

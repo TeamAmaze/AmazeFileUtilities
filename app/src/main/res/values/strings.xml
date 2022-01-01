@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Amaze File Utilities</string>
+    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
+    <string name="team_amaze" translatable="false">Team Amaze</string>
     <string name="app_version" translatable="false">v1.0</string>
     <string name="image_viewer">Amaze Image Viewer</string>
     <string name="video_player">Amaze Video Player</string>
@@ -54,4 +56,10 @@
     <string name="its_quiet_here">It\'s quiet in here…</string>
     <string name="settings">Settings</string>
     <string name="about">About</string>
+    <string name="rights_reserved">Copyright © 2021–2022 All Rights Reserved</string>
+    <string name="open_source_licenses">Open-source licenses</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="pre_production">This is a pre-production copy. Redistribution is strictly prohibited.</string>
+    <string name="licenses">Licenses</string>
+    <string name="libraries">Libraries</string>
 </resources>
