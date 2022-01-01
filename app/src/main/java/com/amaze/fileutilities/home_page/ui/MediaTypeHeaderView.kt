@@ -88,8 +88,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         background = mediaRes
     }
 
-    fun setHeaderColor(headerColor: Int) {
-        setBackgroundColor(headerColor)
+    fun setHeaderColor(headerColor: Int, headerRes: Int) {
+        setBackgroundResource(headerRes)
         mediaProgressIndicator.trackColor = ColorUtils.blendARGB(
             headerColor,
             Color.BLACK, .5f

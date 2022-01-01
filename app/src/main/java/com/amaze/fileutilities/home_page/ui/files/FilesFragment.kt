@@ -23,6 +23,7 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentFilesBinding
 import com.amaze.fileutilities.home_page.ui.MediaTypeView
 import com.amaze.fileutilities.utilis.FileUtils
+import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
@@ -61,6 +62,12 @@ class FilesFragment : Fragment() {
                 viewLifecycleOwner,
                 {
                     it?.run {
+                        binding.internalStorageTab.setOnClickListener {
+                            Utils.openActivity(
+                                requireContext(), Utils.AMAZE_PACKAGE,
+                                Utils.AMAZE_FILE_MANAGER_MAIN
+                            )
+                        }
                         val usedSpace = FileUtils.formatStorageLength(
                             requireContext(),
                             it.usedSpace!!

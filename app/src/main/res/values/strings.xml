@@ -62,4 +62,5 @@
     <string name="pre_production">This is a pre-production copy. Redistribution is strictly prohibited.</string>
     <string name="licenses">Licenses</string>
     <string name="libraries">Libraries</string>
+    <string name="install_amaze">Please install Amaze File Manager to manage internal storage</string>
 </resources>
