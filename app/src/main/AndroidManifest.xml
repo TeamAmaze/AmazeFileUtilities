@@ -154,6 +154,11 @@
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".home_page.ui.options.AboutActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Dialog">
+        </activity>
 
         <service
             android:name=".audio_player.AudioPlayerService"

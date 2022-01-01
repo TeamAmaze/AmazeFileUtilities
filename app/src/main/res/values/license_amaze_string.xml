@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="amaze_license" translatable="false">
+        <![CDATA[
+        Copyright &#169; 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,<br />
+        Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.<br />
+        This file is part of Amaze File Utilities.<br />
+        \'Amaze File Utilities\' is a registered trademark of Team Amaze.<br />
+        All other product and company names mentioned are trademarks or registered trademarks of their respective owners.
+        ]]>
+    </string>
+</resources>
