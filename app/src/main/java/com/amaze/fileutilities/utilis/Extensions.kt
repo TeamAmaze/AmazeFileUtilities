@@ -237,7 +237,7 @@ fun View.hideTranslateY(duration: Long) {
     animation.duration = duration
     animation.fillAfter = true
     this.startAnimation(animation)
-    this.visibility = View.INVISIBLE
+    this.visibility = View.GONE
 }
 
 fun View.showTranslateY(duration: Long) {

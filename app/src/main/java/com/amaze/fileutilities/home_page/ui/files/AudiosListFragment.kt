@@ -10,13 +10,16 @@
 
 package com.amaze.fileutilities.home_page.ui.files
 
+import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
 import android.media.AudioManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,10 +29,14 @@ import com.amaze.fileutilities.databinding.FragmentAudiosListBinding
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.MediaTypeView
 import com.amaze.fileutilities.utilis.FileUtils
+import com.amaze.fileutilities.utilis.getFileFromUri
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
+import com.masoudss.lib.SeekBarOnProgressChanged
+import com.masoudss.lib.WaveformSeekBar
 import java.lang.ref.WeakReference
+import kotlin.math.ceil
 
 class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate {
     private val filesViewModel: FilesViewModel by activityViewModels()
@@ -40,6 +47,8 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate {
     private var linearLayoutManager: LinearLayoutManager? = null
     private val MAX_PRELOAD = 100
     private var isBottomFragmentVisible = false
+    private var isPlaying = true
+    private var forceShowSeekbar = false
 
     private lateinit var audioPlaybackServiceConnection: ServiceConnection
 
@@ -154,17 +163,166 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate {
     }
 
     override fun onPositionUpdate(progressHandler: AudioProgressHandler) {
-        // do nothing
+        _binding?.run {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                waveformSeekbar.progress = progressHandler
+                    .audioPlaybackInfo.currentPosition.toFloat()
+            } else {
+                seekBar.max = progressHandler.audioPlaybackInfo.duration.toInt()
+                seekBar.progress = progressHandler.audioPlaybackInfo.currentPosition.toInt()
+            }
+            timeElapsed.text = AudioUtils.getReadableDurationString(
+                progressHandler
+                    .audioPlaybackInfo.currentPosition
+            ) ?: ""
+            trackLength.text = AudioUtils.getReadableDurationString(
+                progressHandler
+                    .audioPlaybackInfo.duration
+            ) ?: ""
+            onPlaybackStateChanged(progressHandler)
+        }
     }
 
     override fun onPlaybackStateChanged(progressHandler: AudioProgressHandler) {
-        // do nothing
+        invalidateActionButtons(progressHandler)
     }
 
-    override fun setupActionButtons(audioService: WeakReference<ServiceOperationCallback>) {
+    override fun setupActionButtons(audioServiceRef: WeakReference<ServiceOperationCallback>) {
         if (!isBottomFragmentVisible) {
-            AudioPlayerBottomSheet.showDialog(requireActivity().supportFragmentManager)
+            binding.layoutBottomSheet.visibility = View.VISIBLE
             isBottomFragmentVisible = true
+        }
+
+        binding.run {
+            val audioService = audioServiceRef.get()
+            title.text = audioService?.getAudioPlaybackInfo()?.title
+            album.text = audioService?.getAudioPlaybackInfo()?.albumName
+            artist.text = audioService?.getAudioPlaybackInfo()?.artistName
+
+            audioService?.let {
+                playButton.setOnClickListener {
+                    audioService.invokePlayPausePlayer()
+                    invalidateActionButtons(audioService.getAudioProgressHandlerCallback())
+                }
+                prevButton.setOnClickListener {
+                    requireContext()
+                        .startService(retrievePlaybackAction(AudioPlayerService.ACTION_PREVIOUS))
+                }
+                nextButton.setOnClickListener {
+                    requireContext()
+                        .startService(retrievePlaybackAction(AudioPlayerService.ACTION_NEXT))
+                }
+            }
+            setupSeekBars(audioService)
+        }
+    }
+
+    private fun invalidateActionButtons(progressHandler: AudioProgressHandler) {
+        isPlaying = progressHandler.audioPlaybackInfo.isPlaying
+        progressHandler.audioPlaybackInfo.isPlaying.let {
+            isPlaying ->
+            if (progressHandler.isCancelled || !isPlaying) {
+                binding.playButton
+                    .setImageResource(R.drawable.ic_round_play_circle_32)
+            } else {
+                binding.playButton
+                    .setImageResource(R.drawable.ic_round_pause_circle_32)
+            }
+
+            if (progressHandler.isCancelled) {
+                setSeekbarProgress(0)
+            }
+        }
+    }
+
+    private fun setSeekbarProgress(progress: Int) {
+        binding.run {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                waveformSeekbar.visibility = View.VISIBLE
+                seekBar.visibility = View.GONE
+                waveformSeekbar.progress = progress.toFloat()
+            } else {
+                seekBar.visibility = View.VISIBLE
+                waveformSeekbar.visibility = View.GONE
+                seekBar.progress = progress
+            }
+        }
+    }
+
+    private fun retrievePlaybackAction(action: String): Intent {
+        val serviceName = ComponentName(requireContext(), AudioPlayerService::class.java)
+        val intent = Intent(action)
+        intent.component = serviceName
+        return intent
+    }
+
+    private fun setupSeekBars(audioService: ServiceOperationCallback?) {
+        binding.run {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !forceShowSeekbar) {
+                waveformSeekbar.visibility = View.VISIBLE
+                seekBar.visibility = View.GONE
+                val file = audioService?.getAudioProgressHandlerCallback()?.audioPlaybackInfo
+                    ?.audioModel?.getUri()?.getFileFromUri(requireContext())
+                if (file != null) {
+                    waveformSeekbar.setSampleFrom(file)
+                } else {
+                    forceShowSeekbar = true
+                    setupSeekBars(audioService)
+                }
+                waveformSeekbar.maxProgress = audioService
+                    ?.getAudioPlaybackInfo()?.duration?.toFloat() ?: 0f
+                waveformSeekbar.onProgressChanged = object : SeekBarOnProgressChanged {
+                    override fun onProgressChanged(
+                        waveformSeekBar: WaveformSeekBar,
+                        progress: Float,
+                        fromUser: Boolean
+                    ) {
+                        if (fromUser) {
+//                            mediaController.transportControls.seekTo(progress.toLong())
+//                            audioService.seekPlayer(progress.toLong())
+                            audioService?.invokeSeekPlayer(progress.toLong())
+                            val x: Int = ceil(progress / 1000f).toInt()
+
+                            if (x == 0 && audioService?.getAudioProgressHandlerCallback()
+                                ?.isCancelled == true
+                            ) {
+                                waveformSeekBar.progress = 0f
+                            }
+                        }
+                    }
+                }
+            } else {
+                seekBar.visibility = View.VISIBLE
+                waveformSeekbar.visibility = View.GONE
+                seekBar.max = audioService?.getAudioPlaybackInfo()?.duration?.toInt() ?: 0
+                seekBar.setOnSeekBarChangeListener(object :
+                        SeekBar.OnSeekBarChangeListener {
+                        override fun onProgressChanged(
+                            seekBar: SeekBar?,
+                            progress: Int,
+                            fromUser: Boolean
+                        ) {
+                            if (fromUser) {
+//                            mediaController.transportControls.seekTo(progress.toLong())
+//                            audioService.seekPlayer(progress.toLong())
+                                audioService?.invokeSeekPlayer(progress.toLong())
+                                val x: Int = ceil(progress / 1000f).toInt()
+
+                                if (x == 0 && audioService?.getAudioProgressHandlerCallback()
+                                    ?.isCancelled == true
+                                ) {
+                                    seekBar?.progress = 0
+                                }
+                            }
+                        }
+
+                        override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                        }
+
+                        override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                        }
+                    })
+            }
         }
     }
 }

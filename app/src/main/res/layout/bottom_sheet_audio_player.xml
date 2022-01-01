@@ -72,7 +72,7 @@
             app:wave_max_progress="100"
             app:wave_width="@dimen/two_dp"
             app:wave_gap="1dp"
-            app:wave_min_height="@dimen/six_dp"
+            app:wave_min_height="@dimen/eight_dp"
             app:wave_corner_radius="@dimen/two_dp"
             app:wave_background_color="@color/grey_color"
             app:wave_progress_color="@color/highlight_yellow"

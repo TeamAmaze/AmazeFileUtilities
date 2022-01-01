@@ -103,7 +103,8 @@ class MediaFileAdapter(
                         .getColor(
                             context.resources,
                             R.color.peach, context.theme
-                        )
+                        ),
+                    R.drawable.background_curved_bottom_peach
                 )
                 holder.mediaTypeHeaderView.setTypeImageSrc(
                     ResourcesCompat.getDrawable(
@@ -118,7 +119,8 @@ class MediaFileAdapter(
                         .getColor(
                             context.resources,
                             R.color.orange, context.theme
-                        )
+                        ),
+                    R.drawable.background_curved_bottom_orange
                 )
                 holder.mediaTypeHeaderView.setTypeImageSrc(
                     ResourcesCompat.getDrawable(
@@ -133,7 +135,8 @@ class MediaFileAdapter(
                         .getColor(
                             context.resources,
                             R.color.pink, context.theme
-                        )
+                        ),
+                    R.drawable.background_curved_bottom_pink
                 )
                 holder.mediaTypeHeaderView.setTypeImageSrc(
                     ResourcesCompat.getDrawable(
@@ -148,7 +151,8 @@ class MediaFileAdapter(
                         .getColor(
                             context.resources,
                             R.color.green, context.theme
-                        )
+                        ),
+                    R.drawable.background_curved_bottom_green
                 )
                 holder.mediaTypeHeaderView.setTypeImageSrc(
                     ResourcesCompat.getDrawable(
