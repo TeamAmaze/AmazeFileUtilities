@@ -1,52 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/parent"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/eight_dp">
+    android:layout_width="@dimen/audio_player_sheet_height"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentLeft="true"
+    android:padding="@dimen/eight_dp"
+    >
+    <ImageView
+        android:id="@+id/album_image"
+        android:layout_width="@dimen/minimal_icon_size"
+        android:layout_height="@dimen/minimal_icon_size"
+        app:srcCompat="@drawable/ic_outline_audio_file_32"
+        android:layout_marginTop="@dimen/material_generic"
+        />
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:textStyle="bold"
-        />
-    <TextView
-        android:id="@+id/artist"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:textSize="@dimen/eighteen_sp"
+        android:textColor="@color/white"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:ellipsize="middle"
         android:layout_marginTop="@dimen/six_dp"
         />
     <TextView
         android:id="@+id/album"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/artist"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="@dimen/six_dp"
+        android:textSize="@dimen/eight_sp"
+        android:textColor="@color/grey_color"
         />
-    <SeekBar
-        android:id="@+id/seekbar"
-        app:layout_constraintTop_toBottomOf="@id/album"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/material_generic"
-        />
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/play_button"
-        app:srcCompat="@drawable/ic_baseline_pause_circle_outline_32"
-        app:fabSize="mini"
+    <TextView
+        android:id="@+id/artist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/seekbar"
-        app:layout_constraintLeft_toLeftOf="@id/parent"
-        app:layout_constraintRight_toRightOf="@id/parent"
-        app:layout_constrainedWidth="true"
-        android:layout_marginTop="@dimen/material_generic"
+        android:layout_marginTop="@dimen/six_dp"
+        android:textSize="@dimen/twelve_sp"
+        android:textColor="@color/white"
         />
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sixty_four_dp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal|center_vertical"
+        android:layout_marginTop="@dimen/material_generic"
+        >
+        <TextView
+            android:id="@+id/time_elapsed"
+            android:layout_width="@dimen/zero_dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/eight_sp"
+            android:textColor="@color/grey_color"
+            android:layout_weight="0.1"
+            android:gravity="center_horizontal|center_vertical"
+            />
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="@dimen/zero_dp"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:progressDrawable="@drawable/seekbar_accent"
+            android:thumb="@color/white"
+            android:layout_weight="0.8"
+            />
+        <com.masoudss.lib.WaveformSeekBar
+            android:id="@+id/waveformSeekbar"
+            android:layout_width="@dimen/zero_dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.8"
+            android:visibility="gone"
+            app:wave_width="@dimen/two_dp"
+            app:wave_gap="1dp"
+            app:wave_min_height="@dimen/six_dp"
+            app:wave_corner_radius="@dimen/two_dp"
+            app:wave_background_color="@color/grey_color"
+            app:wave_progress_color="@color/highlight_yellow"
+            app:wave_gravity="center"
+            />
+        <TextView
+            android:id="@+id/track_length"
+            android:layout_width="@dimen/zero_dp"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/eight_sp"
+            android:textColor="@color/grey_color"
+            android:layout_weight="0.1"
+            android:gravity="center_horizontal|center_vertical"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/material_generic"
+        android:layout_marginBottom="@dimen/material_generic"
+        >
+        <ImageView
+            android:id="@+id/prevButton"
+            android:layout_width="@dimen/minimal_icon_size"
+            android:layout_height="@dimen/minimal_icon_size"
+            app:srcCompat="@drawable/ic_round_skip_previous_32"
+            android:layout_marginRight="@dimen/material_generic"
+            android:layout_marginEnd="@dimen/material_generic"
+            />
+        <ImageView
+            android:id="@+id/playButton"
+            app:srcCompat="@drawable/ic_round_pause_circle_32"
+            android:layout_width="@dimen/minimal_icon_size"
+            android:layout_height="@dimen/minimal_icon_size"
+            android:layout_marginRight="@dimen/material_generic"
+            android:layout_marginEnd="@dimen/material_generic"
+            />
+        <ImageView
+            android:id="@+id/nextButton"
+            android:layout_width="@dimen/minimal_icon_size"
+            android:layout_height="@dimen/minimal_icon_size"
+            app:srcCompat="@drawable/ic_round_skip_next_32"
+            />
+    </LinearLayout>
+</LinearLayout>
