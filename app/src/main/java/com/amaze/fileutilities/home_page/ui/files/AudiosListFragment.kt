@@ -200,6 +200,12 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate {
                 .layoutParams as CoordinatorLayout.LayoutParams
             val behavior = params.behavior as BottomSheetBehavior
             behavior.addBottomSheetCallback(bottomSheetCallback)
+            binding.sheetUpArrow.setOnClickListener {
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+            binding.sheetDownArrow.setOnClickListener {
+                behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
             isBottomFragmentVisible = true
         }
 

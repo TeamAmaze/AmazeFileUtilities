@@ -235,7 +235,7 @@ fun View.showFade(duration: Long) {
 fun View.hideTranslateY(duration: Long) {
     val animation: Animation = TranslateAnimation(0f, 0f, 0f, this.y)
     animation.duration = duration
-    animation.fillAfter = true
+//    animation.fillAfter = true
     this.startAnimation(animation)
     this.visibility = View.GONE
 }
@@ -243,7 +243,7 @@ fun View.hideTranslateY(duration: Long) {
 fun View.showTranslateY(duration: Long) {
     val animation: Animation = TranslateAnimation(0f, 0f, this.y, 0f)
     animation.duration = duration
-    animation.fillAfter = true
+//    animation.fillAfter = true
     this.startAnimation(animation)
     this.visibility = View.VISIBLE
 }
