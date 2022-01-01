@@ -34,7 +34,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:layout_marginBottom="@dimen/four_dp"
-            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
             >
             <com.google.android.material.progressindicator.LinearProgressIndicator
                 android:id="@+id/mediaProgress"
