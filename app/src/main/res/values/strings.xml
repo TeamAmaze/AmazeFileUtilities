@@ -64,4 +64,5 @@
     <string name="libraries">Libraries</string>
     <string name="install_amaze">Please install Amaze File Manager to manage internal storage</string>
     <string name="version" translatable="false">v0.1</string>
+    <string name="information">Information</string>
 </resources>

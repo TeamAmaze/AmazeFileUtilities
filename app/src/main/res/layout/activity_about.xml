@@ -13,7 +13,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="@dimen/material_generic"
-        android:src="@mipmap/ic_launcher"
+        android:src="@mipmap/ic_launchers"
         />
     <TextView
         android:id="@+id/team_amaze"
