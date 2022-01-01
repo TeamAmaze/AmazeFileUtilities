@@ -110,6 +110,7 @@ class ImagesListFragment : Fragment() {
                             .addOnScrollListener(recyclerViewPreloader!!)
                         binding.imagesListView.layoutManager = linearLayoutManager
                         binding.imagesListView.adapter = mediaFileAdapter
+                        binding.fastscroll.setRecyclerView(binding.imagesListView, 1)
                     }
                 }
             }

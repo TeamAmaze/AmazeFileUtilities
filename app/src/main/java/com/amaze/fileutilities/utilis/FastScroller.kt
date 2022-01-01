@@ -84,7 +84,7 @@ class FastScroller : FrameLayout {
         handle = findViewById(R.id.scroll_handle)
         bar = findViewById(R.id.scroll_bar)
         handle?.isEnabled = true
-        setPressedHandleColor(context.resources.getColor(R.color.accent_blue))
+        setPressedHandleColor(context.resources.getColor(R.color.highlight_yellow))
         setUpBarBackground()
         visibility = VISIBLE
     }
@@ -168,7 +168,7 @@ class FastScroller : FrameLayout {
             val targetPos = clamp(
                 0f, (itemCount - 1).toFloat(),
                 relativePos * itemCount.toFloat()
-            ) as Int
+            ).toInt()
             recyclerView!!.scrollToPosition(targetPos)
         }
     }

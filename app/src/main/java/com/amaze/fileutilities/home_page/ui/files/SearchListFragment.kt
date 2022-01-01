@@ -119,6 +119,7 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
             searchListView.addOnScrollListener(recyclerViewPreloader!!)
             searchListView.layoutManager = linearLayoutManager
             searchListView.adapter = mediaFileAdapter
+            fastscroll.setRecyclerView(searchListView, 1)
         }
         return root
     }

@@ -15,7 +15,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.MotionEvent
-import android.view.View
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.ActionBar
 import androidx.core.app.ActivityCompat.startActivityForResult
@@ -30,6 +29,10 @@ import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
 import com.amaze.fileutilities.databinding.ActivityMainBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
+import com.amaze.fileutilities.utilis.hideFade
+import com.amaze.fileutilities.utilis.hideTranslateY
+import com.amaze.fileutilities.utilis.showFade
+import com.amaze.fileutilities.utilis.showTranslateY
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : PermissionActivity() {
@@ -110,6 +113,8 @@ class MainActivity : PermissionActivity() {
     fun invalidateSearchBar(showSearch: Boolean): AutoCompleteTextView? {
         searchActionBarBinding.run {
             return if (showSearch) {
+                actionBarBinding.root.hideFade(200)
+                searchActionBarBinding.root.showFade(300)
                 supportActionBar?.customView = root
                 backActionBar.setOnClickListener {
                     onBackPressed()
@@ -135,6 +140,8 @@ class MainActivity : PermissionActivity() {
             } else {
                 actionBarEditText.setText("")
                 actionBarEditText.setAdapter(null)
+                searchActionBarBinding.root.hideFade(200)
+                actionBarBinding.root.showFade(300)
                 supportActionBar?.customView = actionBarBinding.root
                 actionBarEditText.setOnEditorActionListener(null)
                 null
@@ -144,9 +151,11 @@ class MainActivity : PermissionActivity() {
 
     fun invalidateBottomBar(doShow: Boolean) {
         if (doShow) {
-            binding.navView.visibility = View.VISIBLE
+//            binding.navView.visibility = View.VISIBLE
+            binding.navView.showTranslateY(500)
         } else {
-            binding.navView.visibility = View.GONE
+//            binding.navView.visibility = View.GONE
+            binding.navView.hideTranslateY(500)
         }
     }
 

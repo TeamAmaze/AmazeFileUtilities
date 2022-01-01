@@ -124,6 +124,7 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate {
                             .addOnScrollListener(recyclerViewPreloader!!)
                         binding.audiosListView.layoutManager = linearLayoutManager
                         binding.audiosListView.adapter = mediaFileAdapter
+                        binding.fastscroll.setRecyclerView(binding.audiosListView, 1)
                     }
                 }
             }
