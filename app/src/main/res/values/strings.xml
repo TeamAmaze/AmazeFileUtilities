@@ -52,4 +52,6 @@
     <string name="action_bar_search_hint">Search for files…</string>
     <string name="please_wait">Please wait…</string>
     <string name="its_quiet_here">It\'s quiet in here…</string>
+    <string name="settings">Settings</string>
+    <string name="about">About</string>
 </resources>

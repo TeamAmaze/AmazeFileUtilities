@@ -117,7 +117,7 @@ class MediaFileAdapter(
                     ResourcesCompat
                         .getColor(
                             context.resources,
-                            R.color.yellow, context.theme
+                            R.color.orange, context.theme
                         )
                 )
                 holder.mediaTypeHeaderView.setTypeImageSrc(

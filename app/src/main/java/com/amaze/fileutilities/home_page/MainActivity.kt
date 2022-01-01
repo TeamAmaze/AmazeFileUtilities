@@ -10,14 +10,13 @@
 
 package com.amaze.fileutilities.home_page
 
-import android.R.attr.data
 import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.MotionEvent
+import android.view.View
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.ActionBar
-import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -42,6 +41,7 @@ class MainActivity : PermissionActivity() {
     private lateinit var searchActionBarBinding: ActivityMainActionbarSearchBinding
 //    var showSearchFragment = false
     private lateinit var viewModel: FilesViewModel
+    private var isOptionsVisible = false
 
     companion object {
         private const val VOICE_REQUEST_CODE = 1000
@@ -71,13 +71,15 @@ class MainActivity : PermissionActivity() {
         supportActionBar?.customView = actionBarBinding.root
         supportActionBar?.elevation = 0f
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            if (isOptionsVisible) {
+                isOptionsVisible = !isOptionsVisible
+                invalidateOptionsTabs()
+            }
             when (destination.id) {
                 R.id.navigation_analyse ->
                     actionBarBinding.title.text = resources.getString(R.string.title_analyse)
-
                 R.id.navigation_files ->
                     actionBarBinding.title.text = resources.getString(R.string.title_files)
-
                 R.id.navigation_transfer ->
                     actionBarBinding.title.text = resources.getString(R.string.title_transfer)
             }
@@ -86,6 +88,14 @@ class MainActivity : PermissionActivity() {
 
         actionBarBinding.searchActionBar.setOnClickListener {
             showSearchFragment()
+        }
+        actionBarBinding.optionsImage.setOnClickListener {
+            isOptionsVisible = !isOptionsVisible
+            invalidateOptionsTabs()
+        }
+        binding.optionsOverlay.setOnClickListener {
+            isOptionsVisible = !isOptionsVisible
+            invalidateOptionsTabs()
         }
     }
 
@@ -174,5 +184,19 @@ class MainActivity : PermissionActivity() {
         )
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice recognition Demo...")
         startActivityForResult(intent, VOICE_REQUEST_CODE)
+    }
+
+    private fun invalidateOptionsTabs() {
+        binding.run {
+            if (!isOptionsVisible) {
+                optionsOverlay.hideFade(400)
+                optionsRoot.hideFade(200)
+                optionsRoot.visibility = View.GONE
+            } else {
+                optionsOverlay.showFade(500)
+                optionsRoot.showFade(200)
+                optionsRoot.visibility = View.VISIBLE
+            }
+        }
     }
 }
