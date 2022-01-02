@@ -23,6 +23,7 @@ import androidx.webkit.WebViewFeature
 import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.DocxViewerActivityBinding
+import com.amaze.fileutilities.utilis.showToastInCenter
 import org.zwobble.mammoth.DocumentConverter
 import org.zwobble.mammoth.Result
 
@@ -42,6 +43,9 @@ class DocxViewerActivity : PermissionActivity() {
         if (savedInstanceState == null) {
             val mimeType = intent.type
             val docxUri = intent.data
+            if (docxUri == null) {
+                showToastInCenter(resources.getString(R.string.unsupported_content))
+            }
             Log.i(
                 javaClass.simpleName,
                 "Loading docx from path ${docxUri?.path} " +

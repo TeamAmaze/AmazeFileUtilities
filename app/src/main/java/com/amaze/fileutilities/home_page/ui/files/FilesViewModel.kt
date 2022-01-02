@@ -24,7 +24,7 @@ class FilesViewModel(val applicationContext: Application) :
     AndroidViewModel(applicationContext) {
 
     val internalStorageStats: LiveData<StorageSummary?> =
-        liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+        liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
             emit(null)
             val storageData: StorageDirectoryParcelable? = if (SDK_INT >= N) {
                 FileUtils.getStorageDirectoriesNew(applicationContext.applicationContext)
@@ -207,7 +207,7 @@ class FilesViewModel(val applicationContext: Application) :
 
     private fun getImagesSummaryLiveData(storageSummary: StorageSummary?):
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
             emit(null)
             if (storageSummary == null) {
                 return@liveData
@@ -224,7 +224,7 @@ class FilesViewModel(val applicationContext: Application) :
 
     private fun getAudiosSummaryLiveData(storageSummary: StorageSummary?):
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
             emit(null)
             if (storageSummary == null) {
                 return@liveData
@@ -241,7 +241,7 @@ class FilesViewModel(val applicationContext: Application) :
 
     private fun getVideosSummaryLiveData(storageSummary: StorageSummary?):
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
             emit(null)
             if (storageSummary == null) {
                 return@liveData
@@ -258,7 +258,7 @@ class FilesViewModel(val applicationContext: Application) :
 
     private fun getDocumentsSummaryLiveData(storageSummary: StorageSummary?):
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
             emit(null)
             if (storageSummary == null) {
                 return@liveData

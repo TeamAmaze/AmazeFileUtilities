@@ -58,6 +58,9 @@ fun Uri.getSiblingUriFiles(context: Context): ArrayList<Uri>? {
 }
 
 fun Uri.getFileFromUri(context: Context): File? {
+    if (this == Uri.EMPTY) {
+        return null
+    }
     var songFile: File? = null
     if (this.authority != null && this.authority == "com.android.externalstorage.documents") {
         songFile = File(

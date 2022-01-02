@@ -26,8 +26,11 @@ import com.amaze.fileutilities.databinding.AudioPlayerDialogActivityBinding
 import com.amaze.fileutilities.utilis.getFileFromUri
 import com.amaze.fileutilities.utilis.getSiblingUriFiles
 import com.amaze.fileutilities.utilis.isAudioMimeType
+import com.amaze.fileutilities.utilis.showToastInCenter
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
+import linc.com.amplituda.exceptions.io.FileNotFoundException
+import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
@@ -69,6 +72,9 @@ class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
         if (savedInstanceState == null) {
             val mimeType = intent.type
             val audioUri = intent.data
+            if (audioUri == null) {
+                showToastInCenter(resources.getString(R.string.unsupported_content))
+            }
             Log.i(
                 javaClass.simpleName,
                 "Loading audio from path ${audioUri?.path} " +
@@ -181,7 +187,12 @@ class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
                 val file = audioService?.getAudioProgressHandlerCallback()?.audioPlaybackInfo
                     ?.audioModel?.getUri()?.getFileFromUri(this@AudioPlayerDialogActivity)
                 if (file != null) {
-                    waveformSeekbar.setSampleFrom(file)
+                    try {
+                        waveformSeekbar.setSampleFrom(file)
+                    } catch (fe: FileNotFoundException) {
+                        fe.printStackTrace()
+                        setupSeekBars(audioService)
+                    }
                 } else {
                     forceShowSeekbar = true
                     setupSeekBars(audioService)

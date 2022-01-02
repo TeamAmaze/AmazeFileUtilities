@@ -18,6 +18,7 @@ import androidx.fragment.app.commit
 import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ImageViewerDialogActivityBinding
+import com.amaze.fileutilities.utilis.showToastInCenter
 
 class ImageViewerDialogActivity : PermissionActivity() {
 
@@ -31,6 +32,9 @@ class ImageViewerDialogActivity : PermissionActivity() {
         if (savedInstanceState == null) {
             val mimeType = intent.type
             val imageUri = intent.data
+            if (imageUri == null) {
+                showToastInCenter(resources.getString(R.string.unsupported_content))
+            }
             Log.i(
                 javaClass.simpleName,
                 "Loading image from path ${imageUri?.path} " +
