@@ -57,6 +57,15 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a' //select ABIs to build APKs for
+            universalApk false //generate an additional APK that contains all the ABIs
+        }
+    }
 }
 
 dependencies {
