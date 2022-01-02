@@ -18,6 +18,7 @@ import androidx.fragment.app.commit
 import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.VideoPlayerDialogActivityBinding
+import com.amaze.fileutilities.utilis.showToastInCenter
 
 class VideoPlayerDialogActivity : PermissionActivity() {
 
@@ -32,6 +33,9 @@ class VideoPlayerDialogActivity : PermissionActivity() {
         if (savedInstanceState == null) {
             val mimeType = intent.type
             val videoUri = intent.data
+            if (videoUri == null) {
+                showToastInCenter(resources.getString(R.string.unsupported_content))
+            }
             Log.i(
                 javaClass.simpleName,
                 "Loading video from path ${videoUri?.path} " +

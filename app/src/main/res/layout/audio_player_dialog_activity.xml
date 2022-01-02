@@ -21,7 +21,7 @@
         />
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/audio_player_sheet_height"
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textSize="@dimen/eighteen_sp"

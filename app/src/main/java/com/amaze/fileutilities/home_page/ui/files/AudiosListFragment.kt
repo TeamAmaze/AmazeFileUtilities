@@ -37,6 +37,7 @@ import com.bumptech.glide.util.ViewPreloadSizeProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
+import linc.com.amplituda.exceptions.io.FileNotFoundException
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
@@ -303,7 +304,12 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate {
                 val file = audioService?.getAudioProgressHandlerCallback()?.audioPlaybackInfo
                     ?.audioModel?.getUri()?.getFileFromUri(requireContext())
                 if (file != null) {
-                    waveformSeekbar.setSampleFrom(file)
+                    try {
+                        waveformSeekbar.setSampleFrom(file)
+                    } catch (fe: FileNotFoundException) {
+                        fe.printStackTrace()
+                        setupSeekBars(audioService)
+                    }
                 } else {
                     forceShowSeekbar = true
                     setupSeekBars(audioService)

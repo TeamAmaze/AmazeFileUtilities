@@ -16,6 +16,7 @@ import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.EpubViewerActivityBinding
 import com.amaze.fileutilities.utilis.getFileFromUri
+import com.amaze.fileutilities.utilis.showToastInCenter
 import com.folioreader.Config
 import com.folioreader.FolioReader
 
@@ -32,6 +33,9 @@ class EpubViewerActivity : PermissionActivity() {
         if (savedInstanceState == null) {
             val mimeType = intent.type
             val epubUri = intent.data
+            if (epubUri == null) {
+                showToastInCenter(resources.getString(R.string.unsupported_content))
+            }
             Log.i(
                 javaClass.simpleName,
                 "Loading epub from path ${epubUri?.path} " +

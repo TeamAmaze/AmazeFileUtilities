@@ -17,6 +17,7 @@ import android.provider.BaseColumns
 import android.provider.MediaStore
 import android.provider.MediaStore.Audio.AudioColumns
 import kotlinx.parcelize.Parcelize
+import java.io.File
 
 @Parcelize
 data class AudioPlaybackInfo(
@@ -64,6 +65,7 @@ data class AudioPlaybackInfo(
                 MediaStore.Audio.Media.DATA + "=?",
                 arrayOf(uri.path?.replace("/storage_root", ""))
             )
+            val audioModel = LocalAudioModel(-1, uri, "")
             cursor?.moveToFirst()
             if (cursor != null && cursor.count > 0) {
                 val id = cursor.getLong(0)
@@ -77,14 +79,22 @@ data class AudioPlaybackInfo(
                 val albumName = cursor.getString(8)
                 val artistId = cursor.getLong(9)
                 val artistName = cursor.getString(10)
+                audioModel.id = id
                 return AudioPlaybackInfo(
-                    LocalAudioModel(id, uri, ""),
+                    audioModel,
                     title, trackNumber, year, duration, data, dateModified, albumId, albumName,
                     artistId, artistName, -1, false
                 )
             } else {
-                var playbackInfo = EMPTY_PLAYBACK
-                playbackInfo.title = uri.path!!
+                val playbackInfo = EMPTY_PLAYBACK
+                playbackInfo.audioModel = audioModel
+                if (uri.path != null) {
+                    val file = File(uri.path!!)
+                    val title = if (file.exists()) file.name else uri.path!!
+                    playbackInfo.title = title
+                } else {
+                    playbackInfo.title = ""
+                }
                 return playbackInfo
             }
         }

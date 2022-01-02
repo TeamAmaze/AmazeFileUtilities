@@ -214,7 +214,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         val mediaItem = extractMediaSourceFromUri(uri)
         if (audioProgressHandler != null) {
             // TODO validate following condition
-            if (audioProgressHandler!!.audioPlaybackInfo.audioModel.getUri().path == uri.path) {
+            if (audioProgressHandler!!.audioPlaybackInfo.audioModel.getUri().path.equals(uri.path)) {
                 playMediaItem()
             } else {
                 initAudioPlaybackInfoAndHandler(uri)

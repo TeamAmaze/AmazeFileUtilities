@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.PermissionActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.PdfViewerActivityBinding
+import com.amaze.fileutilities.utilis.showToastInCenter
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
@@ -41,6 +42,9 @@ class PdfViewerActivity : PermissionActivity(), OnPageChangeListener, OnLoadComp
         if (savedInstanceState == null) {
             val mimeType = intent.type
             val pdfUri = intent.data
+            if (pdfUri == null) {
+                showToastInCenter(resources.getString(R.string.unsupported_content))
+            }
             Log.i(
                 javaClass.simpleName,
                 "Loading pdf from path ${pdfUri?.path} " +
