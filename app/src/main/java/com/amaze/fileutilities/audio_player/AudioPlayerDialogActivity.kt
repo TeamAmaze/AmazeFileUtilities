@@ -30,7 +30,6 @@ import com.amaze.fileutilities.utilis.showToastInCenter
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
 import linc.com.amplituda.exceptions.io.FileNotFoundException
-import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
