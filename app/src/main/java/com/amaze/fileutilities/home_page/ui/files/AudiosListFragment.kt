@@ -30,6 +30,7 @@ import com.amaze.fileutilities.databinding.FragmentAudiosListBinding
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.MediaTypeView
 import com.amaze.fileutilities.utilis.FileUtils
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.amaze.fileutilities.utilis.getFileFromUri
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
@@ -38,10 +39,11 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
 import linc.com.amplituda.exceptions.io.FileNotFoundException
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
-class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate {
+class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.OptionsMenuSelected {
     private val filesViewModel: FilesViewModel by activityViewModels()
     private var _binding: FragmentAudiosListBinding? = null
     private var mediaFileAdapter: MediaFileAdapter? = null
@@ -117,11 +119,10 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate {
                         mediaFileAdapter = MediaFileAdapter(
                             requireContext(),
                             preloader!!,
-                            MediaFileListSorter.SortingPreference(
-                                MediaFileListSorter.GROUP_NAME,
-                                MediaFileListSorter.SORT_SIZE,
-                                true,
-                                true
+                            this@AudiosListFragment,
+                            MediaFileListSorter.SortingPreference.newInstance(
+                                requireContext()
+                                    .getAppCommonSharedPreferences()
                             ),
                             this, MediaFileInfo.MEDIA_TYPE_AUDIO
                         ) {
@@ -136,7 +137,13 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate {
                             .addOnScrollListener(recyclerViewPreloader!!)
                         binding.audiosListView.layoutManager = linearLayoutManager
                         binding.audiosListView.adapter = mediaFileAdapter
-                        binding.fastscroll.setRecyclerView(binding.audiosListView, 1)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            binding.fastscroll.visibility = View.GONE
+                            FastScrollerBuilder(binding.audiosListView).useMd2Style().build()
+                        } else {
+                            binding.fastscroll.visibility = View.VISIBLE
+                            binding.fastscroll.setRecyclerView(binding.audiosListView, 1)
+                        }
                     }
                 }
             }
@@ -369,5 +376,27 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate {
                     })
             }
         }
+    }
+
+    override fun sortBy(sortBy: Int, isAsc: Boolean) {
+        mediaFileAdapter?.invalidateData(
+            MediaFileListSorter.SortingPreference
+                .newInstance(requireContext().getAppCommonSharedPreferences())
+        )
+    }
+
+    override fun groupBy(groupBy: Int, isAsc: Boolean) {
+        mediaFileAdapter?.invalidateData(
+            MediaFileListSorter.SortingPreference
+                .newInstance(requireContext().getAppCommonSharedPreferences())
+        )
+    }
+
+    override fun switchView(isList: Boolean) {
+        // do nothing
+    }
+
+    override fun select(headerPosition: Int) {
+        binding.audiosListView.smoothScrollToPosition(headerPosition + 5)
     }
 }

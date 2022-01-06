@@ -66,4 +66,10 @@
     <string name="version" translatable="false">v0.1</string>
     <string name="information">Information</string>
     <string name="unsupported_content">Unsupported content</string>
+    <string name="parent">Parent</string>
+    <string name="date">Date</string>
+    <string name="name">Name</string>
+    <string name="list_view">List View</string>
+    <string name="grid_view">Grid View</string>
+    <string name="size">Size</string>
 </resources>

@@ -11,6 +11,7 @@
 package com.amaze.fileutilities.utilis
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Resources
 import android.database.Cursor
 import android.net.Uri
@@ -249,4 +250,11 @@ fun View.showTranslateY(duration: Long) {
 //    animation.fillAfter = true
     this.startAnimation(animation)
     this.visibility = View.VISIBLE
+}
+
+fun Context.getAppCommonSharedPreferences(): SharedPreferences {
+    return this.getSharedPreferences(
+        PreferencesConstants.PREFERENCE_FILE,
+        Context.MODE_PRIVATE
+    )
 }

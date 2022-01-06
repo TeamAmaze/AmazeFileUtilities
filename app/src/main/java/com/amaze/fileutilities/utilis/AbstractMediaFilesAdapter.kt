@@ -29,13 +29,14 @@ import com.amaze.fileutilities.home_page.ui.files.MediaInfoRecyclerViewHolder
 import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.video_player.VideoPlayerDialogActivity
 import com.bumptech.glide.Glide
+import me.zhanghai.android.fastscroll.PopupTextProvider
 import kotlin.math.roundToInt
 
 abstract class AbstractMediaFilesAdapter(
     private val superContext: Context,
     private val superPreloader: MediaAdapterPreloader
 ) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>(), PopupTextProvider {
 
     abstract fun getMediaFilesListItems(): MutableList<ListItem>
 
@@ -134,6 +135,10 @@ abstract class AbstractMediaFilesAdapter(
         }
     }
 
+    override fun getPopupText(position: Int): String {
+        return getMediaFilesListItems()[position].header ?: "--"
+    }
+
     private val mInflater: LayoutInflater
         get() = superContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -209,12 +214,16 @@ abstract class AbstractMediaFilesAdapter(
     data class ListItem(
         var mediaFileInfo: MediaFileInfo?,
         var listItemType: @ListItemType Int = TYPE_ITEM,
-        var header: String? = null
+        var header: String? = null,
+        val position: Int
     ) {
-        constructor(listItemType: @ListItemType Int) : this(null, listItemType)
-        constructor(listItemType: @ListItemType Int, header: String) : this(
+        constructor(listItemType: @ListItemType Int, position: Int) : this(
             null,
-            listItemType, header
+            listItemType, position = position
+        )
+        constructor(listItemType: @ListItemType Int, header: String, position: Int) : this(
+            null,
+            listItemType, header, position
         )
     }
 }

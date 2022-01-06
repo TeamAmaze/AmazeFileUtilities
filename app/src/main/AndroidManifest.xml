@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.amaze.fileutilities">
 
-    <uses-sdk tools:overrideLibrary="com.folioreader, linc.com.amplituda" />
+    <uses-sdk tools:overrideLibrary="com.folioreader, linc.com.amplituda, me.zhanghai.android.fastscroll" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

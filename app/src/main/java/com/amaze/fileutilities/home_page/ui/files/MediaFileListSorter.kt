@@ -11,6 +11,8 @@
 package com.amaze.fileutilities.home_page.ui.files
 
 import android.content.Context
+import android.content.SharedPreferences
+import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.safeLet
 import java.util.*
 
@@ -98,5 +100,29 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
         val sortBy: Int,
         val isGroupByAsc: Boolean,
         val isSortByAsc: Boolean
-    )
+    ) {
+        companion object {
+            fun newInstance(sharedPreferences: SharedPreferences): SortingPreference {
+                val groupBy = sharedPreferences.getInt(
+                    PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY,
+                    PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
+                )
+                val sortBy = sharedPreferences.getInt(
+                    PreferencesConstants.KEY_MEDIA_LIST_SORT_BY,
+                    PreferencesConstants.DEFAULT_MEDIA_LIST_SORT_BY
+                )
+                val isGroupByAsc = sharedPreferences
+                    .getBoolean(
+                        PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY_IS_ASC,
+                        PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY_ASC
+                    )
+                val isSortByAsc = sharedPreferences
+                    .getBoolean(
+                        PreferencesConstants.KEY_MEDIA_LIST_SORT_BY_IS_ASC,
+                        PreferencesConstants.DEFAULT_MEDIA_LIST_SORT_BY_ASC
+                    )
+                return SortingPreference(groupBy, sortBy, isGroupByAsc, isSortByAsc)
+            }
+        }
+    }
 }

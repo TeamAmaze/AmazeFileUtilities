@@ -73,7 +73,7 @@
                     app:titleText="@string/undetermined"
                     app:titleTextSize="@dimen/twelve_sp"
                     app:titleTextColor="@color/gray_text"
-                    app:labelColor="@color/green"
+                    app:labelColor="@color/green_banner"
                     android:layout_marginTop="@dimen/material_generic"
                     />
                 <com.amaze.fileutilities.home_page.ui.CircleColorView
@@ -106,7 +106,7 @@
                 android:layout_weight="0.5"
                 app:title="@string/images"
                 app:mediaImageSrc="@drawable/ic_outline_image_32"
-                app:themeColor="@color/pink"
+                app:themeColor="@color/purple"
                 />
             <com.amaze.fileutilities.home_page.ui.MediaTypeView
                 android:id="@+id/audios_tab"
