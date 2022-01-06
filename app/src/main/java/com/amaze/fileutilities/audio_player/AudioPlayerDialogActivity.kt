@@ -139,6 +139,10 @@ class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
         }
     }
 
+    override fun serviceDisconnected() {
+        // do nothing
+    }
+
     private fun invalidateActionButtons(progressHandler: AudioProgressHandler) {
         viewModel.isPlaying = progressHandler.audioPlaybackInfo.isPlaying
         progressHandler.audioPlaybackInfo.isPlaying.let {

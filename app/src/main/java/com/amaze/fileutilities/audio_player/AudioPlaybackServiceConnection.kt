@@ -32,6 +32,7 @@ class AudioPlaybackServiceConnection(private val activityRef: WeakReference<OnPl
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
+        activityRef.get()?.serviceDisconnected()
     }
 }
 

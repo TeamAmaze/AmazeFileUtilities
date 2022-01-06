@@ -29,9 +29,7 @@ import com.amaze.fileutilities.audio_player.*
 import com.amaze.fileutilities.databinding.FragmentAudiosListBinding
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.MediaTypeView
-import com.amaze.fileutilities.utilis.FileUtils
-import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
-import com.amaze.fileutilities.utilis.getFileFromUri
+import com.amaze.fileutilities.utilis.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
@@ -245,6 +243,11 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
             }
             setupSeekBars(audioService)
         }
+    }
+
+    override fun serviceDisconnected() {
+        binding.layoutBottomSheet.hideTranslateY(500)
+        isBottomFragmentVisible = false
     }
 
     private fun invalidateActionButtons(progressHandler: AudioProgressHandler) {

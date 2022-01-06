@@ -22,7 +22,7 @@
         android:required="false" />
 
     <application
-        android:name=".AmazeApplication"
+        android:name=".AppConfig"
         android:banner="@drawable/about_header"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launchers"
@@ -44,12 +44,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".LandingActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.AppCompat.Dialog">
         </activity>
         <activity
             android:name=".image_viewer.ImageViewerDialogActivity"
@@ -159,6 +153,12 @@
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Dialog">
         </activity>
+
+        <activity android:name="crash_report.ErrorActivity"
+            android:theme="@style/Theme.AmazeFileUtilities"
+            android:configChanges=""
+            android:label="Error"
+            />
 
         <service
             android:name=".audio_player.AudioPlayerService"
