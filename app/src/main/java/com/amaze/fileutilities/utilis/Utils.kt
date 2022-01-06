@@ -10,11 +10,11 @@
 
 package com.amaze.fileutilities.utilis
 
-import android.content.ActivityNotFoundException
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.net.Uri
+import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
+import java.lang.Exception
 
 class Utils {
 
@@ -23,6 +23,14 @@ class Utils {
         const val URL_PRIVACY_POLICY = "https://www.teamamaze.xyz/privacy-policy"
         const val AMAZE_FILE_MANAGER_MAIN = "com.amaze.filemanager.ui.activities.MainActivity"
         const val AMAZE_PACKAGE = "com.amaze.filemanager"
+
+        private const val EMAIL_EMMANUEL = "emmanuelbendavid@gmail.com"
+        private const val EMAIL_RAYMOND = "airwave209gt@gmail.com"
+        private const val EMAIL_VISHAL = "vishalmeham2@gmail.com"
+        private const val URL_TELEGRAM = "https://t.me/AmazeFileManager"
+
+        const val EMAIL_NOREPLY_REPORTS = "no-reply@teamamaze.xyz"
+        const val EMAIL_SUPPORT = "support@teamamaze.xyz"
 
         /**
          * Open url in browser
@@ -71,6 +79,64 @@ class Utils {
                 )
                 context.startActivity(intent1)
             }
+        }
+
+        fun copyToClipboard(context: Context, text: String?): Boolean {
+            return try {
+                val clipboard =
+                    context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText(
+                    context.getString(R.string.clipboard_path_copy), text
+                )
+                clipboard.setPrimaryClip(clip)
+                true
+            } catch (e: Exception) {
+                false
+            }
+        }
+
+        /**
+         * Builds a email intent for amaze feedback
+         *
+         * @param text email content
+         * @param supportMail support mail for given intent
+         * @return intent
+         */
+        fun buildEmailIntent(text: String?, supportMail: String): Intent? {
+            val emailIntent = Intent(Intent.ACTION_SEND)
+            val aEmailList = arrayOf(supportMail)
+            val aEmailCCList = arrayOf(
+                EMAIL_VISHAL,
+                EMAIL_EMMANUEL,
+                EMAIL_RAYMOND
+            )
+            emailIntent.putExtra(Intent.EXTRA_EMAIL, aEmailList)
+            emailIntent.putExtra(Intent.EXTRA_CC, aEmailCCList)
+            emailIntent.putExtra(
+                Intent.EXTRA_SUBJECT,
+                "Feedback : Amaze File Utilities for " + BuildConfig.VERSION_NAME
+            )
+            if (!isNullOrEmpty(text)) {
+                emailIntent.putExtra(Intent.EXTRA_TEXT, text)
+            }
+            emailIntent.type = "message/rfc822"
+            return emailIntent
+        }
+
+        /** Open telegram in browser  */
+        fun openTelegramURL(context: Context) {
+            openURL(
+                URL_TELEGRAM,
+                context
+            )
+        }
+
+        fun isNullOrEmpty(list: Collection<*>?): Boolean {
+            return list == null || list.isEmpty()
+        }
+
+        fun isNullOrEmpty(string: String?): Boolean {
+            return string == null || string.isEmpty()
         }
     }
 }

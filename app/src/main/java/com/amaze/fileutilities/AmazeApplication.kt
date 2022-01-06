@@ -10,11 +10,11 @@
 
 package com.amaze.fileutilities
 
-import android.app.Application
+import androidx.multidex.MultiDexApplication
 import com.bumptech.glide.Glide
 import com.bumptech.glide.MemoryCategory
 
-class AmazeApplication : Application() {
+open class AmazeApplication : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()

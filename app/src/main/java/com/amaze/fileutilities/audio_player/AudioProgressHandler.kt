@@ -72,4 +72,6 @@ interface OnPlaybackInfoUpdate {
      * Called once by service connection to initialize button clicks and other views
      */
     fun setupActionButtons(audioServiceRef: WeakReference<ServiceOperationCallback>)
+
+    fun serviceDisconnected()
 }

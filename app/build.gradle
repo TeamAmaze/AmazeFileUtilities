@@ -95,6 +95,7 @@ dependencies {
     implementation "com.folioreader:folioreader:0.5.4"
     implementation 'org.zwobble.mammoth:mammoth:1.4.2'
     implementation 'me.zhanghai.android.fastscroll:library:1.1.7'
+    implementation "ch.acra:acra-core:5.7.0"
 
     // https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor
     implementation group: 'com.drewnoakes', name: 'metadata-extractor', version: '2.16.0'
