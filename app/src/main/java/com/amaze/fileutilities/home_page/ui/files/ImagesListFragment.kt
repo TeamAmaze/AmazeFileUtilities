@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.home_page.ui.files
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,11 +23,13 @@ import com.amaze.fileutilities.databinding.FragmentImagesListBinding
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.MediaTypeView
 import com.amaze.fileutilities.utilis.FileUtils
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
-class ImagesListFragment : Fragment() {
+class ImagesListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
     private val filesViewModel: FilesViewModel by activityViewModels()
     private var _binding: FragmentImagesListBinding? = null
     private var mediaFileAdapter: MediaFileAdapter? = null
@@ -91,11 +94,10 @@ class ImagesListFragment : Fragment() {
                         mediaFileAdapter = MediaFileAdapter(
                             requireContext(),
                             preloader!!,
-                            MediaFileListSorter.SortingPreference(
-                                MediaFileListSorter.GROUP_NAME,
-                                MediaFileListSorter.SORT_SIZE,
-                                true,
-                                true
+                            this@ImagesListFragment,
+                            MediaFileListSorter.SortingPreference.newInstance(
+                                requireContext()
+                                    .getAppCommonSharedPreferences()
                             ),
                             this, MediaFileInfo.MEDIA_TYPE_IMAGE
                         ) {
@@ -110,7 +112,13 @@ class ImagesListFragment : Fragment() {
                             .addOnScrollListener(recyclerViewPreloader!!)
                         binding.imagesListView.layoutManager = linearLayoutManager
                         binding.imagesListView.adapter = mediaFileAdapter
-                        binding.fastscroll.setRecyclerView(binding.imagesListView, 1)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            binding.fastscroll.visibility = View.GONE
+                            FastScrollerBuilder(binding.imagesListView).useMd2Style().build()
+                        } else {
+                            binding.fastscroll.visibility = View.VISIBLE
+                            binding.fastscroll.setRecyclerView(binding.imagesListView, 1)
+                        }
                     }
                 }
             }
@@ -124,5 +132,27 @@ class ImagesListFragment : Fragment() {
             .setCustomTitle(resources.getString(R.string.title_files))
         (activity as MainActivity).invalidateBottomBar(true)
         _binding = null
+    }
+
+    override fun sortBy(sortBy: Int, isAsc: Boolean) {
+        mediaFileAdapter?.invalidateData(
+            MediaFileListSorter.SortingPreference
+                .newInstance(requireContext().getAppCommonSharedPreferences())
+        )
+    }
+
+    override fun groupBy(groupBy: Int, isAsc: Boolean) {
+        mediaFileAdapter?.invalidateData(
+            MediaFileListSorter.SortingPreference
+                .newInstance(requireContext().getAppCommonSharedPreferences())
+        )
+    }
+
+    override fun switchView(isList: Boolean) {
+        // do nothing
+    }
+
+    override fun select(headerPosition: Int) {
+        binding.imagesListView.smoothScrollToPosition(headerPosition + 5)
     }
 }

@@ -22,6 +22,7 @@ import com.amaze.fileutilities.utilis.ListBannerViewHolder
 class MediaFileAdapter(
     val context: Context,
     val preloader: MediaAdapterPreloader,
+    val optionsMenuSelected: OptionsMenuSelected,
     private var sortingPreference: MediaFileListSorter.SortingPreference,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
     private val mediaType: Int,
@@ -29,27 +30,42 @@ class MediaFileAdapter(
 ) :
     AbstractMediaFilesAdapter(context, preloader) {
 
+    private var headerListItems: MutableList<ListItem> = mutableListOf()
     private var mediaFileListItems: MutableList<ListItem> = mutableListOf()
         set(value) {
             value.clear()
+            preloader.clear()
+            headerListItems.clear()
             MediaFileListSorter.generateMediaFileListHeadersAndSort(
                 context,
                 mediaFileInfoList, sortingPreference
             )
             var lastHeader: String? = null
-            value.add(ListItem(TYPE_BANNER))
+            value.add(ListItem(TYPE_BANNER, 0))
             preloader.addItem("")
-            mediaFileInfoList.forEach {
-                if (lastHeader == null || it.listHeader != lastHeader) {
-                    value.add(ListItem(TYPE_HEADER, it.listHeader))
+            for (i in 0 until mediaFileInfoList.size) {
+                if (lastHeader == null || mediaFileInfoList[i].listHeader != lastHeader) {
+                    value.add(ListItem(TYPE_HEADER, mediaFileInfoList[i].listHeader, i))
                     preloader.addItem("")
-                    lastHeader = it.listHeader
+                    headerListItems.add(
+                        ListItem(
+                            TYPE_HEADER, mediaFileInfoList[i].listHeader,
+                            value.size - 1
+                        )
+                    )
+                    lastHeader = mediaFileInfoList[i].listHeader
                 }
-                value.add(ListItem(it))
-                preloader.addItem(it.path)
+                // position here is irrelevant
+                value.add(
+                    ListItem(
+                        mediaFileInfo = mediaFileInfoList[i],
+                        header = mediaFileInfoList[i].listHeader, position = i
+                    )
+                )
+                preloader.addItem(mediaFileInfoList[i].path)
             }
             preloader.addItem("")
-            value.add(ListItem(EMPTY_LAST_ITEM))
+            value.add(ListItem(EMPTY_LAST_ITEM, -1))
             field = value
         }
 
@@ -62,7 +78,7 @@ class MediaFileAdapter(
         when (holder) {
             is HeaderViewHolder -> {
                 holder.setText(
-                    mediaFileListItems[position].mediaFileInfo?.listHeader
+                    mediaFileListItems[position].header
                         ?: context.resources.getString(R.string.undetermined)
                 )
             }
@@ -89,6 +105,15 @@ class MediaFileAdapter(
             preloader.clear()
             sortingPreference = sortPref
             addAll(data)
+            // triggers set call
+            mediaFileListItems = mutableListOf()
+            notifyDataSetChanged()
+        }
+    }
+
+    fun invalidateData(sortPref: MediaFileListSorter.SortingPreference) {
+        mediaFileInfoList.run {
+            sortingPreference = sortPref
             // triggers set call
             mediaFileListItems = mutableListOf()
             notifyDataSetChanged()
@@ -134,7 +159,7 @@ class MediaFileAdapter(
                     ResourcesCompat
                         .getColor(
                             context.resources,
-                            R.color.pink, context.theme
+                            R.color.purple, context.theme
                         ),
                     R.drawable.background_curved_bottom_pink
                 )
@@ -150,7 +175,7 @@ class MediaFileAdapter(
                     ResourcesCompat
                         .getColor(
                             context.resources,
-                            R.color.green, context.theme
+                            R.color.green_banner, context.theme
                         ),
                     R.drawable.background_curved_bottom_green
                 )
@@ -162,10 +187,18 @@ class MediaFileAdapter(
                 )
             }
         }
+        holder.mediaTypeHeaderView.initOptionsItems(optionsMenuSelected, headerListItems)
         drawBannerCallback.invoke(holder.mediaTypeHeaderView)
     }
 
     override fun getMediaFilesListItems(): MutableList<ListItem> {
         return mediaFileListItems
+    }
+
+    interface OptionsMenuSelected {
+        fun sortBy(sortBy: Int, isAsc: Boolean)
+        fun groupBy(groupBy: Int, isAsc: Boolean)
+        fun switchView(isList: Boolean)
+        fun select(headerPosition: Int)
     }
 }

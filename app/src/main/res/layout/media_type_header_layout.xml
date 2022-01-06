@@ -7,15 +7,20 @@
         android:id="@+id/type_image"
         android:layout_width="@dimen/fourty_eight_dp"
         android:layout_height="@dimen/fourty_eight_dp"
-        android:layout_gravity="center_vertical"
+        android:layout_marginTop="@dimen/material_generic_medium"
+        android:layout_gravity="center_horizontal"
         />
     <LinearLayout
         android:id="@+id/infoLayoutParent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="@dimen/eight_dp"
-        android:layout_marginStart="@dimen/eight_dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="@dimen/material_generic_medium"
+        android:layout_marginLeft="@dimen/material_generic"
+        android:layout_marginStart="@dimen/material_generic"
+        android:layout_marginRight="@dimen/material_generic"
+        android:layout_marginBottom="@dimen/material_generic"
         >
         <TextView
             android:id="@+id/usedSpaceTextView"
@@ -25,15 +30,13 @@
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="@dimen/twenty_four_sp"
-            android:layout_marginTop="@dimen/material_generic"
             android:layout_marginBottom="@dimen/material_generic"
             />
         <LinearLayout
             android:id="@+id/progressIndicatorsParent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="@dimen/four_dp"
             android:gravity="center_vertical"
             >
             <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -61,7 +64,7 @@
         <RelativeLayout
             android:id="@+id/storageCountsParent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             >
             <TextView
                 android:id="@+id/itemsCountTextView"
@@ -77,10 +80,68 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/twelve_sp"
                 android:textColor="@color/white"
-                android:layout_marginLeft="@dimen/four_dp"
-                android:layout_marginStart="@dimen/four_dp"
+                android:layout_marginRight="@dimen/material_generic"
+                android:layout_marginEnd="@dimen/material_generic"
                 android:layout_alignParentEnd="true"
                 />
         </RelativeLayout>
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/optionsParent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom|center_horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="@dimen/material_generic_medium"
+        android:layout_marginBottom="@dimen/material_generic"
+        android:paddingLeft="@dimen/material_generic"
+        android:paddingRight="@dimen/material_generic"
+        android:weightSum="1"
+        >
+        <ImageView
+            android:id="@+id/index_image"
+            android:layout_width="@dimen/zero_dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_round_playlist_add_circle_32"
+            android:layout_weight="0.25"
+            />
+        <ImageView
+            android:id="@+id/switch_view"
+            android:layout_width="@dimen/zero_dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_round_grid_on_32"
+            android:layout_weight="0.25"
+            />
+        <ImageView
+            android:id="@+id/group_view"
+            android:layout_width="@dimen/zero_dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_baseline_group_work_32"
+            android:layout_weight="0.25"
+            />
+        <ImageView
+            android:id="@+id/sort_view"
+            android:layout_width="@dimen/zero_dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_round_sort_32"
+            android:layout_weight="0.25"
+            />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/options_list_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/material_generic"
+        android:layout_marginBottom="@dimen/material_generic">
+        <LinearLayout
+            android:id="@+id/options_list_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <!-- placeholder for dynamic elements -->
+        </LinearLayout>
+    </HorizontalScrollView>
 </merge>
