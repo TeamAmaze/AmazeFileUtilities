@@ -134,18 +134,12 @@ class DocumentsListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
         _binding = null
     }
 
-    override fun sortBy(sortBy: Int, isAsc: Boolean) {
-        mediaFileAdapter?.invalidateData(
-            MediaFileListSorter.SortingPreference
-                .newInstance(requireContext().getAppCommonSharedPreferences())
-        )
+    override fun sortBy(sortingPreference: MediaFileListSorter.SortingPreference) {
+        mediaFileAdapter?.invalidateData(sortingPreference)
     }
 
-    override fun groupBy(groupBy: Int, isAsc: Boolean) {
-        mediaFileAdapter?.invalidateData(
-            MediaFileListSorter.SortingPreference
-                .newInstance(requireContext().getAppCommonSharedPreferences())
-        )
+    override fun groupBy(sortingPreference: MediaFileListSorter.SortingPreference) {
+        mediaFileAdapter?.invalidateData(sortingPreference)
     }
 
     override fun switchView(isList: Boolean) {

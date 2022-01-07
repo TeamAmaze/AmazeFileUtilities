@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.ListPreloader.PreloadModelProvider
 import com.bumptech.glide.RequestBuilder
 
-class MediaAdapterPreloader(context: Context, val loadingDrawable: Int) :
+class MediaAdapterPreloader(context: Context, private val loadingDrawable: Int) :
     PreloadModelProvider<String> {
     private var request: RequestBuilder<Drawable> = Glide.with(context).asDrawable().fitCenter()
     private var items: MutableList<String>? = null

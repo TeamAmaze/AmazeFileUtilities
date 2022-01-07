@@ -27,6 +27,7 @@
         android:textSize="@dimen/eighteen_sp"
         android:textColor="@color/white"
         android:marqueeRepeatLimit="marquee_forever"
+        android:gravity="center_horizontal"
         android:ellipsize="middle"
         android:layout_marginTop="@dimen/six_dp"
         />
