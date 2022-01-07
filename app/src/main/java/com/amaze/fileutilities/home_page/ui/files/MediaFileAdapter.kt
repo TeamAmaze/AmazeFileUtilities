@@ -187,7 +187,10 @@ class MediaFileAdapter(
                 )
             }
         }
-        holder.mediaTypeHeaderView.initOptionsItems(optionsMenuSelected, headerListItems)
+        holder.mediaTypeHeaderView.initOptionsItems(
+            optionsMenuSelected, headerListItems,
+            sortingPreference
+        )
         drawBannerCallback.invoke(holder.mediaTypeHeaderView)
     }
 
@@ -196,8 +199,8 @@ class MediaFileAdapter(
     }
 
     interface OptionsMenuSelected {
-        fun sortBy(sortBy: Int, isAsc: Boolean)
-        fun groupBy(groupBy: Int, isAsc: Boolean)
+        fun sortBy(sortingPreference: MediaFileListSorter.SortingPreference)
+        fun groupBy(sortingPreference: MediaFileListSorter.SortingPreference)
         fun switchView(isList: Boolean)
         fun select(headerPosition: Int)
     }

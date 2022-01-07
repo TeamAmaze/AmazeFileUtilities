@@ -96,10 +96,10 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
     }
 
     data class SortingPreference(
-        val groupBy: Int,
-        val sortBy: Int,
-        val isGroupByAsc: Boolean,
-        val isSortByAsc: Boolean
+        var groupBy: Int,
+        var sortBy: Int,
+        var isGroupByAsc: Boolean,
+        var isSortByAsc: Boolean
     ) {
         companion object {
             fun newInstance(sharedPreferences: SharedPreferences): SortingPreference {

@@ -172,12 +172,12 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                             }
                         }
                         else -> {
-                            initCurrentUriAndPlayer(currentUri!!)
+                            initCurrentUriAndPlayer(intentUri!!)
                         }
                     }
                 }
                 else -> {
-                    initCurrentUriAndPlayer(currentUri!!)
+                    initCurrentUriAndPlayer(intentUri!!)
                 }
             }
         }
@@ -211,7 +211,6 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
     }
 
     private fun initCurrentUriAndPlayer(uri: Uri) {
-        val mediaItem = extractMediaSourceFromUri(uri)
         if (audioProgressHandler != null) {
             // TODO validate following condition
             if (audioProgressHandler!!.audioPlaybackInfo.audioModel.getUri()
@@ -219,10 +218,12 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
             ) {
                 playMediaItem()
             } else {
+                val mediaItem = extractMediaSourceFromUri(uri)
                 initAudioPlaybackInfoAndHandler(uri)
                 playMediaItem(mediaItem)
             }
         } else {
+            val mediaItem = extractMediaSourceFromUri(uri)
             initAudioPlaybackInfoAndHandler(uri)
             playMediaItem(mediaItem)
         }

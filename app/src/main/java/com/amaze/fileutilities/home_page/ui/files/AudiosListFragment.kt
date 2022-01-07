@@ -176,6 +176,7 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
     override fun onPositionUpdate(progressHandler: AudioProgressHandler) {
         _binding?.run {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                waveformSeekbar.maxProgress = progressHandler.audioPlaybackInfo.duration.toFloat()
                 waveformSeekbar.progress = progressHandler
                     .audioPlaybackInfo.currentPosition.toFloat()
             } else {
@@ -381,18 +382,12 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
         }
     }
 
-    override fun sortBy(sortBy: Int, isAsc: Boolean) {
-        mediaFileAdapter?.invalidateData(
-            MediaFileListSorter.SortingPreference
-                .newInstance(requireContext().getAppCommonSharedPreferences())
-        )
+    override fun sortBy(sortingPreference: MediaFileListSorter.SortingPreference) {
+        mediaFileAdapter?.invalidateData(sortingPreference)
     }
 
-    override fun groupBy(groupBy: Int, isAsc: Boolean) {
-        mediaFileAdapter?.invalidateData(
-            MediaFileListSorter.SortingPreference
-                .newInstance(requireContext().getAppCommonSharedPreferences())
-        )
+    override fun groupBy(sortingPreference: MediaFileListSorter.SortingPreference) {
+        mediaFileAdapter?.invalidateData(sortingPreference)
     }
 
     override fun switchView(isList: Boolean) {

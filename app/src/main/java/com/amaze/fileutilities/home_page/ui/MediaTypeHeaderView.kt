@@ -117,7 +117,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
 
     fun initOptionsItems(
         optionsMenuSelected: MediaFileAdapter.OptionsMenuSelected,
-        headerListItems: MutableList<AbstractMediaFilesAdapter.ListItem>
+        headerListItems: MutableList<AbstractMediaFilesAdapter.ListItem>,
+        sortingPreference: MediaFileListSorter.SortingPreference
     ) {
         clickOptionsIndex(optionsMenuSelected, headerListItems)
         val sharedPreferences = context.getAppCommonSharedPreferences()
@@ -128,10 +129,10 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
             clickOptionsSwitchView(optionsMenuSelected, sharedPreferences)
         }
         optionsGroupView.setOnClickListener {
-            clickOptionsGroupView(optionsMenuSelected, sharedPreferences)
+            clickOptionsGroupView(optionsMenuSelected, sharedPreferences, sortingPreference)
         }
         optionsSortView.setOnClickListener {
-            clickOptionsSortView(optionsMenuSelected, sharedPreferences)
+            clickOptionsSortView(optionsMenuSelected, sharedPreferences, sortingPreference)
         }
     }
 
@@ -205,18 +206,15 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
 
     private fun clickOptionsGroupView(
         optionsMenuSelected: MediaFileAdapter.OptionsMenuSelected,
-        sharedPreferences: SharedPreferences
+        sharedPreferences: SharedPreferences,
+        sortingPreference: MediaFileListSorter.SortingPreference
     ) {
         clearOptionItemsBackgrounds()
         optionsGroupView.background = resources.getDrawable(R.drawable.button_selected_dark)
-        val groupByPref = sharedPreferences.getInt(
-            PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY,
-            PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
-        )
         var groupParent: Button? = null
         var groupDate: Button? = null
         var groupName: Button? = null
-        when (groupByPref) {
+        when (sortingPreference.groupBy) {
             MediaFileListSorter.GROUP_NAME -> {
                 groupName = getSelectedTextButton(resources.getString(R.string.name))
                 groupParent = getUnSelectedTextButton(resources.getString(R.string.parent))
@@ -243,6 +241,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
                     MediaFileListSorter.GROUP_NAME
                 ).apply()
             }
+            sortingPreference.groupBy = MediaFileListSorter.GROUP_NAME
             var isAsc = sharedPreferences
                 .getBoolean(
                     PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY_IS_ASC,
@@ -254,7 +253,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
                     .KEY_MEDIA_LIST_GROUP_BY_IS_ASC,
                 isAsc
             ).apply()
-            optionsMenuSelected.groupBy(MediaFileListSorter.GROUP_NAME, isAsc)
+            sortingPreference.isGroupByAsc = isAsc
+            optionsMenuSelected.groupBy(sortingPreference)
         }
         groupDate?.setOnClickListener {
             setUnSelectButton(groupName!!)
@@ -266,6 +266,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
                     MediaFileListSorter.GROUP_DATE
                 ).apply()
             }
+            sortingPreference.groupBy = MediaFileListSorter.GROUP_DATE
             var isAsc = sharedPreferences
                 .getBoolean(
                     PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY_IS_ASC,
@@ -277,7 +278,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
                     .KEY_MEDIA_LIST_GROUP_BY_IS_ASC,
                 isAsc
             ).apply()
-            optionsMenuSelected.groupBy(MediaFileListSorter.GROUP_DATE, isAsc)
+            sortingPreference.isGroupByAsc = isAsc
+            optionsMenuSelected.groupBy(sortingPreference)
         }
         groupParent?.setOnClickListener {
             setUnSelectButton(groupName!!)
@@ -289,6 +291,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
                     MediaFileListSorter.GROUP_PARENT
                 ).apply()
             }
+            sortingPreference.groupBy = MediaFileListSorter.GROUP_PARENT
             var isAsc = sharedPreferences
                 .getBoolean(
                     PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY_IS_ASC,
@@ -300,7 +303,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
                     .KEY_MEDIA_LIST_GROUP_BY_IS_ASC,
                 isAsc
             ).apply()
-            optionsMenuSelected.groupBy(MediaFileListSorter.GROUP_PARENT, isAsc)
+            sortingPreference.isGroupByAsc = isAsc
+            optionsMenuSelected.groupBy(sortingPreference)
         }
         optionsListParent.addView(groupName)
         optionsListParent.addView(groupDate)
@@ -309,18 +313,15 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
 
     private fun clickOptionsSortView(
         optionsMenuSelected: MediaFileAdapter.OptionsMenuSelected,
-        sharedPreferences: SharedPreferences
+        sharedPreferences: SharedPreferences,
+        sortingPreference: MediaFileListSorter.SortingPreference
     ) {
         clearOptionItemsBackgrounds()
         optionsSortView.background = resources.getDrawable(R.drawable.button_selected_dark)
-        val sortByPref = sharedPreferences.getInt(
-            PreferencesConstants.KEY_MEDIA_LIST_SORT_BY,
-            PreferencesConstants.DEFAULT_MEDIA_LIST_SORT_BY
-        )
         var sortSize: Button? = null
         var sortDate: Button? = null
         var sortName: Button? = null
-        when (sortByPref) {
+        when (sortingPreference.sortBy) {
             MediaFileListSorter.SORT_NAME -> {
                 sortName = getSelectedTextButton(resources.getString(R.string.name))
                 sortSize = getUnSelectedTextButton(resources.getString(R.string.size))
@@ -347,6 +348,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
                     MediaFileListSorter.SORT_NAME
                 ).apply()
             }
+            sortingPreference.sortBy = MediaFileListSorter.SORT_NAME
             var isAsc = sharedPreferences
                 .getBoolean(
                     PreferencesConstants.KEY_MEDIA_LIST_SORT_BY_IS_ASC,
@@ -358,7 +360,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
                     .KEY_MEDIA_LIST_SORT_BY_IS_ASC,
                 isAsc
             ).apply()
-            optionsMenuSelected.sortBy(MediaFileListSorter.SORT_NAME, isAsc)
+            sortingPreference.isSortByAsc = isAsc
+            optionsMenuSelected.sortBy(sortingPreference)
         }
         sortDate?.setOnClickListener {
             setUnSelectButton(sortName!!)
@@ -370,6 +373,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
                     MediaFileListSorter.SORT_MODIF
                 ).apply()
             }
+            sortingPreference.sortBy = MediaFileListSorter.SORT_MODIF
             var isAsc = sharedPreferences
                 .getBoolean(
                     PreferencesConstants.KEY_MEDIA_LIST_SORT_BY_IS_ASC,
@@ -381,7 +385,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
                     .KEY_MEDIA_LIST_SORT_BY_IS_ASC,
                 isAsc
             ).apply()
-            optionsMenuSelected.sortBy(MediaFileListSorter.SORT_MODIF, isAsc)
+            sortingPreference.isSortByAsc = isAsc
+            optionsMenuSelected.sortBy(sortingPreference)
         }
         sortSize?.setOnClickListener {
             setUnSelectButton(sortName!!)
@@ -393,6 +398,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
                     MediaFileListSorter.SORT_SIZE
                 ).apply()
             }
+            sortingPreference.sortBy = MediaFileListSorter.SORT_SIZE
             var isAsc = sharedPreferences
                 .getBoolean(
                     PreferencesConstants.KEY_MEDIA_LIST_SORT_BY_IS_ASC,
@@ -404,7 +410,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
                     .KEY_MEDIA_LIST_SORT_BY_IS_ASC,
                 isAsc
             ).apply()
-            optionsMenuSelected.sortBy(MediaFileListSorter.SORT_SIZE, isAsc)
+            sortingPreference.isSortByAsc = isAsc
+            optionsMenuSelected.sortBy(sortingPreference)
         }
         optionsListParent.addView(sortName)
         optionsListParent.addView(sortDate)

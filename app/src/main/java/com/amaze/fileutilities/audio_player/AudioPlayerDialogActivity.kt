@@ -94,6 +94,7 @@ class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
     override fun onPositionUpdate(progressHandler: AudioProgressHandler) {
         _binding.run {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                waveformSeekbar.maxProgress = progressHandler.audioPlaybackInfo.duration.toFloat()
                 waveformSeekbar.progress = progressHandler
                     .audioPlaybackInfo.currentPosition.toFloat()
             } else {

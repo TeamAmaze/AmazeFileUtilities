@@ -95,6 +95,7 @@ abstract class AbstractMediaFilesAdapter(
                     mediaFileInfo ->
                     holder.infoTitle.text = mediaFileInfo.title
                     Glide.with(superContext).clear(holder.iconView)
+                    superPreloader.loadImage(mediaFileInfo.path, holder.iconView)
                     val formattedDate = mediaFileInfo.getModificationDate(superContext)
                     val formattedSize = mediaFileInfo.getFormattedSize(superContext)
                     mediaFileInfo.extraInfo?.let { extraInfo ->
@@ -116,7 +117,6 @@ abstract class AbstractMediaFilesAdapter(
                                 }
                             }
                             MediaFileInfo.MEDIA_TYPE_UNKNOWN -> {
-                                superPreloader.loadImage(mediaFileInfo.path, holder.iconView)
                                 holder.infoSummary.text = "$formattedDate | $formattedSize"
                                 holder.extraInfo.text = ""
                                 holder.root.setOnClickListener {
@@ -158,7 +158,6 @@ abstract class AbstractMediaFilesAdapter(
         holder.infoSummary.text =
             "${mediaFileInfo.extraInfo!!.imageMetaData?.width}" +
             "x${mediaFileInfo.extraInfo.imageMetaData?.height}"
-        superPreloader.loadImage(mediaFileInfo.path, holder.iconView)
         holder.extraInfo.text = ""
         holder.root.setOnClickListener {
             val intent = Intent(superContext, ImageViewerDialogActivity::class.java)
@@ -194,7 +193,6 @@ abstract class AbstractMediaFilesAdapter(
         mediaFileInfo.extraInfo.videoMetaData?.duration?.let {
             holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
         }
-        superPreloader.loadImage(mediaFileInfo.path, holder.iconView)
         holder.root.setOnClickListener {
             val intent = Intent(superContext, VideoPlayerDialogActivity::class.java)
             intent.data = mediaFileInfo.getContentUri(superContext)
