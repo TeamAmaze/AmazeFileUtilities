@@ -40,33 +40,30 @@ class DocxViewerActivity : PermissionActivity() {
         setContentView(viewBinding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         viewModel = ViewModelProvider(this).get(DocxViewerActivityViewModel::class.java)
-        if (savedInstanceState == null) {
-            val mimeType = intent.type
-            val docxUri = intent.data
-            if (docxUri == null) {
-                showToastInCenter(resources.getString(R.string.unsupported_content))
-            }
-            Log.i(
-                javaClass.simpleName,
-                "Loading docx from path ${docxUri?.path} " +
-                    "and mimetype $mimeType"
-            )
-            docxModel = LocalDocxModel(docxUri!!, mimeType)
-            val converter = DocumentConverter()
-            val result: Result<String>? = converter.convertToHtml(docxModel.getInputStream(this))
-            title = docxModel.getName(this)
-            result?.let {
-                val html: String = result.value // The generated HTML
-                val warnings: Set<String> = result.warnings // Any warnings during conversion
-                val base64 = Base64.encodeToString(html.toByteArray(), Base64.NO_PADDING)
-                viewBinding.webview.also {
-                    it.loadData(base64, "text/html", "base64")
-                    it.settings.setSupportZoom(true)
-                    it.settings.builtInZoomControls = true
-                    it.settings.displayZoomControls = false
-                    it.setVerticalScrollBarEnabled(true)
-                    it.setHorizontalScrollBarEnabled(true)
-                }
+        if (viewModel.getDocxModel(intent) == null) {
+            showToastInCenter(resources.getString(R.string.unsupported_content))
+            finish()
+        }
+        docxModel = viewModel.getDocxModel(intent)!!
+        Log.i(
+            javaClass.simpleName,
+            "Loading docx from path ${docxModel.getUri().path} " +
+                "and mimetype ${docxModel.mimeType}"
+        )
+        val converter = DocumentConverter()
+        val result: Result<String>? = converter.convertToHtml(docxModel.getInputStream(this))
+        title = docxModel.getName(this)
+        result?.let {
+            val html: String = result.value // The generated HTML
+            val warnings: Set<String> = result.warnings // Any warnings during conversion
+            val base64 = Base64.encodeToString(html.toByteArray(), Base64.NO_PADDING)
+            viewBinding.webview.also {
+                it.loadData(base64, "text/html", "base64")
+                it.settings.setSupportZoom(true)
+                it.settings.builtInZoomControls = true
+                it.settings.displayZoomControls = false
+                it.setVerticalScrollBarEnabled(true)
+                it.setHorizontalScrollBarEnabled(true)
             }
         }
     }

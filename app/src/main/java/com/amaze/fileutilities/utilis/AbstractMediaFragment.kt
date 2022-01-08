@@ -11,14 +11,19 @@
 package com.amaze.fileutilities.utilis
 
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 
 abstract class AbstractMediaFragment : Fragment() {
 
+    companion object {
+        const val ANIM_FADE = 500L
+    }
+
     abstract fun getRootLayout(): View
+
+    abstract fun getToolbarLayout(): View?
 
     fun refactorSystemUi(hide: Boolean) {
         if (hide) {
@@ -31,8 +36,7 @@ abstract class AbstractMediaFragment : Fragment() {
                 controller.systemBarsBehavior = WindowInsetsControllerCompat
                     .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
-            // TODO: Bug, use custom action bar so that hiding doesn't refresh the content
-            (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+            getToolbarLayout()?.hideFade(ANIM_FADE)
         } else {
             WindowInsetsControllerCompat(
                 requireActivity().window,
@@ -43,7 +47,7 @@ abstract class AbstractMediaFragment : Fragment() {
                 controller.systemBarsBehavior = WindowInsetsControllerCompat
                     .BEHAVIOR_SHOW_BARS_BY_TOUCH
             }
-            (requireActivity() as AppCompatActivity).supportActionBar?.show()
+            getToolbarLayout()?.showFade(ANIM_FADE)
         }
     }
 }

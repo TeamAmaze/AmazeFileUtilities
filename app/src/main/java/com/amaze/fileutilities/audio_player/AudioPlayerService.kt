@@ -564,7 +564,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         playingNotification?.update()
     }
 
-    override fun getPlaybackInfoUpdateCallback(onPlaybackInfoUpdate: OnPlaybackInfoUpdate) {
+    override fun getPlaybackInfoUpdateCallback(onPlaybackInfoUpdate: OnPlaybackInfoUpdate?) {
         serviceBinderPlaybackUpdate = onPlaybackInfoUpdate
     }
 

@@ -63,6 +63,11 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
         super.onCreate(savedInstanceState)
         audioPlaybackServiceConnection =
             AudioPlaybackServiceConnection(WeakReference(this))
+
+        activity?.volumeControlStream = AudioManager.STREAM_MUSIC
+
+        val intent = Intent(requireContext(), AudioPlayerService::class.java)
+        requireContext().bindService(intent, audioPlaybackServiceConnection, 0)
     }
 
     override fun onCreateView(
@@ -149,24 +154,12 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
         return root
     }
 
-    override fun onResume() {
-        super.onResume()
-        activity?.volumeControlStream = AudioManager.STREAM_MUSIC
-
-        val intent = Intent(requireContext(), AudioPlayerService::class.java)
-        requireContext().bindService(intent, audioPlaybackServiceConnection, 0)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        requireContext().unbindService(audioPlaybackServiceConnection)
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         (requireActivity() as MainActivity)
             .setCustomTitle(resources.getString(R.string.title_files))
         (activity as MainActivity).invalidateBottomBar(true)
+        requireContext().unbindService(audioPlaybackServiceConnection)
         if (!isPlaying) {
             AudioPlayerService.sendCancelBroadcast(requireContext())
         }
@@ -224,7 +217,7 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
             isBottomFragmentVisible = true
         }
 
-        binding.run {
+        _binding?.run {
             val audioService = audioServiceRef.get()
             title.text = audioService?.getAudioPlaybackInfo()?.title
             titleSmall.text = audioService?.getAudioPlaybackInfo()?.title
@@ -300,7 +293,7 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
     }
 
     private fun setSeekbarProgress(progress: Int) {
-        binding.run {
+        _binding?.run {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 waveformSeekbar.visibility = View.VISIBLE
                 seekBar.visibility = View.GONE
@@ -322,7 +315,7 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
 
     private fun loadWaveFormSeekbar(progressHandler: AudioProgressHandler) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !forceShowSeekbar) {
-            binding.run {
+            _binding?.run {
                 waveformSeekbar.visibility = View.VISIBLE
                 seekBar.visibility = View.GONE
                 val file = progressHandler.audioPlaybackInfo
@@ -346,7 +339,7 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
     }
 
     private fun setupSeekBars(audioService: ServiceOperationCallback?) {
-        binding.run {
+        _binding?.run {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !forceShowSeekbar) {
                 waveformSeekbar.visibility = View.VISIBLE
                 seekBar.visibility = View.GONE
