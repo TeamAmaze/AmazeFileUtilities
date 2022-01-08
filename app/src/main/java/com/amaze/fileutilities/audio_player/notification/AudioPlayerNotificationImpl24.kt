@@ -18,8 +18,8 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlaybackInfo
-import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
 import com.amaze.fileutilities.audio_player.AudioPlayerService
+import com.amaze.fileutilities.home_page.MainActivity
 
 class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
     @Synchronized
@@ -35,7 +35,8 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
             } else {
                 R.drawable.ic_baseline_play_circle_outline_32
             }
-        val action = Intent(service, AudioPlayerDialogActivity::class.java)
+        val action = Intent(service, MainActivity::class.java)
+        action.putExtra(MainActivity.KEY_INTENT_AUDIO_PLAYER, true)
         action.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         val clickIntent = PendingIntent.getActivity(service, 0, action, 0)
 

@@ -93,4 +93,9 @@
     <string name="crash_report_copied">Crash report copied to clipboard</string>
 
     <string name="clipboard_path_copy">Path copied to clipboard</string>
+    <string name="pdf_password_title">Password required</string>
+    <string name="pdf_password_required">Please enter the password to open this document</string>
+    <string name="ok">OK</string>
+    <string name="wrong_password">Wrong password</string>
+    <string name="unsupported_operation">Unsupported Operation</string>
 </resources>

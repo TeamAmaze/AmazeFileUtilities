@@ -95,7 +95,7 @@
         <activity
             android:name=".image_viewer.ImageViewerActivity"
             android:label="@string/image_viewer"
-            android:theme="@style/Theme.AppCompat" />
+            android:theme="@style/Theme.AmazeFileUtilities.FullScreen" />
         <activity
             android:name=".video_player.VideoPlayerActivity"
             android:label="@string/video_player"
@@ -104,7 +104,7 @@
             android:name=".pdf_viewer.PdfViewerActivity"
             android:exported="true"
             android:label="@string/pdf_viewer"
-            android:theme="@style/Theme.AmazeFileUtilities">
+            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark">
             <intent-filter
                 android:label="@string/pdf_viewer"
                 tools:ignore="AppLinkUrlError">
