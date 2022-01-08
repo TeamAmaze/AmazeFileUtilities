@@ -127,7 +127,7 @@ class MediaFileAdapter(
                     ResourcesCompat
                         .getColor(
                             context.resources,
-                            R.color.peach, context.theme
+                            R.color.peach_70, context.theme
                         ),
                     R.drawable.background_curved_bottom_peach
                 )
@@ -143,7 +143,7 @@ class MediaFileAdapter(
                     ResourcesCompat
                         .getColor(
                             context.resources,
-                            R.color.orange, context.theme
+                            R.color.orange_70, context.theme
                         ),
                     R.drawable.background_curved_bottom_orange
                 )
@@ -159,7 +159,7 @@ class MediaFileAdapter(
                     ResourcesCompat
                         .getColor(
                             context.resources,
-                            R.color.purple, context.theme
+                            R.color.purple_70, context.theme
                         ),
                     R.drawable.background_curved_bottom_pink
                 )
@@ -175,7 +175,7 @@ class MediaFileAdapter(
                     ResourcesCompat
                         .getColor(
                             context.resources,
-                            R.color.green_banner, context.theme
+                            R.color.green_banner_70, context.theme
                         ),
                     R.drawable.background_curved_bottom_green
                 )

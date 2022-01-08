@@ -7,5 +7,5 @@
         android:bottomLeftRadius="@dimen/material_generic_medium"
         android:bottomRightRadius="@dimen/material_generic_medium"
         />
-    <solid android:color="@color/purple" />
+    <solid android:color="@color/purple_70" />
 </shape>

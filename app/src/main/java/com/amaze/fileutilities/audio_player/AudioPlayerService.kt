@@ -512,10 +512,12 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         audioProgressHandler?.isCancelled = true
     }
 
+    // don't forget to update notification after this function
     private fun updatePlaybackState(isPlaying: Boolean) {
         audioProgressHandler?.let {
             it.audioPlaybackInfo.isPlaying = isPlaying
-            onProgressUpdate(it)
+//            onProgressUpdate(it)
+            serviceBinderPlaybackUpdate?.onPlaybackStateChanged(audioProgressHandler!!)
         }
     }
 

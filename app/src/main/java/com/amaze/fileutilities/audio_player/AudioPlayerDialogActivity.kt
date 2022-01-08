@@ -30,6 +30,7 @@ import com.amaze.fileutilities.utilis.showToastInCenter
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
 import linc.com.amplituda.exceptions.io.FileNotFoundException
+import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
@@ -109,12 +110,13 @@ class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
                 progressHandler
                     .audioPlaybackInfo.duration
             ) ?: ""
-            onPlaybackStateChanged(progressHandler)
+            invalidateActionButtons(progressHandler)
         }
     }
 
     override fun onPlaybackStateChanged(progressHandler: AudioProgressHandler) {
         invalidateActionButtons(progressHandler)
+        loadWaveFormSeekbar(progressHandler)
     }
 
     override fun setupActionButtons(audioServiceRef: WeakReference<ServiceOperationCallback>) {
@@ -146,19 +148,21 @@ class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
 
     private fun invalidateActionButtons(progressHandler: AudioProgressHandler) {
         viewModel.isPlaying = progressHandler.audioPlaybackInfo.isPlaying
-        progressHandler.audioPlaybackInfo.isPlaying.let {
-            isPlaying ->
-            if (progressHandler.isCancelled || !isPlaying) {
+        progressHandler.audioPlaybackInfo.let {
+            info ->
+            if (progressHandler.isCancelled || !info.isPlaying) {
                 _binding.playButton
                     .setImageResource(R.drawable.ic_round_play_circle_32)
             } else {
                 _binding.playButton
                     .setImageResource(R.drawable.ic_round_pause_circle_32)
             }
-
             if (progressHandler.isCancelled) {
                 setSeekbarProgress(0)
             }
+            _binding.title.text = info.title
+            _binding.album.text = info.albumName
+            _binding.artist.text = info.artistName
         }
     }
 
@@ -183,6 +187,31 @@ class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
         return intent
     }
 
+    private fun loadWaveFormSeekbar(progressHandler: AudioProgressHandler) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !forceShowSeekbar) {
+            _binding.run {
+                waveformSeekbar.visibility = View.VISIBLE
+                seekBar.visibility = View.GONE
+                var file = progressHandler.audioPlaybackInfo
+                    .audioModel.getUri().getFileFromUri(this@AudioPlayerDialogActivity)
+                if (file != null) {
+                    try {
+                        // TODO: hack to get valid wavebar path
+                        if (!file.path.startsWith("storage")) {
+                            file = File("storage/" + file.path)
+                        }
+                        waveformSeekbar.setSampleFrom(file)
+                    } catch (fe: FileNotFoundException) {
+                        fe.printStackTrace()
+                        forceShowSeekbar = true
+                    }
+                } else {
+                    forceShowSeekbar = true
+                }
+            }
+        }
+    }
+
     private fun setupSeekBars(audioService: ServiceOperationCallback?) {
         _binding.run {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !forceShowSeekbar) {
@@ -195,6 +224,7 @@ class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
                         waveformSeekbar.setSampleFrom(file)
                     } catch (fe: FileNotFoundException) {
                         fe.printStackTrace()
+                        forceShowSeekbar = true
                         setupSeekBars(audioService)
                     }
                 } else {
