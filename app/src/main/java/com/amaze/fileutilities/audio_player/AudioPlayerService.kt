@@ -142,7 +142,8 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                                         it[
                                             handler
                                                 .getPlayingIndex(false)
-                                        ]
+                                        ],
+                                        true
                                     )
                                 }
                             }
@@ -166,18 +167,19 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                                         it[
                                             handler
                                                 .getPlayingIndex(false)
-                                        ]
+                                        ],
+                                        true
                                     )
                                 }
                             }
                         }
                         else -> {
-                            initCurrentUriAndPlayer(intentUri!!)
+                            initCurrentUriAndPlayer(intentUri!!, false)
                         }
                     }
                 }
                 else -> {
-                    initCurrentUriAndPlayer(intentUri!!)
+                    initCurrentUriAndPlayer(intentUri!!, false)
                 }
             }
         }
@@ -210,7 +212,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         return mBinder
     }
 
-    private fun initCurrentUriAndPlayer(uri: Uri) {
+    private fun initCurrentUriAndPlayer(uri: Uri, renderWaveform: Boolean) {
         if (audioProgressHandler != null) {
             // TODO validate following condition
             if (audioProgressHandler!!.audioPlaybackInfo.audioModel.getUri()
@@ -220,12 +222,12 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
             } else {
                 val mediaItem = extractMediaSourceFromUri(uri)
                 initAudioPlaybackInfoAndHandler(uri)
-                playMediaItem(mediaItem)
+                playMediaItem(mediaItem, renderWaveform)
             }
         } else {
             val mediaItem = extractMediaSourceFromUri(uri)
             initAudioPlaybackInfoAndHandler(uri)
-            playMediaItem(mediaItem)
+            playMediaItem(mediaItem, renderWaveform)
         }
     }
 
@@ -444,7 +446,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         ) == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
     }
 
-    private fun playMediaItem(mediaItem: MediaItem) {
+    private fun playMediaItem(mediaItem: MediaItem, renderWaveform: Boolean) {
         if (exoPlayer == null) initializePlayer()
         exoPlayer?.apply {
             // AudioAttributes here from exoplayer package !!!
@@ -459,7 +461,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
             playWhenReady = true
             play()
         }
-        updatePlaybackState(true)
+        updatePlaybackState(true, renderWaveform)
         invalidateNotificationPlayButton()
     }
 
@@ -477,7 +479,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                 }
                 exoPlayer?.playWhenReady = true
                 exoPlayer?.play()
-                updatePlaybackState(true)
+                updatePlaybackState(true, false)
                 invalidateNotificationPlayButton()
             }
         }
@@ -497,7 +499,8 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
     private fun pausePlayer() {
         exoPlayer?.apply {
             playWhenReady = false
-            updatePlaybackState(false)
+            pause()
+            updatePlaybackState(false, false)
             invalidateNotificationPlayButton()
         }
     }
@@ -505,7 +508,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
     private fun stopExoPlayer() {
         // release the resources when the service is destroyed
         exoPlayer?.playWhenReady = false
-        updatePlaybackState(false)
+        updatePlaybackState(false, false)
         updateMediaSessionPlaybackState()
         exoPlayer?.release()
         exoPlayer = null
@@ -513,11 +516,14 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
     }
 
     // don't forget to update notification after this function
-    private fun updatePlaybackState(isPlaying: Boolean) {
+    private fun updatePlaybackState(isPlaying: Boolean, renderWaveform: Boolean) {
         audioProgressHandler?.let {
             it.audioPlaybackInfo.isPlaying = isPlaying
 //            onProgressUpdate(it)
-            serviceBinderPlaybackUpdate?.onPlaybackStateChanged(audioProgressHandler!!)
+            serviceBinderPlaybackUpdate?.onPlaybackStateChanged(
+                audioProgressHandler!!,
+                renderWaveform
+            )
         }
     }
 
@@ -540,14 +546,14 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
 
     private fun triggerStopEverything() {
         audioProgressHandler?.isCancelled = true
-        serviceBinderPlaybackUpdate?.onPlaybackStateChanged(audioProgressHandler!!)
+        serviceBinderPlaybackUpdate?.onPlaybackStateChanged(audioProgressHandler!!, false)
     }
 
     private val pauseReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             exoPlayer?.let {
                 playMediaItem()
-                serviceBinderPlaybackUpdate?.onPlaybackStateChanged(audioProgressHandler!!)
+                serviceBinderPlaybackUpdate?.onPlaybackStateChanged(audioProgressHandler!!, false)
             }
         }
     }

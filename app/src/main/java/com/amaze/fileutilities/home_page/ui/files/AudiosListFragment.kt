@@ -38,7 +38,6 @@ import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
 import linc.com.amplituda.exceptions.io.FileNotFoundException
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
-import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
@@ -197,10 +196,15 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
         }
     }
 
-    override fun onPlaybackStateChanged(progressHandler: AudioProgressHandler) {
+    override fun onPlaybackStateChanged(
+        progressHandler: AudioProgressHandler,
+        renderWaveform: Boolean
+    ) {
         invalidateActionButtons(progressHandler)
         // invalidate wavebar
-        loadWaveFormSeekbar(progressHandler)
+        if (renderWaveform) {
+            loadWaveFormSeekbar(progressHandler)
+        }
     }
 
     override fun setupActionButtons(audioServiceRef: WeakReference<ServiceOperationCallback>) {
@@ -211,7 +215,10 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
             val behavior = params.behavior as BottomSheetBehavior
             behavior.addBottomSheetCallback(bottomSheetCallback)
             binding.sheetUpArrow.setOnClickListener {
-                behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+            binding.layoutBottomSheet.setOnClickListener {
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
             binding.sheetDownArrow.setOnClickListener {
                 behavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -320,14 +327,14 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
             binding.run {
                 waveformSeekbar.visibility = View.VISIBLE
                 seekBar.visibility = View.GONE
-                var file = progressHandler.audioPlaybackInfo
+                val file = progressHandler.audioPlaybackInfo
                     .audioModel.getUri().getFileFromUri(requireContext())
                 if (file != null) {
                     try {
                         // TODO: hack to get valid wavebar path
-                        if (!file.path.startsWith("/storage")) {
+                        /*if (!file.path.startsWith("/storage")) {
                             file = File("storage/" + file.path)
-                        }
+                        }*/
                         waveformSeekbar.setSampleFrom(file)
                     } catch (fe: FileNotFoundException) {
                         fe.printStackTrace()
