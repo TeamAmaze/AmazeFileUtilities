@@ -214,14 +214,12 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
                 .layoutParams as CoordinatorLayout.LayoutParams
             val behavior = params.behavior as BottomSheetBehavior
             behavior.addBottomSheetCallback(bottomSheetCallback)
-            binding.sheetUpArrow.setOnClickListener {
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            }
             binding.layoutBottomSheet.setOnClickListener {
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            }
-            binding.sheetDownArrow.setOnClickListener {
-                behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                if (behavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                } else {
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
             }
             isBottomFragmentVisible = true
         }

@@ -7,5 +7,6 @@
         android:bottomLeftRadius="@dimen/material_generic_medium"
         android:bottomRightRadius="@dimen/material_generic_medium"
         />
+    <stroke android:width="@dimen/four_dp" android:color="@color/purple" />
     <solid android:color="@color/purple_70" />
 </shape>
