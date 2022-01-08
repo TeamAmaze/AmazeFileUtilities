@@ -38,6 +38,7 @@ import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
 import linc.com.amplituda.exceptions.io.FileNotFoundException
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
+import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
@@ -192,12 +193,14 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
                     .audioPlaybackInfo.duration
             ) ?: ""
             timeSummarySmall.text = "${timeElapsed.text} / ${trackLength.text}"
-            onPlaybackStateChanged(progressHandler)
+            invalidateActionButtons(progressHandler)
         }
     }
 
     override fun onPlaybackStateChanged(progressHandler: AudioProgressHandler) {
         invalidateActionButtons(progressHandler)
+        // invalidate wavebar
+        loadWaveFormSeekbar(progressHandler)
     }
 
     override fun setupActionButtons(audioServiceRef: WeakReference<ServiceOperationCallback>) {
@@ -208,7 +211,7 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
             val behavior = params.behavior as BottomSheetBehavior
             behavior.addBottomSheetCallback(bottomSheetCallback)
             binding.sheetUpArrow.setOnClickListener {
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
             }
             binding.sheetDownArrow.setOnClickListener {
                 behavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -253,10 +256,10 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
 
     private fun invalidateActionButtons(progressHandler: AudioProgressHandler) {
         isPlaying = progressHandler.audioPlaybackInfo.isPlaying
-        progressHandler.audioPlaybackInfo.isPlaying.let {
-            isPlaying ->
+        progressHandler.audioPlaybackInfo.let {
+            info ->
             _binding?.let {
-                if (progressHandler.isCancelled || !isPlaying) {
+                if (progressHandler.isCancelled || !info.isPlaying) {
                     binding.playButton
                         .setImageResource(R.drawable.ic_round_play_circle_32)
                     binding.playButtonSmall.setImageResource(R.drawable.ic_round_play_circle_32)
@@ -269,6 +272,11 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
                 if (progressHandler.isCancelled) {
                     setSeekbarProgress(0)
                 }
+                it.title.text = info.title
+                it.titleSmall.text = info.title
+                it.album.text = info.albumName
+                it.artist.text = info.artistName
+                it.summarySmall.text = "${it.album.text} | ${it.artist.text}"
             }
         }
     }
@@ -307,6 +315,31 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
         return intent
     }
 
+    private fun loadWaveFormSeekbar(progressHandler: AudioProgressHandler) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !forceShowSeekbar) {
+            binding.run {
+                waveformSeekbar.visibility = View.VISIBLE
+                seekBar.visibility = View.GONE
+                var file = progressHandler.audioPlaybackInfo
+                    .audioModel.getUri().getFileFromUri(requireContext())
+                if (file != null) {
+                    try {
+                        // TODO: hack to get valid wavebar path
+                        if (!file.path.startsWith("/storage")) {
+                            file = File("storage/" + file.path)
+                        }
+                        waveformSeekbar.setSampleFrom(file)
+                    } catch (fe: FileNotFoundException) {
+                        fe.printStackTrace()
+                        forceShowSeekbar = true
+                    }
+                } else {
+                    forceShowSeekbar = true
+                }
+            }
+        }
+    }
+
     private fun setupSeekBars(audioService: ServiceOperationCallback?) {
         binding.run {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !forceShowSeekbar) {
@@ -319,6 +352,7 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
                         waveformSeekbar.setSampleFrom(file)
                     } catch (fe: FileNotFoundException) {
                         fe.printStackTrace()
+                        forceShowSeekbar = true
                         setupSeekBars(audioService)
                     }
                 } else {

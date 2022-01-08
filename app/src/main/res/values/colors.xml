@@ -9,6 +9,7 @@
     <color name="black">#FF000000</color>
     <color name="black_70">#70000000</color>
     <color name="black_50">#50000000</color>
+    <color name="black_20">#20000000</color>
     <color name="white">#FFFFFFFF</color>
 <!--    <color name="white_translucent">#10FFFFFF</color>-->
     <color name="white_translucent_2">#30FFFFFF</color>
@@ -22,11 +23,14 @@
     <color name="pink">#bd5dfb</color>
     <color name="purple">#57489b</color>
     <color name="peach">#ff9195</color>
+    <color name="purple_70">#7057489b</color>
+    <color name="peach_70">#70ff9195</color>
     <color name="yellow">#fbc33d</color>
     <color name="green">#85df66</color>
     <color name="green_banner">#4CAF50</color>
-    <color name="green_banner_item_selected">#1B5E20</color>
+    <color name="green_banner_70">#704CAF50</color>
     <color name="orange">#FF7F50</color>
+    <color name="orange_70">#70FF7F50</color>
     <color name="red">#FF5733</color>
     <color name="accent_blue">#2196F3</color>
     <color name="holo_dark_background">#303030</color>

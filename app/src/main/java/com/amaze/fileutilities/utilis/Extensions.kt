@@ -79,7 +79,9 @@ fun Uri.getFileFromUri(context: Context): File? {
                 this.path?.indexOf("/", 1)!! + 1
             )
         )
-//        songFile = File(this.path)
+        if (songFile == null) {
+            songFile = File(this.path)
+        }
     }
     return songFile
 }

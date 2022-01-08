@@ -49,6 +49,7 @@
         />
 
     <LinearLayout
+        android:id="@+id/seekbar_parent"
         android:layout_width="match_parent"
         android:layout_height="@dimen/sixty_four_dp"
         android:orientation="horizontal"
