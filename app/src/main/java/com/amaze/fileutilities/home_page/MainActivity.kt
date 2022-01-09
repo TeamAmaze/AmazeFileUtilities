@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.home_page
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognizerIntent
@@ -21,7 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.amaze.fileutilities.PermissionActivity
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ActivityMainActionbarBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
@@ -29,13 +30,10 @@ import com.amaze.fileutilities.databinding.ActivityMainBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
 import com.amaze.fileutilities.home_page.ui.options.AboutActivity
-import com.amaze.fileutilities.utilis.hideFade
-import com.amaze.fileutilities.utilis.hideTranslateY
-import com.amaze.fileutilities.utilis.showFade
-import com.amaze.fileutilities.utilis.showTranslateY
+import com.amaze.fileutilities.utilis.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : PermissionActivity() {
+class MainActivity : PermissionsActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var actionBarBinding: ActivityMainActionbarBinding
@@ -46,6 +44,7 @@ class MainActivity : PermissionActivity() {
 
     companion object {
         private const val VOICE_REQUEST_CODE = 1000
+        const val KEY_INTENT_AUDIO_PLAYER = "audio_player_intent"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -197,7 +196,12 @@ class MainActivity : PermissionActivity() {
             RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
         )
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice recognition Demo...")
-        startActivityForResult(intent, VOICE_REQUEST_CODE)
+        try {
+            startActivityForResult(intent, VOICE_REQUEST_CODE)
+        } catch (e: ActivityNotFoundException) {
+            e.printStackTrace()
+            this.showToastInCenter(resources.getString(R.string.unsupported_operation))
+        }
     }
 
     private fun invalidateOptionsTabs() {

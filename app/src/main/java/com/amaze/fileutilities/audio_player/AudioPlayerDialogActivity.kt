@@ -20,7 +20,7 @@ import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import androidx.lifecycle.ViewModelProvider
-import com.amaze.fileutilities.PermissionActivity
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.AudioPlayerDialogActivityBinding
 import com.amaze.fileutilities.utilis.getFileFromUri
@@ -30,11 +30,10 @@ import com.amaze.fileutilities.utilis.showToastInCenter
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
 import linc.com.amplituda.exceptions.io.FileNotFoundException
-import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
-class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
+class AudioPlayerDialogActivity : PermissionsActivity(), OnPlaybackInfoUpdate {
 
     private val _binding by lazy(LazyThreadSafetyMode.NONE) {
         AudioPlayerDialogActivityBinding.inflate(layoutInflater)
@@ -114,9 +113,14 @@ class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
         }
     }
 
-    override fun onPlaybackStateChanged(progressHandler: AudioProgressHandler) {
+    override fun onPlaybackStateChanged(
+        progressHandler: AudioProgressHandler,
+        renderWaveform: Boolean
+    ) {
         invalidateActionButtons(progressHandler)
-        loadWaveFormSeekbar(progressHandler)
+        if (renderWaveform) {
+            loadWaveFormSeekbar(progressHandler)
+        }
     }
 
     override fun setupActionButtons(audioServiceRef: WeakReference<ServiceOperationCallback>) {
@@ -192,14 +196,14 @@ class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
             _binding.run {
                 waveformSeekbar.visibility = View.VISIBLE
                 seekBar.visibility = View.GONE
-                var file = progressHandler.audioPlaybackInfo
+                val file = progressHandler.audioPlaybackInfo
                     .audioModel.getUri().getFileFromUri(this@AudioPlayerDialogActivity)
                 if (file != null) {
                     try {
                         // TODO: hack to get valid wavebar path
-                        if (!file.path.startsWith("storage")) {
+                        /*if (!file.path.startsWith("storage")) {
                             file = File("storage/" + file.path)
-                        }
+                        }*/
                         waveformSeekbar.setSampleFrom(file)
                     } catch (fe: FileNotFoundException) {
                         fe.printStackTrace()

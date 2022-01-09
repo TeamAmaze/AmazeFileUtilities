@@ -18,7 +18,7 @@
         >
         <ImageView
             android:id="@+id/back_video_player"
-            android:src="@drawable/ic_baseline_arrow_back_32"
+            app:srcCompat="@drawable/ic_baseline_arrow_back_32"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/zero_dp"
             android:layout_marginLeft="@dimen/material_generic"
@@ -30,7 +30,7 @@
 
         <ImageView
             android:id="@+id/overflow_video_player"
-            android:src="@drawable/ic_baseline_more_vert_32"
+            app:srcCompat="@drawable/ic_baseline_more_vert_32"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/zero_dp"
             android:layout_marginEnd="@dimen/material_generic"
@@ -42,7 +42,7 @@
 
         <ImageView
             android:id="@+id/fit_to_screen_video_player"
-            android:src="@drawable/ic_outline_fit_screen_32"
+            app:srcCompat="@drawable/ic_outline_fit_screen_32"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/zero_dp"
             app:layout_constraintRight_toLeftOf="@id/overflow_video_player"
@@ -53,7 +53,7 @@
             />
         <ImageView
             android:id="@+id/orientation_video_player"
-            android:src="@drawable/ic_baseline_fullscreen_32"
+            app:srcCompat="@drawable/ic_baseline_fullscreen_32"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/zero_dp"
             app:layout_constraintRight_toLeftOf="@id/fit_to_screen_video_player"
@@ -83,21 +83,21 @@
                 style="@style/ExoMediaButton.Previous"/>
             <ImageButton android:id="@id/exo_rew"
                 style="@style/ExoMediaButton.Rewind"
-                android:src="@drawable/ic_outline_fast_rewind_32"
+                app:srcCompat="@drawable/ic_outline_fast_rewind_32"
                 />
             <ImageButton android:id="@id/exo_repeat_toggle"
                 style="@style/ExoMediaButton"/>
             <ImageButton android:id="@id/exo_play"
                 style="@style/ExoMediaButton.Play"
-                android:src="@drawable/ic_baseline_play_circle_outline_32"
+                app:srcCompat="@drawable/ic_baseline_play_circle_outline_32"
                 />
             <ImageButton android:id="@id/exo_pause"
                 style="@style/ExoMediaButton.Pause"
-                android:src="@drawable/ic_baseline_pause_circle_outline_32"
+                app:srcCompat="@drawable/ic_baseline_pause_circle_outline_32"
                 />
             <ImageButton android:id="@id/exo_ffwd"
                 style="@style/ExoMediaButton.FastForward"
-                android:src="@drawable/ic_outline_fast_forward_32"
+                app:srcCompat="@drawable/ic_outline_fast_forward_32"
                 />
             <ImageButton android:id="@id/exo_next"
                 style="@style/ExoMediaButton.Next"/>
@@ -142,7 +142,7 @@
                     android:layout_gravity="center"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_baseline_open_in_new_24"/>
+                    app:srcCompat="@drawable/ic_baseline_open_in_new_24"/>
             </FrameLayout>
         </LinearLayout>
     </LinearLayout>

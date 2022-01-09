@@ -52,6 +52,10 @@ class ImageViewerFragment : AbstractMediaFragment() {
         return viewBinding.root
     }
 
+    override fun getToolbarLayout(): View {
+        TODO("Not yet implemented")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -97,15 +101,18 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 "and mimetype ${localTypeModel.mimeType}"
         )
 
-        viewBinding.textView.text = DocumentFile.fromSingleUri(
+        viewBinding.customToolbar.title.text = DocumentFile.fromSingleUri(
             requireContext(),
             localTypeModel.uri
         )?.name
+        viewBinding.customToolbar.backButton.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
         Glide.with(this).load(localTypeModel.uri.toString())
             .thumbnail(
                 Glide.with(this).load(
-                    resources.getDrawable(R.drawable.about_header)
+                    resources.getDrawable(R.drawable.ic_outline_image_32)
                 )
             )
             .into(viewBinding.imageView)
