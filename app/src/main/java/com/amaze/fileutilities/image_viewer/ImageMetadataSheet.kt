@@ -14,7 +14,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentManager
+import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ImageMetadataSheetBinding
 import com.drew.imaging.ImageMetadataReader
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -54,6 +56,10 @@ class ImageMetadataSheet() : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         imageMetadataSheetBinding = ImageMetadataSheetBinding.inflate(inflater)
+        imageMetadataSheetBinding!!.root.background = ResourcesCompat.getDrawable(
+            resources,
+            R.drawable.background_curved, requireActivity().theme
+        )
         return viewBinding.root
     }
 
