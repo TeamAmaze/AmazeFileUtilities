@@ -20,7 +20,7 @@ import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import androidx.lifecycle.ViewModelProvider
-import com.amaze.fileutilities.PermissionActivity
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.AudioPlayerDialogActivityBinding
 import com.amaze.fileutilities.utilis.getFileFromUri
@@ -33,7 +33,7 @@ import linc.com.amplituda.exceptions.io.FileNotFoundException
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
-class AudioPlayerDialogActivity : PermissionActivity(), OnPlaybackInfoUpdate {
+class AudioPlayerDialogActivity : PermissionsActivity(), OnPlaybackInfoUpdate {
 
     private val _binding by lazy(LazyThreadSafetyMode.NONE) {
         AudioPlayerDialogActivityBinding.inflate(layoutInflater)

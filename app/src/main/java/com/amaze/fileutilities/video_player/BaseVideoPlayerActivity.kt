@@ -10,10 +10,10 @@
 
 package com.amaze.fileutilities.video_player
 
-import com.amaze.fileutilities.PermissionActivity
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 
-class BaseVideoPlayerActivity : PermissionActivity() {
+class BaseVideoPlayerActivity : PermissionsActivity() {
 
     private fun releasePlayer() {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container_view)

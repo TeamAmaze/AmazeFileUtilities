@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.amaze.fileutilities.PermissionActivity
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ActivityMainActionbarBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
@@ -33,7 +33,7 @@ import com.amaze.fileutilities.home_page.ui.options.AboutActivity
 import com.amaze.fileutilities.utilis.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : PermissionActivity() {
+class MainActivity : PermissionsActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var actionBarBinding: ActivityMainActionbarBinding

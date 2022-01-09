@@ -8,19 +8,26 @@
  * and company names mentioned are trademarks or registered trademarks of their respective owners.
  */
 
-package crash_report
+package com.amaze.fileutilities.crash_report
 
 import android.content.Context
-import org.acra.config.CoreConfiguration
+import com.amaze.fileutilities.R
+import org.acra.data.CrashReportData
 import org.acra.sender.ReportSender
-import org.acra.sender.ReportSenderFactory
 
-class AcraReportSenderFactory : ReportSenderFactory {
-    override fun create(context: Context, config: CoreConfiguration): ReportSender {
-        return AcraReportSender()
+class AcraReportSender : ReportSender {
+
+    override fun send(context: Context, errorContent: CrashReportData) {
+        ErrorActivity.reportError(
+            context, errorContent,
+            ErrorActivity.ErrorInfo.make(
+                ErrorActivity.ERROR_UI_ERROR,
+                "Application crash", R.string.app_ui_crash
+            )
+        )
     }
 
-    override fun enabled(config: CoreConfiguration): Boolean {
+    override fun requiresForeground(): Boolean {
         return true
     }
 }

@@ -11,8 +11,8 @@
 package com.amaze.fileutilities
 
 import android.content.Context
-import crash_report.AcraReportSenderFactory
-import crash_report.ErrorActivity
+import com.amaze.fileutilities.crash_report.AcraReportSenderFactory
+import com.amaze.fileutilities.crash_report.ErrorActivity
 import org.acra.ACRA
 import org.acra.annotation.AcraCore
 import org.acra.config.ACRAConfigurationException
