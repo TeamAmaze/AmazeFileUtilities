@@ -186,29 +186,9 @@ class VideoPlayerFragment : AbstractMediaFragment() {
         return null
     }
 
-    /*private fun refactorSystemUi(hide: Boolean) {
-        if (hide) {
-            WindowInsetsControllerCompat(
-                requireActivity().window,
-                viewBinding.root
-            ).let {
-                controller ->
-                controller.hide(WindowInsetsCompat.Type.systemBars())
-                controller.systemBarsBehavior = WindowInsetsControllerCompat
-                    .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            }
-        } else {
-            WindowInsetsControllerCompat(
-                requireActivity().window,
-                viewBinding.root
-            ).let {
-                controller ->
-                controller.show(WindowInsetsCompat.Type.systemBars())
-                controller.systemBarsBehavior = WindowInsetsControllerCompat
-                    .BEHAVIOR_SHOW_BARS_BY_TOUCH
-            }
-        }
-    }*/
+    override fun getBottomBarLayout(): View? {
+        return null
+    }
 
     private fun releasePlayer() {
         player?.run {

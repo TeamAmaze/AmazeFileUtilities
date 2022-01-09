@@ -34,4 +34,5 @@
     <color name="red">#FF5733</color>
     <color name="accent_blue">#2196F3</color>
     <color name="holo_dark_background">#303030</color>
+    <color name="translucent_toolbar">#CC000000</color>
 </resources>
