@@ -13,13 +13,13 @@ package com.amaze.fileutilities.video_player
 import android.os.Bundle
 import android.view.MotionEvent
 import androidx.lifecycle.ViewModelProvider
-import com.amaze.fileutilities.PermissionActivity
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.databinding.GenericPagerViewerActivityBinding
 import com.amaze.fileutilities.utilis.getSiblingUriFiles
 import java.io.File
 import java.util.*
 
-class VideoPlayerActivity : PermissionActivity() {
+class VideoPlayerActivity : PermissionsActivity() {
 
     private lateinit var viewModel: VideoPlayerViewModel
     private var videoPlayerAdapter: VideoPlayerAdapter? = null

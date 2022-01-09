@@ -154,7 +154,7 @@
             android:theme="@style/Theme.AppCompat.Dialog">
         </activity>
 
-        <activity android:name="crash_report.ErrorActivity"
+        <activity android:name="com.amaze.fileutilities.crash_report.ErrorActivity"
             android:theme="@style/Theme.AmazeFileUtilities"
             android:configChanges=""
             android:label="Error"

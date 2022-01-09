@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal"
+    >
     <include
         android:id="@+id/custom_toolbar"
         layout="@layout/custom_toolbar"
-        />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_height="@dimen/material_generic_large"
+        android:layout_width="match_parent" />
     <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pdfView"
         android:layout_width="match_parent"
@@ -14,15 +21,30 @@
     <LinearLayout
         android:id="@+id/hints_parent"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/material_generic_large"
-        android:gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
         android:orientation="horizontal"
-        android:background="@drawable/button_curved_unselected"
+        android:background="@drawable/background_curved_dark_2"
+        android:padding="@dimen/eight_dp"
+        android:layout_marginBottom="@dimen/material_generic_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         >
         <TextView
             android:id="@+id/page_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            />
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_marginLeft="@dimen/eight_dp"
+            android:layout_marginStart="@dimen/eight_dp"
+            android:layout_marginEnd="@dimen/four_dp"
+            android:layout_marginRight="@dimen/four_dp"
             />
         <ImageView
             android:id="@+id/switch_view"
@@ -32,10 +54,4 @@
             android:background="@null"
             />
     </LinearLayout>
-    <Button
-        android:id="@+id/pages_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        />
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,13 +12,13 @@ package com.amaze.fileutilities.image_viewer
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import com.amaze.fileutilities.PermissionActivity
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.databinding.GenericPagerViewerActivityBinding
 import com.amaze.fileutilities.utilis.getSiblingUriFiles
 import java.io.File
 import java.util.*
 
-class ImageViewerActivity : PermissionActivity() {
+class ImageViewerActivity : PermissionsActivity() {
 
     private lateinit var viewModel: ImageViewerViewModel
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {

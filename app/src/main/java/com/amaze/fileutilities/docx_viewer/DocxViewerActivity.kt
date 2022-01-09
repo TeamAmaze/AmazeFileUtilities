@@ -20,14 +20,14 @@ import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebSettingsCompat.FORCE_DARK_OFF
 import androidx.webkit.WebSettingsCompat.FORCE_DARK_ON
 import androidx.webkit.WebViewFeature
-import com.amaze.fileutilities.PermissionActivity
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.DocxViewerActivityBinding
 import com.amaze.fileutilities.utilis.showToastInCenter
 import org.zwobble.mammoth.DocumentConverter
 import org.zwobble.mammoth.Result
 
-class DocxViewerActivity : PermissionActivity() {
+class DocxViewerActivity : PermissionsActivity() {
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         DocxViewerActivityBinding.inflate(layoutInflater)

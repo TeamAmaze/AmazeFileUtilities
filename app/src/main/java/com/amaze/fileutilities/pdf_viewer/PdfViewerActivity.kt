@@ -19,10 +19,11 @@ import android.util.Log
 import android.view.MotionEvent
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
-import com.amaze.fileutilities.PermissionActivity
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.PdfViewerActivityBinding
 import com.amaze.fileutilities.utilis.hideFade
@@ -38,7 +39,7 @@ import com.shockwave.pdfium.PdfPasswordException
 import java.io.File
 
 class PdfViewerActivity :
-    PermissionActivity(),
+    PermissionsActivity(),
     OnPageChangeListener,
     OnLoadCompleteListener,
     OnTapListener {
@@ -94,6 +95,29 @@ class PdfViewerActivity :
         viewBinding.switchView.setOnClickListener {
             viewModel.nightMode = !viewModel.nightMode
             viewBinding.pdfView.setNightMode(viewModel.nightMode)
+            if (viewModel.nightMode) {
+                viewBinding.hintsParent.background = ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.button_curved_unselected, theme
+                )
+                viewBinding.switchView.setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.ic_outline_light_mode_32, theme
+                    )
+                )
+            } else {
+                viewBinding.hintsParent.background = ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.background_curved_dark_2, theme
+                )
+                viewBinding.switchView.setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.ic_outline_dark_mode_32, theme
+                    )
+                )
+            }
             viewBinding.pdfView.loadPages()
         }
         viewBinding.customToolbar.backButton.setOnClickListener {

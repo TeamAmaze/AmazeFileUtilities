@@ -10,7 +10,10 @@
 
 package com.amaze.fileutilities.utilis
 
+import android.app.Activity
 import android.content.*
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.net.Uri
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
@@ -137,6 +140,23 @@ class Utils {
 
         fun isNullOrEmpty(string: String?): Boolean {
             return string == null || string.isEmpty()
+        }
+
+        /**
+         * Force disables screen rotation. Useful when we're temporarily in activity because of external
+         * intent, and don't have to really deal much with filesystem.
+         */
+        fun disableScreenRotation(activity: Activity) {
+            val screenOrientation = activity.resources.configuration.orientation
+            if (screenOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            } else if (screenOrientation == Configuration.ORIENTATION_PORTRAIT) {
+                activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            }
+        }
+
+        fun enableScreenRotation(activity: Activity) {
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
     }
 }
