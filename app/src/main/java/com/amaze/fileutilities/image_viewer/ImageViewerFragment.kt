@@ -14,10 +14,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.core.content.res.ResourcesCompat
 import androidx.documentfile.provider.DocumentFile
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.QuickViewFragmentBinding
 import com.amaze.fileutilities.utilis.AbstractMediaFragment
+import com.amaze.fileutilities.utilis.getFileFromUri
 import com.bumptech.glide.Glide
 
 class ImageViewerFragment : AbstractMediaFragment() {
@@ -53,7 +55,11 @@ class ImageViewerFragment : AbstractMediaFragment() {
     }
 
     override fun getToolbarLayout(): View {
-        TODO("Not yet implemented")
+        return viewBinding.customToolbar.root
+    }
+
+    override fun getBottomBarLayout(): View {
+        return viewBinding.customBottomBar
     }
 
     override fun onCreateView(
@@ -79,16 +85,31 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 startActivity(intent)
             }
         } else if (activity is ImageViewerActivity) {
-            viewBinding.imageView.setOnClickListener {
-                hideToolbars = !hideToolbars
-                refactorSystemUi(hideToolbars)
-            }
-            viewBinding.imageView.setOnLongClickListener {
-                ImageMetadataSheet.showMetadata(
-                    quickViewType!!,
-                    requireActivity().supportFragmentManager
-                )
-                true
+            viewBinding.run {
+                imageView.setOnClickListener {
+                    hideToolbars = !hideToolbars
+                    refactorSystemUi(hideToolbars)
+                }
+                customToolbar.root.visibility = View.VISIBLE
+                customBottomBar.visibility = View.VISIBLE
+                customToolbar.title.text = DocumentFile.fromSingleUri(
+                    requireContext(),
+                    quickViewType!!.uri
+                )?.name ?: quickViewType.uri.getFileFromUri(requireContext())?.name
+                customToolbar.backButton.setOnClickListener {
+                    requireActivity().onBackPressed()
+                }
+                customBottomBar.addButton(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.ic_outline_info_32, requireActivity().theme
+                    )!!
+                ) {
+                    ImageMetadataSheet.showMetadata(
+                        quickViewType,
+                        requireActivity().supportFragmentManager
+                    )
+                }
             }
         }
         quickViewType?.let { showImage(it) }
@@ -100,14 +121,6 @@ class ImageViewerFragment : AbstractMediaFragment() {
             "Show image in fragment ${localTypeModel.uri.path} " +
                 "and mimetype ${localTypeModel.mimeType}"
         )
-
-        viewBinding.customToolbar.title.text = DocumentFile.fromSingleUri(
-            requireContext(),
-            localTypeModel.uri
-        )?.name
-        viewBinding.customToolbar.backButton.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
 
         Glide.with(this).load(localTypeModel.uri.toString())
             .thumbnail(

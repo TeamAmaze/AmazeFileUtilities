@@ -25,6 +25,8 @@ abstract class AbstractMediaFragment : Fragment() {
 
     abstract fun getToolbarLayout(): View?
 
+    abstract fun getBottomBarLayout(): View?
+
     fun refactorSystemUi(hide: Boolean) {
         if (hide) {
             WindowInsetsControllerCompat(
@@ -37,6 +39,7 @@ abstract class AbstractMediaFragment : Fragment() {
                     .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
             getToolbarLayout()?.hideFade(ANIM_FADE)
+            getBottomBarLayout()?.hideFade(ANIM_FADE)
         } else {
             WindowInsetsControllerCompat(
                 requireActivity().window,
@@ -48,6 +51,7 @@ abstract class AbstractMediaFragment : Fragment() {
                     .BEHAVIOR_SHOW_BARS_BY_TOUCH
             }
             getToolbarLayout()?.showFade(ANIM_FADE)
+            getBottomBarLayout()?.showFade(ANIM_FADE)
         }
     }
 }

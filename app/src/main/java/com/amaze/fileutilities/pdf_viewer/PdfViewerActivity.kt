@@ -26,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.PdfViewerActivityBinding
+import com.amaze.fileutilities.utilis.getFileFromUri
 import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.showFade
 import com.amaze.fileutilities.utilis.showToastInCenter
@@ -36,7 +37,6 @@ import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
 import com.shockwave.pdfium.PdfDocument
 import com.shockwave.pdfium.PdfDocument.Bookmark
 import com.shockwave.pdfium.PdfPasswordException
-import java.io.File
 
 class PdfViewerActivity :
     PermissionsActivity(),
@@ -84,7 +84,7 @@ class PdfViewerActivity :
     override fun loadComplete(nbPages: Int) {
         val meta: PdfDocument.Meta = viewBinding.pdfView.documentMeta
         viewModel.pdfFileName = if (meta.title.isEmpty()) {
-            File(pdfModel.uri.path).name
+            pdfModel.uri.getFileFromUri(this)?.name
         } else {
             meta.title
         }
