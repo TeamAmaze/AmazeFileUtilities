@@ -18,10 +18,12 @@ import java.lang.ref.WeakReference
 
 class AudioPlaybackServiceConnection(private val activityRef: WeakReference<OnPlaybackInfoUpdate>) :
     ServiceConnection {
+
+    private var specificService: ServiceOperationCallback? = null
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder: ObtainableServiceBinder<out AudioPlayerService?> =
             service as ObtainableServiceBinder<out AudioPlayerService?>
-        val specificService: ServiceOperationCallback? = binder.service
+        specificService = binder.service
         specificService?.let {
             audioPlayerService ->
             activityRef.get()?.apply {
@@ -33,11 +35,12 @@ class AudioPlaybackServiceConnection(private val activityRef: WeakReference<OnPl
 
     override fun onServiceDisconnected(name: ComponentName?) {
         activityRef.get()?.serviceDisconnected()
+        specificService?.getPlaybackInfoUpdateCallback(null)
     }
 }
 
 interface ServiceOperationCallback {
-    fun getPlaybackInfoUpdateCallback(onPlaybackInfoUpdate: OnPlaybackInfoUpdate)
+    fun getPlaybackInfoUpdateCallback(onPlaybackInfoUpdate: OnPlaybackInfoUpdate?)
     fun getAudioProgressHandlerCallback(): AudioProgressHandler
     fun getAudioPlaybackInfo(): AudioPlaybackInfo
     fun invokePlayPausePlayer()

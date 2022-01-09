@@ -38,7 +38,6 @@ import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
 import linc.com.amplituda.exceptions.io.FileNotFoundException
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
-import java.io.File
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
@@ -64,6 +63,11 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
         super.onCreate(savedInstanceState)
         audioPlaybackServiceConnection =
             AudioPlaybackServiceConnection(WeakReference(this))
+
+        activity?.volumeControlStream = AudioManager.STREAM_MUSIC
+
+        val intent = Intent(requireContext(), AudioPlayerService::class.java)
+        requireContext().bindService(intent, audioPlaybackServiceConnection, 0)
     }
 
     override fun onCreateView(
@@ -150,24 +154,12 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
         return root
     }
 
-    override fun onResume() {
-        super.onResume()
-        activity?.volumeControlStream = AudioManager.STREAM_MUSIC
-
-        val intent = Intent(requireContext(), AudioPlayerService::class.java)
-        requireContext().bindService(intent, audioPlaybackServiceConnection, 0)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        requireContext().unbindService(audioPlaybackServiceConnection)
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         (requireActivity() as MainActivity)
             .setCustomTitle(resources.getString(R.string.title_files))
         (activity as MainActivity).invalidateBottomBar(true)
+        requireContext().unbindService(audioPlaybackServiceConnection)
         if (!isPlaying) {
             AudioPlayerService.sendCancelBroadcast(requireContext())
         }
@@ -197,10 +189,15 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
         }
     }
 
-    override fun onPlaybackStateChanged(progressHandler: AudioProgressHandler) {
+    override fun onPlaybackStateChanged(
+        progressHandler: AudioProgressHandler,
+        renderWaveform: Boolean
+    ) {
         invalidateActionButtons(progressHandler)
         // invalidate wavebar
-        loadWaveFormSeekbar(progressHandler)
+        if (renderWaveform) {
+            loadWaveFormSeekbar(progressHandler)
+        }
     }
 
     override fun setupActionButtons(audioServiceRef: WeakReference<ServiceOperationCallback>) {
@@ -210,16 +207,17 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
                 .layoutParams as CoordinatorLayout.LayoutParams
             val behavior = params.behavior as BottomSheetBehavior
             behavior.addBottomSheetCallback(bottomSheetCallback)
-            binding.sheetUpArrow.setOnClickListener {
-                behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
-            }
-            binding.sheetDownArrow.setOnClickListener {
-                behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            binding.layoutBottomSheet.setOnClickListener {
+                if (behavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                } else {
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
             }
             isBottomFragmentVisible = true
         }
 
-        binding.run {
+        _binding?.run {
             val audioService = audioServiceRef.get()
             title.text = audioService?.getAudioPlaybackInfo()?.title
             titleSmall.text = audioService?.getAudioPlaybackInfo()?.title
@@ -295,7 +293,7 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
     }
 
     private fun setSeekbarProgress(progress: Int) {
-        binding.run {
+        _binding?.run {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 waveformSeekbar.visibility = View.VISIBLE
                 seekBar.visibility = View.GONE
@@ -317,17 +315,17 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
 
     private fun loadWaveFormSeekbar(progressHandler: AudioProgressHandler) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !forceShowSeekbar) {
-            binding.run {
+            _binding?.run {
                 waveformSeekbar.visibility = View.VISIBLE
                 seekBar.visibility = View.GONE
-                var file = progressHandler.audioPlaybackInfo
+                val file = progressHandler.audioPlaybackInfo
                     .audioModel.getUri().getFileFromUri(requireContext())
                 if (file != null) {
                     try {
                         // TODO: hack to get valid wavebar path
-                        if (!file.path.startsWith("/storage")) {
+                        /*if (!file.path.startsWith("/storage")) {
                             file = File("storage/" + file.path)
-                        }
+                        }*/
                         waveformSeekbar.setSampleFrom(file)
                     } catch (fe: FileNotFoundException) {
                         fe.printStackTrace()
@@ -341,7 +339,7 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
     }
 
     private fun setupSeekBars(audioService: ServiceOperationCallback?) {
-        binding.run {
+        _binding?.run {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !forceShowSeekbar) {
                 waveformSeekbar.visibility = View.VISIBLE
                 seekBar.visibility = View.GONE

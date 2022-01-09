@@ -182,6 +182,10 @@ class VideoPlayerFragment : AbstractMediaFragment() {
         return viewBinding.root
     }
 
+    override fun getToolbarLayout(): View? {
+        return null
+    }
+
     /*private fun refactorSystemUi(hide: Boolean) {
         if (hide) {
             WindowInsetsControllerCompat(

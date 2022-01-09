@@ -11,22 +11,10 @@
     android:layout_centerVertical="true"
     android:clickable="true"
     android:clipToPadding="false">
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="8dp"
-        android:ellipsize="end"
-        android:maxEms="10"
-        android:maxLines="1"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <include
+        android:id="@+id/custom_toolbar"
+        layout="@layout/custom_toolbar"
+        />
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/imageView"
@@ -35,10 +23,10 @@
         android:minWidth="@dimen/material_sheet_peek_height"
         android:minHeight="@dimen/material_sheet_peek_height"
         android:adjustViewBounds="true"
-        android:padding="8dp"
         android:scaleType="fitCenter"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         tools:src="@tools:sample/backgrounds/scenic" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

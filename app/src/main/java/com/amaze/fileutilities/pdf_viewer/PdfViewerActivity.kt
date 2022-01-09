@@ -10,89 +10,75 @@
 
 package com.amaze.fileutilities.pdf_viewer
 
+import android.net.Uri
 import android.os.Bundle
+import android.text.Html
+import android.text.InputType
+import android.text.Spanned
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
+import android.view.MotionEvent
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
-import com.amaze.fileutilities.PermissionActivity
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.PdfViewerActivityBinding
+import com.amaze.fileutilities.utilis.hideFade
+import com.amaze.fileutilities.utilis.showFade
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
+import com.github.barteksc.pdfviewer.listener.OnTapListener
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
 import com.shockwave.pdfium.PdfDocument
 import com.shockwave.pdfium.PdfDocument.Bookmark
+import com.shockwave.pdfium.PdfPasswordException
 import java.io.File
 
-class PdfViewerActivity : PermissionActivity(), OnPageChangeListener, OnLoadCompleteListener {
+class PdfViewerActivity :
+    PermissionsActivity(),
+    OnPageChangeListener,
+    OnLoadCompleteListener,
+    OnTapListener {
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         PdfViewerActivityBinding.inflate(layoutInflater)
     }
     private lateinit var viewModel: PdfViewerActivityViewModel
     private lateinit var pdfModel: LocalPdfModel
+    private var isToolbarVisible = true
+    private var retryPassword = false
+
+    companion object {
+        const val ANIM_DURATION = 500L
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         viewModel = ViewModelProvider(this).get(PdfViewerActivityViewModel::class.java)
-        if (savedInstanceState == null) {
-            val mimeType = intent.type
-            val pdfUri = intent.data
-            if (pdfUri == null) {
-                showToastInCenter(resources.getString(R.string.unsupported_content))
-            }
+        if (viewModel.getPdfModel(intent) == null) {
+            showToastInCenter(resources.getString(R.string.unsupported_content))
+            finish()
+        }
+        pdfModel = viewModel.getPdfModel(intent)!!
+        pdfModel.run {
             Log.i(
                 javaClass.simpleName,
-                "Loading pdf from path ${pdfUri?.path} " +
-                    "and mimetype $mimeType"
+                "Loading pdf from path ${this.uri.path} " +
+                    "and mimetype ${this.mimeType}"
             )
-            pdfModel = LocalPdfModel(uri = pdfUri!!, mimeType = mimeType)
-            viewBinding.pdfView.fromUri(pdfUri).defaultPage(0)
-                .enableSwipe(true)
-                .swipeHorizontal(false)
-                .onPageChange(this)
-                .enableAnnotationRendering(true)
-                .onLoad(this)
-                .nightMode(viewModel.nightMode)
-                .scrollHandle(DefaultScrollHandle(this))
-                .load()
+            openPdf(this.uri, null)
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.pdf_activity, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.also {
-            it.findItem(R.id.invert_colors).isChecked = viewModel.nightMode
-        }
-        return super.onPrepareOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.invert_colors -> {
-                viewModel.nightMode = !viewModel.nightMode
-                viewBinding.pdfView.setNightMode(viewModel.nightMode)
-                item.isChecked = viewModel.nightMode
-                viewBinding.pdfView.loadPages()
-            }
-            android.R.id.home -> {
-                finish()
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onPageChanged(page: Int, pageCount: Int) {
         viewModel.pageNumber = page
-        title = String.format("%s %s / %s", viewModel.pdfFileName, page + 1, pageCount)
+        viewBinding.pageNumber.text = String.format("%s / %s", page + 1, pageCount)
     }
 
     override fun loadComplete(nbPages: Int) {
@@ -102,11 +88,104 @@ class PdfViewerActivity : PermissionActivity(), OnPageChangeListener, OnLoadComp
         } else {
             meta.title
         }
-        title = String.format(
-            "%s %s / %s", viewModel.pdfFileName, viewModel.pageNumber + 1,
+        viewBinding.pageNumber.text = String.format(
+            "%s / %s", viewModel.pageNumber + 1,
             viewBinding.pdfView.pageCount
         )
+        viewBinding.switchView.setOnClickListener {
+            viewModel.nightMode = !viewModel.nightMode
+            viewBinding.pdfView.setNightMode(viewModel.nightMode)
+            if (viewModel.nightMode) {
+                viewBinding.hintsParent.background = ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.button_curved_unselected, theme
+                )
+                viewBinding.switchView.setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.ic_outline_light_mode_32, theme
+                    )
+                )
+            } else {
+                viewBinding.hintsParent.background = ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.background_curved_dark_2, theme
+                )
+                viewBinding.switchView.setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.ic_outline_dark_mode_32, theme
+                    )
+                )
+            }
+            viewBinding.pdfView.loadPages()
+        }
+        viewBinding.customToolbar.backButton.setOnClickListener {
+            finish()
+        }
+        viewBinding.customToolbar.title.text = viewModel.pdfFileName
         printBookmarksTree(viewBinding.pdfView.tableOfContents, "-")
+    }
+
+    private fun showPasswordDialog(positiveCallback: (salt: String) -> Unit) {
+        val inputEditTextField = EditText(this)
+        inputEditTextField.inputType =
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        val content: Spanned?
+        if (retryPassword) {
+            content = Html.fromHtml(
+                "<html><body>${resources
+                    .getString(R.string.pdf_password_required)}<font color='red'><br>" +
+                    "${resources.getString(R.string.wrong_password)}</font></body></html>"
+            )
+        } else {
+            content = Html.fromHtml(resources.getString(R.string.pdf_password_required))
+            retryPassword = !retryPassword
+        }
+        val dialog = AlertDialog.Builder(this).setTitle(R.string.pdf_password_title)
+            .setMessage(content)
+            .setView(inputEditTextField)
+            .setCancelable(false)
+            .setPositiveButton(R.string.ok) { dialog, _ ->
+                val salt = inputEditTextField.text.toString()
+                positiveCallback.invoke(salt)
+                dialog.dismiss()
+            }
+            .setNegativeButton(
+                R.string.cancel
+            ) { _, _ -> finish() }
+            .create()
+        dialog.show()
+    }
+
+    private fun openPdf(uri: Uri, password: String?) {
+        viewBinding.pdfView.fromUri(uri).defaultPage(0)
+            .enableSwipe(true)
+            .swipeHorizontal(false)
+            .password(password)
+            .onPageChange(this)
+            .enableAnnotationRendering(true)
+            .enableAntialiasing(true)
+            .onLoad(this)
+            .onTap(this)
+            .defaultPage(viewModel.pageNumber)
+            .nightMode(viewModel.nightMode)
+            .scrollHandle(DefaultScrollHandle(this))
+            .onError { t ->
+                t?.let {
+                    if (t is PdfPasswordException) {
+                        showPasswordDialog {
+                            openPdf(uri, it)
+                        }
+                    } else {
+                        this@PdfViewerActivity.showToastInCenter(
+                            resources
+                                .getString(R.string.unsupported_content)
+                        )
+                    }
+                }
+            }
+            .load()
     }
 
     private fun printBookmarksTree(tree: List<Bookmark>, sep: String) {
@@ -115,6 +194,40 @@ class PdfViewerActivity : PermissionActivity(), OnPageChangeListener, OnLoadComp
             if (b.hasChildren()) {
                 printBookmarksTree(b.children, "$sep-")
             }
+        }
+    }
+
+    override fun onTap(e: MotionEvent?): Boolean {
+        isToolbarVisible = !isToolbarVisible
+        refactorSystemUi(isToolbarVisible)
+        return true
+    }
+
+    private fun refactorSystemUi(hide: Boolean) {
+        if (hide) {
+            WindowInsetsControllerCompat(
+                window,
+                viewBinding.root
+            ).let {
+                controller ->
+                controller.hide(WindowInsetsCompat.Type.systemBars())
+                controller.systemBarsBehavior = WindowInsetsControllerCompat
+                    .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+            viewBinding.customToolbar.root.hideFade(ANIM_DURATION)
+            viewBinding.hintsParent.hideFade(ANIM_DURATION)
+        } else {
+            WindowInsetsControllerCompat(
+                window,
+                viewBinding.root
+            ).let {
+                controller ->
+                controller.show(WindowInsetsCompat.Type.systemBars())
+                controller.systemBarsBehavior = WindowInsetsControllerCompat
+                    .BEHAVIOR_SHOW_BARS_BY_TOUCH
+            }
+            viewBinding.customToolbar.root.showFade(ANIM_DURATION)
+            viewBinding.hintsParent.showFade(ANIM_DURATION)
         }
     }
 }

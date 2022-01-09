@@ -16,6 +16,22 @@
         <item name="colorAccent">@color/highlight_yellow</item>
     </style>
 
+    <style name="Theme.AmazeFileUtilities.Dark" parent="Theme.MaterialComponents">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/highlight_yellow</item>
+        <item name="colorPrimaryVariant">@color/navy_blue</item>
+        <item name="colorOnPrimary">@color/navy_blue</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/blue</item>
+        <item name="colorSecondaryVariant">@color/blue</item>
+        <item name="colorOnSecondary">@color/blue</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+        <item name="actionBarTheme">@style/ThemeOverlay.Actionbar</item>
+        <item name="colorAccent">@color/highlight_yellow</item>
+    </style>
+
     <style name="Theme.Transparent" parent="android:Theme">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -36,6 +52,11 @@
     </style>
 
     <style name="Theme.AmazeFileUtilities.FullScreen" parent="Theme.AmazeFileUtilities">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.AmazeFileUtilities.FullScreen.Dark" parent="Theme.AmazeFileUtilities.Dark">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>

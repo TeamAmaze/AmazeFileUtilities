@@ -74,6 +74,7 @@
                 android:layout_height="@dimen/material_generic_medium"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center_horizontal"
+                android:clickable="false"
                 app:srcCompat="@drawable/ic_round_keyboard_arrow_up_24"
                 />
             <ImageView
@@ -152,6 +153,7 @@
                 android:id="@+id/sheet_down_arrow"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/material_generic_medium"
+                android:clickable="false"
                 app:srcCompat="@drawable/ic_round_keyboard_arrow_down_24"
                 />
             <ImageView

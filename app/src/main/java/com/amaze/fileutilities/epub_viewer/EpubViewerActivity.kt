@@ -12,7 +12,7 @@ package com.amaze.fileutilities.epub_viewer
 
 import android.os.Bundle
 import android.util.Log
-import com.amaze.fileutilities.PermissionActivity
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.EpubViewerActivityBinding
 import com.amaze.fileutilities.utilis.getFileFromUri
@@ -20,7 +20,7 @@ import com.amaze.fileutilities.utilis.showToastInCenter
 import com.folioreader.Config
 import com.folioreader.FolioReader
 
-class EpubViewerActivity : PermissionActivity() {
+class EpubViewerActivity : PermissionsActivity() {
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         EpubViewerActivityBinding.inflate(layoutInflater)

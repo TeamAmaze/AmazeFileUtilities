@@ -15,12 +15,12 @@ import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
-import com.amaze.fileutilities.PermissionActivity
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.VideoPlayerDialogActivityBinding
 import com.amaze.fileutilities.utilis.showToastInCenter
 
-class VideoPlayerDialogActivity : PermissionActivity() {
+class VideoPlayerDialogActivity : PermissionsActivity() {
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         VideoPlayerDialogActivityBinding.inflate(layoutInflater)

@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.pdf_viewer
 
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 
 class PdfViewerActivityViewModel : ViewModel() {
@@ -17,4 +18,16 @@ class PdfViewerActivityViewModel : ViewModel() {
     var pageNumber = 0
     var pdfFileName: String? = null
     var nightMode = false
+    private var pdfModel: LocalPdfModel? = null
+
+    fun getPdfModel(intent: Intent?): LocalPdfModel? {
+        if (pdfModel == null) {
+            intent?.let {
+                val mimeType = intent.type
+                val pdfUri = intent.data ?: return null
+                pdfModel = LocalPdfModel(uri = pdfUri, mimeType = mimeType)
+            }
+        }
+        return pdfModel
+    }
 }

@@ -8,7 +8,7 @@
  * and company names mentioned are trademarks or registered trademarks of their respective owners.
  */
 
-package crash_report;
+package com.amaze.fileutilities.crash_report;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
