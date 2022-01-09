@@ -95,11 +95,11 @@
         <activity
             android:name=".image_viewer.ImageViewerActivity"
             android:label="@string/image_viewer"
-            android:theme="@style/Theme.AmazeFileUtilities.FullScreen" />
+            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark" />
         <activity
             android:name=".video_player.VideoPlayerActivity"
             android:label="@string/video_player"
-            android:theme="@style/Theme.AmazeFileUtilities.FullScreen" />
+            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark" />
         <activity
             android:name=".pdf_viewer.PdfViewerActivity"
             android:exported="true"

@@ -9,12 +9,7 @@
     android:layout_centerHorizontal="true"
     android:layout_centerInParent="true"
     android:layout_centerVertical="true"
-    android:clickable="true"
     android:clipToPadding="false">
-    <include
-        android:id="@+id/custom_toolbar"
-        layout="@layout/custom_toolbar"
-        />
 
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/imageView"
@@ -23,10 +18,23 @@
         android:minWidth="@dimen/material_sheet_peek_height"
         android:minHeight="@dimen/material_sheet_peek_height"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
+        android:scaleType="centerInside"
         android:visibility="visible"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         tools:src="@tools:sample/backgrounds/scenic" />
-
+    <include
+        android:id="@+id/custom_toolbar"
+        layout="@layout/custom_toolbar"
+        android:visibility="gone"
+        />
+    <com.amaze.fileutilities.home_page.CustomBottomBarView
+        android:id="@+id/custom_bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,18 +6,15 @@
     android:layout_gravity="center_horizontal"
     android:gravity="center_horizontal"
     >
-    <include
-        android:id="@+id/custom_toolbar"
-        layout="@layout/custom_toolbar"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_height="@dimen/material_generic_large"
-        android:layout_width="match_parent" />
     <com.github.barteksc.pdfviewer.PDFView
         android:id="@+id/pdfView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+    <include
+        android:id="@+id/custom_toolbar"
+        layout="@layout/custom_toolbar"
+        android:layout_height="?actionBarSize"
+        android:layout_width="match_parent" />
     <LinearLayout
         android:id="@+id/hints_parent"
         android:layout_width="wrap_content"
