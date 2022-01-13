@@ -4,13 +4,14 @@
     android:id="@+id/second"
     android:layout_height="@dimen/list_header_height"
     android:layout_width="match_parent"
-    android:padding="@dimen/material_generic"
+    android:paddingLeft="@dimen/material_generic"
+    android:paddingStart="@dimen/material_generic"
     android:background="@color/navy_blue"
     >
     <TextView
         android:id="@+id/header_title"
         android:gravity="center_vertical"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:minHeight="?android:attr/listPreferredItemHeightSmall"
         android:textSize="@dimen/eighteen_sp"

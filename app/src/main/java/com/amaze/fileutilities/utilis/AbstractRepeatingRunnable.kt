@@ -41,7 +41,12 @@ abstract class AbstractRepeatingRunnable(
 //        val threadExcecutor = Executors.newScheduledThreadPool(0)
 //        handle = threadExcecutor.scheduleAtFixedRate(this, initialDelay, period, unit)
         countDownTimer = object : CountDownTimer(Long.MAX_VALUE, 1000) {
+            var firstTime = true
             override fun onTick(millisUntilFinished: Long) {
+                if (firstTime) {
+                    firstTime = false
+                    return
+                }
                 run()
             }
 

@@ -11,6 +11,7 @@
 package com.amaze.fileutilities
 
 import android.content.Context
+import android.util.Log
 import com.amaze.fileutilities.crash_report.AcraReportSenderFactory
 import com.amaze.fileutilities.crash_report.ErrorActivity
 import org.acra.ACRA
@@ -18,6 +19,7 @@ import org.acra.annotation.AcraCore
 import org.acra.config.ACRAConfigurationException
 import org.acra.config.CoreConfigurationBuilder
 import org.acra.data.StringFormat
+import org.opencv.android.OpenCVLoader
 
 @AcraCore(
     buildConfigClass = BuildConfig::class,
@@ -28,6 +30,10 @@ class AppConfig : AmazeApplication() {
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         initACRA()
+        if (!OpenCVLoader.initDebug())
+            Log.e("OpenCV", "Unable to load OpenCV!")
+        else
+            Log.d("OpenCV", "OpenCV loaded Successfully!")
     }
 
     /**

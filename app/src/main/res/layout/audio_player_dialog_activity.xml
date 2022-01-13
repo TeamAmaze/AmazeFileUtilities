@@ -21,7 +21,7 @@
         />
     <TextView
         android:id="@+id/title"
-        android:layout_width="@dimen/audio_player_sheet_height"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textStyle="bold"
         android:textSize="@dimen/eighteen_sp"
@@ -29,13 +29,15 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:gravity="center_horizontal"
         android:ellipsize="middle"
+        android:singleLine="true"
         android:layout_marginTop="@dimen/six_dp"
         />
     <TextView
         android:id="@+id/album"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/audio_player_sheet_height"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/six_dp"
+        android:gravity="center_horizontal"
         android:textSize="@dimen/eight_sp"
         android:textColor="@color/grey_color"
         />
@@ -46,6 +48,7 @@
         android:layout_marginTop="@dimen/six_dp"
         android:textSize="@dimen/twelve_sp"
         android:textColor="@color/white"
+        android:gravity="center_horizontal"
         />
 
     <LinearLayout

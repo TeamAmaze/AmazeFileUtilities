@@ -10,9 +10,13 @@
 
 package com.amaze.fileutilities.utilis
 
+import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
+import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
@@ -159,15 +163,34 @@ class CursorUtils {
                 "${MediaStore.Files.FileColumns.MEDIA_TYPE_AUDIO}, " +
                 "${MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO})"
 
-            val cursor: Cursor = context
-                .contentResolver
-                .query(
-                    MediaStore.Files.getContentUri("external"),
-                    projection,
-                    selection,
-                    selectionArgs,
-                    MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC LIMIT 20"
-                ) ?: return recentFiles
+            val queryCursor: Cursor?
+            if (VERSION.SDK_INT >= VERSION_CODES.Q) {
+                val queryArgs = Bundle()
+                queryArgs.putInt(ContentResolver.QUERY_ARG_LIMIT, 20)
+                queryArgs.putStringArray(
+                    ContentResolver.QUERY_ARG_SORT_COLUMNS,
+                    arrayOf(MediaStore.Files.FileColumns.DATE_MODIFIED)
+                )
+                queryArgs.putInt(
+                    ContentResolver.QUERY_ARG_SORT_DIRECTION,
+                    ContentResolver.QUERY_SORT_DIRECTION_DESCENDING
+                )
+                queryCursor = context
+                    .contentResolver
+                    .query(MediaStore.Files.getContentUri("external"), projection, queryArgs, null)
+            } else {
+                queryCursor = context
+                    .contentResolver
+                    .query(
+                        MediaStore.Files.getContentUri("external"),
+                        projection,
+                        selection,
+                        selectionArgs,
+                        MediaStore.Files.FileColumns.DATE_MODIFIED + " DESC LIMIT 20"
+                    )
+            }
+
+            val cursor = queryCursor ?: return recentFiles
             if (cursor.count > 0 && cursor.moveToFirst()) {
                 do {
                     val path =
