@@ -21,7 +21,7 @@ android {
     defaultConfig {
         applicationId "com.amaze.fileutilities"
         minSdk 16
-        targetSdk 29
+        targetSdk 30
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -65,6 +65,10 @@ android {
             include 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a' //select ABIs to build APKs for
             universalApk false //generate an additional APK that contains all the ABIs
         }
+    }
+
+    packagingOptions {
+        pickFirst '**/*.so'
     }
 }
 
@@ -112,6 +116,7 @@ dependencies {
     implementation('com.mikepenz:aboutlibraries:6.1.1@aar') {
         transitive = true
     }
+    implementation 'com.quickbirdstudios:opencv:4.5.3.0'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

@@ -18,9 +18,9 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentManager
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ImageMetadataSheetBinding
+import com.amaze.fileutilities.utilis.getFileFromUri
 import com.drew.imaging.ImageMetadataReader
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import java.io.File
 
 class ImageMetadataSheet() : BottomSheetDialogFragment() {
 
@@ -71,7 +71,7 @@ class ImageMetadataSheet() : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         localImageModel?.let {
-            var metadata = ImageMetadataReader.readMetadata(File(it.uri.path))
+            var metadata = ImageMetadataReader.readMetadata(it.uri.getFileFromUri(requireContext()))
             var result = ""
             metadata.directories.forEach { directory ->
                 directory.tags.forEach {
@@ -81,6 +81,7 @@ class ImageMetadataSheet() : BottomSheetDialogFragment() {
                 }
                 result += "\n\n"
             }
+
             viewBinding.metadata.text = result
         }
     }

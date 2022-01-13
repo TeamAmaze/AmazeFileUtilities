@@ -21,6 +21,12 @@ import com.amaze.fileutilities.databinding.QuickViewFragmentBinding
 import com.amaze.fileutilities.utilis.AbstractMediaFragment
 import com.amaze.fileutilities.utilis.getFileFromUri
 import com.bumptech.glide.Glide
+import org.opencv.core.Core
+import org.opencv.core.Mat
+import org.opencv.core.MatOfDouble
+import org.opencv.imgcodecs.Imgcodecs
+import org.opencv.imgproc.Imgproc
+import kotlin.math.pow
 
 class ImageViewerFragment : AbstractMediaFragment() {
 
@@ -113,6 +119,22 @@ class ImageViewerFragment : AbstractMediaFragment() {
             }
         }
         quickViewType?.let { showImage(it) }
+
+        val matrix = Imgcodecs.imread(quickViewType!!.uri.getFileFromUri(requireContext())!!.path)
+        val factor = laplace(matrix)
+        Log.i(javaClass.simpleName, "Found laplace of image: $factor")
+    }
+
+    private fun laplace(image: Mat): Double {
+        val destination = Mat()
+        val matGray = Mat()
+
+        Imgproc.cvtColor(image, matGray, Imgproc.COLOR_BGR2GRAY)
+        Imgproc.Laplacian(matGray, destination, 3)
+        val median = MatOfDouble()
+        val std = MatOfDouble()
+        Core.meanStdDev(destination, median, std)
+        return std[0, 0][0].pow(2.0)
     }
 
     private fun showImage(localTypeModel: LocalImageModel) {

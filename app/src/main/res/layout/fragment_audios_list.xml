@@ -76,6 +76,7 @@
                 android:layout_gravity="center_horizontal"
                 android:clickable="false"
                 app:srcCompat="@drawable/ic_round_keyboard_arrow_up_24"
+                android:layout_marginBottom="@dimen/material_generic"
                 />
             <ImageView
                 android:id="@+id/album_image_small"
@@ -94,6 +95,8 @@
                 android:layout_marginStart="@dimen/material_generic"
                 android:layout_toRightOf="@id/album_image_small"
                 android:layout_toEndOf="@id/album_image_small"
+                android:layout_toLeftOf="@id/time_summary_small"
+                android:layout_toStartOf="@id/time_summary_small"
                 >
                 <TextView
                     android:id="@+id/title_small"
@@ -104,7 +107,7 @@
                     android:textColor="@color/white"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:ellipsize="middle"
-                    />
+                    android:singleLine="true" />
                 <TextView
                     android:id="@+id/summary_small"
                     android:layout_width="wrap_content"
@@ -172,6 +175,7 @@
                 android:textColor="@color/white"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:ellipsize="middle"
+                android:singleLine="true"
                 android:layout_marginTop="@dimen/six_dp"
                 />
             <TextView
@@ -181,6 +185,7 @@
                 android:layout_marginTop="@dimen/six_dp"
                 android:textSize="@dimen/eight_sp"
                 android:textColor="@color/grey_color"
+                android:singleLine="true"
                 />
             <TextView
                 android:id="@+id/artist"
@@ -189,6 +194,7 @@
                 android:layout_marginTop="@dimen/six_dp"
                 android:textSize="@dimen/twelve_sp"
                 android:textColor="@color/white"
+                android:singleLine="true"
                 />
 
             <LinearLayout

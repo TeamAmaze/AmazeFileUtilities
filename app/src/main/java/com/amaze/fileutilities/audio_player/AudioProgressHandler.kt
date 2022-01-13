@@ -65,6 +65,7 @@ interface OnPlaybackInfoUpdate {
 
     /**
      * Called as soon as the state changes, either through notification or through button
+     * @param renderWaveform should render waveform, in case we press next / prev buttons
      */
     fun onPlaybackStateChanged(progressHandler: AudioProgressHandler, renderWaveform: Boolean)
 
