@@ -16,6 +16,7 @@ import android.content.res.Resources
 import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
+import android.os.ParcelFileDescriptor
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
@@ -24,6 +25,7 @@ import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.Toast
 import java.io.File
+import java.io.InputStream
 
 fun Uri.getSiblingUriFiles(context: Context): ArrayList<Uri>? {
     try {
@@ -73,7 +75,7 @@ fun Uri.getFileFromUri(context: Context): File? {
         val path: String? = getContentResolverFilePathFromUri(context, this)
         if (path != null) songFile = File(path)
     }
-    if (songFile == null && this.path != null) {
+    if ((songFile == null || !songFile.exists()) && this.path != null) {
         songFile = File(
             this.path?.substring(
                 this.path?.indexOf("/", 1)!! + 1

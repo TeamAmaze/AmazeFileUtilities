@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="?actionBarSize"
+    android:layout_alignParentTop="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:background="@color/translucent_toolbar">
+
+    <ImageView
+        android:id="@+id/back_button"
+        app:srcCompat="@drawable/ic_baseline_arrow_back_32"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/zero_dp"
+        android:layout_marginLeft="@dimen/material_generic"
+        android:layout_marginStart="@dimen/material_generic"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toRightOf="@id/back_button"
+        android:layout_marginStart="@dimen/material_generic"
+        android:layout_marginEnd="@dimen/material_generic"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"
+        android:ellipsize="end"
+        android:maxEms="10"
+        android:maxLines="1"
+        android:textSize="@dimen/eighteen_sp"
+        android:textStyle="bold"
+        />
+
+    <ImageView
+        android:id="@+id/overflow_button"
+        app:srcCompat="@drawable/ic_baseline_more_vert_32"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/zero_dp"
+        android:layout_marginEnd="@dimen/material_generic"
+        android:layout_marginRight="@dimen/material_generic"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
+        />
+</merge>

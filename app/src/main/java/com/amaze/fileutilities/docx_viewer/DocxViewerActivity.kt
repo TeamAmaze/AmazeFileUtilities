@@ -69,7 +69,7 @@ class DocxViewerActivity : PermissionsActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.pdf_activity, menu)
+        menuInflater.inflate(R.menu.docx_activity, menu)
         return super.onCreateOptionsMenu(menu)
     }
 

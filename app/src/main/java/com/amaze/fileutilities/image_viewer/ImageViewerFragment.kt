@@ -11,6 +11,7 @@
 package com.amaze.fileutilities.image_viewer
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -19,6 +20,8 @@ import androidx.documentfile.provider.DocumentFile
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.QuickViewFragmentBinding
 import com.amaze.fileutilities.utilis.AbstractMediaFragment
+import com.amaze.fileutilities.utilis.ImgUtils
+import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getFileFromUri
 import com.bumptech.glide.Glide
 import org.opencv.core.Core
@@ -119,22 +122,6 @@ class ImageViewerFragment : AbstractMediaFragment() {
             }
         }
         quickViewType?.let { showImage(it) }
-
-        val matrix = Imgcodecs.imread(quickViewType!!.uri.getFileFromUri(requireContext())!!.path)
-        val factor = laplace(matrix)
-        Log.i(javaClass.simpleName, "Found laplace of image: $factor")
-    }
-
-    private fun laplace(image: Mat): Double {
-        val destination = Mat()
-        val matGray = Mat()
-
-        Imgproc.cvtColor(image, matGray, Imgproc.COLOR_BGR2GRAY)
-        Imgproc.Laplacian(matGray, destination, 3)
-        val median = MatOfDouble()
-        val std = MatOfDouble()
-        Core.meanStdDev(destination, median, std)
-        return std[0, 0][0].pow(2.0)
     }
 
     private fun showImage(localTypeModel: LocalImageModel) {

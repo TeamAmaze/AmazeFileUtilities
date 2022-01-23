@@ -11,6 +11,7 @@
 package com.amaze.fileutilities.image_viewer
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,9 +19,11 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentManager
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ImageMetadataSheetBinding
+import com.amaze.fileutilities.utilis.ImgUtils
 import com.amaze.fileutilities.utilis.getFileFromUri
 import com.drew.imaging.ImageMetadataReader
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import org.opencv.imgcodecs.Imgcodecs
 
 class ImageMetadataSheet() : BottomSheetDialogFragment() {
 
@@ -71,8 +74,13 @@ class ImageMetadataSheet() : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         localImageModel?.let {
-            var metadata = ImageMetadataReader.readMetadata(it.uri.getFileFromUri(requireContext()))
-            var result = ""
+            val metadata = ImageMetadataReader.readMetadata(it.uri.getFileFromUri(requireContext()))
+            val matrix = Imgcodecs.imread(it.uri.getFileFromUri(requireContext())!!.path)
+            val factor = ImgUtils.laplace(matrix)
+            Log.i(javaClass.simpleName, "Found laplace of image: $factor")
+
+            var result = "\n"
+            result += "Laplacian variance: $factor"
             metadata.directories.forEach { directory ->
                 directory.tags.forEach {
                     tag ->
