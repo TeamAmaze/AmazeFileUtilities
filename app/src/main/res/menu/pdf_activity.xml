@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/info"
+        android:title="@string/information"
+        />
+    <item
+        android:id="@+id/bookmarks"
+        android:title="@string/bookmarks"
+        />
+    <item
         android:id="@+id/invert_colors"
         android:title="@string/invert_colors"
-        android:checkable="true"
+        />
+    <item
+        android:id="@+id/copy_page"
+        android:title="@string/copy_page"
         />
 </menu>

@@ -19,6 +19,7 @@ import android.view.View
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.ActionBar
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -52,6 +53,7 @@ class MainActivity : PermissionsActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
+        viewModel.copyTrainedData()
         actionBarBinding = ActivityMainActionbarBinding.inflate(layoutInflater)
         searchActionBarBinding = ActivityMainActionbarSearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -102,6 +104,17 @@ class MainActivity : PermissionsActivity() {
             isOptionsVisible = !isOptionsVisible
             invalidateOptionsTabs()
         }
+
+        viewModel.usedImagesSummaryTransformations.observe(
+            this, {
+                it?.second.let {
+                    list ->
+                    list?.run {
+                        viewModel.analyseImagesTransformation(this)
+                    }
+                }
+            }
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -134,51 +147,56 @@ class MainActivity : PermissionsActivity() {
     }
 
     fun invalidateSearchBar(showSearch: Boolean): AutoCompleteTextView? {
-        searchActionBarBinding.run {
-            return if (showSearch) {
-                actionBarBinding.root.hideFade(200)
-                searchActionBarBinding.root.showFade(300)
-                supportActionBar?.customView = root
-                backActionBar.setOnClickListener {
-                    onBackPressed()
-                }
-                actionBarEditText.setOnTouchListener { _, event ->
-                    if (event.action == MotionEvent.ACTION_UP) {
-                        if (event.rawX >= (
-                            actionBarEditText.right -
-                                actionBarEditText.compoundDrawables[2]
-                                    .bounds.width()
-                            )
-                        ) {
-                            actionBarEditText.setText("")
-                            true
-                        }
+        if (::searchActionBarBinding.isInitialized) {
+            searchActionBarBinding.run {
+                return if (showSearch) {
+                    actionBarBinding.root.hideFade(200)
+                    searchActionBarBinding.root.showFade(300)
+                    supportActionBar?.customView = root
+                    backActionBar.setOnClickListener {
+                        onBackPressed()
                     }
-                    false
+                    actionBarEditText.setOnTouchListener { _, event ->
+                        if (event.action == MotionEvent.ACTION_UP) {
+                            if (event.rawX >= (
+                                        actionBarEditText.right -
+                                                actionBarEditText.compoundDrawables[2]
+                                                    .bounds.width()
+                                        )
+                            ) {
+                                actionBarEditText.setText("")
+                                true
+                            }
+                        }
+                        false
+                    }
+                    voiceActionBar.setOnClickListener {
+                        startVoiceRecognitionActivity()
+                    }
+                    actionBarEditText
+                } else {
+                    actionBarEditText.setText("")
+                    actionBarEditText.setAdapter(null)
+                    searchActionBarBinding.root.hideFade(200)
+                    actionBarBinding.root.showFade(300)
+                    supportActionBar?.customView = actionBarBinding.root
+                    actionBarEditText.setOnEditorActionListener(null)
+                    null
                 }
-                voiceActionBar.setOnClickListener {
-                    startVoiceRecognitionActivity()
-                }
-                actionBarEditText
-            } else {
-                actionBarEditText.setText("")
-                actionBarEditText.setAdapter(null)
-                searchActionBarBinding.root.hideFade(200)
-                actionBarBinding.root.showFade(300)
-                supportActionBar?.customView = actionBarBinding.root
-                actionBarEditText.setOnEditorActionListener(null)
-                null
             }
         }
+        return null
     }
 
     fun invalidateBottomBar(doShow: Boolean) {
-        if (doShow) {
+        if (::binding.isInitialized) {
+            if (doShow) {
 //            binding.navView.visibility = View.VISIBLE
-            binding.navView.showTranslateY(500)
-        } else {
+                binding.navView.showTranslateY(500)
+            } else {
 //            binding.navView.visibility = View.GONE
-            binding.navView.hideTranslateY(500)
+                binding.navView.hideTranslateY(500)
+            }
         }
     }
 

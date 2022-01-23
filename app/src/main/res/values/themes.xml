@@ -77,4 +77,9 @@
         <item name="colorPrimary">@color/white</item>
         <item name="colorOnPrimary">@color/navy_blue</item>
     </style>
+
+    <style name="custom_action_mode_dark" parent="Widget.AppCompat.ActionMode">
+        <item name="background">@color/translucent_toolbar</item>
+        <item name="android:background">@color/translucent_toolbar</item>
+    </style>
 </resources>

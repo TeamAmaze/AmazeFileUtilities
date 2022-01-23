@@ -10,11 +10,13 @@
         android:id="@+id/pdfView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    <include
+    <com.amaze.fileutilities.home_page.CustomToolbar
         android:id="@+id/custom_toolbar"
-        layout="@layout/custom_toolbar"
+        android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        android:layout_width="match_parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
     <LinearLayout
         android:id="@+id/hints_parent"
         android:layout_width="wrap_content"

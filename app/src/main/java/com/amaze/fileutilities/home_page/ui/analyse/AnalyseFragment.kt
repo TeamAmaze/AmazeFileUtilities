@@ -16,13 +16,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.databinding.FragmentAnalyseBinding
+import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 
 class AnalyseFragment : Fragment() {
 
     private lateinit var analyseViewModel: AnalyseViewModel
+    private val filesViewModel: FilesViewModel by activityViewModels()
+
     private var _binding: FragmentAnalyseBinding? = null
 
     // This property is only valid between onCreateView and
@@ -33,7 +37,7 @@ class AnalyseFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         analyseViewModel =
             ViewModelProvider(this).get(AnalyseViewModel::class.java)
 
@@ -47,6 +51,27 @@ class AnalyseFragment : Fragment() {
                 textView.text = it
             }
         )
+        filesViewModel.usedImagesSummaryTransformations
+            .observe(
+                viewLifecycleOwner,
+                {
+                        imagesPair ->
+                    run {
+                        if (imagesPair?.second != null) {
+                            showLoadingViews(false)
+                            filesViewModel.usedVideosSummaryTransformations
+                                .observe(
+                                    viewLifecycleOwner,
+                                    { videosPair ->
+                                        videosPairObserver(videosPair, imagesPair)
+                                    }
+                                )
+                        } else {
+                            showLoadingViews(true)
+                        }
+                    }
+                }
+            )
         return root
     }
 
