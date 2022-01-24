@@ -15,8 +15,11 @@ import android.content.*
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
+import androidx.recyclerview.widget.GridLayoutManager
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.home_page.ui.analyse.ReviewImagesAdapter
+import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import java.lang.Exception
 
 class Utils {
@@ -140,6 +143,36 @@ class Utils {
 
         fun isNullOrEmpty(string: String?): Boolean {
             return string == null || string.isEmpty()
+        }
+
+        fun setGridLayoutManagerSpan(
+            gridLayoutManager: GridLayoutManager,
+            adapter: MediaFileAdapter
+        ) {
+            gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (adapter.getItemViewType(position)) {
+                        AbstractMediaFilesAdapter.TYPE_ITEM ->
+                            1
+                        else -> 3
+                    }
+                }
+            }
+        }
+
+        fun setGridLayoutManagerSpan(
+            gridLayoutManager: GridLayoutManager,
+            adapter: ReviewImagesAdapter
+        ) {
+            gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+                override fun getSpanSize(position: Int): Int {
+                    return when (adapter.getItemViewType(position)) {
+                        AbstractMediaFilesAdapter.TYPE_ITEM ->
+                            1
+                        else -> 3
+                    }
+                }
+            }
         }
 
         /**

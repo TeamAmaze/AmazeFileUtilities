@@ -14,10 +14,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.databinding.FragmentAnalyseBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
@@ -40,43 +38,21 @@ class AnalyseFragment : Fragment() {
     ): View {
         analyseViewModel =
             ViewModelProvider(this).get(AnalyseViewModel::class.java)
-
         _binding = FragmentAnalyseBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        analyseViewModel.text.observe(
-            viewLifecycleOwner,
-            Observer {
-                textView.text = it
-            }
-        )
-        filesViewModel.usedImagesSummaryTransformations
-            .observe(
-                viewLifecycleOwner,
-                {
-                        imagesPair ->
-                    run {
-                        if (imagesPair?.second != null) {
-                            showLoadingViews(false)
-                            filesViewModel.usedVideosSummaryTransformations
-                                .observe(
-                                    viewLifecycleOwner,
-                                    { videosPair ->
-                                        videosPairObserver(videosPair, imagesPair)
-                                    }
-                                )
-                        } else {
-                            showLoadingViews(true)
-                        }
-                    }
-                }
-            )
+        binding.blurButton.setOnClickListener {
+            ReviewImagesFragment.newInstance(true, this)
+        }
+
+        binding.memeButton.setOnClickListener {
+            ReviewImagesFragment.newInstance(false, this)
+        }
         return root
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 }

@@ -11,7 +11,6 @@
 package com.amaze.fileutilities.image_viewer
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -20,16 +19,8 @@ import androidx.documentfile.provider.DocumentFile
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.QuickViewFragmentBinding
 import com.amaze.fileutilities.utilis.AbstractMediaFragment
-import com.amaze.fileutilities.utilis.ImgUtils
-import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getFileFromUri
 import com.bumptech.glide.Glide
-import org.opencv.core.Core
-import org.opencv.core.Mat
-import org.opencv.core.MatOfDouble
-import org.opencv.imgcodecs.Imgcodecs
-import org.opencv.imgproc.Imgproc
-import kotlin.math.pow
 
 class ImageViewerFragment : AbstractMediaFragment() {
 

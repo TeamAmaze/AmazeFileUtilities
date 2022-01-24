@@ -16,7 +16,6 @@ import android.content.res.Resources
 import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
-import android.os.ParcelFileDescriptor
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Gravity
@@ -25,7 +24,6 @@ import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.Toast
 import java.io.File
-import java.io.InputStream
 
 fun Uri.getSiblingUriFiles(context: Context): ArrayList<Uri>? {
     try {

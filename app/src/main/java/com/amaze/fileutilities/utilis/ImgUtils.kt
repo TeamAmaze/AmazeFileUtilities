@@ -1,6 +1,15 @@
+/*
+ * Copyright (C) 2021-2022 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.utilis
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import com.googlecode.tesseract.android.TessBaseAPI
@@ -9,7 +18,6 @@ import org.opencv.core.*
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
 import kotlin.math.pow
-
 
 class ImgUtils {
 
@@ -37,7 +45,6 @@ class ImgUtils {
             return mat
         }
 
-
         fun getTessInstance(bitmap: Bitmap, externalDirPath: String): TessBaseAPI? {
             if (tessBaseApi == null) {
                 tessBaseApi = TessBaseAPI()
@@ -48,14 +55,17 @@ class ImgUtils {
                     return null
                 }
             }
+            tessBaseApi?.clear()
             tessBaseApi?.setImage(bitmap)
             return tessBaseApi
         }
 
         fun isImageMeme(path: String, externalDirPath: String): Boolean {
             val matrix = Imgcodecs.imread(path)
-            val tessBaseAPI = getTessInstance(convertMatToBitmap(processPdfImgAlt(matrix))!!,
-                externalDirPath)
+            val tessBaseAPI = getTessInstance(
+                convertMatToBitmap(processPdfImgAlt(matrix))!!,
+                externalDirPath
+            )
             tessBaseAPI?.run {
                 val extractedText: String? = tessBaseAPI.getUTF8Text()
                 extractedText?.let {
@@ -65,7 +75,7 @@ class ImgUtils {
                         }
                     }
                 }
-                tessBaseAPI.end()
+//                tessBaseAPI.end()
             }
             return false
         }
@@ -102,8 +112,10 @@ class ImgUtils {
             val canny = processCanny(matrix)
             val hierarchy = Mat()
             val contours: ArrayList<MatOfPoint> = ArrayList()
-            Imgproc.findContours(canny, contours, hierarchy, Imgproc.RETR_TREE,
-                Imgproc.CHAIN_APPROX_SIMPLE)
+            Imgproc.findContours(
+                canny, contours, hierarchy, Imgproc.RETR_TREE,
+                Imgproc.CHAIN_APPROX_SIMPLE
+            )
             /*val color = Scalar(0.0, 0.0, 255.0)
             Imgproc.drawContours(
                 matrix, contours, -1, color, 2, Imgproc.LINE_8,
@@ -118,7 +130,10 @@ class ImgUtils {
             val matGray = gray(resizeimage)
             val sharpen = sharpenBitmap(matGray)
             val threshold = Mat()
-            Imgproc.threshold(sharpen, threshold, 250.0, 255.0, Imgproc.THRESH_BINARY)
+            Imgproc.threshold(
+                sharpen, threshold, 250.0, 255.0,
+                Imgproc.THRESH_BINARY
+            )
 
 //            val blur = blur(matGray)
 //            val canny = processCanny(matGray)
@@ -154,7 +169,8 @@ class ImgUtils {
 
         fun adaptiveThreshold(matrix: Mat): Mat {
             val adaptive = Mat()
-            Imgproc.adaptiveThreshold(matrix, adaptive, 255.0,
+            Imgproc.adaptiveThreshold(
+                matrix, adaptive, 255.0,
                 Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 3, 2.0
             )
             return adaptive
@@ -173,8 +189,10 @@ class ImgUtils {
             val canny = processCanny(matrix)
             val hierarchy = Mat()
             val contours: ArrayList<MatOfPoint> = ArrayList()
-            Imgproc.findContours(canny, contours, hierarchy, Imgproc.RETR_TREE,
-                Imgproc.CHAIN_APPROX_SIMPLE)
+            Imgproc.findContours(
+                canny, contours, hierarchy, Imgproc.RETR_TREE,
+                Imgproc.CHAIN_APPROX_SIMPLE
+            )
             val color = Scalar(0.0, 0.0, 255.0)
             Imgproc.drawContours(
                 matrix, contours, -1, color, 2, Imgproc.LINE_8,
@@ -205,8 +223,11 @@ class ImgUtils {
         private fun resize(matrix: Mat, width: Double, height: Double): Mat {
             val resizeMat = Mat()
             val sz = Size(width, height)
-            Imgproc.resize(matrix, resizeMat, sz, 0.0, 0.0,
-                if (matrix.cols() > width || matrix.rows() > height) Imgproc.INTER_AREA else Imgproc.INTER_CUBIC)
+            Imgproc.resize(
+                matrix, resizeMat, sz, 0.0, 0.0,
+                if (matrix.cols() > width || matrix.rows() > height) Imgproc.INTER_AREA
+                else Imgproc.INTER_CUBIC
+            )
             return resizeMat
         }
 

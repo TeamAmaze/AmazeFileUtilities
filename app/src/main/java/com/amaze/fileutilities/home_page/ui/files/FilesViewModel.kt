@@ -21,7 +21,6 @@ import com.amaze.fileutilities.utilis.FileUtils
 import com.amaze.fileutilities.utilis.ImgUtils
 import com.amaze.fileutilities.utilis.StorageDirectoryParcelable
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
@@ -76,9 +75,11 @@ class FilesViewModel(val applicationContext: Application) :
             val dao = AppDatabase.getInstance(applicationContext).analysisDao()
             mediaFileInfoList.forEach {
                 val isBlur = ImgUtils.isImageBlur(it.path)
-                val isMeme = ImgUtils.isImageMeme(it.path,
-                    applicationContext.externalCacheDir!!.path)
-                dao.insertAll(Analysis(null, it.path, isBlur, isMeme))
+                val isMeme = ImgUtils.isImageMeme(
+                    it.path,
+                    applicationContext.externalCacheDir!!.path
+                )
+                dao.insert(Analysis(null, it.path, isBlur, isMeme))
             }
         }
     }
@@ -232,19 +233,19 @@ class FilesViewModel(val applicationContext: Application) :
             val trainedFilesBase = File(externalFilesDir.path, "tessdata")
             val trainedFilesList = arrayListOf("eng.traineddata")
             trainedFilesList.forEach {
-//                writeTrainedFile(trainedFilesBase, it)
+                writeTrainedFile(trainedFilesBase, it)
             }
         }
     }
 
-    private fun writeTrainedFile(basePath:File, fileName: String) {
+    private fun writeTrainedFile(basePath: File, fileName: String) {
         val trained = File(basePath, fileName)
         if (!trained.exists()) {
             basePath.mkdirs()
             var `in`: InputStream? = null
             var out: OutputStream? = null
             try {
-                `in` = applicationContext.assets.open("training/${fileName}")
+                `in` = applicationContext.assets.open("training/$fileName")
                 out = FileOutputStream(trained)
                 val buffer = ByteArray(4096)
                 var bytesRead: Int

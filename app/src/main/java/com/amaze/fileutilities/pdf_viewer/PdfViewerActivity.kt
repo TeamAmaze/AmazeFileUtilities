@@ -32,21 +32,11 @@ import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.github.barteksc.pdfviewer.listener.OnTapListener
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
-import com.googlecode.tesseract.android.TessBaseAPI
 import com.shockwave.pdfium.PdfDocument
 import com.shockwave.pdfium.PdfDocument.Bookmark
 import com.shockwave.pdfium.PdfPasswordException
 import com.shockwave.pdfium.PdfiumCore
-import org.opencv.core.Core
-import org.opencv.core.Mat
-import org.opencv.core.Size
-import org.opencv.imgproc.Imgproc
-import org.opencv.imgproc.Imgproc.INTER_CUBIC
 import java.io.IOException
-import org.opencv.core.CvType
-
-
-
 
 class PdfViewerActivity :
     PermissionsActivity(),
@@ -106,7 +96,7 @@ class PdfViewerActivity :
             switchView()
         }
         viewBinding.customToolbar.setBackButtonClickListener { finish() }
-        viewBinding.customToolbar.setTitle(viewModel.pdfFileName?:"pdf")
+        viewBinding.customToolbar.setTitle(viewModel.pdfFileName ?: "pdf")
         viewBinding.customToolbar.setOverflowPopup(R.menu.pdf_activity) { item ->
             when (item!!.itemId) {
                 R.id.info -> {
@@ -162,8 +152,10 @@ class PdfViewerActivity :
         val content: Spanned?
         if (retryPassword) {
             content = Html.fromHtml(
-                "<html><body>${resources
-                    .getString(R.string.pdf_password_required)}<font color='red'><br>" +
+                "<html><body>" +
+                    "${resources
+                        .getString(R.string.pdf_password_required)}" +
+                    "<font color='red'><br>" +
                     "${resources.getString(R.string.wrong_password)}</font></body></html>"
             )
         } else {
@@ -251,7 +243,6 @@ class PdfViewerActivity :
         }
     }
 
-
     fun showInfoDialog() {
         var dialogMessage = ""
         viewBinding.pdfView.documentMeta.let {
@@ -266,23 +257,25 @@ class PdfViewerActivity :
                 dialogMessage += "${resources.getString(R.string.subject)}: ${meta.subject}" + "\n"
             }
             if (meta.keywords.isNotBlank()) {
-                dialogMessage += "${resources.getString(R.string.keywords)}: ${meta.keywords}" + "\n"
+                dialogMessage += "${resources.getString(R.string.keywords)}: " +
+                    "${meta.keywords}" + "\n"
             }
             if (meta.creator.isNotBlank()) {
-                dialogMessage += "${resources.getString(R.string.creator)}: ${meta.creator}" + "\n"
+                dialogMessage += "${resources.getString(R.string.creator)}:" +
+                    " ${meta.creator}" + "\n"
             }
             if (meta.creationDate.isNotBlank()) {
                 dialogMessage += "${resources.getString(R.string.creation_date)}:" +
-                        " ${meta.creationDate}" + "\n"
+                    " ${meta.creationDate}" + "\n"
             }
             if (meta.producer.isNotBlank()) {
-                dialogMessage += "${resources.getString(R.string.producer)}: ${meta.producer}" + "\n"
+                dialogMessage += "${resources.getString(R.string.producer)}: " +
+                    "${meta.producer}" + "\n"
             }
             if (meta.modDate.isNotBlank()) {
                 dialogMessage += "${resources.getString(R.string.modification_date)}:" +
-                        " ${meta.modDate}" + "\n"
+                    " ${meta.modDate}" + "\n"
             }
-
         }
         val builder: AlertDialog.Builder = this.let {
             AlertDialog.Builder(it)
