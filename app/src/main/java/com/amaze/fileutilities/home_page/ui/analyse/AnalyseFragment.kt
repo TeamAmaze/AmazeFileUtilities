@@ -14,15 +14,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.databinding.FragmentAnalyseBinding
+import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 
 class AnalyseFragment : Fragment() {
 
     private lateinit var analyseViewModel: AnalyseViewModel
+    private val filesViewModel: FilesViewModel by activityViewModels()
+
     private var _binding: FragmentAnalyseBinding? = null
 
     // This property is only valid between onCreateView and
@@ -33,25 +35,24 @@ class AnalyseFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         analyseViewModel =
             ViewModelProvider(this).get(AnalyseViewModel::class.java)
-
         _binding = FragmentAnalyseBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        analyseViewModel.text.observe(
-            viewLifecycleOwner,
-            Observer {
-                textView.text = it
-            }
-        )
+        binding.blurButton.setOnClickListener {
+            ReviewImagesFragment.newInstance(true, this)
+        }
+
+        binding.memeButton.setOnClickListener {
+            ReviewImagesFragment.newInstance(false, this)
+        }
         return root
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         _binding = null
+        super.onDestroyView()
     }
 }

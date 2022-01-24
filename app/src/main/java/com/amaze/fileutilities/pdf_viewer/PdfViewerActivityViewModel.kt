@@ -11,7 +11,13 @@
 package com.amaze.fileutilities.pdf_viewer
 
 import android.content.Intent
+import android.graphics.Bitmap
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
+import com.amaze.fileutilities.utilis.ImgUtils
+import kotlinx.coroutines.Dispatchers
 
 class PdfViewerActivityViewModel : ViewModel() {
 
@@ -29,5 +35,20 @@ class PdfViewerActivityViewModel : ViewModel() {
             }
         }
         return pdfModel
+    }
+
+    fun getCurrentPageText(bitmap: Bitmap, externalDirPath: String): LiveData<String?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+            emit(null)
+            val tessBaseAPI = ImgUtils.getTessInstance(
+                ImgUtils.convertMatToBitmap(
+                    ImgUtils.processPdfImg(ImgUtils.convertBitmapToMat(bitmap))
+                )!!,
+                externalDirPath
+            )
+            val extractedText: String? = tessBaseAPI?.getUTF8Text()
+            tessBaseAPI?.end()
+            emit(extractedText)
+        }
     }
 }

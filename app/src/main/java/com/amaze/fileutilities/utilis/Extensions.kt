@@ -73,7 +73,7 @@ fun Uri.getFileFromUri(context: Context): File? {
         val path: String? = getContentResolverFilePathFromUri(context, this)
         if (path != null) songFile = File(path)
     }
-    if (songFile == null && this.path != null) {
+    if ((songFile == null || !songFile.exists()) && this.path != null) {
         songFile = File(
             this.path?.substring(
                 this.path?.indexOf("/", 1)!! + 1

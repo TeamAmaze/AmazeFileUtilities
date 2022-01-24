@@ -23,6 +23,7 @@ import android.widget.SeekBar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.*
@@ -47,7 +48,8 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
     private var mediaFileAdapter: MediaFileAdapter? = null
     private var preloader: MediaAdapterPreloader? = null
     private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
-    private var linearLayoutManager: LinearLayoutManager? = null
+    private var linearLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
+    private var gridLayoutManager: GridLayoutManager? = GridLayoutManager(context, 3)
     private val MAX_PRELOAD = 100
     private var isBottomFragmentVisible = false
     private var isPlaying = true
@@ -118,11 +120,15 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
                             sizeProvider,
                             MAX_PRELOAD
                         )
-                        linearLayoutManager = LinearLayoutManager(context)
+                        val isList = requireContext()
+                            .getAppCommonSharedPreferences().getBoolean(
+                                PreferencesConstants.KEY_MEDIA_LIST_TYPE,
+                                PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
+                            )
                         mediaFileAdapter = MediaFileAdapter(
                             requireContext(),
                             preloader!!,
-                            this@AudiosListFragment,
+                            this@AudiosListFragment, !isList,
                             MediaFileListSorter.SortingPreference.newInstance(
                                 requireContext()
                                     .getAppCommonSharedPreferences()
@@ -138,7 +144,9 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
                         }
                         binding.audiosListView
                             .addOnScrollListener(recyclerViewPreloader!!)
-                        binding.audiosListView.layoutManager = linearLayoutManager
+                        Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
+                        binding.audiosListView.layoutManager =
+                            if (isList) linearLayoutManager else gridLayoutManager
                         binding.audiosListView.adapter = mediaFileAdapter
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                             binding.fastscroll.visibility = View.GONE
@@ -423,7 +431,9 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
     }
 
     override fun switchView(isList: Boolean) {
-        // do nothing
+        binding.audiosListView.layoutManager = if (isList)
+            linearLayoutManager else gridLayoutManager
+        binding.audiosListView.adapter = mediaFileAdapter
     }
 
     override fun select(headerPosition: Int) {

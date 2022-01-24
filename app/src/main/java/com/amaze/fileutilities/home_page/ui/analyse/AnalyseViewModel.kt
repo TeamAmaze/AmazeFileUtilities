@@ -10,14 +10,43 @@
 
 package com.amaze.fileutilities.home_page.ui.analyse
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.amaze.fileutilities.home_page.database.Analysis
+import com.amaze.fileutilities.home_page.database.AnalysisDao
+import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
+import kotlinx.coroutines.Dispatchers
+import java.io.File
 
 class AnalyseViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "[WIP]"
+    fun getBlurImages(dao: AnalysisDao): LiveData<MutableList<MediaFileInfo>?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            emit(transformAnalysisToMediaFileInfo(dao.getAll(), true))
+        }
     }
-    val text: LiveData<String> = _text
+
+    fun getMemeImages(dao: AnalysisDao): LiveData<MutableList<MediaFileInfo>?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            emit(transformAnalysisToMediaFileInfo(dao.getAll(), false))
+        }
+    }
+
+    private fun transformAnalysisToMediaFileInfo(
+        analysis: List<Analysis>,
+        requiredBlur: Boolean
+    ):
+        MutableList<MediaFileInfo> {
+        val response = analysis.filter { if (requiredBlur) it.isBlur else it.isMeme }.map {
+            MediaFileInfo.fromFile(
+                File(it.filePath),
+                MediaFileInfo.ExtraInfo(
+                    MediaFileInfo.MEDIA_TYPE_IMAGE,
+                    null, null, null
+                )
+            )
+        }
+        return ArrayList(response)
+    }
 }
