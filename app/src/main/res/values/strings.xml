@@ -101,4 +101,17 @@
     <string name="grant_all_files_permission"><html><body>Since Android 11, Google requests File Managers to request user permission for managing all files on the device. Details <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">here</a>.
         \n\nAmaze File Utilities needs this permission too. After pressing &quot;Grant&quot;here, please select <b>Allow access to manage all files</b> option on the next screen.
         \n\n<font color='#ff6347'><i>Canceling this dialog will exit the app.</i></font></body></html></string>
+    <string name="copy_page">Copy page</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="creator">Creator</string>
+    <string name="creation_date">Creation date</string>
+    <string name="modification_date">Modification Date</string>
+    <string name="subject">Subject</string>
+    <string name="keywords">Keywords</string>
+    <string name="producer">Producer</string>
+    <string name="close">Close</string>
+    <string name="analysing">Analysing…</string>
+    <string name="page_copied_to_clipboard">Page content copied to clipboard</string>
 </resources>

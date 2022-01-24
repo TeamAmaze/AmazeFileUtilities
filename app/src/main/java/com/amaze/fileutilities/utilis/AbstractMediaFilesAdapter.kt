@@ -34,9 +34,21 @@ import kotlin.math.roundToInt
 
 abstract class AbstractMediaFilesAdapter(
     private val superContext: Context,
-    private val superPreloader: MediaAdapterPreloader
+    private val superPreloader: MediaAdapterPreloader,
+    private val isGrid: Boolean
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>(), PopupTextProvider {
+
+    val checkItemsList: MutableList<ListItem> = mutableListOf()
+
+    fun toggleChecked(listItem: ListItem) {
+        if (listItem.isChecked) {
+            checkItemsList.remove(listItem)
+        } else {
+            checkItemsList.add(listItem)
+        }
+        listItem.toggleChecked()
+    }
 
     abstract fun getMediaFilesListItems(): MutableList<ListItem>
 
@@ -60,7 +72,9 @@ abstract class AbstractMediaFilesAdapter(
             }
             TYPE_ITEM -> {
                 view = mInflater.inflate(
-                    R.layout.media_info_row_layout, parent,
+                    if (isGrid) R.layout.media_info_grid_layout
+                    else R.layout.media_info_row_layout,
+                    parent,
                     false
                 )
                 return MediaInfoRecyclerViewHolder(view)
@@ -213,7 +227,8 @@ abstract class AbstractMediaFilesAdapter(
         var mediaFileInfo: MediaFileInfo?,
         var listItemType: @ListItemType Int = TYPE_ITEM,
         var header: String? = null,
-        val position: Int
+        val position: Int,
+        var isChecked: Boolean = false
     ) {
         constructor(listItemType: @ListItemType Int, position: Int) : this(
             null,
@@ -223,5 +238,9 @@ abstract class AbstractMediaFilesAdapter(
             null,
             listItemType, header, position
         )
+
+        fun toggleChecked() {
+            isChecked = !isChecked
+        }
     }
 }

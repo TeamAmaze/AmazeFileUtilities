@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.pdf_viewer
 
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
@@ -26,10 +27,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.PdfViewerActivityBinding
-import com.amaze.fileutilities.utilis.getFileFromUri
-import com.amaze.fileutilities.utilis.hideFade
-import com.amaze.fileutilities.utilis.showFade
-import com.amaze.fileutilities.utilis.showToastInCenter
+import com.amaze.fileutilities.utilis.*
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.github.barteksc.pdfviewer.listener.OnTapListener
@@ -37,6 +35,8 @@ import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
 import com.shockwave.pdfium.PdfDocument
 import com.shockwave.pdfium.PdfDocument.Bookmark
 import com.shockwave.pdfium.PdfPasswordException
+import com.shockwave.pdfium.PdfiumCore
+import java.io.IOException
 
 class PdfViewerActivity :
     PermissionsActivity(),
@@ -93,38 +93,56 @@ class PdfViewerActivity :
             viewBinding.pdfView.pageCount
         )
         viewBinding.switchView.setOnClickListener {
-            viewModel.nightMode = !viewModel.nightMode
-            viewBinding.pdfView.setNightMode(viewModel.nightMode)
-            if (viewModel.nightMode) {
-                viewBinding.hintsParent.background = ResourcesCompat.getDrawable(
-                    resources,
-                    R.drawable.button_curved_unselected, theme
-                )
-                viewBinding.switchView.setImageDrawable(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        R.drawable.ic_outline_light_mode_32, theme
-                    )
-                )
-            } else {
-                viewBinding.hintsParent.background = ResourcesCompat.getDrawable(
-                    resources,
-                    R.drawable.background_curved_dark_2, theme
-                )
-                viewBinding.switchView.setImageDrawable(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        R.drawable.ic_outline_dark_mode_32, theme
-                    )
-                )
+            switchView()
+        }
+        viewBinding.customToolbar.setBackButtonClickListener { finish() }
+        viewBinding.customToolbar.setTitle(viewModel.pdfFileName ?: "pdf")
+        viewBinding.customToolbar.setOverflowPopup(R.menu.pdf_activity) { item ->
+            when (item!!.itemId) {
+                R.id.info -> {
+                    showInfoDialog()
+                }
+                R.id.invert_colors -> {
+                    switchView()
+                }
+                R.id.copy_page -> {
+                    extractText(viewModel.pageNumber)
+                }
+                R.id.bookmarks -> {
+                    showBookmarksDialog(viewBinding.pdfView.tableOfContents, "-")
+                }
             }
-            viewBinding.pdfView.loadPages()
+            true
         }
-        viewBinding.customToolbar.backButton.setOnClickListener {
-            finish()
+    }
+
+    private fun switchView() {
+        viewModel.nightMode = !viewModel.nightMode
+        viewBinding.pdfView.setNightMode(viewModel.nightMode)
+        if (viewModel.nightMode) {
+            viewBinding.hintsParent.background = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.button_curved_unselected, theme
+            )
+            viewBinding.switchView.setImageDrawable(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_outline_light_mode_32, theme
+                )
+            )
+        } else {
+            viewBinding.hintsParent.background = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.background_curved_dark_2, theme
+            )
+            viewBinding.switchView.setImageDrawable(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_outline_dark_mode_32, theme
+                )
+            )
         }
-        viewBinding.customToolbar.title.text = viewModel.pdfFileName
-        printBookmarksTree(viewBinding.pdfView.tableOfContents, "-")
+        viewBinding.pdfView.loadPages()
     }
 
     private fun showPasswordDialog(positiveCallback: (salt: String) -> Unit) {
@@ -134,8 +152,10 @@ class PdfViewerActivity :
         val content: Spanned?
         if (retryPassword) {
             content = Html.fromHtml(
-                "<html><body>${resources
-                    .getString(R.string.pdf_password_required)}<font color='red'><br>" +
+                "<html><body>" +
+                    "${resources
+                        .getString(R.string.pdf_password_required)}" +
+                    "<font color='red'><br>" +
                     "${resources.getString(R.string.wrong_password)}</font></body></html>"
             )
         } else {
@@ -186,15 +206,108 @@ class PdfViewerActivity :
                 }
             }
             .load()
+        // TODO: provide option to use better quality with pdfView.useBestQuality
     }
 
-    private fun printBookmarksTree(tree: List<Bookmark>, sep: String) {
+    private fun extractText(page: Int) {
+        try {
+            val pdfiumCore = PdfiumCore(this)
+            val pd = this.contentResolver.openFileDescriptor(pdfModel.uri, "r")
+            val pdfDocument: PdfDocument = pdfiumCore.newDocument(pd)
+            pdfiumCore.openPage(pdfDocument, page)
+            val width: Int = pdfiumCore.getPageWidthPoint(pdfDocument, page)
+            val height: Int = pdfiumCore.getPageHeightPoint(pdfDocument, page)
+
+            // ARGB_8888 - best quality, high memory usage, higher possibility of OutOfMemoryError
+            // RGB_565 - little worse quality, twice less memory usage
+            val bitmap: Bitmap = Bitmap.createBitmap(
+                width, height,
+                Bitmap.Config.ARGB_8888
+            )
+            pdfiumCore.renderPageBitmap(
+                pdfDocument, bitmap, page, 0, 0,
+                width, height
+            )
+            viewModel.getCurrentPageText(bitmap, externalCacheDir!!.path).observe(this, {
+                if (it == null) {
+                    showToastInCenter(resources.getString(R.string.analysing))
+                } else {
+                    Log.e(javaClass.simpleName, it)
+                    showToastInCenter(resources.getString(R.string.page_copied_to_clipboard))
+                    Utils.copyToClipboard(this, it)
+                }
+            })
+            pdfiumCore.closeDocument(pdfDocument) // important!
+        } catch (ex: IOException) {
+            ex.printStackTrace()
+        }
+    }
+
+    fun showInfoDialog() {
+        var dialogMessage = ""
+        viewBinding.pdfView.documentMeta.let {
+            meta ->
+            if (meta.title.isNotBlank()) {
+                dialogMessage += "${resources.getString(R.string.title)}: ${meta.author}" + "\n"
+            }
+            if (meta.author.isNotBlank()) {
+                dialogMessage += "${resources.getString(R.string.author)}: ${meta.author}" + "\n"
+            }
+            if (meta.subject.isNotBlank()) {
+                dialogMessage += "${resources.getString(R.string.subject)}: ${meta.subject}" + "\n"
+            }
+            if (meta.keywords.isNotBlank()) {
+                dialogMessage += "${resources.getString(R.string.keywords)}: " +
+                    "${meta.keywords}" + "\n"
+            }
+            if (meta.creator.isNotBlank()) {
+                dialogMessage += "${resources.getString(R.string.creator)}:" +
+                    " ${meta.creator}" + "\n"
+            }
+            if (meta.creationDate.isNotBlank()) {
+                dialogMessage += "${resources.getString(R.string.creation_date)}:" +
+                    " ${meta.creationDate}" + "\n"
+            }
+            if (meta.producer.isNotBlank()) {
+                dialogMessage += "${resources.getString(R.string.producer)}: " +
+                    "${meta.producer}" + "\n"
+            }
+            if (meta.modDate.isNotBlank()) {
+                dialogMessage += "${resources.getString(R.string.modification_date)}:" +
+                    " ${meta.modDate}" + "\n"
+            }
+        }
+        val builder: AlertDialog.Builder = this.let {
+            AlertDialog.Builder(it)
+        }
+        builder.setMessage(dialogMessage)
+            .setTitle(R.string.information)
+            .setNegativeButton(R.string.close) { dialog, _ ->
+                dialog.dismiss()
+            }.show()
+    }
+
+    private fun showBookmarksDialog(tree: List<Bookmark>, sep: String) {
+        val bookmarksText = getBookmarksTree(tree, sep)
+        val builder: AlertDialog.Builder = this.let {
+            AlertDialog.Builder(it)
+        }
+        builder.setMessage(bookmarksText)
+            .setTitle(R.string.bookmarks)
+            .setNegativeButton(R.string.close) { dialog, _ ->
+                dialog.dismiss()
+            }.show()
+    }
+
+    private fun getBookmarksTree(tree: List<Bookmark>, sep: String): String {
+        var curr = "\n"
         for (b in tree) {
             Log.e(javaClass.simpleName, String.format("%s %s, p %d", sep, b.title, b.pageIdx))
             if (b.hasChildren()) {
-                printBookmarksTree(b.children, "$sep-")
+                curr += getBookmarksTree(b.children, "$sep-")
             }
         }
+        return curr
     }
 
     override fun onTap(e: MotionEvent?): Boolean {
@@ -214,7 +327,7 @@ class PdfViewerActivity :
                 controller.systemBarsBehavior = WindowInsetsControllerCompat
                     .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             }
-            viewBinding.customToolbar.root.hideFade(ANIM_DURATION)
+            viewBinding.customToolbar.hideFade(ANIM_DURATION)
             viewBinding.hintsParent.hideFade(ANIM_DURATION)
         } else {
             WindowInsetsControllerCompat(
@@ -226,7 +339,7 @@ class PdfViewerActivity :
                 controller.systemBarsBehavior = WindowInsetsControllerCompat
                     .BEHAVIOR_SHOW_BARS_BY_TOUCH
             }
-            viewBinding.customToolbar.root.showFade(ANIM_DURATION)
+            viewBinding.customToolbar.showFade(ANIM_DURATION)
             viewBinding.hintsParent.showFade(ANIM_DURATION)
         }
     }

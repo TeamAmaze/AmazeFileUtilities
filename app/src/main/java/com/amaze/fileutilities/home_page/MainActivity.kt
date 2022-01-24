@@ -25,6 +25,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ActivityMainActionbarBinding
+import com.amaze.fileutilities.databinding.ActivityMainActionbarItemSelectedBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
 import com.amaze.fileutilities.databinding.ActivityMainBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
@@ -38,6 +39,7 @@ class MainActivity : PermissionsActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var actionBarBinding: ActivityMainActionbarBinding
     private lateinit var searchActionBarBinding: ActivityMainActionbarSearchBinding
+    private lateinit var selectedItemActionBarBinding: ActivityMainActionbarItemSelectedBinding
 //    var showSearchFragment = false
     private lateinit var viewModel: FilesViewModel
     private var isOptionsVisible = false
@@ -52,8 +54,11 @@ class MainActivity : PermissionsActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
+        viewModel.copyTrainedData()
         actionBarBinding = ActivityMainActionbarBinding.inflate(layoutInflater)
         searchActionBarBinding = ActivityMainActionbarSearchBinding.inflate(layoutInflater)
+        selectedItemActionBarBinding = ActivityMainActionbarItemSelectedBinding
+            .inflate(layoutInflater)
         setContentView(binding.root)
 
         val navView: BottomNavigationView = binding.navView
@@ -102,6 +107,18 @@ class MainActivity : PermissionsActivity() {
             isOptionsVisible = !isOptionsVisible
             invalidateOptionsTabs()
         }
+
+        viewModel.usedImagesSummaryTransformations.observe(
+            this, {
+                it?.second.let {
+                    list ->
+                    list?.run {
+                        val inputList = ArrayList(this)
+                        viewModel.analyseImagesTransformation(inputList)
+                    }
+                }
+            }
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -134,51 +151,80 @@ class MainActivity : PermissionsActivity() {
     }
 
     fun invalidateSearchBar(showSearch: Boolean): AutoCompleteTextView? {
-        searchActionBarBinding.run {
-            return if (showSearch) {
-                actionBarBinding.root.hideFade(200)
-                searchActionBarBinding.root.showFade(300)
-                supportActionBar?.customView = root
-                backActionBar.setOnClickListener {
-                    onBackPressed()
-                }
-                actionBarEditText.setOnTouchListener { _, event ->
-                    if (event.action == MotionEvent.ACTION_UP) {
-                        if (event.rawX >= (
-                            actionBarEditText.right -
-                                actionBarEditText.compoundDrawables[2]
-                                    .bounds.width()
-                            )
-                        ) {
-                            actionBarEditText.setText("")
-                            true
-                        }
+        if (::searchActionBarBinding.isInitialized) {
+            searchActionBarBinding.run {
+                return if (showSearch) {
+                    actionBarBinding.root.hideFade(200)
+                    searchActionBarBinding.root.showFade(300)
+                    supportActionBar?.customView = root
+                    backActionBar.setOnClickListener {
+                        onBackPressed()
                     }
-                    false
+                    actionBarEditText.setOnTouchListener { _, event ->
+                        if (event.action == MotionEvent.ACTION_UP) {
+                            if (event.rawX >= (
+                                actionBarEditText.right -
+                                    actionBarEditText.compoundDrawables[2]
+                                        .bounds.width()
+                                )
+                            ) {
+                                actionBarEditText.setText("")
+                                true
+                            }
+                        }
+                        false
+                    }
+                    voiceActionBar.setOnClickListener {
+                        startVoiceRecognitionActivity()
+                    }
+                    actionBarEditText
+                } else {
+                    actionBarEditText.setText("")
+                    actionBarEditText.setAdapter(null)
+                    searchActionBarBinding.root.hideFade(200)
+                    actionBarBinding.root.showFade(300)
+                    supportActionBar?.customView = actionBarBinding.root
+                    actionBarEditText.setOnEditorActionListener(null)
+                    null
                 }
-                voiceActionBar.setOnClickListener {
-                    startVoiceRecognitionActivity()
-                }
-                actionBarEditText
-            } else {
-                actionBarEditText.setText("")
-                actionBarEditText.setAdapter(null)
-                searchActionBarBinding.root.hideFade(200)
-                actionBarBinding.root.showFade(300)
-                supportActionBar?.customView = actionBarBinding.root
-                actionBarEditText.setOnEditorActionListener(null)
-                null
             }
         }
+        return null
+    }
+
+    fun invalidateSelectedActionBar(doShow: Boolean): View? {
+        if (::selectedItemActionBarBinding.isInitialized) {
+            selectedItemActionBarBinding.run {
+                return if (doShow) {
+                    actionBarBinding.root.hideFade(200)
+                    selectedItemActionBarBinding.root.showFade(300)
+                    supportActionBar?.customView = root
+                    backActionBar.setOnClickListener {
+                        onBackPressed()
+                    }
+                    title.setText("0")
+                    selectedItemActionBarBinding.root
+                } else {
+                    title.setText("0")
+                    searchActionBarBinding.root.hideFade(200)
+                    actionBarBinding.root.showFade(300)
+                    supportActionBar?.customView = actionBarBinding.root
+                    null
+                }
+            }
+        }
+        return null
     }
 
     fun invalidateBottomBar(doShow: Boolean) {
-        if (doShow) {
+        if (::binding.isInitialized) {
+            if (doShow) {
 //            binding.navView.visibility = View.VISIBLE
-            binding.navView.showTranslateY(500)
-        } else {
+                binding.navView.showTranslateY(500)
+            } else {
 //            binding.navView.visibility = View.GONE
-            binding.navView.hideTranslateY(500)
+                binding.navView.hideTranslateY(500)
+            }
         }
     }
 

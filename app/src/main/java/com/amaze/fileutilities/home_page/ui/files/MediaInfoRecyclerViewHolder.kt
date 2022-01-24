@@ -31,5 +31,11 @@ class MediaInfoRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val extraInfo: TextView = view.findViewById(R.id.extra_info)
 
     @JvmField
+    val checkIconGrid: ImageView = view.findViewById(R.id.check_icon_grid)
+
+    @JvmField
+    val expand: ImageView = view.findViewById(R.id.expand)
+
+//    @JvmField
     val root: RelativeLayout = view.findViewById(R.id.row_layout_parent)
 }

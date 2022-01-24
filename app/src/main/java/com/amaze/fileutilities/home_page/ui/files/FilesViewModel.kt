@@ -14,11 +14,18 @@ import android.app.Application
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.N
 import androidx.lifecycle.*
+import com.amaze.fileutilities.home_page.database.Analysis
+import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.utilis.CursorUtils
 import com.amaze.fileutilities.utilis.FileUtils
+import com.amaze.fileutilities.utilis.ImgUtils
 import com.amaze.fileutilities.utilis.StorageDirectoryParcelable
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.io.OutputStream
 
 class FilesViewModel(val applicationContext: Application) :
     AndroidViewModel(applicationContext) {
@@ -62,6 +69,20 @@ class FilesViewModel(val applicationContext: Application) :
                 input ->
                 getImagesSummaryLiveData(input)
             }
+
+    fun analyseImagesTransformation(mediaFileInfoList: ArrayList<MediaFileInfo>) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val dao = AppDatabase.getInstance(applicationContext).analysisDao()
+            mediaFileInfoList.forEach {
+                val isBlur = ImgUtils.isImageBlur(it.path)
+                val isMeme = ImgUtils.isImageMeme(
+                    it.path,
+                    applicationContext.externalCacheDir!!.path
+                )
+                dao.insert(Analysis(null, it.path, isBlur, isMeme))
+            }
+        }
+    }
 
     val usedAudiosSummaryTransformations:
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
@@ -202,6 +223,39 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
             emit(textResults)
+        }
+    }
+
+    fun copyTrainedData() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val externalFilesDir: File = applicationContext.applicationContext
+                .externalCacheDir ?: return@launch
+            val trainedFilesBase = File(externalFilesDir.path, "tessdata")
+            val trainedFilesList = arrayListOf("eng.traineddata")
+            trainedFilesList.forEach {
+                writeTrainedFile(trainedFilesBase, it)
+            }
+        }
+    }
+
+    private fun writeTrainedFile(basePath: File, fileName: String) {
+        val trained = File(basePath, fileName)
+        if (!trained.exists()) {
+            basePath.mkdirs()
+            var `in`: InputStream? = null
+            var out: OutputStream? = null
+            try {
+                `in` = applicationContext.assets.open("training/$fileName")
+                out = FileOutputStream(trained)
+                val buffer = ByteArray(4096)
+                var bytesRead: Int
+                while (`in`.read(buffer).also { bytesRead = it } != -1) {
+                    out.write(buffer, 0, bytesRead)
+                }
+            } finally {
+                out!!.close()
+                `in`!!.close()
+            }
         }
     }
 

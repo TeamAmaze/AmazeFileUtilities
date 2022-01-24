@@ -7,18 +7,32 @@
     tools:context=".home_page.ui.analyse.AnalyseFragment"
     android:background="@null">
 
-    <TextView
-        android:id="@+id/text_home"
-        android:layout_width="match_parent"
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/blur_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Blur pictures"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:cornerRadius="@dimen/material_generic"
+        app:rippleColor="@color/highlight_yellow"
+        android:layout_marginTop="@dimen/material_generic_medium"
+        style="@style/MaterialButton.White"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/meme_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Meme pictures"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/blur_button"
+        app:cornerRadius="@dimen/material_generic"
+        android:layout_marginTop="@dimen/material_generic_medium"
+        app:rippleColor="@color/highlight_yellow"
+        style="@style/MaterialButton.White"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
