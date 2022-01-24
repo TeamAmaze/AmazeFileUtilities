@@ -125,11 +125,11 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         searchEditText?.removeTextChangedListener(this)
         (activity as MainActivity).invalidateSearchBar(false)
         (activity as MainActivity).invalidateBottomBar(true)
         _binding = null
+        super.onDestroyView()
     }
 
     override fun onEditorAction(

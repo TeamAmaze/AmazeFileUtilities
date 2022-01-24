@@ -17,10 +17,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.amaze.fileutilities.utilis.ImgUtils
-import com.shockwave.pdfium.PdfDocument
-import com.shockwave.pdfium.PdfiumCore
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class PdfViewerActivityViewModel : ViewModel() {
 
@@ -45,8 +42,10 @@ class PdfViewerActivityViewModel : ViewModel() {
             emit(null)
             val tessBaseAPI = ImgUtils.getTessInstance(
                 ImgUtils.convertMatToBitmap(
-                    ImgUtils.processPdfImg(ImgUtils.convertBitmapToMat(bitmap)))!!,
-                externalDirPath)
+                    ImgUtils.processPdfImg(ImgUtils.convertBitmapToMat(bitmap))
+                )!!,
+                externalDirPath
+            )
             val extractedText: String? = tessBaseAPI?.getUTF8Text()
             tessBaseAPI?.end()
             emit(extractedText)

@@ -18,7 +18,7 @@ class RecentMediaFilesAdapter(
     val preloader: MediaAdapterPreloader,
     private val mediaFileInfoList: MutableList<MediaFileInfo>
 ) :
-    AbstractMediaFilesAdapter(context, preloader) {
+    AbstractMediaFilesAdapter(context, preloader, false) {
 
     private var mediaFileListItems: MutableList<ListItem> = mutableListOf()
         set(value) {

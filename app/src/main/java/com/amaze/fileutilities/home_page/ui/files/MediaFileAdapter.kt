@@ -23,12 +23,13 @@ class MediaFileAdapter(
     val context: Context,
     val preloader: MediaAdapterPreloader,
     val optionsMenuSelected: OptionsMenuSelected,
+    isGrid: Boolean,
     private var sortingPreference: MediaFileListSorter.SortingPreference,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
     private val mediaType: Int,
     private val drawBannerCallback: (mediaTypeHeader: MediaTypeHeaderView) -> Unit
 ) :
-    AbstractMediaFilesAdapter(context, preloader) {
+    AbstractMediaFilesAdapter(context, preloader, isGrid) {
 
     private var headerListItems: MutableList<ListItem> = mutableListOf()
     private var mediaFileListItems: MutableList<ListItem> = mutableListOf()
@@ -45,7 +46,7 @@ class MediaFileAdapter(
             preloader.addItem("")
             for (i in 0 until mediaFileInfoList.size) {
                 if (lastHeader == null || mediaFileInfoList[i].listHeader != lastHeader) {
-                    value.add(ListItem(TYPE_HEADER, mediaFileInfoList[i].listHeader, i))
+                    value.add(ListItem(TYPE_HEADER, mediaFileInfoList[i].listHeader, i + 1))
                     preloader.addItem("")
                     headerListItems.add(
                         ListItem(
@@ -59,7 +60,7 @@ class MediaFileAdapter(
                 value.add(
                     ListItem(
                         mediaFileInfo = mediaFileInfoList[i],
-                        header = mediaFileInfoList[i].listHeader, position = i
+                        header = mediaFileInfoList[i].listHeader, position = i + 1
                     )
                 )
                 preloader.addItem(mediaFileInfoList[i].path)
