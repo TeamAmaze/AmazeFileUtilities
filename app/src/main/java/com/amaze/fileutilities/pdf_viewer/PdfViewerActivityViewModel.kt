@@ -47,7 +47,6 @@ class PdfViewerActivityViewModel : ViewModel() {
                 externalDirPath
             )
             val extractedText: String? = tessBaseAPI?.getUTF8Text()
-            tessBaseAPI?.end()
             emit(extractedText)
         }
     }
