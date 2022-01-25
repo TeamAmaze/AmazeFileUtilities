@@ -39,7 +39,7 @@ class ImagesListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
     private var preloader: MediaAdapterPreloader? = null
     private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
     private var linearLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
-    private var gridLayoutManager: GridLayoutManager? = GridLayoutManager(context, 5)
+    private var gridLayoutManager: GridLayoutManager? = GridLayoutManager(context, 3)
     private val MAX_PRELOAD = 50
 
     // This property is only valid between onCreateView and

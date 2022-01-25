@@ -36,4 +36,5 @@
     <dimen name="list_header_height">48dp</dimen>
     <dimen name="list_header_textsize">16sp</dimen>
     <dimen name="check_icon_size_grid">40dp</dimen>
+    <dimen name="one_seventy_dp">170dp</dimen>
 </resources>

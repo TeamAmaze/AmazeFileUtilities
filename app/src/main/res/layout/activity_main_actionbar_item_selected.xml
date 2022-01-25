@@ -13,8 +13,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginRight="@dimen/eight_dp"
-        android:layout_marginEnd="@dimen/eight_dp"
+        android:layout_marginRight="@dimen/material_generic"
+        android:layout_marginEnd="@dimen/material_generic"
         />
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/title"

@@ -75,7 +75,6 @@ class ImgUtils {
                         }
                     }
                 }
-//                tessBaseAPI.end()
             }
             return false
         }
