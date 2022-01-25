@@ -54,6 +54,8 @@ class ReviewImagesAdapter(
                     mediaFileInfo.extraInfo?.let { extraInfo ->
                         when (extraInfo.mediaType) {
                             MediaFileInfo.MEDIA_TYPE_IMAGE -> {
+                                holder.infoSummary.text =
+                                    this.mediaFileInfo?.getFormattedSize(context)
                                 holder.expand.visibility = View.VISIBLE
                                 holder.expand.setOnClickListener {
                                     val intent = Intent(

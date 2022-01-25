@@ -150,7 +150,7 @@ abstract class AbstractMediaFilesAdapter(
     }
 
     override fun getPopupText(position: Int): String {
-        return getMediaFilesListItems()[position].header ?: "--"
+        return getMediaFilesListItems()[position].header ?: ""
     }
 
     private val mInflater: LayoutInflater
