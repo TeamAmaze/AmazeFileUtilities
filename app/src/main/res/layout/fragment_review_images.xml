@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/navy_blue">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -18,14 +17,14 @@
         android:id="@+id/processing_progress_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/listView"
+        android:layout_alignParentTop="true"
         />
     <com.amaze.fileutilities.utilis.FastScroller
         android:id="@+id/fastscroll"
         android:orientation="vertical"
         android:layout_width="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_height="match_parent"
         android:visibility="gone"
         />

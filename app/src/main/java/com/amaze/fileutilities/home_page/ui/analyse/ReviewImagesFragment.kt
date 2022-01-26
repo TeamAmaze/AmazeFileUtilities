@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -31,6 +32,7 @@ import com.amaze.fileutilities.utilis.Utils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
+import kotlinx.coroutines.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
 class ReviewImagesFragment : Fragment() {
@@ -112,13 +114,21 @@ class ReviewImagesFragment : Fragment() {
         if (mediaInfoList == null) {
             invalidateProcessing(true)
         } else {
-            invalidateProcessing(false)
             mediaFileAdapter = ReviewImagesAdapter(
                 requireContext(),
                 preloader!!, mediaInfoList
-            ) {
+            ) { checkedSize, itemsCount, bytesFormatted ->
+                val title = "$checkedSize / $itemsCount" +
+                    " ($bytesFormatted)"
                 val countView = optionsActionBar?.findViewById<AppCompatTextView>(R.id.title)
-                countView?.text = it
+                val thumbsDownButton =
+                    optionsActionBar?.findViewById<ImageView>(R.id.thumbsDown)
+                countView?.text = title
+                if (checkedSize > 0) {
+                    thumbsDownButton?.visibility = View.VISIBLE
+                } else {
+                    thumbsDownButton?.visibility = View.GONE
+                }
             }
             binding.listView
                 .addOnScrollListener(recyclerViewPreloader!!)
@@ -132,26 +142,63 @@ class ReviewImagesFragment : Fragment() {
                 binding.fastscroll.visibility = View.VISIBLE
                 binding.fastscroll.setRecyclerView(binding.listView, 1)
             }
+            invalidateProcessing(false)
         }
     }
 
+    private fun invalidateAdapterData(mediaInfoList: MutableList<MediaFileInfo>) {
+        mediaFileAdapter?.updateData(mediaInfoList)
+//        updateData(mediaInfoList)
+    }
+
+    private var isDiffUpdateInProgress = false
+
+    private suspend fun updateData(mediaFileInfo: List<MediaFileInfo>) = coroutineScope {
+        /*val diffResult = async(Dispatchers.Default) {
+            val oldList = ArrayList(mediaFileAdapter?.mediaFileInfoList!!)
+            val mediaFileListDiffCallback =
+                AbstractMediaFilesAdapter.MediaFileInfoDiff(oldList, mediaFileInfo)
+            val result = DiffUtil.calculateDiff(mediaFileListDiffCallback)
+            mediaFileAdapter?.setData(mediaFileInfo)
+            result.dispatchUpdatesTo(mediaFileAdapter!!)
+        }*/
+        /*mediaFileInfoList.run {
+            clear()
+            preloader.clear()
+            addAll(mediaFileInfo)
+            // triggers set call
+            mediaFileListItems = mutableListOf()
+        }*/
+    }
+
     private fun invalidateProcessing(isProcessing: Boolean) {
-        if (isProcessing || filesViewModel.isStorageAnalysing) {
-            binding.processingProgressView.invalidateProcessing(
-                true, false,
-                resources.getString(R.string.analysing)
-            )
-        } else if (mediaFileAdapter?.itemCount == 0) {
-            binding.processingProgressView.invalidateProcessing(
-                false, true,
-                resources.getString(R.string.its_quiet_here)
-            )
-        } else {
-            binding.processingProgressView.invalidateProcessing(
-                false, false,
-                null
-            )
+        when {
+            isProcessing -> {
+                binding.processingProgressView.invalidateProcessing(
+                    true, false,
+                    resources.getString(R.string.please_wait)
+                )
+            }
+            filesViewModel.isStorageAnalysing -> {
+                binding.processingProgressView.invalidateProcessing(
+                    false, false,
+                    null
+                )
+            }
+            mediaFileAdapter?.itemCount == 0 -> {
+                binding.processingProgressView.invalidateProcessing(
+                    false, true,
+                    resources.getString(R.string.its_quiet_here)
+                )
+            }
+            else -> {
+                binding.processingProgressView.invalidateProcessing(
+                    false, false,
+                    null
+                )
+            }
         }
+        mediaFileAdapter?.isProcessing = filesViewModel.isStorageAnalysing
     }
 
     override fun onDestroyView() {

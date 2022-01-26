@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.IntDef
 import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
@@ -30,7 +31,6 @@ import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.video_player.VideoPlayerDialogActivity
 import com.bumptech.glide.Glide
 import me.zhanghai.android.fastscroll.PopupTextProvider
-import kotlin.math.roundToInt
 
 abstract class AbstractMediaFilesAdapter(
     private val superContext: Context,
@@ -95,12 +95,10 @@ abstract class AbstractMediaFilesAdapter(
                 return HeaderViewHolder(view)
             }
             EMPTY_LAST_ITEM -> {
-                view.minimumHeight =
-                    (
-                        superContext.resources.getDimension(R.dimen.fifty_six_dp) +
-                            superContext.resources.getDimension(R.dimen.material_generic)
-                        )
-                        .roundToInt()
+                view = mInflater.inflate(
+                    R.layout.empty_viewholder_layout, parent,
+                    false
+                )
                 return EmptyViewHolder(view)
             }
             else -> {
@@ -251,6 +249,28 @@ abstract class AbstractMediaFilesAdapter(
 
         fun toggleChecked() {
             isChecked = !isChecked
+        }
+    }
+
+    class MediaFileInfoDiff(
+        val oldList: List<MediaFileInfo>,
+        val newList: List<MediaFileInfo>
+    ) : DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int {
+            return oldList.size
+        }
+
+        override fun getNewListSize(): Int {
+            return newList.size
+        }
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].path == newList[newItemPosition].path
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
         }
     }
 }
