@@ -69,6 +69,12 @@
                     />
             </LinearLayout>
         </HorizontalScrollView>
+        <com.amaze.fileutilities.home_page.ui.ProcessingProgressView
+            android:id="@+id/processing_progress_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_generic_medium"
+            />
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/searchListView"
             android:layout_width="match_parent"
@@ -76,35 +82,6 @@
             android:divider="@null"
             android:scrollbars="none"
             android:descendantFocusability="afterDescendants"
-            />
-        <ProgressBar
-            android:id="@+id/loadingProgress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:gravity="center_horizontal"
-            android:visibility="gone"
-            android:layout_marginTop="@dimen/material_generic_medium"
-            />
-        <ImageView
-            android:id="@+id/empty_result_image"
-            app:srcCompat="@drawable/ic_baseline_forest_32"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/sixty_four_dp"
-            android:visibility="gone"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="@dimen/material_generic_medium"
-            />
-        <TextView
-            android:id="@+id/searchInfoText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/material_generic"
-            android:textSize="@dimen/eighteen_sp"
-            android:gravity="center_horizontal"
-            android:text="@string/loading"
-            android:visibility="gone"
-            android:textColor="@color/white"
             />
     </LinearLayout>
     <com.amaze.fileutilities.utilis.FastScroller

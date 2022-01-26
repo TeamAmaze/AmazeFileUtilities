@@ -18,6 +18,9 @@ interface AnalysisDao {
     @Query("SELECT * FROM analysis")
     fun getAll(): List<Analysis>
 
+    @Query("SELECT * FROM analysis WHERE file_path=:path")
+    fun findByPath(path: String): Analysis?
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(analysis: Analysis)
 

@@ -82,7 +82,7 @@ class ImgUtils {
         fun isImageBlur(path: String): Boolean {
             val matrix = Imgcodecs.imread(path)
             val factor = laplace(matrix)
-            if (factor < 100) {
+            if (factor < 100 && factor != 0.0) {
                 return true
             }
             return false

@@ -50,6 +50,14 @@ abstract class AbstractMediaFilesAdapter(
         listItem.toggleChecked()
     }
 
+    fun checkedItemBytes(): String {
+        var size = 0L
+        checkItemsList.forEach {
+            size += it.mediaFileInfo?.longSize ?: 0L
+        }
+        return FileUtils.formatStorageLength(superContext, size)
+    }
+
     abstract fun getMediaFilesListItems(): MutableList<ListItem>
 
     companion object {
@@ -109,6 +117,8 @@ abstract class AbstractMediaFilesAdapter(
                     mediaFileInfo ->
                     holder.infoTitle.text = mediaFileInfo.title
                     Glide.with(superContext).clear(holder.iconView)
+                    holder.checkIconGrid.visibility =
+                        if (isChecked) View.VISIBLE else View.INVISIBLE
                     superPreloader.loadImage(mediaFileInfo.path, holder.iconView)
                     val formattedDate = mediaFileInfo.getModificationDate(superContext)
                     val formattedSize = mediaFileInfo.getFormattedSize(superContext)
