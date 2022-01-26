@@ -12,7 +12,9 @@ package com.amaze.fileutilities.home_page.ui.analyse
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.View
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaAdapterPreloader
@@ -26,11 +28,16 @@ class ReviewImagesAdapter(
     val context: Context,
     val preloader: MediaAdapterPreloader,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
-    private val toggleCheckCallback: (title: String) -> Unit,
+    private val toggleCheckCallback: (
+        checkedSize: Int,
+        itemsCount: Int,
+        bytesFormatted: String
+    ) -> Unit,
 ) :
     AbstractMediaFilesAdapter(context, preloader, true) {
 
     var isProcessing = true
+    var isDiffUpdateInProgress = false
 
     private var mediaFileListItems: MutableList<ListItem> = mutableListOf()
         set(value) {
@@ -111,13 +118,32 @@ class ReviewImagesAdapter(
             addAll(data)
             // triggers set call
             mediaFileListItems = mutableListOf()
-            notifyDataSetChanged()
+//            notifyDataSetChanged()
         }
     }
 
+    fun updateData(mediaFileInfo: List<MediaFileInfo>) {
+        if (isDiffUpdateInProgress) {
+            Log.w(javaClass.simpleName, "Warn: Diff update in progress!!")
+            return
+        }
+        isDiffUpdateInProgress = true
+        val oldList = ArrayList(mediaFileInfoList)
+        val mediaFileListDiffCallback = MediaFileInfoDiff(oldList, mediaFileInfo)
+        val diffResult = DiffUtil.calculateDiff(mediaFileListDiffCallback)
+        setData(mediaFileInfo)
+        /*mediaFileInfoList.run {
+            clear()
+            preloader.clear()
+            addAll(mediaFileInfo)
+            // triggers set call
+            mediaFileListItems = mutableListOf()
+        }*/
+        diffResult.dispatchUpdatesTo(this)
+        isDiffUpdateInProgress = false
+    }
+
     private fun invalidateCheckedTitle() {
-        val title = "${checkItemsList.size} / $itemCount" +
-            " (${checkedItemBytes()})"
-        toggleCheckCallback.invoke(title)
+        toggleCheckCallback.invoke(checkItemsList.size, itemCount, checkedItemBytes())
     }
 }

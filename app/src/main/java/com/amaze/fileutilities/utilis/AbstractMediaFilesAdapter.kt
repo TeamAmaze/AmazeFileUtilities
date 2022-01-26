@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.IntDef
 import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
@@ -248,6 +249,28 @@ abstract class AbstractMediaFilesAdapter(
 
         fun toggleChecked() {
             isChecked = !isChecked
+        }
+    }
+
+    class MediaFileInfoDiff(
+        val oldList: List<MediaFileInfo>,
+        val newList: List<MediaFileInfo>
+    ) : DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int {
+            return oldList.size
+        }
+
+        override fun getNewListSize(): Int {
+            return newList.size
+        }
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].path == newList[newItemPosition].path
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
         }
     }
 }
