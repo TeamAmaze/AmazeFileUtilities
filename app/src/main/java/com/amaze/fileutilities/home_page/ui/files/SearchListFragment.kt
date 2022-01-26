@@ -346,30 +346,20 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
 
     private fun showLoadingViews(doShow: Boolean) {
         binding.run {
-            if (doShow) {
-                searchListView.visibility = View.GONE
-                loadingProgress.visibility = View.VISIBLE
-                searchInfoText.visibility = View.VISIBLE
-                if (searchQueryInput.mediaListsLoaded()) {
-                    searchInfoText.text = resources.getString(R.string.loading)
-                } else {
-                    searchInfoText.text = resources.getString(R.string.please_wait)
-                }
-            } else {
-                searchListView.visibility = View.VISIBLE
-                loadingProgress.visibility = View.GONE
-                searchInfoText.visibility = View.GONE
-                emptyResultImage.visibility = View.GONE
-            }
+            processingProgressView.invalidateProcessing(
+                doShow, false,
+                if (searchQueryInput.mediaListsLoaded()) resources.getString(R.string.loading)
+                else resources.getString(R.string.please_wait)
+            )
         }
     }
 
     private fun showEmptyViews() {
         binding.run {
-            searchListView.visibility = View.GONE
-            emptyResultImage.visibility = View.VISIBLE
-            searchInfoText.visibility = View.VISIBLE
-            searchInfoText.text = resources.getString(R.string.its_quiet_here)
+            processingProgressView.invalidateProcessing(
+                false, true,
+                resources.getString(R.string.its_quiet_here)
+            )
         }
     }
 

@@ -17,12 +17,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentReviewImagesBinding
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.database.AppDatabase
+import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaAdapterPreloader
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.Utils
@@ -34,6 +36,7 @@ import me.zhanghai.android.fastscroll.FastScrollerBuilder
 class ReviewImagesFragment : Fragment() {
 
     private var _binding: FragmentReviewImagesBinding? = null
+    private val filesViewModel: FilesViewModel by activityViewModels()
     private lateinit var viewModel: AnalyseViewModel
     private var gridLayoutManager: GridLayoutManager? = GridLayoutManager(context, 3)
     private var mediaFileAdapter: ReviewImagesAdapter? = null
@@ -94,13 +97,13 @@ class ReviewImagesFragment : Fragment() {
         val appDatabase = AppDatabase.getInstance(requireContext())
         val dao = appDatabase.analysisDao()
         if (isBlur) {
-            viewModel.getBlurImages(dao).observe(viewLifecycleOwner, {
+            viewModel.getBlurImages(dao).observe(viewLifecycleOwner) {
                 setMediaInfoList(it)
-            })
+            }
         } else {
-            viewModel.getMemeImages(dao).observe(viewLifecycleOwner, {
+            viewModel.getMemeImages(dao).observe(viewLifecycleOwner) {
                 setMediaInfoList(it)
-            })
+            }
         }
         return root
     }
@@ -115,7 +118,7 @@ class ReviewImagesFragment : Fragment() {
                 preloader!!, mediaInfoList
             ) {
                 val countView = optionsActionBar?.findViewById<AppCompatTextView>(R.id.title)
-                countView?.text = "$it"
+                countView?.text = it
             }
             binding.listView
                 .addOnScrollListener(recyclerViewPreloader!!)
@@ -133,7 +136,22 @@ class ReviewImagesFragment : Fragment() {
     }
 
     private fun invalidateProcessing(isProcessing: Boolean) {
-        binding.loadingProgress.visibility = if (isProcessing) View.VISIBLE else View.GONE
+        if (isProcessing || filesViewModel.isStorageAnalysing) {
+            binding.processingProgressView.invalidateProcessing(
+                true, false,
+                resources.getString(R.string.analysing)
+            )
+        } else if (mediaFileAdapter?.itemCount == 0) {
+            binding.processingProgressView.invalidateProcessing(
+                false, true,
+                resources.getString(R.string.its_quiet_here)
+            )
+        } else {
+            binding.processingProgressView.invalidateProcessing(
+                false, false,
+                null
+            )
+        }
     }
 
     override fun onDestroyView() {
