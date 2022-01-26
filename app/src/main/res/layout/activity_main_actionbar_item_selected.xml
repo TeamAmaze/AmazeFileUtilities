@@ -25,18 +25,28 @@
         android:textColor="@color/white"
         android:layout_toRightOf="@+id/backActionBar"
         android:layout_toEndOf="@+id/backActionBar"
+        android:layout_toLeftOf="@+id/thumbsDown"
+        android:layout_toStartOf="@id/thumbsDown"
+        />
+    <ImageView
+        android:id="@+id/thumbsDown"
+        app:srcCompat="@drawable/ic_round_thumb_down_off_alt_32"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_toLeftOf="@+id/trashButton"
         android:layout_toStartOf="@id/trashButton"
+        android:layout_marginLeft="@dimen/eight_dp"
+        android:layout_marginStart="@dimen/eight_dp"
+        android:visibility="gone"
         />
     <ImageView
         android:id="@+id/trashButton"
         app:srcCompat="@drawable/ic_round_delete_outline_32"
-        android:background="@drawable/ripple"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginLeft="@dimen/eight_dp"
-        android:layout_marginStart="@dimen/eight_dp"
+        android:layout_marginLeft="@dimen/material_generic"
+        android:layout_marginStart="@dimen/material_generic"
         />
 </RelativeLayout>
