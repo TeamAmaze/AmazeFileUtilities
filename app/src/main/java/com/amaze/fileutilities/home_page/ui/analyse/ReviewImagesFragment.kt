@@ -146,31 +146,6 @@ class ReviewImagesFragment : Fragment() {
         }
     }
 
-    private fun invalidateAdapterData(mediaInfoList: MutableList<MediaFileInfo>) {
-        mediaFileAdapter?.updateData(mediaInfoList)
-//        updateData(mediaInfoList)
-    }
-
-    private var isDiffUpdateInProgress = false
-
-    private suspend fun updateData(mediaFileInfo: List<MediaFileInfo>) = coroutineScope {
-        /*val diffResult = async(Dispatchers.Default) {
-            val oldList = ArrayList(mediaFileAdapter?.mediaFileInfoList!!)
-            val mediaFileListDiffCallback =
-                AbstractMediaFilesAdapter.MediaFileInfoDiff(oldList, mediaFileInfo)
-            val result = DiffUtil.calculateDiff(mediaFileListDiffCallback)
-            mediaFileAdapter?.setData(mediaFileInfo)
-            result.dispatchUpdatesTo(mediaFileAdapter!!)
-        }*/
-        /*mediaFileInfoList.run {
-            clear()
-            preloader.clear()
-            addAll(mediaFileInfo)
-            // triggers set call
-            mediaFileListItems = mutableListOf()
-        }*/
-    }
-
     private fun invalidateProcessing(isProcessing: Boolean) {
         when {
             isProcessing -> {
