@@ -59,206 +59,195 @@ class FilesFragment : Fragment() {
         binding.storagePercent.isSaveEnabled = false
         filesViewModel.run {
             internalStorageStats.observe(
-                viewLifecycleOwner,
-                {
-                    it?.run {
-                        binding.internalStorageTab.setOnClickListener {
-                            Utils.openActivity(
-                                requireContext(), Utils.AMAZE_PACKAGE,
-                                Utils.AMAZE_FILE_MANAGER_MAIN
-                            )
-                        }
-                        val usedSpace = FileUtils.formatStorageLength(
-                            requireContext(),
-                            it.usedSpace!!
+                viewLifecycleOwner
+            ) {
+                it?.run {
+                    binding.internalStorageTab.setOnClickListener {
+                        Utils.openActivity(
+                            requireContext(), Utils.AMAZE_PACKAGE,
+                            Utils.AMAZE_FILE_MANAGER_MAIN
                         )
-                        val freeSpace = FileUtils.formatStorageLength(
-                            requireContext(),
-                            it.freeSpace!!
+                    }
+                    val usedSpace = FileUtils.formatStorageLength(
+                        requireContext(),
+                        it.usedSpace!!
+                    )
+                    val freeSpace = FileUtils.formatStorageLength(
+                        requireContext(),
+                        it.freeSpace!!
+                    )
+                    binding.usedSpace.setColorAndLabel(
+                        colorProvider
+                            .provideProgressColor(it.progress.toFloat()),
+                        usedSpace
+                    )
+                    binding.freeSpace.setColorAndLabel(
+                        colorProvider
+                            .provideBackgroundBarColor(it.progress.toFloat()),
+                        freeSpace
+                    )
+                    binding.storagePercent.setProgress(
+                        it.progress.toFloat(),
+                        true
+                    )
+                    if (it.items == 0) {
+                        binding.filesAmount.text = resources.getString(
+                            R.string.num_of_files,
+                            resources.getString(R.string.undetermined)
                         )
-                        binding.usedSpace.setColorAndLabel(
-                            colorProvider
-                                .provideProgressColor(it.progress.toFloat()),
-                            usedSpace
-                        )
-                        binding.freeSpace.setColorAndLabel(
-                            colorProvider
-                                .provideBackgroundBarColor(it.progress.toFloat()),
-                            freeSpace
-                        )
-                        binding.storagePercent.setProgress(
-                            it.progress.toFloat(),
-                            true
-                        )
-                        if (it.items == 0) {
-                            binding.filesAmount.text = resources.getString(
-                                R.string.num_of_files,
-                                resources.getString(R.string.undetermined)
-                            )
-                        } else {
-                            binding.filesAmount.text =
-                                resources.getString(R.string.num_of_files, it.items.toString())
-                        }
+                    } else {
+                        binding.filesAmount.text =
+                            resources.getString(R.string.num_of_files, it.items.toString())
                     }
                 }
-            )
+            }
             usedImagesSummaryTransformations.observe(
-                viewLifecycleOwner,
-                {
-                    metaInfoAndSummaryPair ->
-                    binding.imagesTab.setOnClickListener {
-                        if (metaInfoAndSummaryPair != null) {
-                            startListFragment(ImagesListFragment())
-                        } else {
-                            requireContext().showToastInCenter(
-                                resources
-                                    .getString(R.string.please_wait)
-                            )
-                        }
-                    }
-                    metaInfoAndSummaryPair?.let {
-                        val storageSummary = metaInfoAndSummaryPair.first
-                        val usedSpace =
-                            FileUtils.formatStorageLength(
-                                requireContext(),
-                                storageSummary.usedSpace!!
-                            )
-                        binding.imagesTab.setProgress(
-                            MediaTypeView.MediaTypeContent(
-                                storageSummary.items, usedSpace,
-                                storageSummary.progress
-                            )
+                viewLifecycleOwner
+            ) { metaInfoAndSummaryPair ->
+                binding.imagesTab.setOnClickListener {
+                    if (metaInfoAndSummaryPair != null) {
+                        startListFragment(ImagesListFragment())
+                    } else {
+                        requireContext().showToastInCenter(
+                            resources
+                                .getString(R.string.please_wait)
                         )
                     }
                 }
-            )
-            usedAudiosSummaryTransformations.observe(
-                viewLifecycleOwner,
-                {
-                    metaInfoAndSummaryPair ->
-                    binding.audiosTab.setOnClickListener {
-                        if (metaInfoAndSummaryPair != null) {
-                            startListFragment(AudiosListFragment())
-                        } else {
-                            requireContext().showToastInCenter(
-                                resources
-                                    .getString(R.string.please_wait)
-                            )
-                        }
-                    }
-                    metaInfoAndSummaryPair?.let {
-                        val storageSummary = metaInfoAndSummaryPair.first
-                        val usedSpace = FileUtils
-                            .formatStorageLength(
-                                requireContext(),
-                                storageSummary.usedSpace!!
-                            )
-                        binding.audiosTab.setProgress(
-                            MediaTypeView.MediaTypeContent(
-                                storageSummary.items, usedSpace,
-                                storageSummary.progress
-                            )
-                        )
-                    }
-                }
-            )
-            usedVideosSummaryTransformations.observe(
-                viewLifecycleOwner,
-                {
-                    metaInfoAndSummaryPair ->
-                    binding.videosTab.setOnClickListener {
-                        if (metaInfoAndSummaryPair != null) {
-                            startListFragment(VideosListFragment())
-                        } else {
-                            requireContext().showToastInCenter(
-                                resources
-                                    .getString(R.string.please_wait)
-                            )
-                        }
-                    }
-                    metaInfoAndSummaryPair?.let {
-                        val storageSummary = metaInfoAndSummaryPair.first
-                        val usedSpace = FileUtils
-                            .formatStorageLength(
-                                requireContext(),
-                                storageSummary.usedSpace!!
-                            )
-                        binding.videosTab.setProgress(
-                            MediaTypeView
-                                .MediaTypeContent(
-                                    storageSummary.items,
-                                    usedSpace, storageSummary.progress
-                                )
-                        )
-                    }
-                }
-            )
-            usedDocsSummaryTransformations.observe(
-                viewLifecycleOwner,
-                {
-                    metaInfoAndSummaryPair ->
-                    binding.documentsTab.setOnClickListener {
-                        if (metaInfoAndSummaryPair != null) {
-                            startListFragment(DocumentsListFragment())
-                        } else {
-                            requireContext().showToastInCenter(
-                                resources
-                                    .getString(R.string.please_wait)
-                            )
-                        }
-                    }
-                    metaInfoAndSummaryPair?.let {
-                        val storageSummary = metaInfoAndSummaryPair.first
-                        val usedSpace = FileUtils.formatStorageLength(
+                metaInfoAndSummaryPair?.let {
+                    val storageSummary = metaInfoAndSummaryPair.first
+                    val usedSpace =
+                        FileUtils.formatStorageLength(
                             requireContext(),
                             storageSummary.usedSpace!!
                         )
-                        binding.documentsTab.setProgress(
-                            MediaTypeView
-                                .MediaTypeContent(
-                                    storageSummary.items,
-                                    usedSpace, storageSummary.progress
-                                )
+                    binding.imagesTab.setProgress(
+                        MediaTypeView.MediaTypeContent(
+                            storageSummary.items, usedSpace,
+                            storageSummary.progress
+                        )
+                    )
+                }
+            }
+            usedAudiosSummaryTransformations.observe(
+                viewLifecycleOwner
+            ) { metaInfoAndSummaryPair ->
+                binding.audiosTab.setOnClickListener {
+                    if (metaInfoAndSummaryPair != null) {
+                        startListFragment(AudiosListFragment())
+                    } else {
+                        requireContext().showToastInCenter(
+                            resources
+                                .getString(R.string.please_wait)
                         )
                     }
                 }
-            )
+                metaInfoAndSummaryPair?.let {
+                    val storageSummary = metaInfoAndSummaryPair.first
+                    val usedSpace = FileUtils
+                        .formatStorageLength(
+                            requireContext(),
+                            storageSummary.usedSpace!!
+                        )
+                    binding.audiosTab.setProgress(
+                        MediaTypeView.MediaTypeContent(
+                            storageSummary.items, usedSpace,
+                            storageSummary.progress
+                        )
+                    )
+                }
+            }
+            usedVideosSummaryTransformations.observe(
+                viewLifecycleOwner
+            ) { metaInfoAndSummaryPair ->
+                binding.videosTab.setOnClickListener {
+                    if (metaInfoAndSummaryPair != null) {
+                        startListFragment(VideosListFragment())
+                    } else {
+                        requireContext().showToastInCenter(
+                            resources
+                                .getString(R.string.please_wait)
+                        )
+                    }
+                }
+                metaInfoAndSummaryPair?.let {
+                    val storageSummary = metaInfoAndSummaryPair.first
+                    val usedSpace = FileUtils
+                        .formatStorageLength(
+                            requireContext(),
+                            storageSummary.usedSpace!!
+                        )
+                    binding.videosTab.setProgress(
+                        MediaTypeView
+                            .MediaTypeContent(
+                                storageSummary.items,
+                                usedSpace, storageSummary.progress
+                            )
+                    )
+                }
+            }
+            usedDocsSummaryTransformations.observe(
+                viewLifecycleOwner
+            ) { metaInfoAndSummaryPair ->
+                binding.documentsTab.setOnClickListener {
+                    if (metaInfoAndSummaryPair != null) {
+                        startListFragment(DocumentsListFragment())
+                    } else {
+                        requireContext().showToastInCenter(
+                            resources
+                                .getString(R.string.please_wait)
+                        )
+                    }
+                }
+                metaInfoAndSummaryPair?.let {
+                    val storageSummary = metaInfoAndSummaryPair.first
+                    val usedSpace = FileUtils.formatStorageLength(
+                        requireContext(),
+                        storageSummary.usedSpace!!
+                    )
+                    binding.documentsTab.setProgress(
+                        MediaTypeView
+                            .MediaTypeContent(
+                                storageSummary.items,
+                                usedSpace, storageSummary.progress
+                            )
+                    )
+                }
+            }
             recentFilesLiveData.observe(
-                viewLifecycleOwner,
-                {
-                    mediaFileInfoList ->
-                    binding.recentFilesInfoText.text = resources.getString(R.string.loading)
-                    mediaFileInfoList?.run {
-                        if (this.size == 0) {
-                            binding.recentFilesInfoText.text =
-                                resources.getString(R.string.no_files)
-                        } else {
-                            binding.recentFilesInfoText.visibility = View.GONE
-                        }
-                        preloader = MediaAdapterPreloader(
-                            applicationContext,
-                            R.drawable.ic_outline_insert_drive_file_32
-                        )
-                        val sizeProvider = ViewPreloadSizeProvider<String>()
-                        recyclerViewPreloader = RecyclerViewPreloader(
-                            Glide.with(applicationContext),
-                            preloader!!,
-                            sizeProvider,
-                            MAX_PRELOAD
-                        )
-                        linearLayoutManager = LinearLayoutManager(context)
-                        mediaFileAdapter = RecentMediaFilesAdapter(
-                            applicationContext,
-                            preloader!!,
-                            this
-                        )
-                        binding.recentFilesList
-                            .addOnScrollListener(recyclerViewPreloader!!)
-                        binding.recentFilesList.layoutManager = linearLayoutManager
-                        binding.recentFilesList.adapter = mediaFileAdapter
+                viewLifecycleOwner
+            ) { mediaFileInfoList ->
+                binding.recentFilesInfoText.text = resources.getString(R.string.loading)
+                mediaFileInfoList?.run {
+                    if (this.size == 0) {
+                        binding.recentFilesInfoText.text =
+                            resources.getString(R.string.no_files)
+                    } else {
+                        binding.recentFilesInfoText.visibility = View.GONE
                     }
+                    preloader = MediaAdapterPreloader(
+                        applicationContext,
+                        R.drawable.ic_outline_insert_drive_file_32
+                    )
+                    val sizeProvider = ViewPreloadSizeProvider<String>()
+                    recyclerViewPreloader = RecyclerViewPreloader(
+                        Glide.with(applicationContext),
+                        preloader!!,
+                        sizeProvider,
+                        MAX_PRELOAD
+                    )
+                    linearLayoutManager = LinearLayoutManager(context)
+                    mediaFileAdapter = RecentMediaFilesAdapter(
+                        applicationContext,
+                        preloader!!,
+                        this
+                    )
+                    binding.recentFilesList
+                        .addOnScrollListener(recyclerViewPreloader!!)
+                    binding.recentFilesList.layoutManager = linearLayoutManager
+                    binding.recentFilesList.adapter = mediaFileAdapter
                 }
-            )
+            }
         }
 
         binding.storagePercent.setAdaptiveColorProvider(colorProvider)

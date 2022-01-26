@@ -11,4 +11,7 @@
         <attr name="mediaImageSrc" format="reference" />
         <attr name="themeColor" format="color" />
     </declare-styleable>
+    <declare-styleable name="AnalysisTypeView">
+        <attr name="analysisTitle" format="string"/>
+    </declare-styleable>
 </resources>
