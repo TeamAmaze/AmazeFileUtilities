@@ -7,32 +7,99 @@
     tools:context=".home_page.ui.analyse.AnalyseFragment"
     android:background="@null">
 
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/blur_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Blur pictures"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:cornerRadius="@dimen/material_generic"
-        app:rippleColor="@color/highlight_yellow"
-        android:layout_marginTop="@dimen/material_generic_medium"
-        style="@style/MaterialButton.White"
-        />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/meme_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Meme pictures"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/blur_button"
-        app:cornerRadius="@dimen/material_generic"
-        android:layout_marginTop="@dimen/material_generic_medium"
-        app:rippleColor="@color/highlight_yellow"
-        style="@style/MaterialButton.White"
-        />
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/eight_dp"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            >
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/blurred_pics_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/blurred_pics"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/memes_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/memes"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/duplicate_files_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/duplicates"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/large_video_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/large_videos"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/large_download_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/large_downloads"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/app_cache_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/cache"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/memory_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/memory"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/old_download_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/old_downloads"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/old_screenshots_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/old_screenshots"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/old_recordings_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/old_recordings"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/analysis_footnote"
+                android:textColor="@color/white"
+                android:textSize="@dimen/eighteen_sp"
+                android:gravity="center_horizontal|start"
+                android:text="@string/more_to_come"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

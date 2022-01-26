@@ -160,6 +160,6 @@ class VideosListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
     }
 
     override fun select(headerPosition: Int) {
-        binding.videosListView.smoothScrollToPosition(headerPosition + 5)
+        binding.videosListView.scrollToPosition(headerPosition + 5)
     }
 }
