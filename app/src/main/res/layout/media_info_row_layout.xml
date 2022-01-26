@@ -12,6 +12,7 @@
     android:padding="@dimen/material_generic"
     android:layout_marginTop="@dimen/eight_dp"
     android:layout_marginBottom="@dimen/four_dp"
+    android:background="@drawable/ripple"
     >
     <ImageView
         android:id="@+id/icon_view"
