@@ -114,4 +114,17 @@
     <string name="close">Close</string>
     <string name="analysing">Analysing…</string>
     <string name="page_copied_to_clipboard">Page content copied to clipboard</string>
+    <string name="clean">Clean</string>
+    <string name="blurred_pics">Blurred Pics</string>
+    <string name="memes">Memes</string>
+    <string name="duplicates">Duplicate files</string>
+    <string name="cache">App Cache</string>
+    <string name="memory">Memory (RAM)</string>
+    <string name="large_videos">Large videos</string>
+    <string name="large_downloads">Large downloads</string>
+    <string name="old_screenshots">Old Screenshots</string>
+    <string name="old_downloads">Old downloads</string>
+    <string name="old_recordings">Old recordings</string>
+    <string name="more_to_come">More optimizations to come!</string>
+    <string name="view_all">View all</string>
 </resources>

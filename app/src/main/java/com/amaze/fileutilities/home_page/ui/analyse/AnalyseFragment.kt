@@ -18,7 +18,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.databinding.FragmentAnalyseBinding
+import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
+import com.amaze.fileutilities.utilis.hideFade
+import com.amaze.fileutilities.utilis.showFade
 
 class AnalyseFragment : Fragment() {
 
@@ -40,13 +43,35 @@ class AnalyseFragment : Fragment() {
             ViewModelProvider(this).get(AnalyseViewModel::class.java)
         _binding = FragmentAnalyseBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        binding.run {
+            blurredPicsPreview.invalidateProgress(filesViewModel.isStorageAnalysing)
+            memesPreview.invalidateProgress(filesViewModel.isStorageAnalysing)
+            blurredPicsPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(true, this@AnalyseFragment)
+            }
+            memesPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(false, this@AnalyseFragment)
+            }
 
-        binding.blurButton.setOnClickListener {
-            ReviewImagesFragment.newInstance(true, this)
-        }
+            val appDatabase = AppDatabase.getInstance(requireContext())
+            val dao = appDatabase.analysisDao()
 
-        binding.memeButton.setOnClickListener {
-            ReviewImagesFragment.newInstance(false, this)
+            analyseViewModel.getBlurImages(dao).observe(viewLifecycleOwner) {
+                if (it != null) {
+                    blurredPicsPreview.showFade(300)
+                    blurredPicsPreview.loadPreviews(it)
+                } else {
+                    blurredPicsPreview.hideFade(300)
+                }
+            }
+            analyseViewModel.getMemeImages(dao).observe(viewLifecycleOwner) {
+                if (it != null) {
+                    memesPreview.showFade(300)
+                    memesPreview.loadPreviews(it)
+                } else {
+                    memesPreview.hideFade(300)
+                }
+            }
         }
         return root
     }

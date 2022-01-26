@@ -435,6 +435,6 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
     }
 
     override fun select(headerPosition: Int) {
-        binding.audiosListView.smoothScrollToPosition(headerPosition + 5)
+        binding.audiosListView.scrollToPosition(headerPosition + 5)
     }
 }

@@ -159,6 +159,6 @@ class DocumentsListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
     }
 
     override fun select(headerPosition: Int) {
-        binding.documentsListView.smoothScrollToPosition(headerPosition + 5)
+        binding.documentsListView.scrollToPosition(headerPosition + 5)
     }
 }
