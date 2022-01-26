@@ -112,7 +112,6 @@ class ReviewImagesFragment : Fragment() {
         if (mediaInfoList == null) {
             invalidateProcessing(true)
         } else {
-            invalidateProcessing(false)
             mediaFileAdapter = ReviewImagesAdapter(
                 requireContext(),
                 preloader!!, mediaInfoList
@@ -132,26 +131,38 @@ class ReviewImagesFragment : Fragment() {
                 binding.fastscroll.visibility = View.VISIBLE
                 binding.fastscroll.setRecyclerView(binding.listView, 1)
             }
+            invalidateProcessing(false)
         }
     }
 
     private fun invalidateProcessing(isProcessing: Boolean) {
-        if (isProcessing || filesViewModel.isStorageAnalysing) {
-            binding.processingProgressView.invalidateProcessing(
-                true, false,
-                resources.getString(R.string.analysing)
-            )
-        } else if (mediaFileAdapter?.itemCount == 0) {
-            binding.processingProgressView.invalidateProcessing(
-                false, true,
-                resources.getString(R.string.its_quiet_here)
-            )
-        } else {
-            binding.processingProgressView.invalidateProcessing(
-                false, false,
-                null
-            )
+        when {
+            isProcessing -> {
+                binding.processingProgressView.invalidateProcessing(
+                    true, false,
+                    resources.getString(R.string.please_wait)
+                )
+            }
+            filesViewModel.isStorageAnalysing -> {
+                binding.processingProgressView.invalidateProcessing(
+                    false, false,
+                    null
+                )
+            }
+            mediaFileAdapter?.itemCount == 0 -> {
+                binding.processingProgressView.invalidateProcessing(
+                    false, true,
+                    resources.getString(R.string.its_quiet_here)
+                )
+            }
+            else -> {
+                binding.processingProgressView.invalidateProcessing(
+                    false, false,
+                    null
+                )
+            }
         }
+        mediaFileAdapter?.isProcessing = filesViewModel.isStorageAnalysing
     }
 
     override fun onDestroyView() {
