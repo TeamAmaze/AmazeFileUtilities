@@ -18,8 +18,10 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.ActionBar
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.amaze.fileutilities.PermissionsActivity
@@ -109,16 +111,15 @@ class MainActivity : PermissionsActivity() {
         }
 
         viewModel.usedImagesSummaryTransformations.observe(
-            this, {
-                it?.second.let {
-                    list ->
-                    list?.run {
-                        val inputList = ArrayList(this)
-                        viewModel.analyseImagesTransformation(inputList)
-                    }
+            this
+        ) {
+            it?.second.let { list ->
+                list?.run {
+                    val inputList = ArrayList(this)
+                    viewModel.analyseImagesTransformation(inputList)
                 }
             }
-        )
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -137,11 +138,20 @@ class MainActivity : PermissionsActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        if (isOptionsVisible) {
-            isOptionsVisible = !isOptionsVisible
-            invalidateOptionsTabs()
+        val fragment = getFragmentAtFrame()
+        if (fragment is NavHostFragment && fragment.childFragmentManager.backStackEntryCount > 1) {
+            supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+            if (isOptionsVisible) {
+                isOptionsVisible = !isOptionsVisible
+                invalidateOptionsTabs()
+            }
         }
+    }
+
+    private fun getFragmentAtFrame(): Fragment? {
+        return supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)
     }
 
     fun setCustomTitle(title: String) {

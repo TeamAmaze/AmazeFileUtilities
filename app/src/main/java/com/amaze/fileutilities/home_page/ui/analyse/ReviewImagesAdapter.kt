@@ -24,7 +24,7 @@ class ReviewImagesAdapter(
     val context: Context,
     val preloader: MediaAdapterPreloader,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
-    private val toggleCheckCallback: (count: Int) -> Unit,
+    private val toggleCheckCallback: (title: String) -> Unit,
 ) :
     AbstractMediaFilesAdapter(context, preloader, true) {
 
@@ -65,11 +65,12 @@ class ReviewImagesAdapter(
                                     intent.data = mediaFileInfo.getContentUri(context)
                                     context.startActivity(intent)
                                 }
+                                invalidateCheckedTitle()
                                 holder.root.setOnClickListener {
                                     toggleChecked(this)
                                     holder.checkIconGrid.visibility =
                                         if (isChecked) View.VISIBLE else View.INVISIBLE
-                                    toggleCheckCallback.invoke(checkItemsList.size)
+                                    invalidateCheckedTitle()
                                 }
                             }
                         }
@@ -103,5 +104,11 @@ class ReviewImagesAdapter(
             mediaFileListItems = mutableListOf()
             notifyDataSetChanged()
         }
+    }
+
+    private fun invalidateCheckedTitle() {
+        val title = "${checkItemsList.size} / $itemCount" +
+            " (${checkedItemBytes()})"
+        toggleCheckCallback.invoke(title)
     }
 }

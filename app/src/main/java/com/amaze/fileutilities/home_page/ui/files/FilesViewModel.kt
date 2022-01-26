@@ -30,6 +30,8 @@ import java.io.OutputStream
 class FilesViewModel(val applicationContext: Application) :
     AndroidViewModel(applicationContext) {
 
+    var isStorageAnalysing = true
+
     val internalStorageStats: LiveData<StorageSummary?> =
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
@@ -73,14 +75,18 @@ class FilesViewModel(val applicationContext: Application) :
     fun analyseImagesTransformation(mediaFileInfoList: ArrayList<MediaFileInfo>) {
         viewModelScope.launch(Dispatchers.Default) {
             val dao = AppDatabase.getInstance(applicationContext).analysisDao()
+            isStorageAnalysing = true
             mediaFileInfoList.forEach {
-                val isBlur = ImgUtils.isImageBlur(it.path)
-                val isMeme = ImgUtils.isImageMeme(
-                    it.path,
-                    applicationContext.externalCacheDir!!.path
-                )
-                dao.insert(Analysis(null, it.path, isBlur, isMeme))
+                if (dao.findByPath(it.path) == null) {
+                    val isBlur = ImgUtils.isImageBlur(it.path)
+                    val isMeme = ImgUtils.isImageMeme(
+                        it.path,
+                        applicationContext.externalCacheDir!!.path
+                    )
+                    dao.insert(Analysis(it.path, isBlur, isMeme))
+                }
             }
+            isStorageAnalysing = false
         }
     }
 
