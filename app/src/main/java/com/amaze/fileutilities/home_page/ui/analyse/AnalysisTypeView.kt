@@ -11,6 +11,7 @@
 package com.amaze.fileutilities.home_page.ui.analyse
 
 import android.content.Context
+import android.content.Intent
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -18,13 +19,18 @@ import android.view.View
 import android.widget.*
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
+import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.utilis.px
+import com.amaze.fileutilities.utilis.showFade
+import com.amaze.fileutilities.utilis.showToastInCenter
 import com.bumptech.glide.Glide
 
 class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
     private val imagesListScroll: HorizontalScrollView
+    private val titleParent: LinearLayout
     private val titleTextView: TextView
+    private val titleHint: ImageView
     private val cleanButtonParent: RelativeLayout
     private val imagesListParent: LinearLayout
     private val cleanButton: Button
@@ -39,7 +45,9 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.analysis_type_view, this, true)
         imagesListScroll = getChildAt(0) as HorizontalScrollView
-        titleTextView = getChildAt(1) as TextView
+        titleParent = getChildAt(1) as LinearLayout
+        titleTextView = titleParent.findViewById(R.id.title)
+        titleHint = titleParent.findViewById(R.id.title_hint)
         cleanButtonParent = getChildAt(2) as RelativeLayout
         imagesListParent = imagesListScroll.findViewById(R.id.images_list_parent)
         cleanButton = cleanButtonParent.findViewById(R.id.clean_button)
@@ -50,7 +58,16 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
             R.styleable.AnalysisTypeView, 0, 0
         )
         val titleText = a.getString(R.styleable.AnalysisTypeView_analysisTitle)
+        val showPreview = a.getBoolean(R.styleable.AnalysisTypeView_showPreview, false)
+        val hintText = a.getString(R.styleable.AnalysisTypeView_hint)
+        imagesListScroll.visibility = if (showPreview) View.INVISIBLE else View.GONE
         titleTextView.text = titleText
+        if (hintText != null) {
+            titleHint.visibility = View.VISIBLE
+            titleHint.setOnClickListener {
+                context.showToastInCenter(hintText)
+            }
+        }
 
         orientation = VERTICAL
         gravity = Gravity.CENTER_HORIZONTAL
@@ -63,7 +80,7 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     }
 
     fun loadPreviews(mediaFileInfoList: List<MediaFileInfo>) {
-        imagesListScroll.visibility = View.VISIBLE
+        imagesListScroll.showFade(500)
         var count =
             if (mediaFileInfoList.size > PREVIEW_COUNT) PREVIEW_COUNT else mediaFileInfoList.size
         while (count -- > 1) {
@@ -75,6 +92,14 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
 
     private fun getImageView(mediaFileInfo: MediaFileInfo): ImageView {
         val imageView = ImageView(context)
+        imageView.setOnClickListener {
+            val intent = Intent(
+                context,
+                ImageViewerDialogActivity::class.java
+            )
+            intent.data = mediaFileInfo.getContentUri(context)
+            context.startActivity(intent)
+        }
         imageView.layoutParams = getParams()
         imageView.scaleType = ImageView.ScaleType.CENTER
         Glide.with(context).load(mediaFileInfo.path).into(imageView)
@@ -88,6 +113,7 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         val view = LinearLayout(context)
         view.layoutParams = getParams()
         view.addView(textView)
+        view.isClickable = false
         view.setHorizontalGravity(Gravity.CENTER_HORIZONTAL)
         view.setVerticalGravity(Gravity.CENTER_VERTICAL)
         view.background = resources.getDrawable(R.drawable.button_curved_unselected)

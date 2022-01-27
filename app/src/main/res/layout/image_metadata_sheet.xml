@@ -13,6 +13,7 @@
         android:textSize="@dimen/eighteen_sp"
         android:textStyle="bold"
         android:text="@string/information"
+        android:layout_marginTop="@dimen/material_generic"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         />

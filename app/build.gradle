@@ -128,6 +128,7 @@ dependencies {
     implementation 'com.rmtheis:tess-two:9.1.0'
     implementation "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

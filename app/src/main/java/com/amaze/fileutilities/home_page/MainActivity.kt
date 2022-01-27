@@ -120,6 +120,7 @@ class MainActivity : PermissionsActivity() {
                 }
             }
         }
+        viewModel.analyseInternalStorage()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

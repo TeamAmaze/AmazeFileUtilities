@@ -26,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/blurred_pics"
+                app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
@@ -33,6 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/memes"
+                app:showPreview="true"
+                app:hint="@string/memes_hint"
                 android:layout_marginTop="@dimen/material_generic"
                 />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
@@ -91,6 +94,22 @@
                 app:analysisTitle="@string/old_recordings"
                 android:layout_marginTop="@dimen/material_generic"
                 />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/empty_files_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/empty_files"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/junk_files_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/junk_files"
+                app:hint="@string/junk_files_hint"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/analysis_footnote"

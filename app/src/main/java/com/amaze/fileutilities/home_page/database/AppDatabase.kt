@@ -14,10 +14,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.amaze.fileutilities.utilis.DbConverters
 
-@Database(entities = [Analysis::class], version = 1)
+@Database(entities = [MediaFileAnalysis::class, InternalStorageAnalysis::class], version = 1)
+@TypeConverters(DbConverters::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun analysisDao(): AnalysisDao
+    abstract fun analysisDao(): MediaFilesAnalysisDao
+    abstract fun internalStorageAnalysisDao(): InternalStorageAnalysisDao
 
     companion object {
         private var appDatabase: AppDatabase? = null

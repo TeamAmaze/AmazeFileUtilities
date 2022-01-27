@@ -20,8 +20,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.databinding.FragmentAnalyseBinding
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
-import com.amaze.fileutilities.utilis.hideFade
-import com.amaze.fileutilities.utilis.showFade
 
 class AnalyseFragment : Fragment() {
 
@@ -44,13 +42,19 @@ class AnalyseFragment : Fragment() {
         _binding = FragmentAnalyseBinding.inflate(inflater, container, false)
         val root: View = binding.root
         binding.run {
-            blurredPicsPreview.invalidateProgress(filesViewModel.isStorageAnalysing)
-            memesPreview.invalidateProgress(filesViewModel.isStorageAnalysing)
+            blurredPicsPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+            memesPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
             blurredPicsPreview.setOnClickListener {
-                ReviewImagesFragment.newInstance(true, this@AnalyseFragment)
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_BLUR,
+                    this@AnalyseFragment
+                )
             }
             memesPreview.setOnClickListener {
-                ReviewImagesFragment.newInstance(false, this@AnalyseFragment)
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_MEME,
+                    this@AnalyseFragment
+                )
             }
 
             val appDatabase = AppDatabase.getInstance(requireContext())
@@ -58,18 +62,12 @@ class AnalyseFragment : Fragment() {
 
             analyseViewModel.getBlurImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    blurredPicsPreview.showFade(300)
                     blurredPicsPreview.loadPreviews(it)
-                } else {
-                    blurredPicsPreview.hideFade(300)
                 }
             }
             analyseViewModel.getMemeImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    memesPreview.showFade(300)
                     memesPreview.loadPreviews(it)
-                } else {
-                    memesPreview.hideFade(300)
                 }
             }
         }

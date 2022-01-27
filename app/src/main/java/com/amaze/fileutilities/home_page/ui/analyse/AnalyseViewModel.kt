@@ -11,34 +11,40 @@
 package com.amaze.fileutilities.home_page.ui.analyse
 
 import androidx.lifecycle.*
-import com.amaze.fileutilities.home_page.database.Analysis
-import com.amaze.fileutilities.home_page.database.AnalysisDao
+import com.amaze.fileutilities.home_page.database.MediaFilesAnalysisDao
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import kotlinx.coroutines.Dispatchers
 import java.io.File
 
 class AnalyseViewModel : ViewModel() {
 
-    fun getBlurImages(dao: AnalysisDao): LiveData<MutableList<MediaFileInfo>?> {
+    fun getBlurImages(dao: MediaFilesAnalysisDao): LiveData<MutableList<MediaFileInfo>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
-            emit(transformAnalysisToMediaFileInfo(dao.getAll(), true))
+            emit(transformAnalysisToMediaFileInfo(dao, true))
         }
     }
 
-    fun getMemeImages(dao: AnalysisDao): LiveData<MutableList<MediaFileInfo>?> {
+    fun getMemeImages(dao: MediaFilesAnalysisDao): LiveData<MutableList<MediaFileInfo>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
-            emit(transformAnalysisToMediaFileInfo(dao.getAll(), false))
+            emit(transformAnalysisToMediaFileInfo(dao, false))
         }
     }
 
     private fun transformAnalysisToMediaFileInfo(
-        analysis: List<Analysis>,
+        dao: MediaFilesAnalysisDao,
         requiredBlur: Boolean
     ):
         MutableList<MediaFileInfo> {
-        val response = analysis.filter { if (requiredBlur) it.isBlur else it.isMeme }.map {
+        val analysis = dao.getAll()
+        val response = analysis.filter {
+            val file = File(it.filePath)
+            if (!file.exists()) {
+                dao.delete(it)
+                false
+            } else true
+        }.filter { if (requiredBlur) it.isBlur else it.isMeme }.map {
             MediaFileInfo.fromFile(
                 File(it.filePath),
                 MediaFileInfo.ExtraInfo(
