@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/grid_view"
         android:layout_marginBottom="@dimen/material_generic"
-        android:visibility="gone"
         android:scrollbars="none"
         >
         <LinearLayout
@@ -22,16 +21,31 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/title_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="@dimen/twenty_four_sp"
-        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
         android:layout_marginTop="@dimen/eight_dp"
         android:layout_marginBottom="@dimen/eight_dp"
-        />
+        >
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/twenty_four_sp"
+            android:textStyle="bold"
+            />
+        <ImageView
+            android:id="@+id/title_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_outline_info_32"
+            android:layout_marginLeft="@dimen/eight_dp"
+            android:visibility="gone"
+            />
+    </LinearLayout>
     <RelativeLayout
         android:id="@+id/clean_button_parent"
         android:layout_width="match_parent"

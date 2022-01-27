@@ -24,9 +24,6 @@ import androidx.annotation.DrawableRes
 import com.amaze.fileutilities.R
 import java.io.File
 import java.io.IOException
-import java.lang.Exception
-import java.lang.NumberFormatException
-import java.lang.RuntimeException
 import java.util.*
 import java.util.regex.Pattern
 
@@ -34,6 +31,7 @@ class FileUtils {
 
     companion object {
         private const val INTERNAL_SHARED_STORAGE = "Internal shared storage"
+        const val DEFAULT_BUFFER_SIZE = 8192
 
         private const val DEFAULT_FALLBACK_STORAGE_PATH = "/storage/sdcard0"
         private val DIR_SEPARATOR = Pattern.compile("/")

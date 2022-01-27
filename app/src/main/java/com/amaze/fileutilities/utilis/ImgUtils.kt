@@ -17,12 +17,14 @@ import org.opencv.android.Utils
 import org.opencv.core.*
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
+import java.lang.Exception
 import kotlin.math.pow
 
 class ImgUtils {
 
     companion object {
         private var tessBaseApi: TessBaseAPI? = null
+        private val wordRegex = "^[A-Za-z]*$".toRegex()
 
         fun convertMatToBitmap(input: Mat): Bitmap? {
             var bmp: Bitmap? = null
@@ -61,6 +63,33 @@ class ImgUtils {
         }
 
         fun isImageMeme(path: String, externalDirPath: String): Boolean {
+            try {
+                val matrix = Imgcodecs.imread(path)
+                val tessBaseAPI = getTessInstance(
+                    convertMatToBitmap(processPdfImgAlt(matrix))!!,
+                    externalDirPath
+                )
+                tessBaseAPI?.run {
+                    val extractedText: String? = tessBaseAPI.getUTF8Text()
+                    extractedText?.let {
+                        for (sentence in extractedText.split("\n")) {
+                            val words = sentence.split(" ")
+                            for (word in words) {
+                                if (word.matches(wordRegex) && word.length > 4) {
+                                    return true
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return false
+            }
+            return false
+        }
+
+        fun extractText(path: String, externalDirPath: String): String {
             val matrix = Imgcodecs.imread(path)
             val tessBaseAPI = getTessInstance(
                 convertMatToBitmap(processPdfImgAlt(matrix))!!,
@@ -68,15 +97,9 @@ class ImgUtils {
             )
             tessBaseAPI?.run {
                 val extractedText: String? = tessBaseAPI.getUTF8Text()
-                extractedText?.let {
-                    for (s in extractedText.split("\n")) {
-                        if (s.trim().length > 10) {
-                            return true
-                        }
-                    }
-                }
+                return extractedText!!
             }
-            return false
+            return ""
         }
 
         fun isImageBlur(path: String): Boolean {
@@ -98,13 +121,17 @@ class ImgUtils {
         fun laplace(image: Mat): Double {
             val destination = Mat()
             val matGray = Mat()
-
-            Imgproc.cvtColor(image, matGray, Imgproc.COLOR_BGR2GRAY)
-            Imgproc.Laplacian(matGray, destination, 3)
-            val median = MatOfDouble()
-            val std = MatOfDouble()
-            Core.meanStdDev(destination, median, std)
-            return std[0, 0][0].pow(2.0)
+            return try {
+                Imgproc.cvtColor(image, matGray, Imgproc.COLOR_BGR2GRAY)
+                Imgproc.Laplacian(matGray, destination, 3)
+                val median = MatOfDouble()
+                val std = MatOfDouble()
+                Core.meanStdDev(destination, median, std)
+                std[0, 0][0].pow(2.0)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Double.MAX_VALUE
+            }
         }
 
         fun processPdfContour(matrix: Mat): Mat {
@@ -123,7 +150,7 @@ class ImgUtils {
             return matrix
         }
 
-        fun processPdfImgAlt(matrix: Mat): Mat {
+        private fun processPdfImgAlt(matrix: Mat): Mat {
 //            val resizeimage = resize(matrix, 4961.0, 7016.0)
             val resizeimage = resize(matrix, 620.0, 480.0)
             val matGray = gray(resizeimage)

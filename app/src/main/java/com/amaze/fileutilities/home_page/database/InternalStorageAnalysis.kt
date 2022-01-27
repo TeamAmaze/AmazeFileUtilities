@@ -15,15 +15,26 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(indices = [Index(value = ["file_path"], unique = true)])
-data class Analysis(
+/**
+ * While fetching and processing, be sure to validate that file exists
+ */
+@Entity(indices = [Index(value = ["sha256_checksum"], unique = true)])
+data class InternalStorageAnalysis(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
     val uid: Int,
-    @ColumnInfo(name = "file_path") val filePath: String,
-    @ColumnInfo(name = "is_blur") val isBlur: Boolean,
-    @ColumnInfo(name = "is_meme") val isMeme: Boolean
+    @ColumnInfo(name = "sha256_checksum") val checksum: String,
+    @ColumnInfo(name = "files_path") val files: List<String>,
+    @ColumnInfo(name = "is_empty") val isEmpty: Boolean,
+    @ColumnInfo(name = "is_junk") val isJunk: Boolean,
+    @ColumnInfo(name = "is_directory") val isDirectory: Boolean,
 ) {
-    constructor(filePath: String, isBlur: Boolean, isMeme: Boolean) :
-        this(0, filePath, isBlur, isMeme)
+    constructor(
+        checksum: String,
+        filesPath: List<String>,
+        isEmpty: Boolean,
+        isJunk: Boolean,
+        isDirectory: Boolean
+    ) :
+        this(0, checksum, filesPath, isEmpty, isJunk, isDirectory)
 }

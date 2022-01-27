@@ -117,6 +117,7 @@
     <string name="clean">Clean</string>
     <string name="blurred_pics">Blurred Pics</string>
     <string name="memes">Memes</string>
+    <string name="memes_hint">Memes are images that have something prominent written over them</string>
     <string name="duplicates">Duplicate files</string>
     <string name="cache">App Cache</string>
     <string name="memory">Memory (RAM)</string>
@@ -125,6 +126,9 @@
     <string name="old_screenshots">Old Screenshots</string>
     <string name="old_downloads">Old downloads</string>
     <string name="old_recordings">Old recordings</string>
+    <string name="empty_files">Empty files / folders</string>
+    <string name="junk_files">Junk files</string>
+    <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
     <string name="more_to_come">More optimizations to come!</string>
     <string name="view_all">View all</string>
 </resources>

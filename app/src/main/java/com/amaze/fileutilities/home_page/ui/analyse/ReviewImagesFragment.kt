@@ -32,7 +32,6 @@ import com.amaze.fileutilities.utilis.Utils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
-import kotlinx.coroutines.*
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
 class ReviewImagesFragment : Fragment() {
@@ -53,13 +52,22 @@ class ReviewImagesFragment : Fragment() {
 
     companion object {
 
-        private const val IS_BLUR_FRAGMENT = "is_blur"
+        private const val ANALYSIS_TYPE = "analysis_type"
+        const val TYPE_BLUR = 1
+        const val TYPE_MEME = 2
+        const val TYPE_DUPLICATES = 3
+        const val TYPE_LARGE_VIDEOS = 4
+        const val TYPE_OLD_DOWNLOADS = 5
+        const val TYPE_OLD_SCREENSHOTS = 6
+        const val TYPE_OLD_RECORDINGS = 7
+        const val TYPE_EMPTY_FILES = 8
+        const val TYPE_JUNK_FIELS = 9
 
-        fun newInstance(isBlur: Boolean, fragment: Fragment) {
+        fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
             analyseFragment.apply {
                 val bundle = Bundle()
-                bundle.putBoolean(IS_BLUR_FRAGMENT, isBlur)
+                bundle.putInt(ANALYSIS_TYPE, type)
                 arguments = bundle
             }
 
@@ -80,7 +88,7 @@ class ReviewImagesFragment : Fragment() {
 
         _binding = FragmentReviewImagesBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val isBlur: Boolean = arguments?.getBoolean(IS_BLUR_FRAGMENT)!!
+        val analysisType: Int = arguments?.getInt(ANALYSIS_TYPE)!!
         optionsActionBar = (activity as MainActivity).invalidateSelectedActionBar(true)!!
         (activity as MainActivity).invalidateBottomBar(false)
 
@@ -98,13 +106,17 @@ class ReviewImagesFragment : Fragment() {
         )
         val appDatabase = AppDatabase.getInstance(requireContext())
         val dao = appDatabase.analysisDao()
-        if (isBlur) {
-            viewModel.getBlurImages(dao).observe(viewLifecycleOwner) {
-                setMediaInfoList(it)
-            }
-        } else {
-            viewModel.getMemeImages(dao).observe(viewLifecycleOwner) {
-                setMediaInfoList(it)
+        when (analysisType) {
+            TYPE_BLUR ->
+                {
+                    viewModel.getBlurImages(dao).observe(viewLifecycleOwner) {
+                        setMediaInfoList(it)
+                    }
+                }
+            TYPE_MEME -> {
+                viewModel.getMemeImages(dao).observe(viewLifecycleOwner) {
+                    setMediaInfoList(it)
+                }
             }
         }
         return root
@@ -154,7 +166,7 @@ class ReviewImagesFragment : Fragment() {
                     resources.getString(R.string.please_wait)
                 )
             }
-            filesViewModel.isStorageAnalysing -> {
+            filesViewModel.isMediaFilesAnalysing -> {
                 binding.processingProgressView.invalidateProcessing(
                     false, false,
                     null
@@ -173,7 +185,7 @@ class ReviewImagesFragment : Fragment() {
                 )
             }
         }
-        mediaFileAdapter?.isProcessing = filesViewModel.isStorageAnalysing
+        mediaFileAdapter?.isProcessing = filesViewModel.isMediaFilesAnalysing
     }
 
     override fun onDestroyView() {
