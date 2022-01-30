@@ -8,25 +8,18 @@
  * and company names mentioned are trademarks or registered trademarks of their respective owners.
  */
 
-package com.amaze.fileutilities.home_page.database
+package com.amaze.fileutilities.utilis
 
-import androidx.room.*
+import androidx.room.TypeConverter
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
-@Dao
-interface AnalysisDao {
+class DbConverters {
 
-    @Query("SELECT * FROM analysis")
-    fun getAll(): List<Analysis>
+    @TypeConverter
+    fun fromList(value: List<String>) = Json.encodeToString(value)
 
-    @Query("SELECT * FROM analysis WHERE file_path=:path")
-    fun findByPath(path: String): Analysis?
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(analysis: Analysis)
-
-    @Delete
-    fun deleteAll(vararg analysis: Analysis)
-
-    @Delete
-    fun delete(user: Analysis)
+    @TypeConverter
+    fun toList(value: String) = Json.decodeFromString<List<String>>(value)
 }

@@ -12,6 +12,8 @@
         <attr name="themeColor" format="color" />
     </declare-styleable>
     <declare-styleable name="AnalysisTypeView">
-        <attr name="analysisTitle" format="string"/>
+        <attr name="analysisTitle" format="string" />
+        <attr name="showPreview" format="boolean" />
+        <attr name="hint" format="string" />
     </declare-styleable>
 </resources>
