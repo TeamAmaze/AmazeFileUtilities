@@ -107,6 +107,7 @@ class FilesViewModel(val applicationContext: Application) :
                 val file = File(this.path)
                 processInternalStorageAnalysis(dao, file)
             }
+            isInternalStorageAnalysing = false
         }
     }
 
@@ -267,18 +268,18 @@ class FilesViewModel(val applicationContext: Application) :
     private fun processInternalStorageAnalysis(dao: InternalStorageAnalysisDao, file: File) {
         if (file.isDirectory) {
             val filesInDir = file.listFiles()
-            filesInDir?.run {
-                if (this.isNotEmpty()) {
+            if (filesInDir == null) {
+                dao.insert(
+                    InternalStorageAnalysis(
+                        file.path, listOf(file.path),
+                        true, false, true
+                    )
+                )
+            } else {
+                if (filesInDir.isNotEmpty()) {
                     for (currFile in filesInDir) {
                         processInternalStorageAnalysis(dao, currFile)
                     }
-                } else {
-                    dao.insert(
-                        InternalStorageAnalysis(
-                            file.path, listOf(file.path),
-                            true, false, true
-                        )
-                    )
                 }
             }
         } else {

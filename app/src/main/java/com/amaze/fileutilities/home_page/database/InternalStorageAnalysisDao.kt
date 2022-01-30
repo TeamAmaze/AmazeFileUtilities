@@ -15,6 +15,12 @@ import androidx.room.*
 @Dao
 interface InternalStorageAnalysisDao {
 
+    @Query("SELECT * FROM internalstorageanalysis")
+    fun getAll(): List<InternalStorageAnalysis>
+
+    @Query("SELECT * FROM internalstorageanalysis where is_empty=1")
+    fun getAllEmptyFiles(): List<InternalStorageAnalysis>
+
     @Query("SELECT * FROM internalstorageanalysis WHERE sha256_checksum=:sha256Checksum")
     fun findBySha256Checksum(sha256Checksum: String): InternalStorageAnalysis?
 
