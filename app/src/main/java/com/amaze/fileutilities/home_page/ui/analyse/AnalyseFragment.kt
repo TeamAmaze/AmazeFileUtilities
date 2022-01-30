@@ -44,6 +44,8 @@ class AnalyseFragment : Fragment() {
         binding.run {
             blurredPicsPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
             memesPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+            emptyFilesPreview.invalidateProgress(filesViewModel.isInternalStorageAnalysing)
+            duplicateFilesPreview.invalidateProgress(filesViewModel.isInternalStorageAnalysing)
             blurredPicsPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_BLUR,
@@ -56,9 +58,22 @@ class AnalyseFragment : Fragment() {
                     this@AnalyseFragment
                 )
             }
+            emptyFilesPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_EMPTY_FILES,
+                    this@AnalyseFragment
+                )
+            }
+            duplicateFilesPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_DUPLICATES,
+                    this@AnalyseFragment
+                )
+            }
 
             val appDatabase = AppDatabase.getInstance(requireContext())
             val dao = appDatabase.analysisDao()
+            val internalStorageDao = appDatabase.internalStorageAnalysisDao()
 
             analyseViewModel.getBlurImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
@@ -70,6 +85,17 @@ class AnalyseFragment : Fragment() {
                     memesPreview.loadPreviews(it)
                 }
             }
+            analyseViewModel.getEmptyFiles(internalStorageDao).observe(viewLifecycleOwner) {
+                if (it != null) {
+                    emptyFilesPreview.loadPreviews(it)
+                }
+            }
+            analyseViewModel.getDuplicateDirectories(internalStorageDao)
+                .observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        duplicateFilesPreview.loadPreviews(it.flatten())
+                    }
+                }
         }
         return root
     }

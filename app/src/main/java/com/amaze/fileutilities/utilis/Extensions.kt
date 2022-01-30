@@ -23,6 +23,10 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.Toast
+import com.amaze.fileutilities.home_page.database.InternalStorageAnalysis
+import com.amaze.fileutilities.home_page.database.InternalStorageAnalysisDao
+import com.amaze.fileutilities.home_page.database.MediaFileAnalysis
+import com.amaze.fileutilities.home_page.database.MediaFilesAnalysisDao
 import java.io.File
 
 fun Uri.getSiblingUriFiles(context: Context): ArrayList<Uri>? {
@@ -259,4 +263,25 @@ fun Context.getAppCommonSharedPreferences(): SharedPreferences {
         PreferencesConstants.PREFERENCE_FILE,
         Context.MODE_PRIVATE
     )
+}
+
+fun MediaFileAnalysis.invalidate(dao: MediaFilesAnalysisDao): Boolean {
+    val file = File(filePath)
+    return if (!file.exists()) {
+        dao.delete(this)
+        false
+    } else {
+        true
+    }
+}
+
+fun InternalStorageAnalysis.invalidate(dao: InternalStorageAnalysisDao): Boolean {
+    this.files.forEach {
+        val file = File(it)
+        if (!file.exists()) {
+            dao.delete(this)
+            return false
+        }
+    }
+    return true
 }

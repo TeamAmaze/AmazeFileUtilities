@@ -18,6 +18,12 @@ interface MediaFilesAnalysisDao {
     @Query("SELECT * FROM mediafileanalysis")
     fun getAll(): List<MediaFileAnalysis>
 
+    @Query("SELECT * FROM mediafileanalysis where is_blur=1")
+    fun getAllBlur(): List<MediaFileAnalysis>
+
+    @Query("SELECT * FROM mediafileanalysis where is_meme=1")
+    fun getAllMeme(): List<MediaFileAnalysis>
+
     @Query("SELECT * FROM mediafileanalysis WHERE file_path=:path")
     fun findByPath(path: String): MediaFileAnalysis?
 

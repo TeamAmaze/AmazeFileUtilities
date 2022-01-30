@@ -106,59 +106,85 @@ class ReviewImagesFragment : Fragment() {
         )
         val appDatabase = AppDatabase.getInstance(requireContext())
         val dao = appDatabase.analysisDao()
+        val internalStorageDao = appDatabase.internalStorageAnalysisDao()
         when (analysisType) {
             TYPE_BLUR ->
                 {
                     viewModel.getBlurImages(dao).observe(viewLifecycleOwner) {
-                        setMediaInfoList(it)
+                        if (it == null) {
+                            invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                        } else {
+                            setMediaInfoList(ArrayList(it), true)
+                            invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                        }
                     }
                 }
             TYPE_MEME -> {
                 viewModel.getMemeImages(dao).observe(viewLifecycleOwner) {
-                    setMediaInfoList(it)
+                    if (it == null) {
+                        invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                    } else {
+                        setMediaInfoList(ArrayList(it), true)
+                        invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                    }
+                }
+            }
+            TYPE_DUPLICATES -> {
+                viewModel.getDuplicateDirectories(internalStorageDao).observe(viewLifecycleOwner) {
+                    if (it == null) {
+                        invalidateProcessing(true, filesViewModel.isInternalStorageAnalysing)
+                    } else {
+                        setMediaInfoList(ArrayList(it.flatten()), false)
+                        invalidateProcessing(false, filesViewModel.isInternalStorageAnalysing)
+                    }
+                }
+            }
+            TYPE_EMPTY_FILES -> {
+                viewModel.getEmptyFiles(internalStorageDao).observe(viewLifecycleOwner) {
+                    if (it == null) {
+                        invalidateProcessing(true, filesViewModel.isInternalStorageAnalysing)
+                    } else {
+                        setMediaInfoList(ArrayList(it), false)
+                        invalidateProcessing(false, filesViewModel.isInternalStorageAnalysing)
+                    }
                 }
             }
         }
         return root
     }
 
-    private fun setMediaInfoList(mediaInfoList: MutableList<MediaFileInfo>?) {
-        if (mediaInfoList == null) {
-            invalidateProcessing(true)
-        } else {
-            mediaFileAdapter = ReviewImagesAdapter(
-                requireContext(),
-                preloader!!, mediaInfoList
-            ) { checkedSize, itemsCount, bytesFormatted ->
-                val title = "$checkedSize / $itemsCount" +
-                    " ($bytesFormatted)"
-                val countView = optionsActionBar?.findViewById<AppCompatTextView>(R.id.title)
-                val thumbsDownButton =
-                    optionsActionBar?.findViewById<ImageView>(R.id.thumbsDown)
-                countView?.text = title
-                if (checkedSize > 0) {
-                    thumbsDownButton?.visibility = View.VISIBLE
-                } else {
-                    thumbsDownButton?.visibility = View.GONE
-                }
-            }
-            binding.listView
-                .addOnScrollListener(recyclerViewPreloader!!)
-            Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
-            binding.listView.layoutManager = gridLayoutManager
-            binding.listView.adapter = mediaFileAdapter
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                binding.fastscroll.visibility = View.GONE
-                FastScrollerBuilder(binding.listView).useMd2Style().build()
+    private fun setMediaInfoList(mediaInfoList: MutableList<MediaFileInfo>, doShowDown: Boolean) {
+        mediaFileAdapter = ReviewImagesAdapter(
+            requireContext(),
+            preloader!!, mediaInfoList
+        ) { checkedSize, itemsCount, bytesFormatted ->
+            val title = "$checkedSize / $itemsCount" +
+                " ($bytesFormatted)"
+            val countView = optionsActionBar?.findViewById<AppCompatTextView>(R.id.title)
+            val thumbsDownButton =
+                optionsActionBar?.findViewById<ImageView>(R.id.thumbsDown)
+            countView?.text = title
+            if (checkedSize > 0 && doShowDown) {
+                thumbsDownButton?.visibility = View.VISIBLE
             } else {
-                binding.fastscroll.visibility = View.VISIBLE
-                binding.fastscroll.setRecyclerView(binding.listView, 1)
+                thumbsDownButton?.visibility = View.GONE
             }
-            invalidateProcessing(false)
+        }
+        binding.listView
+            .addOnScrollListener(recyclerViewPreloader!!)
+        Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
+        binding.listView.layoutManager = gridLayoutManager
+        binding.listView.adapter = mediaFileAdapter
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            binding.fastscroll.visibility = View.GONE
+            FastScrollerBuilder(binding.listView).useMd2Style().build()
+        } else {
+            binding.fastscroll.visibility = View.VISIBLE
+            binding.fastscroll.setRecyclerView(binding.listView, 1)
         }
     }
 
-    private fun invalidateProcessing(isProcessing: Boolean) {
+    private fun invalidateProcessing(isProcessing: Boolean, isAnalysing: Boolean) {
         when {
             isProcessing -> {
                 binding.processingProgressView.invalidateProcessing(
@@ -166,7 +192,7 @@ class ReviewImagesFragment : Fragment() {
                     resources.getString(R.string.please_wait)
                 )
             }
-            filesViewModel.isMediaFilesAnalysing -> {
+            isAnalysing -> {
                 binding.processingProgressView.invalidateProcessing(
                     false, false,
                     null
@@ -185,7 +211,7 @@ class ReviewImagesFragment : Fragment() {
                 )
             }
         }
-        mediaFileAdapter?.isProcessing = filesViewModel.isMediaFilesAnalysing
+        mediaFileAdapter?.isProcessing = isAnalysing
     }
 
     override fun onDestroyView() {
