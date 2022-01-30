@@ -80,7 +80,7 @@ class ImageMetadataSheet() : BottomSheetDialogFragment() {
             Log.i(javaClass.simpleName, "Found laplace of image: $factor")
 
             var result = "\n"
-            result += "Laplacian variance: $factor"
+            result += "Laplacian variance: $factor\n"
             metadata.directories.forEach { directory ->
                 directory.tags.forEach {
                     tag ->
@@ -89,7 +89,10 @@ class ImageMetadataSheet() : BottomSheetDialogFragment() {
                 }
                 result += "\n\n"
             }
-
+            /*result += "\n\n\n------ Extracted text --------\n\n"
+            result += ImgUtils.extractText(it.uri.getFileFromUri(requireContext())!!.path,
+                requireContext().externalCacheDir!!.path)
+            result += "\n\n"*/
             viewBinding.metadata.text = result
         }
     }

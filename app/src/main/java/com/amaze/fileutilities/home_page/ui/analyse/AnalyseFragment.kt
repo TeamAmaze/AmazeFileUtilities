@@ -20,8 +20,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.databinding.FragmentAnalyseBinding
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
-import com.amaze.fileutilities.utilis.hideFade
-import com.amaze.fileutilities.utilis.showFade
 
 class AnalyseFragment : Fragment() {
 
@@ -44,34 +42,60 @@ class AnalyseFragment : Fragment() {
         _binding = FragmentAnalyseBinding.inflate(inflater, container, false)
         val root: View = binding.root
         binding.run {
-            blurredPicsPreview.invalidateProgress(filesViewModel.isStorageAnalysing)
-            memesPreview.invalidateProgress(filesViewModel.isStorageAnalysing)
+            blurredPicsPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+            memesPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+            emptyFilesPreview.invalidateProgress(filesViewModel.isInternalStorageAnalysing)
+            duplicateFilesPreview.invalidateProgress(filesViewModel.isInternalStorageAnalysing)
             blurredPicsPreview.setOnClickListener {
-                ReviewImagesFragment.newInstance(true, this@AnalyseFragment)
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_BLUR,
+                    this@AnalyseFragment
+                )
             }
             memesPreview.setOnClickListener {
-                ReviewImagesFragment.newInstance(false, this@AnalyseFragment)
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_MEME,
+                    this@AnalyseFragment
+                )
+            }
+            emptyFilesPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_EMPTY_FILES,
+                    this@AnalyseFragment
+                )
+            }
+            duplicateFilesPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_DUPLICATES,
+                    this@AnalyseFragment
+                )
             }
 
             val appDatabase = AppDatabase.getInstance(requireContext())
             val dao = appDatabase.analysisDao()
+            val internalStorageDao = appDatabase.internalStorageAnalysisDao()
 
             analyseViewModel.getBlurImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    blurredPicsPreview.showFade(300)
                     blurredPicsPreview.loadPreviews(it)
-                } else {
-                    blurredPicsPreview.hideFade(300)
                 }
             }
             analyseViewModel.getMemeImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    memesPreview.showFade(300)
                     memesPreview.loadPreviews(it)
-                } else {
-                    memesPreview.hideFade(300)
                 }
             }
+            analyseViewModel.getEmptyFiles(internalStorageDao).observe(viewLifecycleOwner) {
+                if (it != null) {
+                    emptyFilesPreview.loadPreviews(it)
+                }
+            }
+            analyseViewModel.getDuplicateDirectories(internalStorageDao)
+                .observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        duplicateFilesPreview.loadPreviews(it.flatten())
+                    }
+                }
         }
         return root
     }
