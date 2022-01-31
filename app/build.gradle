@@ -129,6 +129,7 @@ dependencies {
     implementation "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
+    implementation "androidx.preference:preference-ktx:1.2.0"
 
     //Detect memory leaks
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
