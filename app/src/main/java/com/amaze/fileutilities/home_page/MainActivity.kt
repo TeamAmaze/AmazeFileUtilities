@@ -33,6 +33,7 @@ import com.amaze.fileutilities.databinding.ActivityMainBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
 import com.amaze.fileutilities.home_page.ui.options.AboutActivity
+import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
 import com.amaze.fileutilities.utilis.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -106,6 +107,11 @@ class MainActivity : PermissionsActivity() {
         }
         binding.aboutText.setOnClickListener {
             startActivity(Intent(this, AboutActivity::class.java))
+            isOptionsVisible = !isOptionsVisible
+            invalidateOptionsTabs()
+        }
+        binding.settingsText.setOnClickListener {
+            startActivity(Intent(this, PreferenceActivity::class.java))
             isOptionsVisible = !isOptionsVisible
             invalidateOptionsTabs()
         }

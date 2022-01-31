@@ -69,7 +69,7 @@ abstract class AudioPlayerNotification {
         if (notificationChannel == null) {
             notificationChannel = NotificationChannel(
                 NOTIFICATION_CHANNEL_ID,
-                service.getString(R.string.audio_player),
+                service.getString(R.string.amaze_audio_player),
                 NotificationManager.IMPORTANCE_LOW
             )
             notificationChannel.description =

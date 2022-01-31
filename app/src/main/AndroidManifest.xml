@@ -81,7 +81,7 @@
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Dialog">
             <intent-filter
-                android:label="@string/audio_player"
+                android:label="@string/amaze_audio_player"
                 tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -155,6 +155,12 @@
 
         <activity android:name="com.amaze.fileutilities.crash_report.ErrorActivity"
             android:theme="@style/Theme.AmazeFileUtilities"
+            android:configChanges=""
+            android:label="Error"
+            />
+
+        <activity android:name=".home_page.ui.settings.PreferenceActivity"
+            android:theme="@style/Theme.AmazeFileUtilities.Dark"
             android:configChanges=""
             android:label="Error"
             />
