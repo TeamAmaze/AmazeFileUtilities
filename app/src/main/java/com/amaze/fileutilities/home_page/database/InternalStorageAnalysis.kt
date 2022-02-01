@@ -28,13 +28,17 @@ data class InternalStorageAnalysis(
     @ColumnInfo(name = "is_empty") val isEmpty: Boolean,
     @ColumnInfo(name = "is_junk") val isJunk: Boolean,
     @ColumnInfo(name = "is_directory") val isDirectory: Boolean,
+    @ColumnInfo(name = "is_mediastore") val isMediaStore: Boolean,
+    @ColumnInfo(name = "depth") val depth: Int
 ) {
     constructor(
         checksum: String,
         filesPath: List<String>,
         isEmpty: Boolean,
         isJunk: Boolean,
-        isDirectory: Boolean
+        isDirectory: Boolean,
+        isMediaStore: Boolean,
+        depth: Int
     ) :
-        this(0, checksum, filesPath, isEmpty, isJunk, isDirectory)
+        this(0, checksum, filesPath, isEmpty, isJunk, isDirectory, isMediaStore, depth)
 }

@@ -10,6 +10,7 @@
         android:layout_height="@dimen/grid_view"
         android:layout_marginBottom="@dimen/material_generic"
         android:scrollbars="none"
+        android:visibility="gone"
         >
         <LinearLayout
             android:id="@+id/images_list_parent"
@@ -17,6 +18,12 @@
             android:layout_height="@dimen/grid_view"
             android:orientation="horizontal"
             >
+            <ProgressBar
+                android:id="@+id/scroll_progress"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/grid_view"
+                android:indeterminate="true"
+                />
             <!-- placeholder for dynamic elements -->
         </LinearLayout>
     </HorizontalScrollView>
