@@ -21,7 +21,6 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.utilis.px
-import com.amaze.fileutilities.utilis.showFade
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.bumptech.glide.Glide
 
@@ -35,6 +34,7 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     private val imagesListParent: LinearLayout
     private val cleanButton: Button
     private val loadingProgress: ProgressBar
+    private val loadingHorizontalScroll: ProgressBar
 
     companion object {
         private const val PREVIEW_COUNT = 5
@@ -52,6 +52,7 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         imagesListParent = imagesListScroll.findViewById(R.id.images_list_parent)
         cleanButton = cleanButtonParent.findViewById(R.id.clean_button)
         loadingProgress = cleanButtonParent.findViewById(R.id.loading_progress)
+        loadingHorizontalScroll = imagesListParent.findViewById(R.id.scroll_progress)
 
         val a = context.obtainStyledAttributes(
             attrs,
@@ -60,7 +61,9 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         val titleText = a.getString(R.styleable.AnalysisTypeView_analysisTitle)
         val showPreview = a.getBoolean(R.styleable.AnalysisTypeView_showPreview, false)
         val hintText = a.getString(R.styleable.AnalysisTypeView_hint)
-        imagesListScroll.visibility = if (showPreview) View.INVISIBLE else View.GONE
+        if (showPreview) {
+            imagesListScroll.visibility = View.VISIBLE
+        }
         titleTextView.text = titleText
         if (hintText != null) {
             titleHint.visibility = View.VISIBLE
@@ -80,7 +83,7 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     }
 
     fun loadPreviews(mediaFileInfoList: List<MediaFileInfo>) {
-        imagesListScroll.showFade(500)
+        loadingHorizontalScroll.visibility = View.GONE
         var count =
             if (mediaFileInfoList.size > PREVIEW_COUNT) PREVIEW_COUNT else mediaFileInfoList.size
         while (count -- > 1) {
@@ -102,7 +105,8 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         }
         imageView.layoutParams = getParams()
         imageView.scaleType = ImageView.ScaleType.CENTER
-        Glide.with(context).load(mediaFileInfo.path).into(imageView)
+        Glide.with(context).load(mediaFileInfo.path).fallback(R.drawable.ic_outline_broken_image_24)
+            .placeholder(R.drawable.ic_outline_insert_drive_file_32).into(imageView)
         return imageView
     }
 

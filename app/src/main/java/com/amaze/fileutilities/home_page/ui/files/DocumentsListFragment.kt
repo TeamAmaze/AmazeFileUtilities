@@ -59,80 +59,78 @@ class DocumentsListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
         (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.documents))
         (activity as MainActivity).invalidateBottomBar(false)
         filesViewModel.usedDocsSummaryTransformations.observe(
-            viewLifecycleOwner,
-            {
-                metaInfoAndSummaryPair ->
-                binding.documentsListInfoText.text = resources.getString(R.string.loading)
-                metaInfoAndSummaryPair?.let {
-                    val metaInfoList = metaInfoAndSummaryPair.second
-                    metaInfoList.run {
-                        if (this.size == 0) {
-                            binding.documentsListInfoText.text =
-                                resources.getString(R.string.no_files)
-                            binding.loadingProgress.visibility = View.GONE
-                        } else {
-                            binding.documentsListInfoText.visibility = View.GONE
-                            binding.loadingProgress.visibility = View.GONE
-                        }
-                        val storageSummary = metaInfoAndSummaryPair.first
-                        val usedSpace =
-                            FileUtils.formatStorageLength(
-                                requireContext(), storageSummary.usedSpace!!
-                            )
-                        val totalSpace = FileUtils.formatStorageLength(
-                            requireContext(), storageSummary.totalSpace!!
+            viewLifecycleOwner
+        ) { metaInfoAndSummaryPair ->
+            binding.documentsListInfoText.text = resources.getString(R.string.loading)
+            metaInfoAndSummaryPair?.let {
+                val metaInfoList = metaInfoAndSummaryPair.second
+                metaInfoList.run {
+                    if (this.size == 0) {
+                        binding.documentsListInfoText.text =
+                            resources.getString(R.string.no_files)
+                        binding.loadingProgress.visibility = View.GONE
+                    } else {
+                        binding.documentsListInfoText.visibility = View.GONE
+                        binding.loadingProgress.visibility = View.GONE
+                    }
+                    val storageSummary = metaInfoAndSummaryPair.first
+                    val usedSpace =
+                        FileUtils.formatStorageLength(
+                            requireContext(), storageSummary.usedSpace!!
                         )
-                        // set list adapter
-                        preloader = MediaAdapterPreloader(
-                            requireContext(),
-                            R.drawable.ic_outline_insert_drive_file_32
+                    val totalSpace = FileUtils.formatStorageLength(
+                        requireContext(), storageSummary.totalSpace!!
+                    )
+                    // set list adapter
+                    preloader = MediaAdapterPreloader(
+                        requireContext(),
+                        R.drawable.ic_outline_insert_drive_file_32
+                    )
+                    val sizeProvider = ViewPreloadSizeProvider<String>()
+                    recyclerViewPreloader = RecyclerViewPreloader(
+                        Glide.with(requireActivity()),
+                        preloader!!,
+                        sizeProvider,
+                        MAX_PRELOAD
+                    )
+                    val isList = requireContext()
+                        .getAppCommonSharedPreferences().getBoolean(
+                            PreferencesConstants.KEY_MEDIA_LIST_TYPE,
+                            PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
                         )
-                        val sizeProvider = ViewPreloadSizeProvider<String>()
-                        recyclerViewPreloader = RecyclerViewPreloader(
-                            Glide.with(requireActivity()),
-                            preloader!!,
-                            sizeProvider,
-                            MAX_PRELOAD
+                    mediaFileAdapter = MediaFileAdapter(
+                        requireContext(),
+                        preloader!!,
+                        this@DocumentsListFragment, !isList,
+                        MediaFileListSorter.SortingPreference.newInstance(
+                            requireContext()
+                                .getAppCommonSharedPreferences()
+                        ),
+                        this, MediaFileInfo.MEDIA_TYPE_DOCUMENT
+                    ) {
+                        it.setProgress(
+                            MediaTypeView.MediaTypeContent(
+                                storageSummary.items, usedSpace,
+                                storageSummary.progress, totalSpace
+                            )
                         )
-                        val isList = requireContext()
-                            .getAppCommonSharedPreferences().getBoolean(
-                                PreferencesConstants.KEY_MEDIA_LIST_TYPE,
-                                PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
-                            )
-                        mediaFileAdapter = MediaFileAdapter(
-                            requireContext(),
-                            preloader!!,
-                            this@DocumentsListFragment, !isList,
-                            MediaFileListSorter.SortingPreference.newInstance(
-                                requireContext()
-                                    .getAppCommonSharedPreferences()
-                            ),
-                            this, MediaFileInfo.MEDIA_TYPE_DOCUMENT
-                        ) {
-                            it.setProgress(
-                                MediaTypeView.MediaTypeContent(
-                                    storageSummary.items, usedSpace,
-                                    storageSummary.progress, totalSpace
-                                )
-                            )
-                        }
-                        binding.documentsListView
-                            .addOnScrollListener(recyclerViewPreloader!!)
-                        Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
-                        binding.documentsListView.layoutManager =
-                            if (isList) linearLayoutManager else gridLayoutManager
-                        binding.documentsListView.adapter = mediaFileAdapter
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            binding.fastscroll.visibility = View.GONE
-                            FastScrollerBuilder(binding.documentsListView).useMd2Style().build()
-                        } else {
-                            binding.fastscroll.visibility = View.VISIBLE
-                            binding.fastscroll.setRecyclerView(binding.documentsListView, 1)
-                        }
+                    }
+                    binding.documentsListView
+                        .addOnScrollListener(recyclerViewPreloader!!)
+                    Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
+                    binding.documentsListView.layoutManager =
+                        if (isList) linearLayoutManager else gridLayoutManager
+                    binding.documentsListView.adapter = mediaFileAdapter
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        binding.fastscroll.visibility = View.GONE
+                        FastScrollerBuilder(binding.documentsListView).useMd2Style().build()
+                    } else {
+                        binding.fastscroll.visibility = View.VISIBLE
+                        binding.fastscroll.setRecyclerView(binding.documentsListView, 1)
                     }
                 }
             }
-        )
+        }
         return root
     }
 

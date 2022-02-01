@@ -59,81 +59,79 @@ class VideosListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
         (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.videos))
         (activity as MainActivity).invalidateBottomBar(false)
         filesViewModel.usedVideosSummaryTransformations.observe(
-            viewLifecycleOwner,
-            {
-                metaInfoAndSummaryPair ->
-                binding.videosListInfoText.text = resources.getString(R.string.loading)
-                metaInfoAndSummaryPair?.let {
-                    val metaInfoList = metaInfoAndSummaryPair.second
-                    metaInfoList.run {
-                        if (this.size == 0) {
-                            binding.videosListInfoText.text =
-                                resources.getString(R.string.no_files)
-                            binding.loadingProgress.visibility = View.GONE
-                        } else {
-                            binding.videosListInfoText.visibility = View.GONE
-                            binding.loadingProgress.visibility = View.GONE
-                        }
-                        val storageSummary = metaInfoAndSummaryPair.first
-                        val usedSpace =
-                            FileUtils.formatStorageLength(
-                                requireContext(), storageSummary.usedSpace!!
-                            )
-                        val totalSpace = FileUtils.formatStorageLength(
-                            requireContext(), storageSummary.totalSpace!!
+            viewLifecycleOwner
+        ) { metaInfoAndSummaryPair ->
+            binding.videosListInfoText.text = resources.getString(R.string.loading)
+            metaInfoAndSummaryPair?.let {
+                val metaInfoList = metaInfoAndSummaryPair.second
+                metaInfoList.run {
+                    if (this.size == 0) {
+                        binding.videosListInfoText.text =
+                            resources.getString(R.string.no_files)
+                        binding.loadingProgress.visibility = View.GONE
+                    } else {
+                        binding.videosListInfoText.visibility = View.GONE
+                        binding.loadingProgress.visibility = View.GONE
+                    }
+                    val storageSummary = metaInfoAndSummaryPair.first
+                    val usedSpace =
+                        FileUtils.formatStorageLength(
+                            requireContext(), storageSummary.usedSpace!!
                         )
-                        // set list adapter
-                        preloader = MediaAdapterPreloader(
-                            requireContext(),
-                            R.drawable.ic_outline_video_library_32
+                    val totalSpace = FileUtils.formatStorageLength(
+                        requireContext(), storageSummary.totalSpace!!
+                    )
+                    // set list adapter
+                    preloader = MediaAdapterPreloader(
+                        requireContext(),
+                        R.drawable.ic_outline_video_library_32
+                    )
+                    val sizeProvider = ViewPreloadSizeProvider<String>()
+                    recyclerViewPreloader = RecyclerViewPreloader(
+                        Glide.with(requireActivity()),
+                        preloader!!,
+                        sizeProvider,
+                        MAX_PRELOAD
+                    )
+                    val isList = requireContext()
+                        .getAppCommonSharedPreferences().getBoolean(
+                            PreferencesConstants.KEY_MEDIA_LIST_TYPE,
+                            PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
                         )
-                        val sizeProvider = ViewPreloadSizeProvider<String>()
-                        recyclerViewPreloader = RecyclerViewPreloader(
-                            Glide.with(requireActivity()),
-                            preloader!!,
-                            sizeProvider,
-                            MAX_PRELOAD
+                    linearLayoutManager = LinearLayoutManager(context)
+                    mediaFileAdapter = MediaFileAdapter(
+                        requireContext(),
+                        preloader!!,
+                        this@VideosListFragment, !isList,
+                        MediaFileListSorter.SortingPreference.newInstance(
+                            requireContext()
+                                .getAppCommonSharedPreferences()
+                        ),
+                        this, MediaFileInfo.MEDIA_TYPE_VIDEO
+                    ) {
+                        it.setProgress(
+                            MediaTypeView.MediaTypeContent(
+                                storageSummary.items, usedSpace,
+                                storageSummary.progress, totalSpace
+                            )
                         )
-                        val isList = requireContext()
-                            .getAppCommonSharedPreferences().getBoolean(
-                                PreferencesConstants.KEY_MEDIA_LIST_TYPE,
-                                PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
-                            )
-                        linearLayoutManager = LinearLayoutManager(context)
-                        mediaFileAdapter = MediaFileAdapter(
-                            requireContext(),
-                            preloader!!,
-                            this@VideosListFragment, !isList,
-                            MediaFileListSorter.SortingPreference.newInstance(
-                                requireContext()
-                                    .getAppCommonSharedPreferences()
-                            ),
-                            this, MediaFileInfo.MEDIA_TYPE_VIDEO
-                        ) {
-                            it.setProgress(
-                                MediaTypeView.MediaTypeContent(
-                                    storageSummary.items, usedSpace,
-                                    storageSummary.progress, totalSpace
-                                )
-                            )
-                        }
-                        binding.videosListView
-                            .addOnScrollListener(recyclerViewPreloader!!)
-                        Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
-                        binding.videosListView.layoutManager =
-                            if (isList) linearLayoutManager else gridLayoutManager
-                        binding.videosListView.adapter = mediaFileAdapter
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            binding.fastscroll.visibility = View.GONE
-                            FastScrollerBuilder(binding.videosListView).useMd2Style().build()
-                        } else {
-                            binding.fastscroll.visibility = View.VISIBLE
-                            binding.fastscroll.setRecyclerView(binding.videosListView, 1)
-                        }
+                    }
+                    binding.videosListView
+                        .addOnScrollListener(recyclerViewPreloader!!)
+                    Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
+                    binding.videosListView.layoutManager =
+                        if (isList) linearLayoutManager else gridLayoutManager
+                    binding.videosListView.adapter = mediaFileAdapter
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        binding.fastscroll.visibility = View.GONE
+                        FastScrollerBuilder(binding.videosListView).useMd2Style().build()
+                    } else {
+                        binding.fastscroll.visibility = View.VISIBLE
+                        binding.fastscroll.setRecyclerView(binding.videosListView, 1)
                     }
                 }
             }
-        )
+        }
         return root
     }
 

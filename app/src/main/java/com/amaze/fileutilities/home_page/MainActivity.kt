@@ -19,6 +19,7 @@ import android.view.View
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
@@ -30,6 +31,7 @@ import com.amaze.fileutilities.databinding.ActivityMainActionbarBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarItemSelectedBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
 import com.amaze.fileutilities.databinding.ActivityMainBinding
+import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
 import com.amaze.fileutilities.home_page.ui.options.AboutActivity
@@ -37,7 +39,7 @@ import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
 import com.amaze.fileutilities.utilis.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainActivity : PermissionsActivity() {
+class MainActivity : PermissionsActivity(), AggregatedMediaFileInfoObserver {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var actionBarBinding: ActivityMainActionbarBinding
@@ -126,7 +128,23 @@ class MainActivity : PermissionsActivity() {
                 }
             }
         }
-        viewModel.analyseInternalStorage()
+        val prefs = this.getAppCommonSharedPreferences()
+        val searchIdx = prefs.getInt(
+            PreferencesConstants.KEY_SEARCH_DUPLICATES_IN,
+            PreferencesConstants.DEFAULT_SEARCH_DUPLICATES_IN
+        )
+        if (searchIdx != PreferencesConstants.DEFAULT_SEARCH_DUPLICATES_IN) {
+            viewModel.analyseInternalStorage(
+                searchIdx ==
+                    PreferencesConstants.VAL_SEARCH_DUPLICATES_INTERNAL_DEEP
+            )
+        } else {
+            observeMediaInfoLists { isLoading, aggregatedFiles ->
+                if (!isLoading && aggregatedFiles != null) {
+                    viewModel.analyseMediaStoreFiles(aggregatedFiles)
+                }
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -279,5 +297,13 @@ class MainActivity : PermissionsActivity() {
                 optionsRoot.visibility = View.VISIBLE
             }
         }
+    }
+
+    override fun getFilesModel(): FilesViewModel {
+        return viewModel
+    }
+
+    override fun lifeCycleOwner(): LifecycleOwner {
+        return this
     }
 }

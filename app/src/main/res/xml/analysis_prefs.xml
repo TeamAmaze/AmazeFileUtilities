@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
     <Preference
-        app:key="duplicate"
-        app:title="@string/duplicates"
+        app:key="search_duplicates"
+        app:title="@string/search_duplicates"
         />
 </PreferenceScreen>

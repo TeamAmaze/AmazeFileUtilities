@@ -28,7 +28,9 @@ import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaAdapterPreloader
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
+import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
@@ -89,13 +91,18 @@ class ReviewImagesFragment : Fragment() {
         _binding = FragmentReviewImagesBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val analysisType: Int = arguments?.getInt(ANALYSIS_TYPE)!!
+        val prefs = requireContext().getAppCommonSharedPreferences()
+        val duplicatePref = prefs.getInt(
+            PreferencesConstants.KEY_SEARCH_DUPLICATES_IN,
+            PreferencesConstants.DEFAULT_SEARCH_DUPLICATES_IN
+        )
         optionsActionBar = (activity as MainActivity).invalidateSelectedActionBar(true)!!
         (activity as MainActivity).invalidateBottomBar(false)
 
         // set list adapter
         preloader = MediaAdapterPreloader(
             requireContext(),
-            R.drawable.ic_outline_image_32
+            R.drawable.ic_outline_insert_drive_file_32
         )
         val sizeProvider = ViewPreloadSizeProvider<String>()
         recyclerViewPreloader = RecyclerViewPreloader(
@@ -130,14 +137,21 @@ class ReviewImagesFragment : Fragment() {
                 }
             }
             TYPE_DUPLICATES -> {
-                viewModel.getDuplicateDirectories(internalStorageDao).observe(viewLifecycleOwner) {
-                    if (it == null) {
-                        invalidateProcessing(true, filesViewModel.isInternalStorageAnalysing)
-                    } else {
-                        setMediaInfoList(ArrayList(it.flatten()), false)
-                        invalidateProcessing(false, filesViewModel.isInternalStorageAnalysing)
+                viewModel.getDuplicateDirectories(
+                    internalStorageDao,
+                    duplicatePref
+                        == PreferencesConstants.VAL_SEARCH_DUPLICATES_MEDIA_STORE,
+                    duplicatePref
+                        == PreferencesConstants.VAL_SEARCH_DUPLICATES_INTERNAL_DEEP
+                )
+                    .observe(viewLifecycleOwner) {
+                        if (it == null) {
+                            invalidateProcessing(true, filesViewModel.isInternalStorageAnalysing)
+                        } else {
+                            setMediaInfoList(ArrayList(it.flatten()), false)
+                            invalidateProcessing(false, filesViewModel.isInternalStorageAnalysing)
+                        }
                     }
-                }
             }
             TYPE_EMPTY_FILES -> {
                 viewModel.getEmptyFiles(internalStorageDao).observe(viewLifecycleOwner) {
