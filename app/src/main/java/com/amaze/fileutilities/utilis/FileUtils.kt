@@ -23,7 +23,11 @@ import android.util.Log
 import androidx.annotation.DrawableRes
 import com.amaze.fileutilities.R
 import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
+import java.io.InputStream
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.util.*
 import java.util.regex.Pattern
 
@@ -170,6 +174,27 @@ class FileUtils {
 
         fun formatStorageLength(context: Context, longSize: Long): String {
             return Formatter.formatFileSize(context, longSize)
+        }
+
+        @Throws(NoSuchAlgorithmException::class, IOException::class)
+        fun getSHA256Checksum(file: File): String {
+            val messageDigest = MessageDigest.getInstance("SHA-256")
+            val input = ByteArray(DEFAULT_BUFFER_SIZE)
+            var length: Int
+            val inputStream: InputStream = FileInputStream(file)
+            while (inputStream.read(input).also { length = it } != -1) {
+                if (length > 0) messageDigest.update(input, 0, length)
+            }
+            val hash = messageDigest.digest()
+            val hexString = StringBuilder()
+            for (aHash in hash) {
+                // convert hash to base 16
+                val hex = Integer.toHexString(0xff and aHash.toInt())
+                if (hex.length == 1) hexString.append('0')
+                hexString.append(hex)
+            }
+            inputStream.close()
+            return hexString.toString()
         }
 
         @TargetApi(VERSION_CODES.N)

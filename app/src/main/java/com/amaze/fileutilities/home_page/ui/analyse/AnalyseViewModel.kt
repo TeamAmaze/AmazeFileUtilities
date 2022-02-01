@@ -11,9 +11,11 @@
 package com.amaze.fileutilities.home_page.ui.analyse
 
 import androidx.lifecycle.*
+import com.amaze.fileutilities.home_page.database.InternalStorageAnalysis
 import com.amaze.fileutilities.home_page.database.InternalStorageAnalysisDao
 import com.amaze.fileutilities.home_page.database.MediaFilesAnalysisDao
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
+import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.invalidate
 import kotlinx.coroutines.Dispatchers
 import java.io.File
@@ -34,11 +36,15 @@ class AnalyseViewModel : ViewModel() {
         }
     }
 
-    fun getDuplicateDirectories(dao: InternalStorageAnalysisDao):
+    fun getDuplicateDirectories(
+        dao: InternalStorageAnalysisDao,
+        searchMediaFiles: Boolean,
+        deepSearch: Boolean
+    ):
         LiveData<List<List<MediaFileInfo>>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
-            emit(transformInternalStorageAnalysisToMediaFileList(dao))
+            emit(transformInternalStorageAnalysisToMediaFileList(dao, searchMediaFiles, deepSearch))
         }
     }
 
@@ -58,7 +64,7 @@ class AnalyseViewModel : ViewModel() {
             MediaFileInfo.fromFile(
                 File(it.files[0]),
                 MediaFileInfo.ExtraInfo(
-                    MediaFileInfo.MEDIA_TYPE_IMAGE,
+                    MediaFileInfo.MEDIA_TYPE_UNKNOWN,
                     null, null, null
                 )
             )
@@ -66,9 +72,23 @@ class AnalyseViewModel : ViewModel() {
         return response
     }
 
-    private fun transformInternalStorageAnalysisToMediaFileList(dao: InternalStorageAnalysisDao):
+    private fun transformInternalStorageAnalysisToMediaFileList(
+        dao: InternalStorageAnalysisDao,
+        searchMediaFiles: Boolean,
+        deepSearch: Boolean
+    ):
         List<List<MediaFileInfo>> {
-        val analysis = dao.getAll()
+        val analysis: List<InternalStorageAnalysis> = when {
+            searchMediaFiles -> {
+                dao.getAllMediaFiles()
+            }
+            deepSearch -> {
+                dao.getAll()
+            }
+            else -> {
+                dao.getAllShallow(PreferencesConstants.DEFAULT_DUPLICATE_SEARCH_DEPTH_INCL)
+            }
+        }
         val response = analysis.filter {
             it.invalidate(dao)
         }.filter {
@@ -79,7 +99,7 @@ class AnalyseViewModel : ViewModel() {
                 MediaFileInfo.fromFile(
                     File(filePath),
                     MediaFileInfo.ExtraInfo(
-                        MediaFileInfo.MEDIA_TYPE_IMAGE,
+                        MediaFileInfo.MEDIA_TYPE_UNKNOWN,
                         null, null, null
                     )
                 )

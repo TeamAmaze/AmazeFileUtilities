@@ -135,4 +135,8 @@
     <string name="exclusions">Exclusions</string>
     <string name="exclusions_summary">Paths to exclude while scanning media</string>
     <string name="audio_player">Audio Player</string>
+    <string name="search_duplicates">Search duplicates in…</string>
+    <string name="media_store">Android media store (fastest)</string>
+    <string name="internal_storage_shallow">Internal Storage (Shallow / slow)</string>
+    <string name="internal_storage_deep">Internal Storage (Deep / slowest)</string>
 </resources>

@@ -59,80 +59,78 @@ class ImagesListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
         (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.images))
         (activity as MainActivity).invalidateBottomBar(false)
         filesViewModel.usedImagesSummaryTransformations.observe(
-            viewLifecycleOwner,
-            {
-                metaInfoAndSummaryPair ->
-                binding.imagesListInfoText.text = resources.getString(R.string.loading)
-                metaInfoAndSummaryPair?.let {
-                    val metaInfoList = metaInfoAndSummaryPair.second
-                    metaInfoList.run {
-                        if (this.size == 0) {
-                            binding.imagesListInfoText.text =
-                                resources.getString(R.string.no_files)
-                            binding.loadingProgress.visibility = View.GONE
-                        } else {
-                            binding.imagesListInfoText.visibility = View.GONE
-                            binding.loadingProgress.visibility = View.GONE
-                        }
-                        val storageSummary = metaInfoAndSummaryPair.first
-                        val usedSpace =
-                            FileUtils.formatStorageLength(
-                                requireContext(), storageSummary.usedSpace!!
-                            )
-                        val totalSpace = FileUtils.formatStorageLength(
-                            requireContext(), storageSummary.totalSpace!!
+            viewLifecycleOwner
+        ) { metaInfoAndSummaryPair ->
+            binding.imagesListInfoText.text = resources.getString(R.string.loading)
+            metaInfoAndSummaryPair?.let {
+                val metaInfoList = metaInfoAndSummaryPair.second
+                metaInfoList.run {
+                    if (this.size == 0) {
+                        binding.imagesListInfoText.text =
+                            resources.getString(R.string.no_files)
+                        binding.loadingProgress.visibility = View.GONE
+                    } else {
+                        binding.imagesListInfoText.visibility = View.GONE
+                        binding.loadingProgress.visibility = View.GONE
+                    }
+                    val storageSummary = metaInfoAndSummaryPair.first
+                    val usedSpace =
+                        FileUtils.formatStorageLength(
+                            requireContext(), storageSummary.usedSpace!!
                         )
-                        // set list adapter
-                        preloader = MediaAdapterPreloader(
-                            requireContext(),
-                            R.drawable.ic_outline_image_32
+                    val totalSpace = FileUtils.formatStorageLength(
+                        requireContext(), storageSummary.totalSpace!!
+                    )
+                    // set list adapter
+                    preloader = MediaAdapterPreloader(
+                        requireContext(),
+                        R.drawable.ic_outline_image_32
+                    )
+                    val sizeProvider = ViewPreloadSizeProvider<String>()
+                    recyclerViewPreloader = RecyclerViewPreloader(
+                        Glide.with(requireActivity()),
+                        preloader!!,
+                        sizeProvider,
+                        MAX_PRELOAD
+                    )
+                    val isList = requireContext()
+                        .getAppCommonSharedPreferences().getBoolean(
+                            PreferencesConstants.KEY_MEDIA_LIST_TYPE,
+                            PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
                         )
-                        val sizeProvider = ViewPreloadSizeProvider<String>()
-                        recyclerViewPreloader = RecyclerViewPreloader(
-                            Glide.with(requireActivity()),
-                            preloader!!,
-                            sizeProvider,
-                            MAX_PRELOAD
+                    mediaFileAdapter = MediaFileAdapter(
+                        requireContext(),
+                        preloader!!,
+                        this@ImagesListFragment, !isList,
+                        MediaFileListSorter.SortingPreference.newInstance(
+                            requireContext()
+                                .getAppCommonSharedPreferences()
+                        ),
+                        this, MediaFileInfo.MEDIA_TYPE_IMAGE
+                    ) {
+                        it.setProgress(
+                            MediaTypeView.MediaTypeContent(
+                                storageSummary.items, usedSpace,
+                                storageSummary.progress, totalSpace
+                            )
                         )
-                        val isList = requireContext()
-                            .getAppCommonSharedPreferences().getBoolean(
-                                PreferencesConstants.KEY_MEDIA_LIST_TYPE,
-                                PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
-                            )
-                        mediaFileAdapter = MediaFileAdapter(
-                            requireContext(),
-                            preloader!!,
-                            this@ImagesListFragment, !isList,
-                            MediaFileListSorter.SortingPreference.newInstance(
-                                requireContext()
-                                    .getAppCommonSharedPreferences()
-                            ),
-                            this, MediaFileInfo.MEDIA_TYPE_IMAGE
-                        ) {
-                            it.setProgress(
-                                MediaTypeView.MediaTypeContent(
-                                    storageSummary.items, usedSpace,
-                                    storageSummary.progress, totalSpace
-                                )
-                            )
-                        }
-                        binding.imagesListView
-                            .addOnScrollListener(recyclerViewPreloader!!)
-                        Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
-                        binding.imagesListView.layoutManager =
-                            if (isList) linearLayoutManager else gridLayoutManager
-                        binding.imagesListView.adapter = mediaFileAdapter
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            binding.fastscroll.visibility = View.GONE
-                            FastScrollerBuilder(binding.imagesListView).useMd2Style().build()
-                        } else {
-                            binding.fastscroll.visibility = View.VISIBLE
-                            binding.fastscroll.setRecyclerView(binding.imagesListView, 1)
-                        }
+                    }
+                    binding.imagesListView
+                        .addOnScrollListener(recyclerViewPreloader!!)
+                    Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
+                    binding.imagesListView.layoutManager =
+                        if (isList) linearLayoutManager else gridLayoutManager
+                    binding.imagesListView.adapter = mediaFileAdapter
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        binding.fastscroll.visibility = View.GONE
+                        FastScrollerBuilder(binding.imagesListView).useMd2Style().build()
+                    } else {
+                        binding.fastscroll.visibility = View.VISIBLE
+                        binding.fastscroll.setRecyclerView(binding.imagesListView, 1)
                     }
                 }
             }
-        )
+        }
         return root
     }
 

@@ -14,14 +14,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 
 class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener {
 
     companion object {
-        private const val KEY_DUPLICATES = "duplicate"
+        private const val KEY_DUPLICATES = "search_duplicates"
         private val KEYS = listOf(KEY_DUPLICATES)
     }
 
@@ -44,6 +47,30 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
     }
 
     override fun onPreferenceClick(preference: Preference): Boolean {
-        TODO("Not yet implemented")
+        val prefs = requireContext().getAppCommonSharedPreferences()
+        when (preference.key) {
+            KEY_DUPLICATES -> {
+                val searchIdx = prefs.getInt(
+                    PreferencesConstants.KEY_SEARCH_DUPLICATES_IN,
+                    PreferencesConstants.DEFAULT_SEARCH_DUPLICATES_IN
+                )
+                val dialog = AlertDialog.Builder(requireContext()).setTitle(R.string.duplicates)
+                    .setSingleChoiceItems(
+                        arrayOf(
+                            getString(R.string.media_store),
+                            getString(R.string.internal_storage_shallow),
+                            getString(R.string.internal_storage_deep)
+                        ),
+                        searchIdx
+                    ) { dialog, p1 ->
+                        prefs.edit()
+                            .putInt(PreferencesConstants.KEY_SEARCH_DUPLICATES_IN, p1).apply()
+                        dialog.dismiss()
+                    }
+                    .create()
+                dialog.show()
+            }
+        }
+        return true
     }
 }
