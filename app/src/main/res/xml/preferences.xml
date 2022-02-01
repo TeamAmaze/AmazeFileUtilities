@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <Preference
+        app:key="analysis"
+        app:title="@string/analysis"/>
+    <Preference
+        app:key="audio_player"
+        app:title="@string/audio_player"
+        />
+</PreferenceScreen>

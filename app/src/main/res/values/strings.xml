@@ -5,7 +5,7 @@
     <string name="app_version" translatable="false">v1.0</string>
     <string name="image_viewer">Amaze Image Viewer</string>
     <string name="video_player">Amaze Video Player</string>
-    <string name="audio_player">Amaze Music Player</string>
+    <string name="amaze_audio_player">Amaze Music Player</string>
     <string name="pdf_viewer">Amaze Pdf Viewer</string>
     <string name="epub_viewer">Epub Viewer</string>
     <string name="docx_viewer">Doc Viewer</string>
@@ -131,4 +131,12 @@
     <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
     <string name="more_to_come">More optimizations to come!</string>
     <string name="view_all">View all</string>
+    <string name="analysis">Analysis</string>
+    <string name="exclusions">Exclusions</string>
+    <string name="exclusions_summary">Paths to exclude while scanning media</string>
+    <string name="audio_player">Audio Player</string>
+    <string name="search_duplicates">Search duplicates in…</string>
+    <string name="media_store">Android media store (fastest)</string>
+    <string name="internal_storage_shallow">Internal Storage (Shallow / slow)</string>
+    <string name="internal_storage_deep">Internal Storage (Deep / slowest)</string>
 </resources>

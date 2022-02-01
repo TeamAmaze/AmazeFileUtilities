@@ -18,21 +18,18 @@ import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.InternalStorageAnalysis
 import com.amaze.fileutilities.home_page.database.InternalStorageAnalysisDao
 import com.amaze.fileutilities.home_page.database.MediaFileAnalysis
-import com.amaze.fileutilities.utilis.CursorUtils
-import com.amaze.fileutilities.utilis.FileUtils
-import com.amaze.fileutilities.utilis.ImgUtils
-import com.amaze.fileutilities.utilis.StorageDirectoryParcelable
+import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
+import com.amaze.fileutilities.utilis.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.*
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 
 class FilesViewModel(val applicationContext: Application) :
     AndroidViewModel(applicationContext) {
 
     var isMediaFilesAnalysing = true
     var isInternalStorageAnalysing = true
+    var isMediaStoreAnalysing = true
 
     val internalStorageStats: LiveData<StorageSummary?> =
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
@@ -74,43 +71,6 @@ class FilesViewModel(val applicationContext: Application) :
                 getImagesSummaryLiveData(input)
             }
 
-    fun analyseImagesTransformation(mediaFileInfoList: ArrayList<MediaFileInfo>) {
-        viewModelScope.launch(Dispatchers.Default) {
-            val dao = AppDatabase.getInstance(applicationContext).analysisDao()
-            isMediaFilesAnalysing = true
-            mediaFileInfoList.forEach {
-                if (dao.findByPath(it.path) == null) {
-                    val isBlur = ImgUtils.isImageBlur(it.path)
-                    val isMeme = ImgUtils.isImageMeme(
-                        it.path,
-                        applicationContext.externalCacheDir!!.path
-                    )
-                    if (isBlur || isMeme) {
-                        dao.insert(MediaFileAnalysis(it.path, isBlur, isMeme))
-                    }
-                }
-            }
-            isMediaFilesAnalysing = false
-        }
-    }
-
-    fun analyseInternalStorage() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val dao = AppDatabase.getInstance(applicationContext).internalStorageAnalysisDao()
-            isInternalStorageAnalysing = true
-            val storageData: StorageDirectoryParcelable? = if (SDK_INT >= N) {
-                FileUtils.getStorageDirectoriesNew(applicationContext.applicationContext)
-            } else {
-                FileUtils.getStorageDirectoriesLegacy(applicationContext.applicationContext)
-            }
-            storageData?.run {
-                val file = File(this.path)
-                processInternalStorageAnalysis(dao, file)
-            }
-            isInternalStorageAnalysing = false
-        }
-    }
-
     val usedAudiosSummaryTransformations:
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
             Transformations.switchMap(internalStorageStats) {
@@ -142,7 +102,7 @@ class FilesViewModel(val applicationContext: Application) :
             val mediaFileResults = mutableListOf<MediaFileInfo>()
             val textResults = mutableListOf<String>()
             if (searchFilter.searchFilter.searchFilterImages) {
-                searchFilter.imagesMediaFilesList?.let { mediaInfoList ->
+                searchFilter.aggregatedMediaFiles.imagesMediaFilesList?.let { mediaInfoList ->
                     mediaInfoList.forEach {
                         if (it.title.contains(query)) {
                             mediaFileResults.add(it)
@@ -152,7 +112,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
             if (searchFilter.searchFilter.searchFilterVideos) {
-                searchFilter.videosMediaFilesList?.let { mediaInfoList ->
+                searchFilter.aggregatedMediaFiles.videosMediaFilesList?.let { mediaInfoList ->
                     mediaInfoList.forEach {
                         if (it.title.contains(query)) {
                             mediaFileResults.add(it)
@@ -162,7 +122,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
             if (searchFilter.searchFilter.searchFilterAudios) {
-                searchFilter.audiosMediaFilesList?.let { mediaInfoList ->
+                searchFilter.aggregatedMediaFiles.audiosMediaFilesList?.let { mediaInfoList ->
                     mediaInfoList.forEach {
                         if (it.title.contains(query)) {
                             mediaFileResults.add(it)
@@ -172,7 +132,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
             if (searchFilter.searchFilter.searchFilterDocuments) {
-                searchFilter.docsMediaFilesList?.let { mediaInfoList ->
+                searchFilter.aggregatedMediaFiles.docsMediaFilesList?.let { mediaInfoList ->
                     mediaInfoList.forEach {
                         if (it.title.contains(query)) {
                             mediaFileResults.add(it)
@@ -197,7 +157,7 @@ class FilesViewModel(val applicationContext: Application) :
             var currentResultsCount = 0
 
             if (searchFilter.searchFilter.searchFilterImages) {
-                searchFilter.imagesMediaFilesList?.let { mediaInfoList ->
+                searchFilter.aggregatedMediaFiles.imagesMediaFilesList?.let { mediaInfoList ->
                     mediaInfoList.forEach il@{
                         if (currentResultsCount> resultsThreshold) {
                             return@il
@@ -210,7 +170,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
             if (searchFilter.searchFilter.searchFilterVideos) {
-                searchFilter.videosMediaFilesList?.let { mediaInfoList ->
+                searchFilter.aggregatedMediaFiles.videosMediaFilesList?.let { mediaInfoList ->
                     mediaInfoList.forEach vl@{
                         if (currentResultsCount> resultsThreshold) {
                             return@vl
@@ -223,7 +183,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
             if (searchFilter.searchFilter.searchFilterAudios) {
-                searchFilter.audiosMediaFilesList?.let { mediaInfoList ->
+                searchFilter.aggregatedMediaFiles.audiosMediaFilesList?.let { mediaInfoList ->
                     mediaInfoList.forEach al@{
                         if (currentResultsCount> resultsThreshold) {
                             return@al
@@ -237,7 +197,7 @@ class FilesViewModel(val applicationContext: Application) :
             }
 
             if (searchFilter.searchFilter.searchFilterDocuments) {
-                searchFilter.docsMediaFilesList?.let { mediaInfoList ->
+                searchFilter.aggregatedMediaFiles.docsMediaFilesList?.let { mediaInfoList ->
                     mediaInfoList.forEach dl@{
                         if (currentResultsCount> resultsThreshold) {
                             return@dl
@@ -265,20 +225,93 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
-    private fun processInternalStorageAnalysis(dao: InternalStorageAnalysisDao, file: File) {
+    fun analyseImagesTransformation(mediaFileInfoList: ArrayList<MediaFileInfo>) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val dao = AppDatabase.getInstance(applicationContext).analysisDao()
+            isMediaFilesAnalysing = true
+            mediaFileInfoList.forEach {
+                if (dao.findByPath(it.path) == null) {
+                    val isBlur = ImgUtils.isImageBlur(it.path)
+                    val isMeme = ImgUtils.isImageMeme(
+                        it.path,
+                        applicationContext.externalCacheDir!!.path
+                    )
+                    if (isBlur || isMeme) {
+                        dao.insert(MediaFileAnalysis(it.path, isBlur, isMeme))
+                    }
+                }
+            }
+            isMediaFilesAnalysing = false
+        }
+    }
+
+    fun analyseInternalStorage(deepSearch: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val dao = AppDatabase.getInstance(applicationContext).internalStorageAnalysisDao()
+            isInternalStorageAnalysing = true
+            val storageData: StorageDirectoryParcelable? = if (SDK_INT >= N) {
+                FileUtils.getStorageDirectoriesNew(applicationContext.applicationContext)
+            } else {
+                FileUtils.getStorageDirectoriesLegacy(applicationContext.applicationContext)
+            }
+            storageData?.run {
+                val file = File(this.path)
+                processInternalStorageAnalysis(dao, file, deepSearch, 0)
+            }
+            isInternalStorageAnalysing = false
+        }
+    }
+
+    fun analyseMediaStoreFiles(
+        aggregatedMediaFiles:
+            AggregatedMediaFileInfoObserver.AggregatedMediaFiles
+    ) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val dao = AppDatabase.getInstance(applicationContext).internalStorageAnalysisDao()
+            isMediaStoreAnalysing = true
+            aggregatedMediaFiles.imagesMediaFilesList?.forEach {
+                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path))
+            }
+            aggregatedMediaFiles.audiosMediaFilesList?.forEach {
+                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path))
+            }
+            aggregatedMediaFiles.videosMediaFilesList?.forEach {
+                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path))
+            }
+            aggregatedMediaFiles.docsMediaFilesList?.forEach {
+                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path))
+            }
+            isMediaStoreAnalysing = false
+        }
+    }
+
+    private fun processInternalStorageAnalysis(
+        dao: InternalStorageAnalysisDao,
+        file: File,
+        deepSearch: Boolean,
+        currentDepth: Int
+    ) {
+        if (!deepSearch && currentDepth
+        > PreferencesConstants.DEFAULT_DUPLICATE_SEARCH_DEPTH_INCL
+        ) {
+            return
+        }
         if (file.isDirectory) {
             val filesInDir = file.listFiles()
             if (filesInDir == null) {
                 dao.insert(
                     InternalStorageAnalysis(
                         file.path, listOf(file.path),
-                        true, false, true
+                        true, false, true, false, currentDepth
                     )
                 )
             } else {
                 if (filesInDir.isNotEmpty()) {
                     for (currFile in filesInDir) {
-                        processInternalStorageAnalysis(dao, currFile)
+                        processInternalStorageAnalysis(
+                            dao, currFile, deepSearch,
+                            currentDepth + 1
+                        )
                     }
                 }
             }
@@ -287,25 +320,28 @@ class FilesViewModel(val applicationContext: Application) :
                 dao.insert(
                     InternalStorageAnalysis(
                         file.path, listOf(file.path),
-                        true, false, false
+                        true, false, false, false,
+                        currentDepth
                     )
                 )
             } else {
-                val checksum = getSHA256Checksum(file)
+                val checksum = FileUtils.getSHA256Checksum(file)
                 val existingChecksum = dao.findBySha256Checksum(checksum)
                 if (existingChecksum != null && !existingChecksum.files.contains(file.path)) {
                     dao.insert(
                         InternalStorageAnalysis(
                             existingChecksum.checksum,
                             existingChecksum.files + file.path,
-                            false, false, false
+                            false, false, false, false,
+                            currentDepth
                         )
                     )
                 } else {
                     dao.insert(
                         InternalStorageAnalysis(
                             checksum,
-                            listOf(file.path), false, false, false
+                            listOf(file.path), false, false, false, false,
+                            currentDepth
                         )
                     )
                 }
@@ -313,25 +349,29 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
-    @Throws(NoSuchAlgorithmException::class, IOException::class)
-    private fun getSHA256Checksum(file: File): String {
-        val messageDigest = MessageDigest.getInstance("SHA-256")
-        val input = ByteArray(FileUtils.DEFAULT_BUFFER_SIZE)
-        var length: Int
-        val inputStream: InputStream = FileInputStream(file)
-        while (inputStream.read(input).also { length = it } != -1) {
-            if (length > 0) messageDigest.update(input, 0, length)
+    private fun getMediaFileChecksumAndWriteToDatabase(
+        dao: InternalStorageAnalysisDao,
+        file: File
+    ) {
+        val checksum = FileUtils.getSHA256Checksum(file)
+        val existingChecksum = dao.findMediaFileBySha256Checksum(checksum)
+        if (existingChecksum != null && !existingChecksum.files.contains(file.path)) {
+            dao.insert(
+                InternalStorageAnalysis(
+                    existingChecksum.checksum,
+                    existingChecksum.files + file.path,
+                    false, false, false, true, 0
+                )
+            )
+        } else {
+            dao.insert(
+                InternalStorageAnalysis(
+                    checksum,
+                    listOf(file.path), false, false, false, true,
+                    0
+                )
+            )
         }
-        val hash = messageDigest.digest()
-        val hexString = StringBuilder()
-        for (aHash in hash) {
-            // convert hash to base 16
-            val hex = Integer.toHexString(0xff and aHash.toInt())
-            if (hex.length == 1) hexString.append('0')
-            hexString.append(hex)
-        }
-        inputStream.close()
-        return hexString.toString()
     }
 
     private fun writeTrainedFile(basePath: File, fileName: String) {

@@ -23,15 +23,21 @@ import android.widget.AutoCompleteTextView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentSearchListBinding
 import com.amaze.fileutilities.home_page.MainActivity
+import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
 
-class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatcher {
+class SearchListFragment :
+    Fragment(),
+    AggregatedMediaFileInfoObserver,
+    TextView.OnEditorActionListener,
+    TextWatcher {
     private val filesViewModel: FilesViewModel by activityViewModels()
     private var _binding: FragmentSearchListBinding? = null
     private var searchEditText: AutoCompleteTextView? = null
@@ -41,7 +47,7 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
     private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
     private var linearLayoutManager: LinearLayoutManager? = null
     private val searchQueryInput: SearchQueryInput =
-        SearchQueryInput(searchFilter = SearchFilter())
+        SearchQueryInput(AggregatedMediaFileInfoObserver.AggregatedMediaFiles(), SearchFilter())
 
     companion object {
         const val MAX_PRELOAD = 100
@@ -52,6 +58,13 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    override fun getFilesModel(): FilesViewModel {
+        return filesViewModel
+    }
+
+    override fun lifeCycleOwner(): LifecycleOwner {
+        return viewLifecycleOwner
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,7 +76,18 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
             false
         )
         val root: View = binding.root
-        observeMediaInfoLists()
+//        observeMediaInfoLists()
+        observeMediaInfoLists { isLoading, aggregatedFiles ->
+            if (isLoading) {
+                showLoadingViews(true)
+            } else {
+                aggregatedFiles?.run {
+                    showLoadingViews(false)
+                    showEmptyViews()
+                    searchQueryInput.aggregatedMediaFiles = this
+                }
+            }
+        }
         searchEditText = (activity as MainActivity).invalidateSearchBar(true)!!
         (activity as MainActivity).invalidateBottomBar(false)
         searchEditText?.let {
@@ -143,33 +167,31 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
                 if (it.text != null &&
                     it.text.length > SEARCH_THRESHOLD
                 ) {
-                    if (searchQueryInput.mediaListsLoaded()) {
+                    if (searchQueryInput.aggregatedMediaFiles.mediaListsLoaded()) {
                         showLoadingViews(false)
                         filesViewModel.queryOnAggregatedMediaFiles(
                             it.text.toString(),
                             searchQueryInput
                         ).observe(
-                            viewLifecycleOwner,
-                            {
-                                mediaFileInfoList ->
-                                if (mediaFileInfoList != null) {
-                                    showLoadingViews(false)
-                                    if (mediaFileInfoList.size == 0) {
-                                        showEmptyViews()
-                                    } else {
-                                        binding.searchListView.scrollToPosition(0)
-                                        mediaFileAdapter?.setData(mediaFileInfoList)
-                                    }
+                            viewLifecycleOwner
+                        ) { mediaFileInfoList ->
+                            if (mediaFileInfoList != null) {
+                                showLoadingViews(false)
+                                if (mediaFileInfoList.size == 0) {
+                                    showEmptyViews()
                                 } else {
-                                    showLoadingViews(true)
+                                    binding.searchListView.scrollToPosition(0)
+                                    mediaFileAdapter?.setData(mediaFileInfoList)
                                 }
+                            } else {
+                                showLoadingViews(true)
                             }
-                        )
+                        }
                     } else {
                         showLoadingViews(true)
                     }
                 } else {
-                    if (searchQueryInput.mediaListsLoaded()) {
+                    if (searchQueryInput.aggregatedMediaFiles.mediaListsLoaded()) {
                         mediaFileAdapter?.setData(emptyList())
                         searchEditText?.dismissDropDown()
                         showEmptyViews()
@@ -185,25 +207,24 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
         s?.let {
             query ->
             if (query.toString().length > SEARCH_HINT_THRESHOLD) {
-                if (searchQueryInput.mediaListsLoaded()) {
+                if (searchQueryInput.aggregatedMediaFiles.mediaListsLoaded()) {
                     showLoadingViews(false)
                     filesViewModel.queryHintOnAggregatedMediaFiles(
                         query.toString(),
                         SEARCH_HINT_RESULTS_THRESHOLD,
                         searchQueryInput
                     ).observe(
-                        viewLifecycleOwner,
-                        {
-                            if (it != null) {
-                                val adapter: ArrayAdapter<String> =
-                                    ArrayAdapter<String>(
-                                        requireContext(),
-                                        R.layout.custom_simple_selectable_list_item, it
-                                    )
-                                searchEditText?.setAdapter(adapter)
-                            }
+                        viewLifecycleOwner
+                    ) {
+                        if (it != null) {
+                            val adapter: ArrayAdapter<String> =
+                                ArrayAdapter<String>(
+                                    requireContext(),
+                                    R.layout.custom_simple_selectable_list_item, it
+                                )
+                            searchEditText?.setAdapter(adapter)
                         }
-                    )
+                    }
                 } else {
                     showLoadingViews(true)
                 }
@@ -235,12 +256,10 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
     private fun observeMediaInfoLists() {
         filesViewModel.usedImagesSummaryTransformations
             .observe(
-                viewLifecycleOwner,
-                {
-                    imagesPair ->
-                    imagesPairObserver(imagesPair)
-                }
-            )
+                viewLifecycleOwner
+            ) { imagesPair ->
+                imagesPairObserver(imagesPair)
+            }
     }
 
     private fun imagesPairObserver(
@@ -252,12 +271,10 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
             showLoadingViews(false)
             filesViewModel.usedVideosSummaryTransformations
                 .observe(
-                    viewLifecycleOwner,
-                    {
-                        videosPair ->
-                        videosPairObserver(videosPair, imagesPair)
-                    }
-                )
+                    viewLifecycleOwner
+                ) { videosPair ->
+                    videosPairObserver(videosPair, imagesPair)
+                }
         } else {
             showLoadingViews(true)
         }
@@ -275,14 +292,12 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
             showLoadingViews(false)
             filesViewModel.usedAudiosSummaryTransformations
                 .observe(
-                    viewLifecycleOwner,
-                    {
-                        audiosPair ->
-                        audiosPairObserver(
-                            audiosPair, videosPair, imagesPair
-                        )
-                    }
-                )
+                    viewLifecycleOwner
+                ) { audiosPair ->
+                    audiosPairObserver(
+                        audiosPair, videosPair, imagesPair
+                    )
+                }
         } else {
             showLoadingViews(true)
         }
@@ -303,14 +318,12 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
             showLoadingViews(false)
             filesViewModel.usedDocsSummaryTransformations
                 .observe(
-                    viewLifecycleOwner,
-                    {
-                        docsPair ->
-                        docsPairObserver(
-                            docsPair, audiosPair, videosPair, imagesPair
-                        )
-                    }
-                )
+                    viewLifecycleOwner
+                ) { docsPair ->
+                    docsPairObserver(
+                        docsPair, audiosPair, videosPair, imagesPair
+                    )
+                }
         } else {
             showLoadingViews(true)
         }
@@ -333,7 +346,7 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
         if (docsPair?.second != null) {
             showLoadingViews(false)
             showEmptyViews()
-            searchQueryInput.run {
+            searchQueryInput.aggregatedMediaFiles.run {
                 imagesMediaFilesList = imagesPair.second
                 videosMediaFilesList = videosPair.second
                 audiosMediaFilesList = audiosPair.second
@@ -348,8 +361,11 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
         binding.run {
             processingProgressView.invalidateProcessing(
                 doShow, false,
-                if (searchQueryInput.mediaListsLoaded()) resources.getString(R.string.loading)
-                else resources.getString(R.string.please_wait)
+                if (searchQueryInput.aggregatedMediaFiles.mediaListsLoaded()) {
+                    resources.getString(R.string.loading)
+                } else {
+                    resources.getString(R.string.please_wait)
+                }
             )
         }
     }
@@ -409,17 +425,9 @@ class SearchListFragment : Fragment(), TextView.OnEditorActionListener, TextWatc
     }
 
     data class SearchQueryInput(
-        var imagesMediaFilesList: ArrayList<MediaFileInfo>? = null,
-        var videosMediaFilesList: ArrayList<MediaFileInfo>? = null,
-        var audiosMediaFilesList: ArrayList<MediaFileInfo>? = null,
-        var docsMediaFilesList: ArrayList<MediaFileInfo>? = null,
+        var aggregatedMediaFiles: AggregatedMediaFileInfoObserver.AggregatedMediaFiles,
         val searchFilter: SearchFilter
-    ) {
-        fun mediaListsLoaded(): Boolean {
-            return imagesMediaFilesList != null && videosMediaFilesList != null &&
-                audiosMediaFilesList != null && docsMediaFilesList != null
-        }
-    }
+    )
 
     data class SearchFilter(
         var searchFilterImages: Boolean = true,

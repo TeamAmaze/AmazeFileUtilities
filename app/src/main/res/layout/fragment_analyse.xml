@@ -43,6 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/duplicates"
+                app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView

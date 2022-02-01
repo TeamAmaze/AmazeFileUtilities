@@ -61,7 +61,7 @@ class ReviewImagesAdapter(
                 mediaFileInfo?.let { mediaFileInfo ->
                     mediaFileInfo.extraInfo?.let { extraInfo ->
                         when (extraInfo.mediaType) {
-                            MediaFileInfo.MEDIA_TYPE_IMAGE -> {
+                            MediaFileInfo.MEDIA_TYPE_UNKNOWN -> {
                                 holder.infoSummary.text =
                                     this.mediaFileInfo?.getFormattedSize(context)
                                 holder.expand.visibility = View.VISIBLE

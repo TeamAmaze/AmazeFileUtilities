@@ -86,7 +86,7 @@ class AudioPlayerDialogActivity : PermissionsActivity(), OnPlaybackInfoUpdate {
             )
             AudioPlayerService.runService(audioUri, viewModel.uriList, this)
         }
-        title = getString(R.string.audio_player)
+        title = getString(R.string.amaze_audio_player)
         audioPlaybackServiceConnection =
             AudioPlaybackServiceConnection(WeakReference(this))
     }

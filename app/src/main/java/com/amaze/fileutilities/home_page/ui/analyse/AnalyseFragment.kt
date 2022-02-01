@@ -20,6 +20,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.databinding.FragmentAnalyseBinding
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
+import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 
 class AnalyseFragment : Fragment() {
 
@@ -41,11 +43,10 @@ class AnalyseFragment : Fragment() {
             ViewModelProvider(this).get(AnalyseViewModel::class.java)
         _binding = FragmentAnalyseBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        val prefs = requireContext().getAppCommonSharedPreferences()
         binding.run {
             blurredPicsPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
             memesPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
-            emptyFilesPreview.invalidateProgress(filesViewModel.isInternalStorageAnalysing)
-            duplicateFilesPreview.invalidateProgress(filesViewModel.isInternalStorageAnalysing)
             blurredPicsPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_BLUR,
@@ -90,7 +91,28 @@ class AnalyseFragment : Fragment() {
                     emptyFilesPreview.loadPreviews(it)
                 }
             }
-            analyseViewModel.getDuplicateDirectories(internalStorageDao)
+
+            val duplicatePref = prefs.getInt(
+                PreferencesConstants.KEY_SEARCH_DUPLICATES_IN,
+                PreferencesConstants.DEFAULT_SEARCH_DUPLICATES_IN
+            )
+            val doProgressDuplicateFiles = if (duplicatePref ==
+                PreferencesConstants.VAL_SEARCH_DUPLICATES_MEDIA_STORE
+            )
+                filesViewModel.isMediaFilesAnalysing
+            else filesViewModel.isInternalStorageAnalysing
+            if (duplicatePref == PreferencesConstants.VAL_SEARCH_DUPLICATES_MEDIA_STORE) {
+                emptyFilesPreview.visibility = View.GONE
+            } else {
+                emptyFilesPreview.invalidateProgress(filesViewModel.isInternalStorageAnalysing)
+            }
+            duplicateFilesPreview.invalidateProgress(doProgressDuplicateFiles)
+            analyseViewModel.getDuplicateDirectories(
+                internalStorageDao,
+                duplicatePref
+                    == PreferencesConstants.VAL_SEARCH_DUPLICATES_MEDIA_STORE,
+                duplicatePref == PreferencesConstants.VAL_SEARCH_DUPLICATES_INTERNAL_DEEP
+            )
                 .observe(viewLifecycleOwner) {
                     if (it != null) {
                         duplicateFilesPreview.loadPreviews(it.flatten())
