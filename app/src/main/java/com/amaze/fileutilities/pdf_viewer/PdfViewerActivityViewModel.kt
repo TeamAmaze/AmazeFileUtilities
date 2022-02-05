@@ -37,7 +37,7 @@ class PdfViewerActivityViewModel : ViewModel() {
         return pdfModel
     }
 
-    fun getCurrentPageText(bitmap: Bitmap, externalDirPath: String): LiveData<String?> {
+    /*fun getCurrentPageText(bitmap: Bitmap, externalDirPath: String): LiveData<String?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
             emit(null)
             val tessBaseAPI = ImgUtils.getTessInstance(
@@ -49,5 +49,5 @@ class PdfViewerActivityViewModel : ViewModel() {
             val extractedText: String? = tessBaseAPI?.getUTF8Text()
             emit(extractedText)
         }
-    }
+    }*/
 }

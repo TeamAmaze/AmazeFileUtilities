@@ -108,7 +108,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
     }
 
     fun setHeaderColor(headerColor: Int, headerRes: Int) {
-        setBackgroundResource(headerRes)
+//        setBackgroundResource(headerRes)
+        setBackgroundResource(R.drawable.background_curved)
         mediaProgressIndicator.trackColor = ColorUtils.blendARGB(
             headerColor,
             Color.BLACK, .2f
