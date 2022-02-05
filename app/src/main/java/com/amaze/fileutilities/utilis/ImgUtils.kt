@@ -10,9 +10,19 @@
 
 package com.amaze.fileutilities.utilis
 
+import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.Log
-import com.googlecode.tesseract.android.TessBaseAPI
+import com.amaze.fileutilities.home_page.database.PathPreferences
+import com.amaze.fileutilities.utilis.Utils.Companion.containsInPreferences
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.face.FaceDetection
+import com.google.mlkit.vision.face.FaceDetectorOptions
+import com.google.mlkit.vision.text.Text
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import org.opencv.android.Utils
 import org.opencv.core.*
 import org.opencv.imgcodecs.Imgcodecs
@@ -23,7 +33,7 @@ import kotlin.math.pow
 class ImgUtils {
 
     companion object {
-        private var tessBaseApi: TessBaseAPI? = null
+//        private var tessBaseApi: TessBaseAPI? = null
         private val wordRegex = "^[A-Za-z]*$".toRegex()
 
         fun convertMatToBitmap(input: Mat): Bitmap? {
@@ -47,7 +57,7 @@ class ImgUtils {
             return mat
         }
 
-        fun getTessInstance(bitmap: Bitmap, externalDirPath: String): TessBaseAPI? {
+        /*fun getTessInstance(bitmap: Bitmap, externalDirPath: String): TessBaseAPI? {
             if (tessBaseApi == null) {
                 tessBaseApi = TessBaseAPI()
                 try {
@@ -60,9 +70,116 @@ class ImgUtils {
             tessBaseApi?.clear()
             tessBaseApi?.setImage(bitmap)
             return tessBaseApi
+        }*/
+
+        fun isImageMeme(context: Context, uri: Uri, pathPreferences: List<PathPreferences>,
+                        callback: (isMeme: Boolean) -> Unit) {
+            if (!containsInPreferences(uri.path!!,
+                    pathPreferences, true)
+            ) {
+                callback.invoke(false)
+                return
+            }
+            extractTextFromImg(context, uri) { isSuccess, extractedText ->
+                if (isSuccess) {
+                    extractedText?.run {
+                        for (block in textBlocks) {
+                            for (line in block.lines) {
+                                for (element in line.elements) {
+                                    val elementText = element.text
+                                    if (elementText.matches(wordRegex) && elementText.length > 4) {
+                                        callback.invoke(true)
+                                        return@extractTextFromImg
+                                    }
+                                }
+                            }
+                        }
+                        callback.invoke(false)
+                    }
+                } else {
+                    callback.invoke(false)
+                }
+            }
         }
 
-        fun isImageMeme(path: String, externalDirPath: String): Boolean {
+        fun getImageFeatures(context: Context, uri: Uri, pathPreferences: List<PathPreferences>,
+                             callback: ((isSuccess: Boolean,
+                                          imageFeatures: ImageFeatures?) -> Unit)) {
+            if (!containsInPreferences(uri.path!!, pathPreferences, true)) {
+                callback.invoke(false, null)
+                return
+            }
+            val highAccuracyOpts = FaceDetectorOptions.Builder()
+                .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
+                .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
+                .build()
+            val detector = FaceDetection.getClient(highAccuracyOpts)
+//            val image = InputImage.fromBitmap(bitmap, 0)
+            val image = InputImage.fromFilePath(context, uri)
+            detector.process(image)
+                .addOnSuccessListener { faces ->
+                    // Task completed successfully
+                    // ...
+                    var isSad = false
+                    var isDistracted = false
+                    var isSleeping = false
+                    faces.forEach {
+                        face ->
+                        face.smilingProbability?.let {
+                            if (it < 0.7) {
+                                isSad = true
+                            }
+                        }
+                        if (face.headEulerAngleX > 36 || face.headEulerAngleX < -36
+                            || face.headEulerAngleY > 36 || face.headEulerAngleY < -36
+                            || face.headEulerAngleZ > 36 || face.headEulerAngleZ < -36) {
+                            isDistracted = true
+                        }
+                        face.leftEyeOpenProbability?.let {
+                            if (it < 0.7) {
+                                isSleeping = true
+                            }
+                        }
+                        face.rightEyeOpenProbability?.let {
+                            if (it < 0.7) {
+                                isSleeping = true
+                            }
+                        }
+                    }
+
+                    callback.invoke(true,
+                        ImageFeatures(isSad, isSleeping, isDistracted, faces.count()))
+                    detector.close()
+                }
+                .addOnFailureListener { e ->
+                    // Task failed with an exception
+                    // ...
+                    e.printStackTrace()
+                    callback.invoke(false, null)
+                    detector.close()
+                }
+        }
+
+        private fun extractTextFromImg(context: Context, uri: Uri, callback: ((isSuccess: Boolean, extractedText: Text?) -> Unit)?) {
+            val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+            val image = InputImage.fromFilePath(context, uri)
+            val result = recognizer.process(image)
+                .addOnSuccessListener { visionText ->
+                    // Task completed successfully
+                    Log.d(javaClass.simpleName, visionText.text)
+                    callback?.invoke(true, visionText)
+                    recognizer.close()
+                }
+                .addOnFailureListener { e ->
+                    // Task failed with an exception
+                    // ...
+                    e.printStackTrace()
+                    callback?.invoke(false, null)
+                    recognizer.close()
+                }
+        }
+
+        /*fun isImageMeme(path: String, externalDirPath: String): Boolean {
             try {
                 val matrix = Imgcodecs.imread(path)
                 val tessBaseAPI = getTessInstance(
@@ -87,9 +204,9 @@ class ImgUtils {
                 return false
             }
             return false
-        }
+        }*/
 
-        fun extractText(path: String, externalDirPath: String): String {
+        /*fun extractText(path: String, externalDirPath: String): String {
             val matrix = Imgcodecs.imread(path)
             val tessBaseAPI = getTessInstance(
                 convertMatToBitmap(processPdfImgAlt(matrix))!!,
@@ -100,9 +217,12 @@ class ImgUtils {
                 return extractedText!!
             }
             return ""
-        }
+        }*/
 
-        fun isImageBlur(path: String): Boolean {
+        fun isImageBlur(path: String, pathPreferences: List<PathPreferences>): Boolean {
+            if (!containsInPreferences(path, pathPreferences, true)) {
+                return false
+            }
             val matrix = Imgcodecs.imread(path)
             val factor = laplace(matrix)
             if (factor < 100 && factor != 0.0) {
@@ -261,6 +381,14 @@ class ImgUtils {
             val matGray = Mat()
             Imgproc.cvtColor(matrix, matGray, Imgproc.COLOR_BGR2GRAY)
             return matGray
+        }
+    }
+
+    data class ImageFeatures(val isSad: Boolean = false, val isSleeping: Boolean = false,
+                             val isDistracted: Boolean = false,
+                             val facesCount: Int = 0) {
+        fun featureDetected(): Boolean {
+            return isSleeping || isSad || isDistracted || facesCount > 0
         }
     }
 }

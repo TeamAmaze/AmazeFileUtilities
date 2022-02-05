@@ -59,7 +59,7 @@ class MainActivity : PermissionsActivity(), AggregatedMediaFileInfoObserver {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
-        viewModel.copyTrainedData()
+//        viewModel.copyTrainedData()
         actionBarBinding = ActivityMainActionbarBinding.inflate(layoutInflater)
         searchActionBarBinding = ActivityMainActionbarSearchBinding.inflate(layoutInflater)
         selectedItemActionBarBinding = ActivityMainActionbarItemSelectedBinding
@@ -118,30 +118,33 @@ class MainActivity : PermissionsActivity(), AggregatedMediaFileInfoObserver {
             invalidateOptionsTabs()
         }
 
-        viewModel.usedImagesSummaryTransformations.observe(
-            this
-        ) {
-            it?.second.let { list ->
-                list?.run {
-                    val inputList = ArrayList(this)
-                    viewModel.analyseImagesTransformation(inputList)
+        viewModel.initAndFetchPathPreferences().observe(this) { pathPreferences ->
+            viewModel.usedImagesSummaryTransformations.observe(
+                this
+            ) {
+                it?.second.let { list ->
+                    list?.run {
+                        val inputList = ArrayList(this)
+                        viewModel.analyseImagesTransformation(inputList, pathPreferences)
+                    }
                 }
             }
-        }
-        val prefs = this.getAppCommonSharedPreferences()
-        val searchIdx = prefs.getInt(
-            PreferencesConstants.KEY_SEARCH_DUPLICATES_IN,
-            PreferencesConstants.DEFAULT_SEARCH_DUPLICATES_IN
-        )
-        if (searchIdx != PreferencesConstants.DEFAULT_SEARCH_DUPLICATES_IN) {
-            viewModel.analyseInternalStorage(
-                searchIdx ==
-                    PreferencesConstants.VAL_SEARCH_DUPLICATES_INTERNAL_DEEP
+
+            val prefs = this.getAppCommonSharedPreferences()
+            val searchIdx = prefs.getInt(
+                PreferencesConstants.KEY_SEARCH_DUPLICATES_IN,
+                PreferencesConstants.DEFAULT_SEARCH_DUPLICATES_IN
             )
-        } else {
-            observeMediaInfoLists { isLoading, aggregatedFiles ->
-                if (!isLoading && aggregatedFiles != null) {
-                    viewModel.analyseMediaStoreFiles(aggregatedFiles)
+
+            if (searchIdx != PreferencesConstants.DEFAULT_SEARCH_DUPLICATES_IN) {
+                viewModel.analyseInternalStorage(
+                    searchIdx ==
+                            PreferencesConstants.VAL_SEARCH_DUPLICATES_INTERNAL_DEEP)
+            } else {
+                observeMediaInfoLists { isLoading, aggregatedFiles ->
+                    if (!isLoading && aggregatedFiles != null) {
+                        viewModel.analyseMediaStoreFiles(aggregatedFiles)
+                    }
                 }
             }
         }

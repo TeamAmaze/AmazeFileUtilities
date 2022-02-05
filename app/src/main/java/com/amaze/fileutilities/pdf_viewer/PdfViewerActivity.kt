@@ -32,6 +32,9 @@ import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.github.barteksc.pdfviewer.listener.OnTapListener
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.shockwave.pdfium.PdfDocument
 import com.shockwave.pdfium.PdfDocument.Bookmark
 import com.shockwave.pdfium.PdfPasswordException
@@ -104,9 +107,6 @@ class PdfViewerActivity :
                 }
                 R.id.invert_colors -> {
                     switchView()
-                }
-                R.id.copy_page -> {
-                    extractText(viewModel.pageNumber)
                 }
                 R.id.bookmarks -> {
                     showBookmarksDialog(viewBinding.pdfView.tableOfContents, "-")
@@ -209,7 +209,7 @@ class PdfViewerActivity :
         // TODO: provide option to use better quality with pdfView.useBestQuality
     }
 
-    private fun extractText(page: Int) {
+    /*private fun extractText(page: Int) {
         try {
             val pdfiumCore = PdfiumCore(this)
             val pd = this.contentResolver.openFileDescriptor(pdfModel.uri, "r")
@@ -228,20 +228,20 @@ class PdfViewerActivity :
                 pdfDocument, bitmap, page, 0, 0,
                 width, height
             )
-            viewModel.getCurrentPageText(bitmap, externalCacheDir!!.path).observe(this, {
+            viewModel.getCurrentPageText(bitmap, externalCacheDir!!.path).observe(this) {
                 if (it == null) {
                     showToastInCenter(resources.getString(R.string.analysing))
                 } else {
-                    Log.e(javaClass.simpleName, it)
+                    Log.e(javaClass.simpleName, "CUSTOM:\n$it")
                     showToastInCenter(resources.getString(R.string.page_copied_to_clipboard))
                     Utils.copyToClipboard(this, it)
                 }
-            })
+            }
             pdfiumCore.closeDocument(pdfDocument) // important!
         } catch (ex: IOException) {
             ex.printStackTrace()
         }
-    }
+    }*/
 
     fun showInfoDialog() {
         var dialogMessage = ""

@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.home_page.database.PathPreferences
 
 class AudioPlayerPrefFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener {
 
@@ -44,6 +45,14 @@ class AudioPlayerPrefFragment : PreferenceFragmentCompat(), Preference.OnPrefere
     }
 
     override fun onPreferenceClick(preference: Preference): Boolean {
-        TODO("Not yet implemented")
+        when(preference.key) {
+            KEY_EXCLUSIONS -> {
+                (activity as PreferenceActivity).inflatePreferenceFragment(
+                    PathPreferencesFragment.newInstance(PathPreferences.FEATURE_AUDIO_PLAYER),
+                    R.string.audio_player
+                )
+            }
+        }
+        return true
     }
 }

@@ -12,8 +12,8 @@
         android:id="@+id/invert_colors"
         android:title="@string/invert_colors"
         />
-    <item
+    <!--<item
         android:id="@+id/copy_page"
         android:title="@string/copy_page"
-        />
+        />-->
 </menu>

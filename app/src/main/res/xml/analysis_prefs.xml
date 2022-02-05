@@ -1,7 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference
         app:key="search_duplicates"
         app:title="@string/search_duplicates"
         />
+    <PreferenceCategory
+        app:title="@string/paths_included">
+        <Preference
+            app:key="meme_paths"
+            app:title="@string/memes"
+            />
+        <Preference
+            app:key="blur_paths"
+            app:title="@string/blurred_pics"
+            />
+        <Preference
+            app:key="features_paths"
+            android:title="@string/image_features"
+            app:summary="@string/features_paths_hint"
+            />
+        <Preference
+            app:key="download_paths"
+            app:title="@string/download_paths"
+            android:summary="@string/download_paths_hint"
+            />
+        <Preference
+            app:key="recording_paths"
+            app:title="@string/old_recordings"
+            />
+        <Preference
+            app:key="screenshot_paths"
+            app:title="@string/old_screenshots"
+            />
+        <Preference
+            app:key="telegram_paths"
+            app:title="@string/telegram_files"
+            />
+    </PreferenceCategory>
 </PreferenceScreen>

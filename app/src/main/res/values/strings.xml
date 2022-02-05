@@ -117,6 +117,14 @@
     <string name="clean">Clean</string>
     <string name="blurred_pics">Blurred Pics</string>
     <string name="memes">Memes</string>
+    <string name="frown">Frown</string>
+    <string name="frown_hint">Images that doesn\'t have smiling faces</string>
+    <string name="closed_eyes">Closed Eyes</string>
+    <string name="closed_eyes_hint">Images that have people with closed eyes</string>
+    <string name="distracted">Distracted</string>
+    <string name="distracted_hint">Images that have people looking elsewhere</string>
+    <string name="selfie">Selfies</string>
+    <string name="group_pics">Group Pics</string>
     <string name="memes_hint">Memes are images that have something prominent written over them</string>
     <string name="duplicates">Duplicate files</string>
     <string name="cache">App Cache</string>
@@ -129,6 +137,7 @@
     <string name="empty_files">Empty files / folders</string>
     <string name="junk_files">Junk files</string>
     <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
+    <string name="telegram_files">Telegram</string>
     <string name="more_to_come">More optimizations to come!</string>
     <string name="view_all">View all</string>
     <string name="analysis">Analysis</string>
@@ -139,4 +148,14 @@
     <string name="media_store">Android media store (fastest)</string>
     <string name="internal_storage_shallow">Internal Storage (Shallow / slow)</string>
     <string name="internal_storage_deep">Internal Storage (Deep / slowest)</string>
+    <string name="show_analysis">Show analysis</string>
+    <string name="add_item">Add Item</string>
+    <string name="paths_included">Paths Included</string>
+    <string name="paths_excluded">Paths Excluded</string>
+    <string name="delete_preference">Delete Preference</string>
+    <string name="confirm">Confirm</string>
+    <string name="image_features">Image Features</string>
+    <string name="features_paths_hint">Includes closed eyes, distracted, sad, selfie, group paths</string>
+    <string name="download_paths">Downloads</string>
+    <string name="download_paths_hint">Includes old, large downloads</string>
 </resources>
