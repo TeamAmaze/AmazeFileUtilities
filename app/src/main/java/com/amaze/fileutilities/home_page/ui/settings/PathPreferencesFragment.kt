@@ -1,5 +1,16 @@
+/*
+ * Copyright (C) 2021-2022 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ *
+ * This file is part of Amaze File Utilities.
+ *
+ * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
+ * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ */
+
 package com.amaze.fileutilities.home_page.ui.settings
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.CheckBoxPreference
@@ -9,15 +20,16 @@ import androidx.preference.PreferenceFragmentCompat
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.PathPreferences
+import com.amaze.fileutilities.home_page.database.PathPreferencesDao
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 
-class PathPreferencesFragment: PreferenceFragmentCompat(), Preference.OnPreferenceChangeListener {
+class PathPreferencesFragment : PreferenceFragmentCompat() {
 
     private var preferencesList: PreferenceCategory? = null
     private var featureName: Int? = null
-    private val dao = AppDatabase.getInstance(requireContext()).pathPreferencesDao()
-    private val sharedPrefs = requireContext().getAppCommonSharedPreferences()
+    private lateinit var dao: PathPreferencesDao
+    private lateinit var sharedPrefs: SharedPreferences
 
     private val preferenceDbMap: MutableMap<Preference, PathPreferences> = HashMap()
 
@@ -43,6 +55,8 @@ class PathPreferencesFragment: PreferenceFragmentCompat(), Preference.OnPreferen
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.path_prefs, rootKey)
         featureName = arguments?.getInt(KEY_FEATURE_NAME)
+        dao = AppDatabase.getInstance(requireContext()).pathPreferencesDao()
+        sharedPrefs = requireContext().getAppCommonSharedPreferences()
 
         findPreference<Preference>("add_pref_path")?.onPreferenceClickListener =
             Preference.OnPreferenceClickListener {
@@ -53,17 +67,19 @@ class PathPreferencesFragment: PreferenceFragmentCompat(), Preference.OnPreferen
         if (featureName!! != PathPreferences.FEATURE_AUDIO_PLAYER) {
             val preference = CheckBoxPreference(preferenceScreen.context)
             preference.title = getString(R.string.show_analysis)
-            preference.key = "show_analysis"
-            preference.setDefaultValue(sharedPrefs
-                .getBoolean(PathPreferences.getSharedPreferenceKey(featureName!!),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS))
-            preference.onPreferenceChangeListener = this
+            preference.key = PathPreferences.getSharedPreferenceKey(featureName!!)
+            preference.setDefaultValue(
+                sharedPrefs.getBoolean(
+                    PathPreferences
+                        .getSharedPreferenceKey(featureName!!),
+                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+                )
+            )
             preferenceScreen.addPreference(preference)
-            preferencesList?.dependency = "show_analysis"
+            preferencesList?.dependency = PathPreferences.getSharedPreferenceKey(featureName!!)
         }
         reload()
     }
-
 
     private fun reload() {
         for (p in preferenceDbMap) {
@@ -73,8 +89,10 @@ class PathPreferencesFragment: PreferenceFragmentCompat(), Preference.OnPreferen
         preferenceDbMap.clear()
         val preferences = dao.findByFeature(featureName!!)
         preferences.forEach {
-            val prefSwitch = PathSwitchPreference(requireContext(), null,
-                itemOnDeleteListener)
+            val prefSwitch = PathSwitchPreference(
+                requireContext(), null,
+                itemOnDeleteListener
+            )
             preferenceDbMap[prefSwitch] = it
             prefSwitch.summary = it.path
             preferencesList?.addPreference(prefSwitch)
@@ -96,16 +114,5 @@ class PathPreferencesFragment: PreferenceFragmentCompat(), Preference.OnPreferen
             ) { dialog, _ -> dialog.dismiss() }
             .create()
         dialog.show()
-    }
-
-    override fun onPreferenceChange(preference: Preference, newValue: Any?): Boolean {
-        when(preference.key) {
-            "show_analysis" -> {
-                sharedPrefs.edit().putBoolean(PathPreferences.getSharedPreferenceKey(featureName!!),
-                    newValue as Boolean
-                ).apply()
-            }
-        }
-        return true
     }
 }

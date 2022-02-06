@@ -20,7 +20,7 @@ class PreferencesConstants {
         const val KEY_MEDIA_LIST_GROUP_BY_IS_ASC = "media_list_group_by_is_asc"
         const val KEY_MEDIA_LIST_SORT_BY_IS_ASC = "media_list_sort_by_is_asc"
         const val KEY_SEARCH_DUPLICATES_IN = "search_duplicates_in"
-        const val KEY_PATH_PREFS_MIGRATION  = "path_prefs_migration"
+        const val KEY_PATH_PREFS_MIGRATION = "path_prefs_migration"
 
         const val VAL_SEARCH_DUPLICATES_MEDIA_STORE = 0
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1

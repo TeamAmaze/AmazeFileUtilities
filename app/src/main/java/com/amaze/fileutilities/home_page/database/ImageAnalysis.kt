@@ -31,7 +31,14 @@ data class ImageAnalysis(
     @ColumnInfo(name = "is_sleeping") val isSleeping: Boolean,
     @ColumnInfo(name = "face_count") val faceCount: Int,
 ) {
-    constructor(filePath: String, isBlur: Boolean, isMeme: Boolean, isSad: Boolean,
-                isDistracted: Boolean, isSleeping: Boolean, faceCount: Int) :
+    constructor(
+        filePath: String,
+        isBlur: Boolean,
+        isMeme: Boolean,
+        isSad: Boolean,
+        isDistracted: Boolean,
+        isSleeping: Boolean,
+        faceCount: Int
+    ) :
         this(0, filePath, isBlur, isMeme, isSad, isDistracted, isSleeping, faceCount)
 }

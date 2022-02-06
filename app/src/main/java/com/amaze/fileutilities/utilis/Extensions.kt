@@ -23,10 +23,10 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.Toast
-import com.amaze.fileutilities.home_page.database.InternalStorageAnalysis
-import com.amaze.fileutilities.home_page.database.InternalStorageAnalysisDao
 import com.amaze.fileutilities.home_page.database.ImageAnalysis
 import com.amaze.fileutilities.home_page.database.ImageAnalysisDao
+import com.amaze.fileutilities.home_page.database.InternalStorageAnalysis
+import com.amaze.fileutilities.home_page.database.InternalStorageAnalysisDao
 import java.io.File
 
 fun Uri.getSiblingUriFiles(context: Context): ArrayList<Uri>? {

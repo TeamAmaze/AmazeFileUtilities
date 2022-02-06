@@ -222,24 +222,35 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }*/
 
-    fun analyseImagesTransformation(mediaFileInfoList: ArrayList<MediaFileInfo>,
-                                    pathPreferencesList: List<PathPreferences>) {
+    fun analyseImagesTransformation(
+        mediaFileInfoList: ArrayList<MediaFileInfo>,
+        pathPreferencesList: List<PathPreferences>
+    ) {
         viewModelScope.launch(Dispatchers.Default) {
             val dao = AppDatabase.getInstance(applicationContext).analysisDao()
             isMediaFilesAnalysing = true
+            var memesProcessed = 0
+            var featuresProcessed = 0
             mediaFileInfoList.forEach {
                 if (dao.findByPath(it.path) == null) {
-                    ImgUtils.isImageMeme(applicationContext,
+                    ImgUtils.isImageMeme(
+                        applicationContext,
                         it.getContentUri(applicationContext),
                         pathPreferencesList.filter { pref ->
-                            pref.feature == PathPreferences.FEATURE_ANALYSIS_MEME }) { isMeme ->
+                            pref.feature == PathPreferences.FEATURE_ANALYSIS_MEME
+                        },
+                        memesProcessed++
+                    ) { isMeme ->
                         viewModelScope.launch(Dispatchers.Default) {
                             var features = ImgUtils.ImageFeatures()
-                            ImgUtils.getImageFeatures(applicationContext,
+                            ImgUtils.getImageFeatures(
+                                applicationContext,
                                 it.getContentUri(applicationContext),
+                                featuresProcessed++,
                                 pathPreferencesList.filter { pref ->
                                     pref.feature == PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
-                                }) { isSuccess, imageFeatures ->
+                                }
+                            ) { isSuccess, imageFeatures ->
                                 viewModelScope.launch(Dispatchers.Default) {
                                     if (isSuccess) {
                                         imageFeatures?.run {
@@ -247,10 +258,12 @@ class FilesViewModel(val applicationContext: Application) :
                                         }
                                     }
 
-                                    val isBlur = ImgUtils.isImageBlur(it.path,
+                                    val isBlur = ImgUtils.isImageBlur(
+                                        it.path,
                                         pathPreferencesList.filter { pref ->
                                             pref.feature == PathPreferences.FEATURE_ANALYSIS_BLUR
-                                        })
+                                        }
+                                    )
 
                                     if (isBlur || isMeme || features.featureDetected()) {
                                         dao.insert(
@@ -292,7 +305,8 @@ class FilesViewModel(val applicationContext: Application) :
 
     fun analyseMediaStoreFiles(
         aggregatedMediaFiles:
-            AggregatedMediaFileInfoObserver.AggregatedMediaFiles) {
+            AggregatedMediaFileInfoObserver.AggregatedMediaFiles
+    ) {
         viewModelScope.launch(Dispatchers.Default) {
             val dao = AppDatabase.getInstance(applicationContext).internalStorageAnalysisDao()
             isMediaStoreAnalysing = true
@@ -315,8 +329,10 @@ class FilesViewModel(val applicationContext: Application) :
     fun initAndFetchPathPreferences(): LiveData<List<PathPreferences>> =
         liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
             val prefs = applicationContext.getAppCommonSharedPreferences()
-            val pathPrefs = prefs.getInt(PreferencesConstants.KEY_PATH_PREFS_MIGRATION,
-                PreferencesConstants.DEFAULT_PATH_PREFS_INITIALIZED)
+            val pathPrefs = prefs.getInt(
+                PreferencesConstants.KEY_PATH_PREFS_MIGRATION,
+                PreferencesConstants.DEFAULT_PATH_PREFS_INITIALIZED
+            )
             val dao = AppDatabase.getInstance(applicationContext).pathPreferencesDao()
             if (pathPrefs < PreferencesConstants.VAL_PATH_PREFS_MIGRATION) {
                 val storageData: StorageDirectoryParcelable? = if (SDK_INT >= N) {
@@ -333,16 +349,22 @@ class FilesViewModel(val applicationContext: Application) :
                     }
                 }
                 FileUtils.DEFAULT_PATH_PREFS_EXCLUSIVE.forEach {
-                        keyValue ->
+                    keyValue ->
                     keyValue.value.forEach {
-                            value ->
-                        prefsList.add(PathPreferences(value,
-                            keyValue.key, true))
+                        value ->
+                        prefsList.add(
+                            PathPreferences(
+                                value,
+                                keyValue.key, true
+                            )
+                        )
                     }
                 }
                 dao.insertAll(prefsList)
-                prefs.edit().putInt(PreferencesConstants.KEY_PATH_PREFS_MIGRATION,
-                    PreferencesConstants.VAL_PATH_PREFS_MIGRATION).apply()
+                prefs.edit().putInt(
+                    PreferencesConstants.KEY_PATH_PREFS_MIGRATION,
+                    PreferencesConstants.VAL_PATH_PREFS_MIGRATION
+                ).apply()
             }
             emit(dao.getAll())
         }

@@ -45,7 +45,7 @@ class AudioPlayerPrefFragment : PreferenceFragmentCompat(), Preference.OnPrefere
     }
 
     override fun onPreferenceClick(preference: Preference): Boolean {
-        when(preference.key) {
+        when (preference.key) {
             KEY_EXCLUSIONS -> {
                 (activity as PreferenceActivity).inflatePreferenceFragment(
                     PathPreferencesFragment.newInstance(PathPreferences.FEATURE_AUDIO_PLAYER),

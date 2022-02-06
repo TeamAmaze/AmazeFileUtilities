@@ -10,7 +10,6 @@
 
 package com.amaze.fileutilities.pdf_viewer
 
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
@@ -32,14 +31,9 @@ import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.github.barteksc.pdfviewer.listener.OnTapListener
 import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.shockwave.pdfium.PdfDocument
 import com.shockwave.pdfium.PdfDocument.Bookmark
 import com.shockwave.pdfium.PdfPasswordException
-import com.shockwave.pdfium.PdfiumCore
-import java.io.IOException
 
 class PdfViewerActivity :
     PermissionsActivity(),

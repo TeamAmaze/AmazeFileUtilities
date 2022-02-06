@@ -21,9 +21,7 @@ import androidx.fragment.app.FragmentManager
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ImageMetadataSheetBinding
 import com.amaze.fileutilities.utilis.ImgUtils
-import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getFileFromUri
-import com.amaze.fileutilities.utilis.showToastInCenter
 import com.drew.imaging.ImageMetadataReader
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.mlkit.vision.common.InputImage
@@ -97,7 +95,13 @@ class ImageMetadataSheet() : BottomSheetDialogFragment() {
             }
 
             val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-            val image = InputImage.fromBitmap(BitmapFactory.decodeFile(localImageModel!!.uri.getFileFromUri(requireContext())!!.path), 0)
+            val image = InputImage.fromBitmap(
+                BitmapFactory.decodeFile(
+                    localImageModel!!
+                        .uri.getFileFromUri(requireContext())!!.path
+                ),
+                0
+            )
             recognizer.process(image)
                 .addOnSuccessListener { visionText ->
                     // Task completed successfully

@@ -193,9 +193,12 @@ class Utils {
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
         }
 
-        fun containsInPreferences(path: String, pathPreferences: List<PathPreferences>,
-                                           inclusive: Boolean):
-                Boolean {
+        fun containsInPreferences(
+            path: String,
+            pathPreferences: List<PathPreferences>,
+            inclusive: Boolean
+        ):
+            Boolean {
             pathPreferences.forEach {
                 if (path.contains(it.path)) {
                     return inclusive
