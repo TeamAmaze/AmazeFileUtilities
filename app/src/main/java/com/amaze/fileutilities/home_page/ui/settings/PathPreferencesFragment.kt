@@ -12,6 +12,7 @@ package com.amaze.fileutilities.home_page.ui.settings
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.CheckBoxPreference
 import androidx.preference.Preference
@@ -60,7 +61,7 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
 
         findPreference<Preference>("add_pref_path")?.onPreferenceClickListener =
             Preference.OnPreferenceClickListener {
-//                showCreateDialog()
+                showCreateDialog()
                 true
             }
         preferencesList = findPreference("prefs_list")
@@ -107,6 +108,34 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
                 prefDb?.let { dao.delete(it) }
                 preferencesList?.removePreference(prefSwitch)
                 preferenceDbMap.remove(prefSwitch)
+                dialog.dismiss()
+            }
+            .setNegativeButton(
+                R.string.cancel
+            ) { dialog, _ -> dialog.dismiss() }
+            .create()
+        dialog.show()
+    }
+
+    private fun showCreateDialog() {
+        val inputEditTextField = EditText(requireContext())
+        val dialog = AlertDialog.Builder(requireContext()).setTitle(R.string.select_path)
+            .setView(inputEditTextField)
+            .setCancelable(false)
+            .setPositiveButton(R.string.ok) { dialog, _ ->
+                val path = inputEditTextField.text.toString()
+                val pathPreferences = PathPreferences(
+                    path, featureName!!,
+                    featureName == PathPreferences.FEATURE_AUDIO_PLAYER
+                )
+                dao.insert(pathPreferences)
+                val prefSwitch = PathSwitchPreference(
+                    requireContext(), null,
+                    itemOnDeleteListener
+                )
+                preferenceDbMap[prefSwitch] = pathPreferences
+                prefSwitch.summary = path
+                preferencesList?.addPreference(prefSwitch)
                 dialog.dismiss()
             }
             .setNegativeButton(

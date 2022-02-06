@@ -17,11 +17,9 @@ import android.util.Log
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.utilis.Utils.Companion.containsInPreferences
 import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.face.FaceDetection
-import com.google.mlkit.vision.face.FaceDetectorOptions
+import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.text.Text
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import com.google.mlkit.vision.text.TextRecognizer
 import org.opencv.android.Utils
 import org.opencv.core.*
 import org.opencv.imgcodecs.Imgcodecs
@@ -74,6 +72,7 @@ class ImgUtils {
 
         fun isImageMeme(
             context: Context,
+            textRecognizer: TextRecognizer,
             uri: Uri,
             pathPreferences: List<PathPreferences>,
             memesProcessed: Int,
@@ -83,12 +82,12 @@ class ImgUtils {
             if (!containsInPreferences(
                     uri.path!!,
                     pathPreferences, true
-                ) || memesProcessed > 1000
+                ) || memesProcessed > 10000
             ) {
                 callback.invoke(false)
                 return
             }
-            extractTextFromImg(context, uri) { isSuccess, extractedText ->
+            extractTextFromImg(context, textRecognizer, uri) { isSuccess, extractedText ->
                 if (isSuccess) {
                     extractedText?.run {
                         for (block in textBlocks) {
@@ -112,26 +111,22 @@ class ImgUtils {
 
         fun getImageFeatures(
             context: Context,
+            faceDetector: FaceDetector,
             uri: Uri,
             featuresProcessed: Int,
             pathPreferences: List<PathPreferences>,
             callback: ((isSuccess: Boolean, imageFeatures: ImageFeatures?) -> Unit)
         ) {
-//            TimeUnit.SECONDS.sleep(1L)
+            TimeUnit.SECONDS.sleep(1L)
             if (!containsInPreferences(uri.path!!, pathPreferences, true) ||
-                featuresProcessed > 1000
+                featuresProcessed > 10000
             ) {
                 callback.invoke(false, null)
                 return
             }
-            val highAccuracyOpts = FaceDetectorOptions.Builder()
-                .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
-                .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
-                .build()
-            val detector = FaceDetection.getClient(highAccuracyOpts)
 //            val image = InputImage.fromBitmap(bitmap, 0)
             val image = InputImage.fromFilePath(context, uri)
-            detector.process(image)
+            faceDetector.process(image)
                 .addOnSuccessListener { faces ->
                     // Task completed successfully
                     // ...
@@ -166,37 +161,33 @@ class ImgUtils {
                         true,
                         ImageFeatures(isSad, isSleeping, isDistracted, faces.count())
                     )
-                    detector.close()
                 }
                 .addOnFailureListener { e ->
                     // Task failed with an exception
                     // ...
                     e.printStackTrace()
                     callback.invoke(false, null)
-                    detector.close()
                 }
         }
 
         private fun extractTextFromImg(
             context: Context,
+            textRecognizer: TextRecognizer,
             uri: Uri,
             callback: ((isSuccess: Boolean, extractedText: Text?) -> Unit)?
         ) {
-            val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
             val image = InputImage.fromFilePath(context, uri)
-            val result = recognizer.process(image)
+            val result = textRecognizer.process(image)
                 .addOnSuccessListener { visionText ->
                     // Task completed successfully
                     Log.d(javaClass.simpleName, visionText.text)
                     callback?.invoke(true, visionText)
-                    recognizer.close()
                 }
                 .addOnFailureListener { e ->
                     // Task failed with an exception
                     // ...
                     e.printStackTrace()
                     callback?.invoke(false, null)
-                    recognizer.close()
                 }
         }
 

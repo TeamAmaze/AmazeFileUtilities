@@ -17,6 +17,10 @@ import androidx.lifecycle.*
 import com.amaze.fileutilities.home_page.database.*
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.utilis.*
+import com.google.mlkit.vision.face.FaceDetection
+import com.google.mlkit.vision.face.FaceDetectorOptions
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.*
@@ -27,6 +31,13 @@ class FilesViewModel(val applicationContext: Application) :
     var isMediaFilesAnalysing = true
     var isInternalStorageAnalysing = true
     var isMediaStoreAnalysing = true
+
+    private val highAccuracyOpts = FaceDetectorOptions.Builder()
+        .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
+        .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
+        .build()
+    private val faceDetector = FaceDetection.getClient(highAccuracyOpts)
+    private val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
     val internalStorageStats: LiveData<StorageSummary?> =
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
@@ -235,6 +246,7 @@ class FilesViewModel(val applicationContext: Application) :
                 if (dao.findByPath(it.path) == null) {
                     ImgUtils.isImageMeme(
                         applicationContext,
+                        textRecognizer,
                         it.getContentUri(applicationContext),
                         pathPreferencesList.filter { pref ->
                             pref.feature == PathPreferences.FEATURE_ANALYSIS_MEME
@@ -245,6 +257,7 @@ class FilesViewModel(val applicationContext: Application) :
                             var features = ImgUtils.ImageFeatures()
                             ImgUtils.getImageFeatures(
                                 applicationContext,
+                                faceDetector,
                                 it.getContentUri(applicationContext),
                                 featuresProcessed++,
                                 pathPreferencesList.filter { pref ->
@@ -368,6 +381,12 @@ class FilesViewModel(val applicationContext: Application) :
             }
             emit(dao.getAll())
         }
+
+    override fun onCleared() {
+        faceDetector.close()
+        textRecognizer.close()
+        super.onCleared()
+    }
 
     private fun processInternalStorageAnalysis(
         dao: InternalStorageAnalysisDao,
