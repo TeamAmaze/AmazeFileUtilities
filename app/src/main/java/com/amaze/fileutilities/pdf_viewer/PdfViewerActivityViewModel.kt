@@ -11,13 +11,7 @@
 package com.amaze.fileutilities.pdf_viewer
 
 import android.content.Intent
-import android.graphics.Bitmap
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
-import com.amaze.fileutilities.utilis.ImgUtils
-import kotlinx.coroutines.Dispatchers
 
 class PdfViewerActivityViewModel : ViewModel() {
 

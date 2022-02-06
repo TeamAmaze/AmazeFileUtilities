@@ -33,8 +33,10 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
         private const val KEY_RECORDING = "recording_paths"
         private const val KEY_SCREENSHOT = "screenshot_paths"
         private const val KEY_TELEGRAM = "telegram_paths"
-        private val KEYS = listOf(KEY_DUPLICATES, KEY_MEMES, KEY_BLUR, KEY_FEATURES, KEY_DOWNLOAD,
-            KEY_RECORDING, KEY_SCREENSHOT, KEY_TELEGRAM)
+        private val KEYS = listOf(
+            KEY_DUPLICATES, KEY_MEMES, KEY_BLUR, KEY_FEATURES, KEY_DOWNLOAD,
+            KEY_RECORDING, KEY_SCREENSHOT, KEY_TELEGRAM
+        )
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -93,31 +95,36 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
             }
             KEY_FEATURES -> {
                 (activity as PreferenceActivity).inflatePreferenceFragment(
-                    PathPreferencesFragment.newInstance(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES),
+                    PathPreferencesFragment
+                        .newInstance(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES),
                     R.string.image_features
                 )
             }
             KEY_DOWNLOAD -> {
                 (activity as PreferenceActivity).inflatePreferenceFragment(
-                    PathPreferencesFragment.newInstance(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS),
+                    PathPreferencesFragment
+                        .newInstance(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS),
                     R.string.download_paths
                 )
             }
             KEY_RECORDING -> {
                 (activity as PreferenceActivity).inflatePreferenceFragment(
-                    PathPreferencesFragment.newInstance(PathPreferences.FEATURE_ANALYSIS_RECORDING),
+                    PathPreferencesFragment
+                        .newInstance(PathPreferences.FEATURE_ANALYSIS_RECORDING),
                     R.string.old_recordings
                 )
             }
             KEY_SCREENSHOT -> {
                 (activity as PreferenceActivity).inflatePreferenceFragment(
-                    PathPreferencesFragment.newInstance(PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS),
+                    PathPreferencesFragment
+                        .newInstance(PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS),
                     R.string.old_screenshots
                 )
             }
             KEY_TELEGRAM -> {
                 (activity as PreferenceActivity).inflatePreferenceFragment(
-                    PathPreferencesFragment.newInstance(PathPreferences.FEATURE_ANALYSIS_TELEGRAM),
+                    PathPreferencesFragment
+                        .newInstance(PathPreferences.FEATURE_ANALYSIS_TELEGRAM),
                     R.string.telegram_files
                 )
             }

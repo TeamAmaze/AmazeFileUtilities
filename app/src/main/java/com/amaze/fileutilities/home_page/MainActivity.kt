@@ -139,7 +139,8 @@ class MainActivity : PermissionsActivity(), AggregatedMediaFileInfoObserver {
             if (searchIdx != PreferencesConstants.DEFAULT_SEARCH_DUPLICATES_IN) {
                 viewModel.analyseInternalStorage(
                     searchIdx ==
-                            PreferencesConstants.VAL_SEARCH_DUPLICATES_INTERNAL_DEEP)
+                        PreferencesConstants.VAL_SEARCH_DUPLICATES_INTERNAL_DEEP
+                )
             } else {
                 observeMediaInfoLists { isLoading, aggregatedFiles ->
                     if (!isLoading && aggregatedFiles != null) {

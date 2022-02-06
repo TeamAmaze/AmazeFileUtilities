@@ -12,9 +12,9 @@ package com.amaze.fileutilities.home_page.ui.analyse
 
 import androidx.lifecycle.*
 import com.amaze.fileutilities.home_page.database.ImageAnalysis
+import com.amaze.fileutilities.home_page.database.ImageAnalysisDao
 import com.amaze.fileutilities.home_page.database.InternalStorageAnalysis
 import com.amaze.fileutilities.home_page.database.InternalStorageAnalysisDao
-import com.amaze.fileutilities.home_page.database.ImageAnalysisDao
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.invalidate
@@ -144,8 +144,10 @@ class AnalyseViewModel : ViewModel() {
         return response
     }
 
-    private fun transformAnalysisToMediaFileInfo(imageAnalysis: List<ImageAnalysis>,
-                                                 dao: ImageAnalysisDao):
+    private fun transformAnalysisToMediaFileInfo(
+        imageAnalysis: List<ImageAnalysis>,
+        dao: ImageAnalysisDao
+    ):
         List<MediaFileInfo> {
         val response = imageAnalysis.filter {
             it.invalidate(dao)

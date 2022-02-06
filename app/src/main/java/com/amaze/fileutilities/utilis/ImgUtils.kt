@@ -12,7 +12,6 @@ package com.amaze.fileutilities.utilis
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.util.Log
 import com.amaze.fileutilities.home_page.database.PathPreferences
@@ -28,6 +27,7 @@ import org.opencv.core.*
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
 import java.lang.Exception
+import java.util.concurrent.TimeUnit
 import kotlin.math.pow
 
 class ImgUtils {
@@ -72,10 +72,18 @@ class ImgUtils {
             return tessBaseApi
         }*/
 
-        fun isImageMeme(context: Context, uri: Uri, pathPreferences: List<PathPreferences>,
-                        callback: (isMeme: Boolean) -> Unit) {
-            if (!containsInPreferences(uri.path!!,
-                    pathPreferences, true)
+        fun isImageMeme(
+            context: Context,
+            uri: Uri,
+            pathPreferences: List<PathPreferences>,
+            memesProcessed: Int,
+            callback: (isMeme: Boolean) -> Unit
+        ) {
+            TimeUnit.SECONDS.sleep(1L)
+            if (!containsInPreferences(
+                    uri.path!!,
+                    pathPreferences, true
+                ) || memesProcessed > 1000
             ) {
                 callback.invoke(false)
                 return
@@ -102,10 +110,17 @@ class ImgUtils {
             }
         }
 
-        fun getImageFeatures(context: Context, uri: Uri, pathPreferences: List<PathPreferences>,
-                             callback: ((isSuccess: Boolean,
-                                          imageFeatures: ImageFeatures?) -> Unit)) {
-            if (!containsInPreferences(uri.path!!, pathPreferences, true)) {
+        fun getImageFeatures(
+            context: Context,
+            uri: Uri,
+            featuresProcessed: Int,
+            pathPreferences: List<PathPreferences>,
+            callback: ((isSuccess: Boolean, imageFeatures: ImageFeatures?) -> Unit)
+        ) {
+//            TimeUnit.SECONDS.sleep(1L)
+            if (!containsInPreferences(uri.path!!, pathPreferences, true) ||
+                featuresProcessed > 1000
+            ) {
                 callback.invoke(false, null)
                 return
             }
@@ -130,9 +145,10 @@ class ImgUtils {
                                 isSad = true
                             }
                         }
-                        if (face.headEulerAngleX > 36 || face.headEulerAngleX < -36
-                            || face.headEulerAngleY > 36 || face.headEulerAngleY < -36
-                            || face.headEulerAngleZ > 36 || face.headEulerAngleZ < -36) {
+                        if (face.headEulerAngleX > 36 || face.headEulerAngleX < -36 ||
+                            face.headEulerAngleY > 36 || face.headEulerAngleY < -36 ||
+                            face.headEulerAngleZ > 36 || face.headEulerAngleZ < -36
+                        ) {
                             isDistracted = true
                         }
                         face.leftEyeOpenProbability?.let {
@@ -146,9 +162,10 @@ class ImgUtils {
                             }
                         }
                     }
-
-                    callback.invoke(true,
-                        ImageFeatures(isSad, isSleeping, isDistracted, faces.count()))
+                    callback.invoke(
+                        true,
+                        ImageFeatures(isSad, isSleeping, isDistracted, faces.count())
+                    )
                     detector.close()
                 }
                 .addOnFailureListener { e ->
@@ -160,7 +177,11 @@ class ImgUtils {
                 }
         }
 
-        private fun extractTextFromImg(context: Context, uri: Uri, callback: ((isSuccess: Boolean, extractedText: Text?) -> Unit)?) {
+        private fun extractTextFromImg(
+            context: Context,
+            uri: Uri,
+            callback: ((isSuccess: Boolean, extractedText: Text?) -> Unit)?
+        ) {
             val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
             val image = InputImage.fromFilePath(context, uri)
             val result = recognizer.process(image)
@@ -384,9 +405,12 @@ class ImgUtils {
         }
     }
 
-    data class ImageFeatures(val isSad: Boolean = false, val isSleeping: Boolean = false,
-                             val isDistracted: Boolean = false,
-                             val facesCount: Int = 0) {
+    data class ImageFeatures(
+        val isSad: Boolean = false,
+        val isSleeping: Boolean = false,
+        val isDistracted: Boolean = false,
+        val facesCount: Int = 0
+    ) {
         fun featureDetected(): Boolean {
             return isSleeping || isSad || isDistracted || facesCount > 0
         }

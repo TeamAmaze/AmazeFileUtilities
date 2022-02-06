@@ -31,7 +31,6 @@ import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.*
 import java.util.regex.Pattern
-import kotlin.collections.HashMap
 
 class FileUtils {
 
@@ -44,9 +43,11 @@ class FileUtils {
         private const val WHATSAPP_BASE = "WhatsApp/Media"
         private const val WHATSAPP_IMAGES_BASE = "WhatsApp Images"
         private const val WHATSAPP_AUDIO_BASE = "WhatsApp Audio"
-        private const val WHATSAPP_IMAGES = "$WHATSAPP_BASE_ANDROID/$WHATSAPP_BASE/$WHATSAPP_IMAGES_BASE"
+        private const val WHATSAPP_IMAGES =
+            "$WHATSAPP_BASE_ANDROID/$WHATSAPP_BASE/$WHATSAPP_IMAGES_BASE"
         private const val WHATSAPP_IMAGES_2 = "$WHATSAPP_BASE/$WHATSAPP_IMAGES_BASE"
-        private const val WHATSAPP_AUDIO = "$WHATSAPP_BASE_ANDROID/$WHATSAPP_BASE/$WHATSAPP_AUDIO_BASE"
+        private const val WHATSAPP_AUDIO =
+            "$WHATSAPP_BASE_ANDROID/$WHATSAPP_BASE/$WHATSAPP_AUDIO_BASE"
         private const val WHATSAPP_AUDIO_2 = "$WHATSAPP_BASE/$WHATSAPP_AUDIO_BASE"
         private const val RECORDINGS = "Recordings"
         private const val SCREENSHOTS = "Screenshots"
@@ -58,17 +59,25 @@ class FileUtils {
         private const val TELEGRAM_VIDEO = "Telegram Video"
         private val CAMERA = "${Environment.DIRECTORY_DCIM}/$CAMERA_BASE"
 
-        private val DEFAULT_MEMES = listOf(Environment.DIRECTORY_DOWNLOADS, WHATSAPP_IMAGES,
-            WHATSAPP_IMAGES_2)
+        private val DEFAULT_MEMES = listOf(
+            Environment.DIRECTORY_DOWNLOADS, WHATSAPP_IMAGES,
+            WHATSAPP_IMAGES_2
+        )
 
-        private val DEFAULT_BLUR = listOf(CAMERA,
-            "${Environment.DIRECTORY_PICTURES}/$INSTAGRAM")
+        private val DEFAULT_BLUR = listOf(
+            CAMERA,
+            "${Environment.DIRECTORY_PICTURES}/$INSTAGRAM"
+        )
 
-        private val DEFAULT_IMAGE_FEATURES = listOf(CAMERA,
-            "${Environment.DIRECTORY_PICTURES}/$INSTAGRAM")
+        private val DEFAULT_IMAGE_FEATURES = listOf(
+            CAMERA,
+            "${Environment.DIRECTORY_PICTURES}/$INSTAGRAM"
+        )
 
-        private val DEFAULT_DOWNLOADS = listOf(Environment.DIRECTORY_DOWNLOADS,
-            "${Environment.DIRECTORY_DOWNLOADS}/$ADM", ADM)
+        private val DEFAULT_DOWNLOADS = listOf(
+            Environment.DIRECTORY_DOWNLOADS,
+            "${Environment.DIRECTORY_DOWNLOADS}/$ADM", ADM
+        )
 
         private val DEFAULT_RECORDINGS = if (VERSION.SDK_INT >= VERSION_CODES.S) {
             listOf(Environment.DIRECTORY_RECORDINGS)
@@ -76,17 +85,25 @@ class FileUtils {
             listOf(RECORDINGS)
         }
 
-        private val DEFAULT_AUDIO_PLAYER = listOf(if (VERSION.SDK_INT >= VERSION_CODES.S)
-            Environment.DIRECTORY_RECORDINGS else RECORDINGS, WHATSAPP_AUDIO, WHATSAPP_AUDIO_2)
-
-        private val DEFAULT_SCREENSHOTS = listOf(if (VERSION.SDK_INT >= VERSION_CODES.Q)
-            Environment.DIRECTORY_SCREENSHOTS else SCREENSHOTS, "${Environment.DIRECTORY_PICTURES}/$SCREENSHOTS")
-
-        private val DEFAULT_TELEGRAM = listOf("${Environment.DIRECTORY_PICTURES}/$TELEGRAM/$TELEGRAM_IMAGES",
-            "${Environment.DIRECTORY_PICTURES}/$TELEGRAM/$TELEGRAM_VIDEO",
-            "$TELEGRAM/$TELEGRAM_IMAGES",
-            "$TELEGRAM/$TELEGRAM_VIDEO"
+        private val DEFAULT_AUDIO_PLAYER = listOf(
+            if (VERSION.SDK_INT >= VERSION_CODES.S)
+                Environment.DIRECTORY_RECORDINGS else RECORDINGS,
+            WHATSAPP_AUDIO, WHATSAPP_AUDIO_2
         )
+
+        private val DEFAULT_SCREENSHOTS = listOf(
+            if (VERSION.SDK_INT >= VERSION_CODES.Q)
+                Environment.DIRECTORY_SCREENSHOTS else SCREENSHOTS,
+            "${Environment.DIRECTORY_PICTURES}/$SCREENSHOTS"
+        )
+
+        private val DEFAULT_TELEGRAM =
+            listOf(
+                "${Environment.DIRECTORY_PICTURES}/$TELEGRAM/$TELEGRAM_IMAGES",
+                "${Environment.DIRECTORY_PICTURES}/$TELEGRAM/$TELEGRAM_VIDEO",
+                "$TELEGRAM/$TELEGRAM_IMAGES",
+                "$TELEGRAM/$TELEGRAM_VIDEO"
+            )
 
         /*val DEFAULT_PATH_PREFS_INCLUSIVE = listOf(DEFAULT_MEMES, DEFAULT_BLUR, DEFAULT_GROUP_PIC,
             DEFAULT_SELFIE, DEFAULT_SLEEP, DEFAULT_DISTRACTED, DEFAULT_DOWNLOADS,

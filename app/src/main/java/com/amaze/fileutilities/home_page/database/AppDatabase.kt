@@ -15,13 +15,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.amaze.fileutilities.utilis.DbConverters
-import kotlin.coroutines.coroutineContext
 
-@Database(entities = [ImageAnalysis::class, InternalStorageAnalysis::class, PathPreferences::class],
-    version = 1)
+@Database(
+    entities = [ImageAnalysis::class, InternalStorageAnalysis::class, PathPreferences::class],
+    version = 1
+)
 @TypeConverters(DbConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun analysisDao(): ImageAnalysisDao
