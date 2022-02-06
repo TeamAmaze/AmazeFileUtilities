@@ -39,6 +39,49 @@
                 android:layout_marginTop="@dimen/material_generic"
                 />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/sad_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/frown"
+                app:showPreview="true"
+                app:hint="@string/frown_hint"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/sleeping_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/closed_eyes"
+                app:showPreview="true"
+                app:hint="@string/closed_eyes_hint"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/distracted_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/distracted"
+                app:showPreview="true"
+                app:hint="@string/distracted_hint"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/selfie_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/selfie"
+                app:showPreview="true"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/group_pic_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/group_pics"
+                app:showPreview="true"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
                 android:id="@+id/duplicate_files_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,6 +118,28 @@
                 android:layout_marginTop="@dimen/material_generic"
                 />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/empty_files_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/empty_files"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/telegram_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/telegram_files"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <!--<com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/junk_files_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/junk_files"
+                app:hint="@string/junk_files_hint"
+                android:layout_marginTop="@dimen/material_generic"
+                />-->
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
                 android:id="@+id/old_download_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,6 +152,7 @@
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/old_screenshots"
                 android:layout_marginTop="@dimen/material_generic"
+                android:visibility="gone"
                 />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
                 android:id="@+id/old_recordings_preview"
@@ -94,21 +160,7 @@
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/old_recordings"
                 android:layout_marginTop="@dimen/material_generic"
-                />
-            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
-                android:id="@+id/empty_files_preview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:analysisTitle="@string/empty_files"
-                android:layout_marginTop="@dimen/material_generic"
-                />
-            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
-                android:id="@+id/junk_files_preview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:analysisTitle="@string/junk_files"
-                app:hint="@string/junk_files_hint"
-                android:layout_marginTop="@dimen/material_generic"
+                android:visibility="gone"
                 />
 
             <TextView

@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 
@@ -25,7 +26,17 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
 
     companion object {
         private const val KEY_DUPLICATES = "search_duplicates"
-        private val KEYS = listOf(KEY_DUPLICATES)
+        private const val KEY_MEMES = "meme_paths"
+        private const val KEY_BLUR = "blur_paths"
+        private const val KEY_FEATURES = "features_paths"
+        private const val KEY_DOWNLOAD = "download_paths"
+        private const val KEY_RECORDING = "recording_paths"
+        private const val KEY_SCREENSHOT = "screenshot_paths"
+        private const val KEY_TELEGRAM = "telegram_paths"
+        private val KEYS = listOf(
+            KEY_DUPLICATES, KEY_MEMES, KEY_BLUR, KEY_FEATURES, KEY_DOWNLOAD,
+            KEY_RECORDING, KEY_SCREENSHOT, KEY_TELEGRAM
+        )
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -69,6 +80,53 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                     }
                     .create()
                 dialog.show()
+            }
+            KEY_BLUR -> {
+                (activity as PreferenceActivity).inflatePreferenceFragment(
+                    PathPreferencesFragment.newInstance(PathPreferences.FEATURE_ANALYSIS_BLUR),
+                    R.string.blurred_pics
+                )
+            }
+            KEY_MEMES -> {
+                (activity as PreferenceActivity).inflatePreferenceFragment(
+                    PathPreferencesFragment.newInstance(PathPreferences.FEATURE_ANALYSIS_MEME),
+                    R.string.memes
+                )
+            }
+            KEY_FEATURES -> {
+                (activity as PreferenceActivity).inflatePreferenceFragment(
+                    PathPreferencesFragment
+                        .newInstance(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES),
+                    R.string.image_features
+                )
+            }
+            KEY_DOWNLOAD -> {
+                (activity as PreferenceActivity).inflatePreferenceFragment(
+                    PathPreferencesFragment
+                        .newInstance(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS),
+                    R.string.download_paths
+                )
+            }
+            KEY_RECORDING -> {
+                (activity as PreferenceActivity).inflatePreferenceFragment(
+                    PathPreferencesFragment
+                        .newInstance(PathPreferences.FEATURE_ANALYSIS_RECORDING),
+                    R.string.old_recordings
+                )
+            }
+            KEY_SCREENSHOT -> {
+                (activity as PreferenceActivity).inflatePreferenceFragment(
+                    PathPreferencesFragment
+                        .newInstance(PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS),
+                    R.string.old_screenshots
+                )
+            }
+            KEY_TELEGRAM -> {
+                (activity as PreferenceActivity).inflatePreferenceFragment(
+                    PathPreferencesFragment
+                        .newInstance(PathPreferences.FEATURE_ANALYSIS_TELEGRAM),
+                    R.string.telegram_files
+                )
             }
         }
         return true

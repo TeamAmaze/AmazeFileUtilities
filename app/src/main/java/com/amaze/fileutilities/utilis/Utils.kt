@@ -18,6 +18,7 @@ import android.net.Uri
 import androidx.recyclerview.widget.GridLayoutManager
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewImagesAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import java.lang.Exception
@@ -190,6 +191,20 @@ class Utils {
 
         fun enableScreenRotation(activity: Activity) {
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        }
+
+        fun containsInPreferences(
+            path: String,
+            pathPreferences: List<PathPreferences>,
+            inclusive: Boolean
+        ):
+            Boolean {
+            pathPreferences.forEach {
+                if (path.contains(it.path)) {
+                    return inclusive
+                }
+            }
+            return !inclusive
         }
     }
 }

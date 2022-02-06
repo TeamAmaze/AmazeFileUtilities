@@ -14,10 +14,7 @@ import android.app.Application
 import android.os.Build.VERSION.SDK_INT
 import android.os.Build.VERSION_CODES.N
 import androidx.lifecycle.*
-import com.amaze.fileutilities.home_page.database.AppDatabase
-import com.amaze.fileutilities.home_page.database.InternalStorageAnalysis
-import com.amaze.fileutilities.home_page.database.InternalStorageAnalysisDao
-import com.amaze.fileutilities.home_page.database.MediaFileAnalysis
+import com.amaze.fileutilities.home_page.database.*
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.utilis.*
 import kotlinx.coroutines.Dispatchers
@@ -213,7 +210,7 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
-    fun copyTrainedData() {
+    /*fun copyTrainedData() {
         viewModelScope.launch(Dispatchers.IO) {
             val externalFilesDir: File = applicationContext.applicationContext
                 .externalCacheDir ?: return@launch
@@ -223,21 +220,65 @@ class FilesViewModel(val applicationContext: Application) :
                 writeTrainedFile(trainedFilesBase, it)
             }
         }
-    }
+    }*/
 
-    fun analyseImagesTransformation(mediaFileInfoList: ArrayList<MediaFileInfo>) {
+    fun analyseImagesTransformation(
+        mediaFileInfoList: ArrayList<MediaFileInfo>,
+        pathPreferencesList: List<PathPreferences>
+    ) {
         viewModelScope.launch(Dispatchers.Default) {
             val dao = AppDatabase.getInstance(applicationContext).analysisDao()
             isMediaFilesAnalysing = true
+            var memesProcessed = 0
+            var featuresProcessed = 0
             mediaFileInfoList.forEach {
                 if (dao.findByPath(it.path) == null) {
-                    val isBlur = ImgUtils.isImageBlur(it.path)
-                    val isMeme = ImgUtils.isImageMeme(
-                        it.path,
-                        applicationContext.externalCacheDir!!.path
-                    )
-                    if (isBlur || isMeme) {
-                        dao.insert(MediaFileAnalysis(it.path, isBlur, isMeme))
+                    ImgUtils.isImageMeme(
+                        applicationContext,
+                        it.getContentUri(applicationContext),
+                        pathPreferencesList.filter { pref ->
+                            pref.feature == PathPreferences.FEATURE_ANALYSIS_MEME
+                        },
+                        memesProcessed++
+                    ) { isMeme ->
+                        viewModelScope.launch(Dispatchers.Default) {
+                            var features = ImgUtils.ImageFeatures()
+                            ImgUtils.getImageFeatures(
+                                applicationContext,
+                                it.getContentUri(applicationContext),
+                                featuresProcessed++,
+                                pathPreferencesList.filter { pref ->
+                                    pref.feature == PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
+                                }
+                            ) { isSuccess, imageFeatures ->
+                                viewModelScope.launch(Dispatchers.Default) {
+                                    if (isSuccess) {
+                                        imageFeatures?.run {
+                                            features = this
+                                        }
+                                    }
+
+                                    val isBlur = ImgUtils.isImageBlur(
+                                        it.path,
+                                        pathPreferencesList.filter { pref ->
+                                            pref.feature == PathPreferences.FEATURE_ANALYSIS_BLUR
+                                        }
+                                    )
+
+                                    if (isBlur || isMeme || features.featureDetected()) {
+                                        dao.insert(
+                                            ImageAnalysis(
+                                                it.path, isBlur, isMeme,
+                                                features.isSad,
+                                                features.isDistracted,
+                                                features.isSleeping,
+                                                features.facesCount
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -284,6 +325,49 @@ class FilesViewModel(val applicationContext: Application) :
             isMediaStoreAnalysing = false
         }
     }
+
+    fun initAndFetchPathPreferences(): LiveData<List<PathPreferences>> =
+        liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+            val prefs = applicationContext.getAppCommonSharedPreferences()
+            val pathPrefs = prefs.getInt(
+                PreferencesConstants.KEY_PATH_PREFS_MIGRATION,
+                PreferencesConstants.DEFAULT_PATH_PREFS_INITIALIZED
+            )
+            val dao = AppDatabase.getInstance(applicationContext).pathPreferencesDao()
+            if (pathPrefs < PreferencesConstants.VAL_PATH_PREFS_MIGRATION) {
+                val storageData: StorageDirectoryParcelable? = if (SDK_INT >= N) {
+                    FileUtils.getStorageDirectoriesNew(applicationContext.applicationContext)
+                } else {
+                    FileUtils.getStorageDirectoriesLegacy(applicationContext.applicationContext)
+                }
+                val prefsList = ArrayList<PathPreferences>()
+                FileUtils.DEFAULT_PATH_PREFS_INCLUSIVE.forEach {
+                    keyValue ->
+                    keyValue.value.forEach {
+                        value ->
+                        prefsList.add(PathPreferences(value, keyValue.key))
+                    }
+                }
+                FileUtils.DEFAULT_PATH_PREFS_EXCLUSIVE.forEach {
+                    keyValue ->
+                    keyValue.value.forEach {
+                        value ->
+                        prefsList.add(
+                            PathPreferences(
+                                value,
+                                keyValue.key, true
+                            )
+                        )
+                    }
+                }
+                dao.insertAll(prefsList)
+                prefs.edit().putInt(
+                    PreferencesConstants.KEY_PATH_PREFS_MIGRATION,
+                    PreferencesConstants.VAL_PATH_PREFS_MIGRATION
+                ).apply()
+            }
+            emit(dao.getAll())
+        }
 
     private fun processInternalStorageAnalysis(
         dao: InternalStorageAnalysisDao,
