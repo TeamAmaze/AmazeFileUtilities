@@ -152,11 +152,16 @@ class ReviewImagesFragment : Fragment() {
                         == PreferencesConstants.VAL_SEARCH_DUPLICATES_INTERNAL_DEEP
                 )
                     .observe(viewLifecycleOwner) {
+                        val isMediaFilePref = duplicatePref ==
+                            PreferencesConstants.VAL_SEARCH_DUPLICATES_MEDIA_STORE
+                        val invalidateProgress = if (isMediaFilePref)
+                            filesViewModel.isMediaStoreAnalysing
+                        else filesViewModel.isInternalStorageAnalysing
                         if (it == null) {
-                            invalidateProcessing(true, filesViewModel.isInternalStorageAnalysing)
+                            invalidateProcessing(true, invalidateProgress)
                         } else {
                             setMediaInfoList(ArrayList(it.flatten()), false)
-                            invalidateProcessing(false, filesViewModel.isInternalStorageAnalysing)
+                            invalidateProcessing(false, invalidateProgress)
                         }
                     }
             }

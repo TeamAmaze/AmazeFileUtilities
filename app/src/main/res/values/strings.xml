@@ -158,4 +158,5 @@
     <string name="features_paths_hint">Includes closed eyes, distracted, sad, selfie, group paths</string>
     <string name="download_paths">Downloads</string>
     <string name="download_paths_hint">Includes old, large downloads</string>
+    <string name="select_path">Select Path</string>
 </resources>
