@@ -116,7 +116,7 @@ class AnalyseFragment : Fragment() {
             val doProgressDuplicateFiles = if (duplicatePref ==
                 PreferencesConstants.VAL_SEARCH_DUPLICATES_MEDIA_STORE
             )
-                filesViewModel.isMediaFilesAnalysing
+                filesViewModel.isMediaStoreAnalysing
             else filesViewModel.isInternalStorageAnalysing
             if (duplicatePref == PreferencesConstants.VAL_SEARCH_DUPLICATES_MEDIA_STORE) {
                 emptyFilesPreview.visibility = View.GONE

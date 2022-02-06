@@ -48,8 +48,8 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
         }
 
         release {
