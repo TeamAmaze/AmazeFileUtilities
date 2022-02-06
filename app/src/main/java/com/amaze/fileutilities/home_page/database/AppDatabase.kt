@@ -17,11 +17,15 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.amaze.fileutilities.utilis.DbConverters
 
-@Database(entities = [MediaFileAnalysis::class, InternalStorageAnalysis::class], version = 1)
+@Database(
+    entities = [ImageAnalysis::class, InternalStorageAnalysis::class, PathPreferences::class],
+    version = 1
+)
 @TypeConverters(DbConverters::class)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun analysisDao(): MediaFilesAnalysisDao
+    abstract fun analysisDao(): ImageAnalysisDao
     abstract fun internalStorageAnalysisDao(): InternalStorageAnalysisDao
+    abstract fun pathPreferencesDao(): PathPreferencesDao
 
     companion object {
         private var appDatabase: AppDatabase? = null
@@ -31,7 +35,7 @@ abstract class AppDatabase : RoomDatabase() {
                 appDatabase = Room.databaseBuilder(
                     applicationContext,
                     AppDatabase::class.java, "amaze-utils"
-                ).build()
+                ).allowMainThreadQueries().build()
             }
             return appDatabase!!
         }

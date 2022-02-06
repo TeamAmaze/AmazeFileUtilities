@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.home_page.ui.analyse
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +20,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.databinding.FragmentAnalyseBinding
 import com.amaze.fileutilities.home_page.database.AppDatabase
+import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
@@ -47,30 +49,8 @@ class AnalyseFragment : Fragment() {
         binding.run {
             blurredPicsPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
             memesPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
-            blurredPicsPreview.setOnClickListener {
-                ReviewImagesFragment.newInstance(
-                    ReviewImagesFragment.TYPE_BLUR,
-                    this@AnalyseFragment
-                )
-            }
-            memesPreview.setOnClickListener {
-                ReviewImagesFragment.newInstance(
-                    ReviewImagesFragment.TYPE_MEME,
-                    this@AnalyseFragment
-                )
-            }
-            emptyFilesPreview.setOnClickListener {
-                ReviewImagesFragment.newInstance(
-                    ReviewImagesFragment.TYPE_EMPTY_FILES,
-                    this@AnalyseFragment
-                )
-            }
-            duplicateFilesPreview.setOnClickListener {
-                ReviewImagesFragment.newInstance(
-                    ReviewImagesFragment.TYPE_DUPLICATES,
-                    this@AnalyseFragment
-                )
-            }
+            setVisibility(prefs)
+            setClickListeners()
 
             val appDatabase = AppDatabase.getInstance(requireContext())
             val dao = appDatabase.analysisDao()
@@ -81,11 +61,48 @@ class AnalyseFragment : Fragment() {
                     blurredPicsPreview.loadPreviews(it)
                 }
             }
+
             analyseViewModel.getMemeImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
                     memesPreview.loadPreviews(it)
                 }
             }
+
+            analyseViewModel.getSadImages(dao).observe(viewLifecycleOwner) {
+                if (it != null) {
+                    sadPreview.loadPreviews(it)
+                }
+            }
+            sadPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+
+            analyseViewModel.getDistractedImages(dao).observe(viewLifecycleOwner) {
+                if (it != null) {
+                    distractedPreview.loadPreviews(it)
+                }
+            }
+            distractedPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+
+            analyseViewModel.getSleepingImages(dao).observe(viewLifecycleOwner) {
+                if (it != null) {
+                    sleepingPreview.loadPreviews(it)
+                }
+            }
+            sleepingPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+
+            analyseViewModel.getSelfieImages(dao).observe(viewLifecycleOwner) {
+                if (it != null) {
+                    selfiePreview.loadPreviews(it)
+                }
+            }
+            selfiePreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+
+            analyseViewModel.getGroupPicImages(dao).observe(viewLifecycleOwner) {
+                if (it != null) {
+                    groupPicPreview.loadPreviews(it)
+                }
+            }
+            groupPicPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+
             analyseViewModel.getEmptyFiles(internalStorageDao).observe(viewLifecycleOwner) {
                 if (it != null) {
                     emptyFilesPreview.loadPreviews(it)
@@ -125,5 +142,183 @@ class AnalyseFragment : Fragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    private fun setVisibility(sharedPrefs: SharedPreferences) {
+        binding.run {
+            blurredPicsPreview.visibility = if (sharedPrefs.getBoolean(
+                    PathPreferences
+                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_BLUR),
+                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+                )
+            ) View.VISIBLE else View.GONE
+
+            memesPreview.visibility = if (sharedPrefs.getBoolean(
+                    PathPreferences
+                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_MEME),
+                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+                )
+            ) View.VISIBLE else View.GONE
+
+            sadPreview.visibility = if (sharedPrefs.getBoolean(
+                    PathPreferences
+                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES),
+                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+                )
+            ) View.VISIBLE else View.GONE
+
+            sleepingPreview.visibility = if (sharedPrefs.getBoolean(
+                    PathPreferences
+                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES),
+                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+                )
+            ) View.VISIBLE else View.GONE
+
+            distractedPreview.visibility = if (sharedPrefs.getBoolean(
+                    PathPreferences
+                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES),
+                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+                )
+            ) View.VISIBLE else View.GONE
+            selfiePreview.visibility = if (sharedPrefs.getBoolean(
+                    PathPreferences
+                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES),
+                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+                )
+            ) View.VISIBLE else View.GONE
+            groupPicPreview.visibility = if (sharedPrefs.getBoolean(
+                    PathPreferences
+                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES),
+                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+                )
+            ) View.VISIBLE else View.GONE
+
+            largeDownloadPreview.visibility = if (sharedPrefs.getBoolean(
+                    PathPreferences
+                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS),
+                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+                )
+            ) View.VISIBLE else View.GONE
+            oldDownloadPreview.visibility = if (sharedPrefs.getBoolean(
+                    PathPreferences
+                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS),
+                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+                )
+            ) View.VISIBLE else View.GONE
+            oldRecordingsPreview.visibility = if (sharedPrefs.getBoolean(
+                    PathPreferences
+                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_RECORDING),
+                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+                )
+            ) View.VISIBLE else View.GONE
+            oldScreenshotsPreview.visibility = if (sharedPrefs.getBoolean(
+                    PathPreferences
+                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS),
+                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+                )
+            ) View.VISIBLE else View.GONE
+            telegramPreview.visibility = if (sharedPrefs.getBoolean(
+                    PathPreferences
+                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_TELEGRAM),
+                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+                )
+            ) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun setClickListeners() {
+        binding.run {
+            blurredPicsPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_BLUR,
+                    this@AnalyseFragment
+                )
+            }
+            memesPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_MEME,
+                    this@AnalyseFragment
+                )
+            }
+            sadPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_SAD,
+                    this@AnalyseFragment
+                )
+            }
+            sleepingPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_SLEEPING,
+                    this@AnalyseFragment
+                )
+            }
+            distractedPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_DISTRACTED,
+                    this@AnalyseFragment
+                )
+            }
+            selfiePreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_SELFIE,
+                    this@AnalyseFragment
+                )
+            }
+            groupPicPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_GROUP_PIC,
+                    this@AnalyseFragment
+                )
+            }
+            emptyFilesPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_EMPTY_FILES,
+                    this@AnalyseFragment
+                )
+            }
+            duplicateFilesPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_DUPLICATES,
+                    this@AnalyseFragment
+                )
+            }
+
+            largeDownloadPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_LARGE_DOWNLOADS,
+                    this@AnalyseFragment
+                )
+            }
+            oldDownloadPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_OLD_DOWNLOADS,
+                    this@AnalyseFragment
+                )
+            }
+            oldScreenshotsPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_OLD_SCREENSHOTS,
+                    this@AnalyseFragment
+                )
+            }
+            oldRecordingsPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_OLD_RECORDINGS,
+                    this@AnalyseFragment
+                )
+            }
+            telegramPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_TELEGRAM,
+                    this@AnalyseFragment
+                )
+            }
+            largeVideoPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_LARGE_VIDEOS,
+                    this@AnalyseFragment
+                )
+            }
+        }
     }
 }

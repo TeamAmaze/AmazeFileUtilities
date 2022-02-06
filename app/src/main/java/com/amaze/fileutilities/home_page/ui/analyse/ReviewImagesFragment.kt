@@ -63,7 +63,14 @@ class ReviewImagesFragment : Fragment() {
         const val TYPE_OLD_SCREENSHOTS = 6
         const val TYPE_OLD_RECORDINGS = 7
         const val TYPE_EMPTY_FILES = 8
-        const val TYPE_JUNK_FIELS = 9
+        const val TYPE_JUNK_FILES = 9
+        const val TYPE_SLEEPING = 10
+        const val TYPE_DISTRACTED = 11
+        const val TYPE_SAD = 12
+        const val TYPE_SELFIE = 13
+        const val TYPE_GROUP_PIC = 14
+        const val TYPE_TELEGRAM = 15
+        const val TYPE_LARGE_DOWNLOADS = 16
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -160,6 +167,56 @@ class ReviewImagesFragment : Fragment() {
                     } else {
                         setMediaInfoList(ArrayList(it), false)
                         invalidateProcessing(false, filesViewModel.isInternalStorageAnalysing)
+                    }
+                }
+            }
+            TYPE_SAD -> {
+                viewModel.getSadImages(dao).observe(viewLifecycleOwner) {
+                    if (it == null) {
+                        invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                    } else {
+                        setMediaInfoList(ArrayList(it), true)
+                        invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                    }
+                }
+            }
+            TYPE_DISTRACTED -> {
+                viewModel.getDistractedImages(dao).observe(viewLifecycleOwner) {
+                    if (it == null) {
+                        invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                    } else {
+                        setMediaInfoList(ArrayList(it), true)
+                        invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                    }
+                }
+            }
+            TYPE_SLEEPING -> {
+                viewModel.getSleepingImages(dao).observe(viewLifecycleOwner) {
+                    if (it == null) {
+                        invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                    } else {
+                        setMediaInfoList(ArrayList(it), true)
+                        invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                    }
+                }
+            }
+            TYPE_SELFIE -> {
+                viewModel.getSelfieImages(dao).observe(viewLifecycleOwner) {
+                    if (it == null) {
+                        invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                    } else {
+                        setMediaInfoList(ArrayList(it), true)
+                        invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                    }
+                }
+            }
+            TYPE_GROUP_PIC -> {
+                viewModel.getGroupPicImages(dao).observe(viewLifecycleOwner) {
+                    if (it == null) {
+                        invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                    } else {
+                        setMediaInfoList(ArrayList(it), true)
+                        invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
                     }
                 }
             }

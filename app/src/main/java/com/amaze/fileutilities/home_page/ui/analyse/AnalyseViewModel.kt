@@ -11,9 +11,10 @@
 package com.amaze.fileutilities.home_page.ui.analyse
 
 import androidx.lifecycle.*
+import com.amaze.fileutilities.home_page.database.ImageAnalysis
+import com.amaze.fileutilities.home_page.database.ImageAnalysisDao
 import com.amaze.fileutilities.home_page.database.InternalStorageAnalysis
 import com.amaze.fileutilities.home_page.database.InternalStorageAnalysisDao
-import com.amaze.fileutilities.home_page.database.MediaFilesAnalysisDao
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.invalidate
@@ -22,17 +23,52 @@ import java.io.File
 
 class AnalyseViewModel : ViewModel() {
 
-    fun getBlurImages(dao: MediaFilesAnalysisDao): LiveData<List<MediaFileInfo>?> {
+    fun getBlurImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
-            emit(transformAnalysisToMediaFileInfo(dao, true))
+            emit(transformAnalysisToMediaFileInfo(dao.getAllBlur(), dao))
         }
     }
 
-    fun getMemeImages(dao: MediaFilesAnalysisDao): LiveData<List<MediaFileInfo>?> {
+    fun getMemeImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
-            emit(transformAnalysisToMediaFileInfo(dao, false))
+            emit(transformAnalysisToMediaFileInfo(dao.getAllMeme(), dao))
+        }
+    }
+
+    fun getSleepingImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            emit(transformAnalysisToMediaFileInfo(dao.getAllSleeping(), dao))
+        }
+    }
+
+    fun getSadImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            emit(transformAnalysisToMediaFileInfo(dao.getAllSad(), dao))
+        }
+    }
+
+    fun getDistractedImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            emit(transformAnalysisToMediaFileInfo(dao.getAllDistracted(), dao))
+        }
+    }
+
+    fun getSelfieImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            emit(transformAnalysisToMediaFileInfo(dao.getAllSelfie(), dao))
+        }
+    }
+
+    fun getGroupPicImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            emit(transformAnalysisToMediaFileInfo(dao.getAllGroupPic(), dao))
         }
     }
 
@@ -109,12 +145,11 @@ class AnalyseViewModel : ViewModel() {
     }
 
     private fun transformAnalysisToMediaFileInfo(
-        dao: MediaFilesAnalysisDao,
-        requiredBlur: Boolean
+        imageAnalysis: List<ImageAnalysis>,
+        dao: ImageAnalysisDao
     ):
         List<MediaFileInfo> {
-        val analysis = if (requiredBlur) dao.getAllBlur() else dao.getAllMeme()
-        val response = analysis.filter {
+        val response = imageAnalysis.filter {
             it.invalidate(dao)
         }.map {
             MediaFileInfo.fromFile(

@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         applicationId "com.amaze.fileutilities"
-        minSdk 16
+        minSdk 19
         targetSdk 30
         versionCode 1
         versionName "1.0"
@@ -125,11 +125,13 @@ dependencies {
     }
     implementation 'com.quickbirdstudios:opencv:4.5.3.0'
     // https://mvnrepository.com/artifact/net.sourceforge.tess4j/tess4j
-    implementation 'com.rmtheis:tess-two:9.1.0'
+//    implementation 'com.rmtheis:tess-two:9.1.0'
     implementation "androidx.room:room-runtime:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
     implementation "androidx.preference:preference-ktx:1.2.0"
+    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.0'
+    implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.0'
 
     //Detect memory leaks
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'

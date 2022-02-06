@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.image_viewer
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -23,6 +24,9 @@ import com.amaze.fileutilities.utilis.ImgUtils
 import com.amaze.fileutilities.utilis.getFileFromUri
 import com.drew.imaging.ImageMetadataReader
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import org.opencv.imgcodecs.Imgcodecs
 
 class ImageMetadataSheet() : BottomSheetDialogFragment() {
@@ -89,11 +93,30 @@ class ImageMetadataSheet() : BottomSheetDialogFragment() {
                 }
                 result += "\n\n"
             }
-            /*result += "\n\n\n------ Extracted text --------\n\n"
-            result += ImgUtils.extractText(it.uri.getFileFromUri(requireContext())!!.path,
-                requireContext().externalCacheDir!!.path)
-            result += "\n\n"*/
-            viewBinding.metadata.text = result
+
+            val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+            val image = InputImage.fromBitmap(
+                BitmapFactory.decodeFile(
+                    localImageModel!!
+                        .uri.getFileFromUri(requireContext())!!.path
+                ),
+                0
+            )
+            recognizer.process(image)
+                .addOnSuccessListener { visionText ->
+                    // Task completed successfully
+
+                    result += "\n\n\n------ Extracted text --------\n\n"
+                    result += visionText.text
+                    result += "\n\n"
+                    Log.e(javaClass.simpleName, "CUSTOM:\n${visionText.text}")
+                    viewBinding.metadata.text = result
+                }
+                .addOnFailureListener { e ->
+                    // Task failed with an exception
+                    // ...
+                    e.printStackTrace()
+                }
         }
     }
 }

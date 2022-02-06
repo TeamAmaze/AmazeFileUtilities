@@ -22,6 +22,7 @@ import android.text.format.Formatter
 import android.util.Log
 import androidx.annotation.DrawableRes
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.home_page.database.PathPreferences
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -38,6 +39,90 @@ class FileUtils {
         const val DEFAULT_BUFFER_SIZE = 8192
 
         private const val DEFAULT_FALLBACK_STORAGE_PATH = "/storage/sdcard0"
+        private const val WHATSAPP_BASE_ANDROID = "Android/media/com.whatsapp"
+        private const val WHATSAPP_BASE = "WhatsApp/Media"
+        private const val WHATSAPP_IMAGES_BASE = "WhatsApp Images"
+        private const val WHATSAPP_AUDIO_BASE = "WhatsApp Audio"
+        private const val WHATSAPP_IMAGES =
+            "$WHATSAPP_BASE_ANDROID/$WHATSAPP_BASE/$WHATSAPP_IMAGES_BASE"
+        private const val WHATSAPP_IMAGES_2 = "$WHATSAPP_BASE/$WHATSAPP_IMAGES_BASE"
+        private const val WHATSAPP_AUDIO =
+            "$WHATSAPP_BASE_ANDROID/$WHATSAPP_BASE/$WHATSAPP_AUDIO_BASE"
+        private const val WHATSAPP_AUDIO_2 = "$WHATSAPP_BASE/$WHATSAPP_AUDIO_BASE"
+        private const val RECORDINGS = "Recordings"
+        private const val SCREENSHOTS = "Screenshots"
+        private const val INSTAGRAM = "Instagram"
+        private const val CAMERA_BASE = "Camera"
+        private const val ADM = "ADM"
+        private const val TELEGRAM = "Telegram"
+        private const val TELEGRAM_IMAGES = "Telegram Images"
+        private const val TELEGRAM_VIDEO = "Telegram Video"
+        private val CAMERA = "${Environment.DIRECTORY_DCIM}/$CAMERA_BASE"
+
+        private val DEFAULT_MEMES = listOf(
+            Environment.DIRECTORY_DOWNLOADS, WHATSAPP_IMAGES,
+            WHATSAPP_IMAGES_2
+        )
+
+        private val DEFAULT_BLUR = listOf(
+            CAMERA,
+            "${Environment.DIRECTORY_PICTURES}/$INSTAGRAM"
+        )
+
+        private val DEFAULT_IMAGE_FEATURES = listOf(
+            CAMERA,
+            "${Environment.DIRECTORY_PICTURES}/$INSTAGRAM"
+        )
+
+        private val DEFAULT_DOWNLOADS = listOf(
+            Environment.DIRECTORY_DOWNLOADS,
+            "${Environment.DIRECTORY_DOWNLOADS}/$ADM", ADM
+        )
+
+        private val DEFAULT_RECORDINGS = if (VERSION.SDK_INT >= VERSION_CODES.S) {
+            listOf(Environment.DIRECTORY_RECORDINGS)
+        } else {
+            listOf(RECORDINGS)
+        }
+
+        private val DEFAULT_AUDIO_PLAYER = listOf(
+            if (VERSION.SDK_INT >= VERSION_CODES.S)
+                Environment.DIRECTORY_RECORDINGS else RECORDINGS,
+            WHATSAPP_AUDIO, WHATSAPP_AUDIO_2
+        )
+
+        private val DEFAULT_SCREENSHOTS = listOf(
+            if (VERSION.SDK_INT >= VERSION_CODES.Q)
+                Environment.DIRECTORY_SCREENSHOTS else SCREENSHOTS,
+            "${Environment.DIRECTORY_PICTURES}/$SCREENSHOTS"
+        )
+
+        private val DEFAULT_TELEGRAM =
+            listOf(
+                "${Environment.DIRECTORY_PICTURES}/$TELEGRAM/$TELEGRAM_IMAGES",
+                "${Environment.DIRECTORY_PICTURES}/$TELEGRAM/$TELEGRAM_VIDEO",
+                "$TELEGRAM/$TELEGRAM_IMAGES",
+                "$TELEGRAM/$TELEGRAM_VIDEO"
+            )
+
+        /*val DEFAULT_PATH_PREFS_INCLUSIVE = listOf(DEFAULT_MEMES, DEFAULT_BLUR, DEFAULT_GROUP_PIC,
+            DEFAULT_SELFIE, DEFAULT_SLEEP, DEFAULT_DISTRACTED, DEFAULT_DOWNLOADS,
+            DEFAULT_RECORDINGS,
+            DEFAULT_SCREENSHOTS, DEFAULT_TELEGRAM)*/
+        val DEFAULT_PATH_PREFS_INCLUSIVE = mapOf<Int, List<String>>(
+            Pair(PathPreferences.FEATURE_ANALYSIS_MEME, DEFAULT_MEMES),
+            Pair(PathPreferences.FEATURE_ANALYSIS_BLUR, DEFAULT_BLUR),
+            Pair(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES, DEFAULT_IMAGE_FEATURES),
+            Pair(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS, DEFAULT_DOWNLOADS),
+            Pair(PathPreferences.FEATURE_ANALYSIS_RECORDING, DEFAULT_RECORDINGS),
+            Pair(PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS, DEFAULT_SCREENSHOTS),
+            Pair(PathPreferences.FEATURE_ANALYSIS_TELEGRAM, DEFAULT_TELEGRAM)
+        )
+
+        val DEFAULT_PATH_PREFS_EXCLUSIVE = mapOf(
+            Pair(PathPreferences.FEATURE_AUDIO_PLAYER, DEFAULT_AUDIO_PLAYER)
+        )
+
         private val DIR_SEPARATOR = Pattern.compile("/")
 
         @TargetApi(VERSION_CODES.N)
