@@ -69,6 +69,11 @@ class FileUtils {
             "${Environment.DIRECTORY_PICTURES}/$INSTAGRAM"
         )
 
+        private val DEFAULT_LOW_LIGHT = listOf(
+            CAMERA,
+            "${Environment.DIRECTORY_PICTURES}/$INSTAGRAM"
+        )
+
         private val DEFAULT_IMAGE_FEATURES = listOf(
             CAMERA,
             "${Environment.DIRECTORY_PICTURES}/$INSTAGRAM"
@@ -112,6 +117,7 @@ class FileUtils {
         val DEFAULT_PATH_PREFS_INCLUSIVE = mapOf<Int, List<String>>(
             Pair(PathPreferences.FEATURE_ANALYSIS_MEME, DEFAULT_MEMES),
             Pair(PathPreferences.FEATURE_ANALYSIS_BLUR, DEFAULT_BLUR),
+            Pair(PathPreferences.FEATURE_ANALYSIS_LOW_LIGHT, DEFAULT_LOW_LIGHT),
             Pair(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES, DEFAULT_IMAGE_FEATURES),
             Pair(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS, DEFAULT_DOWNLOADS),
             Pair(PathPreferences.FEATURE_ANALYSIS_RECORDING, DEFAULT_RECORDINGS),

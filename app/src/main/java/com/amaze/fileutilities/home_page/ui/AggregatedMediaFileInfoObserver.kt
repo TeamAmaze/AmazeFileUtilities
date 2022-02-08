@@ -41,7 +41,7 @@ interface AggregatedMediaFileInfoObserver {
         ) -> Unit,
         imagesPair:
             Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>?
+                List<MediaFileInfo>>?
     ) {
         if (imagesPair?.second != null) {
 //            showLoadingViews(false)
@@ -63,10 +63,10 @@ interface AggregatedMediaFileInfoObserver {
         ) -> Unit,
         videosPair:
             Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>?,
+                List<MediaFileInfo>>?,
         imagesPair:
             Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>
+                List<MediaFileInfo>>
     ) {
         if (videosPair?.second != null) {
 //            showLoadingViews(false)
@@ -91,13 +91,13 @@ interface AggregatedMediaFileInfoObserver {
         ) -> Unit,
         audiosPair:
             Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>?,
+                List<MediaFileInfo>>?,
         videosPair:
             Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>,
+                List<MediaFileInfo>>,
         imagesPair:
             Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>
+                List<MediaFileInfo>>
     ) {
         if (audiosPair?.second != null) {
 //            showLoadingViews(false)
@@ -122,16 +122,16 @@ interface AggregatedMediaFileInfoObserver {
         ) -> Unit,
         docsPair:
             Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>?,
+                List<MediaFileInfo>>?,
         audiosPair:
             Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>,
+                List<MediaFileInfo>>,
         videosPair:
             Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>,
+                List<MediaFileInfo>>,
         imagesPair:
             Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>
+                List<MediaFileInfo>>
     ) {
         if (docsPair?.second != null) {
             /*showLoadingViews(false)
@@ -156,10 +156,10 @@ interface AggregatedMediaFileInfoObserver {
     }
 
     data class AggregatedMediaFiles(
-        var imagesMediaFilesList: ArrayList<MediaFileInfo>? = null,
-        var videosMediaFilesList: ArrayList<MediaFileInfo>? = null,
-        var audiosMediaFilesList: ArrayList<MediaFileInfo>? = null,
-        var docsMediaFilesList: ArrayList<MediaFileInfo>? = null
+        var imagesMediaFilesList: List<MediaFileInfo>? = null,
+        var videosMediaFilesList: List<MediaFileInfo>? = null,
+        var audiosMediaFilesList: List<MediaFileInfo>? = null,
+        var docsMediaFilesList: List<MediaFileInfo>? = null
     ) {
         fun mediaListsLoaded(): Boolean {
             return imagesMediaFilesList != null && videosMediaFilesList != null &&

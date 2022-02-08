@@ -41,7 +41,7 @@ class ImgUtils {
             try {
                 bmp = Bitmap.createBitmap(rgb.cols(), rgb.rows(), Bitmap.Config.ARGB_8888)
                 Utils.matToBitmap(rgb, bmp)
-            } catch (e: CvException) {
+            } catch (e: Exception) {
                 e.printStackTrace()
                 Log.e(javaClass.simpleName, e.message!!)
             }
@@ -51,7 +51,12 @@ class ImgUtils {
         fun convertBitmapToMat(input: Bitmap): Mat {
             val mat = Mat()
             val bmp32: Bitmap = input.copy(Bitmap.Config.ARGB_8888, true)
-            Utils.bitmapToMat(bmp32, mat)
+            try {
+                Utils.bitmapToMat(bmp32, mat)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e(javaClass.simpleName, e.message!!)
+            }
             return mat
         }
 
@@ -237,10 +242,29 @@ class ImgUtils {
             }
             val matrix = Imgcodecs.imread(path)
             val factor = laplace(matrix)
-            if (factor < 100 && factor != 0.0) {
+            if (factor < 50 && factor != 0.0) {
                 return true
             }
             return false
+        }
+
+        fun isImageLowLight(path: String, pathPreferences: List<PathPreferences>): Boolean {
+            if (!containsInPreferences(path, pathPreferences, true)) {
+                return false
+            }
+            val matrix = Imgcodecs.imread(path)
+            return processForLowLight(matrix)
+        }
+
+        private fun processForLowLight(matrix: Mat): Boolean {
+            return try {
+                val zerosPair = getTotalAndZeros(matrix)
+                val ratio = (zerosPair.second.toDouble() / zerosPair.first.toDouble()).toDouble()
+                return ratio > 0.7
+            } catch (e: Exception) {
+                e.printStackTrace()
+                false
+            }
         }
 
         fun processPdfImg(matrix: Mat): Mat {
@@ -254,11 +278,18 @@ class ImgUtils {
             val destination = Mat()
             val matGray = Mat()
             return try {
-                Imgproc.cvtColor(image, matGray, Imgproc.COLOR_BGR2GRAY)
+                val resizeimage = resize(image, getGenericWidth(image), getGenericHeight(image))
+                Imgproc.cvtColor(resizeimage, matGray, Imgproc.COLOR_BGR2GRAY)
                 Imgproc.Laplacian(matGray, destination, 3)
                 val median = MatOfDouble()
                 val std = MatOfDouble()
                 Core.meanStdDev(destination, median, std)
+
+                resizeimage.release()
+                matGray.release()
+                destination.release()
+                image.release()
+
                 std[0, 0][0].pow(2.0)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -325,13 +356,57 @@ class ImgUtils {
             return threshold
         }
 
-        fun adaptiveThreshold(matrix: Mat): Mat {
-            val adaptive = Mat()
-            Imgproc.adaptiveThreshold(
-                matrix, adaptive, 255.0,
-                Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY, 3, 2.0
+        fun getTotalAndZeros(matrix: Mat): Pair<Int, Int> {
+            try {
+                val resizeimage = resize(
+                    matrix, getGenericWidth(matrix),
+                    getGenericHeight(matrix)
+                )
+                val matGray = gray(resizeimage)
+                val threshold = thresholdInvert(matGray, 100.0)
+                val nonZeros = Core.countNonZero(threshold)
+                val total = resizeimage.width() * resizeimage.height()
+
+                resizeimage.release()
+                matGray.release()
+                threshold.release()
+                matrix.release()
+
+                return Pair(total, total - nonZeros)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return Pair(1, 0)
+        }
+
+        private fun thresholdInvert(matrix: Mat, intensity: Double): Mat {
+            val blur = blur(matrix)
+            val threshold = Mat()
+            Imgproc.threshold(
+                blur, threshold, intensity, 255.0,
+                Imgproc.THRESH_BINARY
             )
-            return adaptive
+            return threshold
+        }
+
+        fun adaptiveThresholdInvert(matrix: Mat): Mat {
+            val resizeimage = resize(matrix, 620.0, 480.0)
+            val matGray = gray(resizeimage)
+            val blur = blur(matGray)
+            val threshold = Mat()
+            Imgproc.adaptiveThreshold(
+                blur, threshold, 255.0,
+                Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C, Imgproc.THRESH_BINARY_INV, 3, 2.0
+            )
+            return threshold
+        }
+
+        private fun getGenericWidth(matrix: Mat): Double {
+            return if (matrix.width() > matrix.height()) 620.0 else 480.0
+        }
+
+        private fun getGenericHeight(matrix: Mat): Double {
+            return if (matrix.height() > matrix.width()) 620.0 else 480.0
         }
 
         private fun processCanny(matrix: Mat): Mat {
