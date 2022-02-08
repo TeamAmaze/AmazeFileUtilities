@@ -107,7 +107,7 @@ class VideosListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
                             requireContext()
                                 .getAppCommonSharedPreferences()
                         ),
-                        this, MediaFileInfo.MEDIA_TYPE_VIDEO
+                        ArrayList(this), MediaFileInfo.MEDIA_TYPE_VIDEO
                     ) {
                         it.setProgress(
                             MediaTypeView.MediaTypeContent(

@@ -48,6 +48,7 @@ class AnalyseFragment : Fragment() {
         val prefs = requireContext().getAppCommonSharedPreferences()
         binding.run {
             blurredPicsPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+            lowLightPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
             memesPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
             setVisibility(prefs)
             setClickListeners()
@@ -59,6 +60,12 @@ class AnalyseFragment : Fragment() {
             analyseViewModel.getBlurImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
                     blurredPicsPreview.loadPreviews(it)
+                }
+            }
+
+            analyseViewModel.getLowLightImages(dao).observe(viewLifecycleOwner) {
+                if (it != null) {
+                    lowLightPreview.loadPreviews(it)
                 }
             }
 
@@ -152,6 +159,12 @@ class AnalyseFragment : Fragment() {
                     PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
                 )
             ) View.VISIBLE else View.GONE
+            lowLightPreview.visibility = if (sharedPrefs.getBoolean(
+                    PathPreferences
+                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_LOW_LIGHT),
+                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+                )
+            ) View.VISIBLE else View.GONE
 
             memesPreview.visibility = if (sharedPrefs.getBoolean(
                     PathPreferences
@@ -231,6 +244,12 @@ class AnalyseFragment : Fragment() {
             blurredPicsPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_BLUR,
+                    this@AnalyseFragment
+                )
+            }
+            lowLightPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_LOW_LIGHT,
                     this@AnalyseFragment
                 )
             }

@@ -71,6 +71,7 @@ class ReviewImagesFragment : Fragment() {
         const val TYPE_GROUP_PIC = 14
         const val TYPE_TELEGRAM = 15
         const val TYPE_LARGE_DOWNLOADS = 16
+        const val TYPE_LOW_LIGHT = 17
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -125,6 +126,17 @@ class ReviewImagesFragment : Fragment() {
             TYPE_BLUR ->
                 {
                     viewModel.getBlurImages(dao).observe(viewLifecycleOwner) {
+                        if (it == null) {
+                            invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                        } else {
+                            setMediaInfoList(ArrayList(it), true)
+                            invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                        }
+                    }
+                }
+            TYPE_LOW_LIGHT ->
+                {
+                    viewModel.getLowLightImages(dao).observe(viewLifecycleOwner) {
                         if (it == null) {
                             invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
                         } else {

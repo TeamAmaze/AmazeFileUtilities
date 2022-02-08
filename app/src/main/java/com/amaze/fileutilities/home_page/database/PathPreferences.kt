@@ -35,10 +35,11 @@ data class PathPreferences(
         const val FEATURE_ANALYSIS_MEME = 1
         const val FEATURE_ANALYSIS_BLUR = 2
         const val FEATURE_ANALYSIS_IMAGE_FEATURES = 3
-        const val FEATURE_ANALYSIS_DOWNLOADS = 8
-        const val FEATURE_ANALYSIS_RECORDING = 9
-        const val FEATURE_ANALYSIS_SCREENSHOTS = 10
-        const val FEATURE_ANALYSIS_TELEGRAM = 10
+        const val FEATURE_ANALYSIS_DOWNLOADS = 4
+        const val FEATURE_ANALYSIS_RECORDING = 5
+        const val FEATURE_ANALYSIS_SCREENSHOTS = 6
+        const val FEATURE_ANALYSIS_TELEGRAM = 7
+        const val FEATURE_ANALYSIS_LOW_LIGHT = 8
 
         fun getSharedPreferenceKey(feature: Int): String {
             return "${feature}_enabled"

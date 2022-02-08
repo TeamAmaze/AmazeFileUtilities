@@ -64,7 +64,7 @@ class FilesViewModel(val applicationContext: Application) :
             }
         }
 
-    val recentFilesLiveData: LiveData<ArrayList<MediaFileInfo>?> =
+    val recentFilesLiveData: LiveData<List<MediaFileInfo>?> =
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             val mediaFileInfoList = CursorUtils
@@ -73,28 +73,28 @@ class FilesViewModel(val applicationContext: Application) :
         }
 
     val usedImagesSummaryTransformations:
-        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
+        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> =
             Transformations.switchMap(internalStorageStats) {
                 input ->
                 getImagesSummaryLiveData(input)
             }
 
     val usedAudiosSummaryTransformations:
-        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
+        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> =
             Transformations.switchMap(internalStorageStats) {
                 input ->
                 getAudiosSummaryLiveData(input)
             }
 
     val usedVideosSummaryTransformations:
-        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
+        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> =
             Transformations.switchMap(internalStorageStats) {
                 input ->
                 getVideosSummaryLiveData(input)
             }
 
     val usedDocsSummaryTransformations:
-        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
+        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> =
             Transformations.switchMap(internalStorageStats) {
                 input ->
                 getDocumentsSummaryLiveData(input)
@@ -234,7 +234,7 @@ class FilesViewModel(val applicationContext: Application) :
     }*/
 
     fun analyseImagesTransformation(
-        mediaFileInfoList: ArrayList<MediaFileInfo>,
+        mediaFileInfoList: List<MediaFileInfo>,
         pathPreferencesList: List<PathPreferences>
     ) {
         viewModelScope.launch(Dispatchers.Default) {
@@ -261,7 +261,8 @@ class FilesViewModel(val applicationContext: Application) :
                                 it.getContentUri(applicationContext),
                                 featuresProcessed++,
                                 pathPreferencesList.filter { pref ->
-                                    pref.feature == PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
+                                    pref.feature == PathPreferences
+                                        .FEATURE_ANALYSIS_IMAGE_FEATURES
                                 }
                             ) { isSuccess, imageFeatures ->
                                 viewModelScope.launch(Dispatchers.Default) {
@@ -274,17 +275,29 @@ class FilesViewModel(val applicationContext: Application) :
                                     val isBlur = ImgUtils.isImageBlur(
                                         it.path,
                                         pathPreferencesList.filter { pref ->
-                                            pref.feature == PathPreferences.FEATURE_ANALYSIS_BLUR
+                                            pref.feature == PathPreferences
+                                                .FEATURE_ANALYSIS_BLUR
                                         }
                                     )
 
-                                    if (isBlur || isMeme || features.featureDetected()) {
+                                    val isLowLight = ImgUtils.isImageLowLight(
+                                        it.path,
+                                        pathPreferencesList.filter { pref ->
+                                            pref.feature == PathPreferences
+                                                .FEATURE_ANALYSIS_LOW_LIGHT
+                                        }
+                                    )
+
+                                    if (isBlur || isLowLight || isMeme ||
+                                        features.featureDetected()
+                                    ) {
                                         dao.insert(
                                             ImageAnalysis(
                                                 it.path, isBlur, isMeme,
                                                 features.isSad,
                                                 features.isDistracted,
                                                 features.isSleeping,
+                                                isLowLight,
                                                 features.facesCount
                                             )
                                         )
@@ -320,20 +333,20 @@ class FilesViewModel(val applicationContext: Application) :
         aggregatedMediaFiles:
             AggregatedMediaFileInfoObserver.AggregatedMediaFiles
     ) {
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch(Dispatchers.IO) {
             val dao = AppDatabase.getInstance(applicationContext).internalStorageAnalysisDao()
             isMediaStoreAnalysing = true
             aggregatedMediaFiles.imagesMediaFilesList?.forEach {
-                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path))
+                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path + ""))
             }
             aggregatedMediaFiles.audiosMediaFilesList?.forEach {
-                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path))
+                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path + ""))
             }
             aggregatedMediaFiles.videosMediaFilesList?.forEach {
-                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path))
+                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path + ""))
             }
             aggregatedMediaFiles.docsMediaFilesList?.forEach {
-                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path))
+                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path + ""))
             }
             isMediaStoreAnalysing = false
         }
@@ -358,7 +371,12 @@ class FilesViewModel(val applicationContext: Application) :
                     keyValue ->
                     keyValue.value.forEach {
                         value ->
-                        prefsList.add(PathPreferences(value, keyValue.key))
+                        prefsList.add(
+                            PathPreferences(
+                                "${storageData?.path}/$value",
+                                keyValue.key
+                            )
+                        )
                     }
                 }
                 FileUtils.DEFAULT_PATH_PREFS_EXCLUSIVE.forEach {
@@ -367,7 +385,7 @@ class FilesViewModel(val applicationContext: Application) :
                         value ->
                         prefsList.add(
                             PathPreferences(
-                                value,
+                                "${storageData?.path}/$value",
                                 keyValue.key, true
                             )
                         )
@@ -383,8 +401,8 @@ class FilesViewModel(val applicationContext: Application) :
         }
 
     override fun onCleared() {
-        faceDetector.close()
-        textRecognizer.close()
+//        faceDetector.close()
+//        textRecognizer.close()
         super.onCleared()
     }
 
@@ -499,7 +517,7 @@ class FilesViewModel(val applicationContext: Application) :
     }
 
     private fun getImagesSummaryLiveData(storageSummary: StorageSummary?):
-        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
+        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             if (storageSummary == null) {
@@ -516,7 +534,7 @@ class FilesViewModel(val applicationContext: Application) :
     }
 
     private fun getAudiosSummaryLiveData(storageSummary: StorageSummary?):
-        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
+        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             if (storageSummary == null) {
@@ -533,7 +551,7 @@ class FilesViewModel(val applicationContext: Application) :
     }
 
     private fun getVideosSummaryLiveData(storageSummary: StorageSummary?):
-        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
+        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             if (storageSummary == null) {
@@ -550,7 +568,7 @@ class FilesViewModel(val applicationContext: Application) :
     }
 
     private fun getDocumentsSummaryLiveData(storageSummary: StorageSummary?):
-        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
+        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             if (storageSummary == null) {
