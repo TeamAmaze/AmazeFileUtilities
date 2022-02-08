@@ -86,11 +86,15 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         loadingHorizontalScroll.visibility = View.GONE
         var count =
             if (mediaFileInfoList.size > PREVIEW_COUNT) PREVIEW_COUNT else mediaFileInfoList.size
-        while (count -- > 1) {
-            val imageView = getImageView(mediaFileInfoList[count])
-            imagesListParent.addView(imageView)
+        if (count == 0) {
+            imagesListScroll.visibility = View.GONE
+        } else {
+            while (count -- > 1) {
+                val imageView = getImageView(mediaFileInfoList[count])
+                imagesListParent.addView(imageView)
+            }
+            imagesListParent.addView(getSummaryView(mediaFileInfoList.size))
         }
-        imagesListParent.addView(getSummaryView(mediaFileInfoList.size))
     }
 
     private fun getImageView(mediaFileInfo: MediaFileInfo): ImageView {

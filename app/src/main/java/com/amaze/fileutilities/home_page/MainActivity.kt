@@ -124,8 +124,8 @@ class MainActivity : PermissionsActivity(), AggregatedMediaFileInfoObserver {
             ) {
                 it?.second.let { list ->
                     list?.run {
-                        val inputList = ArrayList(this)
-                        viewModel.analyseImagesTransformation(inputList, pathPreferences)
+                        // TODO: Avoid creating new list using existing causes CME for some reason
+                        viewModel.analyseImagesTransformation(this, pathPreferences)
                     }
                 }
             }

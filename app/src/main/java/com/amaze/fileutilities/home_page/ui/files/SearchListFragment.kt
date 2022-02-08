@@ -76,7 +76,6 @@ class SearchListFragment :
             false
         )
         val root: View = binding.root
-//        observeMediaInfoLists()
         observeMediaInfoLists { isLoading, aggregatedFiles ->
             if (isLoading) {
                 showLoadingViews(true)
@@ -251,110 +250,6 @@ class SearchListFragment :
         count: Int
     ) {
         // do nothing
-    }
-
-    private fun observeMediaInfoLists() {
-        filesViewModel.usedImagesSummaryTransformations
-            .observe(
-                viewLifecycleOwner
-            ) { imagesPair ->
-                imagesPairObserver(imagesPair)
-            }
-    }
-
-    private fun imagesPairObserver(
-        imagesPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>?
-    ) {
-        if (imagesPair?.second != null) {
-            showLoadingViews(false)
-            filesViewModel.usedVideosSummaryTransformations
-                .observe(
-                    viewLifecycleOwner
-                ) { videosPair ->
-                    videosPairObserver(videosPair, imagesPair)
-                }
-        } else {
-            showLoadingViews(true)
-        }
-    }
-
-    private fun videosPairObserver(
-        videosPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>?,
-        imagesPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>
-    ) {
-        if (videosPair?.second != null) {
-            showLoadingViews(false)
-            filesViewModel.usedAudiosSummaryTransformations
-                .observe(
-                    viewLifecycleOwner
-                ) { audiosPair ->
-                    audiosPairObserver(
-                        audiosPair, videosPair, imagesPair
-                    )
-                }
-        } else {
-            showLoadingViews(true)
-        }
-    }
-
-    private fun audiosPairObserver(
-        audiosPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>?,
-        videosPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>,
-        imagesPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>
-    ) {
-        if (audiosPair?.second != null) {
-            showLoadingViews(false)
-            filesViewModel.usedDocsSummaryTransformations
-                .observe(
-                    viewLifecycleOwner
-                ) { docsPair ->
-                    docsPairObserver(
-                        docsPair, audiosPair, videosPair, imagesPair
-                    )
-                }
-        } else {
-            showLoadingViews(true)
-        }
-    }
-
-    private fun docsPairObserver(
-        docsPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>?,
-        audiosPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>,
-        videosPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>,
-        imagesPair:
-            Pair<FilesViewModel.StorageSummary,
-                ArrayList<MediaFileInfo>>
-    ) {
-        if (docsPair?.second != null) {
-            showLoadingViews(false)
-            showEmptyViews()
-            searchQueryInput.aggregatedMediaFiles.run {
-                imagesMediaFilesList = imagesPair.second
-                videosMediaFilesList = videosPair.second
-                audiosMediaFilesList = audiosPair.second
-                docsMediaFilesList = docsPair.second
-            }
-        } else {
-            showLoadingViews(true)
-        }
     }
 
     private fun showLoadingViews(doShow: Boolean) {

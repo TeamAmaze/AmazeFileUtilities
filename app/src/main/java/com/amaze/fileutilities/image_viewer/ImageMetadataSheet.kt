@@ -95,11 +95,9 @@ class ImageMetadataSheet() : BottomSheetDialogFragment() {
             }
 
             val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+            val imgPath = localImageModel!!.uri.getFileFromUri(requireContext())!!.path
             val image = InputImage.fromBitmap(
-                BitmapFactory.decodeFile(
-                    localImageModel!!
-                        .uri.getFileFromUri(requireContext())!!.path
-                ),
+                BitmapFactory.decodeFile(imgPath),
                 0
             )
             recognizer.process(image)
@@ -117,6 +115,20 @@ class ImageMetadataSheet() : BottomSheetDialogFragment() {
                     // ...
                     e.printStackTrace()
                 }
+
+            /*val thres = ImgUtils.thresholdInvert(ImgUtils.convertBitmapToMat(BitmapFactory
+                .decodeFile(imgPath)))*/
+            val zeros = ImgUtils.getTotalAndZeros(
+                ImgUtils.convertBitmapToMat(
+                    BitmapFactory
+                        .decodeFile(imgPath)
+                )
+            )
+//            val bitmap = ImgUtils.convertMatToBitmap(thres)
+            result += "\n\n\n------ Dark areas --------\n\n"
+            result += "Total: ${zeros.first}\nZeros: ${zeros.second}" +
+                "\nRatio: ${(zeros.second.toDouble() / zeros.first.toDouble()).toDouble()}"
+            result += "\n\n"
         }
     }
 }

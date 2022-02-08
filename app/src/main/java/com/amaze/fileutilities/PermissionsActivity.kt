@@ -26,8 +26,6 @@ import androidx.core.app.ActivityCompat
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.showToastInCenter
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
 import java.lang.Exception
 
 open class PermissionsActivity :
@@ -152,7 +150,7 @@ open class PermissionsActivity :
         } else if (isInitialStart) {
             ActivityCompat.requestPermissions(this, arrayOf(permission), code)
         } else {
-            Snackbar.make(
+            /*Snackbar.make(
                 findViewById(R.id.frameLayout),
                 R.string.grantfailed,
                 BaseTransientBottomBar.LENGTH_INDEFINITE
@@ -167,7 +165,9 @@ open class PermissionsActivity :
                         )
                     )
                 }
-                .show()
+                .show()*/
+            applicationContext.showToastInCenter(getString(R.string.grantfailed))
+            finish()
         }
     }
 
