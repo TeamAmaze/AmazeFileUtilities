@@ -30,6 +30,14 @@
                 android:layout_marginTop="@dimen/material_generic"
                 />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/low_light_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/low_light"
+                app:showPreview="true"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
                 android:id="@+id/memes_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

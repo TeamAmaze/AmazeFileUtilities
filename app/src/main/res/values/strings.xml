@@ -115,7 +115,8 @@
     <string name="analysing">Analysing…</string>
     <string name="page_copied_to_clipboard">Page content copied to clipboard</string>
     <string name="clean">Clean</string>
-    <string name="blurred_pics">Blurred Pics</string>
+    <string name="blurred_pics">Blurred</string>
+    <string name="low_light">Low-Light</string>
     <string name="memes">Memes</string>
     <string name="frown">Frown</string>
     <string name="frown_hint">Images that doesn\'t have smiling faces</string>

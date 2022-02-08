@@ -132,7 +132,7 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
                             requireContext()
                                 .getAppCommonSharedPreferences()
                         ),
-                        this, MediaFileInfo.MEDIA_TYPE_AUDIO
+                        ArrayList(this), MediaFileInfo.MEDIA_TYPE_AUDIO
                     ) {
                         it.setProgress(
                             MediaTypeView.MediaTypeContent(

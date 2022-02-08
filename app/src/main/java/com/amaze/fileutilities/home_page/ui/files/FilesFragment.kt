@@ -219,7 +219,7 @@ class FilesFragment : Fragment() {
             ) { mediaFileInfoList ->
                 binding.recentFilesInfoText.text = resources.getString(R.string.loading)
                 mediaFileInfoList?.run {
-                    if (this.size == 0) {
+                    if (this.isEmpty()) {
                         binding.recentFilesInfoText.text =
                             resources.getString(R.string.no_files)
                     } else {
@@ -240,7 +240,7 @@ class FilesFragment : Fragment() {
                     mediaFileAdapter = RecentMediaFilesAdapter(
                         applicationContext,
                         preloader!!,
-                        this
+                        ArrayList(this)
                     )
                     binding.recentFilesList
                         .addOnScrollListener(recyclerViewPreloader!!)

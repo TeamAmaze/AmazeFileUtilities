@@ -28,13 +28,14 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
         private const val KEY_DUPLICATES = "search_duplicates"
         private const val KEY_MEMES = "meme_paths"
         private const val KEY_BLUR = "blur_paths"
+        private const val KEY_LOW_LIGHT = "low_light_paths"
         private const val KEY_FEATURES = "features_paths"
         private const val KEY_DOWNLOAD = "download_paths"
         private const val KEY_RECORDING = "recording_paths"
         private const val KEY_SCREENSHOT = "screenshot_paths"
         private const val KEY_TELEGRAM = "telegram_paths"
         private val KEYS = listOf(
-            KEY_DUPLICATES, KEY_MEMES, KEY_BLUR, KEY_FEATURES, KEY_DOWNLOAD,
+            KEY_DUPLICATES, KEY_MEMES, KEY_BLUR, KEY_LOW_LIGHT, KEY_FEATURES, KEY_DOWNLOAD,
             KEY_RECORDING, KEY_SCREENSHOT, KEY_TELEGRAM
         )
     }
@@ -85,6 +86,12 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                 (activity as PreferenceActivity).inflatePreferenceFragment(
                     PathPreferencesFragment.newInstance(PathPreferences.FEATURE_ANALYSIS_BLUR),
                     R.string.blurred_pics
+                )
+            }
+            KEY_LOW_LIGHT -> {
+                (activity as PreferenceActivity).inflatePreferenceFragment(
+                    PathPreferencesFragment.newInstance(PathPreferences.FEATURE_ANALYSIS_LOW_LIGHT),
+                    R.string.low_light
                 )
             }
             KEY_MEMES -> {

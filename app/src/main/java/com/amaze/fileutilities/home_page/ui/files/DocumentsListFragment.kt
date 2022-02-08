@@ -106,7 +106,7 @@ class DocumentsListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
                             requireContext()
                                 .getAppCommonSharedPreferences()
                         ),
-                        this, MediaFileInfo.MEDIA_TYPE_DOCUMENT
+                        ArrayList(this), MediaFileInfo.MEDIA_TYPE_DOCUMENT
                     ) {
                         it.setProgress(
                             MediaTypeView.MediaTypeContent(

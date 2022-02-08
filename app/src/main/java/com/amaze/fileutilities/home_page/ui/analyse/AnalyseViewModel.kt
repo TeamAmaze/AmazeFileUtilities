@@ -30,6 +30,13 @@ class AnalyseViewModel : ViewModel() {
         }
     }
 
+    fun getLowLightImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            emit(transformAnalysisToMediaFileInfo(dao.getAllLowLight(), dao))
+        }
+    }
+
     fun getMemeImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)

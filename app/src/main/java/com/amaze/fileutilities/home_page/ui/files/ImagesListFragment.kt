@@ -64,8 +64,9 @@ class ImagesListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
             binding.imagesListInfoText.text = resources.getString(R.string.loading)
             metaInfoAndSummaryPair?.let {
                 val metaInfoList = metaInfoAndSummaryPair.second
-                metaInfoList.run {
-                    if (this.size == 0) {
+                metaInfoList.let {
+                    it ->
+                    if (it.size == 0) {
                         binding.imagesListInfoText.text =
                             resources.getString(R.string.no_files)
                         binding.loadingProgress.visibility = View.GONE
@@ -106,7 +107,7 @@ class ImagesListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
                             requireContext()
                                 .getAppCommonSharedPreferences()
                         ),
-                        this, MediaFileInfo.MEDIA_TYPE_IMAGE
+                        ArrayList(it), MediaFileInfo.MEDIA_TYPE_IMAGE
                     ) {
                         it.setProgress(
                             MediaTypeView.MediaTypeContent(
