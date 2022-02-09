@@ -22,6 +22,7 @@ import android.widget.*
 import android.widget.LinearLayout
 import androidx.core.content.edit
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
@@ -155,8 +156,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
 
     private fun clickOptionsIndex() {
         clearOptionItemsBackgrounds()
-        optionsRecyclerView.showFade(300)
         optionsItemsScroll.hideFade(200)
+        optionsRecyclerViewParent.showFade(300)
         optionsIndexImage.background = resources.getDrawable(R.drawable.button_selected_dark)
     }
 
@@ -165,7 +166,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         sharedPreferences: SharedPreferences
     ) {
         clearOptionItemsBackgrounds()
-        optionsRecyclerView.hideFade(300)
+        optionsRecyclerViewParent.hideFade(300)
         optionsItemsScroll.showFade(200)
         optionsSwitchView.background = resources.getDrawable(R.drawable.button_selected_dark)
         val listViewButton: Button
@@ -217,7 +218,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         sortingPreference: MediaFileListSorter.SortingPreference
     ) {
         clearOptionItemsBackgrounds()
-        optionsRecyclerView.hideFade(300)
+        optionsRecyclerViewParent.hideFade(300)
         optionsItemsScroll.showFade(200)
         optionsGroupView.background = resources.getDrawable(R.drawable.button_selected_dark)
         var groupParent: Button? = null
@@ -326,7 +327,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         sortingPreference: MediaFileListSorter.SortingPreference
     ) {
         clearOptionItemsBackgrounds()
-        optionsRecyclerView.hideFade(300)
+        optionsRecyclerViewParent.hideFade(300)
         optionsItemsScroll.showFade(200)
         optionsSortView.background = resources.getDrawable(R.drawable.button_selected_dark)
         var sortSize: Button? = null
