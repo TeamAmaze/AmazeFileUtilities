@@ -132,7 +132,11 @@
     <FrameLayout
         android:id="@+id/options_recycler_view_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/eight_dp"
+        android:paddingRight="@dimen/eight_dp"
+        android:visibility="invisible"
+        >
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/options_recycler_view"
             android:layout_width="match_parent"
@@ -141,7 +145,6 @@
             android:layout_marginBottom="@dimen/material_generic"
             android:divider="@null"
             android:scrollbars="none"
-            android:visibility="invisible"
             />
         <View
             android:layout_width="@dimen/material_generic"
