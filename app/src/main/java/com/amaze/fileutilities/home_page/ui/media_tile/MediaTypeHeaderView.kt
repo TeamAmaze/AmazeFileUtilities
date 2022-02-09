@@ -8,7 +8,7 @@
  * and company names mentioned are trademarks or registered trademarks of their respective owners.
  */
 
-package com.amaze.fileutilities.home_page.ui
+package com.amaze.fileutilities.home_page.ui.media_tile
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -22,6 +22,8 @@ import android.widget.*
 import android.widget.LinearLayout
 import androidx.core.content.edit
 import androidx.core.graphics.ColorUtils
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileListSorter
@@ -45,6 +47,12 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
     private val optionsGroupView: ImageView
     private val optionsSortView: ImageView
     private val optionsListParent: LinearLayout
+    private val optionsRecyclerViewParent: FrameLayout
+    private val optionsRecyclerView: RecyclerView
+    private var linearLayoutManager: LinearLayoutManager = LinearLayoutManager(
+        context,
+        LinearLayoutManager.HORIZONTAL, false
+    )
 
     init {
         val inflater = context
@@ -53,7 +61,9 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         typeImageView = getChildAt(0) as ImageView
         infoLayoutParent = getChildAt(1) as LinearLayout
         optionsParentLayout = getChildAt(2) as LinearLayout
-        optionsItemsScroll = getChildAt(3) as HorizontalScrollView
+        optionsItemsScroll = getChildAt(4) as HorizontalScrollView
+        optionsRecyclerViewParent = getChildAt(3) as FrameLayout
+        optionsRecyclerView = optionsRecyclerViewParent.findViewById(R.id.options_recycler_view)
         optionsItemsScroll.isHorizontalScrollBarEnabled = false
         usedSpaceTextView = infoLayoutParent.findViewById(R.id.usedSpaceTextView)
         progressIndicatorsParent = infoLayoutParent.findViewById(R.id.progressIndicatorsParent)
@@ -121,10 +131,16 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         headerListItems: MutableList<AbstractMediaFilesAdapter.ListItem>,
         sortingPreference: MediaFileListSorter.SortingPreference
     ) {
-        clickOptionsIndex(optionsMenuSelected, headerListItems)
+        val adapter = MediaTypeViewOptionsListAdapter(
+            context, headerListItems,
+            optionsMenuSelected
+        )
+        optionsRecyclerView.layoutManager = linearLayoutManager
+        optionsRecyclerView.adapter = adapter
+        clickOptionsIndex()
         val sharedPreferences = context.getAppCommonSharedPreferences()
         optionsIndexImage.setOnClickListener {
-            clickOptionsIndex(optionsMenuSelected, headerListItems)
+            clickOptionsIndex()
         }
         optionsSwitchView.setOnClickListener {
             clickOptionsSwitchView(optionsMenuSelected, sharedPreferences)
@@ -137,23 +153,11 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         }
     }
 
-    private fun clickOptionsIndex(
-        optionsMenuSelected: MediaFileAdapter.OptionsMenuSelected,
-        headerListItems: MutableList<AbstractMediaFilesAdapter.ListItem>
-    ) {
+    private fun clickOptionsIndex() {
         clearOptionItemsBackgrounds()
+        optionsRecyclerView.showFade(300)
+        optionsItemsScroll.hideFade(200)
         optionsIndexImage.background = resources.getDrawable(R.drawable.button_selected_dark)
-        headerListItems.forEach {
-            listItem ->
-            val button = getSelectedTextButton(
-                listItem.header
-                    ?: resources.getString(R.string.undetermined)
-            )
-            button.setOnClickListener {
-                optionsMenuSelected.select(listItem.position)
-            }
-            optionsListParent.addView(button)
-        }
     }
 
     private fun clickOptionsSwitchView(
@@ -161,6 +165,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         sharedPreferences: SharedPreferences
     ) {
         clearOptionItemsBackgrounds()
+        optionsRecyclerView.hideFade(300)
+        optionsItemsScroll.showFade(200)
         optionsSwitchView.background = resources.getDrawable(R.drawable.button_selected_dark)
         val listViewButton: Button
         val gridViewButton: Button
@@ -211,6 +217,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         sortingPreference: MediaFileListSorter.SortingPreference
     ) {
         clearOptionItemsBackgrounds()
+        optionsRecyclerView.hideFade(300)
+        optionsItemsScroll.showFade(200)
         optionsGroupView.background = resources.getDrawable(R.drawable.button_selected_dark)
         var groupParent: Button? = null
         var groupDate: Button? = null
@@ -318,6 +326,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         sortingPreference: MediaFileListSorter.SortingPreference
     ) {
         clearOptionItemsBackgrounds()
+        optionsRecyclerView.hideFade(300)
+        optionsItemsScroll.showFade(200)
         optionsSortView.background = resources.getDrawable(R.drawable.button_selected_dark)
         var sortSize: Button? = null
         var sortDate: Button? = null

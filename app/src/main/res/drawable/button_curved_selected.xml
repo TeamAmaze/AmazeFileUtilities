@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/white"/>
-    <stroke android:width="0dp" android:color="#B1BCBE" />
-    <corners android:radius="@dimen/material_generic"/>
-    <padding android:left="@dimen/eight_dp" android:top="0dp" android:right="@dimen/eight_dp" android:bottom="0dp" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/white"/>
+            <stroke android:width="0dp" android:color="#B1BCBE" />
+            <corners android:radius="@dimen/material_generic"/>
+            <padding android:left="@dimen/eight_dp" android:top="0dp" android:right="@dimen/eight_dp" android:bottom="0dp" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/ripple" />
+</layer-list>

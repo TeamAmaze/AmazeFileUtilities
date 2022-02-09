@@ -11,14 +11,12 @@
 package com.amaze.fileutilities.home_page.ui.analyse
 
 import android.content.Context
-import android.content.Intent
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaAdapterPreloader
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.home_page.ui.files.MediaInfoRecyclerViewHolder
-import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.EmptyViewHolder
 
@@ -60,25 +58,31 @@ class ReviewImagesAdapter(
             getMediaFilesListItems()[position].run {
                 mediaFileInfo?.let { mediaFileInfo ->
                     mediaFileInfo.extraInfo?.let { extraInfo ->
-                        when (extraInfo.mediaType) {
-                            MediaFileInfo.MEDIA_TYPE_UNKNOWN -> {
-                                holder.infoSummary.text =
-                                    this.mediaFileInfo?.getFormattedSize(context)
-                                holder.expand.visibility = View.VISIBLE
-                                holder.expand.setOnClickListener {
-                                    val intent = Intent(
-                                        context,
-                                        ImageViewerDialogActivity::class.java
-                                    )
-                                    intent.data = mediaFileInfo.getContentUri(context)
-                                    context.startActivity(intent)
+                        holder.infoSummary.text =
+                            this.mediaFileInfo?.getFormattedSize(context)
+                        holder.expand.visibility = View.VISIBLE
+
+                        invalidateCheckedTitle()
+                        holder.root.setOnClickListener {
+                            toggleChecked(this)
+                            holder.checkIconGrid.visibility =
+                                if (isChecked) View.VISIBLE else View.INVISIBLE
+                            invalidateCheckedTitle()
+                        }
+                        holder.expand.setOnClickListener {
+                            when (extraInfo.mediaType) {
+                                MediaFileInfo.MEDIA_TYPE_IMAGE -> {
+                                    startImageViewer(mediaFileInfo)
                                 }
-                                invalidateCheckedTitle()
-                                holder.root.setOnClickListener {
-                                    toggleChecked(this)
-                                    holder.checkIconGrid.visibility =
-                                        if (isChecked) View.VISIBLE else View.INVISIBLE
-                                    invalidateCheckedTitle()
+                                MediaFileInfo.MEDIA_TYPE_VIDEO -> {
+                                    startVideoViewer(mediaFileInfo)
+                                }
+                                MediaFileInfo.MEDIA_TYPE_AUDIO -> {
+                                    startAudioViewer(mediaFileInfo)
+                                }
+                                MediaFileInfo.MEDIA_TYPE_DOCUMENT,
+                                MediaFileInfo.MEDIA_TYPE_UNKNOWN -> {
+                                    startExternalViewAction(mediaFileInfo)
                                 }
                             }
                         }

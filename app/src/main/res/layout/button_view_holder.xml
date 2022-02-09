@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/material_generic">
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/header_list_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/button_curved_selected"
+        app:cornerRadius="@dimen/material_generic"
+        app:rippleColor="@color/highlight_yellow"
+        style="@style/MaterialButton.White"
+        android:textColor="@color/navy_blue"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

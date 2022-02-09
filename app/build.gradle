@@ -135,6 +135,7 @@ dependencies {
     implementation "androidx.preference:preference-ktx:1.2.0"
     implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.0'
     implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.0'
+    implementation 'com.afollestad.material-dialogs:core:3.3.0'
 
     //Detect memory leaks
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
