@@ -14,7 +14,7 @@ import android.content.Context
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
-import com.amaze.fileutilities.home_page.ui.MediaTypeHeaderView
+import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeHeaderView
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.HeaderViewHolder
 import com.amaze.fileutilities.utilis.ListBannerViewHolder

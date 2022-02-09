@@ -29,7 +29,7 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.*
 import com.amaze.fileutilities.databinding.FragmentAudiosListBinding
 import com.amaze.fileutilities.home_page.MainActivity
-import com.amaze.fileutilities.home_page.ui.MediaTypeView
+import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
 import com.amaze.fileutilities.utilis.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader

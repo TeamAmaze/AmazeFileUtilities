@@ -259,8 +259,8 @@ class ImgUtils {
         private fun processForLowLight(matrix: Mat): Boolean {
             return try {
                 val zerosPair = getTotalAndZeros(matrix)
-                val ratio = (zerosPair.second.toDouble() / zerosPair.first.toDouble()).toDouble()
-                return ratio > 0.7
+                val ratio = (zerosPair.second.toDouble() / zerosPair.first.toDouble())
+                return ratio >= 0.7
             } catch (e: Exception) {
                 e.printStackTrace()
                 false

@@ -5,7 +5,7 @@
     android:layout_height="@dimen/list_banners_height"
     android:padding="@dimen/material_generic"
     >
-    <com.amaze.fileutilities.home_page.ui.MediaTypeHeaderView
+    <com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeHeaderView
         android:id="@+id/listBannerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
