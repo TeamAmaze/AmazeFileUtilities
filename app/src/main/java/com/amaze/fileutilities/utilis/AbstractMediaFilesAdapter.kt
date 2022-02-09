@@ -163,12 +163,30 @@ abstract class AbstractMediaFilesAdapter(
     private val mInflater: LayoutInflater
         get() = superContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-    private fun startExternalViewAction(mediaFileInfo: MediaFileInfo) {
+    fun startExternalViewAction(mediaFileInfo: MediaFileInfo) {
         val intent = Intent()
         intent.data = mediaFileInfo.getContentUri(superContext)
         intent.action = Intent.ACTION_VIEW
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        superContext.startActivity(intent)
+    }
+
+    fun startImageViewer(mediaFileInfo: MediaFileInfo) {
+        val intent = Intent(superContext, ImageViewerDialogActivity::class.java)
+        intent.data = mediaFileInfo.getContentUri(superContext)
+        superContext.startActivity(intent)
+    }
+
+    fun startAudioViewer(mediaFileInfo: MediaFileInfo) {
+        val intent = Intent(superContext, AudioPlayerDialogActivity::class.java)
+        intent.data = mediaFileInfo.getContentUri(superContext)
+        superContext.startActivity(intent)
+    }
+
+    fun startVideoViewer(mediaFileInfo: MediaFileInfo) {
+        val intent = Intent(superContext, VideoPlayerDialogActivity::class.java)
+        intent.data = mediaFileInfo.getContentUri(superContext)
         superContext.startActivity(intent)
     }
 
@@ -181,9 +199,7 @@ abstract class AbstractMediaFilesAdapter(
             "x${mediaFileInfo.extraInfo.imageMetaData?.height}"
         holder.extraInfo.text = ""
         holder.root.setOnClickListener {
-            val intent = Intent(superContext, ImageViewerDialogActivity::class.java)
-            intent.data = mediaFileInfo.getContentUri(superContext)
-            superContext.startActivity(intent)
+            startImageViewer(mediaFileInfo)
         }
     }
 
@@ -198,9 +214,7 @@ abstract class AbstractMediaFilesAdapter(
             holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
         }
         holder.root.setOnClickListener {
-            val intent = Intent(superContext, AudioPlayerDialogActivity::class.java)
-            intent.data = mediaFileInfo.getContentUri(superContext)
-            superContext.startActivity(intent)
+            startAudioViewer(mediaFileInfo)
         }
     }
 
@@ -215,9 +229,7 @@ abstract class AbstractMediaFilesAdapter(
             holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
         }
         holder.root.setOnClickListener {
-            val intent = Intent(superContext, VideoPlayerDialogActivity::class.java)
-            intent.data = mediaFileInfo.getContentUri(superContext)
-            superContext.startActivity(intent)
+            startVideoViewer(mediaFileInfo)
         }
     }
 

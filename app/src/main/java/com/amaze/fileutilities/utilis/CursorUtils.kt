@@ -104,12 +104,10 @@ class CursorUtils {
                     MediaStore.Files.getContentUri("external"),
                     projection, null, null, null
                 )
-            var cursorCount = 0
             var longSize = 0L
             if (cursor == null) {
                 return Pair(FilesViewModel.StorageSummary(0, 0), docs)
             } else if (cursor.count > 0 && cursor.moveToFirst()) {
-                cursorCount = cursor.count
                 do {
                     val path =
                         cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))
@@ -136,7 +134,7 @@ class CursorUtils {
             /*docs.sortWith { lhs: MediaFileInfo, rhs: MediaFileInfo ->
                 -1 * java.lang.Long.valueOf(lhs.date).compareTo(rhs.date)
             }*/
-            return Pair(FilesViewModel.StorageSummary(cursorCount, 0, longSize), docs)
+            return Pair(FilesViewModel.StorageSummary(docs.size, 0, longSize), docs)
         }
 
         fun listRecentFiles(context: Context): ArrayList<MediaFileInfo> {
@@ -248,14 +246,14 @@ class CursorUtils {
                     selectionValues, null
                 )
             val mediaFileInfoFile: ArrayList<MediaFileInfo> = ArrayList()
-            var cursorCount = 0
+//            var cursorCount = 0
             var longSize = 0L
             if (cursor == null) return Pair(
                 FilesViewModel.StorageSummary(0, 0),
                 mediaFileInfoFile
             ) else if (cursor.count > 0 && cursor.moveToFirst()) {
 //                storageSummaryCallback.getStorageSummary(cursor.count, 0)
-                cursorCount = cursor.count
+//                cursorCount = cursor.count
                 do {
                     val path =
                         cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))
@@ -270,7 +268,7 @@ class CursorUtils {
             }
             cursor.close()
             return Pair(
-                FilesViewModel.StorageSummary(cursorCount, 0, longSize),
+                FilesViewModel.StorageSummary(mediaFileInfoFile.size, 0, longSize),
                 mediaFileInfoFile
             )
         }
