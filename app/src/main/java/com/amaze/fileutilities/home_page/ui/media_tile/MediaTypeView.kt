@@ -8,7 +8,7 @@
  * and company names mentioned are trademarks or registered trademarks of their respective owners.
  */
 
-package com.amaze.fileutilities.home_page.ui
+package com.amaze.fileutilities.home_page.ui.media_tile
 
 import android.content.Context
 import android.os.Build
@@ -18,7 +18,6 @@ import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.setPadding
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.px
 import com.google.android.material.progressindicator.LinearProgressIndicator

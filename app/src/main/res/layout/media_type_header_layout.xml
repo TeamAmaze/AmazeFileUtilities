@@ -129,12 +129,42 @@
             />
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/options_recycler_view_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/options_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/material_generic"
+            android:layout_marginBottom="@dimen/material_generic"
+            android:divider="@null"
+            android:scrollbars="none"
+            android:visibility="invisible"
+            />
+        <View
+            android:layout_width="@dimen/material_generic"
+            android:layout_height="@dimen/sixty_four_dp"
+            android:layout_gravity="left"
+            android:background="@drawable/fading_gradient"
+            />
+        <View
+            android:layout_width="@dimen/material_generic"
+            android:layout_height="@dimen/sixty_four_dp"
+            android:layout_gravity="right"
+            android:background="@drawable/fading_gradient_reverse"
+            />
+    </FrameLayout>
+
     <HorizontalScrollView
         android:id="@+id/options_list_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/material_generic"
-        android:layout_marginBottom="@dimen/material_generic">
+        android:layout_marginBottom="@dimen/material_generic"
+        android:visibility="gone"
+        >
         <LinearLayout
             android:id="@+id/options_list_parent"
             android:layout_width="match_parent"

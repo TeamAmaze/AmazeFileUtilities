@@ -97,7 +97,7 @@
             android:layout_marginTop="@dimen/eight_dp"
             android:layout_marginBottom="@dimen/four_dp"
             >
-            <com.amaze.fileutilities.home_page.ui.MediaTypeView
+            <com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
                 android:id="@+id/images_tab"
                 android:layout_width="@dimen/zero_dp"
                 android:layout_height="@dimen/files_tab_heights"
@@ -108,7 +108,7 @@
                 app:mediaImageSrc="@drawable/ic_outline_image_32"
                 app:themeColor="@color/purple"
                 />
-            <com.amaze.fileutilities.home_page.ui.MediaTypeView
+            <com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
                 android:id="@+id/audios_tab"
                 android:layout_width="@dimen/zero_dp"
                 android:layout_height="@dimen/files_tab_heights"
@@ -129,7 +129,7 @@
             android:weightSum="1"
             android:layout_marginTop="@dimen/four_dp"
             >
-            <com.amaze.fileutilities.home_page.ui.MediaTypeView
+            <com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
                 android:id="@+id/videos_tab"
                 android:layout_width="@dimen/zero_dp"
                 android:layout_height="match_parent"
@@ -140,7 +140,7 @@
                 app:mediaImageSrc="@drawable/ic_outline_video_library_32"
                 app:themeColor="@color/orange"
                 />
-            <com.amaze.fileutilities.home_page.ui.MediaTypeView
+            <com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
                 android:id="@+id/documents_tab"
                 android:layout_width="@dimen/zero_dp"
                 android:layout_height="match_parent"

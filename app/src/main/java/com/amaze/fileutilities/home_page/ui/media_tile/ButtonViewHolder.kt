@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Copyright (C) 2021-2022 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
  * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
  *
  * This file is part of Amaze File Utilities.
@@ -8,15 +8,15 @@
  * and company names mentioned are trademarks or registered trademarks of their respective owners.
  */
 
-package com.amaze.fileutilities.utilis
+package com.amaze.fileutilities.home_page.ui.media_tile
 
 import android.view.View
+import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
-import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeHeaderView
 
-class ListBannerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class ButtonViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     @JvmField
-    val mediaTypeHeaderView: MediaTypeHeaderView = view.findViewById(R.id.listBannerView)
+    val headerListButton: Button = view.findViewById(R.id.header_list_button)
 }
