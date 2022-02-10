@@ -21,19 +21,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.*
 import com.amaze.fileutilities.databinding.FragmentAudiosListBinding
 import com.amaze.fileutilities.home_page.MainActivity
-import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
 import com.amaze.fileutilities.utilis.*
-import com.bumptech.glide.Glide
-import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
-import com.bumptech.glide.util.ViewPreloadSizeProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
@@ -42,18 +36,15 @@ import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
-class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.OptionsMenuSelected {
+class AudiosListFragment : AbstractMediaInfoListFragment(), OnPlaybackInfoUpdate {
+
     private val filesViewModel: FilesViewModel by activityViewModels()
     private var _binding: FragmentAudiosListBinding? = null
-    private var mediaFileAdapter: MediaFileAdapter? = null
-    private var preloader: MediaAdapterPreloader? = null
-    private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
-    private var linearLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
-    private var gridLayoutManager: GridLayoutManager? = GridLayoutManager(context, 3)
-    private val MAX_PRELOAD = 100
     private var isBottomFragmentVisible = false
     private var isPlaying = true
     private var forceShowSeekbar = false
+    private lateinit var fileStorageSummaryAndMediaFileInfo:
+        Pair<FilesViewModel.StorageSummary, List<MediaFileInfo>?>
 
     private lateinit var audioPlaybackServiceConnection: ServiceConnection
 
@@ -91,7 +82,7 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
             metaInfoAndSummaryPair?.let {
                 val metaInfoList = metaInfoAndSummaryPair.second
                 metaInfoList.run {
-                    if (this.size == 0) {
+                    if (this.isEmpty()) {
                         binding.audiosListInfoText.text =
                             resources.getString(R.string.no_files)
                         binding.loadingProgress.visibility = View.GONE
@@ -99,54 +90,9 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
                         binding.audiosListInfoText.visibility = View.GONE
                         binding.loadingProgress.visibility = View.GONE
                     }
-                    val storageSummary = metaInfoAndSummaryPair.first
-                    val usedSpace =
-                        FileUtils.formatStorageLength(
-                            requireContext(), storageSummary.usedSpace!!
-                        )
-                    val totalSpace = FileUtils.formatStorageLength(
-                        requireContext(), storageSummary.totalSpace!!
-                    )
-                    // set list adapter
-                    preloader = MediaAdapterPreloader(
-                        requireContext(),
-                        R.drawable.ic_outline_audio_file_32
-                    )
-                    val sizeProvider = ViewPreloadSizeProvider<String>()
-                    recyclerViewPreloader = RecyclerViewPreloader(
-                        Glide.with(requireActivity()),
-                        preloader!!,
-                        sizeProvider,
-                        MAX_PRELOAD
-                    )
-                    val isList = requireContext()
-                        .getAppCommonSharedPreferences().getBoolean(
-                            PreferencesConstants.KEY_MEDIA_LIST_TYPE,
-                            PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
-                        )
-                    mediaFileAdapter = MediaFileAdapter(
-                        requireContext(),
-                        preloader!!,
-                        this@AudiosListFragment, !isList,
-                        MediaFileListSorter.SortingPreference.newInstance(
-                            requireContext()
-                                .getAppCommonSharedPreferences()
-                        ),
-                        ArrayList(this), MediaFileInfo.MEDIA_TYPE_AUDIO
-                    ) {
-                        it.setProgress(
-                            MediaTypeView.MediaTypeContent(
-                                storageSummary.items, usedSpace,
-                                storageSummary.progress, totalSpace
-                            )
-                        )
-                    }
-                    binding.audiosListView
-                        .addOnScrollListener(recyclerViewPreloader!!)
-                    Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
-                    binding.audiosListView.layoutManager =
-                        if (isList) linearLayoutManager else gridLayoutManager
-                    binding.audiosListView.adapter = mediaFileAdapter
+                    fileStorageSummaryAndMediaFileInfo = it
+                    resetAdapter()
+
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         binding.fastscroll.visibility = View.GONE
                         FastScrollerBuilder(binding.audiosListView).useMd2Style().build()
@@ -256,6 +202,23 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
     override fun serviceDisconnected() {
         binding.layoutBottomSheet.hideTranslateY(500)
         isBottomFragmentVisible = false
+    }
+
+    override fun getFileStorageSummaryAndMediaFileInfoPair(): Pair<FilesViewModel.StorageSummary,
+        List<MediaFileInfo>?>? {
+        return if (::fileStorageSummaryAndMediaFileInfo.isInitialized)
+            fileStorageSummaryAndMediaFileInfo else null
+    }
+
+    override fun getMediaAdapterPreloader(): MediaAdapterPreloader {
+        return MediaAdapterPreloader(
+            requireContext(),
+            R.drawable.ic_outline_audio_file_32
+        )
+    }
+
+    override fun getRecyclerView(): RecyclerView {
+        return binding.audiosListView
     }
 
     private fun invalidateActionButtons(progressHandler: AudioProgressHandler) {
@@ -418,23 +381,5 @@ class AudiosListFragment : Fragment(), OnPlaybackInfoUpdate, MediaFileAdapter.Op
                     })
             }
         }
-    }
-
-    override fun sortBy(sortingPreference: MediaFileListSorter.SortingPreference) {
-        mediaFileAdapter?.invalidateData(sortingPreference)
-    }
-
-    override fun groupBy(sortingPreference: MediaFileListSorter.SortingPreference) {
-        mediaFileAdapter?.invalidateData(sortingPreference)
-    }
-
-    override fun switchView(isList: Boolean) {
-        binding.audiosListView.layoutManager = if (isList)
-            linearLayoutManager else gridLayoutManager
-        binding.audiosListView.adapter = mediaFileAdapter
-    }
-
-    override fun select(headerPosition: Int) {
-        binding.audiosListView.scrollToPosition(headerPosition + 5)
     }
 }
