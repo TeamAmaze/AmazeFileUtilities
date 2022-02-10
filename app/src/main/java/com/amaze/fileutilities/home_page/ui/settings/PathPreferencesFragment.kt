@@ -12,7 +12,6 @@ package com.amaze.fileutilities.home_page.ui.settings
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.preference.CheckBoxPreference
 import androidx.preference.Preference
@@ -22,6 +21,7 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.database.PathPreferencesDao
+import com.amaze.fileutilities.utilis.FileUtils.Companion.showFolderChooserDialog
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 
@@ -76,6 +76,8 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
                     PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
                 )
             )
+            preference.order = 0
+            preferencesList?.order = 1
             preferenceScreen.addPreference(preference)
             preferencesList?.dependency = PathPreferences.getSharedPreferenceKey(featureName!!)
         }
@@ -118,30 +120,19 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
     }
 
     private fun showCreateDialog() {
-        val inputEditTextField = EditText(requireContext())
-        val dialog = AlertDialog.Builder(requireContext()).setTitle(R.string.select_path)
-            .setView(inputEditTextField)
-            .setCancelable(false)
-            .setPositiveButton(R.string.ok) { dialog, _ ->
-                val path = inputEditTextField.text.toString()
-                val pathPreferences = PathPreferences(
-                    path, featureName!!,
-                    featureName == PathPreferences.FEATURE_AUDIO_PLAYER
-                )
-                dao.insert(pathPreferences)
-                val prefSwitch = PathSwitchPreference(
-                    requireContext(), null,
-                    itemOnDeleteListener
-                )
-                preferenceDbMap[prefSwitch] = pathPreferences
-                prefSwitch.summary = path
-                preferencesList?.addPreference(prefSwitch)
-                dialog.dismiss()
-            }
-            .setNegativeButton(
-                R.string.cancel
-            ) { dialog, _ -> dialog.dismiss() }
-            .create()
-        dialog.show()
+        requireContext().showFolderChooserDialog {
+            val pathPreferences = PathPreferences(
+                it.path, featureName!!,
+                featureName == PathPreferences.FEATURE_AUDIO_PLAYER
+            )
+            dao.insert(pathPreferences)
+            val prefSwitch = PathSwitchPreference(
+                requireContext(), null,
+                itemOnDeleteListener
+            )
+            preferenceDbMap[prefSwitch] = pathPreferences
+            prefSwitch.summary = it.path
+            preferencesList?.addPreference(prefSwitch)
+        }
     }
 }

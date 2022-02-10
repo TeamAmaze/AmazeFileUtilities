@@ -14,9 +14,14 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.utilis.px
 import com.bumptech.glide.Glide
 import com.bumptech.glide.ListPreloader.PreloadModelProvider
 import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 
 class MediaAdapterPreloader(context: Context, private val loadingDrawable: Int) :
     PreloadModelProvider<String> {
@@ -44,8 +49,32 @@ class MediaAdapterPreloader(context: Context, private val loadingDrawable: Int) 
             .placeholder(loadingDrawable).load(item)
     }
 
-    fun loadImage(item: String, v: ImageView) {
+    fun loadImage(item: String, v: ImageView, isGrid: Boolean) {
         request.fallback(R.drawable.ic_outline_broken_image_24)
-            .placeholder(loadingDrawable).load(item).into(v)
+            .placeholder(loadingDrawable).load(item)
+            .addListener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    if (isGrid) {
+                        v.setPadding(16.px.toInt(), 16.px.toInt(), 16.px.toInt(), 16.px.toInt())
+                    }
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    // do nothing
+                    return false
+                }
+            }).into(v)
     }
 }

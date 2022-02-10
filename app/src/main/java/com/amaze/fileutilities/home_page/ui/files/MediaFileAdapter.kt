@@ -23,7 +23,7 @@ class MediaFileAdapter(
     val context: Context,
     val preloader: MediaAdapterPreloader,
     val optionsMenuSelected: OptionsMenuSelected,
-    isGrid: Boolean,
+    var isGrid: Boolean,
     private var sortingPreference: MediaFileListSorter.SortingPreference,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
     private val mediaType: Int,
