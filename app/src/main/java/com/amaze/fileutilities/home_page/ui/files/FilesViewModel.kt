@@ -11,12 +11,11 @@
 package com.amaze.fileutilities.home_page.ui.files
 
 import android.app.Application
-import android.os.Build.VERSION.SDK_INT
-import android.os.Build.VERSION_CODES.N
 import androidx.lifecycle.*
 import com.amaze.fileutilities.home_page.database.*
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.FileUtils.Companion.getExternalStorageDirectory
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import com.google.mlkit.vision.text.TextRecognition
@@ -42,11 +41,7 @@ class FilesViewModel(val applicationContext: Application) :
     val internalStorageStats: LiveData<StorageSummary?> =
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
-            val storageData: StorageDirectoryParcelable? = if (SDK_INT >= N) {
-                FileUtils.getStorageDirectoriesNew(applicationContext.applicationContext)
-            } else {
-                FileUtils.getStorageDirectoriesLegacy(applicationContext.applicationContext)
-            }
+            val storageData = applicationContext.applicationContext.getExternalStorageDirectory()
             storageData?.run {
                 val file = File(this.path)
                 var items = 0
@@ -316,11 +311,7 @@ class FilesViewModel(val applicationContext: Application) :
         viewModelScope.launch(Dispatchers.IO) {
             val dao = AppDatabase.getInstance(applicationContext).internalStorageAnalysisDao()
             isInternalStorageAnalysing = true
-            val storageData: StorageDirectoryParcelable? = if (SDK_INT >= N) {
-                FileUtils.getStorageDirectoriesNew(applicationContext.applicationContext)
-            } else {
-                FileUtils.getStorageDirectoriesLegacy(applicationContext.applicationContext)
-            }
+            val storageData = applicationContext.applicationContext.getExternalStorageDirectory()
             storageData?.run {
                 val file = File(this.path)
                 processInternalStorageAnalysis(dao, file, deepSearch, 0)
@@ -361,11 +352,8 @@ class FilesViewModel(val applicationContext: Application) :
             )
             val dao = AppDatabase.getInstance(applicationContext).pathPreferencesDao()
             if (pathPrefs < PreferencesConstants.VAL_PATH_PREFS_MIGRATION) {
-                val storageData: StorageDirectoryParcelable? = if (SDK_INT >= N) {
-                    FileUtils.getStorageDirectoriesNew(applicationContext.applicationContext)
-                } else {
-                    FileUtils.getStorageDirectoriesLegacy(applicationContext.applicationContext)
-                }
+                val storageData = applicationContext.applicationContext
+                    .getExternalStorageDirectory()
                 val prefsList = ArrayList<PathPreferences>()
                 FileUtils.DEFAULT_PATH_PREFS_INCLUSIVE.forEach {
                     keyValue ->

@@ -15,32 +15,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentDocumentsListBinding
 import com.amaze.fileutilities.home_page.MainActivity
-import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
-import com.amaze.fileutilities.utilis.FileUtils
-import com.amaze.fileutilities.utilis.PreferencesConstants
-import com.amaze.fileutilities.utilis.Utils
-import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
-import com.bumptech.glide.Glide
-import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
-import com.bumptech.glide.util.ViewPreloadSizeProvider
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
-class DocumentsListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
+class DocumentsListFragment : AbstractMediaInfoListFragment() {
     private val filesViewModel: FilesViewModel by activityViewModels()
     private var _binding: FragmentDocumentsListBinding? = null
-    private var mediaFileAdapter: MediaFileAdapter? = null
-    private var preloader: MediaAdapterPreloader? = null
-    private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
-    private var linearLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
-    private var gridLayoutManager: GridLayoutManager? = GridLayoutManager(context, 3)
-    private val MAX_PRELOAD = 50
+    private lateinit var fileStorageSummaryAndMediaFileInfo:
+        Pair<FilesViewModel.StorageSummary, List<MediaFileInfo>?>
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -65,7 +51,7 @@ class DocumentsListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
             metaInfoAndSummaryPair?.let {
                 val metaInfoList = metaInfoAndSummaryPair.second
                 metaInfoList.run {
-                    if (this.size == 0) {
+                    if (this.isEmpty()) {
                         binding.documentsListInfoText.text =
                             resources.getString(R.string.no_files)
                         binding.loadingProgress.visibility = View.GONE
@@ -73,54 +59,8 @@ class DocumentsListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
                         binding.documentsListInfoText.visibility = View.GONE
                         binding.loadingProgress.visibility = View.GONE
                     }
-                    val storageSummary = metaInfoAndSummaryPair.first
-                    val usedSpace =
-                        FileUtils.formatStorageLength(
-                            requireContext(), storageSummary.usedSpace!!
-                        )
-                    val totalSpace = FileUtils.formatStorageLength(
-                        requireContext(), storageSummary.totalSpace!!
-                    )
-                    // set list adapter
-                    preloader = MediaAdapterPreloader(
-                        requireContext(),
-                        R.drawable.ic_outline_insert_drive_file_32
-                    )
-                    val sizeProvider = ViewPreloadSizeProvider<String>()
-                    recyclerViewPreloader = RecyclerViewPreloader(
-                        Glide.with(requireActivity()),
-                        preloader!!,
-                        sizeProvider,
-                        MAX_PRELOAD
-                    )
-                    val isList = requireContext()
-                        .getAppCommonSharedPreferences().getBoolean(
-                            PreferencesConstants.KEY_MEDIA_LIST_TYPE,
-                            PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
-                        )
-                    mediaFileAdapter = MediaFileAdapter(
-                        requireContext(),
-                        preloader!!,
-                        this@DocumentsListFragment, !isList,
-                        MediaFileListSorter.SortingPreference.newInstance(
-                            requireContext()
-                                .getAppCommonSharedPreferences()
-                        ),
-                        ArrayList(this), MediaFileInfo.MEDIA_TYPE_DOCUMENT
-                    ) {
-                        it.setProgress(
-                            MediaTypeView.MediaTypeContent(
-                                storageSummary.items, usedSpace,
-                                storageSummary.progress, totalSpace
-                            )
-                        )
-                    }
-                    binding.documentsListView
-                        .addOnScrollListener(recyclerViewPreloader!!)
-                    Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
-                    binding.documentsListView.layoutManager =
-                        if (isList) linearLayoutManager else gridLayoutManager
-                    binding.documentsListView.adapter = mediaFileAdapter
+                    fileStorageSummaryAndMediaFileInfo = it
+                    resetAdapter()
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         binding.fastscroll.visibility = View.GONE
                         FastScrollerBuilder(binding.documentsListView).useMd2Style().build()
@@ -142,21 +82,20 @@ class DocumentsListFragment : Fragment(), MediaFileAdapter.OptionsMenuSelected {
         _binding = null
     }
 
-    override fun sortBy(sortingPreference: MediaFileListSorter.SortingPreference) {
-        mediaFileAdapter?.invalidateData(sortingPreference)
+    override fun getFileStorageSummaryAndMediaFileInfoPair(): Pair<FilesViewModel.StorageSummary,
+        List<MediaFileInfo>?>? {
+        return if (::fileStorageSummaryAndMediaFileInfo.isInitialized)
+            fileStorageSummaryAndMediaFileInfo else null
     }
 
-    override fun groupBy(sortingPreference: MediaFileListSorter.SortingPreference) {
-        mediaFileAdapter?.invalidateData(sortingPreference)
+    override fun getMediaAdapterPreloader(): MediaAdapterPreloader {
+        return MediaAdapterPreloader(
+            requireContext(),
+            R.drawable.ic_outline_insert_drive_file_32
+        )
     }
 
-    override fun switchView(isList: Boolean) {
-        binding.documentsListView.layoutManager = if (isList)
-            linearLayoutManager else gridLayoutManager
-        binding.documentsListView.adapter = mediaFileAdapter
-    }
-
-    override fun select(headerPosition: Int) {
-        binding.documentsListView.scrollToPosition(headerPosition + 5)
+    override fun getRecyclerView(): RecyclerView {
+        return binding.documentsListView
     }
 }

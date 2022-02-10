@@ -22,7 +22,6 @@ import android.widget.*
 import android.widget.LinearLayout
 import androidx.core.content.edit
 import androidx.core.graphics.ColorUtils
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
