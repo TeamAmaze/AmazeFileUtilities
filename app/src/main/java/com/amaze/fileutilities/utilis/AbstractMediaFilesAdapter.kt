@@ -116,7 +116,7 @@ abstract class AbstractMediaFilesAdapter(
                     Glide.with(superContext).clear(holder.iconView)
                     holder.checkIconGrid.visibility =
                         if (isChecked) View.VISIBLE else View.INVISIBLE
-                    superPreloader.loadImage(mediaFileInfo.path, holder.iconView)
+                    superPreloader.loadImage(mediaFileInfo.path, holder.iconView, isGrid)
                     val formattedDate = mediaFileInfo.getModificationDate(superContext)
                     val formattedSize = mediaFileInfo.getFormattedSize(superContext)
                     mediaFileInfo.extraInfo?.let { extraInfo ->
