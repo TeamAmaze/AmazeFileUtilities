@@ -160,4 +160,8 @@
     <string name="download_paths">Downloads</string>
     <string name="download_paths_hint">Includes old, large downloads</string>
     <string name="select_path">Select Path</string>
+    <string name="new_folder">New Folder</string>
+    <string name="cluttered_videos">Cluttered Videos</string>
+    <string name="cluttered_videos_hint">A group of videos that have similar running time.
+        Most likely to be un-useful videos.</string>
 </resources>

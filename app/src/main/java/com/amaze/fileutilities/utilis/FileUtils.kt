@@ -21,11 +21,8 @@ import android.text.TextUtils
 import android.text.format.Formatter
 import android.util.Log
 import androidx.annotation.DrawableRes
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.files.folderChooser
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.PathPreferences
-import com.amaze.fileutilities.utilis.FileUtils.Companion.getExternalStorageDirectory
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -134,32 +131,8 @@ class FileUtils {
 
         private val DIR_SEPARATOR = Pattern.compile("/")
 
-        fun Context.getExternalStorageDirectory(): StorageDirectoryParcelable? {
-            return if (VERSION.SDK_INT >= VERSION_CODES.N) {
-                getStorageDirectoriesNew(applicationContext.applicationContext)
-            } else {
-                getStorageDirectoriesLegacy(applicationContext.applicationContext)
-            }
-        }
-
-        fun Context.showFolderChooserDialog(chooserPath: (file: File) -> Unit) {
-            val initialFolder = getExternalStorageDirectory()
-            initialFolder?.let {
-                val baseFile = File(it.path)
-                MaterialDialog(this).show {
-                    folderChooser(
-                        this@showFolderChooserDialog,
-                        baseFile
-                    ) { dialog, folder ->
-                        chooserPath.invoke(folder)
-                        dialog.dismiss()
-                    }
-                }
-            }
-        }
-
         @TargetApi(VERSION_CODES.N)
-        private fun getStorageDirectoriesNew(context: Context): StorageDirectoryParcelable? {
+        internal fun getStorageDirectoriesNew(context: Context): StorageDirectoryParcelable? {
             val volumes: ArrayList<StorageDirectoryParcelable> =
                 ArrayList<StorageDirectoryParcelable>()
             val sm: StorageManager = context.getSystemService(StorageManager::class.java)
@@ -193,7 +166,7 @@ class FileUtils {
          * @return All available SD-Cards in the system (include emulated)
          */
         @Synchronized
-        private fun getStorageDirectoriesLegacy(context: Context):
+        internal fun getStorageDirectoriesLegacy(context: Context):
             StorageDirectoryParcelable? {
             val rv: MutableList<String> = ArrayList()
 
