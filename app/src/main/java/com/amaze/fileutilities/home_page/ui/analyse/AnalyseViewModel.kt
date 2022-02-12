@@ -79,6 +79,40 @@ class AnalyseViewModel : ViewModel() {
         }
     }
 
+    fun getClutteredVideos(videosList: List<MediaFileInfo>): LiveData<List<MediaFileInfo>?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+            emit(null)
+            val countIdx = IntArray(101) { 0 }
+            videosList.forEach {
+                it.extraInfo?.videoMetaData?.duration?.let {
+                    duration ->
+                    val idx = duration / 60
+                    if (idx < 101) {
+                        countIdx[idx.toInt()]++
+                    }
+                }
+            }
+            var maxIdxValue = 0
+            var maxIdx = 0
+            countIdx.forEachIndexed { index, i ->
+                if (i > maxIdxValue) {
+                    maxIdxValue = i
+                    maxIdx = index
+                }
+            }
+            val result = videosList.filter {
+                it.extraInfo?.videoMetaData?.duration?.let {
+                    duration ->
+                    if ((duration / 60).toInt() == maxIdx) {
+                        return@filter true
+                    }
+                }
+                return@filter false
+            }
+            emit(result)
+        }
+    }
+
     fun getDuplicateDirectories(
         dao: InternalStorageAnalysisDao,
         searchMediaFiles: Boolean,

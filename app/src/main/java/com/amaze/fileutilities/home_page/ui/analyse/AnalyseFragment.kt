@@ -110,12 +110,6 @@ class AnalyseFragment : Fragment() {
             }
             groupPicPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
 
-            analyseViewModel.getEmptyFiles(internalStorageDao).observe(viewLifecycleOwner) {
-                if (it != null) {
-                    emptyFilesPreview.loadPreviews(it)
-                }
-            }
-
             val duplicatePref = prefs.getInt(
                 PreferencesConstants.KEY_SEARCH_DUPLICATES_IN,
                 PreferencesConstants.DEFAULT_SEARCH_DUPLICATES_IN
@@ -125,21 +119,40 @@ class AnalyseFragment : Fragment() {
             )
                 filesViewModel.isMediaStoreAnalysing
             else filesViewModel.isInternalStorageAnalysing
-            if (duplicatePref == PreferencesConstants.VAL_SEARCH_DUPLICATES_MEDIA_STORE) {
-                emptyFilesPreview.visibility = View.GONE
-            } else {
+            if (duplicatePref != PreferencesConstants.VAL_SEARCH_DUPLICATES_MEDIA_STORE) {
+                emptyFilesPreview.visibility = View.VISIBLE
                 emptyFilesPreview.invalidateProgress(filesViewModel.isInternalStorageAnalysing)
+                analyseViewModel.getEmptyFiles(internalStorageDao)
+                    .observe(viewLifecycleOwner) {
+                        if (it != null) {
+                            emptyFilesPreview.loadPreviews(it)
+                        }
+                    }
             }
+            val deepSearch = duplicatePref == PreferencesConstants
+                .VAL_SEARCH_DUPLICATES_INTERNAL_DEEP
+            val searchMediaFiles = duplicatePref == PreferencesConstants
+                .VAL_SEARCH_DUPLICATES_MEDIA_STORE
             duplicateFilesPreview.invalidateProgress(doProgressDuplicateFiles)
             analyseViewModel.getDuplicateDirectories(
-                internalStorageDao,
-                duplicatePref
-                    == PreferencesConstants.VAL_SEARCH_DUPLICATES_MEDIA_STORE,
-                duplicatePref == PreferencesConstants.VAL_SEARCH_DUPLICATES_INTERNAL_DEEP
-            )
-                .observe(viewLifecycleOwner) {
-                    if (it != null) {
-                        duplicateFilesPreview.loadPreviews(it.flatten())
+                internalStorageDao, searchMediaFiles, deepSearch
+            ).observe(viewLifecycleOwner) {
+                if (it != null) {
+                    duplicateFilesPreview.loadPreviews(it.flatten())
+                }
+            }
+
+            filesViewModel.usedVideosSummaryTransformations
+                .observe(viewLifecycleOwner) { mediaFilePair ->
+                    clutteredVideoPreview.invalidateProgress(true)
+                    mediaFilePair?.let {
+                        analyseViewModel.getClutteredVideos(mediaFilePair.second)
+                            .observe(viewLifecycleOwner) { clutteredVideosInfo ->
+                                clutteredVideosInfo?.let {
+                                    clutteredVideoPreview.invalidateProgress(false)
+                                    clutteredVideoPreview.loadPreviews(clutteredVideosInfo)
+                                }
+                            }
                     }
                 }
         }
@@ -175,67 +188,94 @@ class AnalyseFragment : Fragment() {
 
             sadPreview.visibility = if (sharedPrefs.getBoolean(
                     PathPreferences
-                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES),
+                        .getSharedPreferenceKey(
+                                PathPreferences
+                                    .FEATURE_ANALYSIS_IMAGE_FEATURES
+                            ),
                     PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
                 )
             ) View.VISIBLE else View.GONE
 
             sleepingPreview.visibility = if (sharedPrefs.getBoolean(
                     PathPreferences
-                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES),
+                        .getSharedPreferenceKey(
+                                PathPreferences
+                                    .FEATURE_ANALYSIS_IMAGE_FEATURES
+                            ),
                     PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
                 )
             ) View.VISIBLE else View.GONE
 
             distractedPreview.visibility = if (sharedPrefs.getBoolean(
                     PathPreferences
-                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES),
+                        .getSharedPreferenceKey(
+                                PathPreferences
+                                    .FEATURE_ANALYSIS_IMAGE_FEATURES
+                            ),
                     PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
                 )
             ) View.VISIBLE else View.GONE
             selfiePreview.visibility = if (sharedPrefs.getBoolean(
                     PathPreferences
-                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES),
+                        .getSharedPreferenceKey(
+                                PathPreferences
+                                    .FEATURE_ANALYSIS_IMAGE_FEATURES
+                            ),
                     PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
                 )
             ) View.VISIBLE else View.GONE
             groupPicPreview.visibility = if (sharedPrefs.getBoolean(
                     PathPreferences
-                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES),
+                        .getSharedPreferenceKey(
+                                PathPreferences
+                                    .FEATURE_ANALYSIS_IMAGE_FEATURES
+                            ),
                     PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
                 )
             ) View.VISIBLE else View.GONE
 
             largeDownloadPreview.visibility = if (sharedPrefs.getBoolean(
                     PathPreferences
-                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS),
+                        .getSharedPreferenceKey(
+                                PathPreferences
+                                    .FEATURE_ANALYSIS_DOWNLOADS
+                            ),
                     PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
                 )
             ) View.VISIBLE else View.GONE
             oldDownloadPreview.visibility = if (sharedPrefs.getBoolean(
                     PathPreferences
-                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS),
+                        .getSharedPreferenceKey(
+                                PathPreferences
+                                    .FEATURE_ANALYSIS_DOWNLOADS
+                            ),
                     PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
                 )
             ) View.VISIBLE else View.GONE
             oldRecordingsPreview.visibility = if (sharedPrefs.getBoolean(
                     PathPreferences
-                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_RECORDING),
+                        .getSharedPreferenceKey(
+                                PathPreferences
+                                    .FEATURE_ANALYSIS_RECORDING
+                            ),
                     PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
                 )
             ) View.VISIBLE else View.GONE
             oldScreenshotsPreview.visibility = if (sharedPrefs.getBoolean(
                     PathPreferences
-                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS),
+                        .getSharedPreferenceKey(
+                                PathPreferences
+                                    .FEATURE_ANALYSIS_SCREENSHOTS
+                            ),
                     PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
                 )
             ) View.VISIBLE else View.GONE
-            telegramPreview.visibility = if (sharedPrefs.getBoolean(
+            /*telegramPreview.visibility = if (sharedPrefs.getBoolean(
                     PathPreferences
                         .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_TELEGRAM),
                     PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
                 )
-            ) View.VISIBLE else View.GONE
+            ) View.VISIBLE else View.GONE*/
         }
     }
 
@@ -326,15 +366,21 @@ class AnalyseFragment : Fragment() {
                     this@AnalyseFragment
                 )
             }
-            telegramPreview.setOnClickListener {
+            /*telegramPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_TELEGRAM,
                     this@AnalyseFragment
                 )
-            }
+            }*/
             largeVideoPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_LARGE_VIDEOS,
+                    this@AnalyseFragment
+                )
+            }
+            clutteredVideoPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_CLUTTERED_VIDEOS,
                     this@AnalyseFragment
                 )
             }
