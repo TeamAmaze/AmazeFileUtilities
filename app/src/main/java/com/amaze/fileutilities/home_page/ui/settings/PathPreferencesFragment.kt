@@ -21,9 +21,9 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.database.PathPreferencesDao
-import com.amaze.fileutilities.utilis.FileUtils.Companion.showFolderChooserDialog
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
+import com.amaze.fileutilities.utilis.showFolderChooserDialog
 
 class PathPreferencesFragment : PreferenceFragmentCompat() {
 
@@ -103,7 +103,6 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
     }
 
     private fun showDeleteDialog(prefSwitch: PathSwitchPreference) {
-
         val dialog = AlertDialog.Builder(requireContext()).setTitle(R.string.delete_preference)
             .setPositiveButton(R.string.confirm) { dialog, _ ->
                 val prefDb = preferenceDbMap[prefSwitch]

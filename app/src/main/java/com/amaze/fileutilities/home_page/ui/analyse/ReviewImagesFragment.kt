@@ -72,6 +72,7 @@ class ReviewImagesFragment : Fragment() {
         const val TYPE_TELEGRAM = 15
         const val TYPE_LARGE_DOWNLOADS = 16
         const val TYPE_LOW_LIGHT = 17
+        const val TYPE_CLUTTERED_VIDEOS = 18
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -127,10 +128,16 @@ class ReviewImagesFragment : Fragment() {
                 {
                     viewModel.getBlurImages(dao).observe(viewLifecycleOwner) {
                         if (it == null) {
-                            invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                            invalidateProcessing(
+                                true,
+                                filesViewModel.isMediaFilesAnalysing
+                            )
                         } else {
                             setMediaInfoList(ArrayList(it), true)
-                            invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                            invalidateProcessing(
+                                false,
+                                filesViewModel.isMediaFilesAnalysing
+                            )
                         }
                     }
                 }
@@ -138,20 +145,32 @@ class ReviewImagesFragment : Fragment() {
                 {
                     viewModel.getLowLightImages(dao).observe(viewLifecycleOwner) {
                         if (it == null) {
-                            invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                            invalidateProcessing(
+                                true,
+                                filesViewModel.isMediaFilesAnalysing
+                            )
                         } else {
                             setMediaInfoList(ArrayList(it), true)
-                            invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                            invalidateProcessing(
+                                false,
+                                filesViewModel.isMediaFilesAnalysing
+                            )
                         }
                     }
                 }
             TYPE_MEME -> {
                 viewModel.getMemeImages(dao).observe(viewLifecycleOwner) {
                     if (it == null) {
-                        invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                        invalidateProcessing(
+                            true,
+                            filesViewModel.isMediaFilesAnalysing
+                        )
                     } else {
                         setMediaInfoList(ArrayList(it), true)
-                        invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                        invalidateProcessing(
+                            false,
+                            filesViewModel.isMediaFilesAnalysing
+                        )
                     }
                 }
             }
@@ -180,67 +199,121 @@ class ReviewImagesFragment : Fragment() {
             TYPE_EMPTY_FILES -> {
                 viewModel.getEmptyFiles(internalStorageDao).observe(viewLifecycleOwner) {
                     if (it == null) {
-                        invalidateProcessing(true, filesViewModel.isInternalStorageAnalysing)
+                        invalidateProcessing(
+                            true,
+                            filesViewModel.isInternalStorageAnalysing
+                        )
                     } else {
                         setMediaInfoList(ArrayList(it), false)
-                        invalidateProcessing(false, filesViewModel.isInternalStorageAnalysing)
+                        invalidateProcessing(
+                            false,
+                            filesViewModel.isInternalStorageAnalysing
+                        )
                     }
                 }
             }
             TYPE_SAD -> {
                 viewModel.getSadImages(dao).observe(viewLifecycleOwner) {
                     if (it == null) {
-                        invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                        invalidateProcessing(
+                            true,
+                            filesViewModel.isMediaFilesAnalysing
+                        )
                     } else {
                         setMediaInfoList(ArrayList(it), true)
-                        invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                        invalidateProcessing(
+                            false,
+                            filesViewModel.isMediaFilesAnalysing
+                        )
                     }
                 }
             }
             TYPE_DISTRACTED -> {
                 viewModel.getDistractedImages(dao).observe(viewLifecycleOwner) {
                     if (it == null) {
-                        invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                        invalidateProcessing(
+                            true,
+                            filesViewModel.isMediaFilesAnalysing
+                        )
                     } else {
                         setMediaInfoList(ArrayList(it), true)
-                        invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                        invalidateProcessing(
+                            false,
+                            filesViewModel.isMediaFilesAnalysing
+                        )
                     }
                 }
             }
             TYPE_SLEEPING -> {
                 viewModel.getSleepingImages(dao).observe(viewLifecycleOwner) {
                     if (it == null) {
-                        invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                        invalidateProcessing(
+                            true,
+                            filesViewModel.isMediaFilesAnalysing
+                        )
                     } else {
                         setMediaInfoList(ArrayList(it), true)
-                        invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                        invalidateProcessing(
+                            false,
+                            filesViewModel.isMediaFilesAnalysing
+                        )
                     }
                 }
             }
             TYPE_SELFIE -> {
                 viewModel.getSelfieImages(dao).observe(viewLifecycleOwner) {
                     if (it == null) {
-                        invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                        invalidateProcessing(
+                            true,
+                            filesViewModel.isMediaFilesAnalysing
+                        )
                     } else {
                         setMediaInfoList(ArrayList(it), true)
-                        invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                        invalidateProcessing(
+                            false,
+                            filesViewModel.isMediaFilesAnalysing
+                        )
                     }
                 }
             }
             TYPE_GROUP_PIC -> {
                 viewModel.getGroupPicImages(dao).observe(viewLifecycleOwner) {
                     if (it == null) {
-                        invalidateProcessing(true, filesViewModel.isMediaFilesAnalysing)
+                        invalidateProcessing(
+                            true,
+                            filesViewModel.isMediaFilesAnalysing
+                        )
                     } else {
                         setMediaInfoList(ArrayList(it), true)
-                        invalidateProcessing(false, filesViewModel.isMediaFilesAnalysing)
+                        invalidateProcessing(
+                            false,
+                            filesViewModel.isMediaFilesAnalysing
+                        )
                     }
                 }
+            }
+            TYPE_CLUTTERED_VIDEOS -> {
+                filesViewModel.usedVideosSummaryTransformations
+                    .observe(viewLifecycleOwner) { mediaFilePair ->
+                        invalidateProcessing(true, false)
+                        mediaFilePair?.let {
+                            viewModel.getClutteredVideos(mediaFilePair.second)
+                                .observe(viewLifecycleOwner) { clutteredVideosInfo ->
+                                    clutteredVideosInfo?.let {
+                                        setMediaInfoList(ArrayList(it), false)
+                                        invalidateProcessing(false, false)
+                                    }
+                                }
+                        }
+                    }
             }
         }
         return root
     }
 
+    /**
+     * @param doShowDown whether to show thumbs down button
+     */
     private fun setMediaInfoList(mediaInfoList: MutableList<MediaFileInfo>, doShowDown: Boolean) {
         mediaFileAdapter = ReviewImagesAdapter(
             requireContext(),

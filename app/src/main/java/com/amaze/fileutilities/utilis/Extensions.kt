@@ -15,6 +15,7 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 import android.database.Cursor
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.util.DisplayMetrics
 import android.util.Log
@@ -23,6 +24,9 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.files.folderChooser
+import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.ImageAnalysis
 import com.amaze.fileutilities.home_page.database.ImageAnalysisDao
 import com.amaze.fileutilities.home_page.database.InternalStorageAnalysis
@@ -284,4 +288,28 @@ fun InternalStorageAnalysis.invalidate(dao: InternalStorageAnalysisDao): Boolean
         }
     }
     return true
+}
+
+fun Context.getExternalStorageDirectory(): StorageDirectoryParcelable? {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        FileUtils.getStorageDirectoriesNew(applicationContext.applicationContext)
+    } else {
+        FileUtils.getStorageDirectoriesLegacy(applicationContext.applicationContext)
+    }
+}
+
+fun Context.showFolderChooserDialog(chooserPath: (file: File) -> Unit) {
+    val initialFolder = getExternalStorageDirectory()
+    initialFolder?.let {
+        val baseFile = File(it.path)
+        MaterialDialog(this).show {
+            folderChooser(
+                this@showFolderChooserDialog,
+                baseFile,
+            ) { dialog, folder ->
+                chooserPath.invoke(folder)
+                dialog.dismiss()
+            }
+        }
+    }
 }
