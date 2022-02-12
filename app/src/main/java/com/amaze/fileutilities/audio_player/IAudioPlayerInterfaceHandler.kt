@@ -17,13 +17,13 @@ import android.os.Build
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.ImageView
-import android.widget.SeekBar
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.getFileFromUri
 import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.showFade
+import com.google.android.material.slider.Slider
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
 import linc.com.amplituda.exceptions.io.FileNotFoundException
@@ -31,7 +31,7 @@ import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
 interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
-    fun getSeekbar(): SeekBar?
+    fun getSeekbar(): Slider?
     fun getWaveformSeekbar(): WaveformSeekBar?
     fun getTimeElapsedTextView(): TextView?
     fun getTrackLengthTextView(): TextView?
@@ -45,8 +45,8 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     fun getAudioPlayerHandlerViewModel(): AudioPlayerInterfaceHandlerViewModel
 
     override fun onPositionUpdate(progressHandler: AudioProgressHandler) {
-        getSeekbar()?.max = progressHandler.audioPlaybackInfo.duration.toInt()
-        getSeekbar()?.progress = progressHandler.audioPlaybackInfo.currentPosition.toInt()
+        getSeekbar()?.valueTo = progressHandler.audioPlaybackInfo.duration.toFloat()
+        getSeekbar()?.value = progressHandler.audioPlaybackInfo.currentPosition.toFloat()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWaveformSeekbar()?.maxProgress = progressHandler.audioPlaybackInfo.duration.toFloat()
             getWaveformSeekbar()?.progress = progressHandler
@@ -117,7 +117,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     }
 
     private fun setSeekbarProgress(progress: Int) {
-        getSeekbar()?.progress = progress
+        getSeekbar()?.value = progress.toFloat()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWaveformSeekbar()?.visibility = View.VISIBLE
             getSeekbar()?.visibility = View.GONE
@@ -166,7 +166,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     }
 
     private fun setupSeekBars(audioService: ServiceOperationCallback?) {
-        getSeekbar()?.max = audioService?.getAudioPlaybackInfo()?.duration?.toInt() ?: 0
+        getSeekbar()?.valueTo = audioService?.getAudioPlaybackInfo()?.duration?.toFloat() ?: 0f
         getWaveformSeekbar()?.maxProgress = audioService
             ?.getAudioPlaybackInfo()?.duration?.toFloat() ?: 0f
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
@@ -223,7 +223,23 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             getSeekbar()?.visibility = View.VISIBLE
             getWaveformSeekbar()?.visibility = View.GONE
         }
-        getSeekbar()?.setOnSeekBarChangeListener(object :
+        getSeekbar()?.addOnChangeListener(
+            Slider.OnChangeListener { slider, value, fromUser ->
+                if (fromUser) {
+                    //                            mediaController.transportControls.seekTo(progress.toLong())
+                    //                            audioService.seekPlayer(progress.toLong())
+                    audioService?.invokeSeekPlayer(value.toLong())
+                    val x: Int = ceil(value / 1000f).toInt()
+
+                    if (x == 0 && audioService?.getAudioProgressHandlerCallback()
+                        ?.isCancelled == true
+                    ) {
+                        slider.value = 0f
+                    }
+                }
+            }
+        )
+        /*getSeekbar()?.setOnSeekBarChangeListener(object :
                 SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
@@ -249,13 +265,13 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
 
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 }
-            })
+            })*/
     }
 
     private fun scheduleWaveformSeekbarVisibility() {
         getWaveformSeekbar()?.hideFade(300)
         getSeekbar()?.showFade(200)
-        object : CountDownTimer(5000, 5000) {
+        object : CountDownTimer(50000, 5000) {
             override fun onTick(millisUntilFinished: Long) {
             }
 

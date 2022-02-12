@@ -36,7 +36,7 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
         private const val KEY_TELEGRAM = "telegram_paths"
         private val KEYS = listOf(
             KEY_DUPLICATES, KEY_MEMES, KEY_BLUR, KEY_LOW_LIGHT, KEY_FEATURES, KEY_DOWNLOAD,
-            KEY_RECORDING, KEY_SCREENSHOT, KEY_TELEGRAM
+            KEY_RECORDING, KEY_SCREENSHOT
         )
     }
 

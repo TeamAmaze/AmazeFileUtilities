@@ -33,9 +33,9 @@
             app:key="screenshot_paths"
             app:title="@string/old_screenshots"
             />
-        <Preference
+        <!--<Preference
             app:key="telegram_paths"
             app:title="@string/telegram_files"
-            />
+            />-->
     </PreferenceCategory>
 </PreferenceScreen>
