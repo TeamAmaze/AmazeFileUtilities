@@ -68,14 +68,18 @@
             android:layout_weight="0.1"
             android:gravity="center_horizontal|center_vertical"
             />
-        <SeekBar
+        <com.google.android.material.slider.Slider
             android:id="@+id/seekBar"
             android:layout_width="@dimen/zero_dp"
             android:layout_height="wrap_content"
             android:visibility="visible"
-            android:progressDrawable="@drawable/seekbar_accent"
-            android:thumb="@color/white"
             android:layout_weight="0.8"
+            android:tooltipText="@null"
+            app:trackColor="@color/highlight_yellow"
+            app:thumbColor="@color/highlight_yellow"
+            app:labelBehavior="gone"
+            app:haloColor="@color/highlight_yellow"
+            android:theme="@style/Theme.MaterialComponents"
             />
         <com.masoudss.lib.WaveformSeekBar
             android:id="@+id/waveformSeekbar"
