@@ -271,7 +271,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     private fun scheduleWaveformSeekbarVisibility() {
         getWaveformSeekbar()?.hideFade(300)
         getSeekbar()?.showFade(200)
-        object : CountDownTimer(50000, 5000) {
+        object : CountDownTimer(5000, 5000) {
             override fun onTick(millisUntilFinished: Long) {
             }
 
