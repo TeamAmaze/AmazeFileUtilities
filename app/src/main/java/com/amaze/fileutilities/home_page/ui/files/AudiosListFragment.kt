@@ -20,7 +20,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.SeekBar
 import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.fragment.app.activityViewModels
@@ -32,6 +31,7 @@ import com.amaze.fileutilities.databinding.FragmentAudiosListBinding
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.utilis.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.slider.Slider
 import com.masoudss.lib.WaveformSeekBar
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import java.lang.ref.WeakReference
@@ -188,7 +188,7 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         return binding.audiosListView
     }
 
-    override fun getSeekbar(): SeekBar? {
+    override fun getSeekbar(): Slider? {
         return _binding?.seekBar
     }
 

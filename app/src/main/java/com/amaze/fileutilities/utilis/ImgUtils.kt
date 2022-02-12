@@ -260,7 +260,7 @@ class ImgUtils {
             return try {
                 val zerosPair = getTotalAndZeros(matrix)
                 val ratio = (zerosPair.second.toDouble() / zerosPair.first.toDouble())
-                return ratio >= 0.7
+                return ratio >= 0.8
             } catch (e: Exception) {
                 e.printStackTrace()
                 false
