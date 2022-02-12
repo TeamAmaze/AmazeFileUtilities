@@ -17,13 +17,13 @@ import android.media.AudioManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
-import android.widget.SeekBar
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.AudioPlayerDialogActivityBinding
 import com.amaze.fileutilities.utilis.*
+import com.google.android.material.slider.Slider
 import com.masoudss.lib.WaveformSeekBar
 import java.lang.ref.WeakReference
 
@@ -83,7 +83,7 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
             AudioPlaybackServiceConnection(WeakReference(this))
     }
 
-    override fun getSeekbar(): SeekBar {
+    override fun getSeekbar(): Slider {
         return _binding.seekBar
     }
 

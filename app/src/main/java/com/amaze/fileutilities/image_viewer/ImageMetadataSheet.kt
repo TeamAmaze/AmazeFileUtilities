@@ -29,7 +29,7 @@ import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import org.opencv.imgcodecs.Imgcodecs
 
-class ImageMetadataSheet() : BottomSheetDialogFragment() {
+class ImageMetadataSheet : BottomSheetDialogFragment() {
 
     private var localImageModel: LocalImageModel? = null
     private var imageMetadataSheetBinding: ImageMetadataSheetBinding? = null

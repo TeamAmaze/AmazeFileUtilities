@@ -100,11 +100,6 @@ class ReviewImagesFragment : Fragment() {
         _binding = FragmentReviewImagesBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val analysisType: Int = arguments?.getInt(ANALYSIS_TYPE)!!
-        val prefs = requireContext().getAppCommonSharedPreferences()
-        val duplicatePref = prefs.getInt(
-            PreferencesConstants.KEY_SEARCH_DUPLICATES_IN,
-            PreferencesConstants.DEFAULT_SEARCH_DUPLICATES_IN
-        )
         optionsActionBar = (activity as MainActivity).invalidateSelectedActionBar(true)!!
         (activity as MainActivity).invalidateBottomBar(false)
 
@@ -120,9 +115,22 @@ class ReviewImagesFragment : Fragment() {
             sizeProvider,
             MAX_PRELOAD
         )
+        initAnalysisView(analysisType)
+        return root
+    }
+
+    private fun initAnalysisView(analysisType: Int) {
         val appDatabase = AppDatabase.getInstance(requireContext())
         val dao = appDatabase.analysisDao()
+        val pathPreferencesDao = appDatabase.pathPreferencesDao()
         val internalStorageDao = appDatabase.internalStorageAnalysisDao()
+
+        val prefs = requireContext().getAppCommonSharedPreferences()
+        val duplicatePref = prefs.getInt(
+            PreferencesConstants.KEY_SEARCH_DUPLICATES_IN,
+            PreferencesConstants.DEFAULT_SEARCH_DUPLICATES_IN
+        )
+
         when (analysisType) {
             TYPE_BLUR ->
                 {
@@ -307,8 +315,62 @@ class ReviewImagesFragment : Fragment() {
                         }
                     }
             }
+            TYPE_LARGE_VIDEOS -> {
+                filesViewModel.usedVideosSummaryTransformations
+                    .observe(viewLifecycleOwner) { mediaFilePair ->
+                        invalidateProcessing(true, false)
+                        mediaFilePair?.let {
+                            viewModel.getLargeVideos(mediaFilePair.second)
+                                .observe(viewLifecycleOwner) { largeVideosList ->
+                                    largeVideosList?.let {
+                                        setMediaInfoList(ArrayList(it), false)
+                                        invalidateProcessing(false, false)
+                                    }
+                                }
+                        }
+                    }
+            }
+            TYPE_LARGE_DOWNLOADS -> {
+                viewModel.getLargeDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
+                    largeDownloads ->
+                    invalidateProcessing(true, false)
+                    largeDownloads?.let {
+                        setMediaInfoList(ArrayList(it), false)
+                        invalidateProcessing(false, false)
+                    }
+                }
+            }
+            TYPE_OLD_DOWNLOADS -> {
+                viewModel.getOldDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
+                    oldDownloads ->
+                    invalidateProcessing(true, false)
+                    oldDownloads?.let {
+                        setMediaInfoList(ArrayList(it), false)
+                        invalidateProcessing(false, false)
+                    }
+                }
+            }
+            TYPE_OLD_SCREENSHOTS -> {
+                viewModel.getOldScreenshots(pathPreferencesDao).observe(viewLifecycleOwner) {
+                    oldScreenshots ->
+                    invalidateProcessing(true, false)
+                    oldScreenshots?.let {
+                        setMediaInfoList(ArrayList(it), false)
+                        invalidateProcessing(false, false)
+                    }
+                }
+            }
+            TYPE_OLD_RECORDINGS -> {
+                viewModel.getOldRecordings(pathPreferencesDao).observe(viewLifecycleOwner) {
+                    oldRecordings ->
+                    invalidateProcessing(true, false)
+                    oldRecordings?.let {
+                        setMediaInfoList(ArrayList(it), false)
+                        invalidateProcessing(false, false)
+                    }
+                }
+            }
         }
-        return root
     }
 
     /**

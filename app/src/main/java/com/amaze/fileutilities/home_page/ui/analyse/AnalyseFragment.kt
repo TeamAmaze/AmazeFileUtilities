@@ -55,6 +55,7 @@ class AnalyseFragment : Fragment() {
 
             val appDatabase = AppDatabase.getInstance(requireContext())
             val dao = appDatabase.analysisDao()
+            val pathPreferencesDao = appDatabase.pathPreferencesDao()
             val internalStorageDao = appDatabase.internalStorageAnalysisDao()
 
             analyseViewModel.getBlurImages(dao).observe(viewLifecycleOwner) {
@@ -145,6 +146,7 @@ class AnalyseFragment : Fragment() {
             filesViewModel.usedVideosSummaryTransformations
                 .observe(viewLifecycleOwner) { mediaFilePair ->
                     clutteredVideoPreview.invalidateProgress(true)
+                    largeVideoPreview.invalidateProgress(true)
                     mediaFilePair?.let {
                         analyseViewModel.getClutteredVideos(mediaFilePair.second)
                             .observe(viewLifecycleOwner) { clutteredVideosInfo ->
@@ -153,8 +155,49 @@ class AnalyseFragment : Fragment() {
                                     clutteredVideoPreview.loadPreviews(clutteredVideosInfo)
                                 }
                             }
+                        analyseViewModel.getLargeVideos(mediaFilePair.second)
+                            .observe(viewLifecycleOwner) {
+                                largeVideosList ->
+                                largeVideosList?.let {
+                                    largeVideoPreview.invalidateProgress(false)
+                                    largeVideoPreview.loadPreviews(largeVideosList)
+                                }
+                            }
                     }
                 }
+
+            analyseViewModel.getLargeDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
+                largeDownloads ->
+                largeDownloadPreview.invalidateProgress(true)
+                largeDownloads?.let {
+                    largeDownloadPreview.invalidateProgress(false)
+                    largeDownloadPreview.loadPreviews(largeDownloads)
+                }
+            }
+            analyseViewModel.getOldDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
+                oldDownloads ->
+                oldDownloadPreview.invalidateProgress(true)
+                oldDownloads?.let {
+                    oldDownloadPreview.invalidateProgress(false)
+                    oldDownloadPreview.loadPreviews(oldDownloads)
+                }
+            }
+            analyseViewModel.getOldScreenshots(pathPreferencesDao).observe(viewLifecycleOwner) {
+                oldScreenshots ->
+                oldScreenshotsPreview.invalidateProgress(true)
+                oldScreenshots?.let {
+                    oldScreenshotsPreview.invalidateProgress(false)
+                    oldScreenshotsPreview.loadPreviews(oldScreenshots)
+                }
+            }
+            analyseViewModel.getOldRecordings(pathPreferencesDao).observe(viewLifecycleOwner) {
+                oldRecordings ->
+                oldRecordingsPreview.invalidateProgress(true)
+                oldRecordings?.let {
+                    oldRecordingsPreview.invalidateProgress(false)
+                    oldRecordingsPreview.loadPreviews(oldRecordings)
+                }
+            }
         }
         return root
     }
@@ -372,15 +415,15 @@ class AnalyseFragment : Fragment() {
                     this@AnalyseFragment
                 )
             }*/
-            largeVideoPreview.setOnClickListener {
-                ReviewImagesFragment.newInstance(
-                    ReviewImagesFragment.TYPE_LARGE_VIDEOS,
-                    this@AnalyseFragment
-                )
-            }
             clutteredVideoPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_CLUTTERED_VIDEOS,
+                    this@AnalyseFragment
+                )
+            }
+            largeVideoPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_LARGE_VIDEOS,
                     this@AnalyseFragment
                 )
             }

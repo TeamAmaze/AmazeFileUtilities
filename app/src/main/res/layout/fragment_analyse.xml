@@ -102,6 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/large_videos"
+                app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
@@ -118,6 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/large_downloads"
+                app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
@@ -163,6 +165,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/old_downloads"
+                app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
@@ -170,6 +173,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/old_screenshots"
+                app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 android:visibility="gone"
                 />
@@ -178,6 +182,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/old_recordings"
+                app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 android:visibility="gone"
                 />

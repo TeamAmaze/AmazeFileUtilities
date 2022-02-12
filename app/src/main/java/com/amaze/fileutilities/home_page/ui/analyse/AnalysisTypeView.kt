@@ -20,6 +20,7 @@ import android.widget.*
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
+import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.px
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.bumptech.glide.Glide
@@ -84,6 +85,9 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
 
     fun loadPreviews(mediaFileInfoList: List<MediaFileInfo>) {
         loadingHorizontalScroll.visibility = View.GONE
+        if (mediaFileInfoList.isEmpty()) {
+            hideFade(300)
+        }
         var count =
             if (mediaFileInfoList.size > PREVIEW_COUNT) PREVIEW_COUNT else mediaFileInfoList.size
         if (count == 0) {
