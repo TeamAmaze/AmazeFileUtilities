@@ -14,11 +14,12 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.amaze.fileutilities.utilis.isAudioMimeType
 
-class AudioPlayerDialogActivityViewModel : ViewModel() {
+class AudioPlayerInterfaceHandlerViewModel : ViewModel() {
     private var localAudioModelList: ArrayList<LocalAudioModel>? = null
     var uriList: ArrayList<Uri>? = null
     // approx value if player is playing
     var isPlaying: Boolean = true
+    var forceShowSeekbar = false
 
     fun getSiblingAudioModels(
         videoModel: LocalAudioModel,
