@@ -73,7 +73,7 @@ class MediaTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(conte
         mediaTypeContent.run {
             mediaSummaryTextView.text = resources.getString(
                 R.string.num_of_files,
-                itemsCount.toString()
+                String.format("%,d", itemsCount)
             )
             progressPercentTextView.text = "$progress %"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -89,6 +89,7 @@ class MediaTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(conte
         val itemsCount: Int,
         val size: String,
         val progress: Int,
-        val totalSpace: String? = ""
+        var totalUsedSpace: String? = "",
+        var totalItemsCount: Int? = 0
     )
 }

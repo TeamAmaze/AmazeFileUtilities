@@ -19,10 +19,11 @@ import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.home_page.ui.files.MediaInfoRecyclerViewHolder
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.EmptyViewHolder
+import java.lang.ref.WeakReference
 
-class ReviewImagesAdapter(
+class ReviewAnalysisAdapter(
     val context: Context,
-    val preloader: MediaAdapterPreloader,
+    private val preloader: MediaAdapterPreloader,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
     private val toggleCheckCallback: (
         checkedSize: Int,
@@ -57,35 +58,18 @@ class ReviewImagesAdapter(
         if (holder is MediaInfoRecyclerViewHolder) {
             getMediaFilesListItems()[position].run {
                 mediaFileInfo?.let { mediaFileInfo ->
-                    mediaFileInfo.extraInfo?.let { extraInfo ->
-                        holder.infoSummary.text =
-                            this.mediaFileInfo?.getFormattedSize(context)
-                        holder.expand.visibility = View.VISIBLE
-
+                    holder.infoSummary.text =
+                        this.mediaFileInfo?.getFormattedSize(context)
+                    holder.expand.visibility = View.VISIBLE
+                    invalidateCheckedTitle()
+                    holder.root.setOnClickListener {
+                        toggleChecked(this)
+                        holder.checkIconGrid.visibility =
+                            if (isChecked) View.VISIBLE else View.INVISIBLE
                         invalidateCheckedTitle()
-                        holder.root.setOnClickListener {
-                            toggleChecked(this)
-                            holder.checkIconGrid.visibility =
-                                if (isChecked) View.VISIBLE else View.INVISIBLE
-                            invalidateCheckedTitle()
-                        }
-                        holder.expand.setOnClickListener {
-                            when (extraInfo.mediaType) {
-                                MediaFileInfo.MEDIA_TYPE_IMAGE -> {
-                                    startImageViewer(mediaFileInfo)
-                                }
-                                MediaFileInfo.MEDIA_TYPE_VIDEO -> {
-                                    startVideoViewer(mediaFileInfo)
-                                }
-                                MediaFileInfo.MEDIA_TYPE_AUDIO -> {
-                                    startAudioViewer(mediaFileInfo)
-                                }
-                                MediaFileInfo.MEDIA_TYPE_DOCUMENT,
-                                MediaFileInfo.MEDIA_TYPE_UNKNOWN -> {
-                                    startExternalViewAction(mediaFileInfo)
-                                }
-                            }
-                        }
+                    }
+                    holder.expand.setOnClickListener {
+                        mediaFileInfo.triggerMediaFileInfoAction(WeakReference(context))
                     }
                 }
             }

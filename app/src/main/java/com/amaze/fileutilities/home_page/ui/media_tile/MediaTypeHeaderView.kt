@@ -34,12 +34,13 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
     private val typeImageView: ImageView
     private val infoLayoutParent: LinearLayout
     private val usedSpaceTextView: TextView
+    private val usedTotalSpaceTextView: TextView
     private val progressIndicatorsParent: LinearLayout
     private val mediaProgressIndicator: LinearProgressIndicator
     private val progressPercentTextView: TextView
     private val storageCountsParent: RelativeLayout
     private val itemsCountTextView: TextView
-    private val internalStorageTextView: TextView
+    private val totalMediaFiles: TextView
     private val optionsParentLayout: LinearLayout
     private val optionsItemsScroll: HorizontalScrollView
     private val optionsIndexImage: ImageView
@@ -66,13 +67,14 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         optionsRecyclerView = optionsRecyclerViewParent.findViewById(R.id.options_recycler_view)
         optionsItemsScroll.isHorizontalScrollBarEnabled = false
         usedSpaceTextView = infoLayoutParent.findViewById(R.id.usedSpaceTextView)
+        usedTotalSpaceTextView = infoLayoutParent.findViewById(R.id.usedTotalSpaceTextView)
         progressIndicatorsParent = infoLayoutParent.findViewById(R.id.progressIndicatorsParent)
         mediaProgressIndicator = progressIndicatorsParent.findViewById(R.id.mediaProgress)
         progressPercentTextView = progressIndicatorsParent
             .findViewById(R.id.progressPercentTextView)
         storageCountsParent = infoLayoutParent.findViewById(R.id.storageCountsParent)
         itemsCountTextView = storageCountsParent.findViewById(R.id.itemsCountTextView)
-        internalStorageTextView = storageCountsParent.findViewById(R.id.internalStorageTextView)
+        totalMediaFiles = storageCountsParent.findViewById(R.id.internalStorageTextView)
         optionsIndexImage = optionsParentLayout.findViewById(R.id.index_image)
         optionsSwitchView = optionsParentLayout.findViewById(R.id.switch_view)
         optionsGroupView = optionsParentLayout.findViewById(R.id.group_view)
@@ -84,7 +86,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
 
         // init values
         usedSpaceTextView.text = resources.getString(R.string.used_space)
-        typeImageView.setColorFilter(context.resources.getColor(R.color.white))
+        usedTotalSpaceTextView.text = resources.getString(R.string.used_total_space)
+//        typeImageView.setColorFilter(context.resources.getColor(R.color.white))
         progressPercentTextView.text = "--"
     }
 
@@ -93,6 +96,9 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
             usedSpaceTextView.text = resources.getString(
                 R.string.used_space, size
             )
+            usedTotalSpaceTextView.text = resources.getString(
+                R.string.used_total_space, totalUsedSpace
+            )
             progressPercentTextView.text = "$progress %"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mediaProgressIndicator.setProgress(progress, true)
@@ -100,10 +106,10 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
                 mediaProgressIndicator.progress = progress
             }
             itemsCountTextView.text = resources.getString(
-                R.string.num_of_files, itemsCount.toString()
+                R.string.num_of_files, String.format("%,d", itemsCount)
             )
-            internalStorageTextView.text = resources.getString(
-                R.string.internal_storage_subs, totalSpace
+            totalMediaFiles.text = resources.getString(
+                R.string.media_files_subs, String.format("%,d", totalItemsCount)
             )
         }
         invalidate()

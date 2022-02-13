@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.PathPreferences
-import com.amaze.fileutilities.home_page.ui.analyse.ReviewImagesAdapter
+import com.amaze.fileutilities.home_page.ui.analyse.ReviewAnalysisAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import java.lang.Exception
 
@@ -163,7 +163,7 @@ class Utils {
 
         fun setGridLayoutManagerSpan(
             gridLayoutManager: GridLayoutManager,
-            adapter: ReviewImagesAdapter
+            adapter: ReviewAnalysisAdapter
         ) {
             gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
