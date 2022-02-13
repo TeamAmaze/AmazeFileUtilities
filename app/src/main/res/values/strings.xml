@@ -42,8 +42,10 @@
     <string name="videos">Videos</string>
     <string name="documents">Documents</string>
     <string name="num_of_files">%s Files</string>
+    <string name="num_of_media_files">%s Media Files</string>
     <string name="num_of_files_and_size">%s Files | %s</string>
     <string name="used_space">Used: %s</string>
+    <string name="used_total_space">/ %s</string>
     <string name="send">Send</string>
     <string name="receive">Receive</string>
     <string name="undetermined" translatable="false">--</string>
@@ -51,6 +53,7 @@
     <string name="recent_files">Recent Files</string>
     <string name="no_files">No files</string>
     <string name="internal_storage_subs">Internal Storage: %s</string>
+    <string name="media_files_subs">Media Files: %s</string>
     <string name="action_bar_search_hint">Search for files…</string>
     <string name="please_wait">Please wait…</string>
     <string name="its_quiet_here">It\'s quiet in here…</string>
@@ -142,9 +145,11 @@
     <string name="more_to_come">More optimizations to come!</string>
     <string name="view_all">View all</string>
     <string name="analysis">Analysis</string>
+    <string name="analysis_hint">Control analysis tab settings such as paths to include analysis from, show / hide various analysis</string>
     <string name="exclusions">Exclusions</string>
     <string name="exclusions_summary">Paths to exclude while scanning media</string>
     <string name="audio_player">Audio Player</string>
+    <string name="audio_player_hint">Control audio player settings such as paths to exclude</string>
     <string name="search_duplicates">Search duplicates in…</string>
     <string name="media_store">Android media store (fastest)</string>
     <string name="internal_storage_shallow">Internal Storage (Shallow / slow)</string>

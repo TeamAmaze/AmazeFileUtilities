@@ -12,7 +12,6 @@ package com.amaze.fileutilities.utilis
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,15 +20,13 @@ import androidx.annotation.IntDef
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
-import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
 import com.amaze.fileutilities.audio_player.AudioUtils
 import com.amaze.fileutilities.home_page.ui.files.MediaAdapterPreloader
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.home_page.ui.files.MediaInfoRecyclerViewHolder
-import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
-import com.amaze.fileutilities.video_player.VideoPlayerDialogActivity
 import com.bumptech.glide.Glide
 import me.zhanghai.android.fastscroll.PopupTextProvider
+import java.lang.ref.WeakReference
 
 abstract class AbstractMediaFilesAdapter(
     private val superContext: Context,
@@ -134,14 +131,16 @@ abstract class AbstractMediaFilesAdapter(
                                 holder.infoSummary.text = "$formattedDate | $formattedSize"
                                 holder.extraInfo.text = ""
                                 holder.root.setOnClickListener {
-                                    startExternalViewAction(mediaFileInfo)
+                                    mediaFileInfo
+                                        .triggerMediaFileInfoAction(WeakReference(superContext))
                                 }
                             }
                             MediaFileInfo.MEDIA_TYPE_UNKNOWN -> {
                                 holder.infoSummary.text = "$formattedDate | $formattedSize"
                                 holder.extraInfo.text = ""
                                 holder.root.setOnClickListener {
-                                    startExternalViewAction(mediaFileInfo)
+                                    mediaFileInfo
+                                        .triggerMediaFileInfoAction(WeakReference(superContext))
                                 }
                                 holder.root.background = ResourcesCompat
                                     .getDrawable(
@@ -163,33 +162,6 @@ abstract class AbstractMediaFilesAdapter(
     private val mInflater: LayoutInflater
         get() = superContext.getSystemService(Activity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-    fun startExternalViewAction(mediaFileInfo: MediaFileInfo) {
-        val intent = Intent()
-        intent.data = mediaFileInfo.getContentUri(superContext)
-        intent.action = Intent.ACTION_VIEW
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        superContext.startActivity(intent)
-    }
-
-    fun startImageViewer(mediaFileInfo: MediaFileInfo) {
-        val intent = Intent(superContext, ImageViewerDialogActivity::class.java)
-        intent.data = mediaFileInfo.getContentUri(superContext)
-        superContext.startActivity(intent)
-    }
-
-    fun startAudioViewer(mediaFileInfo: MediaFileInfo) {
-        val intent = Intent(superContext, AudioPlayerDialogActivity::class.java)
-        intent.data = mediaFileInfo.getContentUri(superContext)
-        superContext.startActivity(intent)
-    }
-
-    fun startVideoViewer(mediaFileInfo: MediaFileInfo) {
-        val intent = Intent(superContext, VideoPlayerDialogActivity::class.java)
-        intent.data = mediaFileInfo.getContentUri(superContext)
-        superContext.startActivity(intent)
-    }
-
     private fun processImageMediaInfo(
         holder: MediaInfoRecyclerViewHolder,
         mediaFileInfo: MediaFileInfo
@@ -199,7 +171,7 @@ abstract class AbstractMediaFilesAdapter(
             "x${mediaFileInfo.extraInfo.imageMetaData?.height}"
         holder.extraInfo.text = ""
         holder.root.setOnClickListener {
-            startImageViewer(mediaFileInfo)
+            mediaFileInfo.triggerMediaFileInfoAction(WeakReference(superContext))
         }
     }
 
@@ -214,7 +186,7 @@ abstract class AbstractMediaFilesAdapter(
             holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
         }
         holder.root.setOnClickListener {
-            startAudioViewer(mediaFileInfo)
+            mediaFileInfo.triggerMediaFileInfoAction(WeakReference(superContext))
         }
     }
 
@@ -229,7 +201,7 @@ abstract class AbstractMediaFilesAdapter(
             holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
         }
         holder.root.setOnClickListener {
-            startVideoViewer(mediaFileInfo)
+            mediaFileInfo.triggerMediaFileInfoAction(WeakReference(superContext))
         }
     }
 

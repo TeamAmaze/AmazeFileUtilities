@@ -21,12 +21,11 @@ import com.amaze.fileutilities.utilis.ListBannerViewHolder
 
 class MediaFileAdapter(
     val context: Context,
-    val preloader: MediaAdapterPreloader,
-    val optionsMenuSelected: OptionsMenuSelected,
-    var isGrid: Boolean,
+    private val preloader: MediaAdapterPreloader,
+    private val optionsMenuSelected: OptionsMenuSelected,
+    isGrid: Boolean,
     private var sortingPreference: MediaFileListSorter.SortingPreference,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
-    private val mediaType: Int,
     private val drawBannerCallback: (mediaTypeHeader: MediaTypeHeaderView) -> Unit
 ) :
     AbstractMediaFilesAdapter(context, preloader, isGrid) {
@@ -122,7 +121,7 @@ class MediaFileAdapter(
     }
 
     private fun setBannerResources(holder: ListBannerViewHolder) {
-        when (mediaType) {
+        when (mediaFileInfoList[0].extraInfo?.mediaType) {
             MediaFileInfo.MEDIA_TYPE_AUDIO -> {
                 holder.mediaTypeHeaderView.setHeaderColor(
                     ResourcesCompat
@@ -135,7 +134,7 @@ class MediaFileAdapter(
                 holder.mediaTypeHeaderView.setTypeImageSrc(
                     ResourcesCompat.getDrawable(
                         context.resources,
-                        R.drawable.ic_outline_audio_file_32, context.theme
+                        R.drawable.ic_header_audio, context.theme
                     )!!
                 )
             }
@@ -151,7 +150,7 @@ class MediaFileAdapter(
                 holder.mediaTypeHeaderView.setTypeImageSrc(
                     ResourcesCompat.getDrawable(
                         context.resources,
-                        R.drawable.ic_outline_video_library_32, context.theme
+                        R.drawable.ic_header_video, context.theme
                     )!!
                 )
             }
@@ -167,7 +166,7 @@ class MediaFileAdapter(
                 holder.mediaTypeHeaderView.setTypeImageSrc(
                     ResourcesCompat.getDrawable(
                         context.resources,
-                        R.drawable.ic_outline_image_32, context.theme
+                        R.drawable.ic_header_image, context.theme
                     )!!
                 )
             }
@@ -183,7 +182,7 @@ class MediaFileAdapter(
                 holder.mediaTypeHeaderView.setTypeImageSrc(
                     ResourcesCompat.getDrawable(
                         context.resources,
-                        R.drawable.ic_outline_insert_drive_file_32, context.theme
+                        R.drawable.ic_header_docs, context.theme
                     )!!
                 )
             }

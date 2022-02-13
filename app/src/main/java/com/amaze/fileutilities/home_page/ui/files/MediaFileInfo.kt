@@ -11,11 +11,16 @@
 package com.amaze.fileutilities.home_page.ui.files
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.text.format.DateUtils
 import androidx.core.content.FileProvider
+import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
+import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.utilis.FileUtils
+import com.amaze.fileutilities.video_player.VideoPlayerDialogActivity
 import java.io.File
+import java.lang.ref.WeakReference
 
 data class MediaFileInfo(
     val title: String,
@@ -58,6 +63,56 @@ data class MediaFileInfo(
 
     fun getContentUri(context: Context): Uri {
         return FileProvider.getUriForFile(context, context.packageName, File(path))
+    }
+
+    fun triggerMediaFileInfoAction(contextRef: WeakReference<Context>) {
+        contextRef.get()?.let {
+            context ->
+            when (this.extraInfo?.mediaType) {
+                MEDIA_TYPE_IMAGE -> {
+                    startImageViewer(this, context)
+                }
+                MEDIA_TYPE_VIDEO -> {
+                    startVideoViewer(this, context)
+                }
+                MEDIA_TYPE_AUDIO -> {
+                    startAudioViewer(this, context)
+                }
+                MEDIA_TYPE_DOCUMENT, MEDIA_TYPE_UNKNOWN -> {
+                    startExternalViewAction(this, context)
+                }
+                else -> {
+                    startExternalViewAction(this, context)
+                }
+            }
+        }
+    }
+
+    private fun startExternalViewAction(mediaFileInfo: MediaFileInfo, context: Context) {
+        val intent = Intent()
+        intent.data = mediaFileInfo.getContentUri(context)
+        intent.action = Intent.ACTION_VIEW
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(intent)
+    }
+
+    private fun startImageViewer(mediaFileInfo: MediaFileInfo, context: Context) {
+        val intent = Intent(context, ImageViewerDialogActivity::class.java)
+        intent.data = mediaFileInfo.getContentUri(context)
+        context.startActivity(intent)
+    }
+
+    private fun startAudioViewer(mediaFileInfo: MediaFileInfo, context: Context) {
+        val intent = Intent(context, AudioPlayerDialogActivity::class.java)
+        intent.data = mediaFileInfo.getContentUri(context)
+        context.startActivity(intent)
+    }
+
+    private fun startVideoViewer(mediaFileInfo: MediaFileInfo, context: Context) {
+        val intent = Intent(context, VideoPlayerDialogActivity::class.java)
+        intent.data = mediaFileInfo.getContentUri(context)
+        context.startActivity(intent)
     }
 
     data class ExtraInfo(

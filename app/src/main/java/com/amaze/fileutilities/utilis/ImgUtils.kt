@@ -99,7 +99,10 @@ class ImgUtils {
                             for (line in block.lines) {
                                 for (element in line.elements) {
                                     val elementText = element.text
-                                    if (elementText.matches(wordRegex) && elementText.length > 4) {
+                                    if (elementText.matches(wordRegex) &&
+                                        elementText.length > 4 &&
+                                        !elementText.contains("shot on", true)
+                                    ) {
                                         callback.invoke(true)
                                         return@extractTextFromImg
                                     }

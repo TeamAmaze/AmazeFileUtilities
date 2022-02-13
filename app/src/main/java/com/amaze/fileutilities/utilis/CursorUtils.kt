@@ -94,6 +94,18 @@ class CursorUtils {
             )
         }
 
+        fun getMediaFilesCount(context: Context): Int {
+            val cursor = context
+                .contentResolver
+                .query(
+                    MediaStore.Files.getContentUri("external"),
+                    null, null, null, null
+                )
+            cursor.use { cur ->
+                return cur?.count ?: 0
+            }
+        }
+
         fun listDocs(context: Context): Pair<FilesViewModel.StorageSummary,
             ArrayList<MediaFileInfo>> {
             val docs: ArrayList<MediaFileInfo> = ArrayList()
