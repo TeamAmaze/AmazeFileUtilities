@@ -57,6 +57,31 @@ class FilesViewModel(val applicationContext: Application) :
             }
         }
 
+    val initAnalysisMigrations: LiveData<Boolean> =
+        liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(false)
+            val prefs = applicationContext.getAppCommonSharedPreferences()
+            PathPreferences.ANALYSE_FEATURES_LIST.forEach {
+                val migrationPref = prefs.getInt(
+                    PathPreferences.getAnalysisMigrationPreferenceKey(it),
+                    PreferencesConstants.DEFAULT_ANALYSIS_MIGRATION_INITIALIZED
+                )
+                val dao = AppDatabase.getInstance(applicationContext).pathPreferencesDao()
+                val analysisDao = AppDatabase.getInstance(applicationContext).analysisDao()
+                if (migrationPref < PathPreferences.MIGRATION_PREF_MAP[it] ?: 1) {
+                    dao.findByFeature(it).forEach {
+                        pathPref ->
+                        analysisDao.deleteByPathContains(pathPref.path)
+                    }
+                    prefs.edit().putInt(
+                        PathPreferences.getAnalysisMigrationPreferenceKey(it),
+                        PathPreferences.MIGRATION_PREF_MAP[it] ?: 1
+                    ).apply()
+                }
+            }
+            emit(true)
+        }
+
     val recentFilesLiveData: LiveData<List<MediaFileInfo>?> =
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)

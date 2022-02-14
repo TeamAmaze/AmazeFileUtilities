@@ -43,6 +43,24 @@ data class PathPreferences(
         const val FEATURE_ANALYSIS_TELEGRAM = 7
         const val FEATURE_ANALYSIS_LOW_LIGHT = 8
 
+        val ANALYSE_FEATURES_LIST = arrayListOf(
+            FEATURE_ANALYSIS_MEME, FEATURE_ANALYSIS_BLUR,
+            FEATURE_ANALYSIS_IMAGE_FEATURES, FEATURE_ANALYSIS_LOW_LIGHT
+        )
+
+        val MIGRATION_PREF_MAP = mapOf(
+            Pair(FEATURE_ANALYSIS_MEME, PreferencesConstants.VAL_MIGRATION_FEATURE_ANALYSIS_MEME),
+            Pair(FEATURE_ANALYSIS_BLUR, PreferencesConstants.VAL_MIGRATION_FEATURE_ANALYSIS_BLUR),
+            Pair(
+                FEATURE_ANALYSIS_IMAGE_FEATURES,
+                PreferencesConstants.VAL_MIGRATION_FEATURE_ANALYSIS_IMAGE_FEATURES
+            ),
+            Pair(
+                FEATURE_ANALYSIS_LOW_LIGHT,
+                PreferencesConstants.VAL_MIGRATION_FEATURE_ANALYSIS_LOW_LIGHT
+            )
+        )
+
         fun getEnablePreferenceKey(feature: Int): String {
             return "${feature}_enabled"
         }

@@ -27,14 +27,10 @@ class PreferencesConstants {
         const val VAL_SEARCH_DUPLICATES_INTERNAL_DEEP = 2
         // increment this if add new default paths for analysis
         const val VAL_PATH_PREFS_MIGRATION = 1
-        const val VAL_MIGRATION_FEATURE_AUDIO_PLAYER = 1
+
         const val VAL_MIGRATION_FEATURE_ANALYSIS_MEME = 1
         const val VAL_MIGRATION_FEATURE_ANALYSIS_BLUR = 1
         const val VAL_MIGRATION_FEATURE_ANALYSIS_IMAGE_FEATURES = 1
-        const val VAL_MIGRATION_FEATURE_ANALYSIS_DOWNLOADS = 1
-        const val VAL_MIGRATION_FEATURE_ANALYSIS_RECORDING = 1
-        const val VAL_MIGRATION_FEATURE_ANALYSIS_SCREENSHOTS = 1
-        const val VAL_MIGRATION_FEATURE_ANALYSIS_TELEGRAM = 1
         const val VAL_MIGRATION_FEATURE_ANALYSIS_LOW_LIGHT = 1
 
         const val DEFAULT_MEDIA_LIST_TYPE = true

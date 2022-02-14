@@ -122,9 +122,17 @@ class MainActivity : PermissionsActivity(), AggregatedMediaFileInfoObserver {
             viewModel.usedImagesSummaryTransformations.observe(
                 this
             ) {
-                it?.second.let { list ->
-                    list?.run {
-                        viewModel.analyseImagesTransformation(this, pathPreferences)
+                mediaInfoStorageSummaryPair ->
+                viewModel.initAnalysisMigrations.observe(this) {
+                    if (it) {
+                        mediaInfoStorageSummaryPair?.second.let { list ->
+                            list?.run {
+                                viewModel.analyseImagesTransformation(
+                                    this,
+                                    pathPreferences
+                                )
+                            }
+                        }
                     }
                 }
             }
