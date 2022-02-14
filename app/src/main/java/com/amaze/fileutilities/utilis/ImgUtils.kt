@@ -87,7 +87,11 @@ class ImgUtils {
             if (!containsInPreferences(
                     uri.path!!,
                     pathPreferences, true
-                ) || memesProcessed > 10000
+                ) || !PathPreferences.isEnabled(
+                        context.getAppCommonSharedPreferences(),
+                        PathPreferences.FEATURE_ANALYSIS_MEME
+                    ) ||
+                memesProcessed > 10000
             ) {
                 callback.invoke(false)
                 return
@@ -127,6 +131,10 @@ class ImgUtils {
         ) {
             TimeUnit.SECONDS.sleep(1L)
             if (!containsInPreferences(uri.path!!, pathPreferences, true) ||
+                !PathPreferences.isEnabled(
+                        context.getAppCommonSharedPreferences(),
+                        PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
+                    ) ||
                 featuresProcessed > 10000
             ) {
                 callback.invoke(false, null)
@@ -239,8 +247,17 @@ class ImgUtils {
             return ""
         }*/
 
-        fun isImageBlur(path: String, pathPreferences: List<PathPreferences>): Boolean {
-            if (!containsInPreferences(path, pathPreferences, true)) {
+        fun isImageBlur(
+            context: Context,
+            path: String,
+            pathPreferences: List<PathPreferences>
+        ): Boolean {
+            if (!containsInPreferences(path, pathPreferences, true) ||
+                !PathPreferences.isEnabled(
+                        context.getAppCommonSharedPreferences(),
+                        PathPreferences.FEATURE_ANALYSIS_BLUR
+                    )
+            ) {
                 return false
             }
             val matrix = Imgcodecs.imread(path)
@@ -251,8 +268,17 @@ class ImgUtils {
             return false
         }
 
-        fun isImageLowLight(path: String, pathPreferences: List<PathPreferences>): Boolean {
-            if (!containsInPreferences(path, pathPreferences, true)) {
+        fun isImageLowLight(
+            context: Context,
+            path: String,
+            pathPreferences: List<PathPreferences>
+        ): Boolean {
+            if (!containsInPreferences(path, pathPreferences, true) ||
+                !PathPreferences.isEnabled(
+                        context.getAppCommonSharedPreferences(),
+                        PathPreferences.FEATURE_ANALYSIS_LOW_LIGHT
+                    )
+            ) {
                 return false
             }
             val matrix = Imgcodecs.imread(path)

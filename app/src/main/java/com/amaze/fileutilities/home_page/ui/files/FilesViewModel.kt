@@ -266,6 +266,7 @@ class FilesViewModel(val applicationContext: Application) :
                                     }
 
                                     val isBlur = ImgUtils.isImageBlur(
+                                        applicationContext,
                                         it.path,
                                         pathPreferencesList.filter { pref ->
                                             pref.feature == PathPreferences
@@ -274,6 +275,7 @@ class FilesViewModel(val applicationContext: Application) :
                                     )
 
                                     val isLowLight = ImgUtils.isImageLowLight(
+                                        applicationContext,
                                         it.path,
                                         pathPreferencesList.filter { pref ->
                                             pref.feature == PathPreferences
