@@ -21,7 +21,6 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewAnalysisAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
-import java.lang.Exception
 
 class Utils {
 
@@ -205,6 +204,10 @@ class Utils {
                 }
             }
             return !inclusive
+        }
+
+        fun generateRandom(min: Int, max: Int): Int {
+            return (Math.random() * (max - min + 1) + min).toInt()
         }
     }
 }

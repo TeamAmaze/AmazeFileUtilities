@@ -32,7 +32,7 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
     private val preferenceDbMap: MutableMap<Preference, PathPreferences> = HashMap()
 
     private val itemOnDeleteListener = { it: PathSwitchPreference ->
-        showDeleteDialog(it)
+        showDeletePathDialog(it)
     }
 
     companion object {
@@ -63,8 +63,14 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
             }
         preferencesList = findPreference("prefs_list")
         if (featureName!! != PathPreferences.FEATURE_AUDIO_PLAYER) {
-            preferencesList?.order = 1
-            preferenceScreen.addPreference(addEnablePreference())
+            preferencesList?.order = 2
+            val enablePreference = addEnablePreference()
+            preferenceScreen.addPreference(enablePreference)
+            if (PathPreferences.MIGRATION_PREF_MAP.containsKey(featureName)) {
+                val resetPreference = addResetAnalysisPreference()
+                preferenceScreen.addPreference(resetPreference)
+                resetPreference.dependency = PathPreferences.getEnablePreferenceKey(featureName!!)
+            }
             preferencesList?.dependency = PathPreferences.getEnablePreferenceKey(featureName!!)
         }
         reload()
@@ -98,24 +104,13 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
         val preference = Preference(preferenceScreen.context)
         preference.title = getString(R.string.reanalyse)
         preference.summary = getString(R.string.reanalyse_hint)
-        preference.key = PathPreferences.getEnablePreferenceKey(featureName!!)
-        preference.setDefaultValue(
-            sharedPrefs.getBoolean(
-                PathPreferences
-                    .getEnablePreferenceKey(featureName!!),
-                PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
-            )
-        )
-        val onChange = Preference.OnPreferenceChangeListener { pref, newValue ->
-            sharedPrefs.edit().putBoolean(
-                PathPreferences
-                    .getEnablePreferenceKey(featureName!!),
-                newValue as Boolean
-            ).apply()
+        preference.key = PathPreferences.getAnalysisMigrationPreferenceKey(featureName!!)
+        val onClick = Preference.OnPreferenceClickListener { pref ->
+            showReanalyseDialog()
             true
         }
-        preference.onPreferenceChangeListener = onChange
-        preference.order = 0
+        preference.onPreferenceClickListener = onClick
+        preference.order = 1
         return preference
     }
 
@@ -137,7 +132,23 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun showDeleteDialog(prefSwitch: PathSwitchPreference) {
+    private fun showReanalyseDialog() {
+        val dialog = AlertDialog.Builder(requireContext()).setTitle(R.string.reanalyse)
+            .setPositiveButton(R.string.confirm) { dialog, _ ->
+                val dao = AppDatabase.getInstance(requireContext()).analysisDao()
+                preferenceDbMap.values.forEach {
+                    dao.deleteByPathContains(it.path)
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton(
+                R.string.cancel
+            ) { dialog, _ -> dialog.dismiss() }
+            .create()
+        dialog.show()
+    }
+
+    private fun showDeletePathDialog(prefSwitch: PathSwitchPreference) {
         val dialog = AlertDialog.Builder(requireContext()).setTitle(R.string.delete_preference)
             .setPositiveButton(R.string.confirm) { dialog, _ ->
                 val prefDb = preferenceDbMap[prefSwitch]
