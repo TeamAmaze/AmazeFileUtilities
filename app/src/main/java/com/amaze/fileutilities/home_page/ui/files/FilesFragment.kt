@@ -97,7 +97,10 @@ class FilesFragment : Fragment() {
                         )
                     } else {
                         binding.filesAmount.text =
-                            resources.getString(R.string.num_of_files, it.items.toString())
+                            resources.getString(
+                                R.string.num_of_media_files,
+                                String.format("%,d", it.items)
+                            )
                     }
                 }
             }
@@ -121,10 +124,15 @@ class FilesFragment : Fragment() {
                             requireContext(),
                             storageSummary.usedSpace!!
                         )
+                    val usedTotalSpace =
+                        FileUtils.formatStorageLength(
+                            requireContext(),
+                            storageSummary.totalUsedSpace!!
+                        )
                     binding.imagesTab.setProgress(
                         MediaTypeView.MediaTypeContent(
                             storageSummary.items, usedSpace,
-                            storageSummary.progress
+                            storageSummary.progress, usedTotalSpace, storageSummary.totalItems
                         )
                     )
                 }
@@ -149,10 +157,15 @@ class FilesFragment : Fragment() {
                             requireContext(),
                             storageSummary.usedSpace!!
                         )
+                    val usedTotalSpace = FileUtils
+                        .formatStorageLength(
+                            requireContext(),
+                            storageSummary.totalUsedSpace!!
+                        )
                     binding.audiosTab.setProgress(
                         MediaTypeView.MediaTypeContent(
                             storageSummary.items, usedSpace,
-                            storageSummary.progress
+                            storageSummary.progress, usedTotalSpace, storageSummary.totalItems
                         )
                     )
                 }
@@ -177,11 +190,17 @@ class FilesFragment : Fragment() {
                             requireContext(),
                             storageSummary.usedSpace!!
                         )
+                    val usedTotalSpace = FileUtils
+                        .formatStorageLength(
+                            requireContext(),
+                            storageSummary.totalUsedSpace!!
+                        )
                     binding.videosTab.setProgress(
                         MediaTypeView
                             .MediaTypeContent(
                                 storageSummary.items,
-                                usedSpace, storageSummary.progress
+                                usedSpace, storageSummary.progress, usedTotalSpace,
+                                storageSummary.totalItems
                             )
                     )
                 }
@@ -205,11 +224,17 @@ class FilesFragment : Fragment() {
                         requireContext(),
                         storageSummary.usedSpace!!
                     )
+                    val usedTotalSpace = FileUtils
+                        .formatStorageLength(
+                            requireContext(),
+                            storageSummary.totalUsedSpace!!
+                        )
                     binding.documentsTab.setProgress(
                         MediaTypeView
                             .MediaTypeContent(
                                 storageSummary.items,
-                                usedSpace, storageSummary.progress
+                                usedSpace, storageSummary.progress, usedTotalSpace,
+                                storageSummary.totalItems
                             )
                     )
                 }

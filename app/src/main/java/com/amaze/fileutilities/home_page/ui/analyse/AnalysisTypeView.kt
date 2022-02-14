@@ -11,7 +11,6 @@
 package com.amaze.fileutilities.home_page.ui.analyse
 
 import android.content.Context
-import android.content.Intent
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -19,11 +18,11 @@ import android.view.View
 import android.widget.*
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
-import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.px
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.bumptech.glide.Glide
+import java.lang.ref.WeakReference
 
 class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
@@ -104,12 +103,7 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     private fun getImageView(mediaFileInfo: MediaFileInfo): ImageView {
         val imageView = ImageView(context)
         imageView.setOnClickListener {
-            val intent = Intent(
-                context,
-                ImageViewerDialogActivity::class.java
-            )
-            intent.data = mediaFileInfo.getContentUri(context)
-            context.startActivity(intent)
+            mediaFileInfo.triggerMediaFileInfoAction(WeakReference(context))
         }
         imageView.layoutParams = getParams()
         imageView.scaleType = ImageView.ScaleType.CENTER
@@ -125,10 +119,12 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         val view = LinearLayout(context)
         view.layoutParams = getParams()
         view.addView(textView)
-        view.isClickable = false
         view.setHorizontalGravity(Gravity.CENTER_HORIZONTAL)
         view.setVerticalGravity(Gravity.CENTER_VERTICAL)
         view.background = resources.getDrawable(R.drawable.button_curved_unselected)
+        view.setOnClickListener {
+            rootView.performClick()
+        }
         return view
     }
 

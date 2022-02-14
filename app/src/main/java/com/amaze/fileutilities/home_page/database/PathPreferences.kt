@@ -10,10 +10,12 @@
 
 package com.amaze.fileutilities.home_page.database
 
+import android.content.SharedPreferences
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.amaze.fileutilities.utilis.PreferencesConstants
 
 /**
  * While fetching and processing, be sure to validate that file exists
@@ -41,8 +43,19 @@ data class PathPreferences(
         const val FEATURE_ANALYSIS_TELEGRAM = 7
         const val FEATURE_ANALYSIS_LOW_LIGHT = 8
 
-        fun getSharedPreferenceKey(feature: Int): String {
+        fun getEnablePreferenceKey(feature: Int): String {
             return "${feature}_enabled"
+        }
+
+        fun getAnalysisMigrationPreferenceKey(feature: Int): String {
+            return "${feature}_migration_version"
+        }
+
+        fun isEnabled(sharedPreferences: SharedPreferences, feature: Int): Boolean {
+            return sharedPreferences.getBoolean(
+                getEnablePreferenceKey(feature),
+                PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+            )
         }
     }
 }

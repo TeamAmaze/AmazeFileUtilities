@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference
         app:key="analysis"
-        app:title="@string/analysis"/>
+        app:title="@string/analysis"
+        android:summary="@string/analysis_hint"
+        app:icon="@drawable/ic_pref_analysis"
+        />
     <Preference
         app:key="audio_player"
         app:title="@string/audio_player"
+        android:summary="@string/audio_player_hint"
+        app:icon="@drawable/ic_header_audio"
         />
 </PreferenceScreen>

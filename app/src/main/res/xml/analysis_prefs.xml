@@ -16,6 +16,10 @@
             app:title="@string/blurred_pics"
             />
         <Preference
+            app:key="low_light_paths"
+            app:title="@string/low_light"
+            />
+        <Preference
             app:key="features_paths"
             android:title="@string/image_features"
             app:summary="@string/features_paths_hint"

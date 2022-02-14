@@ -42,7 +42,7 @@ class ReviewImagesFragment : Fragment() {
     private val filesViewModel: FilesViewModel by activityViewModels()
     private lateinit var viewModel: AnalyseViewModel
     private var gridLayoutManager: GridLayoutManager? = GridLayoutManager(context, 3)
-    private var mediaFileAdapter: ReviewImagesAdapter? = null
+    private var mediaFileAdapter: ReviewAnalysisAdapter? = null
     private var preloader: MediaAdapterPreloader? = null
     private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
     private val MAX_PRELOAD = 50
@@ -377,7 +377,7 @@ class ReviewImagesFragment : Fragment() {
      * @param doShowDown whether to show thumbs down button
      */
     private fun setMediaInfoList(mediaInfoList: MutableList<MediaFileInfo>, doShowDown: Boolean) {
-        mediaFileAdapter = ReviewImagesAdapter(
+        mediaFileAdapter = ReviewAnalysisAdapter(
             requireContext(),
             preloader!!, mediaInfoList
         ) { checkedSize, itemsCount, bytesFormatted ->

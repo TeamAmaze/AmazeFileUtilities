@@ -41,17 +41,16 @@ class FilesViewModel(val applicationContext: Application) :
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             val storageData = applicationContext.applicationContext.getExternalStorageDirectory()
-            storageData?.run {
-                val file = File(this.path)
-                var items = 0
-                file.list()?.let {
-                    items = it.size
-                }
+            storageData?.let {
+                data ->
+                val file = File(data.path)
+                val items = CursorUtils.getMediaFilesCount(applicationContext)
                 val usedSpace = file.totalSpace - file.usableSpace
                 val progress = (usedSpace * 100) / file.totalSpace
                 emit(
                     StorageSummary(
-                        items, progress.toInt(), usedSpace, file.usableSpace,
+                        items, progress.toInt(), usedSpace, usedSpace,
+                        file.usableSpace,
                         file.totalSpace
                     )
                 )
@@ -267,6 +266,7 @@ class FilesViewModel(val applicationContext: Application) :
                                     }
 
                                     val isBlur = ImgUtils.isImageBlur(
+                                        applicationContext,
                                         it.path,
                                         pathPreferencesList.filter { pref ->
                                             pref.feature == PathPreferences
@@ -275,6 +275,7 @@ class FilesViewModel(val applicationContext: Application) :
                                     )
 
                                     val isLowLight = ImgUtils.isImageLowLight(
+                                        applicationContext,
                                         it.path,
                                         pathPreferencesList.filter { pref ->
                                             pref.feature == PathPreferences
@@ -512,12 +513,25 @@ class FilesViewModel(val applicationContext: Application) :
             }
             val metaInfoAndSummaryPair = CursorUtils
                 .listImages(applicationContext.applicationContext)
-            val summary = metaInfoAndSummaryPair.first
-            summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
-                .toInt()
-            summary.totalSpace = storageSummary.totalSpace
+            setMediaInfoSummary(metaInfoAndSummaryPair.first, storageSummary)
             emit(metaInfoAndSummaryPair)
         }
+    }
+
+    /**
+     * Sets storage summary for individual images/videos/audio/docs from aggregated storagesummary
+     * from internalStorageStats
+     */
+    private fun setMediaInfoSummary(
+        summary: StorageSummary,
+        storageSummary: StorageSummary
+    ) {
+        /*summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
+            .toInt()*/
+        summary.progress = ((summary.items * 100) / storageSummary.items)
+        summary.totalSpace = storageSummary.totalSpace
+        summary.totalUsedSpace = storageSummary.usedSpace
+        summary.totalItems = storageSummary.items
     }
 
     private fun getAudiosSummaryLiveData(storageSummary: StorageSummary?):
@@ -529,10 +543,7 @@ class FilesViewModel(val applicationContext: Application) :
             }
             val metaInfoAndSummaryPair = CursorUtils
                 .listAudio(applicationContext.applicationContext)
-            val summary = metaInfoAndSummaryPair.first
-            summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
-                .toInt()
-            summary.totalSpace = storageSummary.totalSpace
+            setMediaInfoSummary(metaInfoAndSummaryPair.first, storageSummary)
             emit(metaInfoAndSummaryPair)
         }
     }
@@ -546,10 +557,7 @@ class FilesViewModel(val applicationContext: Application) :
             }
             val metaInfoAndSummaryPair = CursorUtils
                 .listVideos(applicationContext.applicationContext)
-            val summary = metaInfoAndSummaryPair.first
-            summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
-                .toInt()
-            summary.totalSpace = storageSummary.totalSpace
+            setMediaInfoSummary(metaInfoAndSummaryPair.first, storageSummary)
             emit(metaInfoAndSummaryPair)
         }
     }
@@ -563,10 +571,7 @@ class FilesViewModel(val applicationContext: Application) :
             }
             val metaInfoAndSummaryPair = CursorUtils
                 .listDocs(applicationContext.applicationContext)
-            val summary = metaInfoAndSummaryPair.first
-            summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
-                .toInt()
-            summary.totalSpace = storageSummary.totalSpace
+            setMediaInfoSummary(metaInfoAndSummaryPair.first, storageSummary)
             emit(metaInfoAndSummaryPair)
         }
     }
@@ -574,8 +579,10 @@ class FilesViewModel(val applicationContext: Application) :
     data class StorageSummary(
         var items: Int,
         var progress: Int,
-        var usedSpace: Long? = null,
-        val freeSpace: Long? = null,
-        var totalSpace: Long? = null
+        var usedSpace: Long? = 0L,
+        var totalUsedSpace: Long? = 0L,
+        val freeSpace: Long? = 0L,
+        var totalSpace: Long? = 0L,
+        var totalItems: Int? = 0
     )
 }
