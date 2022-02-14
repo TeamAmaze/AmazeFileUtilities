@@ -169,4 +169,6 @@
     <string name="cluttered_videos">Cluttered Videos</string>
     <string name="cluttered_videos_hint">A group of videos that have similar running time.
         Most likely to be un-useful videos.</string>
+    <string name="reanalyse">Re-analyse</string>
+    <string name="reanalyse_hint">Clears existing analysis and starts again</string>
 </resources>

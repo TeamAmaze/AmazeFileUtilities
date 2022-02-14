@@ -166,36 +166,44 @@ class AnalyseFragment : Fragment() {
                     }
                 }
 
-            analyseViewModel.getLargeDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
-                largeDownloads ->
-                largeDownloadPreview.invalidateProgress(true)
-                largeDownloads?.let {
-                    largeDownloadPreview.invalidateProgress(false)
-                    largeDownloadPreview.loadPreviews(largeDownloads)
+            if (PathPreferences.isEnabled(prefs, PathPreferences.FEATURE_ANALYSIS_DOWNLOADS)) {
+                analyseViewModel.getLargeDownloads(pathPreferencesDao)
+                    .observe(viewLifecycleOwner) {
+                        largeDownloads ->
+                        largeDownloadPreview.invalidateProgress(true)
+                        largeDownloads?.let {
+                            largeDownloadPreview.invalidateProgress(false)
+                            largeDownloadPreview.loadPreviews(largeDownloads)
+                        }
+                    }
+                analyseViewModel.getOldDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
+                    oldDownloads ->
+                    oldDownloadPreview.invalidateProgress(true)
+                    oldDownloads?.let {
+                        oldDownloadPreview.invalidateProgress(false)
+                        oldDownloadPreview.loadPreviews(oldDownloads)
+                    }
                 }
             }
-            analyseViewModel.getOldDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
-                oldDownloads ->
-                oldDownloadPreview.invalidateProgress(true)
-                oldDownloads?.let {
-                    oldDownloadPreview.invalidateProgress(false)
-                    oldDownloadPreview.loadPreviews(oldDownloads)
-                }
+            if (PathPreferences.isEnabled(prefs, PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS)) {
+                analyseViewModel.getOldScreenshots(pathPreferencesDao)
+                    .observe(viewLifecycleOwner) {
+                        oldScreenshots ->
+                        oldScreenshotsPreview.invalidateProgress(true)
+                        oldScreenshots?.let {
+                            oldScreenshotsPreview.invalidateProgress(false)
+                            oldScreenshotsPreview.loadPreviews(oldScreenshots)
+                        }
+                    }
             }
-            analyseViewModel.getOldScreenshots(pathPreferencesDao).observe(viewLifecycleOwner) {
-                oldScreenshots ->
-                oldScreenshotsPreview.invalidateProgress(true)
-                oldScreenshots?.let {
-                    oldScreenshotsPreview.invalidateProgress(false)
-                    oldScreenshotsPreview.loadPreviews(oldScreenshots)
-                }
-            }
-            analyseViewModel.getOldRecordings(pathPreferencesDao).observe(viewLifecycleOwner) {
-                oldRecordings ->
-                oldRecordingsPreview.invalidateProgress(true)
-                oldRecordings?.let {
-                    oldRecordingsPreview.invalidateProgress(false)
-                    oldRecordingsPreview.loadPreviews(oldRecordings)
+            if (PathPreferences.isEnabled(prefs, PathPreferences.FEATURE_ANALYSIS_RECORDING)) {
+                analyseViewModel.getOldRecordings(pathPreferencesDao).observe(viewLifecycleOwner) {
+                    oldRecordings ->
+                    oldRecordingsPreview.invalidateProgress(true)
+                    oldRecordings?.let {
+                        oldRecordingsPreview.invalidateProgress(false)
+                        oldRecordingsPreview.loadPreviews(oldRecordings)
+                    }
                 }
             }
         }
@@ -209,108 +217,69 @@ class AnalyseFragment : Fragment() {
 
     private fun setVisibility(sharedPrefs: SharedPreferences) {
         binding.run {
-            blurredPicsPreview.visibility = if (sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_BLUR),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+            blurredPicsPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_BLUR
                 )
             ) View.VISIBLE else View.GONE
-            lowLightPreview.visibility = if (sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_LOW_LIGHT),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
-                )
-            ) View.VISIBLE else View.GONE
-
-            memesPreview.visibility = if (sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_MEME),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+            lowLightPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_LOW_LIGHT
                 )
             ) View.VISIBLE else View.GONE
 
-            sadPreview.visibility = if (sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(
-                                PathPreferences
-                                    .FEATURE_ANALYSIS_IMAGE_FEATURES
-                            ),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+            memesPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_MEME
                 )
             ) View.VISIBLE else View.GONE
 
-            sleepingPreview.visibility = if (sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(
-                                PathPreferences
-                                    .FEATURE_ANALYSIS_IMAGE_FEATURES
-                            ),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+            sadPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
                 )
             ) View.VISIBLE else View.GONE
 
-            distractedPreview.visibility = if (sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(
-                                PathPreferences
-                                    .FEATURE_ANALYSIS_IMAGE_FEATURES
-                            ),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
-                )
-            ) View.VISIBLE else View.GONE
-            selfiePreview.visibility = if (sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(
-                                PathPreferences
-                                    .FEATURE_ANALYSIS_IMAGE_FEATURES
-                            ),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
-                )
-            ) View.VISIBLE else View.GONE
-            groupPicPreview.visibility = if (sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(
-                                PathPreferences
-                                    .FEATURE_ANALYSIS_IMAGE_FEATURES
-                            ),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+            sleepingPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
                 )
             ) View.VISIBLE else View.GONE
 
-            largeDownloadPreview.visibility = if (sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(
-                                PathPreferences
-                                    .FEATURE_ANALYSIS_DOWNLOADS
-                            ),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+            distractedPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
                 )
             ) View.VISIBLE else View.GONE
-            oldDownloadPreview.visibility = if (sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(
-                                PathPreferences
-                                    .FEATURE_ANALYSIS_DOWNLOADS
-                            ),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+            selfiePreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
                 )
             ) View.VISIBLE else View.GONE
-            oldRecordingsPreview.visibility = if (sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(
-                                PathPreferences
-                                    .FEATURE_ANALYSIS_RECORDING
-                            ),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+            groupPicPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
                 )
             ) View.VISIBLE else View.GONE
-            oldScreenshotsPreview.visibility = if (sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(
-                                PathPreferences
-                                    .FEATURE_ANALYSIS_SCREENSHOTS
-                            ),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+
+            largeDownloadPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_DOWNLOADS
+                )
+            ) View.VISIBLE else View.GONE
+            oldDownloadPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_DOWNLOADS
+                )
+            ) View.VISIBLE else View.GONE
+            oldRecordingsPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_RECORDING
+                )
+            ) View.VISIBLE else View.GONE
+            oldScreenshotsPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS
                 )
             ) View.VISIBLE else View.GONE
             /*telegramPreview.visibility = if (sharedPrefs.getBoolean(

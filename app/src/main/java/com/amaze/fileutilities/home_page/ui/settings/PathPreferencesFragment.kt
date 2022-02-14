@@ -13,10 +13,7 @@ package com.amaze.fileutilities.home_page.ui.settings
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.preference.CheckBoxPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceCategory
-import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.*
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.PathPreferences
@@ -66,22 +63,60 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
             }
         preferencesList = findPreference("prefs_list")
         if (featureName!! != PathPreferences.FEATURE_AUDIO_PLAYER) {
-            val preference = CheckBoxPreference(preferenceScreen.context)
-            preference.title = getString(R.string.show_analysis)
-            preference.key = PathPreferences.getSharedPreferenceKey(featureName!!)
-            preference.setDefaultValue(
-                sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(featureName!!),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
-                )
-            )
-            preference.order = 0
             preferencesList?.order = 1
-            preferenceScreen.addPreference(preference)
-            preferencesList?.dependency = PathPreferences.getSharedPreferenceKey(featureName!!)
+            preferenceScreen.addPreference(addEnablePreference())
+            preferencesList?.dependency = PathPreferences.getEnablePreferenceKey(featureName!!)
         }
         reload()
+    }
+
+    private fun addEnablePreference(): Preference {
+        val preference = CheckBoxPreference(preferenceScreen.context)
+        preference.title = getString(R.string.show_analysis)
+        preference.key = PathPreferences.getEnablePreferenceKey(featureName!!)
+        preference.setDefaultValue(
+            sharedPrefs.getBoolean(
+                PathPreferences
+                    .getEnablePreferenceKey(featureName!!),
+                PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+            )
+        )
+        val onChange = Preference.OnPreferenceChangeListener { pref, newValue ->
+            sharedPrefs.edit().putBoolean(
+                PathPreferences
+                    .getEnablePreferenceKey(featureName!!),
+                newValue as Boolean
+            ).apply()
+            true
+        }
+        preference.onPreferenceChangeListener = onChange
+        preference.order = 0
+        return preference
+    }
+
+    private fun addResetAnalysisPreference(): Preference {
+        val preference = Preference(preferenceScreen.context)
+        preference.title = getString(R.string.reanalyse)
+        preference.summary = getString(R.string.reanalyse_hint)
+        preference.key = PathPreferences.getEnablePreferenceKey(featureName!!)
+        preference.setDefaultValue(
+            sharedPrefs.getBoolean(
+                PathPreferences
+                    .getEnablePreferenceKey(featureName!!),
+                PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+            )
+        )
+        val onChange = Preference.OnPreferenceChangeListener { pref, newValue ->
+            sharedPrefs.edit().putBoolean(
+                PathPreferences
+                    .getEnablePreferenceKey(featureName!!),
+                newValue as Boolean
+            ).apply()
+            true
+        }
+        preference.onPreferenceChangeListener = onChange
+        preference.order = 0
+        return preference
     }
 
     private fun reload() {
