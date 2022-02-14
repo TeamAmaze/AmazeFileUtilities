@@ -22,16 +22,31 @@
         android:layout_marginRight="@dimen/material_generic"
         android:layout_marginBottom="@dimen/material_generic"
         >
-        <TextView
-            android:id="@+id/usedSpaceTextView"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/twenty_four_sp"
-            android:layout_marginBottom="@dimen/material_generic"
-            />
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/material_generic">
+            <TextView
+                android:id="@+id/usedSpaceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/twenty_four_sp"
+                />
+            <TextView
+                android:id="@+id/usedTotalSpaceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/twelve_sp"
+                android:layout_marginLeft="@dimen/four_dp"
+                />
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/progressIndicatorsParent"
             android:layout_width="match_parent"

@@ -64,6 +64,10 @@ abstract class AbstractMediaInfoListFragment : Fragment(), MediaFileAdapter.Opti
                     FileUtils.formatStorageLength(
                         requireContext(), storageSummary.usedSpace!!
                     )
+                val usedTotalSpace = FileUtils.formatStorageLength(
+                    requireContext(),
+                    storageSummary.totalUsedSpace!!
+                )
                 val totalSpace = FileUtils.formatStorageLength(
                     requireContext(), storageSummary.totalSpace!!
                 )
@@ -88,12 +92,14 @@ abstract class AbstractMediaInfoListFragment : Fragment(), MediaFileAdapter.Opti
                         requireContext()
                             .getAppCommonSharedPreferences()
                     ),
-                    ArrayList(mediaFileInfoList), MediaFileInfo.MEDIA_TYPE_AUDIO
+                    ArrayList(mediaFileInfoList)
                 ) {
-                    it.setProgress(
+                    mediaTypeHeader ->
+                    mediaTypeHeader.setProgress(
                         MediaTypeView.MediaTypeContent(
                             storageSummary.items, usedSpace,
-                            storageSummary.progress, totalSpace
+                            storageSummary.progress, usedTotalSpace,
+                            storageSummary.totalItems
                         )
                     )
                 }

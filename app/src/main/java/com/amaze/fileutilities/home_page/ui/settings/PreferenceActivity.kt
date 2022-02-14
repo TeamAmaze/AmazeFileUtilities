@@ -12,19 +12,23 @@ package com.amaze.fileutilities.home_page.ui.settings
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NavUtils
 import androidx.fragment.app.Fragment
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ActivityPreferencesBinding
 import com.amaze.fileutilities.home_page.MainActivity
+import java.util.*
 
 class PreferenceActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPreferencesBinding
+    private var titleStack: Stack<String> = Stack()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPreferencesBinding.inflate(layoutInflater)
+        titleStack.push(resources.getString(R.string.settings))
         setContentView(binding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         inflatePreferenceFragment(PreferenceFragment(), R.string.settings)
@@ -37,8 +41,15 @@ class PreferenceActivity : AppCompatActivity() {
             NavUtils.navigateUpTo(this, intent)
         } else {
             super.onBackPressed()
-            title = resources.getString(R.string.settings)
+            title = titleStack.pop()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     /**
@@ -50,6 +61,9 @@ class PreferenceActivity : AppCompatActivity() {
         transaction.replace(R.id.prefs_fragment, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
+        title?.let {
+            titleStack.push(it.toString())
+        }
         title = resources.getString(screenTitle)
     }
 

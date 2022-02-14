@@ -277,6 +277,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
 
             override fun onFinish() {
                 if (!getAudioPlayerHandlerViewModel().forceShowSeekbar) {
+                    getSeekbar()?.cancelPendingInputEvents()
                     getWaveformSeekbar()?.showFade(300)
                     getSeekbar()?.hideFade(200)
                 }
