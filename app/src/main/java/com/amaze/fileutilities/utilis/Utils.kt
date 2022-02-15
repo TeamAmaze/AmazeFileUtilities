@@ -200,7 +200,7 @@ class Utils {
             Boolean {
             pathPreferences.forEach {
                 if (path.contains(it.path, true)) {
-                    return inclusive
+                    return !it.excludes
                 }
             }
             return !inclusive

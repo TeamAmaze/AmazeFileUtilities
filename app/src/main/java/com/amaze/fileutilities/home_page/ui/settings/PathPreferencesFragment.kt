@@ -16,17 +16,20 @@ import androidx.appcompat.app.AlertDialog
 import androidx.preference.*
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.AppDatabase
+import com.amaze.fileutilities.home_page.database.ImageAnalysisDao
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.database.PathPreferencesDao
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.amaze.fileutilities.utilis.showFolderChooserDialog
+import java.io.File
 
 class PathPreferencesFragment : PreferenceFragmentCompat() {
 
     private var preferencesList: PreferenceCategory? = null
     private var featureName: Int? = null
     private lateinit var dao: PathPreferencesDao
+    private lateinit var analysisDao: ImageAnalysisDao
     private lateinit var sharedPrefs: SharedPreferences
 
     private val preferenceDbMap: MutableMap<Preference, PathPreferences> = HashMap()
@@ -54,6 +57,7 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.path_prefs, rootKey)
         featureName = arguments?.getInt(KEY_FEATURE_NAME)
         dao = AppDatabase.getInstance(requireContext()).pathPreferencesDao()
+        analysisDao = AppDatabase.getInstance(requireContext()).analysisDao()
         sharedPrefs = requireContext().getAppCommonSharedPreferences()
 
         findPreference<Preference>("add_pref_path")?.onPreferenceClickListener =
@@ -72,6 +76,8 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
                 resetPreference.dependency = PathPreferences.getEnablePreferenceKey(featureName!!)
             }
             preferencesList?.dependency = PathPreferences.getEnablePreferenceKey(featureName!!)
+        } else {
+            preferencesList?.title = resources.getString(R.string.paths_excluded)
         }
         reload()
     }
@@ -164,20 +170,59 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
         dialog.show()
     }
 
+    private fun showWarningOverridePathDialog(callback: (approved: Boolean) -> Unit) {
+        val dialog = AlertDialog.Builder(requireContext()).setTitle(R.string.delete_preference)
+            .setMessage(R.string.delete_pref_override_message)
+            .setPositiveButton(R.string.confirm) { dialog, _ ->
+                callback.invoke(true)
+                dialog.dismiss()
+            }
+            .setNegativeButton(
+                R.string.cancel
+            ) { dialog, _ ->
+                callback.invoke(false)
+                dialog.dismiss()
+            }
+            .create()
+        dialog.show()
+    }
+
     private fun showCreateDialog() {
         requireContext().showFolderChooserDialog {
+            file ->
             val pathPreferences = PathPreferences(
-                it.path, featureName!!,
+                file.path, featureName!!,
                 featureName == PathPreferences.FEATURE_AUDIO_PLAYER
             )
-            dao.insert(pathPreferences)
-            val prefSwitch = PathSwitchPreference(
-                requireContext(), null,
-                itemOnDeleteListener
-            )
-            preferenceDbMap[prefSwitch] = pathPreferences
-            prefSwitch.summary = it.path
-            preferencesList?.addPreference(prefSwitch)
+            var overrideExisting = false
+            dao.findByFeature(featureName!!).forEach {
+                pathPref ->
+                if (file.path.contains(pathPref.path) || pathPref.path.contains(file.path)) {
+                    // new analysis path contains existing path preference, clear existing analysis
+                    overrideExisting = true
+                    showWarningOverridePathDialog {
+                        if (it) {
+                            analysisDao.deleteByPathContains(pathPref.path)
+                            dao.delete(pathPref)
+                            addNewPathAndPreference(pathPreferences, file)
+                        }
+                    }
+                }
+            }
+            if (!overrideExisting) {
+                addNewPathAndPreference(pathPreferences, file)
+            }
         }
+    }
+
+    private fun addNewPathAndPreference(pathPreferences: PathPreferences, file: File) {
+        dao.insert(pathPreferences)
+        val prefSwitch = PathSwitchPreference(
+            requireContext(), null,
+            itemOnDeleteListener
+        )
+        preferenceDbMap[prefSwitch] = pathPreferences
+        prefSwitch.summary = file.path
+        preferencesList?.addPreference(prefSwitch)
     }
 }

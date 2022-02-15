@@ -31,6 +31,9 @@ import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotification
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotificationImpl
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotificationImpl24
 import com.amaze.fileutilities.utilis.ObtainableServiceBinder
+import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -49,13 +52,22 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         const val ACTION_CANCEL = "audio_action_cancel"
         const val ACTION_PREVIOUS = "audio_action_previous"
         const val ACTION_NEXT = "audio_action_next"
+        const val ACTION_SHUFFLE = "audio_action_shuffle"
+        const val ACTION_REPEAT = "audio_action_repeat"
         const val ARG_URI_LIST = "uri_list"
         const val ARG_URI = "uri"
+        const val REPEAT_ALL = 100
+        const val REPEAT_SINGLE = 101
+        const val REPEAT_NONE = 102
+        val REPEAT_ARRAY = arrayListOf(REPEAT_NONE, REPEAT_ALL, REPEAT_SINGLE)
 
-        fun runService(uri: Uri, uriList: ArrayList<Uri>?, context: Context) {
+        fun runService(uri: Uri, uriList: List<Uri>?, context: Context, action: String? = null) {
             val intent = Intent(context, AudioPlayerService::class.java)
             intent.putExtra(ARG_URI, uri)
-            intent.putParcelableArrayListExtra(ARG_URI_LIST, uriList)
+            uriList?.let {
+                intent.putParcelableArrayListExtra(ARG_URI_LIST, ArrayList(uriList))
+            }
+            intent.action = action
             context.startService(intent)
         }
 
@@ -78,9 +90,13 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
     private var audioManager: AudioManager? = null
     private var pausedByTransientLossOfFocus = false
     var mediaSession: MediaSessionCompat? = null
+    private var doShuffle: Boolean = false
+    private var repeatMode: Int = REPEAT_NONE
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate() {
         super.onCreate()
+        sharedPreferences = applicationContext.getAppCommonSharedPreferences()
         initializePlayer()
         initializeAttributes()
         registerReceiver(
@@ -172,6 +188,16 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                                     )
                                 }
                             }
+                        }
+                        ACTION_SHUFFLE -> {
+                            Log.i(javaClass.simpleName, "cycling shuffle")
+                            cycleShuffle()
+                            updateNotification()
+                        }
+                        ACTION_REPEAT -> {
+                            Log.i(javaClass.simpleName, "cycling repeat")
+                            cycleRepeat()
+                            updateNotification()
                         }
                         else -> {
                             initCurrentUriAndPlayer(intentUri!!, false)
@@ -344,7 +370,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration)
                 .putLong(
                     MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER,
-                    (audioProgressHandler.getPlayingIndex(false) + 1).toLong()
+                    (audioProgressHandler.getPlayingIndex(false)).toLong()
                 )
                 .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, song.year.toLong())
             val mediaStream = AudioUtils.getMediaStoreAlbumCoverUri(song.audioModel.id)
@@ -531,6 +557,14 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         mAttrs = AudioAttributes.Builder().setUsage(C.USAGE_MEDIA)
             .setContentType(C.CONTENT_TYPE_MUSIC)
             .build()
+        doShuffle = sharedPreferences.getBoolean(
+            PreferencesConstants.KEY_AUDIO_PLAYER_SHUFFLE,
+            PreferencesConstants.DEFAULT_AUDIO_PLAYER_SHUFFLE
+        )
+        repeatMode = sharedPreferences.getInt(
+            PreferencesConstants.KEY_AUDIO_PLAYER_REPEAT_MODE,
+            PreferencesConstants.DEFAULT_AUDIO_PLAYER_REPEAT_MODE
+        )
     }
 
     private fun extractMediaSourceFromUri(uri: Uri): MediaItem {
@@ -576,6 +610,42 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         seekPlayer(position)
     }
 
+    override fun cycleShuffle(): Boolean {
+        doShuffle = !doShuffle
+        sharedPreferences.edit().putBoolean(
+            PreferencesConstants.KEY_AUDIO_PLAYER_SHUFFLE,
+            doShuffle
+        ).apply()
+        return doShuffle
+    }
+
+    override fun cycleRepeat(): Int {
+        var repeatModeIdx = 0
+        REPEAT_ARRAY.forEachIndexed { index, i ->
+            if (i == repeatMode) {
+                repeatModeIdx = index
+            }
+        }
+        repeatMode = if (repeatModeIdx == REPEAT_ARRAY.size - 1) {
+            REPEAT_ARRAY[0]
+        } else {
+            REPEAT_ARRAY[repeatModeIdx + 1]
+        }
+        sharedPreferences.edit().putInt(
+            PreferencesConstants.KEY_AUDIO_PLAYER_REPEAT_MODE,
+            repeatMode
+        ).apply()
+        return repeatMode
+    }
+
+    override fun getShuffle(): Boolean {
+        return doShuffle
+    }
+
+    override fun getRepeat(): Int {
+        return repeatMode
+    }
+
     override fun getAudioProgressHandlerCallback(): AudioProgressHandler {
         return audioProgressHandler!!
     }
@@ -585,6 +655,33 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
     }
 
     override fun onProgressUpdate(audioProgressHandler: AudioProgressHandler) {
+        if (audioProgressHandler.audioPlaybackInfo.duration.toInt() <=
+            audioProgressHandler.audioPlaybackInfo.currentPosition ||
+            audioProgressHandler.audioPlaybackInfo.duration <= exoPlayer!!
+                .currentPosition
+        ) {
+            if (getShuffle()) {
+                uriList?.let {
+                    val randomIdx = Utils.generateRandom(0, it.size - 1)
+                    runService(
+                        it[randomIdx],
+                        it, applicationContext
+                    )
+                }
+            } else {
+                when (getRepeat()) {
+                    REPEAT_SINGLE -> {
+                        playMediaItem()
+                    }
+                    REPEAT_ALL -> {
+                        runService(currentUri!!, uriList, applicationContext, ACTION_NEXT)
+                    }
+                    REPEAT_NONE -> {
+                        // do nothing
+                    }
+                }
+            }
+        }
         serviceBinderPlaybackUpdate?.onPositionUpdate(audioProgressHandler)
         if (audioProgressHandler.isCancelled) {
             stopSelf()

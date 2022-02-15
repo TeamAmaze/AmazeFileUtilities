@@ -11,6 +11,7 @@
 package com.amaze.fileutilities.home_page.ui.files
 
 import android.app.Application
+import android.net.Uri
 import androidx.lifecycle.*
 import com.amaze.fileutilities.home_page.database.*
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
@@ -45,6 +46,7 @@ class FilesViewModel(val applicationContext: Application) :
                 data ->
                 val file = File(data.path)
                 val items = CursorUtils.getMediaFilesCount(applicationContext)
+                FileUtils.scanFile(Uri.fromFile(file), applicationContext)
                 val usedSpace = file.totalSpace - file.usableSpace
                 val progress = (usedSpace * 100) / file.totalSpace
                 emit(
@@ -566,8 +568,15 @@ class FilesViewModel(val applicationContext: Application) :
             if (storageSummary == null) {
                 return@liveData
             }
+            val dao = AppDatabase.getInstance(applicationContext).pathPreferencesDao()
+            val pathPreferences = dao.findByFeature(PathPreferences.FEATURE_AUDIO_PLAYER)
             val metaInfoAndSummaryPair = CursorUtils
-                .listAudio(applicationContext.applicationContext)
+                .listAudio(
+                    applicationContext.applicationContext,
+                    pathPreferences.map {
+                        it.path
+                    }
+                )
             setMediaInfoSummary(metaInfoAndSummaryPair.first, storageSummary)
             emit(metaInfoAndSummaryPair)
         }

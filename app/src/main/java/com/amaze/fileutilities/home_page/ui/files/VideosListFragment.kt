@@ -98,4 +98,8 @@ class VideosListFragment : AbstractMediaInfoListFragment() {
     override fun getRecyclerView(): RecyclerView {
         return binding.videosListView
     }
+
+    override fun getMediaListType(): Int {
+        return MediaFileAdapter.MEDIA_TYPE_VIDEO
+    }
 }

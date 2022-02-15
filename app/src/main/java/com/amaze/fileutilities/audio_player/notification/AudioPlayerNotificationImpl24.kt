@@ -20,12 +20,22 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlaybackInfo
 import com.amaze.fileutilities.audio_player.AudioPlayerService
 import com.amaze.fileutilities.home_page.MainActivity
+import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 
 class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
     @Synchronized
     override fun update() {
         stopped = false
-
+        val preferences = service.getAppCommonSharedPreferences()
+        val doShuffle = preferences.getBoolean(
+            PreferencesConstants.KEY_AUDIO_PLAYER_SHUFFLE,
+            PreferencesConstants.DEFAULT_AUDIO_PLAYER_SHUFFLE
+        )
+        val repeatMode = preferences.getInt(
+            PreferencesConstants.KEY_AUDIO_PLAYER_REPEAT_MODE,
+            PreferencesConstants.DEFAULT_AUDIO_PLAYER_REPEAT_MODE
+        )
         val playbackInfo = if (service.audioProgressHandler != null)
             service.audioProgressHandler!!.audioPlaybackInfo else AudioPlaybackInfo.EMPTY_PLAYBACK
         val isPlaying: Boolean = service.isPlaying()
@@ -34,6 +44,19 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
                 R.drawable.ic_baseline_pause_circle_outline_32
             } else {
                 R.drawable.ic_baseline_play_circle_outline_32
+            }
+        val shuffleButtonResId: Int =
+            if (doShuffle) {
+                R.drawable.ic_round_shuffle_32
+            } else {
+                R.drawable.ic_round_shuffle_gray_32
+            }
+        val repeatButtonResId: Int =
+            when (repeatMode) {
+                AudioPlayerService.REPEAT_NONE -> R.drawable.ic_round_repeat_gray_32
+                AudioPlayerService.REPEAT_ALL -> R.drawable.ic_round_repeat_32
+                AudioPlayerService.REPEAT_SINGLE -> R.drawable.ic_round_repeat_one_32
+                else -> R.drawable.ic_round_repeat_32
             }
         val action = Intent(service, MainActivity::class.java)
         action.putExtra(MainActivity.KEY_INTENT_AUDIO_PLAYER, true)
@@ -62,6 +85,18 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
                 service.getString(R.string.next),
                 retrievePlaybackAction(AudioPlayerService.ACTION_NEXT)
             )
+        val shuffleAction =
+            NotificationCompat.Action(
+                shuffleButtonResId,
+                service.getString(R.string.shuffle),
+                retrievePlaybackAction(AudioPlayerService.ACTION_SHUFFLE)
+            )
+        val repeatAction =
+            NotificationCompat.Action(
+                repeatButtonResId,
+                service.getString(R.string.repeat),
+                retrievePlaybackAction(AudioPlayerService.ACTION_REPEAT)
+            )
         val builder: NotificationCompat.Builder =
             NotificationCompat.Builder(
                 service,
@@ -76,9 +111,11 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
                 .setContentText(playbackInfo.artistName)
                 .setOngoing(isPlaying)
                 .setShowWhen(false)
+                .addAction(repeatAction)
                 .addAction(previousAction)
                 .addAction(playPauseAction)
                 .addAction(nextAction)
+                .addAction(shuffleAction)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             builder.setStyle(
                 androidx.media.app.NotificationCompat.MediaStyle()

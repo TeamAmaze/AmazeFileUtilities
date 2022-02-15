@@ -54,6 +54,8 @@ abstract class AbstractMediaInfoListFragment : Fragment(), MediaFileAdapter.Opti
 
     abstract fun getRecyclerView(): RecyclerView
 
+    abstract fun getMediaListType(): Int
+
     // make sure to set getFileStorageSummaryAndMediaFileInfoPair before calling
     fun resetAdapter() {
         getFileStorageSummaryAndMediaFileInfoPair()?.let {
@@ -90,9 +92,11 @@ abstract class AbstractMediaInfoListFragment : Fragment(), MediaFileAdapter.Opti
                     this@AbstractMediaInfoListFragment, !isList,
                     MediaFileListSorter.SortingPreference.newInstance(
                         requireContext()
-                            .getAppCommonSharedPreferences()
+                            .getAppCommonSharedPreferences(),
+                        getMediaListType()
                     ),
-                    ArrayList(mediaFileInfoList)
+                    ArrayList(mediaFileInfoList),
+                    getMediaListType()
                 ) {
                     mediaTypeHeader ->
                     mediaTypeHeader.setProgress(

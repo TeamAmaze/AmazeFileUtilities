@@ -45,4 +45,8 @@ interface ServiceOperationCallback {
     fun getAudioPlaybackInfo(): AudioPlaybackInfo
     fun invokePlayPausePlayer()
     fun invokeSeekPlayer(position: Long)
+    fun cycleShuffle(): Boolean
+    fun cycleRepeat(): Int
+    fun getShuffle(): Boolean
+    fun getRepeat(): Int
 }

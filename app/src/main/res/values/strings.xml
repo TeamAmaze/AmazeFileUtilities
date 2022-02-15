@@ -24,6 +24,8 @@
     <string name="grant">Grant</string>
     <string name="cancel">Cancel</string>
     <string name="play">Play</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="repeat">Repeat</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
     <string name="not_allowed">Not allowed</string>
@@ -75,6 +77,9 @@
     <string name="list_view">List View</string>
     <string name="grid_view">Grid View</string>
     <string name="size">Size</string>
+    <string name="album">Album</string>
+    <string name="artist">Artist</string>
+    <string name="duration">Duration</string>
 
     <!-- error activity -->
     <string name="sorry_string">Sorry, that should not have happened.</string>
@@ -159,6 +164,8 @@
     <string name="paths_included">Paths Included</string>
     <string name="paths_excluded">Paths Excluded</string>
     <string name="delete_preference">Delete Preference</string>
+    <string name="delete_pref_override_message">You\'re about to override an existing path.
+        This will reset the existing analysis data for that path.</string>
     <string name="confirm">Confirm</string>
     <string name="image_features">Image Features</string>
     <string name="features_paths_hint">Includes closed eyes, distracted, sad, selfie, group paths</string>
@@ -171,4 +178,6 @@
         Most likely to be un-useful videos.</string>
     <string name="reanalyse">Re-analyse</string>
     <string name="reanalyse_hint">Clears existing analysis data and starts again</string>
+    <string name="unknown_artist">&lt;UNKNOWN&gt;</string>
+    <string name="unknown_album">&lt;UNKNOWN&gt;</string>
 </resources>
