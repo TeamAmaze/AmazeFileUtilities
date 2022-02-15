@@ -72,13 +72,16 @@ class CursorUtils {
             return listMediaCommon(
                 context,
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                projection, null, null, BASE_SELECTION_VIDEOS, null,
+                projection, null, null, BASE_SELECTION_VIDEOS,
+
+                null,
                 MediaFileInfo.MEDIA_TYPE_VIDEO
             )
         }
 
-        fun listAudio(context: Context): Pair<FilesViewModel.StorageSummary,
-            ArrayList<MediaFileInfo>> {
+        fun listAudio(context: Context, blacklistPaths: List<String>):
+            Pair<FilesViewModel.StorageSummary,
+                ArrayList<MediaFileInfo>> {
             val projection = arrayOf(
                 MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.AudioColumns.DURATION,
@@ -89,7 +92,7 @@ class CursorUtils {
                 MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
                 projection,
                 null,
-                null, BASE_SELECTION_AUDIO, BLACKLIST_PATHS_AUDIO,
+                null, BASE_SELECTION_AUDIO, blacklistPaths,
                 MediaFileInfo.MEDIA_TYPE_AUDIO
             )
         }
@@ -187,7 +190,10 @@ class CursorUtils {
                 )
                 queryCursor = context
                     .contentResolver
-                    .query(MediaStore.Files.getContentUri("external"), projection, queryArgs, null)
+                    .query(
+                        MediaStore.Files.getContentUri("external"), projection,
+                        queryArgs, null
+                    )
             } else {
                 queryCursor = context
                     .contentResolver
@@ -229,7 +235,7 @@ class CursorUtils {
             selection: String?,
             selectionValues: Array<String?>?,
             baseSelection: String?,
-            blacklistPaths: ArrayList<String>?,
+            blacklistPaths: List<String>?,
             mediaType: Int
         ): Pair<FilesViewModel.StorageSummary, ArrayList<MediaFileInfo>> {
             var selection = selection
@@ -373,7 +379,7 @@ class CursorUtils {
 
         private fun addBlacklistSelectionValues(
             selectionValues: Array<String?>?,
-            paths: ArrayList<String>
+            paths: List<String>
         ): Array<String?> {
             var selectionValues: Array<String?>? = selectionValues
             if (selectionValues == null) selectionValues = arrayOfNulls(0)

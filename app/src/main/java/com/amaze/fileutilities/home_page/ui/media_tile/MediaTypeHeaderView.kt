@@ -135,7 +135,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
     fun initOptionsItems(
         optionsMenuSelected: MediaFileAdapter.OptionsMenuSelected,
         headerListItems: MutableList<AbstractMediaFilesAdapter.ListItem>,
-        sortingPreference: MediaFileListSorter.SortingPreference
+        sortingPreference: MediaFileListSorter.SortingPreference,
+        mediaListType: Int
     ) {
         val adapter = MediaTypeViewOptionsListAdapter(
             context, headerListItems,
@@ -152,10 +153,16 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
             clickOptionsSwitchView(optionsMenuSelected, sharedPreferences)
         }
         optionsGroupView.setOnClickListener {
-            clickOptionsGroupView(optionsMenuSelected, sharedPreferences, sortingPreference)
+            clickOptionsGroupView(
+                optionsMenuSelected, sharedPreferences, sortingPreference,
+                mediaListType
+            )
         }
         optionsSortView.setOnClickListener {
-            clickOptionsSortView(optionsMenuSelected, sharedPreferences, sortingPreference)
+            clickOptionsSortView(
+                optionsMenuSelected, sharedPreferences, sortingPreference,
+                mediaListType
+            )
         }
     }
 
@@ -220,219 +227,127 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
     private fun clickOptionsGroupView(
         optionsMenuSelected: MediaFileAdapter.OptionsMenuSelected,
         sharedPreferences: SharedPreferences,
-        sortingPreference: MediaFileListSorter.SortingPreference
+        sortingPreference: MediaFileListSorter.SortingPreference,
+        mediaListType: Int
     ) {
         clearOptionItemsBackgrounds()
         optionsRecyclerViewParent.hideFade(300)
         optionsItemsScroll.showFade(200)
         optionsGroupView.background = resources.getDrawable(R.drawable.button_selected_dark)
-        var groupParent: Button? = null
-        var groupDate: Button? = null
-        var groupName: Button? = null
-        when (sortingPreference.groupBy) {
-            MediaFileListSorter.GROUP_NAME -> {
-                groupName = getSelectedTextButton(resources.getString(R.string.name))
-                groupParent = getUnSelectedTextButton(resources.getString(R.string.parent))
-                groupDate = getUnSelectedTextButton(resources.getString(R.string.date))
-            }
-            MediaFileListSorter.GROUP_PARENT -> {
-                groupName = getUnSelectedTextButton(resources.getString(R.string.name))
-                groupParent = getSelectedTextButton(resources.getString(R.string.parent))
-                groupDate = getUnSelectedTextButton(resources.getString(R.string.date))
-            }
-            MediaFileListSorter.GROUP_DATE -> {
-                groupName = getUnSelectedTextButton(resources.getString(R.string.name))
-                groupParent = getUnSelectedTextButton(resources.getString(R.string.parent))
-                groupDate = getSelectedTextButton(resources.getString(R.string.date))
-            }
-        }
-        groupName?.setOnClickListener {
-            setSelectButton(groupName)
-            setUnSelectButton(groupDate!!)
-            setSelectButton(groupParent!!)
-            sharedPreferences.edit {
-                this.putInt(
-                    PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY,
-                    MediaFileListSorter.GROUP_NAME
-                ).apply()
-            }
-            sortingPreference.groupBy = MediaFileListSorter.GROUP_NAME
-            var isAsc = sharedPreferences
-                .getBoolean(
-                    PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY_IS_ASC,
-                    PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY_ASC
+
+        val buttonsList = ArrayList<Button>()
+        var isAsc = sharedPreferences
+            .getBoolean(
+                MediaFileListSorter.SortingPreference.getIsGroupByAscKey(mediaListType),
+                PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY_ASC
+            )
+        MediaFileListSorter.GROUP_BY_MEDIA_TYPE_MAP[mediaListType]?.forEach {
+            groupByType ->
+            val button = if (groupByType == sortingPreference.groupBy) {
+                getSelectedTextButton(
+                    MediaFileListSorter.getGroupNameByType(
+                        groupByType,
+                        resources
+                    )
                 )
-            isAsc = !isAsc
-            sharedPreferences.edit().putBoolean(
-                PreferencesConstants
-                    .KEY_MEDIA_LIST_GROUP_BY_IS_ASC,
-                isAsc
-            ).apply()
-            sortingPreference.isGroupByAsc = isAsc
-            optionsMenuSelected.groupBy(sortingPreference)
-        }
-        groupDate?.setOnClickListener {
-            setUnSelectButton(groupName!!)
-            setSelectButton(groupDate)
-            setUnSelectButton(groupParent!!)
-            sharedPreferences.edit {
-                this.putInt(
-                    PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY,
-                    MediaFileListSorter.GROUP_DATE
-                ).apply()
-            }
-            sortingPreference.groupBy = MediaFileListSorter.GROUP_DATE
-            var isAsc = sharedPreferences
-                .getBoolean(
-                    PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY_IS_ASC,
-                    PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY_ASC
+            } else {
+                getUnSelectedTextButton(
+                    MediaFileListSorter.getGroupNameByType(
+                        groupByType,
+                        resources
+                    )
                 )
-            isAsc = !isAsc
-            sharedPreferences.edit().putBoolean(
-                PreferencesConstants
-                    .KEY_MEDIA_LIST_GROUP_BY_IS_ASC,
-                isAsc
-            ).apply()
-            sortingPreference.isGroupByAsc = isAsc
-            optionsMenuSelected.groupBy(sortingPreference)
-        }
-        groupParent?.setOnClickListener {
-            setUnSelectButton(groupName!!)
-            setUnSelectButton(groupDate!!)
-            setSelectButton(groupParent)
-            sharedPreferences.edit {
-                this.putInt(
-                    PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY,
-                    MediaFileListSorter.GROUP_PARENT
-                ).apply()
             }
-            sortingPreference.groupBy = MediaFileListSorter.GROUP_PARENT
-            var isAsc = sharedPreferences
-                .getBoolean(
-                    PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY_IS_ASC,
-                    PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY_ASC
-                )
-            isAsc = !isAsc
-            sharedPreferences.edit().putBoolean(
-                PreferencesConstants
-                    .KEY_MEDIA_LIST_GROUP_BY_IS_ASC,
-                isAsc
-            ).apply()
-            sortingPreference.isGroupByAsc = isAsc
-            optionsMenuSelected.groupBy(sortingPreference)
+            button.setOnClickListener {
+                buttonsList.forEach {
+                    allButtons ->
+                    setUnSelectButton(allButtons)
+                }
+                setSelectButton(button)
+
+                sharedPreferences.edit {
+                    this.putInt(
+                        MediaFileListSorter.SortingPreference.getGroupByKey(mediaListType),
+                        groupByType
+                    ).apply()
+                }
+                sortingPreference.groupBy = groupByType
+                isAsc = !isAsc
+                sharedPreferences.edit().putBoolean(
+                    MediaFileListSorter.SortingPreference.getIsGroupByAscKey(mediaListType),
+                    isAsc
+                ).apply()
+                sortingPreference.isGroupByAsc = isAsc
+                optionsMenuSelected.groupBy(sortingPreference)
+            }
+            buttonsList.add(button)
         }
-        optionsListParent.addView(groupName)
-        optionsListParent.addView(groupDate)
-        optionsListParent.addView(groupParent)
+        buttonsList.forEach {
+            optionsListParent.addView(it)
+        }
     }
 
     private fun clickOptionsSortView(
         optionsMenuSelected: MediaFileAdapter.OptionsMenuSelected,
         sharedPreferences: SharedPreferences,
-        sortingPreference: MediaFileListSorter.SortingPreference
+        sortingPreference: MediaFileListSorter.SortingPreference,
+        mediaListType: Int
     ) {
         clearOptionItemsBackgrounds()
         optionsRecyclerViewParent.hideFade(300)
         optionsItemsScroll.showFade(200)
         optionsSortView.background = resources.getDrawable(R.drawable.button_selected_dark)
-        var sortSize: Button? = null
-        var sortDate: Button? = null
-        var sortName: Button? = null
-        when (sortingPreference.sortBy) {
-            MediaFileListSorter.SORT_NAME -> {
-                sortName = getSelectedTextButton(resources.getString(R.string.name))
-                sortSize = getUnSelectedTextButton(resources.getString(R.string.size))
-                sortDate = getUnSelectedTextButton(resources.getString(R.string.date))
-            }
-            MediaFileListSorter.SORT_SIZE -> {
-                sortName = getUnSelectedTextButton(resources.getString(R.string.name))
-                sortSize = getSelectedTextButton(resources.getString(R.string.size))
-                sortDate = getUnSelectedTextButton(resources.getString(R.string.date))
-            }
-            MediaFileListSorter.SORT_MODIF -> {
-                sortName = getUnSelectedTextButton(resources.getString(R.string.name))
-                sortSize = getUnSelectedTextButton(resources.getString(R.string.size))
-                sortDate = getSelectedTextButton(resources.getString(R.string.date))
-            }
-        }
-        sortName?.setOnClickListener {
-            setSelectButton(sortName)
-            setUnSelectButton(sortDate!!)
-            setSelectButton(sortSize!!)
-            sharedPreferences.edit {
-                this.putInt(
-                    PreferencesConstants.KEY_MEDIA_LIST_SORT_BY,
-                    MediaFileListSorter.SORT_NAME
-                ).apply()
-            }
-            sortingPreference.sortBy = MediaFileListSorter.SORT_NAME
-            var isAsc = sharedPreferences
-                .getBoolean(
-                    PreferencesConstants.KEY_MEDIA_LIST_SORT_BY_IS_ASC,
-                    PreferencesConstants.DEFAULT_MEDIA_LIST_SORT_BY_ASC
+
+        val buttonsList = ArrayList<Button>()
+        var isAsc = sharedPreferences
+            .getBoolean(
+                MediaFileListSorter.SortingPreference.getIsSortByAscKey(mediaListType),
+                PreferencesConstants.DEFAULT_MEDIA_LIST_SORT_BY_ASC
+            )
+        MediaFileListSorter.SORT_BY_MEDIA_TYPE_MAP[mediaListType]?.forEach {
+            sortByType ->
+            val button = if (sortByType == sortingPreference.sortBy) {
+                getSelectedTextButton(
+                    MediaFileListSorter.getSortNameByType(
+                        sortByType,
+                        resources
+                    )
                 )
-            isAsc = !isAsc
-            sharedPreferences.edit().putBoolean(
-                PreferencesConstants
-                    .KEY_MEDIA_LIST_SORT_BY_IS_ASC,
-                isAsc
-            ).apply()
-            sortingPreference.isSortByAsc = isAsc
-            optionsMenuSelected.sortBy(sortingPreference)
-        }
-        sortDate?.setOnClickListener {
-            setUnSelectButton(sortName!!)
-            setSelectButton(sortDate)
-            setUnSelectButton(sortSize!!)
-            sharedPreferences.edit {
-                this.putInt(
-                    PreferencesConstants.KEY_MEDIA_LIST_SORT_BY,
-                    MediaFileListSorter.SORT_MODIF
-                ).apply()
-            }
-            sortingPreference.sortBy = MediaFileListSorter.SORT_MODIF
-            var isAsc = sharedPreferences
-                .getBoolean(
-                    PreferencesConstants.KEY_MEDIA_LIST_SORT_BY_IS_ASC,
-                    PreferencesConstants.DEFAULT_MEDIA_LIST_SORT_BY_ASC
+            } else {
+                getUnSelectedTextButton(
+                    MediaFileListSorter.getSortNameByType(
+                        sortByType,
+                        resources
+                    )
                 )
-            isAsc = !isAsc
-            sharedPreferences.edit().putBoolean(
-                PreferencesConstants
-                    .KEY_MEDIA_LIST_SORT_BY_IS_ASC,
-                isAsc
-            ).apply()
-            sortingPreference.isSortByAsc = isAsc
-            optionsMenuSelected.sortBy(sortingPreference)
-        }
-        sortSize?.setOnClickListener {
-            setUnSelectButton(sortName!!)
-            setUnSelectButton(sortDate!!)
-            setSelectButton(sortSize)
-            sharedPreferences.edit {
-                this.putInt(
-                    PreferencesConstants.KEY_MEDIA_LIST_SORT_BY,
-                    MediaFileListSorter.SORT_SIZE
-                ).apply()
             }
-            sortingPreference.sortBy = MediaFileListSorter.SORT_SIZE
-            var isAsc = sharedPreferences
-                .getBoolean(
-                    PreferencesConstants.KEY_MEDIA_LIST_SORT_BY_IS_ASC,
-                    PreferencesConstants.DEFAULT_MEDIA_LIST_SORT_BY_ASC
-                )
-            isAsc = !isAsc
-            sharedPreferences.edit().putBoolean(
-                PreferencesConstants
-                    .KEY_MEDIA_LIST_SORT_BY_IS_ASC,
-                isAsc
-            ).apply()
-            sortingPreference.isSortByAsc = isAsc
-            optionsMenuSelected.sortBy(sortingPreference)
+            button.setOnClickListener {
+                buttonsList.forEach {
+                    allButtons ->
+                    setUnSelectButton(allButtons)
+                }
+                setSelectButton(button)
+
+                sharedPreferences.edit {
+                    this.putInt(
+                        MediaFileListSorter.SortingPreference.getSortByKey(mediaListType),
+                        sortByType
+                    ).apply()
+                }
+                sortingPreference.sortBy = sortByType
+                isAsc = !isAsc
+                sharedPreferences.edit().putBoolean(
+                    MediaFileListSorter.SortingPreference.getIsSortByAscKey(mediaListType),
+                    isAsc
+                ).apply()
+                sortingPreference.isSortByAsc = isAsc
+                optionsMenuSelected.sortBy(sortingPreference)
+            }
+            buttonsList.add(button)
         }
-        optionsListParent.addView(sortName)
-        optionsListParent.addView(sortDate)
-        optionsListParent.addView(sortSize)
+        buttonsList.forEach {
+            optionsListParent.addView(it)
+        }
     }
 
     private fun getSelectedTextButton(text: String): Button {

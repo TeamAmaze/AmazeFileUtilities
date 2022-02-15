@@ -12,6 +12,8 @@ package com.amaze.fileutilities.home_page.ui.files
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Resources
+import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.safeLet
 import java.util.*
@@ -39,7 +41,7 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
                         compareGroupBy = groupByAsc * f1.date.compareTo(f2.date)
                     }
                 }
-                GROUP_NAME -> {
+                GROUP_NAME, GROUP_ALBUM, GROUP_ARTIST -> {
                     compareGroupBy = groupByAsc * f1.listHeader.compareTo(f2.listHeader)
                 }
             }
@@ -56,6 +58,32 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
                     SORT_SIZE -> {
                         sortByAsc * f1.longSize.compareTo(f2.longSize)
                     }
+                    SORT_LENGTH -> {
+                        if (f1.extraInfo != null && f2.extraInfo != null) {
+                            if (f1.extraInfo.videoMetaData != null &&
+                                f2.extraInfo.videoMetaData != null &&
+                                f1.extraInfo.videoMetaData.duration != null &&
+                                f2.extraInfo.videoMetaData.duration != null
+                            ) {
+                                sortByAsc * f1.extraInfo.videoMetaData.duration.compareTo(
+                                    f2.extraInfo.videoMetaData.duration
+                                )
+                            } else if (f1.extraInfo.audioMetaData != null &&
+                                f2.extraInfo.audioMetaData != null &&
+                                f1.extraInfo.audioMetaData.duration != null &&
+                                f2.extraInfo.audioMetaData.duration != null
+                            ) {
+                                sortByAsc * f1.extraInfo.audioMetaData.duration.compareTo(
+                                    f2
+                                        .extraInfo.audioMetaData.duration
+                                )
+                            } else {
+                                0
+                            }
+                        } else {
+                            0
+                        }
+                    }
                     else -> {
                         0
                     }
@@ -69,9 +97,44 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
         const val SORT_NAME = 0
         const val SORT_MODIF = 1
         const val SORT_SIZE = 2
+        const val SORT_LENGTH = 3
         const val GROUP_PARENT = 3
         const val GROUP_DATE = 4
         const val GROUP_NAME = 5
+        const val GROUP_ALBUM = 6
+        const val GROUP_ARTIST = 7
+
+        val GROUP_BY_MEDIA_TYPE_MAP = mapOf(
+            Pair(
+                MediaFileAdapter.MEDIA_TYPE_AUDIO,
+                listOf(
+                    GROUP_NAME, GROUP_DATE, GROUP_PARENT,
+                    GROUP_ALBUM, GROUP_ARTIST
+                )
+            ),
+            Pair(MediaFileAdapter.MEDIA_TYPE_VIDEO, listOf(GROUP_NAME, GROUP_DATE, GROUP_PARENT)),
+            Pair(MediaFileAdapter.MEDIA_TYPE_IMAGES, listOf(GROUP_NAME, GROUP_DATE, GROUP_PARENT)),
+            Pair(MediaFileAdapter.MEDIA_TYPE_DOCS, listOf(GROUP_NAME, GROUP_DATE, GROUP_PARENT))
+        )
+
+        val SORT_BY_MEDIA_TYPE_MAP = mapOf(
+            Pair(
+                MediaFileAdapter.MEDIA_TYPE_AUDIO,
+                listOf(
+                    SORT_NAME, SORT_SIZE, SORT_MODIF,
+                    SORT_LENGTH
+                )
+            ),
+            Pair(
+                MediaFileAdapter.MEDIA_TYPE_VIDEO,
+                listOf(
+                    SORT_NAME, SORT_SIZE, SORT_MODIF,
+                    SORT_LENGTH
+                )
+            ),
+            Pair(MediaFileAdapter.MEDIA_TYPE_IMAGES, listOf(SORT_NAME, SORT_SIZE, SORT_MODIF)),
+            Pair(MediaFileAdapter.MEDIA_TYPE_DOCS, listOf(SORT_NAME, SORT_SIZE, SORT_MODIF))
+        )
 
         fun generateMediaFileListHeadersAndSort(
             context: Context,
@@ -89,9 +152,38 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
                     GROUP_NAME -> {
                         it.listHeader = it.title[0].toString()
                     }
+                    GROUP_ALBUM -> {
+                        it.listHeader = it.extraInfo?.audioMetaData?.albumName ?: context
+                            .getString(R.string.unknown_artist)
+                    }
+                    GROUP_ARTIST -> {
+                        it.listHeader = it.extraInfo?.audioMetaData?.artistName ?: context
+                            .getString(R.string.unknown_album)
+                    }
                 }
             }
             Collections.sort(mediaFileList, MediaFileListSorter(sortingPreference))
+        }
+
+        fun getGroupNameByType(groupType: Int, resources: Resources): String {
+            return when (groupType) {
+                GROUP_PARENT -> resources.getString(R.string.parent)
+                GROUP_NAME -> resources.getString(R.string.name)
+                GROUP_DATE -> resources.getString(R.string.date)
+                GROUP_ALBUM -> resources.getString(R.string.album)
+                GROUP_ARTIST -> resources.getString(R.string.artist)
+                else -> ""
+            }
+        }
+
+        fun getSortNameByType(sortBy: Int, resources: Resources): String {
+            return when (sortBy) {
+                SORT_NAME -> resources.getString(R.string.name)
+                SORT_SIZE -> resources.getString(R.string.size)
+                SORT_MODIF -> resources.getString(R.string.date)
+                SORT_LENGTH -> resources.getString(R.string.duration)
+                else -> ""
+            }
         }
     }
 
@@ -102,26 +194,46 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
         var isSortByAsc: Boolean
     ) {
         companion object {
-            fun newInstance(sharedPreferences: SharedPreferences): SortingPreference {
+            fun newInstance(
+                sharedPreferences: SharedPreferences,
+                mediaListType: Int
+            ): SortingPreference {
                 val groupBy = sharedPreferences.getInt(
-                    PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY,
+                    getGroupByKey(mediaListType),
                     PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
                 )
                 val sortBy = sharedPreferences.getInt(
-                    PreferencesConstants.KEY_MEDIA_LIST_SORT_BY,
+                    getSortByKey(mediaListType),
                     PreferencesConstants.DEFAULT_MEDIA_LIST_SORT_BY
                 )
                 val isGroupByAsc = sharedPreferences
                     .getBoolean(
-                        PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY_IS_ASC,
+                        getIsGroupByAscKey(mediaListType),
                         PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY_ASC
                     )
                 val isSortByAsc = sharedPreferences
                     .getBoolean(
-                        PreferencesConstants.KEY_MEDIA_LIST_SORT_BY_IS_ASC,
+                        getIsSortByAscKey(mediaListType),
                         PreferencesConstants.DEFAULT_MEDIA_LIST_SORT_BY_ASC
                     )
                 return SortingPreference(groupBy, sortBy, isGroupByAsc, isSortByAsc)
+            }
+
+            /**
+             * Preference key for media list type from MediaFileAdapter
+             */
+            fun getGroupByKey(mediaListType: Int): String {
+                return "${mediaListType}_${PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY}"
+            }
+
+            fun getSortByKey(mediaListType: Int): String {
+                return "${mediaListType}_${PreferencesConstants.KEY_MEDIA_LIST_SORT_BY}"
+            }
+            fun getIsGroupByAscKey(mediaListType: Int): String {
+                return "${mediaListType}_${PreferencesConstants.KEY_MEDIA_LIST_GROUP_BY_IS_ASC}"
+            }
+            fun getIsSortByAscKey(mediaListType: Int): String {
+                return "${mediaListType}_${PreferencesConstants.KEY_MEDIA_LIST_SORT_BY_IS_ASC}"
             }
         }
     }

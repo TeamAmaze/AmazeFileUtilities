@@ -35,6 +35,7 @@
     <dimen name="fastscroller_track_padding">3dp</dimen>
     <dimen name="minimal_row_size">72dp</dimen>
     <dimen name="minimal_icon_size">40dp</dimen>
+    <dimen name="minimal_icon_size_small">25dp</dimen>
     <dimen name="list_header_height">48dp</dimen>
     <dimen name="list_header_textsize">16sp</dimen>
     <dimen name="check_icon_size_grid">40dp</dimen>

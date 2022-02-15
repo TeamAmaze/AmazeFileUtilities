@@ -131,6 +131,14 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
         return _binding.nextButton
     }
 
+    override fun getShuffleButton(): ImageView {
+        return _binding.shuffleButton
+    }
+
+    override fun getRepeatButton(): ImageView {
+        return _binding.repeatButton
+    }
+
     override fun serviceDisconnected() {
         // do nothing
     }

@@ -188,6 +188,10 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         return binding.audiosListView
     }
 
+    override fun getMediaListType(): Int {
+        return MediaFileAdapter.MEDIA_TYPE_AUDIO
+    }
+
     override fun getSeekbar(): Slider? {
         return _binding?.seekBar
     }
@@ -226,6 +230,14 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
 
     override fun getNextButton(): ImageView? {
         return _binding?.nextButton
+    }
+
+    override fun getShuffleButton(): ImageView? {
+        return _binding?.shuffleButton
+    }
+
+    override fun getRepeatButton(): ImageView? {
+        return _binding?.repeatButton
     }
 
     override fun getContextWeakRef(): WeakReference<Context> {

@@ -18,6 +18,7 @@ import android.view.View
 import android.widget.*
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
+import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.px
 import com.amaze.fileutilities.utilis.showToastInCenter
@@ -89,15 +90,12 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         }
         var count =
             if (mediaFileInfoList.size > PREVIEW_COUNT) PREVIEW_COUNT else mediaFileInfoList.size
-        if (count == 0) {
-            imagesListScroll.visibility = View.GONE
-        } else {
-            while (count -- > 1) {
-                val imageView = getImageView(mediaFileInfoList[count])
-                imagesListParent.addView(imageView)
-            }
-            imagesListParent.addView(getSummaryView(mediaFileInfoList.size))
+        while (count -- > 1) {
+            val idx = Utils.generateRandom(0, mediaFileInfoList.size - 1)
+            val imageView = getImageView(mediaFileInfoList[idx])
+            imagesListParent.addView(imageView)
         }
+        imagesListParent.addView(getSummaryView(mediaFileInfoList.size))
     }
 
     private fun getImageView(mediaFileInfo: MediaFileInfo): ImageView {
