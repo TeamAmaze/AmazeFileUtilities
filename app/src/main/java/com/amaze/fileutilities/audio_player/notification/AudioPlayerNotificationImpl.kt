@@ -24,6 +24,8 @@ import com.amaze.fileutilities.audio_player.AudioPlaybackInfo
 import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
 import com.amaze.fileutilities.audio_player.AudioPlayerService
 import com.amaze.fileutilities.utilis.BitmapPaletteWrapper
+import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.bumptech.glide.request.target.Target
 
 class AudioPlayerNotificationImpl : AudioPlayerNotification() {
@@ -84,6 +86,41 @@ class AudioPlayerNotificationImpl : AudioPlayerNotification() {
     private fun linkButtons(notificationLayout: RemoteViews, notificationLayoutBig: RemoteViews) {
         var pendingIntent: PendingIntent
         val serviceName = ComponentName(service, AudioPlayerService::class.java)
+        val preferences = service.getAppCommonSharedPreferences()
+        val doShuffle = preferences.getBoolean(
+            PreferencesConstants.KEY_AUDIO_PLAYER_SHUFFLE,
+            PreferencesConstants.DEFAULT_AUDIO_PLAYER_SHUFFLE
+        )
+        val repeatMode = preferences.getInt(
+            PreferencesConstants.KEY_AUDIO_PLAYER_REPEAT_MODE,
+            PreferencesConstants.DEFAULT_AUDIO_PLAYER_REPEAT_MODE
+        )
+
+        val shuffleButtonResId: Int =
+            if (doShuffle) {
+                R.drawable.ic_round_shuffle_32
+            } else {
+                R.drawable.ic_round_shuffle_gray_32
+            }
+        val repeatButtonResId: Int =
+            when (repeatMode) {
+                AudioPlayerService.REPEAT_NONE -> R.drawable.ic_round_repeat_gray_32
+                AudioPlayerService.REPEAT_ALL -> R.drawable.ic_round_repeat_32
+                AudioPlayerService.REPEAT_SINGLE -> R.drawable.ic_round_repeat_one_32
+                else -> R.drawable.ic_round_repeat_32
+            }
+        notificationLayout.setImageViewResource(R.id.action_repeat, repeatButtonResId)
+        notificationLayout.setImageViewResource(R.id.action_shuffle, shuffleButtonResId)
+        notificationLayoutBig.setImageViewResource(R.id.action_repeat, repeatButtonResId)
+        notificationLayoutBig.setImageViewResource(R.id.action_shuffle, shuffleButtonResId)
+
+        // repeat
+        pendingIntent = buildPendingIntent(
+            service, AudioPlayerService.ACTION_REPEAT,
+            serviceName
+        )
+        notificationLayout.setOnClickPendingIntent(R.id.action_repeat, pendingIntent)
+        notificationLayoutBig.setOnClickPendingIntent(R.id.action_repeat, pendingIntent)
 
         // Previous track
         pendingIntent = buildPendingIntent(service, AudioPlayerService.ACTION_PREVIOUS, serviceName)
@@ -97,6 +134,14 @@ class AudioPlayerNotificationImpl : AudioPlayerNotification() {
         )
         notificationLayout.setOnClickPendingIntent(R.id.action_play_pause, pendingIntent)
         notificationLayoutBig.setOnClickPendingIntent(R.id.action_play_pause, pendingIntent)
+
+        // shuffle
+        pendingIntent = buildPendingIntent(
+            service, AudioPlayerService.ACTION_SHUFFLE,
+            serviceName
+        )
+        notificationLayout.setOnClickPendingIntent(R.id.action_shuffle, pendingIntent)
+        notificationLayoutBig.setOnClickPendingIntent(R.id.action_shuffle, pendingIntent)
 
         // Next track
         pendingIntent = buildPendingIntent(service, AudioPlayerService.ACTION_NEXT, serviceName)

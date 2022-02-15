@@ -53,4 +53,7 @@ interface ImageAnalysisDao {
 
     @Delete
     fun delete(user: ImageAnalysis)
+
+    @Query("DELETE FROM imageanalysis WHERE file_path like '%' || :path || '%'")
+    fun deleteByPathContains(path: String)
 }

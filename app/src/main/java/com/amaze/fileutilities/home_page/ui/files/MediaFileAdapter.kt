@@ -14,6 +14,7 @@ import android.content.Context
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.audio_player.AudioPlayerService
 import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeHeaderView
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.HeaderViewHolder
@@ -26,9 +27,17 @@ class MediaFileAdapter(
     isGrid: Boolean,
     private var sortingPreference: MediaFileListSorter.SortingPreference,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
+    private val mediaListType: Int,
     private val drawBannerCallback: (mediaTypeHeader: MediaTypeHeaderView) -> Unit
 ) :
     AbstractMediaFilesAdapter(context, preloader, isGrid) {
+
+    companion object {
+        const val MEDIA_TYPE_AUDIO = 0
+        const val MEDIA_TYPE_VIDEO = 1
+        const val MEDIA_TYPE_DOCS = 2
+        const val MEDIA_TYPE_IMAGES = 3
+    }
 
     private var headerListItems: MutableList<ListItem> = mutableListOf()
     private var mediaFileListItems: MutableList<ListItem> = mutableListOf()
@@ -84,6 +93,23 @@ class MediaFileAdapter(
             }
             is ListBannerViewHolder -> {
                 setBannerResources(holder)
+            }
+            is MediaInfoRecyclerViewHolder -> {
+                if (mediaListType == MEDIA_TYPE_AUDIO) {
+                    holder.root.setOnClickListener {
+                        // for audio list fragment we want to just show bottom sheet
+                        mediaFileListItems[position].mediaFileInfo?.getContentUri(context)?.let {
+                            uri ->
+                            AudioPlayerService.runService(
+                                uri,
+                                mediaFileInfoList.map {
+                                    it.getContentUri(context)
+                                },
+                                context
+                            )
+                        }
+                    }
+                }
             }
         }
     }
@@ -189,7 +215,7 @@ class MediaFileAdapter(
         }
         holder.mediaTypeHeaderView.initOptionsItems(
             optionsMenuSelected, headerListItems,
-            sortingPreference
+            sortingPreference, mediaListType
         )
         drawBannerCallback.invoke(holder.mediaTypeHeaderView)
     }
