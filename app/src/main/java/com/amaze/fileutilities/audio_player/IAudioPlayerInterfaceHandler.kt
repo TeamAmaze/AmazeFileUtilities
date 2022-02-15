@@ -41,14 +41,20 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     fun getPlayButton(): ImageView?
     fun getPrevButton(): ImageView?
     fun getNextButton(): ImageView?
+    fun getShuffleButton(): ImageView?
+    fun getRepeatButton(): ImageView?
     fun getContextWeakRef(): WeakReference<Context>
     fun getAudioPlayerHandlerViewModel(): AudioPlayerInterfaceHandlerViewModel
 
     override fun onPositionUpdate(progressHandler: AudioProgressHandler) {
+        progressHandler.audioPlaybackInfo.duration.toFloat()
         getSeekbar()?.valueTo = progressHandler.audioPlaybackInfo.duration.toFloat()
+            .coerceAtMost(157257f)
         getSeekbar()?.value = progressHandler.audioPlaybackInfo.currentPosition.toFloat()
+            .coerceAtMost(157257f)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWaveformSeekbar()?.maxProgress = progressHandler.audioPlaybackInfo.duration.toFloat()
+            getWaveformSeekbar()?.maxProgress = progressHandler.audioPlaybackInfo.duration
+                .toFloat()
             getWaveformSeekbar()?.progress = progressHandler
                 .audioPlaybackInfo.currentPosition.toFloat()
         }
@@ -81,6 +87,11 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         getArtistTextView()?.text = audioService?.getAudioPlaybackInfo()?.artistName
 
         audioService?.let {
+            setShuffleButton(it.getShuffle())
+            setRepeatButton(it.getRepeat())
+        }
+
+        audioService?.let {
             getPlayButton()?.setOnClickListener {
                 audioService.invokePlayPausePlayer()
                 invalidateActionButtons(audioService.getAudioProgressHandlerCallback())
@@ -93,8 +104,65 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                 getContextWeakRef()
                     .get()?.startService(retrievePlaybackAction(AudioPlayerService.ACTION_NEXT))
             }
+            getShuffleButton()?.setOnClickListener {
+                setShuffleButton(audioService.cycleShuffle())
+            }
+            getRepeatButton()?.setOnClickListener {
+                setRepeatButton(audioService.cycleRepeat())
+            }
         }
         setupSeekBars(audioService)
+    }
+
+    private fun setShuffleButton(doShuffle: Boolean) {
+        getContextWeakRef().get()?.let {
+            val gray = it.resources.getColor(R.color.grey_color)
+            getShuffleButton()?.setImageDrawable(
+                it.resources
+                    .getDrawable(R.drawable.ic_round_shuffle_32)
+            )
+            if (!doShuffle) {
+                getShuffleButton()?.setColorFilter(gray)
+            } else {
+                getShuffleButton()?.setColorFilter(null)
+            }
+        }
+    }
+
+    private fun setRepeatButton(repeatMode: Int) {
+        getContextWeakRef().get()?.let {
+            when (repeatMode) {
+                AudioPlayerService.REPEAT_NONE -> {
+                    val gray = it.resources.getColor(R.color.grey_color)
+                    getRepeatButton()?.setImageDrawable(
+                        it.resources
+                            .getDrawable(R.drawable.ic_round_repeat_32)
+                    )
+                    getRepeatButton()?.setColorFilter(gray)
+                }
+                AudioPlayerService.REPEAT_ALL -> {
+                    getRepeatButton()?.setImageDrawable(
+                        it.resources
+                            .getDrawable(R.drawable.ic_round_repeat_32)
+                    )
+                    getRepeatButton()?.setColorFilter(null)
+                }
+                AudioPlayerService.REPEAT_SINGLE -> {
+                    getRepeatButton()?.setImageDrawable(
+                        it.resources
+                            .getDrawable(R.drawable.ic_round_repeat_one_32)
+                    )
+                    getRepeatButton()?.setColorFilter(null)
+                }
+                else -> {
+                    getRepeatButton()?.setImageDrawable(
+                        it.resources
+                            .getDrawable(R.drawable.ic_round_repeat_32)
+                    )
+                    getRepeatButton()?.setColorFilter(null)
+                }
+            }
+        }
     }
 
     private fun invalidateActionButtons(progressHandler: AudioProgressHandler) {
@@ -117,7 +185,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     }
 
     private fun setSeekbarProgress(progress: Int) {
-        getSeekbar()?.value = progress.toFloat()
+        getSeekbar()?.value = progress.toFloat().coerceAtMost(157257f)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWaveformSeekbar()?.visibility = View.VISIBLE
             getSeekbar()?.visibility = View.GONE
@@ -166,7 +234,8 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     }
 
     private fun setupSeekBars(audioService: ServiceOperationCallback?) {
-        getSeekbar()?.valueTo = audioService?.getAudioPlaybackInfo()?.duration?.toFloat() ?: 0f
+        val valueTo = audioService?.getAudioPlaybackInfo()?.duration?.toFloat()
+        getSeekbar()?.valueTo = valueTo?.coerceAtMost(157257f) ?: 0f
         getWaveformSeekbar()?.maxProgress = audioService
             ?.getAudioPlaybackInfo()?.duration?.toFloat() ?: 0f
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
@@ -226,8 +295,8 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         getSeekbar()?.addOnChangeListener(
             Slider.OnChangeListener { slider, value, fromUser ->
                 if (fromUser) {
-                    //                            mediaController.transportControls.seekTo(progress.toLong())
-                    //                            audioService.seekPlayer(progress.toLong())
+//                    mediaController.transportControls.seekTo(progress.toLong())
+//                    audioService.seekPlayer(progress.toLong())
                     audioService?.invokeSeekPlayer(value.toLong())
                     val x: Int = ceil(value / 1000f).toInt()
 
@@ -239,33 +308,6 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                 }
             }
         )
-        /*getSeekbar()?.setOnSeekBarChangeListener(object :
-                SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(
-                    seekBar: SeekBar?,
-                    progress: Int,
-                    fromUser: Boolean
-                ) {
-                    if (fromUser) {
-//                            mediaController.transportControls.seekTo(progress.toLong())
-//                            audioService.seekPlayer(progress.toLong())
-                        audioService?.invokeSeekPlayer(progress.toLong())
-                        val x: Int = ceil(progress / 1000f).toInt()
-
-                        if (x == 0 && audioService?.getAudioProgressHandlerCallback()
-                            ?.isCancelled == true
-                        ) {
-                            seekBar?.progress = 0
-                        }
-                    }
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                }
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                }
-            })*/
     }
 
     private fun scheduleWaveformSeekbarVisibility() {

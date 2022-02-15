@@ -12,6 +12,8 @@ package com.amaze.fileutilities.utilis
 
 import android.annotation.TargetApi
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Environment
@@ -51,6 +53,7 @@ class FileUtils {
         private const val WHATSAPP_AUDIO_2 = "$WHATSAPP_BASE/$WHATSAPP_AUDIO_BASE"
         private const val RECORDINGS = "Recordings"
         private const val SCREENSHOTS = "Screenshots"
+        private const val RINGTONES_MUSIC = "Music/ringtone"
         private const val INSTAGRAM = "Instagram"
         private const val CAMERA_BASE = "Camera"
         private const val ADM = "ADM"
@@ -85,14 +88,16 @@ class FileUtils {
         )
 
         private val DEFAULT_RECORDINGS = if (VERSION.SDK_INT >= VERSION_CODES.S) {
-            listOf(Environment.DIRECTORY_RECORDINGS)
+            listOf(Environment.DIRECTORY_RECORDINGS, RINGTONES_MUSIC)
         } else {
-            listOf(RECORDINGS)
+            listOf(RECORDINGS, RINGTONES_MUSIC)
         }
 
         private val DEFAULT_AUDIO_PLAYER = listOf(
-            if (VERSION.SDK_INT >= VERSION_CODES.S)
-                Environment.DIRECTORY_RECORDINGS else RECORDINGS,
+            Environment.DIRECTORY_ALARMS,
+            Environment.DIRECTORY_NOTIFICATIONS,
+            Environment.DIRECTORY_RINGTONES,
+            RINGTONES_MUSIC,
             WHATSAPP_AUDIO, WHATSAPP_AUDIO_2
         )
 
@@ -286,6 +291,17 @@ class FileUtils {
             }
             inputStream.close()
             return hexString.toString()
+        }
+
+        /**
+         * Triggers [Intent.ACTION_MEDIA_SCANNER_SCAN_FILE] intent to refresh the media store.
+         *
+         * @param uri File's [Uri]
+         * @param c [Context]
+         */
+        fun scanFile(uri: Uri, c: Context) {
+            val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri)
+            c.sendBroadcast(mediaScanIntent)
         }
 
         @TargetApi(VERSION_CODES.N)

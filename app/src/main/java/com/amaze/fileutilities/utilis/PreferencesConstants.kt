@@ -10,6 +10,8 @@
 
 package com.amaze.fileutilities.utilis
 
+import com.amaze.fileutilities.audio_player.AudioPlayerService
+
 class PreferencesConstants {
 
     companion object {
@@ -21,6 +23,8 @@ class PreferencesConstants {
         const val KEY_MEDIA_LIST_SORT_BY_IS_ASC = "media_list_sort_by_is_asc"
         const val KEY_SEARCH_DUPLICATES_IN = "search_duplicates_in"
         const val KEY_PATH_PREFS_MIGRATION = "path_prefs_migration"
+        const val KEY_AUDIO_PLAYER_SHUFFLE = "audio_player_shuffle"
+        const val KEY_AUDIO_PLAYER_REPEAT_MODE = "audio_player_repeat_mode"
 
         const val VAL_SEARCH_DUPLICATES_MEDIA_STORE = 0
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1
@@ -43,5 +47,7 @@ class PreferencesConstants {
         const val DEFAULT_PATH_PREFS_INITIALIZED = 0
         const val DEFAULT_ANALYSIS_MIGRATION_INITIALIZED = 1
         const val DEFAULT_ENABLED_ANALYSIS = true
+        const val DEFAULT_AUDIO_PLAYER_SHUFFLE = false
+        const val DEFAULT_AUDIO_PLAYER_REPEAT_MODE = AudioPlayerService.REPEAT_NONE
     }
 }
