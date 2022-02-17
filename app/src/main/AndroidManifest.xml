@@ -197,6 +197,10 @@
         <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="ocr,face" />
+        <meta-data
+            android:name=
+                "com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="com.amaze.fileutilities.cast.CastOptionsProvider" />
     </application>
 
 </manifest>
