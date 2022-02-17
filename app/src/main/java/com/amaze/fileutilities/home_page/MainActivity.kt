@@ -127,7 +127,19 @@ class MainActivity : PermissionsActivity(), AggregatedMediaFileInfoObserver {
                     if (it) {
                         mediaInfoStorageSummaryPair?.second.let { list ->
                             list?.run {
-                                viewModel.analyseImagesTransformation(
+                                viewModel.analyseImageFeatures(
+                                    this,
+                                    pathPreferences
+                                )
+                                viewModel.analyseMemeImages(
+                                    this,
+                                    pathPreferences
+                                )
+                                viewModel.analyseBlurImages(
+                                    this,
+                                    pathPreferences
+                                )
+                                viewModel.analyseLowLightImages(
                                     this,
                                     pathPreferences
                                 )

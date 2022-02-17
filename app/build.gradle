@@ -136,6 +136,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.0'
     implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.0'
     implementation 'com.afollestad.material-dialogs:files:3.3.0'
+    implementation 'androidx.mediarouter:mediarouter:1.2.6'
+    implementation 'com.google.android.gms:play-services-cast-framework:21.0.1'
 
     //Detect memory leaks
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'

@@ -23,11 +23,15 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.*
+import java.lang.ref.WeakReference
 
 class FilesViewModel(val applicationContext: Application) :
     AndroidViewModel(applicationContext) {
 
-    var isMediaFilesAnalysing = true
+    var isImageFeaturesAnalysing = true
+    var isImageBlurAnalysing = true
+    var isImageLowLightAnalysing = true
+    var isImageMemesAnalysing = true
     var isInternalStorageAnalysing = true
     var isMediaStoreAnalysing = true
 
@@ -68,13 +72,13 @@ class FilesViewModel(val applicationContext: Application) :
                     PathPreferences.getAnalysisMigrationPreferenceKey(it),
                     PreferencesConstants.DEFAULT_ANALYSIS_MIGRATION_INITIALIZED
                 )
-                val dao = AppDatabase.getInstance(applicationContext).pathPreferencesDao()
-                val analysisDao = AppDatabase.getInstance(applicationContext).analysisDao()
+                val db = AppDatabase.getInstance(applicationContext)
+                val dao = db.pathPreferencesDao()
                 if (migrationPref < PathPreferences.MIGRATION_PREF_MAP[it] ?: 1) {
-                    dao.findByFeature(it).forEach {
-                        pathPref ->
-                        analysisDao.deleteByPathContains(pathPref.path)
-                    }
+                    PathPreferences.deleteAnalysisData(
+                        dao.findByFeature(it),
+                        WeakReference(applicationContext)
+                    )
                     prefs.edit().putInt(
                         PathPreferences.getAnalysisMigrationPreferenceKey(it),
                         PathPreferences.MIGRATION_PREF_MAP[it] ?: 1
@@ -253,84 +257,158 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }*/
 
-    fun analyseImagesTransformation(
+    fun analyseImageFeatures(
         mediaFileInfoList: List<MediaFileInfo>,
         pathPreferencesList: List<PathPreferences>
     ) {
         viewModelScope.launch(Dispatchers.Default) {
             val dao = AppDatabase.getInstance(applicationContext).analysisDao()
-            isMediaFilesAnalysing = true
-            var memesProcessed = 0
+            isImageFeaturesAnalysing = true
             var featuresProcessed = 0
-            mediaFileInfoList.forEach {
+            mediaFileInfoList.filter {
+                val pathPrefsList = pathPreferencesList.filter { pref ->
+                    pref.feature == PathPreferences
+                        .FEATURE_ANALYSIS_IMAGE_FEATURES
+                }
+                Utils.containsInPreferences(it.path, pathPrefsList, true) &&
+                    PathPreferences.isEnabled(
+                        applicationContext.getAppCommonSharedPreferences(),
+                        PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
+                    )
+            }.forEach {
                 if (dao.findByPath(it.path) == null) {
-                    ImgUtils.isImageMeme(
+                    if (featuresProcessed++ > 10000) {
+                        // hard limit in a single run
+                        return@forEach
+                    }
+                    var features = ImgUtils.ImageFeatures()
+                    ImgUtils.getImageFeatures(
                         applicationContext,
-                        textRecognizer,
-                        it.getContentUri(applicationContext),
-                        pathPreferencesList.filter { pref ->
-                            pref.feature == PathPreferences.FEATURE_ANALYSIS_MEME
-                        },
-                        memesProcessed++
-                    ) { isMeme ->
-                        viewModelScope.launch(Dispatchers.Default) {
-                            var features = ImgUtils.ImageFeatures()
-                            ImgUtils.getImageFeatures(
-                                applicationContext,
-                                faceDetector,
-                                it.getContentUri(applicationContext),
-                                featuresProcessed++,
-                                pathPreferencesList.filter { pref ->
-                                    pref.feature == PathPreferences
-                                        .FEATURE_ANALYSIS_IMAGE_FEATURES
-                                }
-                            ) { isSuccess, imageFeatures ->
-                                viewModelScope.launch(Dispatchers.Default) {
-                                    if (isSuccess) {
-                                        imageFeatures?.run {
-                                            features = this
-                                        }
-                                    }
-
-                                    val isBlur = ImgUtils.isImageBlur(
-                                        applicationContext,
-                                        it.path,
-                                        pathPreferencesList.filter { pref ->
-                                            pref.feature == PathPreferences
-                                                .FEATURE_ANALYSIS_BLUR
-                                        }
-                                    )
-
-                                    val isLowLight = ImgUtils.isImageLowLight(
-                                        applicationContext,
-                                        it.path,
-                                        pathPreferencesList.filter { pref ->
-                                            pref.feature == PathPreferences
-                                                .FEATURE_ANALYSIS_LOW_LIGHT
-                                        }
-                                    )
-
-                                    if (isBlur || isLowLight || isMeme ||
-                                        features.featureDetected()
-                                    ) {
-                                        dao.insert(
-                                            ImageAnalysis(
-                                                it.path, isBlur, isMeme,
-                                                features.isSad,
-                                                features.isDistracted,
-                                                features.isSleeping,
-                                                isLowLight,
-                                                features.facesCount
-                                            )
-                                        )
-                                    }
-                                }
+                        faceDetector,
+                        it.getContentUri(applicationContext)
+                    ) { isSuccess, imageFeatures ->
+                        if (isSuccess) {
+                            imageFeatures?.run {
+                                features = this
                             }
+                            dao.insert(
+                                ImageAnalysis(
+                                    it.path,
+                                    features.isSad,
+                                    features.isDistracted,
+                                    features.isSleeping,
+                                    features.facesCount
+                                )
+                            )
                         }
                     }
                 }
             }
-            isMediaFilesAnalysing = false
+            isImageFeaturesAnalysing = false
+        }
+    }
+
+    fun analyseBlurImages(
+        mediaFileInfoList: List<MediaFileInfo>,
+        pathPreferencesList: List<PathPreferences>
+    ) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val dao = AppDatabase.getInstance(applicationContext).blurAnalysisDao()
+            isImageBlurAnalysing = true
+            mediaFileInfoList.filter {
+                val pathPrefsList = pathPreferencesList.filter { pref ->
+                    pref.feature == PathPreferences
+                        .FEATURE_ANALYSIS_BLUR
+                }
+                Utils.containsInPreferences(it.path, pathPrefsList, true) &&
+                    PathPreferences.isEnabled(
+                        applicationContext.getAppCommonSharedPreferences(),
+                        PathPreferences.FEATURE_ANALYSIS_BLUR
+                    )
+            }.forEach {
+                if (dao.findByPath(it.path) == null) {
+                    val isBlur = ImgUtils.isImageBlur(it.path)
+                    dao.insert(
+                        BlurAnalysis(
+                            it.path, isBlur
+                        )
+                    )
+                }
+            }
+            isImageBlurAnalysing = false
+        }
+    }
+
+    fun analyseMemeImages(
+        mediaFileInfoList: List<MediaFileInfo>,
+        pathPreferencesList: List<PathPreferences>
+    ) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val dao = AppDatabase.getInstance(applicationContext).memesAnalysisDao()
+            isImageMemesAnalysing = true
+            var memesProcessed = 0
+            mediaFileInfoList.filter {
+                val pathPrefsList = pathPreferencesList.filter { pref ->
+                    pref.feature == PathPreferences.FEATURE_ANALYSIS_MEME
+                }
+                Utils.containsInPreferences(it.path, pathPrefsList, true) &&
+                    PathPreferences.isEnabled(
+                        applicationContext.getAppCommonSharedPreferences(),
+                        PathPreferences.FEATURE_ANALYSIS_MEME
+                    )
+            }.forEach {
+                if (dao.findByPath(it.path) == null) {
+                    if (memesProcessed++ > 10000) {
+                        // hard limit in a single run
+                        return@forEach
+                    }
+                    ImgUtils.isImageMeme(
+                        applicationContext,
+                        textRecognizer,
+                        it.getContentUri(applicationContext),
+                    ) { isMeme ->
+                        dao.insert(
+                            MemeAnalysis(
+                                it.path, isMeme
+                            )
+                        )
+                    }
+                }
+            }
+            isImageMemesAnalysing = false
+        }
+    }
+
+    fun analyseLowLightImages(
+        mediaFileInfoList: List<MediaFileInfo>,
+        pathPreferencesList: List<PathPreferences>
+    ) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val dao = AppDatabase.getInstance(applicationContext).lowLightAnalysisDao()
+            isImageLowLightAnalysing = true
+            mediaFileInfoList.filter {
+                val pathPrefsList = pathPreferencesList.filter { pref ->
+                    pref.feature == PathPreferences
+                        .FEATURE_ANALYSIS_LOW_LIGHT
+                }
+                Utils.containsInPreferences(it.path, pathPrefsList, true) &&
+                    PathPreferences.isEnabled(
+                        applicationContext.getAppCommonSharedPreferences(),
+                        PathPreferences.FEATURE_ANALYSIS_LOW_LIGHT
+                    )
+            }.forEach {
+                if (dao.findByPath(it.path) == null) {
+                    val isLowLight = ImgUtils.isImageLowLight(
+                        it.path
+                    )
+                    dao.insert(
+                        LowLightAnalysis(
+                            it.path, isLowLight
+                        )
+                    )
+                }
+            }
+            isImageLowLightAnalysing = false
         }
     }
 
@@ -370,6 +448,9 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
+    /**
+     * Fetch path preferences set by user about what paths should we search in
+     */
     fun initAndFetchPathPreferences(): LiveData<List<PathPreferences>> =
         liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
             val prefs = applicationContext.getAppCommonSharedPreferences()
@@ -452,6 +533,9 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
         } else {
+            if (!file.exists()) {
+                return
+            }
             if (file.length() == 0L) {
                 dao.insert(
                     InternalStorageAnalysis(
@@ -489,6 +573,9 @@ class FilesViewModel(val applicationContext: Application) :
         dao: InternalStorageAnalysisDao,
         file: File
     ) {
+        if (!file.exists()) {
+            return
+        }
         val checksum = FileUtils.getSHA256Checksum(file)
         val existingChecksum = dao.findMediaFileBySha256Checksum(checksum)
         if (existingChecksum != null && !existingChecksum.files.contains(file.path)) {
@@ -555,7 +642,9 @@ class FilesViewModel(val applicationContext: Application) :
     ) {
         /*summary.progress = ((summary.usedSpace!! * 100) / storageSummary.totalSpace!!)
             .toInt()*/
-        summary.progress = ((summary.items * 100) / storageSummary.items)
+        if (storageSummary.items != 0) {
+            summary.progress = ((summary.items * 100) / storageSummary.items)
+        }
         summary.totalSpace = storageSummary.totalSpace
         summary.totalUsedSpace = storageSummary.usedSpace
         summary.totalItems = storageSummary.items

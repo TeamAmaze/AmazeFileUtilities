@@ -22,21 +22,21 @@ import kotlin.collections.ArrayList
 
 class AnalyseViewModel : ViewModel() {
 
-    fun getBlurImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+    fun getBlurImages(dao: BlurAnalysisDao): LiveData<List<MediaFileInfo>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             emit(transformAnalysisToMediaFileInfo(dao.getAllBlur(), dao))
         }
     }
 
-    fun getLowLightImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+    fun getLowLightImages(dao: LowLightAnalysisDao): LiveData<List<MediaFileInfo>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             emit(transformAnalysisToMediaFileInfo(dao.getAllLowLight(), dao))
         }
     }
 
-    fun getMemeImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+    fun getMemeImages(dao: MemeAnalysisDao): LiveData<List<MediaFileInfo>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             emit(transformAnalysisToMediaFileInfo(dao.getAllMeme(), dao))
@@ -324,6 +324,63 @@ class AnalyseViewModel : ViewModel() {
     ):
         List<MediaFileInfo> {
         val response = imageAnalysis.filter {
+            it.invalidate(dao)
+        }.map {
+            MediaFileInfo.fromFile(
+                File(it.filePath),
+                MediaFileInfo.ExtraInfo(
+                    MediaFileInfo.MEDIA_TYPE_IMAGE,
+                    null, null, null
+                )
+            )
+        }
+        return response
+    }
+
+    private fun transformAnalysisToMediaFileInfo(
+        analysis: List<BlurAnalysis>,
+        dao: BlurAnalysisDao
+    ):
+        List<MediaFileInfo> {
+        val response = analysis.filter {
+            it.invalidate(dao)
+        }.map {
+            MediaFileInfo.fromFile(
+                File(it.filePath),
+                MediaFileInfo.ExtraInfo(
+                    MediaFileInfo.MEDIA_TYPE_IMAGE,
+                    null, null, null
+                )
+            )
+        }
+        return response
+    }
+
+    private fun transformAnalysisToMediaFileInfo(
+        analysis: List<LowLightAnalysis>,
+        dao: LowLightAnalysisDao
+    ):
+        List<MediaFileInfo> {
+        val response = analysis.filter {
+            it.invalidate(dao)
+        }.map {
+            MediaFileInfo.fromFile(
+                File(it.filePath),
+                MediaFileInfo.ExtraInfo(
+                    MediaFileInfo.MEDIA_TYPE_IMAGE,
+                    null, null, null
+                )
+            )
+        }
+        return response
+    }
+
+    private fun transformAnalysisToMediaFileInfo(
+        analysis: List<MemeAnalysis>,
+        dao: MemeAnalysisDao
+    ):
+        List<MediaFileInfo> {
+        val response = analysis.filter {
             it.invalidate(dao)
         }.map {
             MediaFileInfo.fromFile(
