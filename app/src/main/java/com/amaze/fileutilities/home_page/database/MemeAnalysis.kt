@@ -15,26 +15,18 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-/**
- * While fetching and processing, be sure to validate that file exists
- */
 @Entity(indices = [Index(value = ["file_path"], unique = true)])
-data class ImageAnalysis(
+data class MemeAnalysis(
+
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
     val uid: Int,
     @ColumnInfo(name = "file_path") val filePath: String,
-    @ColumnInfo(name = "is_sad") val isSad: Boolean,
-    @ColumnInfo(name = "is_distracted") val isDistracted: Boolean,
-    @ColumnInfo(name = "is_sleeping") val isSleeping: Boolean,
-    @ColumnInfo(name = "face_count") val faceCount: Int,
+    @ColumnInfo(name = "is_meme") val isMeme: Boolean
 ) {
     constructor(
         filePath: String,
-        isSad: Boolean,
-        isDistracted: Boolean,
-        isSleeping: Boolean,
-        faceCount: Int
+        isMeme: Boolean
     ) :
-        this(0, filePath, isSad, isDistracted, isSleeping, faceCount)
+        this(0, filePath, isMeme)
 }
