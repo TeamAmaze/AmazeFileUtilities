@@ -27,10 +27,7 @@ import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.folderChooser
 import com.amaze.fileutilities.R
-import com.amaze.fileutilities.home_page.database.ImageAnalysis
-import com.amaze.fileutilities.home_page.database.ImageAnalysisDao
-import com.amaze.fileutilities.home_page.database.InternalStorageAnalysis
-import com.amaze.fileutilities.home_page.database.InternalStorageAnalysisDao
+import com.amaze.fileutilities.home_page.database.*
 import java.io.File
 
 fun Uri.getSiblingUriFiles(context: Context): ArrayList<Uri>? {
@@ -270,6 +267,36 @@ fun Context.getAppCommonSharedPreferences(): SharedPreferences {
 }
 
 fun ImageAnalysis.invalidate(dao: ImageAnalysisDao): Boolean {
+    val file = File(filePath)
+    return if (!file.exists()) {
+        dao.delete(this)
+        false
+    } else {
+        true
+    }
+}
+
+fun BlurAnalysis.invalidate(dao: BlurAnalysisDao): Boolean {
+    val file = File(filePath)
+    return if (!file.exists()) {
+        dao.delete(this)
+        false
+    } else {
+        true
+    }
+}
+
+fun MemeAnalysis.invalidate(dao: MemeAnalysisDao): Boolean {
+    val file = File(filePath)
+    return if (!file.exists()) {
+        dao.delete(this)
+        false
+    } else {
+        true
+    }
+}
+
+fun LowLightAnalysis.invalidate(dao: LowLightAnalysisDao): Boolean {
     val file = File(filePath)
     return if (!file.exists()) {
         dao.delete(this)

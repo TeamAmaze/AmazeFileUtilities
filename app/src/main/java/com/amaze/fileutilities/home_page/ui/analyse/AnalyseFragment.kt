@@ -47,30 +47,33 @@ class AnalyseFragment : Fragment() {
         val root: View = binding.root
         val prefs = requireContext().getAppCommonSharedPreferences()
         binding.run {
-            blurredPicsPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
-            lowLightPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
-            memesPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+            blurredPicsPreview.invalidateProgress(filesViewModel.isImageBlurAnalysing)
+            lowLightPreview.invalidateProgress(filesViewModel.isImageLowLightAnalysing)
+            memesPreview.invalidateProgress(filesViewModel.isImageMemesAnalysing)
             setVisibility(prefs)
             setClickListeners()
 
             val appDatabase = AppDatabase.getInstance(requireContext())
             val dao = appDatabase.analysisDao()
+            val blurAnalysisDao = appDatabase.blurAnalysisDao()
+            val lowLightAnalysisDao = appDatabase.lowLightAnalysisDao()
+            val memeAnalysisDao = appDatabase.memesAnalysisDao()
             val pathPreferencesDao = appDatabase.pathPreferencesDao()
             val internalStorageDao = appDatabase.internalStorageAnalysisDao()
 
-            analyseViewModel.getBlurImages(dao).observe(viewLifecycleOwner) {
+            analyseViewModel.getBlurImages(blurAnalysisDao).observe(viewLifecycleOwner) {
                 if (it != null) {
                     blurredPicsPreview.loadPreviews(it)
                 }
             }
 
-            analyseViewModel.getLowLightImages(dao).observe(viewLifecycleOwner) {
+            analyseViewModel.getLowLightImages(lowLightAnalysisDao).observe(viewLifecycleOwner) {
                 if (it != null) {
                     lowLightPreview.loadPreviews(it)
                 }
             }
 
-            analyseViewModel.getMemeImages(dao).observe(viewLifecycleOwner) {
+            analyseViewModel.getMemeImages(memeAnalysisDao).observe(viewLifecycleOwner) {
                 if (it != null) {
                     memesPreview.loadPreviews(it)
                 }
@@ -81,35 +84,35 @@ class AnalyseFragment : Fragment() {
                     sadPreview.loadPreviews(it)
                 }
             }
-            sadPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+            sadPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getDistractedImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
                     distractedPreview.loadPreviews(it)
                 }
             }
-            distractedPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+            distractedPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getSleepingImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
                     sleepingPreview.loadPreviews(it)
                 }
             }
-            sleepingPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+            sleepingPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getSelfieImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
                     selfiePreview.loadPreviews(it)
                 }
             }
-            selfiePreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+            selfiePreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getGroupPicImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
                     groupPicPreview.loadPreviews(it)
                 }
             }
-            groupPicPreview.invalidateProgress(filesViewModel.isMediaFilesAnalysing)
+            groupPicPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             val duplicatePref = prefs.getInt(
                 PreferencesConstants.KEY_SEARCH_DUPLICATES_IN,

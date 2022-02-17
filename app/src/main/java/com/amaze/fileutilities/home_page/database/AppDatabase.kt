@@ -18,12 +18,18 @@ import androidx.room.TypeConverters
 import com.amaze.fileutilities.utilis.DbConverters
 
 @Database(
-    entities = [ImageAnalysis::class, InternalStorageAnalysis::class, PathPreferences::class],
+    entities = [
+        ImageAnalysis::class, InternalStorageAnalysis::class, PathPreferences::class,
+        BlurAnalysis::class, LowLightAnalysis::class, MemeAnalysis::class
+    ],
     version = 1
 )
 @TypeConverters(DbConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun analysisDao(): ImageAnalysisDao
+    abstract fun blurAnalysisDao(): BlurAnalysisDao
+    abstract fun memesAnalysisDao(): MemeAnalysisDao
+    abstract fun lowLightAnalysisDao(): LowLightAnalysisDao
     abstract fun internalStorageAnalysisDao(): InternalStorageAnalysisDao
     abstract fun pathPreferencesDao(): PathPreferencesDao
 

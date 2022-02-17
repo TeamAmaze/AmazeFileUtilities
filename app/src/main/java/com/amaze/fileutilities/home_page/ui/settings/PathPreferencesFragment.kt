@@ -16,20 +16,19 @@ import androidx.appcompat.app.AlertDialog
 import androidx.preference.*
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.AppDatabase
-import com.amaze.fileutilities.home_page.database.ImageAnalysisDao
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.database.PathPreferencesDao
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.amaze.fileutilities.utilis.showFolderChooserDialog
 import java.io.File
+import java.lang.ref.WeakReference
 
 class PathPreferencesFragment : PreferenceFragmentCompat() {
 
     private var preferencesList: PreferenceCategory? = null
     private var featureName: Int? = null
     private lateinit var dao: PathPreferencesDao
-    private lateinit var analysisDao: ImageAnalysisDao
     private lateinit var sharedPrefs: SharedPreferences
 
     private val preferenceDbMap: MutableMap<Preference, PathPreferences> = HashMap()
@@ -57,7 +56,6 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.path_prefs, rootKey)
         featureName = arguments?.getInt(KEY_FEATURE_NAME)
         dao = AppDatabase.getInstance(requireContext()).pathPreferencesDao()
-        analysisDao = AppDatabase.getInstance(requireContext()).analysisDao()
         sharedPrefs = requireContext().getAppCommonSharedPreferences()
 
         findPreference<Preference>("add_pref_path")?.onPreferenceClickListener =
@@ -141,10 +139,10 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
     private fun showReanalyseDialog() {
         val dialog = AlertDialog.Builder(requireContext()).setTitle(R.string.reanalyse)
             .setPositiveButton(R.string.confirm) { dialog, _ ->
-                val dao = AppDatabase.getInstance(requireContext()).analysisDao()
-                preferenceDbMap.values.forEach {
-                    dao.deleteByPathContains(it.path)
-                }
+                PathPreferences.deleteAnalysisData(
+                    ArrayList(preferenceDbMap.values),
+                    WeakReference(requireContext())
+                )
                 dialog.dismiss()
             }
             .setNegativeButton(
@@ -202,7 +200,10 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
                     overrideExisting = true
                     showWarningOverridePathDialog {
                         if (it) {
-                            analysisDao.deleteByPathContains(pathPref.path)
+                            PathPreferences.deleteAnalysisData(
+                                arrayListOf(pathPref),
+                                WeakReference(requireContext())
+                            )
                             dao.delete(pathPref)
                             addNewPathAndPreference(pathPreferences, file)
                         }

@@ -10,12 +10,14 @@
 
 package com.amaze.fileutilities.home_page.database
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.amaze.fileutilities.utilis.PreferencesConstants
+import java.lang.ref.WeakReference
 
 /**
  * While fetching and processing, be sure to validate that file exists
@@ -74,6 +76,36 @@ data class PathPreferences(
                 getEnablePreferenceKey(feature),
                 PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
             )
+        }
+
+        fun deleteAnalysisData(
+            pathPreferences: List<PathPreferences>,
+            contextRef: WeakReference<Context>
+        ) {
+            contextRef.get()?.let {
+                context ->
+                val db = AppDatabase.getInstance(context)
+                val analysisDao = db.analysisDao()
+                val memesDao = db.memesAnalysisDao()
+                val blurDao = db.blurAnalysisDao()
+                val lowLightDao = db.lowLightAnalysisDao()
+                pathPreferences.forEach {
+                    when (it.feature) {
+                        FEATURE_ANALYSIS_IMAGE_FEATURES -> {
+                            analysisDao.deleteByPathContains(it.path)
+                        }
+                        FEATURE_ANALYSIS_BLUR -> {
+                            blurDao.deleteByPathContains(it.path)
+                        }
+                        FEATURE_ANALYSIS_MEME -> {
+                            memesDao.deleteByPathContains(it.path)
+                        }
+                        FEATURE_ANALYSIS_LOW_LIGHT -> {
+                            lowLightDao.deleteByPathContains(it.path)
+                        }
+                    }
+                }
+            }
         }
     }
 }

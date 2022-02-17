@@ -18,15 +18,6 @@ interface ImageAnalysisDao {
     @Query("SELECT * FROM imageanalysis")
     fun getAll(): List<ImageAnalysis>
 
-    @Query("SELECT * FROM imageanalysis where is_blur=1")
-    fun getAllBlur(): List<ImageAnalysis>
-
-    @Query("SELECT * FROM imageanalysis where is_low_light=1")
-    fun getAllLowLight(): List<ImageAnalysis>
-
-    @Query("SELECT * FROM imageanalysis where is_meme=1")
-    fun getAllMeme(): List<ImageAnalysis>
-
     @Query("SELECT * FROM imageanalysis where is_sleeping=1")
     fun getAllSleeping(): List<ImageAnalysis>
 
