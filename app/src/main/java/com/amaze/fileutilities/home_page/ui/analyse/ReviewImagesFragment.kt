@@ -122,6 +122,9 @@ class ReviewImagesFragment : Fragment() {
     private fun initAnalysisView(analysisType: Int) {
         val appDatabase = AppDatabase.getInstance(requireContext())
         val dao = appDatabase.analysisDao()
+        val blurAnalysisDao = appDatabase.blurAnalysisDao()
+        val lowLightAnalysisDao = appDatabase.lowLightAnalysisDao()
+        val memeAnalysisDao = appDatabase.memesAnalysisDao()
         val pathPreferencesDao = appDatabase.pathPreferencesDao()
         val internalStorageDao = appDatabase.internalStorageAnalysisDao()
 
@@ -134,50 +137,50 @@ class ReviewImagesFragment : Fragment() {
         when (analysisType) {
             TYPE_BLUR ->
                 {
-                    viewModel.getBlurImages(dao).observe(viewLifecycleOwner) {
+                    viewModel.getBlurImages(blurAnalysisDao).observe(viewLifecycleOwner) {
                         if (it == null) {
                             invalidateProcessing(
                                 true,
-                                filesViewModel.isMediaFilesAnalysing
+                                filesViewModel.isImageFeaturesAnalysing
                             )
                         } else {
                             setMediaInfoList(ArrayList(it), true)
                             invalidateProcessing(
                                 false,
-                                filesViewModel.isMediaFilesAnalysing
+                                filesViewModel.isImageFeaturesAnalysing
                             )
                         }
                     }
                 }
             TYPE_LOW_LIGHT ->
                 {
-                    viewModel.getLowLightImages(dao).observe(viewLifecycleOwner) {
+                    viewModel.getLowLightImages(lowLightAnalysisDao).observe(viewLifecycleOwner) {
                         if (it == null) {
                             invalidateProcessing(
                                 true,
-                                filesViewModel.isMediaFilesAnalysing
+                                filesViewModel.isImageFeaturesAnalysing
                             )
                         } else {
                             setMediaInfoList(ArrayList(it), true)
                             invalidateProcessing(
                                 false,
-                                filesViewModel.isMediaFilesAnalysing
+                                filesViewModel.isImageFeaturesAnalysing
                             )
                         }
                     }
                 }
             TYPE_MEME -> {
-                viewModel.getMemeImages(dao).observe(viewLifecycleOwner) {
+                viewModel.getMemeImages(memeAnalysisDao).observe(viewLifecycleOwner) {
                     if (it == null) {
                         invalidateProcessing(
                             true,
-                            filesViewModel.isMediaFilesAnalysing
+                            filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
                         setMediaInfoList(ArrayList(it), true)
                         invalidateProcessing(
                             false,
-                            filesViewModel.isMediaFilesAnalysing
+                            filesViewModel.isImageFeaturesAnalysing
                         )
                     }
                 }
@@ -225,13 +228,13 @@ class ReviewImagesFragment : Fragment() {
                     if (it == null) {
                         invalidateProcessing(
                             true,
-                            filesViewModel.isMediaFilesAnalysing
+                            filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
                         setMediaInfoList(ArrayList(it), true)
                         invalidateProcessing(
                             false,
-                            filesViewModel.isMediaFilesAnalysing
+                            filesViewModel.isImageFeaturesAnalysing
                         )
                     }
                 }
@@ -241,13 +244,13 @@ class ReviewImagesFragment : Fragment() {
                     if (it == null) {
                         invalidateProcessing(
                             true,
-                            filesViewModel.isMediaFilesAnalysing
+                            filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
                         setMediaInfoList(ArrayList(it), true)
                         invalidateProcessing(
                             false,
-                            filesViewModel.isMediaFilesAnalysing
+                            filesViewModel.isImageFeaturesAnalysing
                         )
                     }
                 }
@@ -257,13 +260,13 @@ class ReviewImagesFragment : Fragment() {
                     if (it == null) {
                         invalidateProcessing(
                             true,
-                            filesViewModel.isMediaFilesAnalysing
+                            filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
                         setMediaInfoList(ArrayList(it), true)
                         invalidateProcessing(
                             false,
-                            filesViewModel.isMediaFilesAnalysing
+                            filesViewModel.isImageFeaturesAnalysing
                         )
                     }
                 }
@@ -273,13 +276,13 @@ class ReviewImagesFragment : Fragment() {
                     if (it == null) {
                         invalidateProcessing(
                             true,
-                            filesViewModel.isMediaFilesAnalysing
+                            filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
                         setMediaInfoList(ArrayList(it), true)
                         invalidateProcessing(
                             false,
-                            filesViewModel.isMediaFilesAnalysing
+                            filesViewModel.isImageFeaturesAnalysing
                         )
                     }
                 }
@@ -289,13 +292,13 @@ class ReviewImagesFragment : Fragment() {
                     if (it == null) {
                         invalidateProcessing(
                             true,
-                            filesViewModel.isMediaFilesAnalysing
+                            filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
                         setMediaInfoList(ArrayList(it), true)
                         invalidateProcessing(
                             false,
-                            filesViewModel.isMediaFilesAnalysing
+                            filesViewModel.isImageFeaturesAnalysing
                         )
                     }
                 }

@@ -14,8 +14,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
-import com.amaze.fileutilities.home_page.database.PathPreferences
-import com.amaze.fileutilities.utilis.Utils.Companion.containsInPreferences
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.text.Text
@@ -79,23 +77,9 @@ class ImgUtils {
             context: Context,
             textRecognizer: TextRecognizer,
             uri: Uri,
-            pathPreferences: List<PathPreferences>,
-            memesProcessed: Int,
             callback: (isMeme: Boolean) -> Unit
         ) {
             TimeUnit.SECONDS.sleep(1L)
-            if (!containsInPreferences(
-                    uri.path!!,
-                    pathPreferences, true
-                ) || !PathPreferences.isEnabled(
-                        context.getAppCommonSharedPreferences(),
-                        PathPreferences.FEATURE_ANALYSIS_MEME
-                    ) ||
-                memesProcessed > 10000
-            ) {
-                callback.invoke(false)
-                return
-            }
             extractTextFromImg(context, textRecognizer, uri) { isSuccess, extractedText ->
                 if (isSuccess) {
                     extractedText?.run {
@@ -113,8 +97,8 @@ class ImgUtils {
                                 }
                             }
                         }
-                        callback.invoke(false)
                     }
+                    callback.invoke(false)
                 } else {
                     callback.invoke(false)
                 }
@@ -125,21 +109,9 @@ class ImgUtils {
             context: Context,
             faceDetector: FaceDetector,
             uri: Uri,
-            featuresProcessed: Int,
-            pathPreferences: List<PathPreferences>,
             callback: ((isSuccess: Boolean, imageFeatures: ImageFeatures?) -> Unit)
         ) {
             TimeUnit.SECONDS.sleep(1L)
-            if (!containsInPreferences(uri.path!!, pathPreferences, true) ||
-                !PathPreferences.isEnabled(
-                        context.getAppCommonSharedPreferences(),
-                        PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
-                    ) ||
-                featuresProcessed > 10000
-            ) {
-                callback.invoke(false, null)
-                return
-            }
 //            val image = InputImage.fromBitmap(bitmap, 0)
             val image = InputImage.fromFilePath(context, uri)
             faceDetector.process(image)
@@ -193,6 +165,10 @@ class ImgUtils {
             callback: ((isSuccess: Boolean, extractedText: Text?) -> Unit)?
         ) {
             val image = InputImage.fromFilePath(context, uri)
+            if (image.width < 32 || image.height < 32) {
+                callback?.invoke(true, null)
+                return
+            }
             val result = textRecognizer.process(image)
                 .addOnSuccessListener { visionText ->
                     // Task completed successfully
@@ -248,18 +224,8 @@ class ImgUtils {
         }*/
 
         fun isImageBlur(
-            context: Context,
-            path: String,
-            pathPreferences: List<PathPreferences>
+            path: String
         ): Boolean {
-            if (!containsInPreferences(path, pathPreferences, true) ||
-                !PathPreferences.isEnabled(
-                        context.getAppCommonSharedPreferences(),
-                        PathPreferences.FEATURE_ANALYSIS_BLUR
-                    )
-            ) {
-                return false
-            }
             val matrix = Imgcodecs.imread(path)
             val factor = laplace(matrix)
             if (factor < 50 && factor != 0.0) {
@@ -269,18 +235,8 @@ class ImgUtils {
         }
 
         fun isImageLowLight(
-            context: Context,
-            path: String,
-            pathPreferences: List<PathPreferences>
+            path: String
         ): Boolean {
-            if (!containsInPreferences(path, pathPreferences, true) ||
-                !PathPreferences.isEnabled(
-                        context.getAppCommonSharedPreferences(),
-                        PathPreferences.FEATURE_ANALYSIS_LOW_LIGHT
-                    )
-            ) {
-                return false
-            }
             val matrix = Imgcodecs.imread(path)
             return processForLowLight(matrix)
         }
