@@ -22,6 +22,7 @@ import org.opencv.android.Utils
 import org.opencv.core.*
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
+import java.io.IOException
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
 import kotlin.math.pow
@@ -164,23 +165,29 @@ class ImgUtils {
             uri: Uri,
             callback: ((isSuccess: Boolean, extractedText: Text?) -> Unit)?
         ) {
-            val image = InputImage.fromFilePath(context, uri)
-            if (image.width < 32 || image.height < 32) {
+            try {
+                val image = InputImage.fromFilePath(context, uri)
+                if (image.width < 32 || image.height < 32) {
+                    callback?.invoke(true, null)
+                    return
+                }
+                val result = textRecognizer.process(image)
+                    .addOnSuccessListener { visionText ->
+                        // Task completed successfully
+                        Log.d(javaClass.simpleName, visionText.text)
+                        callback?.invoke(true, visionText)
+                    }
+                    .addOnFailureListener { e ->
+                        // Task failed with an exception
+                        // ...
+                        e.printStackTrace()
+                        callback?.invoke(false, null)
+                    }
+            } catch (e: IOException) {
+                e.printStackTrace()
                 callback?.invoke(true, null)
                 return
             }
-            val result = textRecognizer.process(image)
-                .addOnSuccessListener { visionText ->
-                    // Task completed successfully
-                    Log.d(javaClass.simpleName, visionText.text)
-                    callback?.invoke(true, visionText)
-                }
-                .addOnFailureListener { e ->
-                    // Task failed with an exception
-                    // ...
-                    e.printStackTrace()
-                    callback?.invoke(false, null)
-                }
         }
 
         /*fun isImageMeme(path: String, externalDirPath: String): Boolean {

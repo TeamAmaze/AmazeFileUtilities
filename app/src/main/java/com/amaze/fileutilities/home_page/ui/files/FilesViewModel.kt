@@ -533,6 +533,9 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
         } else {
+            if (!file.exists()) {
+                return
+            }
             if (file.length() == 0L) {
                 dao.insert(
                     InternalStorageAnalysis(
@@ -570,6 +573,9 @@ class FilesViewModel(val applicationContext: Application) :
         dao: InternalStorageAnalysisDao,
         file: File
     ) {
+        if (!file.exists()) {
+            return
+        }
         val checksum = FileUtils.getSHA256Checksum(file)
         val existingChecksum = dao.findMediaFileBySha256Checksum(checksum)
         if (existingChecksum != null && !existingChecksum.files.contains(file.path)) {

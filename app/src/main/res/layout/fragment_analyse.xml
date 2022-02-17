@@ -22,6 +22,15 @@
             android:gravity="center_horizontal"
             >
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/memes_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/memes"
+                app:showPreview="true"
+                app:hint="@string/memes_hint"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
                 android:id="@+id/blurred_pics_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -38,21 +47,28 @@
                 android:layout_marginTop="@dimen/material_generic"
                 />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
-                android:id="@+id/memes_preview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:analysisTitle="@string/memes"
-                app:showPreview="true"
-                app:hint="@string/memes_hint"
-                android:layout_marginTop="@dimen/material_generic"
-                />
-            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
                 android:id="@+id/sad_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/frown"
                 app:showPreview="true"
                 app:hint="@string/frown_hint"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/selfie_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/selfie"
+                app:showPreview="true"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/group_pic_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/group_pics"
+                app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
@@ -71,22 +87,6 @@
                 app:analysisTitle="@string/distracted"
                 app:showPreview="true"
                 app:hint="@string/distracted_hint"
-                android:layout_marginTop="@dimen/material_generic"
-                />
-            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
-                android:id="@+id/selfie_preview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:analysisTitle="@string/selfie"
-                app:showPreview="true"
-                android:layout_marginTop="@dimen/material_generic"
-                />
-            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
-                android:id="@+id/group_pic_preview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:analysisTitle="@string/group_pics"
-                app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
@@ -122,7 +122,7 @@
                 app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 />
-            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+            <!--<com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
                 android:id="@+id/app_cache_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/memory"
                 android:layout_marginTop="@dimen/material_generic"
-                />
+                />-->
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
                 android:id="@+id/empty_files_preview"
                 android:layout_width="match_parent"
