@@ -34,17 +34,6 @@
         android:imeOptions="actionSend"
         android:drawableRight="@drawable/ic_round_close_32"
         android:drawableEnd="@drawable/ic_round_close_32" />
-    <androidx.mediarouter.app.MediaRouteButton
-        android:id="@+id/media_route_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:mediaRouteTypes="user"
-        android:visibility="gone"
-        android:layout_toLeftOf="@+id/voiceActionBar"
-        android:layout_marginLeft="@dimen/eight_dp"
-        android:layout_marginStart="@dimen/eight_dp"
-        />
     <ImageView
         android:id="@+id/voiceActionBar"
         app:srcCompat="@drawable/ic_outline_keyboard_voice_32"

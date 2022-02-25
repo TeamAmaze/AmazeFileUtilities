@@ -109,7 +109,14 @@ class FilesFragment : Fragment() {
             ) { metaInfoAndSummaryPair ->
                 binding.imagesTab.setOnClickListener {
                     if (metaInfoAndSummaryPair != null) {
-                        startListFragment(ImagesListFragment())
+                        if (metaInfoAndSummaryPair.second.isNotEmpty()) {
+                            startListFragment(ImagesListFragment())
+                        } else {
+                            requireContext().showToastInCenter(
+                                resources
+                                    .getString(R.string.no_files)
+                            )
+                        }
                     } else {
                         requireContext().showToastInCenter(
                             resources
@@ -142,7 +149,14 @@ class FilesFragment : Fragment() {
             ) { metaInfoAndSummaryPair ->
                 binding.audiosTab.setOnClickListener {
                     if (metaInfoAndSummaryPair != null) {
-                        startListFragment(AudiosListFragment())
+                        if (metaInfoAndSummaryPair.second.isNotEmpty()) {
+                            startListFragment(AudiosListFragment())
+                        } else {
+                            requireContext().showToastInCenter(
+                                resources
+                                    .getString(R.string.no_files)
+                            )
+                        }
                     } else {
                         requireContext().showToastInCenter(
                             resources
@@ -175,7 +189,14 @@ class FilesFragment : Fragment() {
             ) { metaInfoAndSummaryPair ->
                 binding.videosTab.setOnClickListener {
                     if (metaInfoAndSummaryPair != null) {
-                        startListFragment(VideosListFragment())
+                        if (metaInfoAndSummaryPair.second.isNotEmpty()) {
+                            startListFragment(VideosListFragment())
+                        } else {
+                            requireContext().showToastInCenter(
+                                resources
+                                    .getString(R.string.no_files)
+                            )
+                        }
                     } else {
                         requireContext().showToastInCenter(
                             resources
@@ -210,7 +231,14 @@ class FilesFragment : Fragment() {
             ) { metaInfoAndSummaryPair ->
                 binding.documentsTab.setOnClickListener {
                     if (metaInfoAndSummaryPair != null) {
-                        startListFragment(DocumentsListFragment())
+                        if (metaInfoAndSummaryPair.second.isNotEmpty()) {
+                            startListFragment(DocumentsListFragment())
+                        } else {
+                            requireContext().showToastInCenter(
+                                resources
+                                    .getString(R.string.no_files)
+                            )
+                        }
                     } else {
                         requireContext().showToastInCenter(
                             resources
