@@ -164,6 +164,18 @@
             android:configChanges=""
             android:label="Error"
             />
+        <activity
+            android:name=".cast.ExpandedControlsActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.AmazeFileUtilities.Dark"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+            <!--<meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.google.sample.cast.refplayer.VideoBrowserActivity"/>-->
+        </activity>
 
         <service
             android:name=".audio_player.AudioPlayerService"
@@ -195,12 +207,11 @@
         </provider>
 
         <meta-data
+            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="com.amaze.fileutilities.cast.CastOptionsProvider" />
+        <meta-data
             android:name="com.google.mlkit.vision.DEPENDENCIES"
             android:value="ocr,face" />
-        <meta-data
-            android:name=
-                "com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
-            android:value="com.amaze.fileutilities.cast.CastOptionsProvider" />
     </application>
 
 </manifest>

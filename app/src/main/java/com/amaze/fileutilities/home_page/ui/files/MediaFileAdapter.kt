@@ -15,6 +15,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerService
+import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeHeaderView
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.HeaderViewHolder
@@ -108,6 +109,8 @@ class MediaFileAdapter(
                                 context
                             )
                         }
+                        (context as MainActivity)
+                            .startCastPlayback(mediaFileListItems[position].mediaFileInfo!!)
                     }
                 }
             }
