@@ -150,7 +150,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
             clickOptionsIndex()
         }
         optionsSwitchView.setOnClickListener {
-            clickOptionsSwitchView(optionsMenuSelected, sharedPreferences)
+            clickOptionsSwitchView(optionsMenuSelected, sharedPreferences, mediaListType)
         }
         optionsGroupView.setOnClickListener {
             clickOptionsGroupView(
@@ -175,7 +175,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
 
     private fun clickOptionsSwitchView(
         optionsMenuSelected: MediaFileAdapter.OptionsMenuSelected,
-        sharedPreferences: SharedPreferences
+        sharedPreferences: SharedPreferences,
+        mediaListType: Int
     ) {
         clearOptionItemsBackgrounds()
         optionsRecyclerViewParent.hideFade(300)
@@ -184,7 +185,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         val listViewButton: Button
         val gridViewButton: Button
         if (sharedPreferences.getBoolean(
-                PreferencesConstants.KEY_MEDIA_LIST_TYPE,
+                "${mediaListType}_${PreferencesConstants.KEY_MEDIA_LIST_TYPE}",
                 PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
             )
         ) {
@@ -207,7 +208,10 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
             setSelectButton(listViewButton)
             setUnSelectButton(gridViewButton)
             sharedPreferences.edit {
-                this.putBoolean(PreferencesConstants.KEY_MEDIA_LIST_TYPE, true).apply()
+                this.putBoolean(
+                    "${mediaListType}_${PreferencesConstants.KEY_MEDIA_LIST_TYPE}",
+                    true
+                ).apply()
             }
             optionsMenuSelected.switchView(true)
         }
@@ -215,7 +219,10 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
             setSelectButton(gridViewButton)
             setUnSelectButton(listViewButton)
             sharedPreferences.edit {
-                this.putBoolean(PreferencesConstants.KEY_MEDIA_LIST_TYPE, false).apply()
+                this.putBoolean(
+                    "${mediaListType}_${PreferencesConstants.KEY_MEDIA_LIST_TYPE}",
+                    false
+                ).apply()
             }
             optionsMenuSelected.switchView(false)
         }

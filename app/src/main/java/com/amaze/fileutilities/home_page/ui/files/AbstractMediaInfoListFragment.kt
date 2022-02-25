@@ -83,7 +83,7 @@ abstract class AbstractMediaInfoListFragment : Fragment(), MediaFileAdapter.Opti
                 )
                 val isList = requireContext()
                     .getAppCommonSharedPreferences().getBoolean(
-                        PreferencesConstants.KEY_MEDIA_LIST_TYPE,
+                        "${getMediaListType()}_${PreferencesConstants.KEY_MEDIA_LIST_TYPE}",
                         PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
                     )
                 mediaFileAdapter = MediaFileAdapter(

@@ -20,3 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keep class com.shockwave.**
+-keep class com.amaze.fileutilities.cast.CastOptionsProvider { *; }
+-keep class android.support.** { *; }
+-keep class com.google.** { *; }
