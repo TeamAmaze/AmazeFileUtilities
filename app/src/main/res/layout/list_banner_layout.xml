@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/list_banners_height"
+    android:layout_height="wrap_content"
     android:padding="@dimen/material_generic"
     >
     <com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeHeaderView

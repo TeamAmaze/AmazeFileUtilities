@@ -7,28 +7,78 @@
     tools:context=".home_page.ui.transfer.TransferFragment"
     android:background="@null"
     android:gravity="center_vertical|center_horizontal"
-    android:orientation="horizontal"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/material_generic"
+    android:paddingRight="@dimen/material_generic"
     >
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/send_button"
+    <TextView
+        android:id="@+id/searching_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/send"
-        app:cornerRadius="@dimen/material_generic"
-        app:rippleColor="@color/highlight_yellow"
-        style="@style/MaterialButton.White"
+        android:text="@string/searching"
+        android:textColor="@color/white"
+        android:textSize="@dimen/twenty_four_sp"
+        android:textStyle="bold"
+        android:visibility="gone"
         />
 
+    <ProgressBar
+        android:id="@+id/searching_progress"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/grid_view"
+        android:indeterminate="true"
+        android:visibility="gone"
+        />
+
+    <LinearLayout
+        android:id="@+id/devices_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical|center_horizontal">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical|center_horizontal">
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send"
+            app:cornerRadius="@dimen/material_generic"
+            app:rippleColor="@color/highlight_yellow"
+            style="@style/MaterialButton.White"
+            android:visibility="gone"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/receive_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/receive"
+            android:layout_marginStart="@dimen/material_generic"
+            app:cornerRadius="@dimen/material_generic"
+            app:rippleColor="@color/highlight_yellow"
+            app:elevation="@dimen/material_generic"
+            style="@style/MaterialButton.White"
+            />
+    </LinearLayout>
+
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/receive_button"
+        android:id="@+id/transfer_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/receive"
+        android:text="@string/title_transfer"
         android:layout_marginStart="@dimen/material_generic"
         app:cornerRadius="@dimen/material_generic"
         app:rippleColor="@color/highlight_yellow"
         app:elevation="@dimen/material_generic"
         style="@style/MaterialButton.White"
+        android:visibility="gone"
         />
 </LinearLayout>

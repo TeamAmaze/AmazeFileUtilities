@@ -11,7 +11,9 @@
 package com.amaze.fileutilities.home_page
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
+import android.net.wifi.p2p.WifiP2pManager
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.MotionEvent
@@ -63,6 +65,11 @@ class MainActivity :
     private var mCastContext: CastContext? = null
     private var mCastSession: CastSession? = null
     private lateinit var mSessionManager: SessionManager
+    val manager: WifiP2pManager? by lazy(LazyThreadSafetyMode.NONE) {
+        getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager?
+    }
+
+    var channel: WifiP2pManager.Channel? = null
 
     companion object {
         private const val VOICE_REQUEST_CODE = 1000
@@ -74,6 +81,7 @@ class MainActivity :
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
+        channel = manager?.initialize(this, mainLooper, null)
 //        viewModel.copyTrainedData()
         actionBarBinding = ActivityMainActionbarBinding.inflate(layoutInflater)
         searchActionBarBinding = ActivityMainActionbarSearchBinding.inflate(layoutInflater)
@@ -242,6 +250,14 @@ class MainActivity :
         if (::actionBarBinding.isInitialized) {
             actionBarBinding.title.text = title
         }
+    }
+
+    fun getWifiP2PManager(): WifiP2pManager? {
+        return manager
+    }
+
+    fun getWifiP2PChannel(): WifiP2pManager.Channel? {
+        return channel
     }
 
     fun invalidateSearchBar(showSearch: Boolean): AutoCompleteTextView? {

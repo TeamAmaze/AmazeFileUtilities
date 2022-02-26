@@ -60,6 +60,11 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
         setContentView(_binding.root)
         viewModel = ViewModelProvider(this)
             .get(AudioPlayerInterfaceHandlerViewModel::class.java)
+        val sharedPrefs = getAppCommonSharedPreferences()
+        viewModel.forceShowSeekbar = !sharedPrefs.getBoolean(
+            PreferencesConstants.KEY_ENABLE_WAVEFORM,
+            PreferencesConstants.DEFAULT_AUDIO_PLAYER_WAVEFORM
+        )
         if (savedInstanceState == null) {
             val mimeType = intent.type
             val audioUri = intent.data
