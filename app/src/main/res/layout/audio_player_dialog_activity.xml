@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/six_dp"
         android:gravity="center_horizontal"
-        android:textSize="@dimen/eight_sp"
+        android:textSize="@dimen/twelve_sp"
         android:textColor="@color/grey_color"
         />
     <TextView
@@ -63,7 +63,7 @@
             android:id="@+id/time_elapsed"
             android:layout_width="@dimen/zero_dp"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/eight_sp"
+            android:textSize="@dimen/twelve_sp"
             android:textColor="@color/grey_color"
             android:layout_weight="0.1"
             android:gravity="center_horizontal|center_vertical"
@@ -99,7 +99,7 @@
             android:id="@+id/track_length"
             android:layout_width="@dimen/zero_dp"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/eight_sp"
+            android:textSize="@dimen/twelve_sp"
             android:textColor="@color/grey_color"
             android:layout_weight="0.1"
             android:gravity="center_horizontal|center_vertical"

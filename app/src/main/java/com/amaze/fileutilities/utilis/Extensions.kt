@@ -25,6 +25,7 @@ import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.files.fileChooser
 import com.afollestad.materialdialogs.files.folderChooser
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.*
@@ -332,6 +333,22 @@ fun Context.showFolderChooserDialog(chooserPath: (file: File) -> Unit) {
         MaterialDialog(this).show {
             folderChooser(
                 this@showFolderChooserDialog,
+                baseFile,
+            ) { dialog, folder ->
+                chooserPath.invoke(folder)
+                dialog.dismiss()
+            }
+        }
+    }
+}
+
+fun Context.showFileChooserDialog(chooserPath: (file: File) -> Unit) {
+    val initialFolder = getExternalStorageDirectory()
+    initialFolder?.let {
+        val baseFile = File(it.path)
+        MaterialDialog(this).show {
+            fileChooser(
+                this@showFileChooserDialog,
                 baseFile,
             ) { dialog, folder ->
                 chooserPath.invoke(folder)
