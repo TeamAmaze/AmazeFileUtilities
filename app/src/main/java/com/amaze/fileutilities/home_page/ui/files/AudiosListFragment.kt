@@ -76,6 +76,11 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         val root: View = binding.root
         (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.audios))
         (activity as MainActivity).invalidateBottomBar(false)
+        val sharedPrefs = requireContext().getAppCommonSharedPreferences()
+        viewModel.forceShowSeekbar = !sharedPrefs.getBoolean(
+            PreferencesConstants.KEY_ENABLE_WAVEFORM,
+            PreferencesConstants.DEFAULT_AUDIO_PLAYER_WAVEFORM
+        )
         filesViewModel.usedAudiosSummaryTransformations.observe(
             viewLifecycleOwner
         ) { metaInfoAndSummaryPair ->
@@ -248,8 +253,8 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         return viewModel
     }
 
-    private fun invalidateActionButtons(progressHandler: AudioProgressHandler) {
-        progressHandler.audioPlaybackInfo.let {
+    private fun invalidateActionButtons(progressHandler: AudioProgressHandler?) {
+        progressHandler?.audioPlaybackInfo?.let {
             info ->
             _binding?.let {
                 if (progressHandler.isCancelled || !info.isPlaying) {

@@ -180,4 +180,10 @@
     <string name="reanalyse_hint">Clears existing analysis data and starts again</string>
     <string name="unknown_artist">&lt;UNKNOWN&gt;</string>
     <string name="unknown_album">&lt;UNKNOWN&gt;</string>
+    <string name="searching">Searching…</string>
+    <string name="enable_wifi">Please enable your Wi-Fi</string>
+    <string name="discovery_failure">Failed to discover peers</string>
+    <string name="receiving_files">Receiving files</string>
+    <string name="no_device_nearby">No device nearby!</string>
+    <string name="enable_waveform">Enable waveform seekbar</string>
 </resources>

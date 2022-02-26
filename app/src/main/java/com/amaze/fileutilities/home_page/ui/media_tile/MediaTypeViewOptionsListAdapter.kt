@@ -21,8 +21,8 @@ import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 
 class MediaTypeViewOptionsListAdapter(
     val context: Context,
-    val headerListItems: List<AbstractMediaFilesAdapter.ListItem>,
-    val optionsMenuSelected:
+    private val headerListItems: List<AbstractMediaFilesAdapter.ListItem>,
+    private val optionsMenuSelected:
         MediaFileAdapter.OptionsMenuSelected
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

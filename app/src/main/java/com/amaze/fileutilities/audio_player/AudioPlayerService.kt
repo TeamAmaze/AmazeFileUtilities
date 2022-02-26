@@ -646,12 +646,12 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         return repeatMode
     }
 
-    override fun getAudioProgressHandlerCallback(): AudioProgressHandler {
-        return audioProgressHandler!!
+    override fun getAudioProgressHandlerCallback(): AudioProgressHandler? {
+        return audioProgressHandler
     }
 
-    override fun getAudioPlaybackInfo(): AudioPlaybackInfo {
-        return audioProgressHandler!!.audioPlaybackInfo
+    override fun getAudioPlaybackInfo(): AudioPlaybackInfo? {
+        return audioProgressHandler?.audioPlaybackInfo
     }
 
     override fun onProgressUpdate(audioProgressHandler: AudioProgressHandler) {
@@ -661,11 +661,11 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                 .currentPosition
         ) {
             if (getShuffle()) {
-                uriList?.let {
-                    val randomIdx = Utils.generateRandom(0, it.size - 1)
+                if (!uriList.isNullOrEmpty()) {
+                    val randomIdx = Utils.generateRandom(0, uriList!!.size - 1)
                     runService(
-                        it[randomIdx],
-                        it, applicationContext
+                        uriList!![randomIdx],
+                        uriList!!, applicationContext
                     )
                 }
             } else {
@@ -674,7 +674,9 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                         playMediaItem()
                     }
                     REPEAT_ALL -> {
-                        runService(currentUri!!, uriList, applicationContext, ACTION_NEXT)
+                        if (!uriList.isNullOrEmpty()) {
+                            runService(currentUri!!, uriList, applicationContext, ACTION_NEXT)
+                        }
                     }
                     REPEAT_NONE -> {
                         // do nothing

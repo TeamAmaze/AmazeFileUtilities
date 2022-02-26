@@ -5,4 +5,9 @@
         app:title="@string/exclusions"
         app:summary="@string/exclusions_summary"
         />
+    <CheckBoxPreference
+        app:key="pref_enable_waveform"
+        app:title="@string/enable_waveform"
+        app:defaultValue="true"
+        />
 </PreferenceScreen>

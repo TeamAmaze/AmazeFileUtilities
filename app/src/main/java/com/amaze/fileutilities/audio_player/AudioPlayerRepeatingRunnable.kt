@@ -30,22 +30,25 @@ class AudioPlayerRepeatingRunnable(
         }
         val callback = serviceRef.get()
         callback?.let {
-            if (it.getAudioProgressHandlerCallback().isCancelled) {
-                it.onProgressUpdate(it.getAudioProgressHandlerCallback())
-                cancel()
-                return
+            it.getAudioProgressHandlerCallback()?.let {
+                audioProgressHandler ->
+                if (audioProgressHandler.isCancelled) {
+                    it.onProgressUpdate(audioProgressHandler)
+                    cancel()
+                    return
+                }
+                val audioPlaybackInfo = audioProgressHandler.audioPlaybackInfo
+                audioPlaybackInfo.currentPosition = it.getPlayerPosition()
+                audioPlaybackInfo.duration = it.getPlayerDuration()
+                audioPlaybackInfo.isPlaying = it.isPlaying()
+                it.onProgressUpdate(audioProgressHandler)
             }
-            val audioPlaybackInfo = it.getAudioProgressHandlerCallback().audioPlaybackInfo
-            audioPlaybackInfo.currentPosition = it.getPlayerPosition()
-            audioPlaybackInfo.duration = it.getPlayerDuration()
-            audioPlaybackInfo.isPlaying = it.isPlaying()
-            it.onProgressUpdate(it.getAudioProgressHandlerCallback())
         }
     }
 }
 
 interface OnPlayerRepeatingCallback {
-    fun getAudioProgressHandlerCallback(): AudioProgressHandler
+    fun getAudioProgressHandlerCallback(): AudioProgressHandler?
     fun onProgressUpdate(audioProgressHandler: AudioProgressHandler)
     fun getPlayerPosition(): Long
     fun getPlayerDuration(): Long
