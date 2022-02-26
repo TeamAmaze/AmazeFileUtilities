@@ -48,15 +48,22 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
 
     override fun onPositionUpdate(progressHandler: AudioProgressHandler) {
         progressHandler.audioPlaybackInfo.duration.toFloat()
-        getSeekbar()?.valueTo = progressHandler.audioPlaybackInfo.duration.toFloat()
-            .coerceAtMost(157257f)
-        getSeekbar()?.value = progressHandler.audioPlaybackInfo.currentPosition.toFloat()
-            .coerceAtMost(157257f)
+        getSeekbar()?.let {
+            seekbar ->
+            seekbar.valueTo = progressHandler.audioPlaybackInfo.duration.toFloat()
+                .coerceAtMost(157257f)
+            seekbar.value = progressHandler.audioPlaybackInfo.currentPosition.toFloat()
+                .coerceAtMost(seekbar.valueTo)
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWaveformSeekbar()?.maxProgress = progressHandler.audioPlaybackInfo.duration
-                .toFloat()
-            getWaveformSeekbar()?.progress = progressHandler
-                .audioPlaybackInfo.currentPosition.toFloat()
+            getWaveformSeekbar()?.let {
+                waveformSeekBar ->
+                waveformSeekBar.maxProgress = progressHandler.audioPlaybackInfo.duration
+                    .toFloat()
+                waveformSeekBar.progress = progressHandler
+                    .audioPlaybackInfo.currentPosition.toFloat()
+                    .coerceAtMost(waveformSeekBar.maxProgress)
+            }
         }
         getTimeElapsedTextView()?.text = AudioUtils.getReadableDurationString(
             progressHandler
@@ -165,9 +172,10 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         }
     }
 
-    private fun invalidateActionButtons(progressHandler: AudioProgressHandler) {
-        getAudioPlayerHandlerViewModel().isPlaying = progressHandler.audioPlaybackInfo.isPlaying
-        progressHandler.audioPlaybackInfo.let {
+    private fun invalidateActionButtons(progressHandler: AudioProgressHandler?) {
+        getAudioPlayerHandlerViewModel().isPlaying =
+            progressHandler?.audioPlaybackInfo?.isPlaying ?: false
+        progressHandler?.audioPlaybackInfo?.let {
             info ->
             if (progressHandler.isCancelled || !info.isPlaying) {
                 getPlayButton()?.setImageResource(R.drawable.ic_round_play_circle_32)

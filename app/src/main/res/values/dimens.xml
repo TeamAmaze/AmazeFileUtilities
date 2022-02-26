@@ -30,7 +30,7 @@
     <dimen name="fourteen_sp">14sp</dimen>
     <dimen name="sixteen_sp">16sp</dimen>
     <dimen name="twelve_sp">12sp</dimen>
-    <dimen name="eight_sp">12sp</dimen>
+    <dimen name="eight_sp">8sp</dimen>
     <dimen name="fastscroller_track_height">70dp</dimen>
     <dimen name="fastscroller_track_padding">3dp</dimen>
     <dimen name="minimal_row_size">72dp</dimen>

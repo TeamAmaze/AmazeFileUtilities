@@ -7,7 +7,7 @@
     android:layout_marginStart="@dimen/material_generic">
     <com.google.android.material.button.MaterialButton
         android:id="@+id/header_list_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -16,5 +16,7 @@
         app:rippleColor="@color/highlight_yellow"
         style="@style/MaterialButton.White"
         android:textColor="@color/navy_blue"
+        android:singleLine="true"
+        android:maxLength="25"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

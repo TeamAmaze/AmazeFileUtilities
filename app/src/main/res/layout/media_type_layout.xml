@@ -50,6 +50,8 @@
             android:layout_marginLeft="@dimen/four_dp"
             android:layout_marginStart="@dimen/four_dp"
             android:layout_weight="0.2"
+            android:maxLines="1"
+            android:maxWidth="@dimen/eight_dp"
             />
     </LinearLayout>
 
