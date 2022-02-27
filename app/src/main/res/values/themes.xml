@@ -82,4 +82,6 @@
         <item name="background">@color/translucent_toolbar</item>
         <item name="android:background">@color/translucent_toolbar</item>
     </style>
+
+    <style name="Custom.Dialog.Dark" parent="Theme.AppCompat.DayNight.Dialog.Alert"/>
 </resources>

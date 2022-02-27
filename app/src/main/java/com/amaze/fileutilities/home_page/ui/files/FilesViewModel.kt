@@ -34,6 +34,8 @@ class FilesViewModel(val applicationContext: Application) :
     var isImageMemesAnalysing = true
     var isInternalStorageAnalysing = true
     var isMediaStoreAnalysing = true
+    var isCasting = false
+    var wifiIpAddress: String? = null
 
     private val highAccuracyOpts = FaceDetectorOptions.Builder()
         .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)

@@ -15,6 +15,7 @@ import android.content.Intent
 import android.net.Uri
 import android.text.format.DateUtils
 import androidx.core.content.FileProvider
+import com.amaze.fileutilities.CastActivity
 import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
 import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.utilis.FileUtils
@@ -68,18 +69,39 @@ data class MediaFileInfo(
     fun triggerMediaFileInfoAction(contextRef: WeakReference<Context>) {
         contextRef.get()?.let {
             context ->
+            val castActivity = (context as CastActivity)
             when (this.extraInfo?.mediaType) {
                 MEDIA_TYPE_IMAGE -> {
-                    startImageViewer(this, context)
+                    castActivity.showCastFileDialog(
+                        this,
+                        MediaFileAdapter.MEDIA_TYPE_IMAGES
+                    ) {
+                        startImageViewer(this, context)
+                    }
                 }
                 MEDIA_TYPE_VIDEO -> {
-                    startVideoViewer(this, context)
+                    castActivity.showCastFileDialog(
+                        this,
+                        MediaFileAdapter.MEDIA_TYPE_VIDEO
+                    ) {
+                        startVideoViewer(this, context)
+                    }
                 }
                 MEDIA_TYPE_AUDIO -> {
-                    startAudioViewer(this, context)
+                    castActivity.showCastFileDialog(
+                        this,
+                        MediaFileAdapter.MEDIA_TYPE_AUDIO
+                    ) {
+                        startAudioViewer(this, context)
+                    }
                 }
                 MEDIA_TYPE_DOCUMENT, MEDIA_TYPE_UNKNOWN -> {
-                    startExternalViewAction(this, context)
+                    castActivity.showCastFileDialog(
+                        this,
+                        MediaFileAdapter.MEDIA_TYPE_DOCS
+                    ) {
+                        startExternalViewAction(this, context)
+                    }
                 }
                 else -> {
                     startExternalViewAction(this, context)

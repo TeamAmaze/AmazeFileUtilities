@@ -168,18 +168,6 @@
             android:configChanges=""
             android:label="Error"
             />
-        <activity
-            android:name=".cast.ExpandedControlsActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.AmazeFileUtilities.Dark"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-            <!--<meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.google.sample.cast.refplayer.VideoBrowserActivity"/>-->
-        </activity>
 
         <service
             android:name=".audio_player.AudioPlayerService"
@@ -187,12 +175,19 @@
             android:enabled="true"
             android:exported="true">
 
+
             <!--
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService"/>
             </intent-filter>
             -->
         </service>
+
+        <service
+            android:name=".cast.cloud.CloudStreamerService"
+            android:description="@string/cloud_streamer_service_description"
+            android:enabled="true"
+            android:exported="true" />
 
         <receiver android:name=".audio_player.MediaButtonIntentReceiver">
             <intent-filter>
