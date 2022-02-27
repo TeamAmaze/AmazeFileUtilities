@@ -186,4 +186,18 @@
     <string name="receiving_files">Receiving files</string>
     <string name="no_device_nearby">No device nearby!</string>
     <string name="enable_waveform">Enable waveform seekbar</string>
+    <string name="failed_to_start_cast">Failed to start cast session</string>
+    <string name="ready_to_cast">Ready to cast, select any media</string>
+    <string name="establishing_cast">Establishing cast connection</string>
+    <string name="cast_suspended">Cast session suspended</string>
+    <string name="resuming_cast">Resuming cast session</string>
+    <string name="failed_resume_cast">Failed to resume cast session</string>
+    <string name="cast_resumed">Cast session resumed</string>
+    <string name="cast_ending">Ending cast session</string>
+    <string name="cast_ended">Cast session ended</string>
+    <string name="open_with">Open with…</string>
+    <string name="chromecast">Chromecast</string>
+    <string name="inbuilt_player">In-built player</string>
+    <string name="cast_notification_title">Server running…</string>
+    <string name="cast_notification_summary">Casting content on TV</string>
 </resources>

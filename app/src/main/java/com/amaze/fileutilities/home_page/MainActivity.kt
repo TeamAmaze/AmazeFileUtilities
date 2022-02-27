@@ -20,40 +20,30 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.ActionBar
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
-import androidx.mediarouter.media.MediaRouter
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.amaze.fileutilities.PermissionsActivity
+import com.amaze.fileutilities.CastActivity
 import com.amaze.fileutilities.R
-import com.amaze.fileutilities.cast.ExpandedControlsActivity
 import com.amaze.fileutilities.databinding.ActivityMainActionbarBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarItemSelectedBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
 import com.amaze.fileutilities.databinding.ActivityMainBinding
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
-import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
 import com.amaze.fileutilities.home_page.ui.options.AboutActivity
 import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
 import com.amaze.fileutilities.utilis.*
-import com.google.android.gms.cast.MediaInfo
-import com.google.android.gms.cast.MediaLoadRequestData
-import com.google.android.gms.cast.MediaMetadata
-import com.google.android.gms.cast.framework.*
-import com.google.android.gms.cast.framework.media.RemoteMediaClient
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity :
-    PermissionsActivity(),
-    AggregatedMediaFileInfoObserver,
-    SessionManagerListener<CastSession> {
+    CastActivity(),
+    AggregatedMediaFileInfoObserver {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var actionBarBinding: ActivityMainActionbarBinding
@@ -62,9 +52,6 @@ class MainActivity :
 //    var showSearchFragment = false
     private lateinit var viewModel: FilesViewModel
     private var isOptionsVisible = false
-    private var mCastContext: CastContext? = null
-    private var mCastSession: CastSession? = null
-    private lateinit var mSessionManager: SessionManager
     val manager: WifiP2pManager? by lazy(LazyThreadSafetyMode.NONE) {
         getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager?
     }
@@ -126,14 +113,6 @@ class MainActivity :
             isOptionsVisible = !isOptionsVisible
             invalidateOptionsTabs()
         }
-        mCastContext = CastContext.getSharedInstance(baseContext)
-        mSessionManager = mCastContext!!.sessionManager
-        val mediaRouter = MediaRouter.getInstance(this)
-        mediaRouter.setMediaSession(mSessionManager.currentCastSession)
-        CastButtonFactory.setUpMediaRouteButton(
-            baseContext,
-            binding.mediaRouteButton
-        )
         binding.optionsOverlay.setOnClickListener {
             isOptionsVisible = !isOptionsVisible
             invalidateOptionsTabs()
@@ -199,19 +178,6 @@ class MainActivity :
                 }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        mSessionManager = CastContext.getSharedInstance(applicationContext).sessionManager
-        mCastSession = mSessionManager.currentCastSession
-        mSessionManager.addSessionManagerListener(this, CastSession::class.java)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mSessionManager.removeSessionManagerListener(this, CastSession::class.java)
-        mCastSession = null
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -380,103 +346,5 @@ class MainActivity :
 
     override fun lifeCycleOwner(): LifecycleOwner {
         return this
-    }
-
-    private fun invalidateCastButton() {
-        if (::binding.isInitialized && binding.root.isVisible) {
-            binding.run {
-                CastButtonFactory.setUpMediaRouteButton(applicationContext, mediaRouteButton)
-            }
-        }
-    }
-
-    fun startCastPlayback(mediaFileInfo: MediaFileInfo) {
-        val remoteMediaClient = mCastSession?.remoteMediaClient ?: return
-        val movieMetadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE)
-
-        movieMetadata.putString(MediaMetadata.KEY_TITLE, mediaFileInfo.title)
-        movieMetadata.putString(MediaMetadata.KEY_SUBTITLE, mediaFileInfo.path)
-//        movieMetadata.addImage(WebImage(Uri.fromFile(mediaFileInfo.extraInfo?.audioMetaData?.)))
-//        movieMetadata.addImage(WebImage(Uri.parse(mSelectedMedia.getImage(1))))
-
-        val duration = mediaFileInfo.extraInfo?.audioMetaData?.duration ?: 0
-        val mediaInfo = MediaInfo.Builder(mediaFileInfo.path)
-            .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
-            .setContentType("audio/mp3")
-            .setMetadata(movieMetadata)
-            .setStreamDuration(duration * 1000)
-            .build()
-        remoteMediaClient.registerCallback(object : RemoteMediaClient.Callback() {
-            override fun onStatusUpdated() {
-                val intent = Intent(
-                    this@MainActivity,
-                    ExpandedControlsActivity::class.java
-                )
-                startActivity(intent)
-                remoteMediaClient.unregisterCallback(this)
-            }
-        })
-        remoteMediaClient.load(
-            MediaLoadRequestData
-                .Builder().setMediaInfo(mediaInfo).build()
-        )
-    }
-
-    override fun onSessionEnded(p0: CastSession, p1: Int) {
-        onApplicationDisconnected()
-    }
-
-    override fun onSessionResumed(p0: CastSession, p1: Boolean) {
-        onApplicationConnected(p0)
-    }
-
-    override fun onSessionStarted(p0: CastSession, p1: String) {
-        onApplicationConnected(p0)
-    }
-
-    override fun onSessionEnding(p0: CastSession) {
-    }
-
-    override fun onSessionResumeFailed(p0: CastSession, p1: Int) {
-        onApplicationDisconnected()
-    }
-
-    override fun onSessionResuming(p0: CastSession, p1: String) {
-        onApplicationConnected(p0)
-    }
-
-    override fun onSessionStartFailed(p0: CastSession, p1: Int) {
-        onApplicationDisconnected()
-    }
-
-    override fun onSessionStarting(p0: CastSession) {
-        onApplicationConnected(p0)
-    }
-
-    override fun onSessionSuspended(p0: CastSession, p1: Int) {
-    }
-
-    private fun onApplicationConnected(castSession: CastSession) {
-        mCastSession = castSession
-        /*if (null != mSelectedMedia) {
-            if (mPlaybackState === PlaybackState.PLAYING) {
-                mVideoView.pause()
-                loadRemoteMedia(mSeekbar.getProgress(), true)
-                return
-            } else {
-                mPlaybackState = PlaybackState.IDLE
-                updatePlaybackLocation(PlaybackLocation.REMOTE)
-            }
-        }
-        updatePlayButton(mPlaybackState)*/
-//        supportInvalidateOptionsMenu()
-    }
-
-    private fun onApplicationDisconnected() {
-        /*updatePlaybackLocation(PlaybackLocation.LOCAL)
-        mPlaybackState = PlaybackState.IDLE
-        mLocation = PlaybackLocation.LOCAL
-        updatePlayButton(mPlaybackState)
-        supportInvalidateOptionsMenu()*/
     }
 }
