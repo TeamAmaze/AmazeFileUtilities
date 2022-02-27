@@ -200,4 +200,6 @@
     <string name="inbuilt_player">In-built player</string>
     <string name="cast_notification_title">Server running…</string>
     <string name="cast_notification_summary">Casting content on TV</string>
+    <string name="stop">Stop</string>
+    <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
 </resources>

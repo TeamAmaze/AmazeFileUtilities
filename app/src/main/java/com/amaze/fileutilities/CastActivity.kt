@@ -11,6 +11,8 @@
 package com.amaze.fileutilities
 
 import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Bundle
@@ -19,6 +21,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.mediarouter.app.MediaRouteButton
 import com.afollestad.materialdialogs.MaterialDialog
 import com.amaze.fileutilities.cast.cloud.CloudStreamer
+import com.amaze.fileutilities.cast.cloud.CloudStreamerService
+import com.amaze.fileutilities.cast.cloud.CloudStreamerServiceConnection
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
@@ -30,7 +34,7 @@ import com.google.android.gms.cast.MediaLoadRequestData
 import com.google.android.gms.cast.MediaMetadata
 import com.google.android.gms.cast.framework.*
 import java.io.File
-import java.io.FileInputStream
+import java.lang.ref.WeakReference
 import java.math.BigInteger
 import java.net.InetAddress
 import java.net.UnknownHostException
@@ -43,7 +47,10 @@ abstract class CastActivity :
     private var mCastContext: CastContext? = null
     private var mCastSession: CastSession? = null
     private var mSessionManager: SessionManager? = null
+    var cloudStreamerService: CloudStreamerService? = null
     private var cloudStreamer: CloudStreamer? = null
+
+    private lateinit var streamerServiceConnection: ServiceConnection
 
     abstract fun getFilesModel(): FilesViewModel
 
@@ -54,6 +61,9 @@ abstract class CastActivity :
         mCastSession = mSessionManager?.currentCastSession
         /*val mediaRouter = MediaRouter.getInstance(this)
         mediaRouter.setMediaSession(mSessionManager?.currentCastSession)*/
+
+        streamerServiceConnection =
+            CloudStreamerServiceConnection(WeakReference(this))
     }
 
     override fun onResume() {
@@ -61,12 +71,16 @@ abstract class CastActivity :
         mSessionManager = CastContext.getSharedInstance(applicationContext).sessionManager
         mCastSession = mSessionManager?.currentCastSession
         mSessionManager?.addSessionManagerListener(this, CastSession::class.java)
+
+        val intent = Intent(this, CloudStreamerService::class.java)
+        this.bindService(intent, streamerServiceConnection, 0)
     }
 
     override fun onPause() {
         super.onPause()
         mSessionManager?.removeSessionManagerListener(this, CastSession::class.java)
         mCastSession = null
+        this.unbindService(streamerServiceConnection)
     }
 
     override fun onDestroy() {
@@ -95,6 +109,9 @@ abstract class CastActivity :
         showToastOnBottom(resources.getString(R.string.cast_resumed))
         getFilesModel().isCasting = true
         getFilesModel().wifiIpAddress = wifiIpAddress(this)
+        if (cloudStreamerService == null) {
+            CloudStreamerService.runService(this)
+        }
     }
 
     override fun onSessionResuming(p0: CastSession, p1: String) {
@@ -112,6 +129,9 @@ abstract class CastActivity :
         mCastContext = CastContext.getSharedInstance(applicationContext)
         getFilesModel().isCasting = true
         getFilesModel().wifiIpAddress = wifiIpAddress(this)
+        if (cloudStreamerService == null) {
+            CloudStreamerService.runService(this)
+        }
     }
 
     override fun onSessionStarting(p0: CastSession) {
@@ -201,17 +221,17 @@ abstract class CastActivity :
         mSessionManager?.addSessionManagerListener(this, CastSession::class.java)
     }
 
+    private fun submitStreamSrc(mediaFileInfo: MediaFileInfo) {
+        cloudStreamerService?.setStreamSrc(mediaFileInfo)
+    }
+
     private fun startCastPlayback(mediaFileInfo: MediaFileInfo, mediaType: Int) {
         initCastContext()
-        val remoteMediaClient = mCastSession?.remoteMediaClient ?: return
-        if (cloudStreamer == null) {
-            cloudStreamer = CloudStreamer.getInstance()
+        if (cloudStreamerService == null) {
+            CloudStreamerService.runService(this)
         }
-        cloudStreamer?.setStreamSrc(
-            FileInputStream(mediaFileInfo.path),
-            mediaFileInfo.title,
-            File(mediaFileInfo.path).length()
-        )
+        val remoteMediaClient = mCastSession?.remoteMediaClient ?: return
+        submitStreamSrc(mediaFileInfo)
         getFilesModel().wifiIpAddress?.let {
             ipAddress ->
             val uri = Uri.parse(

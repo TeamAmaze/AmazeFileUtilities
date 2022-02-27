@@ -11,7 +11,6 @@
 package com.amaze.fileutilities.cast.cloud
 
 import android.app.Notification
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -25,22 +24,15 @@ class CloudStreamerNotification {
 
     companion object {
         const val NOTIFICATION_CHANNEL_ID = "httpServerChannel"
-        const val NOTIFICATION_ID = 1005
+        const val NOTIFICATION_ID = 1006
 
-        fun startNotification(context: Context, noStopButton: Boolean): Notification {
+        fun startNotification(context: Context): Notification {
             val builder = buildNotification(
                 context,
                 R.string.cast_notification_title,
                 context.getString(R.string.cast_notification_summary)
             )
-//            context.startForeground(NotificationConstants.FTP_ID, notification)
             return builder.build()
-        }
-
-        fun removeNotification(context: Context) {
-            val ns = Context.NOTIFICATION_SERVICE
-            val nm = context.getSystemService(ns) as NotificationManager
-            nm.cancel(NOTIFICATION_ID)
         }
 
         private fun buildNotification(
@@ -66,7 +58,19 @@ class CloudStreamerNotification {
                     .setWhen(`when`)
                     .setOngoing(true)
                     .setOnlyAlertOnce(true)
-            NotificationConstants.setMetadata(context, builder, 1)
+            val stopIcon = android.R.drawable.ic_menu_close_clear_cancel
+            val stopText: CharSequence = context.getString(R.string.stop)
+            val stopIntent: Intent =
+                Intent(CloudStreamerService.TAG_BROADCAST_STREAMER_STOP)
+                    .setPackage(context.packageName)
+            val stopPendingIntent =
+                PendingIntent.getBroadcast(
+                    context, 0, stopIntent,
+                    PendingIntent.FLAG_ONE_SHOT
+                )
+
+            builder.addAction(stopIcon, stopText, stopPendingIntent)
+            NotificationConstants.setMetadata(context, builder, NotificationConstants.TYPE_NORMAL)
             return builder
         }
     }
