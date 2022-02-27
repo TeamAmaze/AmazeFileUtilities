@@ -175,12 +175,19 @@
             android:enabled="true"
             android:exported="true">
 
+
             <!--
             <intent-filter>
                 <action android:name="android.media.browse.MediaBrowserService"/>
             </intent-filter>
             -->
         </service>
+
+        <service
+            android:name=".cast.cloud.CloudStreamerService"
+            android:description="@string/cloud_streamer_service_description"
+            android:enabled="true"
+            android:exported="true" />
 
         <receiver android:name=".audio_player.MediaButtonIntentReceiver">
             <intent-filter>
