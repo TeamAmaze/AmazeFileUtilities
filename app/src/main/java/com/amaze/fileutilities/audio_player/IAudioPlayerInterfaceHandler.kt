@@ -51,7 +51,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         getSeekbar()?.let {
             seekbar ->
             seekbar.valueTo = progressHandler.audioPlaybackInfo.duration.toFloat()
-                .coerceAtMost(157257f)
+                .coerceAtLeast(0.1f)
             seekbar.value = progressHandler.audioPlaybackInfo.currentPosition.toFloat()
                 .coerceAtMost(seekbar.valueTo)
         }
@@ -193,7 +193,9 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     }
 
     private fun setSeekbarProgress(progress: Int) {
-        getSeekbar()?.value = progress.toFloat().coerceAtMost(157257f)
+        getSeekbar()?.value = progress.toFloat().coerceAtMost(
+            getSeekbar()?.valueTo ?: 0f
+        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWaveformSeekbar()?.visibility = View.VISIBLE
             getSeekbar()?.visibility = View.GONE
@@ -243,7 +245,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
 
     private fun setupSeekBars(audioService: ServiceOperationCallback?) {
         val valueTo = audioService?.getAudioPlaybackInfo()?.duration?.toFloat()
-        getSeekbar()?.valueTo = valueTo?.coerceAtMost(157257f) ?: 0f
+        getSeekbar()?.valueTo = valueTo?.coerceAtLeast(0.1f) ?: 0f
         getWaveformSeekbar()?.maxProgress = audioService
             ?.getAudioPlaybackInfo()?.duration?.toFloat() ?: 0f
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
