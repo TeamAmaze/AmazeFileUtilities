@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.amaze.fileutilities.CastActivity
 import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
 import com.amaze.fileutilities.utilis.FileUtils
 import com.amaze.fileutilities.utilis.PreferencesConstants
@@ -99,6 +100,8 @@ abstract class AbstractMediaInfoListFragment : Fragment(), MediaFileAdapter.Opti
                     getMediaListType()
                 ) {
                     mediaTypeHeader ->
+                    (requireContext() as CastActivity)
+                        .refactorCastButton(mediaTypeHeader.getMediaRouteButton())
                     mediaTypeHeader.setProgress(
                         MediaTypeView.MediaTypeContent(
                             storageSummary.items, usedSpace,

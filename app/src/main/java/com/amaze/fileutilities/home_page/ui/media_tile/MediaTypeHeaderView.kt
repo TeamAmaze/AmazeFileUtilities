@@ -22,6 +22,7 @@ import android.widget.*
 import android.widget.LinearLayout
 import androidx.core.content.edit
 import androidx.core.graphics.ColorUtils
+import androidx.mediarouter.app.MediaRouteButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
@@ -31,7 +32,9 @@ import com.amaze.fileutilities.utilis.*
 import com.google.android.material.progressindicator.LinearProgressIndicator
 
 class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
+    private val typeHeaderParent: RelativeLayout
     private val typeImageView: ImageView
+    private val mediaRouteButton: MediaRouteButton
     private val infoLayoutParent: LinearLayout
     private val usedSpaceTextView: TextView
     private val usedTotalSpaceTextView: TextView
@@ -59,7 +62,9 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         val inflater = context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.media_type_header_layout, this, true)
-        typeImageView = getChildAt(0) as ImageView
+        typeHeaderParent = getChildAt(0) as RelativeLayout
+        typeImageView = typeHeaderParent.findViewById(R.id.type_image)
+        mediaRouteButton = typeHeaderParent.findViewById(R.id.media_route_button)
         infoLayoutParent = getChildAt(1) as LinearLayout
         optionsParentLayout = getChildAt(2) as LinearLayout
         optionsItemsScroll = getChildAt(4) as HorizontalScrollView
@@ -121,6 +126,10 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
 
     fun setMediaImageSrc(mediaRes: Drawable) {
         background = mediaRes
+    }
+
+    fun getMediaRouteButton(): MediaRouteButton {
+        return mediaRouteButton
     }
 
     fun setHeaderColor(headerColor: Int, headerRes: Int) {
