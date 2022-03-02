@@ -102,4 +102,8 @@ class DocumentsListFragment : AbstractMediaInfoListFragment() {
     override fun getMediaListType(): Int {
         return MediaFileAdapter.MEDIA_TYPE_DOCS
     }
+
+    override fun getItemPressedCallback(mediaFileInfo: MediaFileInfo) {
+        // do nothing
+    }
 }

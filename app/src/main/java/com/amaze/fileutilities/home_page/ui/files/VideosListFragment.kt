@@ -102,4 +102,8 @@ class VideosListFragment : AbstractMediaInfoListFragment() {
     override fun getMediaListType(): Int {
         return MediaFileAdapter.MEDIA_TYPE_VIDEO
     }
+
+    override fun getItemPressedCallback(mediaFileInfo: MediaFileInfo) {
+        // do nothing
+    }
 }
