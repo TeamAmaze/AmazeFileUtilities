@@ -29,7 +29,8 @@ class MediaFileAdapter(
     private var sortingPreference: MediaFileListSorter.SortingPreference,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
     private val mediaListType: Int,
-    private val drawBannerCallback: (mediaTypeHeader: MediaTypeHeaderView) -> Unit
+    private val drawBannerCallback: (mediaTypeHeader: MediaTypeHeaderView) -> Unit,
+    private val listItemPressedCallback: (mediaFileInfo: MediaFileInfo) -> Unit
 ) :
     AbstractMediaFilesAdapter(context, preloader, isGrid) {
 

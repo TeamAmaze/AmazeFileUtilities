@@ -21,6 +21,10 @@ class AudioPlayerInterfaceHandlerViewModel : ViewModel() {
     var isPlaying: Boolean = true
     var forceShowSeekbar = false
 
+    companion object {
+        const val WAVEFORM_THRESHOLD_BYTES = 50000000L
+    }
+
     fun getSiblingAudioModels(
         videoModel: LocalAudioModel,
         uriList: ArrayList<Uri>?

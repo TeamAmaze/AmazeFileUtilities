@@ -81,6 +81,11 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
                     it.isAudioMimeType()
                 }.asReversed()
             )
+            audioUri.getFileFromUri(this)?.length()?.also {
+                if (it > AudioPlayerInterfaceHandlerViewModel.WAVEFORM_THRESHOLD_BYTES) {
+                    viewModel.forceShowSeekbar = true
+                }
+            }
             AudioPlayerService.runService(audioUri, viewModel.uriList, this)
         }
         title = getString(R.string.amaze_audio_player)
