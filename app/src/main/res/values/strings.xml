@@ -185,6 +185,7 @@
     <string name="discovery_failure">Failed to discover peers</string>
     <string name="receiving_files">Receiving files</string>
     <string name="no_device_nearby">No device nearby!</string>
+    <string name="search_devices">Search for devices…</string>
     <string name="enable_waveform">Enable waveform seekbar</string>
     <string name="failed_to_start_cast">Failed to start cast session</string>
     <string name="ready_to_cast">Ready to cast, select any media</string>

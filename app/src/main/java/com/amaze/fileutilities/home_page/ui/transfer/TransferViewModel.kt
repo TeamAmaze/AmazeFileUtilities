@@ -22,11 +22,12 @@ import java.net.Socket
 
 class TransferViewModel : ViewModel() {
 
-    var currentDeviceAddress: String? = null
+    var groupOwnerIP: String? = null
+    var isWifiP2PEnabled: Boolean = false
 
     fun initClientTransfer(inputStream: InputStream) {
         viewModelScope.launch(Dispatchers.Default) {
-            currentDeviceAddress?.let {
+            groupOwnerIP?.let {
                 host ->
                 val port: Int
                 var len: Int
@@ -38,7 +39,7 @@ class TransferViewModel : ViewModel() {
                      * port, and timeout information.
                      */
                     socket.bind(null)
-                    socket.connect((InetSocketAddress(host, 8888)), 5000)
+                    socket.connect((InetSocketAddress("http://$host", 8888)), 5000)
 
                     /**
                      * Create a byte stream from a JPEG file and pipe it to the output stream
