@@ -11,9 +11,7 @@
 package com.amaze.fileutilities.home_page
 
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
-import android.net.wifi.p2p.WifiP2pManager
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.MotionEvent
@@ -27,8 +25,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import com.amaze.fileutilities.CastActivity
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.WifiP2PActivity
 import com.amaze.fileutilities.databinding.ActivityMainActionbarBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarItemSelectedBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
@@ -42,7 +40,7 @@ import com.amaze.fileutilities.utilis.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity :
-    CastActivity(),
+    WifiP2PActivity(),
     AggregatedMediaFileInfoObserver {
 
     private lateinit var binding: ActivityMainBinding
@@ -52,11 +50,6 @@ class MainActivity :
 //    var showSearchFragment = false
     private lateinit var viewModel: FilesViewModel
     private var isOptionsVisible = false
-    val manager: WifiP2pManager? by lazy(LazyThreadSafetyMode.NONE) {
-        getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager?
-    }
-
-    var channel: WifiP2pManager.Channel? = null
 
     companion object {
         private const val VOICE_REQUEST_CODE = 1000
@@ -68,7 +61,6 @@ class MainActivity :
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
-        channel = manager?.initialize(this, mainLooper, null)
 //        viewModel.copyTrainedData()
         actionBarBinding = ActivityMainActionbarBinding.inflate(layoutInflater)
         searchActionBarBinding = ActivityMainActionbarSearchBinding.inflate(layoutInflater)
@@ -216,14 +208,6 @@ class MainActivity :
         if (::actionBarBinding.isInitialized) {
             actionBarBinding.title.text = title
         }
-    }
-
-    fun getWifiP2PManager(): WifiP2pManager? {
-        return manager
-    }
-
-    fun getWifiP2PChannel(): WifiP2pManager.Channel? {
-        return channel
     }
 
     fun invalidateSearchBar(showSearch: Boolean): AutoCompleteTextView? {

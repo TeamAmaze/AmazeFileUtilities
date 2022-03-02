@@ -66,6 +66,7 @@ class CloudStreamerService : Service() {
     override fun onDestroy() {
         super.onDestroy()
         cloudStreamer?.stop()
+        wakeLock!!.release()
         cloudStreamer = null
         notificationManager!!.cancel(CloudStreamerNotification.NOTIFICATION_ID)
         unregisterReceiver(stopReceiver)
@@ -87,6 +88,7 @@ class CloudStreamerService : Service() {
         override fun onReceive(context: Context, intent: Intent) {
             // cancel operation
             stopSelf()
+            notificationManager!!.cancel(CloudStreamerNotification.NOTIFICATION_ID)
             stopForeground(true)
         }
     }

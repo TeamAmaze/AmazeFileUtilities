@@ -14,11 +14,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.wifi.p2p.WifiP2pConfig
-import android.net.wifi.p2p.WifiP2pDevice
-import android.net.wifi.p2p.WifiP2pDeviceList
-import android.net.wifi.p2p.WifiP2pManager
+import android.net.NetworkInfo
+import android.net.wifi.p2p.*
+import android.net.wifi.p2p.WifiP2pManager.PeerListListener
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -35,11 +35,14 @@ import com.amaze.fileutilities.utilis.px
 import com.amaze.fileutilities.utilis.showFileChooserDialog
 import com.amaze.fileutilities.utilis.showToastInCenter
 
-class TransferFragment : Fragment() {
+class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, PeerListListener {
 
     private lateinit var transferViewModel: TransferViewModel
     private var _binding: FragmentTransferBinding? = null
     private var mainActivity: MainActivity? = null
+
+    private var info: WifiP2pInfo? = null
+    private var device: WifiP2pDevice? = null
 
     private val wifiP2PIntentFilter = IntentFilter().apply {
         addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
@@ -82,7 +85,8 @@ class TransferFragment : Fragment() {
 
                     override fun onFailure(reasonCode: Int) {
                         binding.searchingProgress.visibility = View.GONE
-                        transferViewModel.currentDeviceAddress = null
+                        transferViewModel.groupOwnerIP = null
+                        binding.searchingText.visibility = View.VISIBLE
                         binding.searchingText.text =
                             "${getString(R.string.discovery_failure)} : $reasonCode"
                     }
@@ -122,62 +126,78 @@ class TransferFragment : Fragment() {
     private val wifiP2PReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action: String? = intent.action
-            action?.let {
-                when (action) {
-                    WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION -> {
-                        // Check to see if Wi-Fi is enabled and notify appropriate activity
-                        when (intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1)) {
-                            WifiP2pManager.WIFI_P2P_STATE_ENABLED -> {
-                                // Wifi P2P is enabled
-                                binding.sendButton.visibility = View.VISIBLE
-                            }
-                            else -> {
-                                // Wi-Fi P2P is not enabled
-                                binding.transferButton.visibility = View.GONE
-                                binding.sendButton.visibility = View.GONE
-                                binding.devicesParent.removeAllViews()
-                                binding.searchingProgress.visibility = View.GONE
-                                binding.searchingText.visibility = View.VISIBLE
-                                transferViewModel.currentDeviceAddress = null
-                                binding.searchingText.text = getString(R.string.enable_wifi)
-                            }
-                        }
+
+            action.let {
+                if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION == action) {
+
+                    // UI update to indicate wifi p2p status.
+                    val state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1)
+                    if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
+                        // Wifi Direct mode is enabled
+                        transferViewModel.isWifiP2PEnabled = true
+                        // Wifi P2P is enabled
+                        binding.sendButton.visibility = View.VISIBLE
+                    } else {
+                        resetViewsOnDisconnect()
                     }
-                    WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION -> {
-                        // Call WifiP2pManager.requestPeers() to get a list of current peers
-                        mainActivity?.getWifiP2PManager()?.requestPeers(mainActivity?.channel) {
-                            peers: WifiP2pDeviceList? ->
-                            // Handle peers list
-                            Log.i(javaClass.simpleName, "Found peers: $peers")
-                            peers?.let {
-                                if (it.deviceList.isEmpty()) {
-                                    binding.searchingText.text =
-                                        getString(R.string.no_device_nearby)
-                                } else {
-                                    binding.searchingText.text = peers.deviceList.joinToString {
-                                        "Name: ${it.deviceName}\n${it.deviceAddress}\n\n"
-                                    }
-                                    binding.devicesParent.removeAllViews()
-                                    transferViewModel.currentDeviceAddress = null
-                                    peers.deviceList.forEach {
-                                        device ->
-                                        binding.devicesParent.addView(getPeerButton(device))
-                                    }
-                                }
-                            }
-                        }
+                    Log.d(javaClass.simpleName, "P2P state changed - $state")
+                } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION == action) {
+
+                    // request available peers from the wifi p2p manager. This is an
+                    // asynchronous call and the calling activity is notified with a
+                    // callback on PeerListListener.onPeersAvailable()
+                    if (mainActivity?.manager != null) {
+                        mainActivity?.manager!!.requestPeers(
+                            mainActivity?.channel,
+                            this@TransferFragment
+                        )
                     }
-                    WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION -> {
-                        // Respond to new connection or disconnections
+                    Log.d(javaClass.simpleName, "P2P peers changed")
+                } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION == action) {
+                    if (mainActivity?.manager == null) {
+                        return
                     }
-                    WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION -> {
-                        // Respond to this device's wifi state changing
+                    val networkInfo = intent
+                        .getParcelableExtra<Parcelable>(WifiP2pManager.EXTRA_NETWORK_INFO)
+                        as NetworkInfo?
+                    if (networkInfo!!.isConnected) {
+
+                        // we are connected with the other device, request connection
+                        // info to find group owner IP
+                        mainActivity?.manager!!.requestConnectionInfo(
+                            mainActivity?.channel,
+                            this@TransferFragment
+                        )
+                    } else {
+                        // It's a disconnect
+                        resetViewsOnDisconnect()
                     }
-                    else -> {
-                    }
+                } else if (WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION == action) {
+                    updateThisDevice(
+                        intent.getParcelableExtra<Parcelable>(
+                            WifiP2pManager.EXTRA_WIFI_P2P_DEVICE
+                        ) as WifiP2pDevice?
+                    )
+                } else {
+                    // do nothing
                 }
             }
         }
+    }
+
+    private fun resetViewsOnDisconnect() {
+        transferViewModel.isWifiP2PEnabled = true
+        binding.devicesParent.removeAllViews()
+        binding.searchingText.visibility = View.VISIBLE
+        binding.searchingText.text = resources.getString(R.string.search_devices)
+        binding.searchingProgress.visibility = View.GONE
+
+        // Wi-Fi P2P is not enabled
+        binding.transferButton.visibility = View.GONE
+        binding.sendButton.visibility = View.GONE
+        binding.searchingText.text = getString(R.string.enable_wifi)
+        binding.deviceName.visibility = View.GONE
+        binding.deviceStatus.visibility = View.GONE
     }
 
     private fun getPeerButton(device: WifiP2pDevice): Button {
@@ -195,7 +215,6 @@ class TransferFragment : Fragment() {
                                 "successful"
                         )
                         binding.transferButton.visibility = View.VISIBLE
-                        transferViewModel.currentDeviceAddress = device.deviceAddress
                     }
 
                     override fun onFailure(p0: Int) {
@@ -203,7 +222,6 @@ class TransferFragment : Fragment() {
                             "Connection " +
                                 "failed with $p0"
                         )
-                        transferViewModel.currentDeviceAddress = null
                     }
                 }
             )
@@ -231,5 +249,59 @@ class TransferFragment : Fragment() {
     private fun setSelectButton(button: Button) {
         button.background = resources.getDrawable(R.drawable.button_curved_selected)
         button.setTextColor(resources.getColor(R.color.navy_blue))
+    }
+
+    override fun onConnectionInfoAvailable(p0: WifiP2pInfo?) {
+        this.info = p0
+        p0?.let {
+            transferViewModel.groupOwnerIP = p0.groupOwnerAddress.hostAddress
+            Log.i(
+                javaClass.simpleName,
+                "Connection established with group owner" +
+                    " id ${transferViewModel.groupOwnerIP}"
+            )
+        }
+    }
+
+    override fun onPeersAvailable(peers: WifiP2pDeviceList?) {
+        // Handle peers list
+        Log.i(javaClass.simpleName, "Found peers: $peers")
+        peers?.let {
+            if (it.deviceList.isEmpty()) {
+                binding.searchingText.text =
+                    getString(R.string.no_device_nearby)
+            } else {
+                binding.searchingText.text = peers.deviceList.joinToString {
+                    "Name: ${it.deviceName}\n${it.deviceAddress}\n\n"
+                }
+                binding.devicesParent.removeAllViews()
+                peers.deviceList.forEach {
+                    device ->
+                    binding.devicesParent.addView(getPeerButton(device))
+                }
+            }
+        }
+    }
+
+    fun updateThisDevice(device: WifiP2pDevice?) {
+        device?.also {
+            this.device = device
+            binding.deviceName.visibility = View.VISIBLE
+            binding.deviceStatus.visibility = View.VISIBLE
+            binding.deviceName.text = device.deviceName
+            binding.deviceStatus.text = getDeviceStatus(device.status)
+        }
+    }
+
+    private fun getDeviceStatus(deviceStatus: Int): String? {
+        Log.d(javaClass.simpleName, "Peer status :$deviceStatus")
+        return when (deviceStatus) {
+            WifiP2pDevice.AVAILABLE -> "Available"
+            WifiP2pDevice.INVITED -> "Invited"
+            WifiP2pDevice.CONNECTED -> "Connected"
+            WifiP2pDevice.FAILED -> "Failed"
+            WifiP2pDevice.UNAVAILABLE -> "Unavailable"
+            else -> "Unknown"
+        }
     }
 }
