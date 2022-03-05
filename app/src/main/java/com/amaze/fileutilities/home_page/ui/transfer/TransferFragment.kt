@@ -30,10 +30,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentTransferBinding
 import com.amaze.fileutilities.home_page.MainActivity
-import com.amaze.fileutilities.utilis.getExternalStorageDirectory
-import com.amaze.fileutilities.utilis.px
-import com.amaze.fileutilities.utilis.showFileChooserDialog
-import com.amaze.fileutilities.utilis.showToastInCenter
+import com.amaze.fileutilities.utilis.*
 
 class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, PeerListListener {
 
@@ -55,6 +52,11 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
     // onDestroyView.
     private val binding get() = _binding!!
 
+    companion object {
+        private val RECEIVER_BASE_PATH = "AmazeFileUtils"
+        private val SEND_FILE_META_SPLITTER = "/"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,14 +66,10 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
             ViewModelProvider(this).get(TransferViewModel::class.java)
         mainActivity = activity as MainActivity
 
-        wifiP2PReceiver.also { receiver ->
-            mainActivity?.registerReceiver(receiver, wifiP2PIntentFilter)
-        }
-
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        binding.sendButton.setOnClickListener {
+        binding.scanButton.setOnClickListener {
             binding.searchingProgress.visibility = View.VISIBLE
             binding.searchingText.visibility = View.VISIBLE
             mainActivity?.getWifiP2PManager()?.discoverPeers(
@@ -93,33 +91,103 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
                 }
             )
         }
-        binding.transferButton.setOnClickListener {
+        binding.sendButton.setOnClickListener {
             requireContext().showFileChooserDialog {
-                transferViewModel.initClientTransfer(it.inputStream())
+                if (transferViewModel.peerIP == null) {
+                    resetViewsOnDisconnect()
+                    requireContext().showToastInCenter(
+                        resources
+                            .getString(R.string.failed_filename_send_reconnecct)
+                    )
+                    binding.searchingText.text = getString(R.string.failed_to_handshake)
+                } else {
+                    transferViewModel
+                        .sendMessage("${it.name}$SEND_FILE_META_SPLITTER${it.length()}")
+                        .observe(viewLifecycleOwner) {
+                            didSendFileName ->
+                            if (!didSendFileName) {
+                                requireContext().showToastInCenter(
+                                    resources
+                                        .getString(R.string.failed_filename_send)
+                                )
+                            } else {
+                                transferViewModel.initClientTransfer(it)
+                                    .observe(viewLifecycleOwner) {
+                                        progress ->
+                                        invalidateTransferProgressBar(progress, it.name)
+                                    }
+                            }
+                        }
+                }
             }
         }
+
         binding.receiveButton.setOnClickListener {
             requireContext().getExternalStorageDirectory()?.path?.let {
-                binding.searchingText.text = getString(R.string.receiving_files)
-                transferViewModel.initServerConnection(it)
+                if (transferViewModel.peerIP == null) {
+                    resetViewsOnDisconnect()
+                    requireContext().showToastInCenter(
+                        resources
+                            .getString(R.string.failed_filename_receive_reconnecct)
+                    )
+                    binding.searchingText.text = getString(R.string.failed_to_handshake)
+                } else {
+                    transferViewModel.receiveMessage().observe(viewLifecycleOwner) {
+                        receivedFileNameAndBytes ->
+                        if (receivedFileNameAndBytes != null) {
+                            val array = receivedFileNameAndBytes.split(SEND_FILE_META_SPLITTER)
+                            val filePath = "$it/$RECEIVER_BASE_PATH/${array[0]}"
+                            val fileLength = array[1].toLong()
+                            binding.searchingText.text = getString(R.string.receiving_files)
+
+                            transferViewModel.initServerConnection(filePath, fileLength)
+                                .observe(viewLifecycleOwner) {
+                                    progress ->
+                                    invalidateTransferProgressBar(progress, array[0])
+                                }
+                        } else {
+                            requireContext().showToastInCenter(
+                                resources
+                                    .getString(R.string.failed_filename_receive)
+                            )
+                        }
+                    }
+                }
             }
         }
         return root
     }
 
+    private fun invalidateTransferProgressBar(progress: Long, fileName: String) {
+        if (progress == -1L || progress > 100) {
+            // finish sending
+            binding.transferFileText.text = ""
+            binding.transferProgress.progress = 0
+            binding.transferInfoParent.hideFade(300)
+            requireContext().showToastInCenter(resources.getString(R.string.transfer_complete))
+        } else {
+            binding.transferInfoParent.visibility = View.VISIBLE
+            binding.transferFileText.text = fileName
+            binding.transferProgress.progress = progress.toInt()
+        }
+    }
+
     override fun onResume() {
         super.onResume()
+        wifiP2PReceiver.also { receiver ->
+            mainActivity?.registerReceiver(receiver, wifiP2PIntentFilter)
+        }
     }
 
     override fun onPause() {
         super.onPause()
+        wifiP2PReceiver.also { receiver ->
+            mainActivity?.unregisterReceiver(receiver)
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        wifiP2PReceiver.also { receiver ->
-            mainActivity?.unregisterReceiver(receiver)
-        }
         _binding = null
     }
 
@@ -133,10 +201,14 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
                     // UI update to indicate wifi p2p status.
                     val state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1)
                     if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-                        // Wifi Direct mode is enabled
-                        transferViewModel.isWifiP2PEnabled = true
-                        // Wifi P2P is enabled
-                        binding.sendButton.visibility = View.VISIBLE
+                        if (transferViewModel.isWifiP2PEnabled) {
+                            binding.scanButton.visibility = View.VISIBLE
+
+                            // set connected devices info
+                        } else {
+                            // Wifi Direct mode is enabled
+                            transferViewModel.isWifiP2PEnabled = true
+                        }
                     } else {
                         resetViewsOnDisconnect()
                     }
@@ -186,14 +258,17 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
     }
 
     private fun resetViewsOnDisconnect() {
-        transferViewModel.isWifiP2PEnabled = true
+        transferViewModel.isWifiP2PEnabled = false
+        transferViewModel.groupOwnerIP = null
+        transferViewModel.selfIP = null
+        transferViewModel.peerIP = null
         binding.devicesParent.removeAllViews()
         binding.searchingText.visibility = View.VISIBLE
         binding.searchingText.text = resources.getString(R.string.search_devices)
         binding.searchingProgress.visibility = View.GONE
 
         // Wi-Fi P2P is not enabled
-        binding.transferButton.visibility = View.GONE
+        binding.scanButton.visibility = View.GONE
         binding.sendButton.visibility = View.GONE
         binding.searchingText.text = getString(R.string.enable_wifi)
         binding.deviceName.visibility = View.GONE
@@ -210,11 +285,7 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
                 config,
                 object : WifiP2pManager.ActionListener {
                     override fun onSuccess() {
-                        requireContext().showToastInCenter(
-                            "Connection " +
-                                "successful"
-                        )
-                        binding.transferButton.visibility = View.VISIBLE
+                        // wait for group owner ip callback
                     }
 
                     override fun onFailure(p0: Int) {
@@ -222,6 +293,8 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
                             "Connection " +
                                 "failed with $p0"
                         )
+                        resetViewsOnDisconnect()
+                        binding.scanButton.visibility = View.VISIBLE
                     }
                 }
             )
@@ -255,11 +328,37 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
         this.info = p0
         p0?.let {
             transferViewModel.groupOwnerIP = p0.groupOwnerAddress.hostAddress
-            Log.i(
-                javaClass.simpleName,
-                "Connection established with group owner" +
-                    " id ${transferViewModel.groupOwnerIP}"
-            )
+            transferViewModel.selfIP = Utils.wifiIpAddress(requireContext())
+            transferViewModel.initHandshake().observe(viewLifecycleOwner) {
+                handshakeSuccess ->
+                if (!handshakeSuccess) {
+                    Log.w(javaClass.simpleName, "Handshake failed")
+                    requireContext().showToastInCenter(
+                        resources
+                            .getString(R.string.failed_to_handshake)
+                    )
+                    resetViewsOnDisconnect()
+                    binding.searchingText.text = getString(R.string.failed_to_handshake)
+                } else {
+                    Log.w(
+                        javaClass.simpleName,
+                        "Handshake success, " +
+                            "peer ip: ${transferViewModel.peerIP}"
+                    )
+                    requireContext().showToastInCenter(
+                        resources
+                            .getString(R.string.connection_successful)
+                    )
+                    binding.scanButton.visibility = View.GONE
+                    binding.sendButton.visibility = View.VISIBLE
+                    binding.receiveButton.visibility = View.VISIBLE
+                    Log.i(
+                        javaClass.simpleName,
+                        "Connection established with group owner" +
+                            " id ${transferViewModel.groupOwnerIP}"
+                    )
+                }
+            }
         }
     }
 

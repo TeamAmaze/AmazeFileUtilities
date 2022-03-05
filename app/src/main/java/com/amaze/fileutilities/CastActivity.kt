@@ -10,11 +10,9 @@
 
 package com.amaze.fileutilities
 
-import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.net.Uri
-import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -26,8 +24,8 @@ import com.amaze.fileutilities.cast.cloud.CloudStreamerServiceConnection
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
+import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.showToastOnBottom
-import com.google.android.exoplayer2.util.Log
 import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaLoadRequestData
@@ -35,10 +33,6 @@ import com.google.android.gms.cast.MediaMetadata
 import com.google.android.gms.cast.framework.*
 import java.io.File
 import java.lang.ref.WeakReference
-import java.math.BigInteger
-import java.net.InetAddress
-import java.net.UnknownHostException
-import java.nio.ByteOrder
 
 abstract class CastActivity :
     PermissionsActivity(),
@@ -108,7 +102,7 @@ abstract class CastActivity :
     override fun onSessionResumed(p0: CastSession, p1: Boolean) {
         showToastOnBottom(resources.getString(R.string.cast_resumed))
         getFilesModel().isCasting = true
-        getFilesModel().wifiIpAddress = wifiIpAddress(this)
+        getFilesModel().wifiIpAddress = Utils.wifiIpAddress(this)
         if (cloudStreamerService == null) {
             CloudStreamerService.runService(this)
         }
@@ -128,7 +122,7 @@ abstract class CastActivity :
         showToastOnBottom(resources.getString(R.string.ready_to_cast))
         mCastContext = CastContext.getSharedInstance(applicationContext)
         getFilesModel().isCasting = true
-        getFilesModel().wifiIpAddress = wifiIpAddress(this)
+        getFilesModel().wifiIpAddress = Utils.wifiIpAddress(this)
         if (cloudStreamerService == null) {
             CloudStreamerService.runService(this)
         }
@@ -145,7 +139,7 @@ abstract class CastActivity :
     }
 
     fun refactorCastButton(mediaRouteButton: MediaRouteButton) {
-        val wifiIpAddress = wifiIpAddress(this)
+        val wifiIpAddress = Utils.wifiIpAddress(this)
         if (getFilesModel().isCasting) {
             mediaRouteButton.setRemoteIndicatorDrawable(
                 resources
@@ -338,24 +332,5 @@ abstract class CastActivity :
     private fun clearCastResources() {
         cloudStreamer?.stop()
         cloudStreamer = null
-    }
-
-    private fun wifiIpAddress(context: Context): String? {
-        val wifiManager = context.applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-        var ipAddress = wifiManager.connectionInfo.ipAddress
-
-        // Convert little-endian to big-endianif needed
-        if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
-            ipAddress = Integer.reverseBytes(ipAddress)
-        }
-        val ipByteArray: ByteArray = BigInteger.valueOf(ipAddress.toLong()).toByteArray()
-        val ipAddressString: String? = try {
-            InetAddress.getByAddress(ipByteArray).hostAddress
-        } catch (ex: UnknownHostException) {
-            Log.e(javaClass.simpleName, "Unable to get host address.")
-            ex.printStackTrace()
-            null
-        }
-        return ipAddressString
     }
 }

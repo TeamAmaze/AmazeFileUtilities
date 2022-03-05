@@ -15,12 +15,19 @@ import android.content.*
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
+import android.net.wifi.WifiManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewAnalysisAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
+import com.google.android.exoplayer2.util.Log
+import java.math.BigInteger
+import java.net.InetAddress
+import java.net.UnknownHostException
+import java.nio.ByteOrder
 
 class Utils {
 
@@ -208,6 +215,26 @@ class Utils {
 
         fun generateRandom(min: Int, max: Int): Int {
             return (Math.random() * (max - min + 1) + min).toInt()
+        }
+
+        fun wifiIpAddress(context: Context): String? {
+            val wifiManager = context.applicationContext
+                .getSystemService(AppCompatActivity.WIFI_SERVICE) as WifiManager
+            var ipAddress = wifiManager.connectionInfo.ipAddress
+
+            // Convert little-endian to big-endianif needed
+            if (ByteOrder.nativeOrder().equals(ByteOrder.LITTLE_ENDIAN)) {
+                ipAddress = Integer.reverseBytes(ipAddress)
+            }
+            val ipByteArray: ByteArray = BigInteger.valueOf(ipAddress.toLong()).toByteArray()
+            val ipAddressString: String? = try {
+                InetAddress.getByAddress(ipByteArray).hostAddress
+            } catch (ex: UnknownHostException) {
+                Log.e(javaClass.simpleName, "Unable to get host address.")
+                ex.printStackTrace()
+                null
+            }
+            return ipAddressString
         }
     }
 }
