@@ -38,6 +38,7 @@
     <string name="title_analyse">Analyse</string>
     <string name="title_files">Files</string>
     <string name="title_transfer">Transfer</string>
+    <string name="title_scan">Scan</string>
     <string name="internal_storage">Internal Storage</string>
     <string name="images">Images</string>
     <string name="audios">Audios</string>
@@ -203,4 +204,11 @@
     <string name="cast_notification_summary">Casting content on TV</string>
     <string name="stop">Stop</string>
     <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
+    <string name="failed_to_handshake">Failed to establish connection with remote device</string>
+    <string name="connection_successful">Connection successful</string>
+    <string name="failed_filename_send">Failed to send, please ensure remote is set to receive file</string>
+    <string name="failed_filename_send_reconnecct">Failed to send, please reconnect</string>
+    <string name="failed_filename_receive">Failed to receive, please ensure you\'re connected to sender before receiving</string>
+    <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
+    <string name="transfer_complete">Transfer complete</string>
 </resources>
