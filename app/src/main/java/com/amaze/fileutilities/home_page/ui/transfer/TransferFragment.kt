@@ -27,6 +27,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentTransferBinding
 import com.amaze.fileutilities.home_page.MainActivity
@@ -68,6 +69,25 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
 
         _binding = FragmentTransferBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        binding.searchingText.visibility = View.VISIBLE
+        binding.searchingText.text = resources.getString(R.string.waiting_for_permissions)
+        binding.scanButton.visibility = View.GONE
+        val isGranted = mainActivity?.initLocationResources(object :
+                PermissionsActivity.OnPermissionGranted {
+                override fun onPermissionGranted(isGranted: Boolean) {
+                    if (isGranted) {
+                        binding.searchingText.visibility = View.GONE
+                        binding.scanButton.visibility = View.VISIBLE
+                    } else {
+                        locationPermissionDenied()
+                    }
+                }
+            })
+        isGranted?.also {
+            binding.searchingText.visibility = View.GONE
+            binding.scanButton.visibility = View.VISIBLE
+        }
+        checkLocationEnabled()
 
         binding.scanButton.setOnClickListener {
             binding.searchingProgress.visibility = View.VISIBLE
@@ -156,6 +176,40 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
             }
         }
         return root
+    }
+
+    private fun locationPermissionDenied() {
+        binding.run {
+            resetViewsOnDisconnect()
+            scanButton.visibility = View.GONE
+            searchingText.text = resources.getString(R.string.location_permission_not_granted)
+        }
+    }
+
+    private fun locationDisabled() {
+        binding.run {
+            resetViewsOnDisconnect()
+            scanButton.visibility = View.GONE
+            enableLocationButton.visibility = View.VISIBLE
+            searchingText.text = resources.getString(R.string.enable_location)
+            enableLocationButton.setOnClickListener {
+                checkLocationEnabled()
+            }
+        }
+    }
+
+    private fun checkLocationEnabled() {
+        mainActivity?.isLocationEnabled(object : PermissionsActivity.OnPermissionGranted {
+            override fun onPermissionGranted(isGranted: Boolean) {
+                if (isGranted) {
+                    binding.searchingText.visibility = View.GONE
+                    binding.enableLocationButton.visibility = View.GONE
+                    binding.scanButton.visibility = View.VISIBLE
+                } else {
+                    locationDisabled()
+                }
+            }
+        })
     }
 
     private fun invalidateTransferProgressBar(progress: Long, fileName: String) {

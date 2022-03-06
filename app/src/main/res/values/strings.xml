@@ -19,6 +19,7 @@
     <string name="intent_image_viewer">Amaze Image Viewer</string>
     <string name="intent_video_player">Amaze Video Player</string>
     <string name="grantfailed">Storage permission not granted</string>
+    <string name="grant_location_failed">Location permission not granted</string>
     <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
     <string name="grant_permission">Grant permission</string>
     <string name="grant">Grant</string>
@@ -211,4 +212,12 @@
     <string name="failed_filename_receive">Failed to receive, please ensure you\'re connected to sender before receiving</string>
     <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
     <string name="transfer_complete">Transfer complete</string>
+    <string name="grant_location_permission">App needs location permission to connect with nearby devices.</string>
+    <string name="location_permission_not_granted">Please grant storage permission to connect with nearby devices.</string>
+    <string name="waiting_for_permissions">Waiting for permissions…</string>
+    <string name="gps_disabled">Your GPS seems to be disabled, please enable to proceed</string>
+    <string name="enable_location">Please enable location to scan.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="enable">Enable</string>
 </resources>
