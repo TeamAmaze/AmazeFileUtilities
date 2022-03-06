@@ -23,6 +23,17 @@
         android:visibility="gone"
         />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/enable_location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/enable"
+        app:cornerRadius="@dimen/material_generic"
+        app:rippleColor="@color/highlight_yellow"
+        style="@style/MaterialButton.White"
+        android:visibility="gone"
+        />
+
     <TextView
         android:id="@+id/device_name"
         android:layout_width="wrap_content"
