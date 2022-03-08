@@ -30,7 +30,7 @@
         android:name=".AppConfig"
         android:banner="@drawable/about_header"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/ic_launchers"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"

@@ -117,21 +117,25 @@ open class PermissionsActivity :
         val manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             buildAlertMessageNoGps(onPermissionGranted)
+            onPermissionGranted.onPermissionGranted(false)
         } else {
             onPermissionGranted.onPermissionGranted(true)
         }
     }
 
     private fun buildAlertMessageNoGps(onPermissionGranted: OnPermissionGranted) {
-        val builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this, R.style.Custom_Dialog_Dark)
         builder.setMessage(resources.getString(R.string.gps_disabled))
             .setCancelable(false)
             .setPositiveButton(
                 resources.getString(R.string.yes)
-            ) { dialog, id -> startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) }
+            ) { dialog, _ ->
+                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                dialog.cancel()
+            }
             .setNegativeButton(
                 resources.getString(R.string.no)
-            ) { dialog, id ->
+            ) { dialog, _ ->
                 onPermissionGranted.onPermissionGranted(false)
                 dialog.cancel()
             }
@@ -139,10 +143,10 @@ open class PermissionsActivity :
         alert.show()
     }
 
-    fun initLocationResources(onPermissionGranted: OnPermissionGranted): Boolean {
-        if (!checkLocationPermission()) {
+    fun initLocationResources(onPermissionGranted: OnPermissionGranted) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkLocationPermission()) {
             val builder: AlertDialog.Builder = this.let {
-                AlertDialog.Builder(this)
+                AlertDialog.Builder(this, R.style.Custom_Dialog_Dark)
             }
             builder.setMessage(R.string.grant_location_permission)
                 .setTitle(R.string.grant_permission)
@@ -155,9 +159,9 @@ open class PermissionsActivity :
                 onPermissionGranted,
                 true
             )
-            return false
+            onPermissionGranted.onPermissionGranted(false)
         } else {
-            return true
+            onPermissionGranted.onPermissionGranted(true)
         }
     }
 
@@ -184,7 +188,7 @@ open class PermissionsActivity :
     ) {
 //        Utils.disableScreenRotation(this)
         val builder: AlertDialog.Builder = this.let {
-            AlertDialog.Builder(it)
+            AlertDialog.Builder(it, R.style.Custom_Dialog_Dark)
         }
         builder.setMessage(R.string.grant_storage_read_permission)
             .setTitle(R.string.grant_permission)
@@ -264,7 +268,7 @@ open class PermissionsActivity :
             !Environment.isExternalStorageManager()
         ) {
             val builder: AlertDialog.Builder = this.let {
-                AlertDialog.Builder(it)
+                AlertDialog.Builder(it, R.style.Custom_Dialog_Dark)
             }
             builder.setMessage(R.string.grant_all_files_permission)
                 .setTitle(R.string.grant_permission)
