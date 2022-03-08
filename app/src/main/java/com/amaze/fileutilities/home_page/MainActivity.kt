@@ -36,6 +36,7 @@ import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
 import com.amaze.fileutilities.home_page.ui.options.AboutActivity
 import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
+import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -169,6 +170,21 @@ class MainActivity :
                     }
                 }
             }
+        }
+    }
+
+    override fun getTransferFragment(): TransferFragment? {
+        val fragment = getFragmentAtFrame()
+        return if (fragment is NavHostFragment) {
+            if (fragment.childFragmentManager.fragments.size == 1) {
+                val childFragment = fragment.childFragmentManager.fragments[0]
+                if (childFragment is TransferFragment) {
+                    return childFragment
+                }
+            }
+            null
+        } else {
+            null
         }
     }
 

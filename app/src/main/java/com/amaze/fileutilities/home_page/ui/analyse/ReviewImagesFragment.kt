@@ -381,7 +381,7 @@ class ReviewImagesFragment : Fragment() {
      */
     private fun setMediaInfoList(mediaInfoList: MutableList<MediaFileInfo>, doShowDown: Boolean) {
         mediaFileAdapter = ReviewAnalysisAdapter(
-            requireContext(),
+            requireActivity(),
             preloader!!, mediaInfoList
         ) { checkedSize, itemsCount, bytesFormatted ->
             val title = "$checkedSize / $itemsCount" +

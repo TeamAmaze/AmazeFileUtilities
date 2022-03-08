@@ -90,7 +90,7 @@ abstract class AbstractMediaInfoListFragment : Fragment(), MediaFileAdapter.Opti
                         PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
                     )
                 mediaFileAdapter = MediaFileAdapter(
-                    requireContext(),
+                    requireActivity(),
                     getMediaAdapterPreloader(),
                     this@AbstractMediaInfoListFragment, !isList,
                     MediaFileListSorter.SortingPreference.newInstance(

@@ -114,7 +114,7 @@ class SearchListFragment :
         )
         linearLayoutManager = LinearLayoutManager(context)
         mediaFileAdapter = RecentMediaFilesAdapter(
-            requireContext(),
+            requireActivity(),
             preloader!!,
             mutableListOf()
         )
