@@ -108,15 +108,8 @@ abstract class WifiP2PActivity : CastActivity(), WifiP2pManager.ChannelListener 
                         // UI update to indicate wifi p2p status.
                         val state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1)
                         if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-                            if (transferFragment.getTransferViewModel().isWifiP2PEnabled) {
-                                transferFragment.getViewBinding().scanButton
-                                    .visibility = View.VISIBLE
-
-                                // set connected devices info
-                            } else {
-                                // Wifi Direct mode is enabled
-                                transferFragment.getTransferViewModel().isWifiP2PEnabled = true
-                            }
+                            transferFragment.getViewBinding().scanButton
+                                .visibility = View.VISIBLE
                         } else {
                             transferFragment.resetViewsOnDisconnect()
                         }
@@ -126,6 +119,8 @@ abstract class WifiP2PActivity : CastActivity(), WifiP2pManager.ChannelListener 
                         // request available peers from the wifi p2p manager. This is an
                         // asynchronous call and the calling activity is notified with a
                         // callback on PeerListListener.onPeersAvailable()
+                        transferFragment.getTransferViewModel().performedRequestPeers = true
+                        transferFragment.monitorDiscoveryTime.cancel()
                         getWifiP2PManager()?.requestPeers(
                             channel,
                             transferFragment

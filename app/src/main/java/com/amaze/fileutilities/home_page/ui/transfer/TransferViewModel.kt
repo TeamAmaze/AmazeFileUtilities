@@ -19,6 +19,7 @@ import java.net.InetAddress
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
+import java.util.concurrent.TimeUnit
 
 class TransferViewModel : ViewModel() {
 
@@ -28,14 +29,16 @@ class TransferViewModel : ViewModel() {
     var selfIP: String? = null
     // other device's ip, only in case self ip and group owner ip is different
     var peerIP: String? = null
-    var isWifiP2PEnabled: Boolean = false
+    var isConnectedToPeer: Boolean = false
     var isTransferInProgress = false
     var clientHandshakeSocket: Socket? = null
     var clientTransferSocket: Socket? = null
     var serverTransferSocket: ServerSocket? = null
     var serverHandshakeSocket: ServerSocket? = null
+    // needed in case we're connected to a rogue wifi direct already and aren't peers changed action
+    var performedRequestPeers: Boolean = false
 
-    private val handshakePort = 8989
+    private val handshakePort = 8787
     private val transferPort = 8989
     private val handshakeSalt = "@k%Sg4Gd9n"
 
@@ -60,43 +63,47 @@ class TransferViewModel : ViewModel() {
 
     fun sendMessage(message: String): LiveData<Boolean> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-            if (isTransferInProgress) {
+            if (isTransferInProgress && false) {
                 emit(false)
-                return@liveData
-            }
-            try {
-                clientHandshakeSocket?.also {
-                    if (!it.isClosed) {
-                        it.close()
+            } else {
+                try {
+                    if (message == peerIP) {
+                        // sleep for few seconds so that we're sure handshake receiver is available
+                        isConnectedToPeer = true
+                        TimeUnit.SECONDS.sleep(3L)
                     }
-                }
-                clientHandshakeSocket = Socket()
-                clientHandshakeSocket?.use {
-                    socket ->
-                    isTransferInProgress = true
-                    socket.reuseAddress = true
-                    socket.connect((InetSocketAddress(peerIP, handshakePort)), 5000)
-                    socket.getOutputStream().use {
-                        outputStream ->
-                        ObjectOutputStream(outputStream).use {
-                            objectOutputStream ->
-                            Log.d(
-                                javaClass.simpleName,
-                                "Send message for filename to : " +
-                                    "$peerIP"
-                            )
-                            objectOutputStream.writeObject(handshakeSalt + message)
+                    clientHandshakeSocket?.also {
+                        if (!it.isClosed) {
+                            it.close()
                         }
                     }
+                    isTransferInProgress = true
+                    clientHandshakeSocket = Socket()
+                    clientHandshakeSocket?.use {
+                        socket ->
+                        socket.reuseAddress = true
+                        socket.connect((InetSocketAddress(peerIP, handshakePort)), 5000)
+                        socket.getOutputStream().use {
+                            outputStream ->
+                            ObjectOutputStream(outputStream).use {
+                                objectOutputStream ->
+                                Log.d(
+                                    javaClass.simpleName,
+                                    "Send message for filename to : " +
+                                        "$peerIP"
+                                )
+                                objectOutputStream.writeObject(handshakeSalt + message)
+                            }
+                        }
+                    }
+                    emit(true)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    emit(false)
+                } finally {
+                    isTransferInProgress = false
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                emit(false)
-                return@liveData
-            } finally {
-                isTransferInProgress = false
             }
-            emit(true)
         }
     }
 
@@ -106,145 +113,157 @@ class TransferViewModel : ViewModel() {
         }
     }
 
-    fun initClientTransfer(file: File): LiveData<Long> {
+    fun initClientTransfer(file: File): LiveData<String> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            if (isTransferInProgress) {
-                emit(-1)
-                return@liveData
-            }
-            peerIP?.let {
-                host ->
-                var len: Int
-                try {
-                    clientTransferSocket?.also {
-                        if (!it.isClosed) {
-                            it.close()
-                        }
-                    }
-                    clientTransferSocket = Socket()
-                    clientTransferSocket?.use {
-                        socket ->
-                        isTransferInProgress = true
-                        val buf = ByteArray(1024)
-                        var progress = 0
-                        val fileSize = file.length()
-                        var currentTime = System.currentTimeMillis() / 1000
-                        file.inputStream().use {
-                            inputStream ->
-                            /**
-                             * Create a client socket with the host,
-                             * port, and timeout information.
-                             */
-                            socket.bind(null)
-                            socket.connect((InetSocketAddress(host, transferPort)), 5000)
-
-                            /**
-                             * Create a byte stream from a file and pipe it to the output stream
-                             * of the socket. This data is retrieved by the server device.
-                             */
-                            socket.getOutputStream().use {
-                                outputStream ->
-                                Log.i(javaClass.simpleName, "Start sending file to host : $host")
-                                while (inputStream.read(buf).also { len = it } != -1) {
-                                    outputStream.write(buf, 0, len)
-                                    progress += len
-                                    if (System.currentTimeMillis() / 1000 - currentTime > 3) {
-                                        currentTime = System.currentTimeMillis() / 1000
-                                        emit((progress * 100) / fileSize)
-                                    }
-                                }
-                                emit((progress * 100) / fileSize)
-                                emit(-1)
+            if (isTransferInProgress && false) {
+                emit("done")
+            } else {
+                peerIP?.let {
+                    host ->
+                    var len: Int
+                    try {
+                        clientTransferSocket?.also {
+                            if (!it.isClosed) {
+                                it.close()
                             }
                         }
+                        isTransferInProgress = true
+                        TimeUnit.SECONDS.sleep(3L)
+                        clientTransferSocket = Socket()
+                        clientTransferSocket?.use {
+                            socket ->
+                            val buf = ByteArray(1024)
+                            var progress = 0
+                            val fileSize = file.length()
+                            var currentTime = System.currentTimeMillis() / 1000
+                            file.inputStream().use {
+                                inputStream ->
+                                /**
+                                 * Create a client socket with the host,
+                                 * port, and timeout information.
+                                 */
+                                socket.bind(null)
+                                socket.connect(
+                                    (InetSocketAddress(host, transferPort)),
+                                    30000
+                                )
+
+                                /**
+                                 * Create a byte stream from a file and pipe it to the output stream
+                                 * of the socket. This data is retrieved by the server device.
+                                 */
+                                socket.getOutputStream().use {
+                                    outputStream ->
+                                    Log.i(
+                                        javaClass.simpleName,
+                                        "Start sending " +
+                                            "file to host : $host"
+                                    )
+                                    while (inputStream.read(buf).also { len = it } != -1) {
+                                        outputStream.write(buf, 0, len)
+                                        progress += len
+                                        if (System.currentTimeMillis() / 1000 - currentTime > 3) {
+                                            currentTime = System.currentTimeMillis() / 1000
+                                            emit(("$progress/$fileSize"))
+                                        }
+                                    }
+                                    emit(("$progress/$fileSize"))
+                                    emit("done")
+                                }
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        emit("done")
+                    } finally {
+                        isTransferInProgress = false
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    emit(-1)
-                } finally {
-                    isTransferInProgress = false
                 }
             }
         }
     }
 
-    fun initServerConnection(filePath: String, fileSize: Long): LiveData<Long> {
+    fun initServerConnection(filePath: String, fileSize: Long): LiveData<String> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            if (isTransferInProgress) {
-                emit(-1)
-                return@liveData
-            }
-            try {
-                serverTransferSocket?.also {
-                    if (!it.isClosed) {
-                        it.close()
-                    }
-                }
-                serverTransferSocket = ServerSocket(transferPort)
-                serverTransferSocket?.use {
-                    serverSocket ->
-                    isTransferInProgress = true
-                    /**
-                     * Create a server socket.
-                     */
-                    /**
-                     * Create a server socket.
-                     */
-                    /**
-                     * Wait for client connections. This call blocks until a
-                     * connection is accepted from a client.
-                     */
-                    /**
-                     * Wait for client connections. This call blocks until a
-                     * connection is accepted from a client.
-                     */
-                    val client = serverSocket.accept()
-                    /**
-                     * If this code is reached, a client has connected and transferred data
-                     * Save the input stream from the client as a JPEG file
-                     */
-                    /**
-                     * If this code is reached, a client has connected and transferred data
-                     * Save the input stream from the client as a JPEG file
-                     */
-                    val f = File(filePath)
-                    val dirs = File(f.parent)
-
-                    dirs.takeIf { it.doesNotExist() }?.apply {
-                        mkdirs()
-                    }
-                    f.createNewFile()
-                    client.getInputStream().use {
-                        inputStream ->
-                        FileOutputStream(f).use {
-                            out ->
-                            val buf = ByteArray(1024)
-                            var len: Int
-                            var progress = 0
-                            var currentTime = System.currentTimeMillis() / 1000
-                            Log.i(javaClass.simpleName, "Start receiving file to host : $peerIP")
-                            try {
-                                while (inputStream.read(buf).also { len = it } != -1) {
-                                    out.write(buf, 0, len)
-                                    progress += len
-                                    if (System.currentTimeMillis() / 1000 - currentTime > 3) {
-                                        currentTime = System.currentTimeMillis() / 1000
-                                        emit((progress * 100) / fileSize)
-                                    }
-                                }
-                                emit((progress * 100) / fileSize)
-                            } catch (e: IOException) {
-                                Log.w(javaClass.simpleName, e.toString())
-                            }
-                            emit(-1)
+            if (isTransferInProgress && false) {
+                emit("done")
+            } else {
+                try {
+                    serverTransferSocket?.also {
+                        if (!it.isClosed) {
+                            it.close()
                         }
                     }
+                    serverTransferSocket = ServerSocket(transferPort)
+                    serverTransferSocket?.use {
+                        serverSocket ->
+                        isTransferInProgress = true
+                        /**
+                         * Create a server socket.
+                         */
+                        /**
+                         * Create a server socket.
+                         */
+                        /**
+                         * Wait for client connections. This call blocks until a
+                         * connection is accepted from a client.
+                         */
+                        /**
+                         * Wait for client connections. This call blocks until a
+                         * connection is accepted from a client.
+                         */
+                        val client = serverSocket.accept()
+                        /**
+                         * If this code is reached, a client has connected and transferred data
+                         * Save the input stream from the client as a JPEG file
+                         */
+                        /**
+                         * If this code is reached, a client has connected and transferred data
+                         * Save the input stream from the client as a JPEG file
+                         */
+                        val f = File(filePath)
+                        val dirs = File(f.parent)
+
+                        dirs.takeIf { it.doesNotExist() }?.apply {
+                            mkdirs()
+                        }
+                        f.createNewFile()
+                        client.getInputStream().use {
+                            inputStream ->
+                            FileOutputStream(f).use {
+                                out ->
+                                val buf = ByteArray(1024)
+                                var len: Int
+                                var progress = 0
+                                var currentTime = System.currentTimeMillis() / 1000
+                                Log.i(
+                                    javaClass.simpleName,
+                                    "Start receiving file to host" +
+                                        " : $peerIP"
+                                )
+                                try {
+                                    while (inputStream.read(buf).also { len = it } != -1) {
+                                        out.write(buf, 0, len)
+                                        progress += len
+                                        if (System.currentTimeMillis() / 1000 - currentTime > 3) {
+                                            currentTime = System.currentTimeMillis() / 1000
+                                            emit(("$progress/$fileSize"))
+                                        }
+                                    }
+                                    emit(("$progress/$fileSize"))
+                                } catch (e: IOException) {
+                                    Log.w(javaClass.simpleName, e.toString())
+                                }
+                                emit("done")
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    emit("done")
+                } finally {
+                    isTransferInProgress = false
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                emit(-1)
-            } finally {
-                isTransferInProgress = false
             }
         }
     }
@@ -256,6 +275,7 @@ class TransferViewModel : ViewModel() {
                 emit(false)
             } else {
                 peerIP = receivedIP.first.hostAddress
+                isConnectedToPeer = true
                 emit(true)
             }
         }
@@ -266,7 +286,7 @@ class TransferViewModel : ViewModel() {
      */
     private fun receiveMessageInternal(): Pair<InetAddress, String>? {
         try {
-            if (isTransferInProgress) {
+            if (isTransferInProgress && false) {
                 return null
             }
             serverHandshakeSocket?.also {
@@ -279,6 +299,7 @@ class TransferViewModel : ViewModel() {
                 serverSocket ->
                 isTransferInProgress = true
                 serverSocket.reuseAddress = true
+//                serverSocket.soTimeout = 30000
                 val client = serverSocket.accept()
                 ObjectInputStream(client.getInputStream()).use {
                     objectInputStream ->
@@ -305,7 +326,6 @@ class TransferViewModel : ViewModel() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            isTransferInProgress = false
             return null
         } finally {
             isTransferInProgress = false
