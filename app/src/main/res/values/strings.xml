@@ -40,6 +40,7 @@
     <string name="title_files">Files</string>
     <string name="title_transfer">Transfer</string>
     <string name="title_scan">Scan</string>
+    <string name="title_stop_scan">Stop</string>
     <string name="internal_storage">Internal Storage</string>
     <string name="images">Images</string>
     <string name="audios">Audios</string>
@@ -186,7 +187,6 @@
     <string name="enable_wifi">Please enable your Wi-Fi</string>
     <string name="discovery_failure">Failed to discover peers</string>
     <string name="receiving_files">Receiving files</string>
-    <string name="no_device_nearby">No device nearby!</string>
     <string name="search_devices">Search for devices…</string>
     <string name="enable_waveform">Enable waveform seekbar</string>
     <string name="failed_to_start_cast">Failed to start cast session</string>
@@ -220,4 +220,12 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="enable">Enable</string>
+    <string name="no_devices_found">No devices found nearby,
+        please make sure your device is connected to same network and have WiFi-Direct enabled in settings</string>
+    <string name="failed_to_stop_peer_discovery">Failed to stop peer discovery</string>
+    <string name="resetting_network_discovery">Resetting network discovery</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="existing_connection">Existing connection exists, please disconnect first!</string>
+    <string name="connecting">Connecting…</string>
 </resources>
