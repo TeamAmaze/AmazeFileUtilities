@@ -23,6 +23,39 @@
         android:visibility="gone"
         />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/enable_location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/enable"
+        app:cornerRadius="@dimen/material_generic"
+        app:rippleColor="@color/highlight_yellow"
+        style="@style/MaterialButton.White"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/device_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/searching"
+        android:textColor="@color/white"
+        android:textSize="@dimen/eight_sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/device_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/searching"
+        android:textColor="@color/white"
+        android:textSize="@dimen/eight_sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        />
+
     <ProgressBar
         android:id="@+id/searching_progress"
         android:layout_width="match_parent"
@@ -41,10 +74,13 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/send_receive_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical|center_horizontal">
+        android:gravity="center_vertical|center_horizontal"
+        android:visibility="gone"
+        >
         <com.google.android.material.button.MaterialButton
             android:id="@+id/send_button"
             android:layout_width="wrap_content"
@@ -53,7 +89,6 @@
             app:cornerRadius="@dimen/material_generic"
             app:rippleColor="@color/highlight_yellow"
             style="@style/MaterialButton.White"
-            android:visibility="gone"
             />
 
         <com.google.android.material.button.MaterialButton
@@ -67,18 +102,90 @@
             app:elevation="@dimen/material_generic"
             style="@style/MaterialButton.White"
             />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/disconnect_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/disconnect"
+            android:layout_marginStart="@dimen/material_generic"
+            app:cornerRadius="@dimen/material_generic"
+            app:rippleColor="@color/highlight_yellow"
+            app:elevation="@dimen/material_generic"
+            style="@style/MaterialButton.White"
+            />
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/transfer_button"
+        android:id="@+id/scan_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_transfer"
-        android:layout_marginStart="@dimen/material_generic"
+        android:text="@string/title_scan"
+        app:cornerRadius="@dimen/material_generic"
+        app:rippleColor="@color/highlight_yellow"
+        app:elevation="@dimen/material_generic"
+        style="@style/MaterialButton.White"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/stop_scan_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title_stop_scan"
         app:cornerRadius="@dimen/material_generic"
         app:rippleColor="@color/highlight_yellow"
         app:elevation="@dimen/material_generic"
         style="@style/MaterialButton.White"
         android:visibility="gone"
         />
+    <LinearLayout
+        android:id="@+id/transfer_info_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+        <TextView
+            android:id="@+id/transfer_file_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/searching"
+            android:textColor="@color/white"
+            android:textSize="@dimen/twelve_sp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/transfer_bytes_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/searching"
+            android:textColor="@color/white"
+            android:textSize="@dimen/twelve_sp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            >
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/transfer_progress"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.8"
+                app:trackColor="@color/white_grey_1"
+                app:indicatorColor="@color/highlight_yellow"
+                app:trackCornerRadius="@dimen/two_dp"
+                app:indicatorDirectionLinear="leftToRight"
+                />
+            <ImageView
+                android:id="@+id/transfer_cancel"
+                android:layout_width="@dimen/zero_dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_round_close_32"
+                android:layout_weight="0.2"
+                android:layout_marginLeft="@dimen/eight_dp"
+                />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

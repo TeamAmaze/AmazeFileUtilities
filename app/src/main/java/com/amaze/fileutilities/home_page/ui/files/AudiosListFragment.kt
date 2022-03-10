@@ -197,6 +197,14 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         return MediaFileAdapter.MEDIA_TYPE_AUDIO
     }
 
+    override fun getItemPressedCallback(mediaFileInfo: MediaFileInfo) {
+        if (mediaFileInfo.longSize >
+            AudioPlayerInterfaceHandlerViewModel.WAVEFORM_THRESHOLD_BYTES
+        ) {
+            viewModel.forceShowSeekbar = true
+        }
+    }
+
     override fun getSeekbar(): Slider? {
         return _binding?.seekBar
     }
