@@ -19,6 +19,7 @@
     <string name="intent_image_viewer">Amaze Image Viewer</string>
     <string name="intent_video_player">Amaze Video Player</string>
     <string name="grantfailed">Storage permission not granted</string>
+    <string name="grant_location_failed">Location permission not granted</string>
     <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
     <string name="grant_permission">Grant permission</string>
     <string name="grant">Grant</string>
@@ -38,6 +39,8 @@
     <string name="title_analyse">Analyse</string>
     <string name="title_files">Files</string>
     <string name="title_transfer">Transfer</string>
+    <string name="title_scan">Scan</string>
+    <string name="title_stop_scan">Stop</string>
     <string name="internal_storage">Internal Storage</string>
     <string name="images">Images</string>
     <string name="audios">Audios</string>
@@ -184,7 +187,7 @@
     <string name="enable_wifi">Please enable your Wi-Fi</string>
     <string name="discovery_failure">Failed to discover peers</string>
     <string name="receiving_files">Receiving files</string>
-    <string name="no_device_nearby">No device nearby!</string>
+    <string name="search_devices">Search for devices…</string>
     <string name="enable_waveform">Enable waveform seekbar</string>
     <string name="failed_to_start_cast">Failed to start cast session</string>
     <string name="ready_to_cast">Ready to cast, select any media</string>
@@ -202,4 +205,27 @@
     <string name="cast_notification_summary">Casting content on TV</string>
     <string name="stop">Stop</string>
     <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
+    <string name="failed_to_handshake">Failed to establish connection with remote device</string>
+    <string name="connection_successful">Connection successful</string>
+    <string name="failed_filename_send">Failed to send, please ensure remote is set to receive file</string>
+    <string name="failed_filename_send_reconnecct">Failed to send, please reconnect</string>
+    <string name="failed_filename_receive">Failed to receive, please ensure you\'re connected to sender before receiving</string>
+    <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
+    <string name="transfer_complete">Transfer complete</string>
+    <string name="grant_location_permission">App needs location permission to connect with nearby devices.</string>
+    <string name="location_permission_not_granted">Please grant storage permission to connect with nearby devices.</string>
+    <string name="waiting_for_permissions">Waiting for permissions…</string>
+    <string name="gps_disabled">Your GPS seems to be disabled, please enable to proceed</string>
+    <string name="enable_location">Please enable location to scan.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="enable">Enable</string>
+    <string name="no_devices_found">No devices found nearby,
+        please make sure your device is connected to same network and have WiFi-Direct enabled in settings</string>
+    <string name="failed_to_stop_peer_discovery">Failed to stop peer discovery</string>
+    <string name="resetting_network_discovery">Resetting network discovery</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="existing_connection">Existing connection exists, please disconnect first!</string>
+    <string name="connecting">Connecting…</string>
 </resources>

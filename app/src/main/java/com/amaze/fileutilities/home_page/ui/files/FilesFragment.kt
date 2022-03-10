@@ -291,7 +291,7 @@ class FilesFragment : Fragment() {
                     )
                     linearLayoutManager = LinearLayoutManager(context)
                     mediaFileAdapter = RecentMediaFilesAdapter(
-                        applicationContext,
+                        requireActivity(),
                         preloader!!,
                         ArrayList(this)
                     )

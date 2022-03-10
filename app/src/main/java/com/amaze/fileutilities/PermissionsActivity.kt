@@ -11,8 +11,10 @@
 package com.amaze.fileutilities
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -24,9 +26,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.amaze.fileutilities.home_page.MainActivity
-import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.showToastInCenter
-import java.lang.Exception
 
 open class PermissionsActivity :
     AppCompatActivity(),
@@ -49,17 +49,31 @@ open class PermissionsActivity :
     companion object {
         private const val PERMISSION_LENGTH = 3
         private const val STORAGE_PERMISSION = 0
-        private const val ALL_FILES_PERMISSION = 2
+        private const val ALL_FILES_PERMISSION = 1
+        private const val LOCATION_PERMISSION = 2
     }
 
     private val permissionCallbacks = arrayOfNulls<OnPermissionGranted>(PERMISSION_LENGTH)
 
     private val onPermissionGranted = object : OnPermissionGranted {
-        override fun onPermissionGranted() {
-            val action = Intent(this@PermissionsActivity, MainActivity::class.java)
-            action.addCategory(Intent.CATEGORY_LAUNCHER)
-            startActivity(action)
-            finish()
+        override fun onPermissionGranted(isGranted: Boolean) {
+            if (isGranted) {
+//                Utils.enableScreenRotation(this@PermissionsActivity)
+                val action = Intent(this@PermissionsActivity, MainActivity::class.java)
+                action.addCategory(Intent.CATEGORY_LAUNCHER)
+                startActivity(action)
+                finish()
+            } else {
+                Toast.makeText(
+                    this@PermissionsActivity, R.string.grantfailed,
+                    Toast.LENGTH_SHORT
+                ).show()
+                requestStoragePermission(
+                    permissionCallbacks[STORAGE_PERMISSION]!!,
+                    false
+                )
+            }
+            permissionCallbacks[STORAGE_PERMISSION] = null
         }
     }
 
@@ -70,16 +84,20 @@ open class PermissionsActivity :
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == STORAGE_PERMISSION) {
+            permissionCallbacks[STORAGE_PERMISSION]?.onPermissionGranted(isGranted(grantResults))
+        } else if (requestCode == LOCATION_PERMISSION) {
             if (isGranted(grantResults)) {
-                Utils.enableScreenRotation(this)
-                permissionCallbacks[STORAGE_PERMISSION]!!.onPermissionGranted()
-                permissionCallbacks[STORAGE_PERMISSION] = null
+//                Utils.enableScreenRotation(this)
+                permissionCallbacks[LOCATION_PERMISSION]!!.onPermissionGranted(true)
+                permissionCallbacks[LOCATION_PERMISSION] = null
             } else {
-                Toast.makeText(this, R.string.grantfailed, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.grant_location_failed, Toast.LENGTH_SHORT).show()
                 requestStoragePermission(
-                    permissionCallbacks[STORAGE_PERMISSION]!!,
+                    permissionCallbacks[LOCATION_PERMISSION]!!,
                     false
                 )
+                permissionCallbacks[LOCATION_PERMISSION]!!.onPermissionGranted(false)
+                permissionCallbacks[LOCATION_PERMISSION] = null
             }
         }
     }
@@ -95,13 +113,82 @@ open class PermissionsActivity :
             )
     }
 
+    fun isLocationEnabled(onPermissionGranted: OnPermissionGranted) {
+        val manager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            buildAlertMessageNoGps(onPermissionGranted)
+            onPermissionGranted.onPermissionGranted(false)
+        } else {
+            onPermissionGranted.onPermissionGranted(true)
+        }
+    }
+
+    private fun buildAlertMessageNoGps(onPermissionGranted: OnPermissionGranted) {
+        val builder = AlertDialog.Builder(this, R.style.Custom_Dialog_Dark)
+        builder.setMessage(resources.getString(R.string.gps_disabled))
+            .setCancelable(false)
+            .setPositiveButton(
+                resources.getString(R.string.yes)
+            ) { dialog, _ ->
+                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                dialog.cancel()
+            }
+            .setNegativeButton(
+                resources.getString(R.string.no)
+            ) { dialog, _ ->
+                onPermissionGranted.onPermissionGranted(false)
+                dialog.cancel()
+            }
+        val alert = builder.create()
+        alert.show()
+    }
+
+    fun initLocationResources(onPermissionGranted: OnPermissionGranted) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkLocationPermission()) {
+            val builder: AlertDialog.Builder = this.let {
+                AlertDialog.Builder(this, R.style.Custom_Dialog_Dark)
+            }
+            builder.setMessage(R.string.grant_location_permission)
+                .setTitle(R.string.grant_permission)
+                .setNegativeButton(R.string.cancel) { dialog, _ ->
+                }.setCancelable(false)
+            requestPermission(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                LOCATION_PERMISSION,
+                builder,
+                onPermissionGranted,
+                true
+            )
+            onPermissionGranted.onPermissionGranted(false)
+        } else {
+            onPermissionGranted.onPermissionGranted(true)
+        }
+    }
+
+    private fun checkLocationPermission(): Boolean {
+        // Verify that all required contact permissions have been granted.
+        return (
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+                == PackageManager.PERMISSION_GRANTED
+            )/* && (
+                ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+                        == PackageManager.PERMISSION_GRANTED
+                )*/
+    }
+
     private fun requestStoragePermission(
         onPermissionGranted: OnPermissionGranted,
         isInitialStart: Boolean
     ) {
-        Utils.disableScreenRotation(this)
+//        Utils.disableScreenRotation(this)
         val builder: AlertDialog.Builder = this.let {
-            AlertDialog.Builder(it)
+            AlertDialog.Builder(it, R.style.Custom_Dialog_Dark)
         }
         builder.setMessage(R.string.grant_storage_read_permission)
             .setTitle(R.string.grant_permission)
@@ -181,7 +268,7 @@ open class PermissionsActivity :
             !Environment.isExternalStorageManager()
         ) {
             val builder: AlertDialog.Builder = this.let {
-                AlertDialog.Builder(it)
+                AlertDialog.Builder(it, R.style.Custom_Dialog_Dark)
             }
             builder.setMessage(R.string.grant_all_files_permission)
                 .setTitle(R.string.grant_permission)
@@ -192,7 +279,7 @@ open class PermissionsActivity :
                 }
                 .setPositiveButton(R.string.grant) { dialog, _ ->
                     run {
-                        Utils.disableScreenRotation(this)
+//                        Utils.disableScreenRotation(this)
                         permissionCallbacks[ALL_FILES_PERMISSION] = onPermissionGranted
                         try {
                             val intent =
@@ -217,6 +304,6 @@ open class PermissionsActivity :
     }
 
     interface OnPermissionGranted {
-        fun onPermissionGranted()
+        fun onPermissionGranted(isGranted: Boolean)
     }
 }

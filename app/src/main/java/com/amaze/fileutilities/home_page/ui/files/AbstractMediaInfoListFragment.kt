@@ -57,6 +57,8 @@ abstract class AbstractMediaInfoListFragment : Fragment(), MediaFileAdapter.Opti
 
     abstract fun getMediaListType(): Int
 
+    abstract fun getItemPressedCallback(mediaFileInfo: MediaFileInfo)
+
     // make sure to set getFileStorageSummaryAndMediaFileInfoPair before calling
     fun resetAdapter() {
         getFileStorageSummaryAndMediaFileInfoPair()?.let {
@@ -88,7 +90,7 @@ abstract class AbstractMediaInfoListFragment : Fragment(), MediaFileAdapter.Opti
                         PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
                     )
                 mediaFileAdapter = MediaFileAdapter(
-                    requireContext(),
+                    requireActivity(),
                     getMediaAdapterPreloader(),
                     this@AbstractMediaInfoListFragment, !isList,
                     MediaFileListSorter.SortingPreference.newInstance(
@@ -97,19 +99,23 @@ abstract class AbstractMediaInfoListFragment : Fragment(), MediaFileAdapter.Opti
                         getMediaListType()
                     ),
                     ArrayList(mediaFileInfoList),
-                    getMediaListType()
-                ) {
-                    mediaTypeHeader ->
-                    (requireContext() as CastActivity)
-                        .refactorCastButton(mediaTypeHeader.getMediaRouteButton())
-                    mediaTypeHeader.setProgress(
-                        MediaTypeView.MediaTypeContent(
-                            storageSummary.items, usedSpace,
-                            storageSummary.progress, usedTotalSpace,
-                            storageSummary.totalItems
+                    getMediaListType(),
+                    {
+                        mediaTypeHeader ->
+                        (requireContext() as CastActivity)
+                            .refactorCastButton(mediaTypeHeader.getMediaRouteButton())
+                        mediaTypeHeader.setProgress(
+                            MediaTypeView.MediaTypeContent(
+                                storageSummary.items, usedSpace,
+                                storageSummary.progress, usedTotalSpace,
+                                storageSummary.totalItems
+                            )
                         )
-                    )
+                    }, {
+                    mediaFileInfo ->
+                    getItemPressedCallback(mediaFileInfo)
                 }
+                )
                 getRecyclerView().addOnScrollListener(recyclerViewPreloader!!)
                 Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
                 getRecyclerView().layoutManager =
