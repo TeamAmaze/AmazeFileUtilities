@@ -126,7 +126,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             val gray = it.resources.getColor(R.color.grey_color)
             getShuffleButton()?.setImageDrawable(
                 it.resources
-                    .getDrawable(R.drawable.ic_round_shuffle_32)
+                    .getDrawable(R.drawable.ic_round_shuffle_24)
             )
             if (!doShuffle) {
                 getShuffleButton()?.setColorFilter(gray)
@@ -143,28 +143,28 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                     val gray = it.resources.getColor(R.color.grey_color)
                     getRepeatButton()?.setImageDrawable(
                         it.resources
-                            .getDrawable(R.drawable.ic_round_repeat_32)
+                            .getDrawable(R.drawable.ic_round_repeat_24)
                     )
                     getRepeatButton()?.setColorFilter(gray)
                 }
                 AudioPlayerService.REPEAT_ALL -> {
                     getRepeatButton()?.setImageDrawable(
                         it.resources
-                            .getDrawable(R.drawable.ic_round_repeat_32)
+                            .getDrawable(R.drawable.ic_round_repeat_24)
                     )
                     getRepeatButton()?.setColorFilter(null)
                 }
                 AudioPlayerService.REPEAT_SINGLE -> {
                     getRepeatButton()?.setImageDrawable(
                         it.resources
-                            .getDrawable(R.drawable.ic_round_repeat_one_32)
+                            .getDrawable(R.drawable.ic_round_repeat_one_24)
                     )
                     getRepeatButton()?.setColorFilter(null)
                 }
                 else -> {
                     getRepeatButton()?.setImageDrawable(
                         it.resources
-                            .getDrawable(R.drawable.ic_round_repeat_32)
+                            .getDrawable(R.drawable.ic_round_repeat_24)
                     )
                     getRepeatButton()?.setColorFilter(null)
                 }
@@ -182,7 +182,8 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             } else {
                 getPlayButton()?.setImageResource(R.drawable.ic_round_pause_circle_32)
             }
-
+            setShuffleButton(progressHandler.doShuffle)
+            setRepeatButton(progressHandler.repeatMode)
             if (progressHandler.isCancelled) {
                 setSeekbarProgress(0)
             }
