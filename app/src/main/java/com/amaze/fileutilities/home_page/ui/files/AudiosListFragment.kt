@@ -34,6 +34,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.slider.Slider
 import com.masoudss.lib.WaveformSeekBar
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
+import java.lang.IllegalStateException
 import java.lang.ref.WeakReference
 
 class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfaceHandler {
@@ -254,7 +255,12 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
     }
 
     override fun getContextWeakRef(): WeakReference<Context> {
-        return WeakReference(requireContext())
+        return try {
+            WeakReference(requireContext())
+        } catch (e: IllegalStateException) {
+            e.printStackTrace()
+            WeakReference(null)
+        }
     }
 
     override fun getAudioPlayerHandlerViewModel(): AudioPlayerInterfaceHandlerViewModel {
