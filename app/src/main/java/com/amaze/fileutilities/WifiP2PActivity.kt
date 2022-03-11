@@ -44,7 +44,7 @@ abstract class WifiP2PActivity : CastActivity(), WifiP2pManager.ChannelListener 
     }
 
     override fun onChannelDisconnected() {
-        TODO("Not yet implemented")
+        // ignore
     }
 
     override fun onResume() {
