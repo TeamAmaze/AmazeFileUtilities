@@ -68,7 +68,7 @@
             android:layout_marginLeft="2dp"
             android:layout_marginRight="2dp"
             android:layout_weight="1"
-            android:background="@drawable/ic_round_repeat_32"
+            android:background="@drawable/ic_round_repeat_24"
             android:gravity="center"
             android:padding="8dp"
             android:scaleType="fitCenter" />
@@ -118,7 +118,7 @@
             android:layout_marginLeft="2dp"
             android:layout_marginRight="2dp"
             android:layout_weight="1"
-            android:background="@drawable/ic_round_shuffle_32"
+            android:background="@drawable/ic_round_shuffle_24"
             android:gravity="center"
             android:padding="8dp"
             android:scaleType="fitCenter" />

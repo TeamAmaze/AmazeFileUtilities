@@ -98,16 +98,16 @@ class AudioPlayerNotificationImpl : AudioPlayerNotification() {
 
         val shuffleButtonResId: Int =
             if (doShuffle) {
-                R.drawable.ic_round_shuffle_32
+                R.drawable.ic_round_shuffle_on_24
             } else {
-                R.drawable.ic_round_shuffle_gray_32
+                R.drawable.ic_round_shuffle_24
             }
         val repeatButtonResId: Int =
             when (repeatMode) {
-                AudioPlayerService.REPEAT_NONE -> R.drawable.ic_round_repeat_gray_32
-                AudioPlayerService.REPEAT_ALL -> R.drawable.ic_round_repeat_32
-                AudioPlayerService.REPEAT_SINGLE -> R.drawable.ic_round_repeat_one_32
-                else -> R.drawable.ic_round_repeat_32
+                AudioPlayerService.REPEAT_NONE -> R.drawable.ic_round_repeat_24
+                AudioPlayerService.REPEAT_ALL -> R.drawable.ic_round_repeat_on_24
+                AudioPlayerService.REPEAT_SINGLE -> R.drawable.ic_round_repeat_one_24
+                else -> R.drawable.ic_round_repeat_24
             }
         notificationLayout.setImageViewResource(R.id.action_repeat, repeatButtonResId)
         notificationLayout.setImageViewResource(R.id.action_shuffle, shuffleButtonResId)
