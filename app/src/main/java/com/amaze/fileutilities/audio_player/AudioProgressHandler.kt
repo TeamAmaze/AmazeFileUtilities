@@ -11,6 +11,7 @@
 package com.amaze.fileutilities.audio_player
 
 import android.net.Uri
+import com.amaze.fileutilities.utilis.PreferencesConstants
 import java.io.File
 import java.lang.ref.WeakReference
 
@@ -18,7 +19,9 @@ data class AudioProgressHandler(
     var isCancelled: Boolean = false,
     var uriList: List<Uri>?,
     var playingIndex: Int,
-    var audioPlaybackInfo: AudioPlaybackInfo
+    var audioPlaybackInfo: AudioPlaybackInfo,
+    var doShuffle: Boolean = PreferencesConstants.DEFAULT_AUDIO_PLAYER_SHUFFLE,
+    var repeatMode: Int = PreferencesConstants.DEFAULT_AUDIO_PLAYER_REPEAT_MODE
 ) {
     companion object {
         const val INDEX_UNDEFINED = -3

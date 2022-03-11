@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.home_page.ui.settings
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
@@ -22,6 +23,7 @@ import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.amaze.fileutilities.utilis.showFolderChooserDialog
 import java.io.File
+import java.lang.IllegalStateException
 import java.lang.ref.WeakReference
 
 class PathPreferencesFragment : PreferenceFragmentCompat() {
@@ -139,9 +141,15 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
     private fun showReanalyseDialog() {
         val dialog = AlertDialog.Builder(requireContext()).setTitle(R.string.reanalyse)
             .setPositiveButton(R.string.confirm) { dialog, _ ->
+                val context: WeakReference<Context> = try {
+                    WeakReference(requireContext())
+                } catch (e: IllegalStateException) {
+                    e.printStackTrace()
+                    WeakReference(null)
+                }
                 PathPreferences.deleteAnalysisData(
                     ArrayList(preferenceDbMap.values),
-                    WeakReference(requireContext())
+                    context
                 )
                 dialog.dismiss()
             }
@@ -200,9 +208,15 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
                     overrideExisting = true
                     showWarningOverridePathDialog {
                         if (it) {
+                            val context: WeakReference<Context> = try {
+                                WeakReference(requireContext())
+                            } catch (e: IllegalStateException) {
+                                e.printStackTrace()
+                                WeakReference(null)
+                            }
                             PathPreferences.deleteAnalysisData(
                                 arrayListOf(pathPref),
-                                WeakReference(requireContext())
+                                context
                             )
                             dao.delete(pathPref)
                             addNewPathAndPreference(pathPreferences, file)

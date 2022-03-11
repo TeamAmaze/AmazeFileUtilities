@@ -47,16 +47,16 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
             }
         val shuffleButtonResId: Int =
             if (doShuffle) {
-                R.drawable.ic_round_shuffle_32
+                R.drawable.ic_round_shuffle_on_24
             } else {
-                R.drawable.ic_round_shuffle_gray_32
+                R.drawable.ic_round_shuffle_24
             }
         val repeatButtonResId: Int =
             when (repeatMode) {
-                AudioPlayerService.REPEAT_NONE -> R.drawable.ic_round_repeat_gray_32
-                AudioPlayerService.REPEAT_ALL -> R.drawable.ic_round_repeat_32
-                AudioPlayerService.REPEAT_SINGLE -> R.drawable.ic_round_repeat_one_32
-                else -> R.drawable.ic_round_repeat_32
+                AudioPlayerService.REPEAT_NONE -> R.drawable.ic_round_repeat_24
+                AudioPlayerService.REPEAT_ALL -> R.drawable.ic_round_repeat_on_24
+                AudioPlayerService.REPEAT_SINGLE -> R.drawable.ic_round_repeat_one_24
+                else -> R.drawable.ic_round_repeat_24
             }
         val action = Intent(service, MainActivity::class.java)
         action.putExtra(MainActivity.KEY_INTENT_AUDIO_PLAYER, true)
@@ -120,7 +120,7 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
             builder.setStyle(
                 androidx.media.app.NotificationCompat.MediaStyle()
                     .setMediaSession(service.mediaSession!!.sessionToken)
-                    .setShowActionsInCompactView(0, 1, 2)
+                    .setShowActionsInCompactView(1, 2, 3)
             )
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             builder.color = service.resources.getColor(R.color.blue)

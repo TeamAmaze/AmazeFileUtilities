@@ -90,8 +90,6 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
     private var audioManager: AudioManager? = null
     private var pausedByTransientLossOfFocus = false
     var mediaSession: MediaSessionCompat? = null
-    private var doShuffle: Boolean = false
-    private var repeatMode: Int = REPEAT_NONE
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate() {
@@ -192,12 +190,10 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                         ACTION_SHUFFLE -> {
                             Log.i(javaClass.simpleName, "cycling shuffle")
                             cycleShuffle()
-                            updateNotification()
                         }
                         ACTION_REPEAT -> {
                             Log.i(javaClass.simpleName, "cycling repeat")
                             cycleRepeat()
-                            updateNotification()
                         }
                         else -> {
                             initCurrentUriAndPlayer(intentUri!!, false)
@@ -258,10 +254,18 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
     }
 
     private fun initAudioPlaybackInfoAndHandler(uri: Uri) {
+        val doShuffle = sharedPreferences.getBoolean(
+            PreferencesConstants.KEY_AUDIO_PLAYER_SHUFFLE,
+            PreferencesConstants.DEFAULT_AUDIO_PLAYER_SHUFFLE
+        )
+        val repeatMode = sharedPreferences.getInt(
+            PreferencesConstants.KEY_AUDIO_PLAYER_REPEAT_MODE,
+            PreferencesConstants.DEFAULT_AUDIO_PLAYER_REPEAT_MODE
+        )
         val audioPlaybackInfo = AudioPlaybackInfo.init(baseContext, uri)
         audioProgressHandler = AudioProgressHandler(
             false, uriList,
-            AudioProgressHandler.INDEX_UNDEFINED, audioPlaybackInfo
+            AudioProgressHandler.INDEX_UNDEFINED, audioPlaybackInfo, doShuffle, repeatMode
         )
         audioProgressHandler!!.getPlayingIndex(true)
     }
@@ -557,14 +561,6 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         mAttrs = AudioAttributes.Builder().setUsage(C.USAGE_MEDIA)
             .setContentType(C.CONTENT_TYPE_MUSIC)
             .build()
-        doShuffle = sharedPreferences.getBoolean(
-            PreferencesConstants.KEY_AUDIO_PLAYER_SHUFFLE,
-            PreferencesConstants.DEFAULT_AUDIO_PLAYER_SHUFFLE
-        )
-        repeatMode = sharedPreferences.getInt(
-            PreferencesConstants.KEY_AUDIO_PLAYER_REPEAT_MODE,
-            PreferencesConstants.DEFAULT_AUDIO_PLAYER_REPEAT_MODE
-        )
     }
 
     private fun extractMediaSourceFromUri(uri: Uri): MediaItem {
@@ -611,39 +607,47 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
     }
 
     override fun cycleShuffle(): Boolean {
-        doShuffle = !doShuffle
+        audioProgressHandler!!.doShuffle = !audioProgressHandler!!.doShuffle
         sharedPreferences.edit().putBoolean(
             PreferencesConstants.KEY_AUDIO_PLAYER_SHUFFLE,
-            doShuffle
+            audioProgressHandler!!.doShuffle
         ).apply()
-        return doShuffle
+        updateNotification()
+        return audioProgressHandler!!.doShuffle
     }
 
     override fun cycleRepeat(): Int {
         var repeatModeIdx = 0
         REPEAT_ARRAY.forEachIndexed { index, i ->
-            if (i == repeatMode) {
+            if (i == audioProgressHandler!!.repeatMode) {
                 repeatModeIdx = index
             }
         }
-        repeatMode = if (repeatModeIdx == REPEAT_ARRAY.size - 1) {
+        audioProgressHandler!!.repeatMode = if (repeatModeIdx == REPEAT_ARRAY.size - 1) {
             REPEAT_ARRAY[0]
         } else {
             REPEAT_ARRAY[repeatModeIdx + 1]
         }
         sharedPreferences.edit().putInt(
             PreferencesConstants.KEY_AUDIO_PLAYER_REPEAT_MODE,
-            repeatMode
+            audioProgressHandler!!.repeatMode
         ).apply()
-        return repeatMode
+        updateNotification()
+        return audioProgressHandler!!.repeatMode
     }
 
     override fun getShuffle(): Boolean {
-        return doShuffle
+        audioProgressHandler?.let {
+            return it.doShuffle
+        }
+        return PreferencesConstants.DEFAULT_AUDIO_PLAYER_SHUFFLE
     }
 
     override fun getRepeat(): Int {
-        return repeatMode
+        audioProgressHandler?.let {
+            return it.repeatMode
+        }
+        return PreferencesConstants.DEFAULT_AUDIO_PLAYER_REPEAT_MODE
     }
 
     override fun getAudioProgressHandlerCallback(): AudioProgressHandler? {
