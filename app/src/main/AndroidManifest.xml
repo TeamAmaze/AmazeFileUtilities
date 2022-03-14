@@ -69,6 +69,8 @@
             android:name=".video_player.VideoPlayerDialogActivity"
             android:exported="true"
             android:label="@string/video_player"
+            android:supportsPictureInPicture="true"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.Dialog">
             <intent-filter
                 android:label="@string/intent_video_player"
@@ -103,6 +105,8 @@
         <activity
             android:name=".video_player.VideoPlayerActivity"
             android:label="@string/video_player"
+            android:supportsPictureInPicture="true"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark" />
         <activity
             android:name=".pdf_viewer.PdfViewerActivity"

@@ -12,7 +12,7 @@ package com.amaze.fileutilities.video_player
 
 import androidx.lifecycle.ViewModel
 
-class VideoPlayerFragmentViewModel : ViewModel() {
+class VideoPlayerActivityViewModel : ViewModel() {
 
     var playWhenReady = false
     var currentWindow = 0
@@ -20,4 +20,5 @@ class VideoPlayerFragmentViewModel : ViewModel() {
     var videoModel: LocalVideoModel? = null
     var fullscreen = false
     var fitToScreen = false
+    var isInPictureInPicture = false
 }
