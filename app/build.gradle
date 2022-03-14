@@ -118,6 +118,7 @@ dependencies {
 
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.google.android.exoplayer:exoplayer:2.16.0'
+    implementation 'com.google.android.exoplayer:extension-mediasession:2.16.0'
     implementation 'com.ramijemli.percentagechartview:percentagechartview:0.3.1'
     implementation  'com.github.massoudss:waveformSeekBar:4.1.0'
     implementation 'com.github.lincollincol:amplituda:2.1.2'
