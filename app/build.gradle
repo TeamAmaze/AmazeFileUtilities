@@ -134,7 +134,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
     implementation "androidx.preference:preference-ktx:1.2.0"
     implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.0'
-    implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.0'
+//    implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.0'
+    implementation 'com.google.mlkit:face-detection:16.1.5'
+
     implementation 'com.afollestad.material-dialogs:files:3.3.0'
     implementation 'androidx.mediarouter:mediarouter:1.2.6'
     implementation 'com.google.android.gms:play-services-cast-framework:21.0.1'
