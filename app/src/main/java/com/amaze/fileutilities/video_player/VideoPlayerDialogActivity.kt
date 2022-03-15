@@ -10,46 +10,48 @@
 
 package com.amaze.fileutilities.video_player
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.core.os.bundleOf
-import androidx.fragment.app.add
-import androidx.fragment.app.commit
-import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
-import com.amaze.fileutilities.databinding.VideoPlayerDialogActivityBinding
 import com.amaze.fileutilities.utilis.showToastInCenter
 
-class VideoPlayerDialogActivity : PermissionsActivity() {
+class VideoPlayerDialogActivity : BaseVideoPlayerActivity() {
 
-    private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
-        VideoPlayerDialogActivityBinding.inflate(layoutInflater)
+    private var localVideoModel: LocalVideoModel? = null
+
+    override fun getVideoModel(): LocalVideoModel? {
+        return localVideoModel
     }
-    private lateinit var videoModel: LocalVideoModel
+
+    override fun isDialogActivity(): Boolean {
+        return true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        initLocalVideoModel(intent)
         super.onCreate(savedInstanceState)
-        setContentView(viewBinding.root)
-        if (savedInstanceState == null) {
-            val mimeType = intent.type
-            val videoUri = intent.data
-            if (videoUri == null) {
-                showToastInCenter(resources.getString(R.string.unsupported_content))
-            }
-            Log.i(
-                javaClass.simpleName,
-                "Loading video from path ${videoUri?.path} " +
-                    "and mimetype $mimeType"
-            )
-            videoModel = LocalVideoModel(uri = videoUri!!, mimeType = mimeType)
-            val bundle = bundleOf(
-                VideoPlayerFragment.VIEW_TYPE_ARGUMENT to videoModel
-            )
+        handleViewPlayerDialogActivityResources()
+    }
 
-            supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                add<VideoPlayerFragment>(R.id.fragment_container_view, args = bundle)
-            }
+    /*override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            initLocalVideoModel(it)
         }
+    }*/
+
+    private fun initLocalVideoModel(intent: Intent) {
+        val mimeType = intent.type
+        val videoUri = intent.data
+        if (videoUri == null) {
+            showToastInCenter(resources.getString(R.string.unsupported_content))
+        }
+        Log.i(
+            javaClass.simpleName,
+            "Loading video from path ${videoUri?.path} " +
+                "and mimetype $mimeType"
+        )
+        localVideoModel = LocalVideoModel(uri = videoUri!!, mimeType = mimeType)
     }
 }
