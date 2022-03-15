@@ -35,13 +35,4 @@ class VideoPlayerActivity : BaseVideoPlayerActivity() {
         super.onCreate(savedInstanceState)
         handleVideoPlayerActivityResources()
     }
-
-    /*override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        intent?.let {
-            localVideoModel = intent.extras?.getParcelable(
-                VIEW_TYPE_ARGUMENT
-            )
-        }
-    }*/
 }
