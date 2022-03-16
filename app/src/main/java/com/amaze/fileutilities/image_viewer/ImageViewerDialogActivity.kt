@@ -29,25 +29,24 @@ class ImageViewerDialogActivity : PermissionsActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
-        if (savedInstanceState == null) {
-            val mimeType = intent.type
-            val imageUri = intent.data
-            if (imageUri == null) {
-                showToastInCenter(resources.getString(R.string.unsupported_content))
-            }
-            Log.i(
-                javaClass.simpleName,
-                "Loading image from path ${imageUri?.path} " +
-                    "and mimetype $mimeType"
-            )
-            val bundle = bundleOf(
-                ImageViewerFragment.VIEW_TYPE_ARGUMENT
-                    to LocalImageModel(uri = imageUri!!, mimeType = mimeType)
-            )
-            supportFragmentManager.commit {
-                setReorderingAllowed(true)
-                add<ImageViewerFragment>(R.id.fragment_container_view, args = bundle)
-            }
+        val mimeType = intent.type
+        val imageUri = intent.data
+        if (imageUri == null) {
+            showToastInCenter(resources.getString(R.string.unsupported_content))
+            return
+        }
+        Log.i(
+            javaClass.simpleName,
+            "Loading image from path ${imageUri.path} " +
+                "and mimetype $mimeType"
+        )
+        val bundle = bundleOf(
+            ImageViewerFragment.VIEW_TYPE_ARGUMENT
+                to LocalImageModel(uri = imageUri, mimeType = mimeType)
+        )
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            add<ImageViewerFragment>(R.id.fragment_container_view, args = bundle)
         }
     }
 }
