@@ -15,18 +15,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:visibility="gone"
         />
-    <ImageView
-        android:id="@+id/lock_ui"
-        android:layout_width="@dimen/material_generic_medium"
-        android:layout_height="@dimen/material_generic_medium"
-        app:layout_constraintTop_toBottomOf="@+id/top_bar_video_player"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="@dimen/material_generic_medium"
-        android:layout_marginTop="@dimen/material_generic_medium"
-        android:background="@drawable/background_curved_video_hints"
-        android:src="@drawable/ic_outline_lock_24"
-        android:visibility="gone"
-        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

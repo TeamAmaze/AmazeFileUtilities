@@ -42,10 +42,33 @@
                 />
         </LinearLayout>
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/lock_ui"
+        android:layout_width="@dimen/material_generic_large"
+        android:layout_height="@dimen/material_generic_large"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="@dimen/material_generic_medium"
+        android:layout_marginEnd="@dimen/material_generic_medium"
+        android:layout_marginTop="@dimen/material_generic_large"
+        android:background="@drawable/background_curved_video_hints"
+        android:visibility="gone"
+        android:gravity="center_horizontal|center_vertical"
+        >
+        <ImageView
+            android:id="@+id/lock_image_view"
+            android:layout_width="@dimen/fourty_eight_dp"
+            android:layout_height="@dimen/fourty_eight_dp"
+            android:src="@drawable/ic_round_lock_open_24"
+            />
+    </LinearLayout>
+
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/video_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:surface_type="texture_view"
         app:controller_layout_id="@layout/exo_playback_controller_view"
         />
 

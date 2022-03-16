@@ -21,6 +21,7 @@ import android.graphics.drawable.Icon
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.util.Rational
 import android.view.Display
@@ -103,12 +104,20 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         viewBinding.videoView.player = player
         initMediaItem()
         initializePlayer()
-        refactorPlayerController(!(videoPlayerViewModel?.isInPictureInPicture ?: false))
+        refactorPlayerController(
+            !(
+                videoPlayerViewModel?.isInPictureInPicture ?: false ||
+                    videoPlayerViewModel?.isUiLocked ?: false
+                )
+        )
         mAudioManager =
             applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         getScreenSize()
         if (!isDialogActivity()) {
             viewBinding.videoView.setOnTouchListener(this)
+            viewBinding.volumeHintParent.bringToFront()
+            viewBinding.brightnessHintParent.bringToFront()
+            viewBinding.lockUi.bringToFront()
         }
     }
 
@@ -144,6 +153,28 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 // touch is start
                 downX = event.x
                 downY = event.y
+                when {
+                    viewBinding.videoView.isControllerVisible -> {
+                        viewBinding.videoView.hideController()
+                    }
+                    videoPlayerViewModel?.isUiLocked == true -> {
+                        viewBinding.lockUi.showFade(300)
+                        object : CountDownTimer(3000, 3000) {
+                            override fun onTick(millisUntilFinished: Long) {
+                                // do nothing
+                            }
+
+                            override fun onFinish() {
+                                viewBinding.lockUi.hideFade(300)
+                            }
+                        }.start()
+                        return true
+                    }
+                    else -> {
+                        viewBinding.videoView.showController()
+                    }
+                }
+
                 if (event.x < sWidth / 2) {
 
                     // here check touch is screen left side
@@ -162,13 +193,11 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                     // calculate horizontal swipe millis seek forward
                     gestureSkipStepMs = ((player?.duration!! * 5.0) / sWidth).toInt()
                 }
-                if (viewBinding.videoView.isControllerVisible) {
-                    viewBinding.videoView.hideController()
-                } else {
-                    viewBinding.videoView.showController()
-                }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_MOVE -> {
+                if (videoPlayerViewModel?.isUiLocked == true) {
+                    return true
+                }
                 val x2 = event.x
                 val y2 = event.y
                 diffX = ceil((event.x - downX).toDouble()).toLong()
@@ -188,7 +217,9 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                         } else {
                             player?.seekTo(it - gestureSkipStepMs)
                         }
-                        if (!viewBinding.videoView.isControllerVisible) {
+                        if (!viewBinding.videoView.isControllerVisible &&
+                            videoPlayerViewModel?.isUiLocked == false
+                        ) {
                             viewBinding.videoView.showController()
                         }
                     }
@@ -215,7 +246,12 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         newConfig: Configuration?
     ) {
         videoPlayerViewModel?.isInPictureInPicture = isInPictureInPictureMode
-        refactorPlayerController(!(videoPlayerViewModel?.isInPictureInPicture ?: false))
+        refactorPlayerController(
+            !(
+                videoPlayerViewModel?.isInPictureInPicture ?: false ||
+                    videoPlayerViewModel?.isUiLocked ?: false
+                )
+        )
         if (!isInPictureInPictureMode && onStopCalled) {
             finish()
         }
@@ -274,11 +310,31 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             val customToolbar = videoView
                 .findViewById<ConstraintLayout>(R.id.top_bar_video_player) as CustomToolbar
             customToolbar.visibility = View.VISIBLE
+            customToolbar.addActionButton(resources.getDrawable(R.drawable.ic_outline_lock_24)) {
+                videoPlayerViewModel?.isUiLocked = true
+                refactorPlayerController(
+                    !(
+                        videoPlayerViewModel?.isInPictureInPicture ?: false ||
+                            videoPlayerViewModel?.isUiLocked ?: false
+                        )
+                )
+            }
             videoView.findViewById<FrameLayout>(R.id.exo_fullscreen_button).visibility = View.GONE
             videoView.findViewById<ImageView>(R.id.fit_to_screen).visibility = View.VISIBLE
             videoView.findViewById<ImageView>(R.id.pip_video_player).visibility = View.VISIBLE
-            videoView.findViewById<ImageView>(R.id.lock_ui)
-                .visibility = View.VISIBLE
+            viewBinding.lockUi.setOnClickListener {
+                videoPlayerViewModel?.let {
+                    viewModel ->
+                    viewModel.isUiLocked = false
+                    refactorPlayerController(
+                        !(
+                            videoPlayerViewModel?.isInPictureInPicture ?: false ||
+                                videoPlayerViewModel?.isUiLocked ?: false
+                            )
+                    )
+                    viewBinding.lockUi.hideFade(300)
+                }
+            }
             videoView.findViewById<ImageView>(R.id.fit_to_screen)
                 .setOnClickListener {
                     videoPlayerViewModel?.fitToScreen?.also {
@@ -307,8 +363,6 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 when (item!!.itemId) {
                     R.id.info -> {
                         showInfoDialog()
-                    }
-                    R.id.aspect_ratio -> {
                     }
                     R.id.playback_speed -> {
                         showPlaybackSpeedDialog()
@@ -352,6 +406,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 if (i.value == which) {
                     val param = PlaybackParameters(i.key)
                     player?.playbackParameters = param
+                    videoPlayerViewModel?.playbackSpeed = i.key
                     break
                 }
             }
@@ -379,6 +434,39 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                     Date(file.lastModified()) + "\n"
             }
         }
+        player?.videoFormat?.let {
+            dialogMessage += "\n${resources.getString(R.string.video)}\n---\n"
+            dialogMessage += "${resources.getString(R.string.width)}: " +
+                "${it.width}" + "\n"
+            dialogMessage += "${resources.getString(R.string.height)}: " +
+                "${it.height}" + "\n"
+            dialogMessage += "${resources.getString(R.string.codecs)}: " +
+                "${it.codecs}" + "\n"
+            dialogMessage += "${resources.getString(R.string.frame_rate)}: " +
+                "${it.frameRate}" + "\n"
+            dialogMessage += "${resources.getString(R.string.bitrate)}: " +
+                "${it.averageBitrate}" + "\n"
+            dialogMessage += "${resources.getString(R.string.channel)}: " +
+                "${it.channelCount}" + "\n"
+            dialogMessage += "${resources.getString(R.string.mime_type)}: " +
+                "${it.containerMimeType}" + "\n"
+            dialogMessage += "${resources.getString(R.string.sample_rate)}: " +
+                "${it.sampleRate}" + "\n"
+        }
+        player?.audioFormat?.let {
+            dialogMessage += "\n${resources.getString(R.string.audio)}\n---\n"
+            "${it.containerMimeType}" + "\n"
+            dialogMessage += "${resources.getString(R.string.codecs)}: " +
+                "${it.codecs}" + "\n"
+            dialogMessage += "${resources.getString(R.string.sample_rate)}: " +
+                "${it.sampleRate}" + "\n"
+            dialogMessage += "${resources.getString(R.string.bitrate)}: " +
+                "${it.averageBitrate}" + "\n"
+            dialogMessage += "${resources.getString(R.string.channel)}: " +
+                "${it.channelCount}" + "\n"
+            dialogMessage += "${resources.getString(R.string.mime_type)}: " +
+                "${it.containerMimeType}" + "\n"
+        }
         player?.mediaMetadata?.let {
             dialogMessage += "\n${resources.getString(R.string.media)}\n---\n"
             dialogMessage += "${resources.getString(R.string.description)}: " +
@@ -388,38 +476,6 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 "${it.releaseMonth}/${it.releaseYear}" + "\n"
             dialogMessage += "${resources.getString(R.string.recording_date)}: " +
                 "${it.recordingMonth}/${it.recordingYear}" + "\n"
-        }
-        player?.videoFormat?.let {
-            dialogMessage += "\n${resources.getString(R.string.video)}\n---\n"
-            dialogMessage += "${resources.getString(R.string.width)}: " +
-                "${it.width}" + "\n"
-            dialogMessage += "${resources.getString(R.string.height)}: " +
-                "${it.height}" + "\n"
-            dialogMessage += "${resources.getString(R.string.bitrate)}: " +
-                "${it.averageBitrate}" + "\n"
-            dialogMessage += "${resources.getString(R.string.channel)}: " +
-                "${it.channelCount}" + "\n"
-            dialogMessage += "${resources.getString(R.string.frame_rate)}: " +
-                "${it.frameRate}" + "\n"
-            dialogMessage += "${resources.getString(R.string.mime_type)}: " +
-                "${it.containerMimeType}" + "\n"
-            dialogMessage += "${resources.getString(R.string.codecs)}: " +
-                "${it.codecs}" + "\n"
-            dialogMessage += "${resources.getString(R.string.sample_rate)}: " +
-                "${it.sampleRate}" + "\n"
-        }
-        player?.audioFormat?.let {
-            dialogMessage += "\n${resources.getString(R.string.audio)}\n---\n"
-            dialogMessage += "${resources.getString(R.string.bitrate)}: " +
-                "${it.averageBitrate}" + "\n"
-            dialogMessage += "${resources.getString(R.string.channel)}: " +
-                "${it.channelCount}" + "\n"
-            dialogMessage += "${resources.getString(R.string.mime_type)}: " +
-                "${it.containerMimeType}" + "\n"
-            dialogMessage += "${resources.getString(R.string.codecs)}: " +
-                "${it.codecs}" + "\n"
-            dialogMessage += "${resources.getString(R.string.sample_rate)}: " +
-                "${it.sampleRate}" + "\n"
         }
         val builder: AlertDialog.Builder = this.let {
             AlertDialog.Builder(it)
@@ -628,16 +684,20 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                         it.videoView.hideController()
                     }
                 }
+                refactorSystemUi(true)
             } else {
                 it.videoView.showController()
                 it.videoView.useController = true
-                it.videoView.setControllerVisibilityListener { visibility ->
-                    if (visibility == View.VISIBLE) {
+                it.videoView.setControllerVisibilityListener {
+                    view ->
+                    if (view == View.VISIBLE) {
                         it.videoView.showController()
                     } else {
                         it.videoView.hideController()
                     }
+                    refactorSystemUi(view == View.GONE)
                 }
+                refactorSystemUi(false)
             }
         }
     }
@@ -663,6 +723,8 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 exoPlayer.playWhenReady = it.playWhenReady
                 exoPlayer.seekTo(it.currentWindow, it.playbackPosition)
                 exoPlayer.prepare()
+                val param = PlaybackParameters(videoPlayerViewModel?.playbackSpeed ?: 1f)
+                player?.playbackParameters = param
             }
 
             /*val mediaSession = MediaSessionCompat(this, this.packageName)
