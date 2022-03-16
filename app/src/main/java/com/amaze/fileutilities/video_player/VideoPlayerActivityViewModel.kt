@@ -22,4 +22,5 @@ class VideoPlayerActivityViewModel : ViewModel() {
     var fitToScreen = false
     var isInPictureInPicture = false
     var playbackSpeed = 1f
+    var isUiLocked = false
 }
