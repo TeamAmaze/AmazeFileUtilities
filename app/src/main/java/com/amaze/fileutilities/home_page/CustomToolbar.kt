@@ -11,22 +11,26 @@
 package com.amaze.fileutilities.home_page
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.utilis.px
 
 class CustomToolbar(context: Context, attrs: AttributeSet?) : ConstraintLayout(context, attrs) {
 
     private val backButton: ImageView
     private val titleTextView: TextView
     private val overflowButton: ImageView
+    private val actionButtonsParent: LinearLayout
 
     init {
         val a = context.obtainStyledAttributes(
@@ -43,7 +47,8 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) : ConstraintLayout(c
         inflater.inflate(R.layout.custom_toolbar_view, this, true)
         backButton = getChildAt(0) as ImageView
         titleTextView = getChildAt(1) as TextView
-        overflowButton = getChildAt(2) as ImageView
+        actionButtonsParent = getChildAt(2) as LinearLayout
+        overflowButton = getChildAt(3) as ImageView
         titleTextView.text = titleText
         setBackgroundColor(bgColor)
     }
@@ -54,6 +59,15 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) : ConstraintLayout(c
 
     fun setBackButtonClickListener(callback: () -> Unit) {
         backButton.setOnClickListener { callback.invoke() }
+    }
+
+    fun addActionButton(drawable: Drawable, onPress: () -> Unit) {
+        val imageView = getImageView(drawable)
+        imageView.setOnClickListener {
+            onPress.invoke()
+        }
+        actionButtonsParent.addView(imageView)
+        actionButtonsParent.invalidate()
     }
 
     fun setOverflowPopup(
@@ -72,5 +86,26 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) : ConstraintLayout(c
         overflowButton.setOnClickListener {
             popupMenu.show()
         }
+    }
+
+    private fun getImageView(drawable: Drawable): ImageView {
+        val imageView = ImageView(context)
+        setParams(imageView)
+        imageView.setImageDrawable(drawable)
+        imageView.setBackgroundColor(resources.getColor(android.R.color.transparent))
+        return imageView
+    }
+
+    private fun setParams(button: ImageView) {
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
+        params.rightMargin = 16.px.toInt()
+        params.leftMargin = 16.px.toInt()
+        params.topMargin = 16.px.toInt()
+        params.bottomMargin = 16.px.toInt()
+        params.weight = 1f
+        button.layoutParams = params
     }
 }

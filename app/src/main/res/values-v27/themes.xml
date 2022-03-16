@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.AmazeFileUtilities.FullScreen" parent="Theme.AmazeFileUtilities">
-<!--        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>-->
+    <style name="Theme.AmazeFileUtilities.FullScreen.Dark" parent="Theme.AmazeFileUtilities.Dark">
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
