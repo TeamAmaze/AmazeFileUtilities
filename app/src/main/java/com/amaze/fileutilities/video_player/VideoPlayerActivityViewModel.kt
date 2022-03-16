@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModel
 
 class VideoPlayerActivityViewModel : ViewModel() {
 
-    var playWhenReady = false
+    var playWhenReady = true
     var currentWindow = 0
     var playbackPosition = 0L
     var videoModel: LocalVideoModel? = null
@@ -23,4 +23,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
     var isInPictureInPicture = false
     var playbackSpeed = 1f
     var isUiLocked = false
+    var isSubtitleAvailable = false
+    var isSubtitleEnabled = false
+    var subtitleFilePath: String? = null
 }

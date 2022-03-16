@@ -250,4 +250,7 @@
     <string name="sample_rate">Sample Rate</string>
     <string name="default_name">Default</string>
     <string name="failed_to_gain_focus">Failed to gain audio focus</string>
+    <string name="open">Open</string>
+    <string name="search">Search</string>
+    <string name="synchronize">Synchronize</string>
 </resources>
