@@ -68,7 +68,7 @@
         android:id="@+id/video_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:surface_type="texture_view"
+        app:surface_type="surface_view"
         app:controller_layout_id="@layout/exo_playback_controller_view"
         />
 
