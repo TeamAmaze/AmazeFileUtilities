@@ -29,13 +29,23 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) : ConstraintLayout(c
     private val overflowButton: ImageView
 
     init {
+        val a = context.obtainStyledAttributes(
+            attrs,
+            R.styleable.CustomToolbar, 0, 0
+        )
+        val titleText = a.getString(R.styleable.CustomToolbar_toolbarTitle)
+        val bgColor = a.getColor(
+            R.styleable.CustomToolbar_bgColor,
+            resources.getColor(R.color.translucent_toolbar)
+        )
         val inflater = context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.custom_toolbar_view, this, true)
         backButton = getChildAt(0) as ImageView
         titleTextView = getChildAt(1) as TextView
         overflowButton = getChildAt(2) as ImageView
-        setBackgroundColor(resources.getColor(R.color.translucent_toolbar))
+        titleTextView.text = titleText
+        setBackgroundColor(bgColor)
     }
 
     fun setTitle(title: String) {

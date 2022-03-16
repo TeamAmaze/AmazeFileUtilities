@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/aspect_ratio"
+        android:title="@string/aspect_ratio"
+        />
+    <item
+        android:id="@+id/playback_speed"
+        android:title="@string/playback_speed"
+        />
+    <item
+        android:id="@+id/subtitles"
+        android:title="@string/subtitles"
+        />
+    <item
+        android:id="@+id/info"
+        android:title="@string/information"
+        />
+</menu>

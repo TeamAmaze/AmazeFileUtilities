@@ -228,4 +228,25 @@
     <string name="disconnect">Disconnect</string>
     <string name="existing_connection">Existing connection exists, please disconnect first!</string>
     <string name="connecting">Connecting…</string>
+    <string name="aspect_ratio">Aspect ratio</string>
+    <string name="playback_speed">Playback Speed</string>
+    <string name="subtitles">Subtitles</string>
+    <string name="file">File</string>
+    <string name="media">Media</string>
+    <string name="audio">Audio</string>
+    <string name="video">Video</string>
+    <string name="file_path">Path</string>
+    <string name="last_modified">Last Modified</string>
+    <string name="description">Description</string>
+    <string name="recording_date">Recording month/year</string>
+    <string name="release_date">Release month/year</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="channel">Channel</string>
+    <string name="frame_rate">Frame Rate</string>
+    <string name="mime_type">Container Type</string>
+    <string name="width">Width</string>
+    <string name="height">Height</string>
+    <string name="codecs">Codecs</string>
+    <string name="sample_rate">Sample Rate</string>
+    <string name="default_name">Default</string>
 </resources>

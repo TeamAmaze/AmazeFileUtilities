@@ -30,7 +30,7 @@
         android:name=".AppConfig"
         android:banner="@drawable/about_header"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_normal"
         android:label="@string/app_name"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
@@ -107,6 +107,7 @@
             android:label="@string/video_player"
             android:supportsPictureInPicture="true"
             android:launchMode="singleTask"
+            android:screenOrientation="user"
             android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark" />
         <activity
             android:name=".pdf_viewer.PdfViewerActivity"
