@@ -16,4 +16,8 @@
         <attr name="showPreview" format="boolean" />
         <attr name="hint" format="string" />
     </declare-styleable>
+    <declare-styleable name="CustomToolbar">
+        <attr name="toolbarTitle" format="string" localization="suggested" />
+        <attr name="bgColor" format="color" />
+    </declare-styleable>
 </resources>

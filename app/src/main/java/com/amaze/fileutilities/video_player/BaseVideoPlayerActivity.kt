@@ -14,7 +14,6 @@ import android.app.PendingIntent
 import android.app.PictureInPictureParams
 import android.app.RemoteAction
 import android.content.*
-import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Point
@@ -29,6 +28,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -38,11 +38,12 @@ import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerService
 import com.amaze.fileutilities.databinding.VideoPlayerActivityBinding
-import com.amaze.fileutilities.utilis.hideFade
-import com.amaze.fileutilities.utilis.showFade
-import com.amaze.fileutilities.utilis.showToastInCenter
+import com.amaze.fileutilities.home_page.CustomToolbar
+import com.amaze.fileutilities.utilis.*
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackParameters
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -61,7 +62,8 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
     private var size: Point? = null
     private var deviceDisplay: Display? = null
     private var gestureSkipStepMs: Int = 200
-    private val gestureThreshold = 75
+    private val verticalSwipeThreshold = 75
+    private val horizontalSwipeThreshold = 150
     private var onStopCalled = false
 
     private var mAudioManager: AudioManager? = null
@@ -153,17 +155,21 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 }
 
                 if (gestureSkipStepMs == 200) {
+                    // calculate horizontal swipe millis seek forward
                     gestureSkipStepMs = ((player?.duration!! * 5.0) / sWidth).toInt()
+                }
+                if (viewBinding.videoView.isControllerVisible) {
+                    viewBinding.videoView.hideController()
+                } else {
+                    viewBinding.videoView.showController()
                 }
             }
             MotionEvent.ACTION_UP, MotionEvent.ACTION_MOVE -> {
-
-                // finger move to screen
                 val x2 = event.x
                 val y2 = event.y
                 diffX = ceil((event.x - downX).toDouble()).toLong()
                 diffY = ceil((event.y - downY).toDouble()).toLong()
-                if (abs(diffY) > abs(diffX) && abs(diffY) > gestureThreshold) {
+                if (abs(diffY) > abs(diffX) && abs(diffY) > verticalSwipeThreshold) {
                     if (intLeft) {
                         // if left its for brightness
                         invalidateBrightness(downY > y2)
@@ -171,12 +177,15 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                         // if right its for audio
                         invalidateVolume(downY > y2)
                     }
-                } else if (abs(diffY) < abs(diffX)) {
+                } else if (abs(diffY) < abs(diffX) && abs(diffX) > horizontalSwipeThreshold) {
                     player?.currentPosition?.let {
                         if (downX < x2) {
                             player?.seekTo(it + gestureSkipStepMs)
                         } else {
                             player?.seekTo(it - gestureSkipStepMs)
+                        }
+                        if (!viewBinding.videoView.isControllerVisible) {
+                            viewBinding.videoView.showController()
                         }
                     }
                 }
@@ -239,47 +248,166 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 width = FrameLayout.LayoutParams.MATCH_PARENT
                 height = FrameLayout.LayoutParams.MATCH_PARENT
             }
-            videoView.findViewById<ConstraintLayout>(R.id.top_bar_video_player)
+            val customToolbar = videoView
+                .findViewById<ConstraintLayout>(R.id.top_bar_video_player) as CustomToolbar
+            customToolbar.visibility = View.VISIBLE
+            videoView.findViewById<FrameLayout>(R.id.exo_fullscreen_button).visibility = View.GONE
+            videoView.findViewById<ImageView>(R.id.fit_to_screen).visibility = View.VISIBLE
+            videoView.findViewById<ImageView>(R.id.pip_video_player).visibility = View.VISIBLE
+            videoView.findViewById<ImageView>(R.id.lock_ui)
                 .visibility = View.VISIBLE
-            videoView.findViewById<ImageView>(R.id.exo_fullscreen_icon)
-                .visibility = View.GONE
-            videoView.findViewById<ImageView>(R.id.fit_to_screen_video_player)
+            videoView.findViewById<ImageView>(R.id.fit_to_screen)
                 .setOnClickListener {
-                    /*viewModel?.fitToScreen?.also {
+                    videoPlayerViewModel?.fitToScreen?.also {
                         if (!it) {
                             viewBinding.videoView.resizeMode =
                                 AspectRatioFrameLayout.RESIZE_MODE_ZOOM
-                            viewModel?.fitToScreen = true
+                            videoPlayerViewModel?.fitToScreen = true
                         } else {
                             viewBinding.videoView.resizeMode =
                                 AspectRatioFrameLayout.RESIZE_MODE_FIT
-                            viewModel?.fitToScreen = false
-                        }
-                    }*/
-                    enterPIPMode()
-                }
-            videoView.findViewById<ImageView>(R.id.orientation_video_player)
-                .setOnClickListener {
-                    videoPlayerViewModel?.fullscreen?.also {
-                        if (!it) {
-                            this@BaseVideoPlayerActivity.requestedOrientation =
-                                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                            videoPlayerViewModel?.fullscreen = true
-                        } else {
-                            this@BaseVideoPlayerActivity.requestedOrientation =
-                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                            videoPlayerViewModel?.fullscreen = false
+                            videoPlayerViewModel?.fitToScreen = false
                         }
                     }
                 }
-            videoView.findViewById<ImageView>(R.id.back_video_player)
-                .setOnClickListener {
-                    onBackPressed()
+            videoView.findViewById<ImageView>(R.id.pip_video_player).setOnClickListener {
+                enterPIPMode()
+            }
+            customToolbar.setBackButtonClickListener {
+                onBackPressed()
+            }
+            val fileName = videoPlayerViewModel?.videoModel?.uri?.getFileFromUri(
+                this@BaseVideoPlayerActivity
+            )?.name
+            customToolbar.setTitle(fileName ?: "")
+            customToolbar.setOverflowPopup(R.menu.video_activity) { item ->
+                when (item!!.itemId) {
+                    R.id.info -> {
+                        showInfoDialog()
+                    }
+                    R.id.aspect_ratio -> {
+                    }
+                    R.id.playback_speed -> {
+                        showPlaybackSpeedDialog()
+                    }
+                    R.id.subtitles -> {
+                    }
                 }
+                true
+            }
             videoView.setControllerVisibilityListener {
                 refactorSystemUi(it == View.GONE)
             }
         }
+    }
+
+    private fun showPlaybackSpeedDialog() {
+        val builder: AlertDialog.Builder = this.let {
+            AlertDialog.Builder(it)
+        }
+        val items = arrayOf(
+            "0.25x", "0.50x", "0.75f",
+            "1.0x " +
+                "(${resources.getString(R.string.default_name)})",
+            "1.25x", "1.50x", "1.75x", "2.0x"
+        )
+        val itemsMap = mapOf(
+            Pair(0.25f, 0),
+            Pair(0.50f, 1),
+            Pair(0.75f, 2),
+            Pair(1.0f, 3),
+            Pair(1.25f, 4),
+            Pair(1.50f, 5),
+            Pair(1.75f, 6),
+            Pair(2.0f, 7),
+        )
+        val checkedItem = itemsMap.get(player?.playbackParameters?.speed) ?: 3
+        builder.setSingleChoiceItems(
+            items, checkedItem
+        ) { dialog, which ->
+            for (i in itemsMap.entries) {
+                if (i.value == which) {
+                    val param = PlaybackParameters(i.key)
+                    player?.playbackParameters = param
+                    break
+                }
+            }
+            player?.play()
+            dialog.dismiss()
+        }
+            .setTitle(R.string.playback_speed)
+            .setNegativeButton(R.string.close) { dialog, _ ->
+                player?.play()
+                dialog.dismiss()
+            }.show()
+        player?.pause()
+    }
+
+    private fun showInfoDialog() {
+        var dialogMessage = ""
+        val uri = videoPlayerViewModel?.videoModel?.uri
+        uri?.let {
+            val file = uri.getFileFromUri(this)
+            file?.let {
+                dialogMessage += "${resources.getString(R.string.file)}\n---\n"
+                dialogMessage += "${resources.getString(R.string.name)}: ${file.name}" + "\n"
+                dialogMessage += "${resources.getString(R.string.file_path)}: ${file.path}" + "\n"
+                dialogMessage += "${resources.getString(R.string.last_modified)}: " +
+                    Date(file.lastModified()) + "\n"
+            }
+        }
+        player?.mediaMetadata?.let {
+            dialogMessage += "\n${resources.getString(R.string.media)}\n---\n"
+            dialogMessage += "${resources.getString(R.string.description)}: " +
+                "${it.description}" + "\n"
+            dialogMessage += "${resources.getString(R.string.recording_date)}: ${it.artist}" + "\n"
+            dialogMessage += "${resources.getString(R.string.release_date)}: " +
+                "${it.releaseMonth}/${it.releaseYear}" + "\n"
+            dialogMessage += "${resources.getString(R.string.recording_date)}: " +
+                "${it.recordingMonth}/${it.recordingYear}" + "\n"
+        }
+        player?.videoFormat?.let {
+            dialogMessage += "\n${resources.getString(R.string.video)}\n---\n"
+            dialogMessage += "${resources.getString(R.string.width)}: " +
+                "${it.width}" + "\n"
+            dialogMessage += "${resources.getString(R.string.height)}: " +
+                "${it.height}" + "\n"
+            dialogMessage += "${resources.getString(R.string.bitrate)}: " +
+                "${it.averageBitrate}" + "\n"
+            dialogMessage += "${resources.getString(R.string.channel)}: " +
+                "${it.channelCount}" + "\n"
+            dialogMessage += "${resources.getString(R.string.frame_rate)}: " +
+                "${it.frameRate}" + "\n"
+            dialogMessage += "${resources.getString(R.string.mime_type)}: " +
+                "${it.containerMimeType}" + "\n"
+            dialogMessage += "${resources.getString(R.string.codecs)}: " +
+                "${it.codecs}" + "\n"
+            dialogMessage += "${resources.getString(R.string.sample_rate)}: " +
+                "${it.sampleRate}" + "\n"
+        }
+        player?.audioFormat?.let {
+            dialogMessage += "\n${resources.getString(R.string.audio)}\n---\n"
+            dialogMessage += "${resources.getString(R.string.bitrate)}: " +
+                "${it.averageBitrate}" + "\n"
+            dialogMessage += "${resources.getString(R.string.channel)}: " +
+                "${it.channelCount}" + "\n"
+            dialogMessage += "${resources.getString(R.string.mime_type)}: " +
+                "${it.containerMimeType}" + "\n"
+            dialogMessage += "${resources.getString(R.string.codecs)}: " +
+                "${it.codecs}" + "\n"
+            dialogMessage += "${resources.getString(R.string.sample_rate)}: " +
+                "${it.sampleRate}" + "\n"
+        }
+        val builder: AlertDialog.Builder = this.let {
+            AlertDialog.Builder(it)
+        }
+        builder.setMessage(dialogMessage)
+            .setTitle(R.string.information)
+            .setNegativeButton(R.string.close) { dialog, _ ->
+                player?.play()
+                dialog.dismiss()
+            }.show()
+        player?.pause()
     }
 
     private val pipActionsReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -376,8 +504,8 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         val layout = window.attributes
         layout.screenBrightness = currentBrightness
         window.attributes = layout
-        viewBinding.brightnessProgress.setMax(100)
-        viewBinding.brightnessProgress.setProgress((currentBrightness * 100).toInt())
+        viewBinding.brightnessProgress.max = 100
+        viewBinding.brightnessProgress.progress = (currentBrightness * 100).toInt()
     }
 
     private fun invalidateVolume(doIncrease: Boolean) {
@@ -394,8 +522,8 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         }
         val currentVolume: Int = mAudioManager!!.getStreamVolume(AudioManager.STREAM_MUSIC)
         val maxVolume: Int = mAudioManager!!.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-        viewBinding.volumeProgress.setMax(maxVolume)
-        viewBinding.volumeProgress.setProgress(currentVolume)
+        viewBinding.volumeProgress.max = maxVolume
+        viewBinding.volumeProgress.progress = currentVolume
     }
 
     private fun getScreenSize() {
@@ -483,6 +611,8 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 it.videoView.setControllerVisibilityListener { visibility ->
                     if (visibility == View.VISIBLE) {
                         it.videoView.showController()
+                    } else {
+                        it.videoView.hideController()
                     }
                 }
             }
