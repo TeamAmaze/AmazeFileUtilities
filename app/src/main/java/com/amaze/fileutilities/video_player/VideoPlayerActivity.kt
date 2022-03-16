@@ -18,20 +18,12 @@ class VideoPlayerActivity : BaseVideoPlayerActivity() {
         const val VIEW_TYPE_ARGUMENT = "videoPlayerUri"
     }
 
-    private var localVideoModel: LocalVideoModel? = null
-
-    override fun getVideoModel(): LocalVideoModel? {
-        return localVideoModel
-    }
-
     override fun isDialogActivity(): Boolean {
         return false
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        localVideoModel = intent.extras?.getParcelable(
-            VIEW_TYPE_ARGUMENT
-        )
+        initLocalVideoModel(intent)
         super.onCreate(savedInstanceState)
         handleVideoPlayerActivityResources()
     }

@@ -78,11 +78,13 @@ class ImageViewerFragment : AbstractMediaFragment() {
 //        val imageView = constraintLayout.findViewById<PhotoView>(R.id.imageView)
         if (activity is ImageViewerDialogActivity) {
             viewBinding.imageView.setOnClickListener {
-                activity?.finish()
-                val intent = Intent(requireContext(), ImageViewerActivity::class.java).apply {
-                    putExtra(VIEW_TYPE_ARGUMENT, quickViewType)
+                val intent = Intent(requireContext(), ImageViewerActivity::class.java)
+                intent.setDataAndType(quickViewType?.uri, quickViewType?.mimeType)
+                if (!quickViewType?.uri?.authority.equals(requireContext().packageName, true)) {
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
                 startActivity(intent)
+                activity?.finish()
             }
         } else if (activity is ImageViewerActivity) {
             viewBinding.run {

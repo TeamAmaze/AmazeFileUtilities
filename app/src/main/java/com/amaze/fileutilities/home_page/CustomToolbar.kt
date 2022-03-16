@@ -70,7 +70,6 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) : ConstraintLayout(c
         popupMenu.inflate(menuRes)
         overflowButton.visibility = View.VISIBLE
         overflowButton.setOnClickListener {
-            popupMenu.dismiss()
             popupMenu.show()
         }
     }

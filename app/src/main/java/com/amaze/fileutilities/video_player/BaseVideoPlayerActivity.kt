@@ -21,6 +21,7 @@ import android.graphics.drawable.Icon
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.util.Rational
 import android.view.Display
 import android.view.MotionEvent
@@ -40,9 +41,11 @@ import com.amaze.fileutilities.audio_player.AudioPlayerService
 import com.amaze.fileutilities.databinding.VideoPlayerActivityBinding
 import com.amaze.fileutilities.home_page.CustomToolbar
 import com.amaze.fileutilities.utilis.*
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.PlaybackParameters
+import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import java.util.*
 import kotlin.math.abs
@@ -67,8 +70,9 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
     private var onStopCalled = false
 
     private var mAudioManager: AudioManager? = null
+    private var mAttrs: AudioAttributes? = null
 
-    abstract fun getVideoModel(): LocalVideoModel?
+    private var localVideoModel: LocalVideoModel? = null
 
     abstract fun isDialogActivity(): Boolean
 
@@ -217,6 +221,20 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         }
     }
 
+    fun initLocalVideoModel(intent: Intent) {
+        val mimeType = intent.type
+        val videoUri = intent.data
+        if (videoUri == null) {
+            showToastInCenter(resources.getString(R.string.unsupported_content))
+        }
+        Log.i(
+            javaClass.simpleName,
+            "Loading video from path ${videoUri?.path} " +
+                "and mimetype $mimeType"
+        )
+        localVideoModel = LocalVideoModel(uri = videoUri!!, mimeType = mimeType)
+    }
+
     fun handleViewPlayerDialogActivityResources() {
         viewBinding.run {
             videoView.findViewById<ConstraintLayout>(R.id.top_bar_video_player)
@@ -228,11 +246,16 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                     val intent = Intent(
                         this@BaseVideoPlayerActivity,
                         VideoPlayerActivity::class.java
-                    ).apply {
-                        putExtra(
-                            VideoPlayerActivity.VIEW_TYPE_ARGUMENT,
-                            videoPlayerViewModel?.videoModel
-                        )
+                    )
+                    intent.action = Intent.ACTION_VIEW
+                    intent.setDataAndType(
+                        videoPlayerViewModel?.videoModel?.uri,
+                        videoPlayerViewModel?.videoModel?.mimeType
+                    )
+                    if (!videoPlayerViewModel?.videoModel?.uri?.authority
+                        .equals(packageName, true)
+                    ) {
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     }
                     startActivity(intent)
                     finish()
@@ -306,7 +329,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             AlertDialog.Builder(it)
         }
         val items = arrayOf(
-            "0.25x", "0.50x", "0.75f",
+            "0.25x", "0.50x", "0.75x",
             "1.0x " +
                 "(${resources.getString(R.string.default_name)})",
             "1.25x", "1.50x", "1.75x", "2.0x"
@@ -321,7 +344,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             Pair(1.75f, 6),
             Pair(2.0f, 7),
         )
-        val checkedItem = itemsMap.get(player?.playbackParameters?.speed) ?: 3
+        val checkedItem = itemsMap[player?.playbackParameters?.speed] ?: 3
         builder.setSingleChoiceItems(
             items, checkedItem
         ) { dialog, which ->
@@ -536,7 +559,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
 
     private fun initMediaItem() {
         if (videoPlayerViewModel?.videoModel == null) {
-            videoPlayerViewModel?.videoModel = getVideoModel()
+            videoPlayerViewModel?.videoModel = localVideoModel
         }
         if (videoPlayerViewModel?.videoModel == null) {
             this.showToastInCenter(resources.getString(R.string.unsupported_operation))
@@ -635,6 +658,8 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         player?.let {
             exoPlayer ->
             videoPlayerViewModel?.also {
+                initializeAttributes()
+                exoPlayer.setAudioAttributes(mAttrs!!, true)
                 exoPlayer.playWhenReady = it.playWhenReady
                 exoPlayer.seekTo(it.currentWindow, it.playbackPosition)
                 exoPlayer.prepare()
@@ -645,6 +670,12 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             mediaSessionConnector.setPlayer(player)
             mediaSession.isActive = true*/
         }
+    }
+
+    private fun initializeAttributes() {
+        mAttrs = AudioAttributes.Builder().setUsage(C.USAGE_MEDIA)
+            .setContentType(C.CONTENT_TYPE_MUSIC)
+            .build()
     }
 
     private fun refactorSystemUi(hide: Boolean) {

@@ -30,10 +30,7 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotification
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotificationImpl
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotificationImpl24
-import com.amaze.fileutilities.utilis.ObtainableServiceBinder
-import com.amaze.fileutilities.utilis.PreferencesConstants
-import com.amaze.fileutilities.utilis.Utils
-import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
+import com.amaze.fileutilities.utilis.*
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -480,7 +477,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         if (exoPlayer == null) initializePlayer()
         exoPlayer?.apply {
             // AudioAttributes here from exoplayer package !!!
-            mAttrs?.let { initializeAttributes() }
+            initializeAttributes()
             setAudioAttributes(mAttrs!!, true)
             if (isPlaying) {
                 stop()
