@@ -11,10 +11,13 @@
 package com.amaze.fileutilities.image_viewer
 
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.PermissionsActivity
+import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.GenericPagerViewerActivityBinding
 import com.amaze.fileutilities.utilis.getSiblingUriFiles
+import com.amaze.fileutilities.utilis.showToastInCenter
 import java.io.File
 import java.util.*
 
@@ -30,11 +33,21 @@ class ImageViewerActivity : PermissionsActivity() {
         setContentView(viewBinding.root)
         viewModel = ViewModelProvider(this).get(ImageViewerViewModel::class.java)
 
-        val imageModel = intent.extras?.getParcelable<LocalImageModel>(
-            ImageViewerFragment.VIEW_TYPE_ARGUMENT
+        val mimeType = intent.type
+        val imageUri = intent.data
+        if (imageUri == null) {
+            showToastInCenter(resources.getString(R.string.unsupported_content))
+            return
+        }
+        Log.i(
+            javaClass.simpleName,
+            "Loading image from path ${imageUri.path} " +
+                "and mimetype $mimeType"
         )
+
+        val imageModel = LocalImageModel(uri = imageUri, mimeType = mimeType)
         viewModel.getSiblingImageModels(
-            imageModel!!,
+            imageModel,
             imageModel.uri
                 .getSiblingUriFiles(this)
         ).let {

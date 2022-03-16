@@ -249,4 +249,5 @@
     <string name="codecs">Codecs</string>
     <string name="sample_rate">Sample Rate</string>
     <string name="default_name">Default</string>
+    <string name="failed_to_gain_focus">Failed to gain audio focus</string>
 </resources>
