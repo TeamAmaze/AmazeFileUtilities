@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/enable_subtitles"
+        android:title="@string/enable"
+        android:checkable="true"
+        />
+    <item
+        android:id="@+id/open_subtitles"
+        android:title="@string/open"
+        />
+    <item
+        android:id="@+id/search_subtitles"
+        android:title="@string/search"
+        />
+    <item
+        android:id="@+id/sync_subtitles"
+        android:title="@string/synchronize"/>
+</menu>

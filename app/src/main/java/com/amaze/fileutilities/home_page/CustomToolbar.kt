@@ -88,6 +88,10 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) : ConstraintLayout(c
         }
     }
 
+    fun getOverflowButton(): ImageView {
+        return overflowButton
+    }
+
     private fun getImageView(drawable: Drawable): ImageView {
         val imageView = ImageView(context)
         setParams(imageView)

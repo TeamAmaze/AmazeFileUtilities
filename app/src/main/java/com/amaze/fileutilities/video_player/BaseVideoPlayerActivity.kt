@@ -17,25 +17,26 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Point
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Icon
 import android.media.AudioManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.util.Rational
-import android.view.Display
-import android.view.MotionEvent
-import android.view.View
-import android.widget.FrameLayout
-import android.widget.ImageView
+import android.view.*
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.ViewModelProvider
+import com.afollestad.materialdialogs.files.FileFilter
 import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerService
@@ -45,9 +46,13 @@ import com.amaze.fileutilities.utilis.*
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.MediaItem.SubtitleConfiguration
 import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+import com.google.android.exoplayer2.util.MimeTypes
+import com.google.common.collect.ImmutableList
+import java.io.File
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -100,6 +105,13 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         setContentView(viewBinding.root)
         videoPlayerViewModel = ViewModelProvider(this).get(VideoPlayerActivityViewModel::class.java)
 
+        if (intent != null) {
+            val pos = intent.getLongExtra(
+                VideoPlayerActivity.VIDEO_PLAYBACK_POSITION,
+                0L
+            )
+            videoPlayerViewModel?.playbackPosition = pos
+        }
         player = ExoPlayer.Builder(this).build()
         viewBinding.videoView.player = player
         initMediaItem()
@@ -109,6 +121,10 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 videoPlayerViewModel?.isInPictureInPicture ?: false ||
                     videoPlayerViewModel?.isUiLocked ?: false
                 )
+        )
+        refactorSystemUi(
+            resources.configuration.orientation
+                == Configuration.ORIENTATION_LANDSCAPE
         )
         mAudioManager =
             applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -123,7 +139,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
 
     override fun onPause() {
         super.onPause()
-        pausePlayer()
+        savePlayerState()
     }
 
     override fun onStop() {
@@ -293,6 +309,10 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                     ) {
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     }
+                    intent.putExtra(
+                        VideoPlayerActivity.VIDEO_PLAYBACK_POSITION,
+                        player?.currentPosition
+                    )
                     startActivity(intent)
                     finish()
                 }
@@ -368,14 +388,94 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                         showPlaybackSpeedDialog()
                     }
                     R.id.subtitles -> {
+                        showSubtitlePopup()
                     }
                 }
                 true
             }
-            videoView.setControllerVisibilityListener {
-                refactorSystemUi(it == View.GONE)
-            }
         }
+    }
+
+    private fun showSubtitlePopup() {
+        val customToolbar = viewBinding.videoView
+            .findViewById<ConstraintLayout>(R.id.top_bar_video_player) as CustomToolbar
+        setupSubtitlePopup {
+            item ->
+            when (item!!.itemId) {
+                R.id.sync_subtitles -> {
+                    val popupWindow = setupSyncSubtitlesPopupWindow()
+                    popupWindow.showAsDropDown(customToolbar.getOverflowButton())
+                }
+                R.id.open_subtitles -> {
+                    val filter: FileFilter = {
+                        it.isDirectory ||
+                            it.name.endsWith(".srt", true)
+                    }
+                    this.showFileChooserDialog(filter) {
+                        saveStateAndSetSubtitleFile(it)
+                    }
+                }
+                R.id.enable_subtitles -> {
+                    item.setChecked(!item.isChecked)
+                    videoPlayerViewModel?.isSubtitleEnabled = item.isChecked
+                    if (item.isChecked) {
+                        videoPlayerViewModel?.subtitleFilePath?.let {
+                            filePath ->
+                            saveStateAndSetSubtitleFile(File(filePath))
+                        }
+                    } else {
+                        saveStateAndSetSubtitleFile(null)
+                    }
+                }
+            }
+            true
+        }
+    }
+
+    private fun saveStateAndSetSubtitleFile(file: File?) {
+        savePlayerState()
+        setMediaItemWithSubtitle(file)
+        initializePlayer()
+    }
+
+    private fun setupSyncSubtitlesPopupWindow(): PopupWindow {
+        val inflater =
+            applicationContext.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val view = inflater.inflate(R.layout.subtitle_sync_menu_item, null)
+
+        val popup = PopupWindow(
+            view, ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        popup.setBackgroundDrawable(BitmapDrawable())
+        popup.isOutsideTouchable = true
+        return popup
+    }
+
+    private fun setupSubtitlePopup(onMenuItemClickListener: PopupMenu.OnMenuItemClickListener) {
+        val customToolbar = viewBinding.videoView
+            .findViewById<ConstraintLayout>(R.id.top_bar_video_player) as CustomToolbar
+        val overflowContext = ContextThemeWrapper(this, R.style.custom_action_mode_dark)
+        val popupMenu = PopupMenu(
+            overflowContext, customToolbar.getOverflowButton()
+        )
+        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
+            onMenuItemClickListener.onMenuItemClick(item)
+        }
+        popupMenu.inflate(R.menu.video_subtitle_popup)
+        popupMenu.menu.findItem(R.id.enable_subtitles).let {
+            item ->
+            item.isVisible =
+                videoPlayerViewModel?.isSubtitleAvailable == true
+            item.setChecked(videoPlayerViewModel?.isSubtitleEnabled == true)
+        }
+        popupMenu.menu.findItem(R.id.sync_subtitles).let {
+            item ->
+            item.isVisible =
+                videoPlayerViewModel?.isSubtitleAvailable == true
+            item.setChecked(videoPlayerViewModel?.isSubtitleEnabled == true)
+        }
+        popupMenu.show()
     }
 
     private fun showPlaybackSpeedDialog() {
@@ -621,8 +721,34 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             this.showToastInCenter(resources.getString(R.string.unsupported_operation))
             return
         }
-        val mediaItem = MediaItem.fromUri(videoPlayerViewModel?.videoModel!!.uri)
-        player?.setMediaItem(mediaItem)
+        setMediaItemWithSubtitle(videoPlayerViewModel?.videoModel?.uri?.getFileFromUri(this))
+    }
+
+    private fun setMediaItemWithSubtitle(subtitleFile: File?) {
+        val mediaItemBuilder = MediaItem.Builder().setUri(videoPlayerViewModel?.videoModel!!.uri)
+        if (subtitleFile == null) {
+            mediaItemBuilder.setSubtitleConfigurations(Collections.emptyList())
+        } else {
+            val filePath = subtitleFile.path
+            filePath.let {
+                path ->
+                val srt = path.substring(0, path.lastIndexOf(".")) + ".srt"
+                val srtFile = File(srt)
+                if (srtFile.exists()) {
+                    Log.i(javaClass.simpleName, "Found srt file with name $srt")
+                    val subtitleConfig = SubtitleConfiguration.Builder(Uri.fromFile(srtFile))
+                        .setMimeType(MimeTypes.APPLICATION_SUBRIP) // The correct MIME type (required).
+                        .setSelectionFlags(C.SELECTION_FLAG_DEFAULT) // Selection flags for the track (optional).
+                        .build()
+                    mediaItemBuilder.setSubtitleConfigurations(ImmutableList.of(subtitleConfig))
+                    videoPlayerViewModel?.isSubtitleAvailable = true
+                    videoPlayerViewModel?.isSubtitleEnabled = true
+                    videoPlayerViewModel?.subtitleFilePath = srtFile.path
+                }
+            }
+        }
+
+        player?.setMediaItem(mediaItemBuilder.build())
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -684,7 +810,6 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                         it.videoView.hideController()
                     }
                 }
-                refactorSystemUi(true)
             } else {
                 it.videoView.showController()
                 it.videoView.useController = true
@@ -695,14 +820,12 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                     } else {
                         it.videoView.hideController()
                     }
-                    refactorSystemUi(view == View.GONE)
                 }
-                refactorSystemUi(false)
             }
         }
     }
 
-    private fun pausePlayer() {
+    private fun savePlayerState() {
         player?.run {
             videoPlayerViewModel?.also {
                 it.playbackPosition = this.currentPosition
@@ -724,7 +847,8 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 exoPlayer.seekTo(it.currentWindow, it.playbackPosition)
                 exoPlayer.prepare()
                 val param = PlaybackParameters(videoPlayerViewModel?.playbackSpeed ?: 1f)
-                player?.playbackParameters = param
+                exoPlayer.playbackParameters = param
+                exoPlayer.play()
             }
 
             /*val mediaSession = MediaSessionCompat(this, this.packageName)
