@@ -15,7 +15,7 @@ import android.os.Bundle
 class VideoPlayerActivity : BaseVideoPlayerActivity() {
 
     companion object {
-        const val VIEW_TYPE_ARGUMENT = "videoPlayerUri"
+        const val VIDEO_PLAYBACK_POSITION = "playback_position"
     }
 
     override fun isDialogActivity(): Boolean {
