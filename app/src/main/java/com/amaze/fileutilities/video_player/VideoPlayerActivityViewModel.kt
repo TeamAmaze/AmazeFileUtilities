@@ -21,4 +21,5 @@ class VideoPlayerActivityViewModel : ViewModel() {
     var fullscreen = false
     var fitToScreen = false
     var isInPictureInPicture = false
+    var playbackSpeed = 1f
 }

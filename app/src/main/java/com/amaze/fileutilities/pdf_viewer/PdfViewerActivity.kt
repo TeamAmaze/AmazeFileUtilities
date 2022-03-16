@@ -237,7 +237,7 @@ class PdfViewerActivity :
         }
     }*/
 
-    fun showInfoDialog() {
+    private fun showInfoDialog() {
         var dialogMessage = ""
         viewBinding.pdfView.documentMeta.let {
             meta ->
