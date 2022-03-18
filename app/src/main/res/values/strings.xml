@@ -253,4 +253,10 @@
     <string name="open">Open</string>
     <string name="search">Search</string>
     <string name="synchronize">Synchronize</string>
+    <string name="download_subtitles">Download subtitles</string>
+    <string name="download_subtitles_info">Enter keywords and select your language to search subtitles from <html><body><font color='#FF4287f5'>opensubtitles.org</font></body></html></string>
+    <string name="amaze_fm_redirect">You\'re being redirected to Amaze File Manager. It\'s our open source offering that has all features a modern file manager has completely free of cost with over 2M downloads and 4.3 rating on Play Store.</string>
+    <string name="download">Download</string>
+    <string name="amaze_file_manager" translatable="false">Amaze File Manager</string>
+    <string name="not_connected_to_internet">Device not connected to internet</string>
 </resources>

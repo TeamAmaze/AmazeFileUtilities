@@ -16,6 +16,9 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.net.wifi.WifiManager
+import android.view.LayoutInflater
+import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.amaze.fileutilities.BuildConfig
@@ -67,12 +70,32 @@ class Utils {
                 intent.setClassName(packageName, className)
                 context.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
-                context.showToastOnBottom(context.resources.getString(R.string.install_amaze))
-                popupPlay(packageName, context)
+//                context.showToastOnBottom(context.resources.getString(R.string.install_amaze))
+                showAmazeFileManagerDialog(context, packageName)
             }
         }
 
-        fun popupPlay(packageName: String, context: Context) {
+        fun Context.showPleaseWaitDialog(layoutInflater: LayoutInflater): AlertDialog.Builder {
+            val dialogBuilder = AlertDialog.Builder(this).setCancelable(false)
+            val dialogView: View = layoutInflater.inflate(R.layout.please_wait_dialog, null)
+            dialogBuilder.setView(dialogView)
+            return dialogBuilder
+        }
+
+        private fun showAmazeFileManagerDialog(context: Context, packageName: String) {
+            val dialog = AlertDialog.Builder(context).setTitle(R.string.amaze_file_manager)
+                .setPositiveButton(R.string.download) { dialog, _ ->
+                    popupPlay(packageName, context)
+                    dialog.dismiss()
+                }
+                .setNegativeButton(
+                    R.string.cancel
+                ) { dialog, _ -> dialog.dismiss() }
+                .create()
+            dialog.show()
+        }
+
+        private fun popupPlay(packageName: String, context: Context) {
             val intent1 =
                 Intent(Intent.ACTION_VIEW)
             try {
