@@ -18,6 +18,7 @@ import android.net.Uri
 import android.net.wifi.WifiManager
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -75,9 +76,14 @@ class Utils {
             }
         }
 
-        fun Context.showPleaseWaitDialog(layoutInflater: LayoutInflater): AlertDialog.Builder {
+        fun Context.showProcessingDialog(
+            layoutInflater: LayoutInflater,
+            message: String
+        ): AlertDialog.Builder {
             val dialogBuilder = AlertDialog.Builder(this).setCancelable(false)
             val dialogView: View = layoutInflater.inflate(R.layout.please_wait_dialog, null)
+            val textView = dialogView.findViewById<TextView>(R.id.please_wait_text)
+            textView.text = message
             dialogBuilder.setView(dialogView)
             return dialogBuilder
         }

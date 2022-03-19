@@ -10,7 +10,6 @@
 
 package com.amaze.fileutilities.video_player
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
@@ -18,8 +17,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import org.jsoup.Jsoup
 import retrofit2.Retrofit
+import java.io.*
 import java.util.*
-import kotlin.collections.ArrayList
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
 
 class VideoPlayerActivityViewModel : ViewModel() {
 
@@ -48,7 +49,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
                 response ->
                 if (response.body() != null) {
                     val document = Jsoup.parse(response.body()!!.string())
-                    val optionTags = document.select("select[name=SubLanguageID]")
+                    val optionTags = document.select("select[id=SubLanguageID]")
                         .select("option")
                     var languageCodes = optionTags.eachAttr("value")
                     var languageValues = optionTags.eachText()
@@ -93,28 +94,207 @@ class VideoPlayerActivityViewModel : ViewModel() {
     fun getSubtitlesList(
         languageList: List<LanguageSelectionAdapter.SubtitleLanguageAndCode>,
         movieName: String
-    ): LiveData<List<LanguageSelectionAdapter
-            .SubtitleLanguageAndCode>?> {
+    ): LiveData<List<SubtitlesSearchResultsAdapter.SubtitleResult>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
             emit(null)
             val retrofit = Retrofit.Builder()
                 .baseUrl(SubtitlesApi.OPEN_SUBTITLES_BASE)
                 .build()
             val service = retrofit.create(SubtitlesApi::class.java)
+            val languageListRequestString = languageList.map { it.code }.filter { it.isNotEmpty() }
+                .joinToString(",")
             service.postSearchQuery(
-                languageList.map { it.code }.filter { it.isNotEmpty() }
-                    .joinToString(","),
+                languageListRequestString,
                 movieName
             )?.execute()?.let {
                 response ->
-                Log.i(
-                    javaClass.simpleName,
-                    "Subtitles list doc " +
-                        response.body()!!.string()
-                )
-                val document = Jsoup.parse(response.body().toString())
-                emit(null)
+                val document = Jsoup.parse(response.body()!!.string())
+                val table = document.select("table[id=search_results]")
+                if (table.isNullOrEmpty()) {
+                    // no search results
+                    emit(Collections.emptyList())
+                } else {
+                    val tableBody = table.select("tbody")
+                    val tableRows = tableBody.select("tr")
+                    val movieIds = ArrayList<String>()
+                    for (i in tableRows.indices) {
+                        if (i == 0) {
+                            // skip table headers
+                            continue
+                        }
+                        val tableData = tableRows[i].select("td")
+                        if (tableData.size> 1) {
+                            // first table data is empty, we expect atleast 2
+                            val secondTableData = tableData[1]
+                            // only first href tag has movie id link
+                            val ahrefTag = secondTableData.select("a")
+                            if (ahrefTag.size > 0) {
+                                // /en/search/sublanguageid-abk,afr,alb/idmovie-1872
+                                val attr = ahrefTag[0].attr("href")
+                                val movieId = attr.substring(attr.lastIndexOf("-") + 1)
+                                movieIds.add(movieId)
+                            }
+                        }
+                    }
+                    val subtitleResult = ArrayList<SubtitlesSearchResultsAdapter.SubtitleResult>()
+                    for (movieId in movieIds) {
+                        if (subtitleResult.size <50) {
+                            getSubtitlesResults(languageListRequestString, movieId)?.let {
+                                subtitleResult.addAll(it)
+                            }
+                        }
+                    }
+                    emit(subtitleResult)
+                }
             }
         }
+    }
+
+    fun downloadSubtitle(
+        downloadId: String,
+        targetFile: File
+    ): LiveData<String?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+            emit(null)
+            val retrofit = Retrofit.Builder()
+                .baseUrl(SubtitlesApi.DOWNLOAD_SUBTITLES_BASE)
+                .build()
+            val service = retrofit.create(SubtitlesApi::class.java)
+            service.downloadSubtitle(downloadId)?.execute()?.body()?.byteStream()?.use {
+                if (targetFile.parent != null) {
+                    emit(extractSubtitles(targetFile.parent!!, it))
+                } else {
+                    emit("")
+                }
+            }
+        }
+    }
+
+    private fun extractSubtitles(parentPath: String, inputStream: InputStream): String {
+        var extractPath = ""
+        ZipInputStream(BufferedInputStream(inputStream)).use {
+            zipIn ->
+            var entry: ZipEntry? = zipIn.nextEntry
+            // iterates over entries in the zip file
+            while (entry != null) {
+                val filePath: String = parentPath + File.separator + entry.name
+                if (!entry.isDirectory && !entry.name.endsWith(".nfo")) {
+                    // if the entry is a file, extracts it
+                    extractPath = try {
+                        extractFile(zipIn, filePath)
+                        filePath
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                        ""
+                    }
+                    break
+                }
+                zipIn.closeEntry()
+                entry = zipIn.nextEntry
+            }
+        }
+        return extractPath
+    }
+
+    @Throws(IOException::class)
+    private fun extractFile(zipIn: ZipInputStream, filePath: String) {
+        BufferedOutputStream(FileOutputStream(filePath)).use {
+            bos ->
+            val bytesIn = ByteArray(1024)
+            var read = 0
+            while (zipIn.read(bytesIn).also { read = it } != -1) {
+                bos.write(bytesIn, 0, read)
+            }
+        }
+    }
+
+    private fun getSubtitlesResults(
+        languageList: String,
+        movieId: String
+    ): List<SubtitlesSearchResultsAdapter.SubtitleResult>? {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(SubtitlesApi.OPEN_SUBTITLES_BASE)
+            .build()
+        val service = retrofit.create(SubtitlesApi::class.java)
+        service.getSearchResultsInfo(
+            languageList, movieId
+        )?.execute()?.let { response ->
+            val document = Jsoup.parse(response.body()!!.string())
+            val table = document.select("table[id=search_results]")
+            if (table.isNullOrEmpty()) {
+                // no search results
+                return Collections.emptyList()
+            } else {
+                val tableBody = table.select("tbody")
+                val tableRows = tableBody.select("tr")
+                val subtitleResultsList = ArrayList<SubtitlesSearchResultsAdapter.SubtitleResult>()
+                for (i in tableRows.indices) {
+                    if (i == 0) {
+                        // skip table headers
+                        continue
+                    }
+                    val subtitleResult = SubtitlesSearchResultsAdapter.SubtitleResult()
+                    val tableDataList = tableRows[i].select("td")
+                    if (tableDataList.size < 9) {
+                        continue
+                    }
+                    for (j in tableDataList.indices) {
+                        when (j) {
+                            0 -> {
+                                // first td is title
+                                val hrefs = tableDataList[0].select("a")
+                                if (hrefs.size > 0) {
+                                    // we need first href for title
+                                    val title = hrefs[0].text()
+                                    subtitleResult.title = title
+                                }
+                            }
+                            1 -> {
+                                // language
+                                val language = tableDataList[1].select("a")[0]
+                                    .attr("title")
+                                subtitleResult.language = language
+                            }
+                            2 -> {
+                                val cd = tableDataList[2].text()
+                                subtitleResult.cdNumber = cd
+                            }
+                            3 -> {
+                                val uploadDate = tableDataList[3].select("time")[0]
+                                    .attr("title")
+                                subtitleResult.uploadDate = uploadDate
+                            }
+                            4 -> {
+                                // /en/subtitleserve/sub/5136695
+                                val href = tableDataList[4].select("a")[0]
+                                    .attr("href")
+                                val downloadId = href.substring(href.lastIndexOf("/") + 1)
+                                subtitleResult.downloadId = downloadId
+                            }
+                            5 -> {
+                                val rating = tableDataList[5].select("span").text()
+                                subtitleResult.subtitleRating = rating
+                            }
+                            7 -> {
+                                val imdb = tableDataList[7].select("a")[0].text()
+                                subtitleResult.imdb = imdb
+                            }
+                            8 -> {
+                                val a_uploader = tableDataList[8].select("a")
+                                var uploader = a_uploader[0].text()
+                                if (a_uploader.size > 1) {
+                                    val badge = a_uploader[1].attr("title")
+                                    uploader += " ($badge)"
+                                    subtitleResult.uploader = uploader
+                                }
+                            }
+                        }
+                    }
+                    subtitleResultsList.add(subtitleResult)
+                }
+                return subtitleResultsList
+            }
+        }
+        return null
     }
 }

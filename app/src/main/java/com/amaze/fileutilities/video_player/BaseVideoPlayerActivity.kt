@@ -37,6 +37,8 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.files.FileFilter
 import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
@@ -44,7 +46,7 @@ import com.amaze.fileutilities.audio_player.AudioPlayerService
 import com.amaze.fileutilities.databinding.VideoPlayerActivityBinding
 import com.amaze.fileutilities.home_page.CustomToolbar
 import com.amaze.fileutilities.utilis.*
-import com.amaze.fileutilities.utilis.Utils.Companion.showPleaseWaitDialog
+import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -703,7 +705,10 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 )
                 val width = player?.videoFormat?.width ?: 16
                 val height = player?.videoFormat?.height ?: 9
-                params.setAspectRatio(Rational.parseRational("${abs(width)}:${abs(height)}"))
+                params.setAspectRatio(
+                    Rational
+                        .parseRational("${abs(width)}:${abs(height)}")
+                )
                 params.setSourceRectHint(viewBinding.videoView.clipBounds)
 
                 this.enterPictureInPictureMode(params.build())
@@ -757,16 +762,18 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
     }
 
     private fun initMediaItem() {
-        videoPlayerViewModel?.videoModel.let {
-            videoModel ->
-            if (videoModel == null) {
-                videoPlayerViewModel?.videoModel = localVideoModel
-            }
-            if (videoModel == null) {
-                this.showToastInCenter(resources.getString(R.string.unsupported_operation))
-                return
-            }
-            setMediaItemWithSubtitle(videoModel.uri.getFileFromUri(this))
+        if (videoPlayerViewModel?.videoModel == null) {
+            videoPlayerViewModel?.videoModel = localVideoModel
+        }
+        if (videoPlayerViewModel?.videoModel == null) {
+            this.showToastInCenter(resources.getString(R.string.unsupported_operation))
+            return
+        }
+        if (videoPlayerViewModel?.subtitleFilePath != null) {
+            setMediaItemWithSubtitle(File(videoPlayerViewModel?.subtitleFilePath!!))
+        } else {
+            val uri = videoPlayerViewModel?.videoModel?.uri
+            setMediaItemWithSubtitle(uri?.getFileFromUri(this))
         }
     }
 
@@ -786,8 +793,10 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 if (srtFile.exists()) {
                     Log.i(javaClass.simpleName, "Found srt file with name $srt")
                     val subtitleConfig = SubtitleConfiguration.Builder(Uri.fromFile(srtFile))
-                        .setMimeType(MimeTypes.APPLICATION_SUBRIP) // The correct MIME type (required).
-                        .setSelectionFlags(C.SELECTION_FLAG_DEFAULT) // Selection flags for the track (optional).
+                        .setMimeType(MimeTypes.APPLICATION_SUBRIP)
+                        // The correct MIME type (required).
+                        .setSelectionFlags(C.SELECTION_FLAG_DEFAULT)
+                        // Selection flags for the track (optional).
                         .build()
                     mediaItemBuilder.setSubtitleConfigurations(ImmutableList.of(subtitleConfig))
                     videoPlayerViewModel?.isSubtitleAvailable = true
@@ -814,7 +823,10 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         val editText = dialogView.findViewById(R.id.movie_name_edit_text) as AutoCompleteTextView
         editText.setText(mediaFile.name.removeExtension())
         val spinner = dialogView.findViewById<Spinner>(R.id.language_selection_spinner)
-        val pleaseWaitDialog = this.showPleaseWaitDialog(layoutInflater).create()
+        val pleaseWaitDialog = this.showProcessingDialog(
+            layoutInflater,
+            resources.getString(R.string.please_wait)
+        ).create()
         videoPlayerViewModel?.getSubtitlesAvailableLanguages()?.observe(this) { languageList ->
             if (languageList == null) {
                 pleaseWaitDialog.show()
@@ -825,19 +837,83 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             }
         }
         dialogBuilder.setPositiveButton(
-            R.string.download
+            R.string.search
         ) { dialog, _ ->
             adapter?.let {
                 videoPlayerViewModel?.getSubtitlesList(
                     it.getCheckedList(),
                     editText.text.toString()
                 )?.observe(this) {
+                    resultList ->
+                    if (resultList == null) {
+                        pleaseWaitDialog.show()
+                    } else {
+                        pleaseWaitDialog.dismiss()
+                        showSubtitlesSearchResultsList(resultList, mediaFile)
+                    }
                 }
             }
             dialog.dismiss()
         }
         val alertDialog = dialogBuilder.create()
         alertDialog.show()
+    }
+
+    private fun showSubtitlesSearchResultsList(
+        subtitleResultsList:
+            List<SubtitlesSearchResultsAdapter.SubtitleResult>,
+        targetFile: File
+    ) {
+        val adapter: SubtitlesSearchResultsAdapter?
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setTitle(R.string.download_subtitles)
+            .setNegativeButton(R.string.close) { dialog, _ ->
+                player?.play()
+                dialog.dismiss()
+            }
+        val inflater = this.layoutInflater
+        val dialogView: View = inflater.inflate(R.layout.subtitles_search_results_view, null)
+        dialogBuilder.setView(dialogView)
+        val recyclerView = dialogView.findViewById<RecyclerView>(R.id.search_results_list)
+        val emptyTextView = dialogView.findViewById<TextView>(R.id.empty_text_view)
+        val alertDialog = dialogBuilder.create()
+        alertDialog.show()
+        if (subtitleResultsList.isEmpty()) {
+            emptyTextView.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            adapter = SubtitlesSearchResultsAdapter(this, subtitleResultsList) {
+                downloadId ->
+                alertDialog.dismiss()
+                downloadSubtitle(downloadId, targetFile)
+            }
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.adapter = adapter
+        }
+    }
+
+    private fun downloadSubtitle(downloadId: String, targetFile: File) {
+        val pleaseWaitDialog = this.showProcessingDialog(
+            layoutInflater,
+            resources.getString(R.string.downloading)
+        ).create()
+        videoPlayerViewModel?.downloadSubtitle(
+            downloadId,
+            targetFile
+        )?.observe(this) { downloadPath ->
+            if (downloadPath == null) {
+                pleaseWaitDialog.show()
+            } else {
+                pleaseWaitDialog.dismiss()
+                if (downloadPath.isEmpty()) {
+                    this.showToastInCenter(resources.getString(R.string.failed_to_download))
+                } else {
+                    saveStateAndSetSubtitleFile(File(downloadPath))
+                    this.showToastInCenter(resources.getString(R.string.subtitles_applied))
+                }
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
