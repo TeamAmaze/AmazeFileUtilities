@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/row_layout_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="@dimen/minimal_row_size"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_gravity="center_vertical"
+    android:gravity="center_vertical"
+    android:padding="@dimen/material_generic"
+    android:layout_marginTop="@dimen/eight_dp"
+    android:layout_marginBottom="@dimen/four_dp"
+    android:background="@drawable/ripple"
+    >
+    <LinearLayout
+        android:id="@+id/info_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentStart="true"
+        android:gravity="center_vertical"
+        android:clickable="false"
+        >
+        <TextView
+            android:id="@+id/movie_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:ellipsize="middle"
+            android:textSize="@dimen/eighteen_sp"
+            android:singleLine="true" />
+        <TextView
+            android:id="@+id/info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/twelve_sp"
+            android:textColor="@color/gray_text"
+            />
+    </LinearLayout>
+</RelativeLayout>

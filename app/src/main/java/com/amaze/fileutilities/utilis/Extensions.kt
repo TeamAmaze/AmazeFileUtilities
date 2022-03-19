@@ -359,3 +359,7 @@ fun Context.showFileChooserDialog(filter: FileFilter = null, chooserPath: (file:
         }
     }
 }
+
+fun String.removeExtension(): String {
+    return this.substring(0, this.lastIndexOf("."))
+}

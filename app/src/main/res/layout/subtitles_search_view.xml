@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/material_generic"
+    >
+
+    <TextView
+        android:id="@+id/info_text"
+        android:layout_width="match_parent"
+        android:layout_height="?listPreferredItemHeightSmall"
+        android:textColor="@color/white"
+        android:textSize="@dimen/eighteen_sp"
+        android:layout_marginTop="@dimen/eight_dp"
+        android:text="@string/download_subtitles_info"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+    <AutoCompleteTextView
+        android:id="@+id/movie_name_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:inputType="text"
+        android:layout_marginTop="@dimen/material_generic"
+        app:layout_constraintTop_toBottomOf="@id/info_text"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+    <Spinner
+        android:id="@+id/language_selection_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/material_generic"
+        app:layout_constraintTop_toBottomOf="@id/movie_name_edit_text"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
