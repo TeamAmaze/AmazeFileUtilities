@@ -11,7 +11,7 @@
         />
     <item
         android:id="@+id/search_subtitles"
-        android:title="@string/search"
+        android:title="@string/search_online"
         />
     <item
         android:id="@+id/sync_subtitles"
