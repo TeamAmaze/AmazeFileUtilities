@@ -512,7 +512,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         popupMenu.menu.findItem(R.id.sync_subtitles).let {
             item ->
             item.isVisible =
-                videoPlayerViewModel?.isSubtitleAvailable == true
+                videoPlayerViewModel?.isSubtitleAvailable == true && false
             item.setChecked(videoPlayerViewModel?.isSubtitleEnabled == true)
         }
         popupMenu.menu.findItem(R.id.search_subtitles).let {
