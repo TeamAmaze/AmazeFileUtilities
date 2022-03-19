@@ -16,6 +16,7 @@
         android:layout_marginTop="@dimen/eight_dp"
         android:gravity="center_vertical"
         android:visibility="gone"
+        android:padding="@dimen/material_generic"
         />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/search_results_list"
