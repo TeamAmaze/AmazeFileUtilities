@@ -14,11 +14,13 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Streaming
 
 interface SubtitlesApi {
 
     companion object {
         const val OPEN_SUBTITLES_BASE = "https://www.opensubtitles.org/"
+        const val DOWNLOAD_SUBTITLES_BASE = "https://dl.opensubtitles.org"
     }
 
     @GET("en/search/subs")
@@ -29,4 +31,14 @@ interface SubtitlesApi {
         @Path("languages") languages: String,
         @Path("name") name: String
     ): Call<ResponseBody>?
+
+    @GET("en/search/sublanguageid-{languages}/idmovie-{id}")
+    fun getSearchResultsInfo(
+        @Path("languages") languages: String,
+        @Path("id") id: String
+    ): Call<ResponseBody>?
+
+    @GET("en/download/sub/{downloadId}")
+    @Streaming
+    fun downloadSubtitle(@Path("downloadId") downloadId: String): Call<ResponseBody>?
 }

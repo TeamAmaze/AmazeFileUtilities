@@ -259,4 +259,15 @@
     <string name="download">Download</string>
     <string name="amaze_file_manager" translatable="false">Amaze File Manager</string>
     <string name="not_connected_to_internet">Device not connected to internet</string>
+    <string name="upload_date">Upload date</string>
+    <string name="rating">Rating</string>
+    <string name="cd" translatable="false">CD</string>
+    <string name="uploader">Uploader</string>
+    <string name="imdb" translatable="false">IMDB</string>
+    <string name="language">Language</string>
+    <string name="no_results_subtitles">No results, please try with different keywords…</string>
+    <string name="downloading">Downloading…</string>
+    <string name="choose_different_subtitle">Can\'t download, choose some other subtitles</string>
+    <string name="subtitles_applied">Subtitles applied</string>
+    <string name="failed_to_download">Failed to download</string>
 </resources>

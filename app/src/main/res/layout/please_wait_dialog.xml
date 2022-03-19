@@ -8,7 +8,6 @@
         android:id="@+id/please_wait_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/please_wait"
         android:textColor="@color/white"
         android:textSize="@dimen/twenty_four_sp"
         app:layout_constraintLeft_toLeftOf="parent"
