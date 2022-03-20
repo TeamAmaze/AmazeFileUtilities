@@ -135,7 +135,9 @@ class VideoPlayerActivityViewModel : ViewModel() {
                             if (ahrefTag.size > 0) {
                                 // /en/search/sublanguageid-abk,afr,alb/idmovie-1872
                                 val attr = ahrefTag[0].attr("href")
-                                val movieId = attr.substring(attr.lastIndexOf("-") + 1)
+                                val movieId = attr.substring(
+                                    attr.lastIndexOf("-") + 1
+                                )
                                 movieIds.add(movieId)
                             }
                         }
@@ -156,7 +158,8 @@ class VideoPlayerActivityViewModel : ViewModel() {
 
     fun downloadSubtitle(
         downloadId: String,
-        targetFile: File
+        targetFile: File,
+        fallbackSubtitleDownloadPath: String
     ): LiveData<String?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
             emit(null)
@@ -168,7 +171,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
             service.downloadSubtitle(downloadId)?.execute()?.body()?.byteStream()?.use {
                 if (targetFile.parent != null) {
                     log.debug("get subtitle download response from opensubtitles")
-                    emit(extractSubtitles(targetFile.parent!!, it))
+                    emit(extractSubtitles(targetFile.parent!!, it, fallbackSubtitleDownloadPath))
                 } else {
                     emit("")
                 }
@@ -176,7 +179,11 @@ class VideoPlayerActivityViewModel : ViewModel() {
         }
     }
 
-    private fun extractSubtitles(parentPath: String, inputStream: InputStream): String {
+    private fun extractSubtitles(
+        parentPath: String,
+        inputStream: InputStream,
+        fallbackSubtitleDownloadPath: String
+    ): String {
         var extractPath = ""
         ZipInputStream(BufferedInputStream(inputStream)).use {
             zipIn ->
@@ -188,8 +195,15 @@ class VideoPlayerActivityViewModel : ViewModel() {
                     // if the entry is a file, extracts it
                     log.debug("Found zip entry for subtitles ${entry.name}")
                     extractPath = try {
-                        extractFile(zipIn, filePath)
-                        filePath
+                        if (extractFile(
+                                zipIn, filePath, false,
+                                fallbackSubtitleDownloadPath
+                            )
+                        ) {
+                            filePath
+                        } else {
+                            ""
+                        }
                     } catch (e: IOException) {
                         log.warn("failed to extract subtitles from downloaded file", e)
                         ""
@@ -204,14 +218,44 @@ class VideoPlayerActivityViewModel : ViewModel() {
     }
 
     @Throws(IOException::class)
-    private fun extractFile(zipIn: ZipInputStream, filePath: String) {
-        BufferedOutputStream(FileOutputStream(filePath)).use {
-            bos ->
-            val bytesIn = ByteArray(1024)
-            log.debug("Extract subtitle zip entry at $filePath")
-            var read = 0
-            while (zipIn.read(bytesIn).also { read = it } != -1) {
-                bos.write(bytesIn, 0, read)
+    private fun extractFile(
+        zipIn: ZipInputStream,
+        filePath: String,
+        isRetry: Boolean,
+        fallbackSubtitleDownloadPath: String
+    ): Boolean {
+        return try {
+            BufferedOutputStream(FileOutputStream(filePath)).use {
+                bos ->
+                val bytesIn = ByteArray(1024)
+                log.debug("Extract subtitle zip entry at $filePath")
+                var read = 0
+                while (zipIn.read(bytesIn).also { read = it } != -1) {
+                    bos.write(bytesIn, 0, read)
+                }
+            }
+            return true
+        } catch (e: FileNotFoundException) {
+            if (isRetry) {
+                log.warn("Exhausted retries, failing to get subtitles")
+            }
+            log.warn(
+                "Failed to write subtitle file, " +
+                    "probably due to video file being in sd card",
+                e
+            )
+            if (!isRetry) {
+                log.warn(
+                    "Retrying to extract subtitle at fallback path " +
+                        "$fallbackSubtitleDownloadPath"
+                )
+                return extractFile(
+                    zipIn, fallbackSubtitleDownloadPath,
+                    true, fallbackSubtitleDownloadPath
+                )
+            } else {
+                log.warn("Exhausted retries, failing to get subtitles")
+                false
             }
         }
     }
