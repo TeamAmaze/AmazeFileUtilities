@@ -707,13 +707,19 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 )
                 val width = player?.videoFormat?.width ?: 16
                 val height = player?.videoFormat?.height ?: 9
-                params.setAspectRatio(
-                    Rational
-                        .parseRational("${abs(width)}:${abs(height)}")
-                )
                 params.setSourceRectHint(viewBinding.videoView.clipBounds)
 
-                this.enterPictureInPictureMode(params.build())
+                try {
+                    params.setAspectRatio(
+                        Rational
+                            .parseRational("${abs(width)}:${abs(height)}")
+                    )
+                    this.enterPictureInPictureMode(params.build())
+                } catch (e: IllegalArgumentException) {
+                    log.warn("Aspect ration issue", e)
+                    params.setAspectRatio(Rational.parseRational("16:9"))
+                    this.enterPictureInPictureMode(params.build())
+                }
             } else {
                 this.enterPictureInPictureMode()
             }
