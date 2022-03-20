@@ -103,7 +103,7 @@
         <activity
             android:name=".image_viewer.ImageViewerActivity"
             android:label="@string/image_viewer"
-            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark" />
+            android:theme="@style/DragDismissTheme" />
         <activity
             android:name=".video_player.VideoPlayerActivity"
             android:label="@string/video_player"

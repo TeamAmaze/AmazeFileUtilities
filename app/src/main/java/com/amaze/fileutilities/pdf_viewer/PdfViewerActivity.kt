@@ -15,7 +15,6 @@ import android.os.Bundle
 import android.text.Html
 import android.text.InputType
 import android.text.Spanned
-import android.util.Log
 import android.view.MotionEvent
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
@@ -34,12 +33,16 @@ import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
 import com.shockwave.pdfium.PdfDocument
 import com.shockwave.pdfium.PdfDocument.Bookmark
 import com.shockwave.pdfium.PdfPasswordException
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class PdfViewerActivity :
     PermissionsActivity(),
     OnPageChangeListener,
     OnLoadCompleteListener,
     OnTapListener {
+
+    var log: Logger = LoggerFactory.getLogger(PdfViewerActivity::class.java)
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         PdfViewerActivityBinding.inflate(layoutInflater)
@@ -64,8 +67,7 @@ class PdfViewerActivity :
         }
         pdfModel = viewModel.getPdfModel(intent)!!
         pdfModel.run {
-            Log.i(
-                javaClass.simpleName,
+            log.info(
                 "Loading pdf from path ${this.uri.path} " +
                     "and mimetype ${this.mimeType}"
             )
@@ -296,7 +298,7 @@ class PdfViewerActivity :
     private fun getBookmarksTree(tree: List<Bookmark>, sep: String): String {
         var curr = "\n"
         for (b in tree) {
-            Log.e(javaClass.simpleName, String.format("%s %s, p %d", sep, b.title, b.pageIdx))
+            log.info(String.format("%s %s, p %d", sep, b.title, b.pageIdx))
             if (b.hasChildren()) {
                 curr += getBookmarksTree(b.children, "$sep-")
             }

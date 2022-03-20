@@ -19,11 +19,14 @@ import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pManager
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import android.view.View
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 abstract class WifiP2PActivity : CastActivity(), WifiP2pManager.ChannelListener {
+
+    private var log: Logger = LoggerFactory.getLogger(WifiP2PActivity::class.java)
 
     private val wifiP2PIntentFilter = IntentFilter().apply {
         addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
@@ -83,11 +86,11 @@ abstract class WifiP2PActivity : CastActivity(), WifiP2pManager.ChannelListener 
                         getWifiP2PChannel(),
                         object : WifiP2pManager.ActionListener {
                             override fun onSuccess() {
-                                Log.d(javaClass.simpleName, "removeGroup onSuccess -")
+                                log.debug("removeGroup onSuccess -")
                             }
 
                             override fun onFailure(reason: Int) {
-                                Log.d(javaClass.simpleName, "removeGroup onFailure -$reason")
+                                log.debug("removeGroup onFailure -$reason")
                             }
                         }
                     )
@@ -113,7 +116,7 @@ abstract class WifiP2PActivity : CastActivity(), WifiP2pManager.ChannelListener 
                         } else {
                             transferFragment.resetViewsOnDisconnect()
                         }
-                        Log.d(javaClass.simpleName, "P2P state changed - $state")
+                        log.debug("P2P state changed - $state")
                     } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION == action) {
 
                         // request available peers from the wifi p2p manager. This is an
@@ -125,7 +128,7 @@ abstract class WifiP2PActivity : CastActivity(), WifiP2pManager.ChannelListener 
                             channel,
                             transferFragment
                         )
-                        Log.d(javaClass.simpleName, "P2P peers changed")
+                        log.debug("P2P peers changed")
                     } else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION == action) {
                         if (getWifiP2PManager() == null) {
                             return

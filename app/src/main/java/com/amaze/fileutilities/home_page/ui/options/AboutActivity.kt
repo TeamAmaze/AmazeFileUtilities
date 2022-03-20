@@ -12,15 +12,20 @@ package com.amaze.fileutilities.home_page.ui.options
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ActivityAboutBinding
+import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.utilis.share.showShareDialog
+import com.amaze.fileutilities.utilis.showToastInCenter
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 
 class AboutActivity : AppCompatActivity() {
 
     private var _binding: ActivityAboutBinding? = null
+    private lateinit var viewModel: FilesViewModel
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -28,6 +33,7 @@ class AboutActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
         _binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.privacyPolicy.setOnClickListener {
@@ -45,6 +51,16 @@ class AboutActivity : AppCompatActivity() {
                 .withLicenseShown(true)
             libsBuilder.withActivityStyle(Libs.ActivityStyle.DARK)
             libsBuilder.start(this)
+        }
+        binding.shareLogs.setOnClickListener {
+            viewModel.getShareLogsAdapter().observe(this) {
+                shareAdapter ->
+                if (shareAdapter == null) {
+                    this.showToastInCenter(resources.getString(R.string.please_wait))
+                } else {
+                    showShareDialog(this, this.layoutInflater, shareAdapter)
+                }
+            }
         }
     }
 
