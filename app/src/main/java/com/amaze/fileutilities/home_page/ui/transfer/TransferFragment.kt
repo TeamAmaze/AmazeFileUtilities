@@ -46,7 +46,7 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
     private val binding get() = _binding!!
 
     companion object {
-        private val RECEIVER_BASE_PATH = "AmazeFileUtils"
+        val RECEIVER_BASE_PATH = "AmazeFileUtils"
         private val SEND_FILE_META_SPLITTER = "/"
     }
 

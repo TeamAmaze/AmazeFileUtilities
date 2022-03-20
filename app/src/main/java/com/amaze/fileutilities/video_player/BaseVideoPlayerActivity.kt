@@ -44,6 +44,7 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerService
 import com.amaze.fileutilities.databinding.VideoPlayerActivityBinding
 import com.amaze.fileutilities.home_page.CustomToolbar
+import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.google.android.exoplayer2.C
@@ -908,7 +909,9 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         ).create()
         videoPlayerViewModel?.downloadSubtitle(
             downloadId,
-            targetFile
+            targetFile,
+            this.getExternalStorageDirectory()?.path +
+                "/${TransferFragment.RECEIVER_BASE_PATH}/files"
         )?.observe(this) { downloadPath ->
             if (downloadPath == null) {
                 pleaseWaitDialog.show()
