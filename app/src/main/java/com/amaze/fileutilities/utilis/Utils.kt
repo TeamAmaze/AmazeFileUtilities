@@ -27,7 +27,8 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewAnalysisAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
-import com.google.android.exoplayer2.util.Log
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.math.BigInteger
 import java.net.InetAddress
 import java.net.UnknownHostException
@@ -36,6 +37,7 @@ import java.nio.ByteOrder
 class Utils {
 
     companion object {
+        var log: Logger = LoggerFactory.getLogger(Utils::class.java)
 
         const val URL_PRIVACY_POLICY = "https://www.teamamaze.xyz/privacy-policy"
         const val AMAZE_FILE_MANAGER_MAIN = "com.amaze.filemanager.ui.activities.MainActivity"
@@ -60,7 +62,7 @@ class Utils {
             try {
                 context.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
-                e.printStackTrace()
+                log.warn("cannot open url activity not found", e)
             }
         }
 
@@ -89,7 +91,10 @@ class Utils {
         }
 
         private fun showAmazeFileManagerDialog(context: Context, packageName: String) {
-            val dialog = AlertDialog.Builder(context).setTitle(R.string.amaze_file_manager)
+            val dialog = AlertDialog.Builder(
+                context,
+                R.style.Custom_Dialog_Dark
+            ).setTitle(R.string.amaze_file_manager)
                 .setPositiveButton(R.string.download) { dialog, _ ->
                     popupPlay(packageName, context)
                     dialog.dismiss()
@@ -97,6 +102,7 @@ class Utils {
                 .setNegativeButton(
                     R.string.cancel
                 ) { dialog, _ -> dialog.dismiss() }
+                .setMessage(R.string.amaze_fm_redirect)
                 .create()
             dialog.show()
         }
@@ -259,8 +265,7 @@ class Utils {
             val ipAddressString: String? = try {
                 InetAddress.getByAddress(ipByteArray).hostAddress
             } catch (ex: UnknownHostException) {
-                Log.e(javaClass.simpleName, "Unable to get host address.")
-                ex.printStackTrace()
+                log.error("Unable to get host address.", ex)
                 null
             }
             return ipAddressString

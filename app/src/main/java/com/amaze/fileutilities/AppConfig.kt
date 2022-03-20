@@ -11,7 +11,8 @@
 package com.amaze.fileutilities
 
 import android.content.Context
-import android.util.Log
+import android.os.StrictMode
+import android.os.StrictMode.VmPolicy
 import com.amaze.fileutilities.crash_report.AcraReportSenderFactory
 import com.amaze.fileutilities.crash_report.ErrorActivity
 import org.acra.ACRA
@@ -20,6 +21,8 @@ import org.acra.config.ACRAConfigurationException
 import org.acra.config.CoreConfigurationBuilder
 import org.acra.data.StringFormat
 import org.opencv.android.OpenCVLoader
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 @AcraCore(
     buildConfigClass = BuildConfig::class,
@@ -27,13 +30,23 @@ import org.opencv.android.OpenCVLoader
 )
 class AppConfig : AmazeApplication() {
 
+    var log: Logger = LoggerFactory.getLogger(AppConfig::class.java)
+
+    override fun onCreate() {
+        super.onCreate()
+
+        // disabling file exposure method check for api n+
+        val builder = VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
+    }
+
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         initACRA()
         if (!OpenCVLoader.initDebug())
-            Log.e("OpenCV", "Unable to load OpenCV!")
+            log.warn("Unable to load OpenCV!")
         else
-            Log.d("OpenCV", "OpenCV loaded Successfully!")
+            log.debug("OpenCV loaded Successfully!")
     }
 
     /**
@@ -53,7 +66,7 @@ class AppConfig : AmazeApplication() {
                 .build()
             ACRA.init(this, acraConfig)
         } catch (ace: ACRAConfigurationException) {
-            ace.printStackTrace()
+            log.warn("cannot init acra", ace)
             ErrorActivity.reportError(
                 this,
                 ace,

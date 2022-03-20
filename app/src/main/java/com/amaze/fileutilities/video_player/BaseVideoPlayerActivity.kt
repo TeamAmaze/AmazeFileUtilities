@@ -24,7 +24,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.util.Rational
 import android.view.*
 import android.widget.*
@@ -56,12 +55,16 @@ import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.util.MimeTypes
 import com.google.common.collect.ImmutableList
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.ceil
 
 abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchListener {
+
+    var log: Logger = LoggerFactory.getLogger(BaseVideoPlayerActivity::class.java)
 
     private var intLeft = false
     private var intRight = false
@@ -302,8 +305,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         if (videoUri == null) {
             showToastInCenter(resources.getString(R.string.unsupported_content))
         }
-        Log.i(
-            javaClass.simpleName,
+        log.info(
             "Loading video from path ${videoUri?.path} " +
                 "and mimetype $mimeType"
         )
@@ -791,7 +793,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 val srt = path.removeExtension() + ".srt"
                 val srtFile = File(srt)
                 if (srtFile.exists()) {
-                    Log.i(javaClass.simpleName, "Found srt file with name $srt")
+                    log.info("Found srt file with name $srt")
                     val subtitleConfig = SubtitleConfiguration.Builder(Uri.fromFile(srtFile))
                         .setMimeType(MimeTypes.APPLICATION_SUBRIP)
                         // The correct MIME type (required).

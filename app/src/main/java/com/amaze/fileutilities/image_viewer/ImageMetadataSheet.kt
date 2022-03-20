@@ -12,7 +12,6 @@ package com.amaze.fileutilities.image_viewer
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,8 +27,12 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import org.opencv.imgcodecs.Imgcodecs
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class ImageMetadataSheet : BottomSheetDialogFragment() {
+
+    var log: Logger = LoggerFactory.getLogger(ImageMetadataSheet::class.java)
 
     private var localImageModel: LocalImageModel? = null
     private var imageMetadataSheetBinding: ImageMetadataSheetBinding? = null
@@ -81,7 +84,7 @@ class ImageMetadataSheet : BottomSheetDialogFragment() {
             val metadata = ImageMetadataReader.readMetadata(it.uri.getFileFromUri(requireContext()))
             val matrix = Imgcodecs.imread(it.uri.getFileFromUri(requireContext())!!.path)
             val factor = ImgUtils.laplace(matrix)
-            Log.i(javaClass.simpleName, "Found laplace of image: $factor")
+            log.info("Found laplace of image: $factor")
 
             var result = "\n"
             result += "Laplacian variance: $factor\n"
@@ -107,28 +110,30 @@ class ImageMetadataSheet : BottomSheetDialogFragment() {
                     result += "\n\n\n------ Extracted text --------\n\n"
                     result += visionText.text
                     result += "\n\n"
-                    Log.e(javaClass.simpleName, "CUSTOM:\n${visionText.text}")
+                    log.info("CUSTOM:\n${visionText.text}")
                     viewBinding.metadata.text = result
                 }
                 .addOnFailureListener { e ->
                     // Task failed with an exception
                     // ...
-                    e.printStackTrace()
+                    log.warn("failed to recognize image", e)
                 }
 
             /*val thres = ImgUtils.thresholdInvert(ImgUtils.convertBitmapToMat(BitmapFactory
                 .decodeFile(imgPath)))*/
-            val zeros = ImgUtils.getTotalAndZeros(
-                ImgUtils.convertBitmapToMat(
-                    BitmapFactory
-                        .decodeFile(imgPath)
-                )
-            )
+            ImgUtils.convertBitmapToMat(
+                BitmapFactory
+                    .decodeFile(imgPath)
+            )?.let {
+                mat ->
+                val zeros = ImgUtils.getTotalAndZeros(mat)
+
 //            val bitmap = ImgUtils.convertMatToBitmap(thres)
-            result += "\n\n\n------ Dark areas --------\n\n"
-            result += "Total: ${zeros.first}\nZeros: ${zeros.second}" +
-                "\nRatio: ${(zeros.second.toDouble() / zeros.first.toDouble()).toDouble()}"
-            result += "\n\n"
+                result += "\n\n\n------ Dark areas --------\n\n"
+                result += "Total: ${zeros.first}\nZeros: ${zeros.second}" +
+                    "\nRatio: ${(zeros.second.toDouble() / zeros.first.toDouble()).toDouble()}"
+                result += "\n\n"
+            }
         }
     }
 }

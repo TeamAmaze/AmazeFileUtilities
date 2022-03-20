@@ -15,7 +15,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.media.AudioManager
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
@@ -25,9 +24,13 @@ import com.amaze.fileutilities.databinding.AudioPlayerDialogActivityBinding
 import com.amaze.fileutilities.utilis.*
 import com.google.android.material.slider.Slider
 import com.masoudss.lib.WaveformSeekBar
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.lang.ref.WeakReference
 
 class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHandler {
+
+    var log: Logger = LoggerFactory.getLogger(AudioPlayerDialogActivity::class.java)
 
     private val _binding by lazy(LazyThreadSafetyMode.NONE) {
         AudioPlayerDialogActivityBinding.inflate(layoutInflater)
@@ -71,8 +74,7 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
             if (audioUri == null) {
                 showToastInCenter(resources.getString(R.string.unsupported_content))
             }
-            Log.i(
-                javaClass.simpleName,
+            log.info(
                 "Loading audio from path ${audioUri?.path} " +
                     "and mimetype $mimeType"
             )
@@ -115,6 +117,10 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
 
     override fun getAudioPlayerHandlerViewModel(): AudioPlayerInterfaceHandlerViewModel {
         return viewModel
+    }
+
+    override fun getLogger(): Logger {
+        return log
     }
 
     override fun getTitleTextView(): TextView {

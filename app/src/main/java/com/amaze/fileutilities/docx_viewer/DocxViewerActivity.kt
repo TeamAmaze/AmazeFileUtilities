@@ -12,7 +12,6 @@ package com.amaze.fileutilities.docx_viewer
 
 import android.os.Bundle
 import android.util.Base64
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
@@ -24,10 +23,13 @@ import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.DocxViewerActivityBinding
 import com.amaze.fileutilities.utilis.showToastInCenter
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.zwobble.mammoth.DocumentConverter
 import org.zwobble.mammoth.Result
 
 class DocxViewerActivity : PermissionsActivity() {
+    var log: Logger = LoggerFactory.getLogger(DocxViewerActivity::class.java)
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         DocxViewerActivityBinding.inflate(layoutInflater)
@@ -45,8 +47,7 @@ class DocxViewerActivity : PermissionsActivity() {
             finish()
         }
         docxModel = viewModel.getDocxModel(intent)!!
-        Log.i(
-            javaClass.simpleName,
+        log.info(
             "Loading docx from path ${docxModel.getUri().path} " +
                 "and mimetype ${docxModel.mimeType}"
         )
