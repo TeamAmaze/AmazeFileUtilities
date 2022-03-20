@@ -21,10 +21,11 @@ import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
 import android.text.TextUtils
 import android.text.format.Formatter
-import android.util.Log
 import androidx.annotation.DrawableRes
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.PathPreferences
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -37,6 +38,8 @@ import java.util.regex.Pattern
 class FileUtils {
 
     companion object {
+        var log: Logger = LoggerFactory.getLogger(FileUtils::class.java)
+
         private const val INTERNAL_SHARED_STORAGE = "Internal shared storage"
         const val DEFAULT_BUFFER_SIZE = 8192
 
@@ -326,8 +329,7 @@ class FileUtils {
                     val index = file.absolutePath
                         .lastIndexOf("/Android/data")
                     if (index < 0) {
-                        Log.w(
-                            javaClass.simpleName,
+                        log.warn(
                             "Unexpected external file dir: " +
                                 file.absolutePath
                         )

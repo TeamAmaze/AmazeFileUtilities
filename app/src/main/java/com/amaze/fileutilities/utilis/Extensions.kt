@@ -18,19 +18,23 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.FileFilter
 import com.afollestad.materialdialogs.files.fileChooser
 import com.afollestad.materialdialogs.files.folderChooser
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
+
+var log: Logger = LoggerFactory.getLogger(Utils::class.java)
 
 fun Uri.getSiblingUriFiles(context: Context): ArrayList<Uri>? {
     try {
@@ -59,7 +63,7 @@ fun Uri.getSiblingUriFiles(context: Context): ArrayList<Uri>? {
             }
         }
     } catch (exception: Exception) {
-        Log.w(javaClass.simpleName, "Failed to get siblings", exception)
+        log.warn("Failed to get siblings", exception)
         return null
     }
     return null
@@ -93,6 +97,10 @@ fun Uri.getFileFromUri(context: Context): File? {
     return songFile
 }
 
+fun File.getUriFromFile(context: Context): Uri {
+    return FileProvider.getUriForFile(context, context.packageName, this)
+}
+
 private fun getContentResolverFilePathFromUri(context: Context, uri: Uri): String? {
     var cursor: Cursor? = null
     val column = "_data"
@@ -109,7 +117,7 @@ private fun getContentResolverFilePathFromUri(context: Context, uri: Uri): Strin
             return cursor.getString(columnIndex)
         }
     } catch (e: Exception) {
-        e.printStackTrace()
+        log.warn("failed to get cursor resolver from task", e)
     } finally {
         cursor?.close()
     }

@@ -11,9 +11,10 @@
 package com.amaze.fileutilities.home_page.ui.transfer
 
 import android.net.wifi.p2p.WifiP2pInfo
-import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.*
 import java.net.InetAddress
 import java.net.InetSocketAddress
@@ -22,6 +23,8 @@ import java.net.Socket
 import java.util.concurrent.TimeUnit
 
 class TransferViewModel : ViewModel() {
+
+    var log: Logger = LoggerFactory.getLogger(TransferViewModel::class.java)
 
     // group owner ip known to both devices
     var groupOwnerIP: String? = null
@@ -87,8 +90,7 @@ class TransferViewModel : ViewModel() {
                             outputStream ->
                             ObjectOutputStream(outputStream).use {
                                 objectOutputStream ->
-                                Log.d(
-                                    javaClass.simpleName,
+                                log.debug(
                                     "Send message for filename to : " +
                                         "$peerIP"
                                 )
@@ -98,7 +100,7 @@ class TransferViewModel : ViewModel() {
                     }
                     emit(true)
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    log.error("failed to send message", e)
                     emit(false)
                 } finally {
                     isTransferInProgress = false
@@ -154,8 +156,7 @@ class TransferViewModel : ViewModel() {
                                  */
                                 socket.getOutputStream().use {
                                     outputStream ->
-                                    Log.i(
-                                        javaClass.simpleName,
+                                    log.info(
                                         "Start sending " +
                                             "file to host : $host"
                                     )
@@ -173,7 +174,7 @@ class TransferViewModel : ViewModel() {
                             }
                         }
                     } catch (e: Exception) {
-                        e.printStackTrace()
+                        log.error("failed to init client transfer", e)
                         emit("done")
                     } finally {
                         isTransferInProgress = false
@@ -236,8 +237,7 @@ class TransferViewModel : ViewModel() {
                                 var len: Int
                                 var progress = 0
                                 var currentTime = System.currentTimeMillis() / 1000
-                                Log.i(
-                                    javaClass.simpleName,
+                                log.info(
                                     "Start receiving file to host" +
                                         " : $peerIP"
                                 )
@@ -252,14 +252,14 @@ class TransferViewModel : ViewModel() {
                                     }
                                     emit(("$progress/$fileSize"))
                                 } catch (e: IOException) {
-                                    Log.w(javaClass.simpleName, e.toString())
+                                    log.warn("failed to receive file to host", e)
                                 }
                                 emit("done")
                             }
                         }
                     }
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    log.error("failed to init server connection", e)
                     emit("done")
                 } finally {
                     isTransferInProgress = false
@@ -307,8 +307,7 @@ class TransferViewModel : ViewModel() {
                     if (incoming.javaClass == String::class.java) {
                         val incomingMessage = incoming as String
                         return if (incomingMessage.startsWith(handshakeSalt)) {
-                            Log.d(
-                                javaClass.simpleName,
+                            log.debug(
                                 "Incoming message $incomingMessage " +
                                     "from : ${client.inetAddress}"
                             )
@@ -325,7 +324,7 @@ class TransferViewModel : ViewModel() {
                 return null
             }
         } catch (e: Exception) {
-            e.printStackTrace()
+            log.warn("failed to receive message", e)
             return null
         } finally {
             isTransferInProgress = false

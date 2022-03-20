@@ -11,7 +11,6 @@
 package com.amaze.fileutilities.image_viewer
 
 import android.os.Bundle
-import android.util.Log
 import androidx.core.os.bundleOf
 import androidx.fragment.app.add
 import androidx.fragment.app.commit
@@ -19,8 +18,12 @@ import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ImageViewerDialogActivityBinding
 import com.amaze.fileutilities.utilis.showToastInCenter
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class ImageViewerDialogActivity : PermissionsActivity() {
+
+    var log: Logger = LoggerFactory.getLogger(ImageViewerDialogActivity::class.java)
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         ImageViewerDialogActivityBinding.inflate(layoutInflater)
@@ -35,8 +38,7 @@ class ImageViewerDialogActivity : PermissionsActivity() {
             showToastInCenter(resources.getString(R.string.unsupported_content))
             return
         }
-        Log.i(
-            javaClass.simpleName,
+        log.info(
             "Loading image from path ${imageUri.path} " +
                 "and mimetype $mimeType"
         )

@@ -34,10 +34,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.slider.Slider
 import com.masoudss.lib.WaveformSeekBar
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.lang.IllegalStateException
 import java.lang.ref.WeakReference
 
 class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfaceHandler {
+
+    private var log: Logger = LoggerFactory.getLogger(AudiosListFragment::class.java)
 
     private val filesViewModel: FilesViewModel by activityViewModels()
     private lateinit var viewModel: AudioPlayerInterfaceHandlerViewModel
@@ -258,13 +262,17 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         return try {
             WeakReference(requireContext())
         } catch (e: IllegalStateException) {
-            e.printStackTrace()
+            log.warn("failed to get context", e)
             WeakReference(null)
         }
     }
 
     override fun getAudioPlayerHandlerViewModel(): AudioPlayerInterfaceHandlerViewModel {
         return viewModel
+    }
+
+    override fun getLogger(): Logger {
+        return log
     }
 
     private fun invalidateActionButtons(progressHandler: AudioProgressHandler?) {

@@ -27,6 +27,7 @@ import com.google.android.material.slider.Slider
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
 import linc.com.amplituda.exceptions.io.FileNotFoundException
+import org.slf4j.Logger
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
@@ -45,6 +46,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     fun getRepeatButton(): ImageView?
     fun getContextWeakRef(): WeakReference<Context>
     fun getAudioPlayerHandlerViewModel(): AudioPlayerInterfaceHandlerViewModel
+    fun getLogger(): Logger
 
     override fun onPositionUpdate(progressHandler: AudioProgressHandler) {
         progressHandler.audioPlaybackInfo.duration.toFloat()
@@ -234,7 +236,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                         }*/
                         getWaveformSeekbar()?.setSampleFrom(file)
                     } catch (fe: FileNotFoundException) {
-                        fe.printStackTrace()
+                        getLogger().warn("file not found for waveform, force seekbar", fe)
                         getAudioPlayerHandlerViewModel().forceShowSeekbar = true
                     }
                 } else {
@@ -262,7 +264,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                         try {
                             getWaveformSeekbar()?.setSampleFrom(file)
                         } catch (fe: FileNotFoundException) {
-                            fe.printStackTrace()
+                            getLogger().warn("file not found for waveform, setup seekbar", fe)
                             getAudioPlayerHandlerViewModel().forceShowSeekbar = true
                             setupSeekBars(audioService)
                             return

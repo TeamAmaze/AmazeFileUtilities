@@ -39,10 +39,14 @@ import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class MainActivity :
     WifiP2PActivity(),
     AggregatedMediaFileInfoObserver {
+
+    var log: Logger = LoggerFactory.getLogger(MainActivity::class.java)
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var actionBarBinding: ActivityMainActionbarBinding
@@ -321,7 +325,7 @@ class MainActivity :
         try {
             startActivityForResult(intent, VOICE_REQUEST_CODE)
         } catch (e: ActivityNotFoundException) {
-            e.printStackTrace()
+            log.warn("voice recognition activity not found", e)
             this.showToastInCenter(resources.getString(R.string.unsupported_operation))
         }
     }

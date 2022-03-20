@@ -13,7 +13,6 @@ package com.amaze.fileutilities.utilis
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.text.Text
@@ -22,6 +21,8 @@ import org.opencv.android.Utils
 import org.opencv.core.*
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.lang.Exception
 import java.util.concurrent.TimeUnit
@@ -30,6 +31,9 @@ import kotlin.math.pow
 class ImgUtils {
 
     companion object {
+
+        var log: Logger = LoggerFactory.getLogger(ImgUtils::class.java)
+
 //        private var tessBaseApi: TessBaseAPI? = null
         private val wordRegex = "^[A-Za-z]*$".toRegex()
 
@@ -41,20 +45,19 @@ class ImgUtils {
                 bmp = Bitmap.createBitmap(rgb.cols(), rgb.rows(), Bitmap.Config.ARGB_8888)
                 Utils.matToBitmap(rgb, bmp)
             } catch (e: Exception) {
-                e.printStackTrace()
-                Log.e(javaClass.simpleName, e.message!!)
+                log.warn("failed to convert mat to bitmap", e)
             }
             return bmp
         }
 
-        fun convertBitmapToMat(input: Bitmap): Mat {
+        fun convertBitmapToMat(input: Bitmap): Mat? {
             val mat = Mat()
             val bmp32: Bitmap = input.copy(Bitmap.Config.ARGB_8888, true)
             try {
                 Utils.bitmapToMat(bmp32, mat)
             } catch (e: Exception) {
-                e.printStackTrace()
-                Log.e(javaClass.simpleName, e.message!!)
+                log.warn("failed to convert bitmap to mat", e)
+                return null
             }
             return mat
         }
@@ -154,7 +157,7 @@ class ImgUtils {
                 .addOnFailureListener { e ->
                     // Task failed with an exception
                     // ...
-                    e.printStackTrace()
+                    log.warn("get image features failure", e)
                     callback.invoke(false, null)
                 }
         }
@@ -174,17 +177,17 @@ class ImgUtils {
                 val result = textRecognizer.process(image)
                     .addOnSuccessListener { visionText ->
                         // Task completed successfully
-                        Log.d(javaClass.simpleName, visionText.text)
+                        log.debug(visionText.text)
                         callback?.invoke(true, visionText)
                     }
                     .addOnFailureListener { e ->
                         // Task failed with an exception
                         // ...
-                        e.printStackTrace()
+                        log.warn("extract text from img failure", e)
                         callback?.invoke(false, null)
                     }
             } catch (e: IOException) {
-                e.printStackTrace()
+                log.warn("extract text from img ioexception", e)
                 callback?.invoke(true, null)
                 return
             }
@@ -232,30 +235,46 @@ class ImgUtils {
 
         fun isImageBlur(
             path: String
-        ): Boolean {
-            val matrix = Imgcodecs.imread(path)
-            val factor = laplace(matrix)
-            if (factor < 50 && factor != 0.0) {
-                return true
+        ): Boolean? {
+            return try {
+                val matrix = Imgcodecs.imread(path)
+                val factor = laplace(matrix)
+                if (factor == Double.MAX_VALUE) {
+                    return null
+                }
+                if (factor < 50 && factor != 0.0) {
+                    return true
+                }
+                return false
+            } catch (e: Exception) {
+                log.warn("Failed to check for blurry image", e)
+                null
             }
-            return false
         }
 
         fun isImageLowLight(
             path: String
-        ): Boolean {
-            val matrix = Imgcodecs.imread(path)
-            return processForLowLight(matrix)
+        ): Boolean? {
+            return try {
+                val matrix = Imgcodecs.imread(path)
+                processForLowLight(matrix)
+            } catch (e: Exception) {
+                log.warn("Failed to check for low light image", e)
+                null
+            } catch (oom: OutOfMemoryError) {
+                log.warn("Failed to check for low light image", oom)
+                null
+            }
         }
 
-        private fun processForLowLight(matrix: Mat): Boolean {
+        private fun processForLowLight(matrix: Mat): Boolean? {
             return try {
                 val zerosPair = getTotalAndZeros(matrix)
                 val ratio = (zerosPair.second.toDouble() / zerosPair.first.toDouble())
                 return ratio >= 0.8
             } catch (e: Exception) {
-                e.printStackTrace()
-                false
+                log.warn("Failed to check for low light image", e)
+                null
             }
         }
 
@@ -284,7 +303,7 @@ class ImgUtils {
 
                 std[0, 0][0].pow(2.0)
             } catch (e: Exception) {
-                e.printStackTrace()
+                log.warn("Failed to check for blurry image", e)
                 Double.MAX_VALUE
             }
         }
@@ -366,7 +385,7 @@ class ImgUtils {
 
                 return Pair(total, total - nonZeros)
             } catch (e: Exception) {
-                e.printStackTrace()
+                log.warn("cannot get zeros and total count from img", e)
             }
             return Pair(1, 0)
         }
