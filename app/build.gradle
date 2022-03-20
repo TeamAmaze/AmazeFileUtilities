@@ -105,7 +105,9 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 //    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
     implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
-    implementation 'com.github.VishalNehra:FolioReader-Android:0.5.5'
+    implementation('com.github.VishalNehra:FolioReader-Android:0.5.5') {
+        exclude group: 'org.slf4j', module: 'slf4j-android'
+    }
     implementation 'org.zwobble.mammoth:mammoth:1.4.2'
     implementation 'me.zhanghai.android.fastscroll:library:1.1.7'
     implementation "ch.acra:acra-core:5.7.0"
@@ -142,6 +144,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-cast-framework:21.0.1'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'org.jsoup:jsoup:1.14.3'
+    implementation 'com.klinkerapps:drag-dismiss-activity:1.7.0'
+    implementation 'org.slf4j:slf4j-api:1.7.32'
+    implementation 'com.github.tony19:logback-android:2.0.0'
 
     //Detect memory leaks
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'

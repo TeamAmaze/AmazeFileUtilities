@@ -79,10 +79,24 @@
         android:textColor="@color/blue"
         android:text="@string/privacy_policy"
         />
+
     <TextView
+        android:id="@+id/share_logs"
         android:layout_width="@dimen/zero_dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/privacy_policy"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="@dimen/material_generic"
+        android:textSize="@dimen/eighteen_sp"
+        android:textColor="@color/blue"
+        android:text="@string/share_logs"
+        />
+
+    <TextView
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/share_logs"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"

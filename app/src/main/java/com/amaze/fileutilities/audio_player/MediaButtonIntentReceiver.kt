@@ -19,9 +19,10 @@ import android.os.Handler
 import android.os.Message
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
-import android.util.Log
 import android.view.KeyEvent
 import androidx.core.content.ContextCompat
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.lang.IllegalStateException
 
 class MediaButtonIntentReceiver : BroadcastReceiver() {
@@ -32,6 +33,7 @@ class MediaButtonIntentReceiver : BroadcastReceiver() {
     }
 
     companion object {
+        var log: Logger = LoggerFactory.getLogger(MediaButtonIntentReceiver::class.java)
         val TAG = MediaButtonIntentReceiver::class.java.simpleName
         private const val MSG_HEADSET_DOUBLE_CLICK_TIMEOUT = 2
         private const val DOUBLE_CLICK = 400
@@ -98,7 +100,7 @@ class MediaButtonIntentReceiver : BroadcastReceiver() {
                                     mClickCounter = 0
                                 }
                                 mClickCounter++
-                                Log.i(TAG, "Got headset click, count = " + mClickCounter)
+                                log.info("Got headset click, count = " + mClickCounter)
                                 mHandler.removeMessages(MSG_HEADSET_DOUBLE_CLICK_TIMEOUT)
                                 val msg = mHandler.obtainMessage(
                                     MSG_HEADSET_DOUBLE_CLICK_TIMEOUT, mClickCounter, 0,
@@ -145,7 +147,7 @@ class MediaButtonIntentReceiver : BroadcastReceiver() {
                 mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG)
                 mWakeLock?.setReferenceCounted(false)
             }
-            Log.i(TAG, "Acquiring wake lock and sending " + msg.what)
+            log.debug("Acquiring wake lock and sending " + msg.what)
             // Make sure we don't indefinitely hold the wake lock under any circumstances
             mWakeLock!!.acquire(10000)
             mHandler.sendMessageDelayed(msg, delay)
@@ -153,11 +155,11 @@ class MediaButtonIntentReceiver : BroadcastReceiver() {
 
         private fun releaseWakeLockIfHandlerIdle() {
             if (mHandler.hasMessages(MSG_HEADSET_DOUBLE_CLICK_TIMEOUT)) {
-                Log.i(TAG, "Handler still has messages pending, not releasing wake lock")
+                log.debug("Handler still has messages pending, not releasing wake lock")
                 return
             }
             if (mWakeLock != null) {
-                Log.i(TAG, "Releasing wake lock")
+                log.debug("Releasing wake lock")
                 mWakeLock!!.release()
                 mWakeLock = null
             }

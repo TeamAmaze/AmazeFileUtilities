@@ -21,17 +21,20 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
-import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.utilis.showToastInCenter
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 open class PermissionsActivity :
     AppCompatActivity(),
     ActivityCompat.OnRequestPermissionsResultCallback {
+
+    private var log: Logger = LoggerFactory.getLogger(PermissionsActivity::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +47,6 @@ open class PermissionsActivity :
             }
         }
     }
-
-    private val TAG = PermissionsActivity::class.java.simpleName
 
     companion object {
         private const val PERMISSION_LENGTH = 3
@@ -294,10 +295,7 @@ open class PermissionsActivity :
                                     .setData(Uri.parse("package:$packageName"))
                             startActivity(intent)
                         } catch (e: Exception) {
-                            Log.e(
-                                TAG, "Failed to initial activity to grant all files access",
-                                e
-                            )
+                            log.error("Failed to initial activity to grant all files access", e)
                             applicationContext.showToastInCenter(getString(R.string.grantfailed))
                         }
                         dialog.cancel()

@@ -15,7 +15,6 @@ import android.net.wifi.p2p.*
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,8 +27,12 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentTransferBinding
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.utilis.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, PeerListListener {
+
+    var log: Logger = LoggerFactory.getLogger(TransferFragment::class.java)
 
     private lateinit var transferViewModel: TransferViewModel
     private var _binding: FragmentTransferBinding? = null
@@ -91,7 +94,7 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
 
                     override fun onSuccess() {
                         // do nothing, handle when peers are found
-                        Log.i(javaClass.simpleName, "Peers discovered")
+                        log.info("Peers discovered")
                     }
 
                     override fun onFailure(reasonCode: Int) {
@@ -251,8 +254,7 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
                         }
 
                         override fun onFailure(p0: Int) {
-                            Log.w(
-                                javaClass.simpleName,
+                            log.warn(
                                 "Failed to stop peer discovery, " +
                                     "error code $p0"
                             )
@@ -406,8 +408,7 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
         p0?.let {
             transferViewModel.groupOwnerIP = p0.groupOwnerAddress.hostAddress
             transferViewModel.selfIP = Utils.wifiIpAddress(requireContext())
-            Log.i(
-                javaClass.simpleName,
+            log.info(
                 "isGO: ${p0.isGroupOwner}" +
                     " owner ip: ${transferViewModel.groupOwnerIP}\n " +
                     "selfIP: ${transferViewModel.groupOwnerIP}"
@@ -424,7 +425,7 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
                 transferViewModel.initHandshake(p0)?.observe(viewLifecycleOwner) {
                     handshakeSuccess ->
                     if (!handshakeSuccess) {
-                        Log.w(javaClass.simpleName, "Handshake failed")
+                        log.warn("Handshake failed")
                         requireContext().showToastInCenter(
                             resources
                                 .getString(R.string.failed_to_handshake)
@@ -433,8 +434,7 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
                         binding.searchingText.text = getString(R.string.failed_to_handshake)
                         binding.scanButton.visibility = View.VISIBLE
                     } else {
-                        Log.w(
-                            javaClass.simpleName,
+                        log.warn(
                             "Handshake success, " +
                                 "peer ip: ${transferViewModel.peerIP}"
                         )
@@ -449,8 +449,7 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
                             .groupOwnerIP}\n " +
                             "selfIP: ${transferViewModel.groupOwnerIP}\npeerIp: " +
                             "${transferViewModel.peerIP}"
-                        Log.i(
-                            javaClass.simpleName,
+                        log.info(
                             "Connection established with group owner" +
                                 " id ${transferViewModel.groupOwnerIP}"
                         )
@@ -462,7 +461,7 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
 
     override fun onPeersAvailable(peers: WifiP2pDeviceList?) {
         // Handle peers list
-        Log.i(javaClass.simpleName, "Found peers: $peers")
+        log.info("Found peers: $peers")
         peers?.let {
             binding.stopScanButton.visibility = View.GONE
             if (it.deviceList.isEmpty()) {
@@ -475,7 +474,7 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
                 binding.devicesParent.removeAllViews()
                 peers.deviceList.forEach {
                     device ->
-                    Log.i(javaClass.simpleName, "Found peer: $device")
+                    log.info("Found peer: $device")
                     binding.devicesParent.addView(getPeerButton(device))
                 }
             }
@@ -495,8 +494,8 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
         }
     }
 
-    private fun getDeviceStatus(deviceStatus: Int): String? {
-        Log.d(javaClass.simpleName, "Peer status :$deviceStatus")
+    private fun getDeviceStatus(deviceStatus: Int): String {
+        log.info("Peer status :$deviceStatus")
         return when (deviceStatus) {
             WifiP2pDevice.AVAILABLE -> "Available"
             WifiP2pDevice.INVITED -> "Invited"

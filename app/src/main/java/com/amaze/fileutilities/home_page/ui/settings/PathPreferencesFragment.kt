@@ -22,11 +22,15 @@ import com.amaze.fileutilities.home_page.database.PathPreferencesDao
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.amaze.fileutilities.utilis.showFolderChooserDialog
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.lang.IllegalStateException
 import java.lang.ref.WeakReference
 
 class PathPreferencesFragment : PreferenceFragmentCompat() {
+
+    var log: Logger = LoggerFactory.getLogger(PathPreferencesFragment::class.java)
 
     private var preferencesList: PreferenceCategory? = null
     private var featureName: Int? = null
@@ -144,7 +148,7 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
                 val context: WeakReference<Context> = try {
                     WeakReference(requireContext())
                 } catch (e: IllegalStateException) {
-                    e.printStackTrace()
+                    log.warn("failed to get context", e)
                     WeakReference(null)
                 }
                 PathPreferences.deleteAnalysisData(
@@ -211,7 +215,7 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
                             val context: WeakReference<Context> = try {
                                 WeakReference(requireContext())
                             } catch (e: IllegalStateException) {
-                                e.printStackTrace()
+                                log.warn("failed to get context", e)
                                 WeakReference(null)
                             }
                             PathPreferences.deleteAnalysisData(

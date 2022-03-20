@@ -32,8 +32,10 @@ import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.Vector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.net.Uri;
-import android.util.Log;
 
 /**
  * A simple, tiny, nicely embeddable HTTP 1.0 (partially 1.1) server in Java
@@ -79,6 +81,7 @@ import android.util.Log;
  */
 public abstract class CloudStreamServer {
   private static final String TAG = "CloudStreamServer";
+  private static final Logger log = LoggerFactory.getLogger(CloudStreamServer.class);
 
   // ==================================================
   // API parts
@@ -180,7 +183,7 @@ public abstract class CloudStreamServer {
                   new HTTPSession(accept);
                 }
               } catch (IOException ioe) {
-                ioe.printStackTrace();
+                log.error("failed to start httpsession", ioe);
               }
             });
     myThread.setDaemon(true);
@@ -220,7 +223,7 @@ public abstract class CloudStreamServer {
       myServerSocket.close();
       myThread.join();
     } catch (IOException | InterruptedException ioe) {
-      ioe.printStackTrace();
+      log.warn("failed to stop server", ioe);
     }
   }
 
@@ -308,7 +311,7 @@ public abstract class CloudStreamServer {
             is.close();
             socket.close();
           } catch (IOException e) {
-            e.printStackTrace();
+            log.warn("failed to close socket", e);
           }
         }
       }
@@ -341,9 +344,9 @@ public abstract class CloudStreamServer {
 
         // Decode the header into parms and header java properties
         decodeHeader(hin, pre, parms, header);
-        Log.d(TAG, pre.toString());
-        Log.d(TAG, "Params: " + parms.toString());
-        Log.d(TAG, "Header: " + header.toString());
+        log.debug(pre.toString());
+        log.debug(TAG, "Params: " + parms.toString());
+        log.debug(TAG, "Header: " + header.toString());
         String method = pre.getProperty("method");
         String uri = pre.getProperty("uri");
 
