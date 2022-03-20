@@ -24,9 +24,12 @@ import java.util.Vector;
 import org.acra.ReportField;
 import org.acra.data.CrashReportData;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.amaze.fileutilities.BuildConfig;
 import com.amaze.fileutilities.R;
+import com.amaze.fileutilities.cast.cloud.CloudStreamServer;
 import com.amaze.fileutilities.home_page.MainActivity;
 import com.amaze.fileutilities.utilis.Utils;
 import com.google.android.material.snackbar.Snackbar;
@@ -39,7 +42,6 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -55,6 +57,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NavUtils;
 
 public class ErrorActivity extends AppCompatActivity {
+
+  private static final Logger log = LoggerFactory.getLogger(CloudStreamServer.class);
+
   // LOG TAGS
   public static final String TAG = ErrorActivity.class.toString();
   // BUNDLE TAGS
@@ -205,7 +210,7 @@ public class ErrorActivity extends AppCompatActivity {
 
     // print stack trace once again for debugging:
     for (final String e : errorList) {
-      Log.e(TAG, e);
+      log.warn(e);
     }
     //    initStatusBarResources(findViewById(R.id.parent_view));
   }
@@ -306,8 +311,7 @@ public class ErrorActivity extends AppCompatActivity {
       jsonMap.put("user_comment", userCommentBox.getText().toString());
       return new JSONObject(jsonMap).toString();
     } catch (final Throwable e) {
-      Log.e(TAG, "Could not build json");
-      e.printStackTrace();
+      log.warn("Could not build json", e);
     }
 
     return "";
@@ -378,8 +382,7 @@ public class ErrorActivity extends AppCompatActivity {
       htmlErrorReport.append("<hr>\n");
       return htmlErrorReport.toString();
     } catch (final Throwable e) {
-      Log.e(TAG, "Error while erroring: Could not build markdown");
-      e.printStackTrace();
+      log.warn("Error while erroring: Could not build markdown", e);
       return "";
     }
   }

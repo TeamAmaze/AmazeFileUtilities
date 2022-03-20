@@ -19,9 +19,10 @@ import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
@@ -29,6 +30,8 @@ import kotlin.collections.ArrayList
 class CursorUtils {
 
     companion object {
+        var log: Logger = LoggerFactory.getLogger(CursorUtils::class.java)
+
         private const val BASE_SELECTION_AUDIO =
             MediaStore.Audio.AudioColumns.IS_MUSIC + "=1" + " AND " +
                 MediaStore.Audio.AudioColumns.TITLE + " != ''"
@@ -346,8 +349,7 @@ class CursorUtils {
                     }
                 }
             } catch (e: Exception) {
-                Log.w(
-                    javaClass.simpleName,
+                log.warn(
                     "Error while fetching metadata for " +
                         "$mediaType",
                     e

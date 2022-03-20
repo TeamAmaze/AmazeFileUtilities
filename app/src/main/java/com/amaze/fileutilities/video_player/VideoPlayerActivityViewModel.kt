@@ -16,6 +16,8 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import org.jsoup.Jsoup
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import retrofit2.Retrofit
 import java.io.*
 import java.util.*
@@ -23,6 +25,8 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 
 class VideoPlayerActivityViewModel : ViewModel() {
+
+    var log: Logger = LoggerFactory.getLogger(VideoPlayerActivityViewModel::class.java)
 
     var playWhenReady = true
     var currentWindow = 0
@@ -76,7 +80,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
                         }
                         emit(languageAndCodeList)
                     } catch (e: Exception) {
-                        e.printStackTrace()
+                        log.warn("failed to fetch languges from remote for subtitles", e)
                         emit(
                             Collections.singletonList(
                                 LanguageSelectionAdapter
@@ -160,8 +164,10 @@ class VideoPlayerActivityViewModel : ViewModel() {
                 .baseUrl(SubtitlesApi.DOWNLOAD_SUBTITLES_BASE)
                 .build()
             val service = retrofit.create(SubtitlesApi::class.java)
+            log.debug("Download request for id $downloadId")
             service.downloadSubtitle(downloadId)?.execute()?.body()?.byteStream()?.use {
                 if (targetFile.parent != null) {
+                    log.debug("get subtitle download response from opensubtitles")
                     emit(extractSubtitles(targetFile.parent!!, it))
                 } else {
                     emit("")
@@ -180,11 +186,12 @@ class VideoPlayerActivityViewModel : ViewModel() {
                 val filePath: String = parentPath + File.separator + entry.name
                 if (!entry.isDirectory && !entry.name.endsWith(".nfo")) {
                     // if the entry is a file, extracts it
+                    log.debug("Found zip entry for subtitles ${entry.name}")
                     extractPath = try {
                         extractFile(zipIn, filePath)
                         filePath
                     } catch (e: IOException) {
-                        e.printStackTrace()
+                        log.warn("failed to extract subtitles from downloaded file", e)
                         ""
                     }
                     break
@@ -201,6 +208,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
         BufferedOutputStream(FileOutputStream(filePath)).use {
             bos ->
             val bytesIn = ByteArray(1024)
+            log.debug("Extract subtitle zip entry at $filePath")
             var read = 0
             while (zipIn.read(bytesIn).also { read = it } != -1) {
                 bos.write(bytesIn, 0, read)

@@ -13,9 +13,13 @@ package com.amaze.fileutilities.home_page.ui.files
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
+import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.*
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.share.ShareAdapter
+import com.amaze.fileutilities.utilis.share.getShareIntents
+import com.google.common.io.ByteStreams
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import com.google.mlkit.vision.text.TextRecognition
@@ -24,6 +28,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.*
 import java.lang.ref.WeakReference
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FilesViewModel(val applicationContext: Application) :
     AndroidViewModel(applicationContext) {
@@ -330,11 +336,14 @@ class FilesViewModel(val applicationContext: Application) :
             }.forEach {
                 if (dao.findByPath(it.path) == null) {
                     val isBlur = ImgUtils.isImageBlur(it.path)
-                    dao.insert(
-                        BlurAnalysis(
-                            it.path, isBlur
+                    isBlur?.let {
+                        isBlur ->
+                        dao.insert(
+                            BlurAnalysis(
+                                it.path, isBlur
+                            )
                         )
-                    )
+                    }
                 }
             }
             isImageBlurAnalysing = false
@@ -403,11 +412,14 @@ class FilesViewModel(val applicationContext: Application) :
                     val isLowLight = ImgUtils.isImageLowLight(
                         it.path
                     )
-                    dao.insert(
-                        LowLightAnalysis(
-                            it.path, isLowLight
+                    isLowLight?.let {
+                        isLowLight ->
+                        dao.insert(
+                            LowLightAnalysis(
+                                it.path, isLowLight
+                            )
                         )
-                    )
+                    }
                 }
             }
             isImageLowLightAnalysing = false
@@ -498,10 +510,54 @@ class FilesViewModel(val applicationContext: Application) :
             emit(dao.getAll())
         }
 
+    fun getShareLogsAdapter(): LiveData<ShareAdapter?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+            emit(null)
+            val outputPath = copyLogsFileToInternalStorage()
+            if (outputPath != null) {
+                log.info("Sharing logs file at path $outputPath")
+                val logsFile = File(outputPath)
+                emit(
+                    getShareIntents(
+                        Collections.singletonList(Uri.fromFile(logsFile)),
+                        applicationContext
+                    )
+                )
+            } else {
+                applicationContext.showToastInCenter(
+                    applicationContext.resources
+                        .getString(R.string.failed_to_extract_logs)
+                )
+                log.warn("Failed to share logs file")
+            }
+        }
+    }
+
     override fun onCleared() {
 //        faceDetector.close()
 //        textRecognizer.close()
         super.onCleared()
+    }
+
+    /**
+     * Copies logs file to internal storage and returns the written file path
+     */
+    private fun copyLogsFileToInternalStorage(): String? {
+        applicationContext.getExternalStorageDirectory()?.let {
+            internalStoragePath ->
+            FileInputStream(File("${applicationContext.filesDir}/logs.txt")).use {
+                inputStream ->
+                val file = File(internalStoragePath.path + "/AmazeFileUtils/files")
+                file.mkdirs()
+                val logFile = File(file, "logs.txt")
+                FileOutputStream(logFile).use {
+                    outputStream ->
+                    ByteStreams.copy(inputStream, outputStream)
+                }
+                return logFile.path
+            }
+        }
+        return null
     }
 
     private fun processInternalStorageAnalysis(

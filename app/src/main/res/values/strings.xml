@@ -271,4 +271,8 @@
     <string name="choose_different_subtitle">Can\'t download, choose some other subtitles</string>
     <string name="subtitles_applied">Subtitles applied</string>
     <string name="failed_to_download">Failed to download</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="share_logs">Share logs</string>
+    <string name="no_apps_found_to_share">No apps found to share</string>
+    <string name="failed_to_extract_logs">Failed to extract logs file</string>
 </resources>

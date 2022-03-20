@@ -17,6 +17,7 @@ import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.MediaStore.Audio.AudioColumns
+import com.amaze.fileutilities.utilis.log
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -98,7 +99,7 @@ class AudioUtils {
                     sortOrder
                 )
             } catch (e: SecurityException) {
-                e.printStackTrace()
+                log.warn("cannot query external content uri, not allowed", e)
                 null
             }
         }

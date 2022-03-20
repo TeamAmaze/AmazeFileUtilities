@@ -11,7 +11,6 @@
 package com.amaze.fileutilities.epub_viewer
 
 import android.os.Bundle
-import android.util.Log
 import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.EpubViewerActivityBinding
@@ -19,8 +18,12 @@ import com.amaze.fileutilities.utilis.getFileFromUri
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.folioreader.Config
 import com.folioreader.FolioReader
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class EpubViewerActivity : PermissionsActivity() {
+
+    var log: Logger = LoggerFactory.getLogger(EpubViewerActivity::class.java)
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         EpubViewerActivityBinding.inflate(layoutInflater)
@@ -36,8 +39,7 @@ class EpubViewerActivity : PermissionsActivity() {
             if (epubUri == null) {
                 showToastInCenter(resources.getString(R.string.unsupported_content))
             }
-            Log.i(
-                javaClass.simpleName,
+            log.info(
                 "Loading epub from path ${epubUri?.path} " +
                     "and mimetype $mimeType"
             )

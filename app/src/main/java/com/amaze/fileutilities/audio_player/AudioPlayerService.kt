@@ -24,7 +24,6 @@ import android.os.PowerManager.WakeLock
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
 import android.widget.Toast
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotification
@@ -35,10 +34,14 @@ import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.audio.AudioAttributes
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.lang.ref.WeakReference
 
 class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatingCallback {
+
+    var log: Logger = LoggerFactory.getLogger(AudioPlayerService::class.java)
 
     companion object {
         const val TAG_BROADCAST_AUDIO_SERVICE_CANCEL = "audio_service_cancel_broadcast"
@@ -119,7 +122,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                 uriList = intentUriList
             }
             if (currentUri == null) {
-                Log.w(javaClass.name, "No intent uri to start audio service")
+                log.warn("No intent uri to start audio service")
                 return super.onStartCommand(intent, flags, startId)
             }
             when {
@@ -185,11 +188,11 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                             }
                         }
                         ACTION_SHUFFLE -> {
-                            Log.i(javaClass.simpleName, "cycling shuffle")
+                            log.info("cycling shuffle")
                             cycleShuffle()
                         }
                         ACTION_REPEAT -> {
-                            Log.i(javaClass.simpleName, "cycling repeat")
+                            log.info("cycling repeat")
                             cycleRepeat()
                         }
                         else -> {
@@ -215,7 +218,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i(javaClass.simpleName, "destroying audio player service")
+        log.info("destroying audio player service")
         closeAudioEffectSession()
         stopExoPlayer()
         wakeLock!!.release()

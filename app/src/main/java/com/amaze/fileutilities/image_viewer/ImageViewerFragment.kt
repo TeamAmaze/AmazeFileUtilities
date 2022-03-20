@@ -12,7 +12,6 @@ package com.amaze.fileutilities.image_viewer
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
 import androidx.documentfile.provider.DocumentFile
@@ -21,8 +20,13 @@ import com.amaze.fileutilities.databinding.QuickViewFragmentBinding
 import com.amaze.fileutilities.utilis.AbstractMediaFragment
 import com.amaze.fileutilities.utilis.getFileFromUri
 import com.bumptech.glide.Glide
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import xyz.klinker.android.drag_dismiss.DragDismissIntentBuilder
 
 class ImageViewerFragment : AbstractMediaFragment() {
+
+    var log: Logger = LoggerFactory.getLogger(ImageViewerFragment::class.java)
 
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         QuickViewFragmentBinding.inflate(layoutInflater)
@@ -83,6 +87,16 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 if (!quickViewType?.uri?.authority.equals(requireContext().packageName, true)) {
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
+
+                // add elastic activity properties
+                DragDismissIntentBuilder(context)
+                    .setTheme(DragDismissIntentBuilder.Theme.DARK)	// LIGHT (default), DARK, BLACK, DAY_NIGHT, SYSTEM_DEFAULT
+//                    .setPrimaryColorResource(R.color.colorPrimary)	// defaults to a semi-transparent black
+                    .setShowToolbar(false) // defaults to true
+                    .setFullscreenOnTablets(false) // defaults to false, tablets will have padding on each side
+                    .setDragElasticity(DragDismissIntentBuilder.DragElasticity.XXLARGE) // Larger elasticities will make it easier to dismiss.
+                    .setDrawUnderStatusBar(false) // defaults to false. Change to true if you don't want me to handle the content margin for the Activity. Does not apply to the RecyclerView Activities
+                    .build(intent)
                 startActivity(intent)
                 activity?.finish()
             }
@@ -118,8 +132,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
     }
 
     private fun showImage(localTypeModel: LocalImageModel) {
-        Log.i(
-            javaClass.simpleName,
+        log.info(
             "Show image in fragment ${localTypeModel.uri.path} " +
                 "and mimetype ${localTypeModel.mimeType}"
         )
