@@ -105,9 +105,7 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
 //    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
     implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
-    implementation('com.github.VishalNehra:FolioReader-Android:0.5.5') {
-        exclude group: 'org.slf4j', module: 'slf4j-android'
-    }
+    implementation 'com.github.VishalNehra:FolioReader-Android:0.5.6'
     implementation 'org.zwobble.mammoth:mammoth:1.4.2'
     implementation 'me.zhanghai.android.fastscroll:library:1.1.7'
     implementation "ch.acra:acra-core:5.7.0"
