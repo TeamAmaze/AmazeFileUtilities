@@ -16,6 +16,7 @@ import androidx.lifecycle.*
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.*
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
+import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
 import com.amaze.fileutilities.utilis.share.ShareAdapter
 import com.amaze.fileutilities.utilis.share.getShareIntents
@@ -547,7 +548,10 @@ class FilesViewModel(val applicationContext: Application) :
             internalStoragePath ->
             FileInputStream(File("${applicationContext.filesDir}/logs.txt")).use {
                 inputStream ->
-                val file = File(internalStoragePath.path + "/AmazeFileUtils/files")
+                val file = File(
+                    internalStoragePath.path +
+                        "/${TransferFragment.RECEIVER_BASE_PATH}/files"
+                )
                 file.mkdirs()
                 val logFile = File(file, "logs.txt")
                 FileOutputStream(logFile).use {
