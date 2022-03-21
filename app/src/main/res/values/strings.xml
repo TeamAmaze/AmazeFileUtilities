@@ -275,4 +275,5 @@
     <string name="share_logs">Share logs</string>
     <string name="no_apps_found_to_share">No apps found to share</string>
     <string name="failed_to_extract_logs">Failed to extract logs file</string>
+    <string name="continue_playing">Continue playing</string>
 </resources>
