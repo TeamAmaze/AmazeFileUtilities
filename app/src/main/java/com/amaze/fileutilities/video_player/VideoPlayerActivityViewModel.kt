@@ -246,9 +246,9 @@ class VideoPlayerActivityViewModel : ViewModel() {
             )
             if (!isRetry) {
                 log.warn(
-                    "Retrying to extract subtitle at fallback path " +
-                        "$fallbackSubtitleDownloadPath"
+                    "Retrying to extract subtitle at fallback path $fallbackSubtitleDownloadPath"
                 )
+                File(fallbackSubtitleDownloadPath).mkdirs()
                 return extractFile(
                     zipIn, fallbackSubtitleDownloadPath,
                     true, fallbackSubtitleDownloadPath
