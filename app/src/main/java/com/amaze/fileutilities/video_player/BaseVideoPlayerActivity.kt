@@ -44,6 +44,7 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerService
 import com.amaze.fileutilities.databinding.VideoPlayerActivityBinding
 import com.amaze.fileutilities.home_page.CustomToolbar
+import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
@@ -82,6 +83,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
     private val verticalSwipeThreshold = 75
     private val horizontalSwipeThreshold = 150
     private var onStopCalled = false
+    private lateinit var appDatabase: AppDatabase
 
     private var mAudioManager: AudioManager? = null
     private var mAttrs: AudioAttributes? = null
@@ -111,6 +113,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
+        appDatabase = AppDatabase.getInstance(applicationContext)
         videoPlayerViewModel = ViewModelProvider(this)
             .get(VideoPlayerActivityViewModel::class.java)
 
@@ -143,6 +146,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             viewBinding.volumeHintParent.bringToFront()
             viewBinding.brightnessHintParent.bringToFront()
             viewBinding.lockUi.bringToFront()
+            viewBinding.continuePlaying.bringToFront()
         }
     }
 
@@ -165,11 +169,26 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
     }
 
     override fun onDestroy() {
-        super.onDestroy()
+        if (!isDialogActivity() &&
+            videoPlayerViewModel?.isContinuePlayingDisplayed == true
+        ) {
+            player?.currentPosition?.let {
+                if (it > 60_000L) {
+                    // save state only after 1 minute of playback
+                    videoPlayerViewModel?.savePlaybackState(
+                        appDatabase.videoPlayerStateDao(),
+                        (it - 10000L).coerceAtLeast(0L)
+                    )
+                }
+            }
+        }
+        continuePlayingTimer.cancel()
+        lockUiVisibilityCounter?.cancel()
         releasePlayer()
         pipActionsReceiver.also { receiver ->
             unregisterReceiver(receiver)
         }
+        super.onDestroy()
     }
 
     var lockUiVisibilityCounter: CountDownTimer? = null
@@ -1013,6 +1032,22 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         }
     }
 
+    private val continuePlayingTimer = object : CountDownTimer(
+        10000,
+        10000
+    ) {
+        override fun onTick(millisUntilFinished: Long) {
+            // do nothing
+        }
+
+        override fun onFinish() {
+            if (viewBinding.continuePlaying.isVisible) {
+                viewBinding.continuePlaying.hideFade(300)
+                videoPlayerViewModel?.isContinuePlayingDisplayed = true
+            }
+        }
+    }
+
     private fun initializePlayer() {
         player?.let {
             exoPlayer ->
@@ -1020,6 +1055,41 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 initializeAttributes()
                 exoPlayer.setAudioAttributes(mAttrs!!, true)
                 exoPlayer.playWhenReady = it.playWhenReady
+                if (videoPlayerViewModel?.isContinuePlayingDisplayed == false &&
+                    !isDialogActivity()
+                ) {
+                    videoPlayerViewModel?.getPlaybackSavedState(
+                        appDatabase
+                            .videoPlayerStateDao()
+                    )?.observe(this) {
+                        playbackState ->
+                        if (playbackState != null) {
+                            log.info(
+                                "found existing saved playback state for" +
+                                    " ${playbackState.filePath} at " +
+                                    "${playbackState.playbackPosition}"
+                            )
+                            continuePlayingTimer.start()
+                            viewBinding.continuePlaying.showFade(300)
+                            viewBinding.continuePlaying.setOnClickListener {
+                                _ ->
+                                exoPlayer.seekTo(
+                                    it.currentWindow,
+                                    playbackState.playbackPosition
+                                )
+                                viewBinding.continuePlaying.hideFade(300)
+                                videoPlayerViewModel?.isContinuePlayingDisplayed = true
+                            }
+                            viewBinding.closeContinuePlaying.setOnClickListener {
+                                viewBinding.continuePlaying.hideFade(300)
+                                videoPlayerViewModel?.isContinuePlayingDisplayed = true
+                            }
+                        } else {
+                            // reset flag in case no playback state found
+                            videoPlayerViewModel?.isContinuePlayingDisplayed = true
+                        }
+                    }
+                }
                 exoPlayer.seekTo(it.currentWindow, it.playbackPosition)
                 exoPlayer.prepare()
                 val param = PlaybackParameters(videoPlayerViewModel?.playbackSpeed ?: 1f)
