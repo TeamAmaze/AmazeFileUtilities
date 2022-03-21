@@ -14,6 +14,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import com.amaze.fileutilities.home_page.database.VideoPlayerState
+import com.amaze.fileutilities.home_page.database.VideoPlayerStateDao
 import kotlinx.coroutines.Dispatchers
 import org.jsoup.Jsoup
 import org.slf4j.Logger
@@ -23,6 +25,7 @@ import java.io.*
 import java.util.*
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
+import kotlin.coroutines.coroutineContext
 
 class VideoPlayerActivityViewModel : ViewModel() {
 
@@ -40,6 +43,22 @@ class VideoPlayerActivityViewModel : ViewModel() {
     var isSubtitleAvailable = false
     var isSubtitleEnabled = false
     var subtitleFilePath: String? = null
+    var isContinuePlayingDisplayed = false
+
+    fun getPlaybackSavedState(videoPlayerStateDao: VideoPlayerStateDao):
+        LiveData<VideoPlayerState?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            videoModel?.uri?.path?.let {
+                emit(videoPlayerStateDao.getStateByUriPath(it))
+            }
+        }
+    }
+
+    fun savePlaybackState(videoPlayerStateDao: VideoPlayerStateDao, playbackPosition: Long) {
+        videoModel?.uri?.path?.let {
+            videoPlayerStateDao.insert(VideoPlayerState(it, playbackPosition))
+        }
+    }
 
     fun getSubtitlesAvailableLanguages(): LiveData<List<LanguageSelectionAdapter
             .SubtitleLanguageAndCode>?> {

@@ -16,6 +16,7 @@
     <color name="white_grey_1">#464a5b</color>
     <color name="navy_blue">#1a1e34</color>
     <color name="highlight_yellow">#fbc33d</color>
+    <color name="highlight_yellow_70">#70fbc33d</color>
     <color name="highlight_yellow_trans">#33FFEB6B</color>
     <color name="navy_blue_translucent_30">#30FFFFFF</color>
     <color name="navy_blue_alt">#262a3e</color>
