@@ -190,20 +190,15 @@ class VideoPlayerActivityViewModel : ViewModel() {
             var entry: ZipEntry? = zipIn.nextEntry
             // iterates over entries in the zip file
             while (entry != null) {
-                val filePath: String = parentPath + File.separator + entry.name
+                val filePath: String = parentPath
                 if (!entry.isDirectory && !entry.name.endsWith(".nfo")) {
                     // if the entry is a file, extracts it
                     log.debug("Found zip entry for subtitles ${entry.name}")
                     extractPath = try {
-                        if (extractFile(
-                                zipIn, filePath, false,
-                                fallbackSubtitleDownloadPath
-                            )
-                        ) {
-                            filePath
-                        } else {
-                            ""
-                        }
+                        extractFile(
+                            zipIn, filePath, entry.name, false,
+                            fallbackSubtitleDownloadPath
+                        )
                     } catch (e: IOException) {
                         log.warn("failed to extract subtitles from downloaded file", e)
                         ""
@@ -220,11 +215,13 @@ class VideoPlayerActivityViewModel : ViewModel() {
     @Throws(IOException::class)
     private fun extractFile(
         zipIn: ZipInputStream,
-        filePath: String,
+        folderPath: String,
+        fileName: String,
         isRetry: Boolean,
         fallbackSubtitleDownloadPath: String
-    ): Boolean {
+    ): String {
         return try {
+            val filePath = folderPath + File.separator + fileName
             BufferedOutputStream(FileOutputStream(filePath)).use {
                 bos ->
                 val bytesIn = ByteArray(1024)
@@ -234,7 +231,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
                     bos.write(bytesIn, 0, read)
                 }
             }
-            return true
+            return filePath
         } catch (e: FileNotFoundException) {
             if (isRetry) {
                 log.warn("Exhausted retries, failing to get subtitles")
@@ -250,12 +247,12 @@ class VideoPlayerActivityViewModel : ViewModel() {
                 )
                 File(fallbackSubtitleDownloadPath).mkdirs()
                 return extractFile(
-                    zipIn, fallbackSubtitleDownloadPath,
+                    zipIn, fallbackSubtitleDownloadPath, fileName,
                     true, fallbackSubtitleDownloadPath
                 )
             } else {
                 log.warn("Exhausted retries, failing to get subtitles")
-                false
+                ""
             }
         }
     }
