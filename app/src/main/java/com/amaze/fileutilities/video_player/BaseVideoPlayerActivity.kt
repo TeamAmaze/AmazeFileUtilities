@@ -19,7 +19,6 @@ import android.content.res.Configuration
 import android.graphics.Point
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Icon
-import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -54,7 +53,6 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.MediaItem.SubtitleConfiguration
 import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.audio.AudioAttributes
-import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.util.MimeTypes
 import com.google.common.collect.ImmutableList
 import org.slf4j.Logger
@@ -76,7 +74,8 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
     private var diffY = 0L
     private var downX = 0f
     private var downY = 0f
-    private var currentBrightness = 0.5f
+    private var currentBrightness = 0.3f
+    private var currentVolume = 0.3f
     private var size: Point? = null
     private var deviceDisplay: Display? = null
     private var gestureSkipStepMs: Int = 200
@@ -85,7 +84,6 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
     private var onStopCalled = false
     private lateinit var appDatabase: AppDatabase
 
-    private var mAudioManager: AudioManager? = null
     private var mAttrs: AudioAttributes? = null
 
     private var localVideoModel: LocalVideoModel? = null
@@ -138,8 +136,6 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             resources.configuration.orientation
                 == Configuration.ORIENTATION_LANDSCAPE
         )
-        mAudioManager =
-            applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         getScreenSize()
         if (!isDialogActivity()) {
             viewBinding.videoView.setOnTouchListener(this)
@@ -163,6 +159,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
     override fun onResume() {
         super.onResume()
         onStopCalled = false
+        initializePlayer()
         pipActionsReceiver.also { receiver ->
             registerReceiver(receiver, pipIntentFilter)
         }
@@ -403,7 +400,14 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             videoView.findViewById<ImageView>(R.id.fit_to_screen)
                 .setOnClickListener {
                     videoPlayerViewModel?.fitToScreen?.also {
-                        if (!it) {
+                        if (it == 4) {
+                            videoPlayerViewModel?.fitToScreen = 0
+                        } else {
+                            videoPlayerViewModel?.fitToScreen = it + 1
+                        }
+                        viewBinding.videoView.resizeMode = videoPlayerViewModel?.fitToScreen ?: 0
+
+                        /*if (!it) {
                             viewBinding.videoView.resizeMode =
                                 AspectRatioFrameLayout.RESIZE_MODE_ZOOM
                             videoPlayerViewModel?.fitToScreen = true
@@ -411,7 +415,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                             viewBinding.videoView.resizeMode =
                                 AspectRatioFrameLayout.RESIZE_MODE_FIT
                             videoPlayerViewModel?.fitToScreen = false
-                        }
+                        }*/
                     }
                 }
             videoView.findViewById<ImageView>(R.id.pip_video_player).setOnClickListener {
@@ -765,20 +769,17 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
 
     private fun invalidateVolume(doIncrease: Boolean) {
         if (doIncrease) {
-            mAudioManager!!.adjustVolume(
-                AudioManager.ADJUST_RAISE,
-                AudioManager.FLAG_PLAY_SOUND
-            )
+            if (currentVolume <= 0.993f) {
+                currentVolume += 0.007f
+            }
         } else {
-            mAudioManager!!.adjustVolume(
-                AudioManager.ADJUST_LOWER,
-                AudioManager.FLAG_PLAY_SOUND
-            )
+            if (currentVolume >= 0.007f) {
+                currentVolume -= 0.007f
+            }
         }
-        val currentVolume: Int = mAudioManager!!.getStreamVolume(AudioManager.STREAM_MUSIC)
-        val maxVolume: Int = mAudioManager!!.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
-        viewBinding.volumeProgress.max = maxVolume
-        viewBinding.volumeProgress.progress = currentVolume
+        player?.volume = currentVolume
+        viewBinding.volumeProgress.max = 100
+        viewBinding.volumeProgress.progress = (currentVolume * 100).toInt()
     }
 
     private fun getScreenSize() {
@@ -1026,8 +1027,9 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 it.playbackPosition = this.currentPosition
                 it.currentWindow = this.currentWindowIndex
                 it.playWhenReady = this.playWhenReady
+                it.currentlyPlaying = this.isPlaying
 //                this.playWhenReady = false
-//                this.pause()
+                this.pause()
             }
         }
     }
@@ -1094,7 +1096,11 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 exoPlayer.prepare()
                 val param = PlaybackParameters(videoPlayerViewModel?.playbackSpeed ?: 1f)
                 exoPlayer.playbackParameters = param
-                exoPlayer.play()
+                if (videoPlayerViewModel?.currentlyPlaying == true) {
+                    exoPlayer.play()
+                } else {
+                    exoPlayer.pause()
+                }
             }
 
             /*val mediaSession = MediaSessionCompat(this, this.packageName)
