@@ -35,8 +35,9 @@ class VideoPlayerActivityViewModel : ViewModel() {
     var currentWindow = 0
     var playbackPosition = 0L
     var videoModel: LocalVideoModel? = null
+    var currentlyPlaying = true
     var fullscreen = false
-    var fitToScreen = false
+    var fitToScreen = 0
     var isInPictureInPicture = false
     var playbackSpeed = 1f
     var isUiLocked = false
