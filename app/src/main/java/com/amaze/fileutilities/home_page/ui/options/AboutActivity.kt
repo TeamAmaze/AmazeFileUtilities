@@ -53,10 +53,19 @@ class AboutActivity : AppCompatActivity() {
             libsBuilder.start(this)
         }
         binding.shareLogs.setOnClickListener {
+            var processed = false
             viewModel.getShareLogsAdapter().observe(this) {
                 shareAdapter ->
                 if (shareAdapter == null) {
-                    this.showToastInCenter(resources.getString(R.string.please_wait))
+                    if (processed) {
+                        showToastInCenter(
+                            applicationContext.resources
+                                .getString(R.string.failed_to_extract_logs)
+                        )
+                    } else {
+                        this.showToastInCenter(resources.getString(R.string.please_wait))
+                        processed = true
+                    }
                 } else {
                     showShareDialog(this, this.layoutInflater, shareAdapter)
                 }

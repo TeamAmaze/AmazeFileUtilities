@@ -13,7 +13,6 @@ package com.amaze.fileutilities.home_page.ui.files
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
-import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.*
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
@@ -525,11 +524,8 @@ class FilesViewModel(val applicationContext: Application) :
                     )
                 )
             } else {
-                applicationContext.showToastInCenter(
-                    applicationContext.resources
-                        .getString(R.string.failed_to_extract_logs)
-                )
                 log.warn("Failed to share logs file")
+                emit(null)
             }
         }
     }
