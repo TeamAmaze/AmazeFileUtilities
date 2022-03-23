@@ -140,7 +140,7 @@ class FileUtils {
         private val DIR_SEPARATOR = Pattern.compile("/")
 
         @TargetApi(VERSION_CODES.N)
-        internal fun getStorageDirectoriesNew(context: Context): StorageDirectoryParcelable? {
+        internal fun getStorageDirectoriesNew(context: Context): StorageDirectoryParcelable {
             val volumes: ArrayList<StorageDirectoryParcelable> =
                 ArrayList<StorageDirectoryParcelable>()
             val sm: StorageManager = context.getSystemService(StorageManager::class.java)
@@ -158,9 +158,14 @@ class FileUtils {
                 if (INTERNAL_SHARED_STORAGE.equals(name, ignoreCase = true)) {
                     name = context.resources.getString(R.string.internal_storage)
                     return StorageDirectoryParcelable(file.path, name)
+                } else if (!volume.isRemovable) {
+                    return StorageDirectoryParcelable(file.path, name)
                 }
             }
-            return null
+            throw RuntimeException(
+                "Failed to get internal storage, " +
+                    "all storages available ${sm.storageVolumes}"
+            )
         }
 
         /**
