@@ -18,6 +18,7 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Point
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
@@ -83,6 +84,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
     private val horizontalSwipeThreshold = 150
     private var onStopCalled = false
     private lateinit var appDatabase: AppDatabase
+    private var rotationDisableView: ImageView? = null
 
     private var mAttrs: AudioAttributes? = null
 
@@ -148,11 +150,11 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
 
     override fun onPause() {
         super.onPause()
-        savePlayerState()
     }
 
     override fun onStop() {
         super.onStop()
+        savePlayerState()
         onStopCalled = true
     }
 
@@ -381,6 +383,21 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                         )
                 )
             }
+            rotationDisableView = customToolbar.addActionButton(getToolbarRotationDrawable()) {
+                videoPlayerViewModel?.isRotationLocked = !(
+                    videoPlayerViewModel?.isRotationLocked
+                        ?: true
+                    )
+                if (videoPlayerViewModel?.isRotationLocked == true) {
+                    Utils.disableScreenRotation(this@BaseVideoPlayerActivity)
+                } else {
+                    Utils.enableScreenRotation(this@BaseVideoPlayerActivity)
+                }
+                rotationDisableView?.let {
+                    imageView ->
+                    customToolbar.updateActionButton(imageView, getToolbarRotationDrawable())
+                }
+            }
             videoView.findViewById<FrameLayout>(R.id.exo_fullscreen_button).visibility = View.GONE
             videoView.findViewById<ImageView>(R.id.fit_to_screen).visibility = View.VISIBLE
             videoView.findViewById<ImageView>(R.id.pip_video_player).visibility = View.VISIBLE
@@ -502,6 +519,14 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         savePlayerState()
         setMediaItemWithSubtitle(file)
         initializePlayer()
+    }
+
+    private fun getToolbarRotationDrawable(): Drawable {
+        return if (videoPlayerViewModel?.isRotationLocked == true) {
+            resources.getDrawable(R.drawable.ic_round_screen_rotation_24)
+        } else {
+            resources.getDrawable(R.drawable.ic_round_screen_lock_rotation_24)
+        }
     }
 
     private fun setupSyncSubtitlesPopupWindow(): PopupWindow {
