@@ -45,6 +45,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
     var isSubtitleEnabled = false
     var subtitleFilePath: String? = null
     var isContinuePlayingDisplayed = false
+    var isRotationLocked = false
 
     fun getPlaybackSavedState(videoPlayerStateDao: VideoPlayerStateDao):
         LiveData<VideoPlayerState?> {
@@ -89,14 +90,34 @@ class VideoPlayerActivityViewModel : ViewModel() {
                                 .SubtitleLanguageAndCode("Languages", "all")
                         )
                         for (i in languageCodes.indices) {
-                            languageAndCodeList
-                                .add(
-                                    LanguageSelectionAdapter
-                                        .SubtitleLanguageAndCode(
-                                            languageValues[i],
-                                            languageCodes[i]
-                                        )
-                                )
+                            // first add english on top
+                            if (languageValues[i].equals("english", true) ||
+                                languageCodes[i].equals("eng", true)
+                            ) {
+                                languageAndCodeList
+                                    .add(
+                                        LanguageSelectionAdapter
+                                            .SubtitleLanguageAndCode(
+                                                languageValues[i],
+                                                languageCodes[i]
+                                            )
+                                    )
+                                break
+                            }
+                        }
+                        for (i in languageCodes.indices) {
+                            if (!languageValues[i].equals("english", true) &&
+                                !languageCodes[i].equals("eng", true)
+                            ) {
+                                languageAndCodeList
+                                    .add(
+                                        LanguageSelectionAdapter
+                                            .SubtitleLanguageAndCode(
+                                                languageValues[i],
+                                                languageCodes[i]
+                                            )
+                                    )
+                            }
                         }
                         emit(languageAndCodeList)
                     } catch (e: Exception) {
