@@ -21,15 +21,15 @@
         />
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/zero_dp"
         android:layout_height="match_parent"
         app:layout_constraintLeft_toRightOf="@id/back_button"
+        app:layout_constraintRight_toLeftOf="@id/action_buttons_parent"
         android:layout_marginStart="@dimen/material_generic"
         android:layout_marginEnd="@dimen/material_generic"
         android:gravity="center_vertical"
         android:textColor="@color/white"
         android:ellipsize="end"
-        android:maxEms="10"
         android:maxLines="1"
         android:textSize="@dimen/eighteen_sp"
         android:textStyle="bold"

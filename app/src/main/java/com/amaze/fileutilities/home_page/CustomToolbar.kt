@@ -30,6 +30,7 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) : ConstraintLayout(c
     private val backButton: ImageView
     private val titleTextView: TextView
     private val overflowButton: ImageView
+    private var actionButtonList: MutableList<ImageView>
     private val actionButtonsParent: LinearLayout
 
     init {
@@ -51,6 +52,7 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) : ConstraintLayout(c
         overflowButton = getChildAt(3) as ImageView
         titleTextView.text = titleText
         setBackgroundColor(bgColor)
+        actionButtonList = ArrayList()
     }
 
     fun setTitle(title: String) {
@@ -61,13 +63,27 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) : ConstraintLayout(c
         backButton.setOnClickListener { callback.invoke() }
     }
 
-    fun addActionButton(drawable: Drawable, onPress: () -> Unit) {
+    fun addActionButton(drawable: Drawable, onPress: () -> Unit): ImageView {
         val imageView = getImageView(drawable)
         imageView.setOnClickListener {
             onPress.invoke()
         }
         actionButtonsParent.addView(imageView)
+        actionButtonList.add(imageView)
         actionButtonsParent.invalidate()
+        this.invalidate()
+        return imageView
+    }
+
+    fun updateActionButton(imageView: ImageView, drawable: Drawable) {
+        actionButtonList.forEach {
+            if (it.drawable == imageView.drawable) {
+                imageView.setImageDrawable(drawable)
+                actionButtonsParent.invalidate()
+                this.invalidate()
+                return
+            }
+        }
     }
 
     fun setOverflowPopup(
