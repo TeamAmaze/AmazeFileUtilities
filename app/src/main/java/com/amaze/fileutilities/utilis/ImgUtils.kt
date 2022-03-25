@@ -117,49 +117,58 @@ class ImgUtils {
         ) {
             TimeUnit.SECONDS.sleep(1L)
 //            val image = InputImage.fromBitmap(bitmap, 0)
-            val image = InputImage.fromFilePath(context, uri)
-            faceDetector.process(image)
-                .addOnSuccessListener { faces ->
-                    // Task completed successfully
-                    // ...
-                    var isSad = false
-                    var isDistracted = false
-                    var isSleeping = false
-                    faces.forEach {
-                        face ->
-                        face.smilingProbability?.let {
-                            if (it < 0.7) {
-                                isSad = true
+            try {
+
+                val image = InputImage.fromFilePath(context, uri)
+                faceDetector.process(image)
+                    .addOnSuccessListener { faces ->
+                        // Task completed successfully
+                        // ...
+                        var isSad = false
+                        var isDistracted = false
+                        var isSleeping = false
+                        faces.forEach {
+                            face ->
+                            face.smilingProbability?.let {
+                                if (it < 0.7) {
+                                    isSad = true
+                                }
+                            }
+                            if (face.headEulerAngleX > 36 || face.headEulerAngleX < -36 ||
+                                face.headEulerAngleY > 36 || face.headEulerAngleY < -36 ||
+                                face.headEulerAngleZ > 36 || face.headEulerAngleZ < -36
+                            ) {
+                                isDistracted = true
+                            }
+                            face.leftEyeOpenProbability?.let {
+                                if (it < 0.7) {
+                                    isSleeping = true
+                                }
+                            }
+                            face.rightEyeOpenProbability?.let {
+                                if (it < 0.7) {
+                                    isSleeping = true
+                                }
                             }
                         }
-                        if (face.headEulerAngleX > 36 || face.headEulerAngleX < -36 ||
-                            face.headEulerAngleY > 36 || face.headEulerAngleY < -36 ||
-                            face.headEulerAngleZ > 36 || face.headEulerAngleZ < -36
-                        ) {
-                            isDistracted = true
-                        }
-                        face.leftEyeOpenProbability?.let {
-                            if (it < 0.7) {
-                                isSleeping = true
-                            }
-                        }
-                        face.rightEyeOpenProbability?.let {
-                            if (it < 0.7) {
-                                isSleeping = true
-                            }
-                        }
+                        callback.invoke(
+                            true,
+                            ImageFeatures(isSad, isSleeping, isDistracted, faces.count())
+                        )
                     }
-                    callback.invoke(
-                        true,
-                        ImageFeatures(isSad, isSleeping, isDistracted, faces.count())
-                    )
-                }
-                .addOnFailureListener { e ->
-                    // Task failed with an exception
-                    // ...
-                    log.warn("get image features failure", e)
-                    callback.invoke(false, null)
-                }
+                    .addOnFailureListener { e ->
+                        // Task failed with an exception
+                        // ...
+                        log.warn("get image features failure", e)
+                        callback.invoke(false, null)
+                    }
+            } catch (e: Exception) {
+                log.warn("Failed to check for image features due to exception", e)
+                callback.invoke(false, null)
+            } catch (oom: OutOfMemoryError) {
+                log.warn("Failed to check for image features due to oom", oom)
+                callback.invoke(false, null)
+            }
         }
 
         private fun extractTextFromImg(
@@ -248,6 +257,9 @@ class ImgUtils {
                 return false
             } catch (e: Exception) {
                 log.warn("Failed to check for blurry image", e)
+                null
+            } catch (oom: OutOfMemoryError) {
+                log.warn("Failed to check for low light image", oom)
                 null
             }
         }
