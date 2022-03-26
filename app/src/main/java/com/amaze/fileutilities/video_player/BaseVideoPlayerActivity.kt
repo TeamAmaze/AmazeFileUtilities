@@ -881,7 +881,10 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             layoutInflater,
             resources.getString(R.string.please_wait)
         ).create()
-        videoPlayerViewModel?.getSubtitlesAvailableLanguages()?.observe(this) { languageList ->
+        videoPlayerViewModel?.getSubtitlesAvailableLanguages(
+            this
+                .getAppCommonSharedPreferences()
+        )?.observe(this) { languageList ->
             if (languageList == null) {
                 pleaseWaitDialog.show()
             } else {
@@ -894,17 +897,27 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             R.string.search
         ) { dialog, _ ->
             adapter?.let {
-                videoPlayerViewModel?.getSubtitlesList(
-                    it.getCheckedList(),
-                    editText.text.toString()
-                )?.observe(this) {
-                    resultList ->
-                    if (resultList == null) {
-                        pleaseWaitDialog.show()
-                    } else {
-                        pleaseWaitDialog.dismiss()
-                        showSubtitlesSearchResultsList(resultList, mediaFile)
+                val checkedList = it.getCheckedList()
+                if (!checkedList.isNullOrEmpty()) {
+                    this.getAppCommonSharedPreferences().edit()
+                        .putString(
+                            PreferencesConstants.KEY_SUBTITLE_LANGUAGE_CODE,
+                            checkedList[0].code
+                        ).apply()
+                    videoPlayerViewModel?.getSubtitlesList(
+                        checkedList,
+                        editText.text.toString()
+                    )?.observe(this) {
+                        resultList ->
+                        if (resultList == null) {
+                            pleaseWaitDialog.show()
+                        } else {
+                            pleaseWaitDialog.dismiss()
+                            showSubtitlesSearchResultsList(resultList, mediaFile)
+                        }
                     }
+                } else {
+                    showToastOnBottom(resources.getString(R.string.no_language_selected))
                 }
             }
             dialog.dismiss()
