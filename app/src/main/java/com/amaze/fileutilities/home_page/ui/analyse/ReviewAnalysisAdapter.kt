@@ -25,22 +25,25 @@ class ReviewAnalysisAdapter(
     val context: Context,
     private val preloader: MediaAdapterPreloader,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
-    private val toggleCheckCallback: (
+    toggleCheckCallback: (
         checkedSize: Int,
         itemsCount: Int,
         bytesFormatted: String
     ) -> Unit,
 ) :
-    AbstractMediaFilesAdapter(context, preloader, true) {
+    AbstractMediaFilesAdapter(
+        context, preloader, true, null,
+        toggleCheckCallback
+    ) {
 
     var isProcessing = true
 
     private var mediaFileListItems: MutableList<ListItem> = mutableListOf()
         set(value) {
             value.clear()
-            mediaFileInfoList.forEach {
-                value.add(ListItem(mediaFileInfo = it, position = 0))
-                preloader.addItem(it.path)
+            for (i in mediaFileInfoList.indices) {
+                value.add(ListItem(mediaFileInfo = mediaFileInfoList[i], position = i))
+                preloader.addItem(mediaFileInfoList[i].path)
             }
             if (mediaFileInfoList.size != 0) {
                 preloader.addItem("")
@@ -105,9 +108,5 @@ class ReviewAnalysisAdapter(
             mediaFileListItems = mutableListOf()
 //            notifyDataSetChanged()
         }
-    }
-
-    private fun invalidateCheckedTitle() {
-        toggleCheckCallback.invoke(checkItemsList.size, itemCount, checkedItemBytes())
     }
 }

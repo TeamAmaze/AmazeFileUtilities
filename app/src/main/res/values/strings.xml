@@ -276,4 +276,7 @@
     <string name="no_apps_found_to_share">No apps found to share</string>
     <string name="failed_to_extract_logs">Failed to extract logs file</string>
     <string name="continue_playing">Continue playing</string>
+    <string name="no_language_selected">No language selected</string>
+    <string name="no_item_selected">No item selected</string>
+    <string name="analysis_updated">Updated analysis</string>
 </resources>

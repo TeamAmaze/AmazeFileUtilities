@@ -29,4 +29,7 @@ interface LowLightAnalysisDao {
 
     @Query("DELETE FROM lowlightanalysis WHERE file_path like '%' || :path || '%'")
     fun deleteByPathContains(path: String)
+
+    @Query("UPDATE lowlightanalysis SET is_low_light=0 WHERE file_path IN(:pathList)")
+    fun cleanIsLowLight(pathList: List<String>)
 }

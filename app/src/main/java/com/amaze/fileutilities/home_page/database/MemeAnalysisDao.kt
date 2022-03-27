@@ -29,4 +29,7 @@ interface MemeAnalysisDao {
 
     @Query("DELETE FROM memeanalysis WHERE file_path like '%' || :path || '%'")
     fun deleteByPathContains(path: String)
+
+    @Query("UPDATE memeanalysis SET is_meme=0 WHERE file_path IN(:pathList)")
+    fun cleanIsMeme(pathList: List<String>)
 }
