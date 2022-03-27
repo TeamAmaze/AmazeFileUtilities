@@ -272,7 +272,11 @@ class MainActivity :
         return null
     }
 
-    fun invalidateSelectedActionBar(doShow: Boolean): View? {
+    fun invalidateSelectedActionBar(
+        doShow: Boolean,
+        hideActionBarOnClick: Boolean,
+        onBackPressed: () -> Unit
+    ): View? {
         if (::selectedItemActionBarBinding.isInitialized) {
             selectedItemActionBarBinding.run {
                 return if (doShow) {
@@ -280,7 +284,15 @@ class MainActivity :
                     selectedItemActionBarBinding.root.showFade(300)
                     supportActionBar?.customView = root
                     backActionBar.setOnClickListener {
-                        onBackPressed()
+                        onBackPressed.invoke()
+                        if (hideActionBarOnClick) {
+                            invalidateSelectedActionBar(
+                                false, hideActionBarOnClick,
+                                onBackPressed
+                            )
+                        } else {
+                            onBackPressed()
+                        }
                     }
                     title.setText("0")
                     selectedItemActionBarBinding.root

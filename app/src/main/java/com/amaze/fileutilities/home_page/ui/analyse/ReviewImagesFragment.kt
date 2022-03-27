@@ -15,8 +15,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
@@ -38,11 +36,12 @@ import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class ReviewImagesFragment : Fragment() {
+class ReviewImagesFragment : ItemsActionBarFragment() {
 
     var log: Logger = LoggerFactory.getLogger(ReviewImagesFragment::class.java)
 
     private var _binding: FragmentReviewImagesBinding? = null
+
     private val filesViewModel: FilesViewModel by activityViewModels()
     private lateinit var viewModel: AnalyseViewModel
     private var gridLayoutManager: GridLayoutManager? = GridLayoutManager(context, 3)
@@ -50,7 +49,6 @@ class ReviewImagesFragment : Fragment() {
     private var preloader: MediaAdapterPreloader? = null
     private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
     private val MAX_PRELOAD = 50
-    private var optionsActionBar: View? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -105,7 +103,7 @@ class ReviewImagesFragment : Fragment() {
         val root: View = binding.root
         val analysisType: Int = arguments?.getInt(ANALYSIS_TYPE)!!
         viewModel.analysisType = analysisType
-        optionsActionBar = (activity as MainActivity).invalidateSelectedActionBar(true)!!
+        setupShowActionBar()
         (activity as MainActivity).invalidateBottomBar(false)
 
         // set list adapter
@@ -122,6 +120,14 @@ class ReviewImagesFragment : Fragment() {
         )
         initAnalysisView(analysisType)
         return root
+    }
+
+    override fun hideActionBarOnClick(): Boolean {
+        return false
+    }
+
+    override fun getMediaFileAdapter(): AbstractMediaFilesAdapter? {
+        return mediaFileAdapter
     }
 
     private fun initAnalysisView(analysisType: Int) {
@@ -417,15 +423,14 @@ class ReviewImagesFragment : Fragment() {
         doShowDown: Boolean,
         cleanData: ((List<ListItem>) -> LiveData<Boolean>)? = null
     ) {
-        val thumbsDownButton =
-            optionsActionBar?.findViewById<ImageView>(R.id.thumbsDown)
+        val thumbsDownButton = getThumbsDown()
         mediaFileAdapter = ReviewAnalysisAdapter(
             requireActivity(),
             preloader!!, mediaInfoList
         ) { checkedSize, itemsCount, bytesFormatted ->
             val title = "$checkedSize / $itemsCount" +
                 " ($bytesFormatted)"
-            val countView = optionsActionBar?.findViewById<AppCompatTextView>(R.id.title)
+            val countView = getCountView()
             countView?.text = title
             if (checkedSize > 0 && doShowDown) {
                 thumbsDownButton?.visibility = View.VISIBLE
@@ -433,6 +438,24 @@ class ReviewImagesFragment : Fragment() {
                 thumbsDownButton?.visibility = View.GONE
             }
         }
+        setupActionBarButtons(cleanData)
+        binding.listView
+            .addOnScrollListener(recyclerViewPreloader!!)
+        Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
+        binding.listView.layoutManager = gridLayoutManager
+        binding.listView.adapter = mediaFileAdapter
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            binding.fastscroll.visibility = View.GONE
+            FastScrollerBuilder(binding.listView).useMd2Style().build()
+        } else {
+            binding.fastscroll.visibility = View.VISIBLE
+            binding.fastscroll.setRecyclerView(binding.listView, 1)
+        }
+    }
+
+    private fun setupActionBarButtons(cleanData: ((List<ListItem>) -> LiveData<Boolean>)?) {
+        val thumbsDownButton = getThumbsDown()
+        setupCommonButtons()
         thumbsDownButton?.setOnClickListener {
             mediaFileAdapter?.let {
                 if (!it.checkItemsList.isNullOrEmpty()) {
@@ -459,18 +482,6 @@ class ReviewImagesFragment : Fragment() {
                     )
                 }
             }
-        }
-        binding.listView
-            .addOnScrollListener(recyclerViewPreloader!!)
-        Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
-        binding.listView.layoutManager = gridLayoutManager
-        binding.listView.adapter = mediaFileAdapter
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            binding.fastscroll.visibility = View.GONE
-            FastScrollerBuilder(binding.listView).useMd2Style().build()
-        } else {
-            binding.fastscroll.visibility = View.VISIBLE
-            binding.fastscroll.setRecyclerView(binding.listView, 1)
         }
     }
 
@@ -502,11 +513,5 @@ class ReviewImagesFragment : Fragment() {
             }
         }
         mediaFileAdapter?.isProcessing = isAnalysing
-    }
-
-    override fun onDestroyView() {
-        (activity as MainActivity).invalidateSelectedActionBar(false)
-        (activity as MainActivity).invalidateBottomBar(true)
-        super.onDestroyView()
     }
 }
