@@ -10,12 +10,14 @@
 
 package com.amaze.fileutilities.video_player
 
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.amaze.fileutilities.home_page.database.VideoPlayerState
 import com.amaze.fileutilities.home_page.database.VideoPlayerStateDao
+import com.amaze.fileutilities.utilis.PreferencesConstants
 import kotlinx.coroutines.Dispatchers
 import org.jsoup.Jsoup
 import org.slf4j.Logger
@@ -62,8 +64,9 @@ class VideoPlayerActivityViewModel : ViewModel() {
         }
     }
 
-    fun getSubtitlesAvailableLanguages(): LiveData<List<LanguageSelectionAdapter
-            .SubtitleLanguageAndCode>?> {
+    fun getSubtitlesAvailableLanguages(sharedPreferences: SharedPreferences):
+        LiveData<List<LanguageSelectionAdapter
+                .SubtitleLanguageAndCode>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
             emit(null)
             val retrofit = Retrofit.Builder()
@@ -89,11 +92,14 @@ class VideoPlayerActivityViewModel : ViewModel() {
                             LanguageSelectionAdapter
                                 .SubtitleLanguageAndCode("Languages", "all")
                         )
+                        val prefLanguageCode = sharedPreferences
+                            .getString(
+                                PreferencesConstants.KEY_SUBTITLE_LANGUAGE_CODE,
+                                PreferencesConstants.DEFAULT_SUBTITLE_LANGUAGE_CODE
+                            )
                         for (i in languageCodes.indices) {
                             // first add english on top
-                            if (languageValues[i].equals("english", true) ||
-                                languageCodes[i].equals("eng", true)
-                            ) {
+                            if (languageCodes[i].equals(prefLanguageCode, true)) {
                                 languageAndCodeList
                                     .add(
                                         LanguageSelectionAdapter
@@ -106,9 +112,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
                             }
                         }
                         for (i in languageCodes.indices) {
-                            if (!languageValues[i].equals("english", true) &&
-                                !languageCodes[i].equals("eng", true)
-                            ) {
+                            if (!languageCodes[i].equals(prefLanguageCode, true)) {
                                 languageAndCodeList
                                     .add(
                                         LanguageSelectionAdapter
