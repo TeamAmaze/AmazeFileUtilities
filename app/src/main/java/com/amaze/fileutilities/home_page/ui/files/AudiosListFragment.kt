@@ -120,7 +120,7 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
     override fun onDestroyView() {
         super.onDestroyView()
         (requireActivity() as MainActivity)
-            .setCustomTitle(resources.getString(R.string.title_files))
+            .setCustomTitle(resources.getString(R.string.title_utilities))
         (activity as MainActivity).invalidateBottomBar(true)
         requireContext().unbindService(audioPlaybackServiceConnection)
         if (!viewModel.isPlaying) {

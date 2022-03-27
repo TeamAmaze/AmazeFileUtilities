@@ -530,6 +530,19 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
+    fun getShareMediaFilesAdapter(mediaFileInfoList: List<MediaFileInfo>): LiveData<ShareAdapter?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+            emit(null)
+            log.info("Sharing media files $mediaFileInfoList")
+            emit(
+                getShareIntents(
+                    mediaFileInfoList.map { it.getContentUri(applicationContext) },
+                    applicationContext
+                )
+            )
+        }
+    }
+
     override fun onCleared() {
 //        faceDetector.close()
 //        textRecognizer.close()
