@@ -279,4 +279,5 @@
     <string name="no_language_selected">No language selected</string>
     <string name="no_item_selected">No item selected</string>
     <string name="analysis_updated">Updated analysis</string>
+    <string name="failed_to_share">Failed to share files</string>
 </resources>

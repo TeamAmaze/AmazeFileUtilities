@@ -57,14 +57,28 @@ abstract class AbstractMediaFilesAdapter(
             if (isGrid) {
                 holder.checkIconGrid.visibility = View.VISIBLE
             } else {
-                holder.root.isSelected = true
+                holder.root.setBackgroundColor(
+                    superContext.resources
+                        .getColor(R.color.highlight_yellow_50)
+                )
             }
         } else {
             if (isGrid) {
                 holder.checkIconGrid.visibility = View.INVISIBLE
             } else {
-                holder.root.isSelected = false
+                holder.root.background = superContext.resources.getDrawable(R.drawable.ripple)
             }
+        }
+    }
+
+    fun uncheckChecked() {
+        val removeItemsIdx = checkItemsList.map { it.position }
+        for (listItem in checkItemsList) {
+            listItem.toggleChecked()
+        }
+        checkItemsList.clear()
+        removeItemsIdx.forEach {
+            notifyItemChanged(it)
         }
     }
 
@@ -146,20 +160,22 @@ abstract class AbstractMediaFilesAdapter(
                     mediaFileInfo ->
                     holder.infoTitle.text = mediaFileInfo.title
                     Glide.with(superContext).clear(holder.iconView)
-                    /*holder.checkIconGrid.visibility =
-                        if (isChecked) View.VISIBLE else View.INVISIBLE*/
                     superPreloader.loadImage(mediaFileInfo.path, holder.iconView, isGrid)
                     if (isChecked) {
                         if (isGrid) {
                             holder.checkIconGrid.visibility = View.VISIBLE
                         } else {
-                            holder.root.isSelected = true
+                            holder.root.setBackgroundColor(
+                                superContext.resources
+                                    .getColor(R.color.highlight_yellow_50)
+                            )
                         }
                     } else {
                         if (isGrid) {
                             holder.checkIconGrid.visibility = View.INVISIBLE
                         } else {
-                            holder.root.isSelected = false
+                            holder.root.background =
+                                superContext.resources.getDrawable(R.drawable.ripple)
                         }
                     }
                     holder.root.setOnLongClickListener {
@@ -183,19 +199,10 @@ abstract class AbstractMediaFilesAdapter(
                             MediaFileInfo.MEDIA_TYPE_DOCUMENT -> {
                                 holder.infoSummary.text = "$formattedDate | $formattedSize"
                                 holder.extraInfo.text = ""
-                                holder.root.setOnClickListener {
-                                    listItemPressedCallback?.invoke(mediaFileInfo)
-                                    mediaFileInfo
-                                        .triggerMediaFileInfoAction(WeakReference(superContext))
-                                }
                             }
                             MediaFileInfo.MEDIA_TYPE_UNKNOWN -> {
                                 holder.infoSummary.text = "$formattedDate | $formattedSize"
                                 holder.extraInfo.text = ""
-                                holder.root.setOnClickListener {
-                                    mediaFileInfo
-                                        .triggerMediaFileInfoAction(WeakReference(superContext))
-                                }
                                 holder.root.background = ResourcesCompat
                                     .getDrawable(
                                         superContext.resources,
@@ -206,10 +213,15 @@ abstract class AbstractMediaFilesAdapter(
                     }
 
                     // override click listener in case we have any single item checked
-                    if (checkItemsList.size > 0) {
-                        holder.root.setOnClickListener {
+
+                    holder.root.setOnClickListener {
+                        if (checkItemsList.size > 0) {
                             toggleChecked(this, holder)
                             invalidateCheckedTitle()
+                        } else {
+                            listItemPressedCallback?.invoke(mediaFileInfo)
+                            mediaFileInfo
+                                .triggerMediaFileInfoAction(WeakReference(superContext))
                         }
                     }
                 }
@@ -236,10 +248,6 @@ abstract class AbstractMediaFilesAdapter(
             "${mediaFileInfo.extraInfo!!.imageMetaData?.width}" +
             "x${mediaFileInfo.extraInfo.imageMetaData?.height}"
         holder.extraInfo.text = ""
-        holder.root.setOnClickListener {
-            listItemPressedCallback?.invoke(mediaFileInfo)
-            mediaFileInfo.triggerMediaFileInfoAction(WeakReference(superContext))
-        }
     }
 
     private fun processAudioMediaInfo(
@@ -252,10 +260,6 @@ abstract class AbstractMediaFilesAdapter(
         mediaFileInfo.extraInfo.audioMetaData?.duration?.let {
             holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
         }
-        holder.root.setOnClickListener {
-            listItemPressedCallback?.invoke(mediaFileInfo)
-            mediaFileInfo.triggerMediaFileInfoAction(WeakReference(superContext))
-        }
     }
 
     private fun processVideoMediaInfo(
@@ -267,10 +271,6 @@ abstract class AbstractMediaFilesAdapter(
             "x${mediaFileInfo.extraInfo.videoMetaData?.height}"
         mediaFileInfo.extraInfo.videoMetaData?.duration?.let {
             holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
-        }
-        holder.root.setOnClickListener {
-            listItemPressedCallback?.invoke(mediaFileInfo)
-            mediaFileInfo.triggerMediaFileInfoAction(WeakReference(superContext))
         }
     }
 
