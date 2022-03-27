@@ -33,11 +33,21 @@
         app:srcCompat="@drawable/ic_round_thumb_down_off_alt_32"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_toLeftOf="@+id/shareFiles"
+        android:layout_toStartOf="@id/shareFiles"
+        android:layout_marginLeft="@dimen/eight_dp"
+        android:layout_marginStart="@dimen/eight_dp"
+        android:visibility="gone"
+        />
+    <ImageView
+        android:id="@+id/shareFiles"
+        app:srcCompat="@drawable/ic_twotone_share_32"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         android:layout_toLeftOf="@+id/trashButton"
         android:layout_toStartOf="@id/trashButton"
         android:layout_marginLeft="@dimen/eight_dp"
         android:layout_marginStart="@dimen/eight_dp"
-        android:visibility="gone"
         />
     <ImageView
         android:id="@+id/trashButton"
