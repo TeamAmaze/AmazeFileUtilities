@@ -18,20 +18,35 @@ interface ImageAnalysisDao {
     @Query("SELECT * FROM imageanalysis")
     fun getAll(): List<ImageAnalysis>
 
-    @Query("SELECT * FROM imageanalysis where is_sleeping=1")
+    @Query("SELECT * FROM imageanalysis WHERE is_sleeping=1")
     fun getAllSleeping(): List<ImageAnalysis>
 
-    @Query("SELECT * FROM imageanalysis where is_distracted=1")
+    @Query("UPDATE imageanalysis SET is_sleeping=0 WHERE file_path IN(:pathList)")
+    fun cleanIsSleeping(pathList: List<String>)
+
+    @Query("SELECT * FROM imageanalysis WHERE is_distracted=1")
     fun getAllDistracted(): List<ImageAnalysis>
 
-    @Query("SELECT * FROM imageanalysis where is_sad=1")
+    @Query("UPDATE imageanalysis SET is_distracted=0 WHERE file_path IN(:pathList)")
+    fun cleanIsDistracted(pathList: List<String>)
+
+    @Query("SELECT * FROM imageanalysis WHERE is_sad=1")
     fun getAllSad(): List<ImageAnalysis>
 
-    @Query("SELECT * FROM imageanalysis where face_count=1")
+    @Query("UPDATE imageanalysis SET is_sad=0 WHERE file_path IN(:pathList)")
+    fun cleanIsSad(pathList: List<String>)
+
+    @Query("SELECT * FROM imageanalysis WHERE face_count=1")
     fun getAllSelfie(): List<ImageAnalysis>
 
-    @Query("SELECT * FROM imageanalysis where face_count>1")
+    @Query("UPDATE imageanalysis SET face_count=0 WHERE file_path IN(:pathList)")
+    fun cleanIsSelfie(pathList: List<String>)
+
+    @Query("SELECT * FROM imageanalysis WHERE face_count>1")
     fun getAllGroupPic(): List<ImageAnalysis>
+
+    @Query("UPDATE imageanalysis SET face_count=0 WHERE file_path IN(:pathList)")
+    fun cleanIsGroupPic(pathList: List<String>)
 
     @Query("SELECT * FROM imageanalysis WHERE file_path=:path")
     fun findByPath(path: String): ImageAnalysis?

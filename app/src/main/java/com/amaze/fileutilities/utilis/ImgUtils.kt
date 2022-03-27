@@ -92,7 +92,7 @@ class ImgUtils {
                                 for (element in line.elements) {
                                     val elementText = element.text
                                     if (elementText.matches(wordRegex) &&
-                                        elementText.length > 4 &&
+                                        elementText.length > 10 &&
                                         !elementText.contains("shot on", true)
                                     ) {
                                         callback.invoke(true)
@@ -126,7 +126,8 @@ class ImgUtils {
                         // ...
                         var isSad = false
                         var isDistracted = false
-                        var isSleeping = false
+                        var leftEyeOpen = false
+                        var rightEyeOpen = false
                         faces.forEach {
                             face ->
                             face.smilingProbability?.let {
@@ -142,18 +143,21 @@ class ImgUtils {
                             }
                             face.leftEyeOpenProbability?.let {
                                 if (it < 0.7) {
-                                    isSleeping = true
+                                    leftEyeOpen = true
                                 }
                             }
                             face.rightEyeOpenProbability?.let {
                                 if (it < 0.7) {
-                                    isSleeping = true
+                                    rightEyeOpen = true
                                 }
                             }
                         }
                         callback.invoke(
                             true,
-                            ImageFeatures(isSad, isSleeping, isDistracted, faces.count())
+                            ImageFeatures(
+                                isSad, leftEyeOpen && rightEyeOpen,
+                                isDistracted, faces.count()
+                            )
                         )
                     }
                     .addOnFailureListener { e ->
