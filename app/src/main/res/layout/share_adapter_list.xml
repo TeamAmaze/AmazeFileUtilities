@@ -20,20 +20,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/second"
     android:layout_width="match_parent"
-    android:minHeight="50dip"
+    android:minHeight="@dimen/minimal_row_size"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:background="?selectableItemBackground"
-    android:padding="6dip">
+    android:background="@drawable/ripple"
+    android:layout_gravity="center_vertical"
+    android:gravity="center_vertical"
+    android:padding="@dimen/material_generic"
+    >
 
     <ImageView
         android:id="@+id/icon"
-        android:padding="10dip"
-        android:layout_width="50dip"
-        android:layout_height="50dip"
-        android:clickable="false"
-        android:gravity="center"
-        android:layout_gravity="center" />
+        android:layout_width="@dimen/fourty_eight_dp"
+        android:layout_height="@dimen/fourty_eight_dp"
+        android:clickable="false" />
 
     <TextView
         android:id="@+id/firstline"
@@ -41,12 +40,10 @@
         android:layout_toRightOf="@id/icon"
         android:layout_height="match_parent"
         android:clickable="false"
-        android:paddingTop="13dp"
-        android:paddingLeft="15dp"
+        android:layout_marginLeft="@dimen/material_generic"
         android:layout_gravity="center_vertical"
         android:singleLine="true"
-        android:textSize="17sp"
-        android:gravity="center_vertical"
-
+        android:textSize="@dimen/eighteen_sp"
+        android:textColor="@color/white"
         />
 </RelativeLayout>
