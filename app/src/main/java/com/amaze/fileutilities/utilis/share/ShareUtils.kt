@@ -109,7 +109,7 @@ fun getShareIntents(sharingUris: List<Uri>, context: Context): ShareAdapter? {
 }
 
 fun showShareDialog(context: Context, inflater: LayoutInflater, adapter: ShareAdapter) {
-    val dialogBuilder = AlertDialog.Builder(context)
+    val dialogBuilder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
         .setTitle(R.string.share)
         .setNegativeButton(R.string.close) { dialog, _ ->
             dialog.dismiss()
