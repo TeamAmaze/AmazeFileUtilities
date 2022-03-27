@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/navigation_files"
         android:name="com.amaze.fileutilities.home_page.ui.files.FilesFragment"
-        android:label="@string/title_files"
+        android:label="@string/title_utilities"
         tools:layout="@layout/fragment_files" />
 
     <fragment

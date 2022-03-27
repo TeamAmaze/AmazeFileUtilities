@@ -18,6 +18,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.app.ActionBar
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
@@ -32,6 +33,7 @@ import com.amaze.fileutilities.databinding.ActivityMainActionbarItemSelectedBind
 import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
 import com.amaze.fileutilities.databinding.ActivityMainBinding
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
+import com.amaze.fileutilities.home_page.ui.files.AbstractMediaInfoListFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
 import com.amaze.fileutilities.home_page.ui.options.AboutActivity
@@ -96,7 +98,7 @@ class MainActivity :
                 R.id.navigation_analyse ->
                     actionBarBinding.title.text = resources.getString(R.string.title_analyse)
                 R.id.navigation_files ->
-                    actionBarBinding.title.text = resources.getString(R.string.title_files)
+                    actionBarBinding.title.text = resources.getString(R.string.title_utilities)
                 R.id.navigation_transfer ->
                     actionBarBinding.title.text = resources.getString(R.string.title_transfer)
             }
@@ -212,7 +214,29 @@ class MainActivity :
         if (fragment is NavHostFragment && fragment.childFragmentManager.backStackEntryCount > 1) {
             supportFragmentManager.popBackStack()
         } else {
-            super.onBackPressed()
+            if (::selectedItemActionBarBinding.isInitialized) {
+                if (!actionBarBinding.root.isVisible) {
+                    var abstractListFragment: AbstractMediaInfoListFragment? = null
+                    fragment?.childFragmentManager?.fragments?.forEach {
+                        if (it is AbstractMediaInfoListFragment) {
+                            abstractListFragment = it
+                        }
+                    }
+                    if (abstractListFragment != null) {
+                        invalidateSelectedActionBar(
+                            false, abstractListFragment!!.hideActionBarOnClick(),
+                            abstractListFragment!!.handleBackPressed()
+                        )
+                        abstractListFragment!!.handleBackPressed().invoke()
+                    } else {
+                        super.onBackPressed()
+                    }
+                } else {
+                    super.onBackPressed()
+                }
+            } else {
+                super.onBackPressed()
+            }
             if (isOptionsVisible) {
                 isOptionsVisible = !isOptionsVisible
                 invalidateOptionsTabs()
