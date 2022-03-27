@@ -31,15 +31,15 @@ class MediaFileAdapter(
     private val mediaListType: Int,
     private val drawBannerCallback: (mediaTypeHeader: MediaTypeHeaderView) -> Unit,
     listItemPressedCallback: (mediaFileInfo: MediaFileInfo) -> Unit,
-    /*toggleCheckCallback: (
+    toggleCheckCallback: (
         checkedSize: Int,
         itemsCount: Int,
         bytesFormatted: String
-    ) -> Unit,*/
+    ) -> Unit,
 ) :
     AbstractMediaFilesAdapter(
         context, preloader, isGrid, listItemPressedCallback,
-        null
+        toggleCheckCallback
     ) {
 
     companion object {
@@ -60,11 +60,12 @@ class MediaFileAdapter(
                 mediaFileInfoList, sortingPreference
             )
             var lastHeader: String? = null
-            value.add(ListItem(TYPE_BANNER, 0))
+            var position = 0
+            value.add(ListItem(TYPE_BANNER, position))
             preloader.addItem("")
             for (i in 0 until mediaFileInfoList.size) {
                 if (lastHeader == null || mediaFileInfoList[i].listHeader != lastHeader) {
-                    value.add(ListItem(TYPE_HEADER, mediaFileInfoList[i].listHeader, i + 1))
+                    value.add(ListItem(TYPE_HEADER, mediaFileInfoList[i].listHeader, ++position))
                     preloader.addItem("")
                     headerListItems.add(
                         ListItem(
@@ -78,7 +79,7 @@ class MediaFileAdapter(
                 value.add(
                     ListItem(
                         mediaFileInfo = mediaFileInfoList[i],
-                        header = mediaFileInfoList[i].listHeader, position = i + 1
+                        header = mediaFileInfoList[i].listHeader, position = ++position
                     )
                 )
                 preloader.addItem(mediaFileInfoList[i].path)
@@ -108,21 +109,27 @@ class MediaFileAdapter(
                 if (mediaListType == MEDIA_TYPE_AUDIO) {
                     holder.root.setOnClickListener {
                         // for audio list fragment we want to just show bottom sheet
-                        mediaFileListItems[position].mediaFileInfo?.getContentUri(context)?.let {
-                            uri ->
-                            (context as CastActivity)
-                                .showCastFileDialog(
-                                    mediaFileListItems[position].mediaFileInfo!!,
-                                    MEDIA_TYPE_AUDIO
-                                ) {
-                                    AudioPlayerService.runService(
-                                        uri,
-                                        mediaFileInfoList.map {
-                                            it.getContentUri(context)
-                                        },
-                                        context
-                                    )
-                                }
+                        val listItem = mediaFileListItems[position]
+                        if (checkItemsList.size > 0) {
+                            toggleChecked(listItem, holder)
+                            invalidateCheckedTitle()
+                        } else {
+                            listItem.mediaFileInfo?.getContentUri(context)?.let {
+                                uri ->
+                                (context as CastActivity)
+                                    .showCastFileDialog(
+                                        mediaFileListItems[position].mediaFileInfo!!,
+                                        MEDIA_TYPE_AUDIO
+                                    ) {
+                                        AudioPlayerService.runService(
+                                            uri,
+                                            mediaFileInfoList.map {
+                                                it.getContentUri(context)
+                                            },
+                                            context
+                                        )
+                                    }
+                            }
                         }
                     }
                 }

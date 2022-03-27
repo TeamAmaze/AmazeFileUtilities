@@ -37,7 +37,7 @@
     <string name="loading">Loading…</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_analyse">Analyse</string>
-    <string name="title_files">Files</string>
+    <string name="title_utilities">Utilities</string>
     <string name="title_transfer">Transfer</string>
     <string name="title_scan">Scan</string>
     <string name="title_stop_scan">Stop</string>
@@ -279,4 +279,5 @@
     <string name="no_language_selected">No language selected</string>
     <string name="no_item_selected">No item selected</string>
     <string name="analysis_updated">Updated analysis</string>
+    <string name="failed_to_share">Failed to share files</string>
 </resources>
