@@ -9,7 +9,7 @@
     <item
         android:id="@+id/navigation_files"
         android:icon="@drawable/ic_outline_dashboard_32"
-        android:title="@string/title_files" />
+        android:title="@string/title_utilities" />
 
     <item
         android:id="@+id/navigation_transfer"

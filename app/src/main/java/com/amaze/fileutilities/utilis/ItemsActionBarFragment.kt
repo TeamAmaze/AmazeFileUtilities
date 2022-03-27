@@ -50,7 +50,7 @@ abstract class ItemsActionBarFragment : Fragment() {
             .invalidateSelectedActionBar(false, hideActionBarOnClick(), handleBackPressed())
     }
 
-    private fun handleBackPressed(): (() -> Unit) {
+    fun handleBackPressed(): (() -> Unit) {
         return {
             if (hideActionBarOnClick()) {
                 getMediaFileAdapter()?.uncheckChecked()
