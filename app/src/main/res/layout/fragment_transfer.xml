@@ -12,27 +12,6 @@
     android:paddingRight="@dimen/material_generic"
     >
 
-    <TextView
-        android:id="@+id/searching_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/searching"
-        android:textColor="@color/white"
-        android:textSize="@dimen/twenty_four_sp"
-        android:textStyle="bold"
-        android:visibility="gone"
-        />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/enable_location_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/enable"
-        app:cornerRadius="@dimen/material_generic"
-        app:rippleColor="@color/highlight_yellow"
-        style="@style/MaterialButton.White"
-        android:visibility="gone"
-        />
 
     <TextView
         android:id="@+id/device_name"
@@ -49,10 +28,32 @@
         android:id="@+id/device_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/material_generic_medium"
         android:text="@string/searching"
         android:textColor="@color/white"
         android:textSize="@dimen/eight_sp"
         android:textStyle="bold"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/searching_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/searching"
+        android:textColor="@color/white"
+        android:textSize="@dimen/eighteen_sp"
+        android:visibility="gone"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/enable_location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/enable"
+        app:cornerRadius="@dimen/material_generic"
+        app:rippleColor="@color/highlight_yellow"
+        style="@style/MaterialButton.White"
         android:visibility="gone"
         />
 
@@ -64,43 +65,69 @@
         android:visibility="gone"
         />
 
-    <LinearLayout
-        android:id="@+id/devices_parent"
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical|center_horizontal">
+        android:padding="@dimen/material_generic"
+        android:scrollbars="none"
+        >
+        <LinearLayout
+            android:id="@+id/devices_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical|center_horizontal">
 
-    </LinearLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <LinearLayout
         android:id="@+id/send_receive_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:gravity="center_vertical|center_horizontal"
         android:visibility="gone"
         >
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/send_button"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/send"
-            app:cornerRadius="@dimen/material_generic"
-            app:rippleColor="@color/highlight_yellow"
-            style="@style/MaterialButton.White"
-            />
+            android:orientation="horizontal"
+            android:gravity="center_vertical|center_horizontal"
+            >
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/send_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/send"
+                app:cornerRadius="@dimen/material_generic"
+                app:rippleColor="@color/highlight_yellow"
+                style="@style/MaterialButton.White"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/receive_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/receive"
+                android:layout_marginStart="@dimen/material_generic"
+                app:cornerRadius="@dimen/material_generic"
+                app:rippleColor="@color/highlight_yellow"
+                app:elevation="@dimen/material_generic"
+                style="@style/MaterialButton.White"
+                />
+        </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/receive_button"
+            android:id="@+id/receive_stop_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/receive"
-            android:layout_marginStart="@dimen/material_generic"
+            android:text="@string/stop_receiving"
             app:cornerRadius="@dimen/material_generic"
             app:rippleColor="@color/highlight_yellow"
             app:elevation="@dimen/material_generic"
             style="@style/MaterialButton.White"
+            android:visibility="gone"
             />
 
         <com.google.android.material.button.MaterialButton
@@ -108,7 +135,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/disconnect"
-            android:layout_marginStart="@dimen/material_generic"
+            android:layout_marginTop="@dimen/material_generic"
             app:cornerRadius="@dimen/material_generic"
             app:rippleColor="@color/highlight_yellow"
             app:elevation="@dimen/material_generic"
@@ -141,7 +168,7 @@
     <LinearLayout
         android:id="@+id/transfer_info_parent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
         >
@@ -173,10 +200,12 @@
                 android:layout_width="@dimen/zero_dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.8"
+                android:layout_marginTop="@dimen/material_generic"
                 app:trackColor="@color/white_grey_1"
                 app:indicatorColor="@color/highlight_yellow"
                 app:trackCornerRadius="@dimen/two_dp"
                 app:indicatorDirectionLinear="leftToRight"
+                android:indeterminate="false"
                 />
             <ImageView
                 android:id="@+id/transfer_cancel"
@@ -185,6 +214,7 @@
                 android:src="@drawable/ic_round_close_32"
                 android:layout_weight="0.2"
                 android:layout_marginLeft="@dimen/eight_dp"
+                android:visibility="gone"
                 />
         </LinearLayout>
     </LinearLayout>

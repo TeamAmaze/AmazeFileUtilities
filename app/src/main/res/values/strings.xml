@@ -53,6 +53,7 @@
     <string name="used_total_space">/ %s</string>
     <string name="send">Send</string>
     <string name="receive">Receive</string>
+    <string name="stop_receiving">Stop Receiving</string>
     <string name="undetermined" translatable="false">--</string>
     <string name="calculating">Calculating…</string>
     <string name="recent_files">Recent Files</string>
@@ -184,6 +185,7 @@
     <string name="unknown_artist">&lt;UNKNOWN&gt;</string>
     <string name="unknown_album">&lt;UNKNOWN&gt;</string>
     <string name="searching">Searching…</string>
+    <string name="searching_timer">Searching… (%s secs)</string>
     <string name="enable_wifi">Please enable your Wi-Fi</string>
     <string name="discovery_failure">Failed to discover peers</string>
     <string name="receiving_files">Receiving files</string>
@@ -209,7 +211,7 @@
     <string name="connection_successful">Connection successful</string>
     <string name="failed_filename_send">Failed to send, please ensure remote is set to receive file</string>
     <string name="failed_filename_send_reconnecct">Failed to send, please reconnect</string>
-    <string name="failed_filename_receive">Failed to receive, please ensure you\'re connected to sender before receiving</string>
+    <string name="failed_filename_receive">Failed to receive</string>
     <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
     <string name="transfer_complete">Transfer complete</string>
     <string name="grant_location_permission">App needs location permission to connect with nearby devices.</string>
@@ -280,4 +282,19 @@
     <string name="no_item_selected">No item selected</string>
     <string name="analysis_updated">Updated analysis</string>
     <string name="failed_to_share">Failed to share files</string>
+    <string name="connected_send_receive_hint">Connected… before you start sending, 
+        make sure to enable receiver on the other device</string>
+    <string name="receiving">Receiving…</string>
+    <string name="devices_present_select">Make sure to initiate connection only from one device not both.</string>
+    <string name="start_scan_both_devices">Make sure to start scan on both the devices</string>
+    <string name="connecting_please_wait">Connecting… (%s secs)</string>
+    <string name="enable_wifi_to_continue">Please enable Wifi to continue</string>
+    <string name="my_device">My device: %s</string>
+    <string name="device_status">Status: %s</string>
+    <string name="transfer_in_progress_title">Transfer in progress</string>
+    <string name="transfer_in_progress_summary">There is a P2P transfer currently in progress,
+        it is recommended that you don\'t leave this screen,
+        otherwise you\'ll not be able to track the transfer</string>
+    <string name="leave">Leave</string>
+    <string name="stay">Stay</string>
 </resources>

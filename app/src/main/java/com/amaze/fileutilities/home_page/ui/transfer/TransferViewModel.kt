@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.home_page.ui.transfer
 
+import android.app.Application
 import android.net.wifi.p2p.WifiP2pInfo
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,8 @@ import java.net.ServerSocket
 import java.net.Socket
 import java.util.concurrent.TimeUnit
 
-class TransferViewModel : ViewModel() {
+class TransferViewModel(val applicationContext: Application) :
+    AndroidViewModel(applicationContext) {
 
     var log: Logger = LoggerFactory.getLogger(TransferViewModel::class.java)
 

@@ -66,7 +66,8 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                     PreferencesConstants.KEY_SEARCH_DUPLICATES_IN,
                     PreferencesConstants.DEFAULT_SEARCH_DUPLICATES_IN
                 )
-                val dialog = AlertDialog.Builder(requireContext()).setTitle(R.string.duplicates)
+                val dialog = AlertDialog.Builder(requireContext(), R.style.Custom_Dialog_Dark)
+                    .setTitle(R.string.duplicates)
                     .setSingleChoiceItems(
                         arrayOf(
                             getString(R.string.media_store),
