@@ -232,7 +232,23 @@ class MainActivity :
                         super.onBackPressed()
                     }
                 } else {
-                    super.onBackPressed()
+                    var didShowTransfer = false
+                    var isTransferFragment = false
+                    fragment?.childFragmentManager?.fragments?.forEach {
+                        if (it is TransferFragment) {
+                            isTransferFragment = true
+                            // check if transfer in progress, avoid back press if it is
+                            if (it.getTransferViewModel().isTransferInProgress) {
+                                didShowTransfer = true
+                                it.warnTransferInProgress {
+                                    super.onBackPressed()
+                                }
+                            }
+                        }
+                    }
+                    if (!didShowTransfer || !isTransferFragment) {
+                        super.onBackPressed()
+                    }
                 }
             } else {
                 super.onBackPressed()
