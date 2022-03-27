@@ -19,14 +19,17 @@ import android.net.wifi.p2p.WifiP2pDevice
 import android.net.wifi.p2p.WifiP2pManager
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
+import com.amaze.fileutilities.home_page.ui.transfer.TransferViewModel
+import com.amaze.fileutilities.utilis.showToastInCenter
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 abstract class WifiP2PActivity : CastActivity(), WifiP2pManager.ChannelListener {
 
     private var log: Logger = LoggerFactory.getLogger(WifiP2PActivity::class.java)
+    private lateinit var transferViewModel: TransferViewModel
 
     private val wifiP2PIntentFilter = IntentFilter().apply {
         addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION)
@@ -44,10 +47,30 @@ abstract class WifiP2PActivity : CastActivity(), WifiP2pManager.ChannelListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         channel = manager?.initialize(this, mainLooper, this)
+        transferViewModel = ViewModelProvider(this).get(TransferViewModel::class.java)
+    }
+
+    override fun onDestroy() {
+        getTransferFragment()?.let {
+            fragment ->
+            fragment.getTransferViewModel().clientHandshakeSocket?.close()
+            fragment.getTransferViewModel().serverHandshakeSocket?.close()
+            fragment.getTransferViewModel().clientTransferSocket?.close()
+            fragment.getTransferViewModel().serverTransferSocket?.close()
+            disconnectP2PGroup()
+            fragment.monitorDiscoveryTime.cancel()
+            fragment.initConnectionTimer.cancel()
+        }
+        super.onDestroy()
     }
 
     override fun onChannelDisconnected() {
-        // ignore
+        getTransferFragment()?.let {
+            fragment ->
+            fragment.resetViewsOnDisconnect()
+            fragment.resetNetworkGroup()
+            showToastInCenter(resources.getString(R.string.disconnected))
+        }
     }
 
     override fun onResume() {
@@ -111,10 +134,11 @@ abstract class WifiP2PActivity : CastActivity(), WifiP2pManager.ChannelListener 
                         // UI update to indicate wifi p2p status.
                         val state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1)
                         if (state == WifiP2pManager.WIFI_P2P_STATE_ENABLED) {
-                            transferFragment.getViewBinding().scanButton
-                                .visibility = View.VISIBLE
+                            transferFragment.initScreenComponents()
                         } else {
                             transferFragment.resetViewsOnDisconnect()
+                            transferFragment.resetNetworkGroup()
+                            showToastInCenter(resources.getString(R.string.disconnected))
                         }
                         log.debug("P2P state changed - $state")
                     } else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION == action) {
