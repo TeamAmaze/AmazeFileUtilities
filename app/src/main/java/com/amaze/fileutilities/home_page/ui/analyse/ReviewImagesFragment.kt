@@ -19,6 +19,7 @@ import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.amaze.fileutilities.R
@@ -28,15 +29,18 @@ import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaAdapterPreloader
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
-import com.amaze.fileutilities.utilis.PreferencesConstants
-import com.amaze.fileutilities.utilis.Utils
-import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
+import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class ReviewImagesFragment : Fragment() {
+
+    var log: Logger = LoggerFactory.getLogger(ReviewImagesFragment::class.java)
 
     private var _binding: FragmentReviewImagesBinding? = null
     private val filesViewModel: FilesViewModel by activityViewModels()
@@ -100,6 +104,7 @@ class ReviewImagesFragment : Fragment() {
         _binding = FragmentReviewImagesBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val analysisType: Int = arguments?.getInt(ANALYSIS_TYPE)!!
+        viewModel.analysisType = analysisType
         optionsActionBar = (activity as MainActivity).invalidateSelectedActionBar(true)!!
         (activity as MainActivity).invalidateBottomBar(false)
 
@@ -144,7 +149,10 @@ class ReviewImagesFragment : Fragment() {
                                 filesViewModel.isImageFeaturesAnalysing
                             )
                         } else {
-                            setMediaInfoList(ArrayList(it), true)
+                            setMediaInfoList(ArrayList(it), true) {
+                                checkedItems ->
+                                viewModel.cleanBlurAnalysis(blurAnalysisDao, checkedItems)
+                            }
                             invalidateProcessing(
                                 false,
                                 filesViewModel.isImageFeaturesAnalysing
@@ -161,7 +169,13 @@ class ReviewImagesFragment : Fragment() {
                                 filesViewModel.isImageFeaturesAnalysing
                             )
                         } else {
-                            setMediaInfoList(ArrayList(it), true)
+                            setMediaInfoList(ArrayList(it), true) {
+                                checkedItems ->
+                                viewModel.cleanLowLightAnalysis(
+                                    lowLightAnalysisDao,
+                                    checkedItems
+                                )
+                            }
                             invalidateProcessing(
                                 false,
                                 filesViewModel.isImageFeaturesAnalysing
@@ -177,7 +191,10 @@ class ReviewImagesFragment : Fragment() {
                             filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
-                        setMediaInfoList(ArrayList(it), true)
+                        setMediaInfoList(ArrayList(it), true) {
+                            checkedItems ->
+                            viewModel.cleanMemeAnalysis(memeAnalysisDao, checkedItems)
+                        }
                         invalidateProcessing(
                             false,
                             filesViewModel.isImageFeaturesAnalysing
@@ -231,7 +248,10 @@ class ReviewImagesFragment : Fragment() {
                             filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
-                        setMediaInfoList(ArrayList(it), true)
+                        setMediaInfoList(ArrayList(it), true) {
+                            checkedItems ->
+                            viewModel.cleanImageAnalysis(dao, TYPE_SAD, checkedItems)
+                        }
                         invalidateProcessing(
                             false,
                             filesViewModel.isImageFeaturesAnalysing
@@ -247,7 +267,10 @@ class ReviewImagesFragment : Fragment() {
                             filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
-                        setMediaInfoList(ArrayList(it), true)
+                        setMediaInfoList(ArrayList(it), true) {
+                            checkedItems ->
+                            viewModel.cleanImageAnalysis(dao, TYPE_DISTRACTED, checkedItems)
+                        }
                         invalidateProcessing(
                             false,
                             filesViewModel.isImageFeaturesAnalysing
@@ -263,7 +286,10 @@ class ReviewImagesFragment : Fragment() {
                             filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
-                        setMediaInfoList(ArrayList(it), true)
+                        setMediaInfoList(ArrayList(it), true) {
+                            checkedItems ->
+                            viewModel.cleanImageAnalysis(dao, TYPE_SLEEPING, checkedItems)
+                        }
                         invalidateProcessing(
                             false,
                             filesViewModel.isImageFeaturesAnalysing
@@ -279,7 +305,10 @@ class ReviewImagesFragment : Fragment() {
                             filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
-                        setMediaInfoList(ArrayList(it), true)
+                        setMediaInfoList(ArrayList(it), true) {
+                            checkedItems ->
+                            viewModel.cleanImageAnalysis(dao, TYPE_SELFIE, checkedItems)
+                        }
                         invalidateProcessing(
                             false,
                             filesViewModel.isImageFeaturesAnalysing
@@ -295,7 +324,10 @@ class ReviewImagesFragment : Fragment() {
                             filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
-                        setMediaInfoList(ArrayList(it), true)
+                        setMediaInfoList(ArrayList(it), true) {
+                            checkedItems ->
+                            viewModel.cleanImageAnalysis(dao, TYPE_GROUP_PIC, checkedItems)
+                        }
                         invalidateProcessing(
                             false,
                             filesViewModel.isImageFeaturesAnalysing
@@ -378,8 +410,15 @@ class ReviewImagesFragment : Fragment() {
 
     /**
      * @param doShowDown whether to show thumbs down button
+     * @param cleanData if doShowDown is true, set a way to get cleaned data result
      */
-    private fun setMediaInfoList(mediaInfoList: MutableList<MediaFileInfo>, doShowDown: Boolean) {
+    private fun setMediaInfoList(
+        mediaInfoList: MutableList<MediaFileInfo>,
+        doShowDown: Boolean,
+        cleanData: ((List<ListItem>) -> LiveData<Boolean>)? = null
+    ) {
+        val thumbsDownButton =
+            optionsActionBar?.findViewById<ImageView>(R.id.thumbsDown)
         mediaFileAdapter = ReviewAnalysisAdapter(
             requireActivity(),
             preloader!!, mediaInfoList
@@ -387,13 +426,38 @@ class ReviewImagesFragment : Fragment() {
             val title = "$checkedSize / $itemsCount" +
                 " ($bytesFormatted)"
             val countView = optionsActionBar?.findViewById<AppCompatTextView>(R.id.title)
-            val thumbsDownButton =
-                optionsActionBar?.findViewById<ImageView>(R.id.thumbsDown)
             countView?.text = title
             if (checkedSize > 0 && doShowDown) {
                 thumbsDownButton?.visibility = View.VISIBLE
             } else {
                 thumbsDownButton?.visibility = View.GONE
+            }
+        }
+        thumbsDownButton?.setOnClickListener {
+            mediaFileAdapter?.let {
+                if (!it.checkItemsList.isNullOrEmpty()) {
+                    if (cleanData != null) {
+                        cleanData(it.checkItemsList).observe(viewLifecycleOwner) { success ->
+                            if (success) {
+                                if (mediaFileAdapter?.removeChecked() != true) {
+                                    log.warn("Failed to update analysis adapter to remove items")
+                                    viewModel.analysisType?.let { type ->
+                                        initAnalysisView(type)
+                                    }
+                                }
+                                requireActivity().showToastOnBottom(
+                                    resources
+                                        .getString(R.string.analysis_updated)
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    requireActivity().showToastOnBottom(
+                        resources
+                            .getString(R.string.no_item_selected)
+                    )
+                }
             }
         }
         binding.listView
