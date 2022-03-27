@@ -27,13 +27,18 @@ import com.amaze.fileutilities.home_page.ui.files.MediaInfoRecyclerViewHolder
 import com.bumptech.glide.Glide
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.lang.ref.WeakReference
+import java.util.*
 
 abstract class AbstractMediaFilesAdapter(
     private val superContext: Context,
     private val superPreloader: MediaAdapterPreloader,
-    private val isGrid: Boolean
-) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>(), PopupTextProvider {
+    private val isGrid: Boolean,
+    private val listItemPressedCallback: ((mediaFileInfo: MediaFileInfo) -> Unit)?,
+    private val toggleCheckCallback: (
+        (checkedSize: Int, itemsCount: Int, bytesFormatted: String)
+        -> Unit
+    )?
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(), PopupTextProvider {
 
     val checkItemsList: MutableList<ListItem> = mutableListOf()
 
@@ -44,6 +49,36 @@ abstract class AbstractMediaFilesAdapter(
             checkItemsList.add(listItem)
         }
         listItem.toggleChecked()
+    }
+
+    fun toggleChecked(listItem: ListItem, holder: MediaInfoRecyclerViewHolder) {
+        toggleChecked(listItem)
+        if (listItem.isChecked) {
+            if (isGrid) {
+                holder.checkIconGrid.visibility = View.VISIBLE
+            } else {
+                holder.root.isSelected = true
+            }
+        } else {
+            if (isGrid) {
+                holder.checkIconGrid.visibility = View.INVISIBLE
+            } else {
+                holder.root.isSelected = false
+            }
+        }
+    }
+
+    fun removeChecked(): Boolean {
+        val syncList = Collections.synchronizedList(getMediaFilesListItems())
+        val removeItemsIdx = checkItemsList.map { it.position }
+        synchronized(syncList) {
+            return if (syncList.removeAll { removeItemsIdx.contains(it.position) }) {
+                removeItemsIdx.forEach { notifyItemRemoved(it) }
+                true
+            } else {
+                false
+            }
+        }
     }
 
     fun checkedItemBytes(): String {
@@ -111,9 +146,27 @@ abstract class AbstractMediaFilesAdapter(
                     mediaFileInfo ->
                     holder.infoTitle.text = mediaFileInfo.title
                     Glide.with(superContext).clear(holder.iconView)
-                    holder.checkIconGrid.visibility =
-                        if (isChecked) View.VISIBLE else View.INVISIBLE
+                    /*holder.checkIconGrid.visibility =
+                        if (isChecked) View.VISIBLE else View.INVISIBLE*/
                     superPreloader.loadImage(mediaFileInfo.path, holder.iconView, isGrid)
+                    if (isChecked) {
+                        if (isGrid) {
+                            holder.checkIconGrid.visibility = View.VISIBLE
+                        } else {
+                            holder.root.isSelected = true
+                        }
+                    } else {
+                        if (isGrid) {
+                            holder.checkIconGrid.visibility = View.INVISIBLE
+                        } else {
+                            holder.root.isSelected = false
+                        }
+                    }
+                    holder.root.setOnLongClickListener {
+                        toggleChecked(this, holder)
+                        invalidateCheckedTitle()
+                        true
+                    }
                     val formattedDate = mediaFileInfo.getModificationDate(superContext)
                     val formattedSize = mediaFileInfo.getFormattedSize(superContext)
                     mediaFileInfo.extraInfo?.let { extraInfo ->
@@ -131,6 +184,7 @@ abstract class AbstractMediaFilesAdapter(
                                 holder.infoSummary.text = "$formattedDate | $formattedSize"
                                 holder.extraInfo.text = ""
                                 holder.root.setOnClickListener {
+                                    listItemPressedCallback?.invoke(mediaFileInfo)
                                     mediaFileInfo
                                         .triggerMediaFileInfoAction(WeakReference(superContext))
                                 }
@@ -150,6 +204,14 @@ abstract class AbstractMediaFilesAdapter(
                             }
                         }
                     }
+
+                    // override click listener in case we have any single item checked
+                    if (checkItemsList.size > 0) {
+                        holder.root.setOnClickListener {
+                            toggleChecked(this, holder)
+                            invalidateCheckedTitle()
+                        }
+                    }
                 }
             }
         }
@@ -157,6 +219,10 @@ abstract class AbstractMediaFilesAdapter(
 
     override fun getPopupText(position: Int): String {
         return getMediaFilesListItems()[position].header ?: ""
+    }
+
+    fun invalidateCheckedTitle() {
+        toggleCheckCallback?.invoke(checkItemsList.size, itemCount, checkedItemBytes())
     }
 
     private val mInflater: LayoutInflater
@@ -171,6 +237,7 @@ abstract class AbstractMediaFilesAdapter(
             "x${mediaFileInfo.extraInfo.imageMetaData?.height}"
         holder.extraInfo.text = ""
         holder.root.setOnClickListener {
+            listItemPressedCallback?.invoke(mediaFileInfo)
             mediaFileInfo.triggerMediaFileInfoAction(WeakReference(superContext))
         }
     }
@@ -186,6 +253,7 @@ abstract class AbstractMediaFilesAdapter(
             holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
         }
         holder.root.setOnClickListener {
+            listItemPressedCallback?.invoke(mediaFileInfo)
             mediaFileInfo.triggerMediaFileInfoAction(WeakReference(superContext))
         }
     }
@@ -201,6 +269,7 @@ abstract class AbstractMediaFilesAdapter(
             holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
         }
         holder.root.setOnClickListener {
+            listItemPressedCallback?.invoke(mediaFileInfo)
             mediaFileInfo.triggerMediaFileInfoAction(WeakReference(superContext))
         }
     }

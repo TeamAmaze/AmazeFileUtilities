@@ -29,4 +29,7 @@ interface BlurAnalysisDao {
 
     @Query("DELETE FROM bluranalysis WHERE file_path like '%' || :path || '%'")
     fun deleteByPathContains(path: String)
+
+    @Query("UPDATE bluranalysis SET is_blur=0 WHERE file_path IN(:pathList)")
+    fun cleanIsBlur(pathList: List<String>)
 }

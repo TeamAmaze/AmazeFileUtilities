@@ -30,9 +30,17 @@ class MediaFileAdapter(
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
     private val mediaListType: Int,
     private val drawBannerCallback: (mediaTypeHeader: MediaTypeHeaderView) -> Unit,
-    private val listItemPressedCallback: (mediaFileInfo: MediaFileInfo) -> Unit
+    listItemPressedCallback: (mediaFileInfo: MediaFileInfo) -> Unit,
+    /*toggleCheckCallback: (
+        checkedSize: Int,
+        itemsCount: Int,
+        bytesFormatted: String
+    ) -> Unit,*/
 ) :
-    AbstractMediaFilesAdapter(context, preloader, isGrid) {
+    AbstractMediaFilesAdapter(
+        context, preloader, isGrid, listItemPressedCallback,
+        null
+    ) {
 
     companion object {
         const val MEDIA_TYPE_AUDIO = 0

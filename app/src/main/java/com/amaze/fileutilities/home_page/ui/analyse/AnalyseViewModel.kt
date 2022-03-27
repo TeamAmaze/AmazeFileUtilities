@@ -13,6 +13,7 @@ package com.amaze.fileutilities.home_page.ui.analyse
 import androidx.lifecycle.*
 import com.amaze.fileutilities.home_page.database.*
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
+import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.invalidate
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +22,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class AnalyseViewModel : ViewModel() {
+
+    var analysisType: Int? = null
 
     fun getBlurImages(dao: BlurAnalysisDao): LiveData<List<MediaFileInfo>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
@@ -238,6 +241,93 @@ class AnalyseViewModel : ViewModel() {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             emit(transformInternalStorageAnalysisToMediaFile(dao))
+        }
+    }
+
+    fun cleanImageAnalysis(
+        dao: ImageAnalysisDao,
+        analysisType: Int,
+        checkItemsList: List<AbstractMediaFilesAdapter.ListItem>
+    ):
+        LiveData<Boolean> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(false)
+            checkItemsList.filter {
+                listItem ->
+                listItem.mediaFileInfo != null
+            }.map {
+                listItem ->
+                listItem.mediaFileInfo!!.path
+            }.let {
+                list ->
+                when (analysisType) {
+                    ReviewImagesFragment.TYPE_SELFIE ->
+                        dao.cleanIsSelfie(list)
+                    ReviewImagesFragment.TYPE_SAD ->
+                        dao.cleanIsSad(list)
+                    ReviewImagesFragment.TYPE_SLEEPING ->
+                        dao.cleanIsSleeping(list)
+                    ReviewImagesFragment.TYPE_DISTRACTED ->
+                        dao.cleanIsDistracted(list)
+                    ReviewImagesFragment.TYPE_GROUP_PIC ->
+                        dao.cleanIsGroupPic(list)
+                }
+            }
+            emit(true)
+        }
+    }
+
+    fun cleanMemeAnalysis(
+        dao: MemeAnalysisDao,
+        checkItemsList: List<AbstractMediaFilesAdapter.ListItem>
+    ):
+        LiveData<Boolean> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(false)
+            checkItemsList.filter { listItem ->
+                listItem.mediaFileInfo != null
+            }.map { listItem ->
+                listItem.mediaFileInfo!!.path
+            }.let { list ->
+                dao.cleanIsMeme(list)
+            }
+            emit(true)
+        }
+    }
+
+    fun cleanBlurAnalysis(
+        dao: BlurAnalysisDao,
+        checkItemsList: List<AbstractMediaFilesAdapter.ListItem>
+    ):
+        LiveData<Boolean> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(false)
+            checkItemsList.filter { listItem ->
+                listItem.mediaFileInfo != null
+            }.map { listItem ->
+                listItem.mediaFileInfo!!.path
+            }.let { list ->
+                dao.cleanIsBlur(list)
+            }
+            emit(true)
+        }
+    }
+
+    fun cleanLowLightAnalysis(
+        dao: LowLightAnalysisDao,
+        checkItemsList: List<AbstractMediaFilesAdapter.ListItem>
+    ):
+        LiveData<Boolean> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(false)
+            checkItemsList.filter { listItem ->
+                listItem.mediaFileInfo != null
+            }.map { listItem ->
+                listItem.mediaFileInfo!!.path
+            }.let { list ->
+                dao.cleanIsLowLight(list)
+            }
+            emit(true)
         }
     }
 
