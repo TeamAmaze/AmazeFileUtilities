@@ -383,6 +383,9 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                         )
                 )
             }
+            if (!isDialogActivity()) {
+                Utils.setScreenRotationSensor(this@BaseVideoPlayerActivity)
+            }
             rotationDisableView = customToolbar.addActionButton(getToolbarRotationDrawable()) {
                 videoPlayerViewModel?.isRotationLocked = !(
                     videoPlayerViewModel?.isRotationLocked
@@ -391,7 +394,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 if (videoPlayerViewModel?.isRotationLocked == true) {
                     Utils.disableScreenRotation(this@BaseVideoPlayerActivity)
                 } else {
-                    Utils.enableScreenRotation(this@BaseVideoPlayerActivity)
+                    Utils.setScreenRotationSensor(this@BaseVideoPlayerActivity)
                 }
                 rotationDisableView?.let {
                     imageView ->
