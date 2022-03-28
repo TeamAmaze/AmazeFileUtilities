@@ -231,7 +231,11 @@ class Utils {
         }
 
         fun enableScreenRotation(activity: Activity) {
-            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_USER
+        }
+
+        fun setScreenRotationSensor(activity: Activity) {
+            activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
         }
 
         fun containsInPreferences(
