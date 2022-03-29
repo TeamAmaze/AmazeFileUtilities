@@ -11,21 +11,18 @@
 package com.amaze.fileutilities.image_viewer
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.GenericPagerViewerActivityBinding
 import com.amaze.fileutilities.utilis.getSiblingUriFiles
 import com.amaze.fileutilities.utilis.showToastInCenter
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import xyz.klinker.android.drag_dismiss.activity.DragDismissActivity
 import java.io.File
 import java.util.*
 
-class ImageViewerActivity : DragDismissActivity() {
+class ImageViewerActivity : PermissionsActivity() {
 
     var log: Logger = LoggerFactory.getLogger(ImageViewerActivity::class.java)
 
@@ -34,11 +31,9 @@ class ImageViewerActivity : DragDismissActivity() {
         GenericPagerViewerActivityBinding.inflate(layoutInflater)
     }
 
-    override fun onCreateContent(
-        inflater: LayoutInflater?,
-        parent: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(viewBinding.root)
 
         viewModel = ViewModelProvider(this).get(ImageViewerViewModel::class.java)
 
@@ -46,7 +41,7 @@ class ImageViewerActivity : DragDismissActivity() {
         val imageUri = intent.data
         if (imageUri == null) {
             showToastInCenter(resources.getString(R.string.unsupported_content))
-            return View(this)
+            return
         }
         log.info(
             "Loading image from path ${imageUri.path} " +
@@ -78,7 +73,6 @@ class ImageViewerActivity : DragDismissActivity() {
                 viewBinding.pager.currentItem = position
             }
         }
-        return viewBinding.root
     }
 
     /*override fun onCreate(savedInstanceState: Bundle?) {

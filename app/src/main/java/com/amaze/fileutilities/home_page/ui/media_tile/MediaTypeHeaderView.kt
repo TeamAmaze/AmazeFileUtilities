@@ -200,7 +200,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         ) {
             optionsSwitchView.setImageDrawable(
                 resources
-                    .getDrawable(R.drawable.ic_round_view_list_32)
+                    .getDrawable(R.drawable.ic_round_grid_on_32)
             )
             listViewButton = getSelectedTextButton(resources.getString(R.string.list_view))
             gridViewButton = getUnSelectedTextButton(resources.getString(R.string.grid_view))

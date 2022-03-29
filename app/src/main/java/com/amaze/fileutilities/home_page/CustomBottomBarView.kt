@@ -29,7 +29,7 @@ class CustomBottomBarView(context: Context, attrs: AttributeSet?) : LinearLayout
 
         orientation = VERTICAL
         gravity = Gravity.CENTER_HORIZONTAL
-        setBackgroundColor(resources.getColor(R.color.translucent_toolbar))
+//        setBackgroundColor(resources.getColor(R.color.translucent_toolbar))
     }
 
     fun addButton(drawable: Drawable, onPress: () -> Unit) {
