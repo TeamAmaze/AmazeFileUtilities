@@ -12,6 +12,7 @@ package com.amaze.fileutilities.image_viewer
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.format.Formatter
 import android.view.*
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
@@ -26,6 +27,10 @@ import com.amaze.fileutilities.utilis.share.showSetAsDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.bumptech.glide.Glide
 import com.drew.imaging.ImageMetadataReader
+import com.drew.metadata.exif.ExifIFD0Directory
+import com.drew.metadata.exif.ExifSubIFDDirectory
+import com.drew.metadata.file.FileSystemDirectory
+import com.drew.metadata.jpeg.JpegDirectory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -137,7 +142,104 @@ class ImageViewerFragment : AbstractMediaFragment() {
                         }
                         result += "\n\n"
                     }
-                    viewBinding.metadata.text = result
+                    val file = it.uri.getFileFromUri(requireContext())
+                    val jpegDirectory = metadata.getFirstDirectoryOfType(JpegDirectory::class.java)
+                    val fileSystemDirectory = metadata
+                        .getFirstDirectoryOfType(FileSystemDirectory::class.java)
+                    if (file != null) {
+                        imageMetadataLayout.fileName.text = file.name
+                        val widthAndHeight = "${jpegDirectory.imageWidth}" +
+                            "x${jpegDirectory.imageHeight}"
+                        imageMetadataLayout.fileSize.text =
+                            "$widthAndHeight " +
+                            "| ${Formatter.formatFileSize(
+                                requireContext(),
+                                file.length()
+                            )}"
+                        imageMetadataLayout.fileLastModified.text =
+                            Date(file.lastModified()).toString()
+                        imageMetadataLayout.filePath.text = it.uri.path ?: file.path
+                    } else if (fileSystemDirectory != null) {
+                        viewBinding.imageMetadataLayout.fileName.text =
+                            fileSystemDirectory.tags.toMutableList()[0].toString()
+                        viewBinding.imageMetadataLayout.fileSize.text =
+                            Formatter.formatFileSize(
+                                requireContext(),
+                                fileSystemDirectory.tags.toMutableList()[1].toString().toLong()
+                            )
+
+                        imageMetadataLayout.fileLastModified.text = fileSystemDirectory.tags
+                            .toMutableList()[2].toString()
+                    }
+
+                    val exifDirectory = metadata
+                        .getFirstDirectoryOfType(ExifIFD0Directory::class.java)
+                    val exifSubDirectory = metadata
+                        .getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
+                    if (exifDirectory != null) {
+                        exifDirectory.getString(ExifIFD0Directory.TAG_MODEL).let {
+                            property ->
+                            if (!property.isNullOrEmpty()) {
+                                imageMetadataLayout.model.text =
+                                    "${resources.getString(R.string.model)}: $property"
+                            } else {
+                                imageMetadataLayout.model.visibility = View.GONE
+                            }
+                        }
+                        exifDirectory.getString(ExifIFD0Directory.TAG_MAKE).let {
+                            property ->
+                            if (!property.isNullOrEmpty()) {
+                                imageMetadataLayout.make.text =
+                                    "${resources.getString(R.string.make)}: $property"
+                            } else {
+                                imageMetadataLayout.make.visibility = View.GONE
+                            }
+                        }
+                        exifSubDirectory.getString(ExifSubIFDDirectory.TAG_APERTURE).let {
+                            property ->
+                            if (!property.isNullOrEmpty()) {
+                                imageMetadataLayout.aperture.text =
+                                    "${resources.getString(R.string.aperture)}: $property"
+                            } else {
+                                imageMetadataLayout.aperture.visibility = View.GONE
+                            }
+                        }
+                        exifSubDirectory.getString(ExifSubIFDDirectory.TAG_SHUTTER_SPEED).let {
+                            property ->
+                            if (!property.isNullOrEmpty()) {
+                                imageMetadataLayout.shutterTime.text =
+                                    "${resources.getString(R.string.shutter_time)}: $property"
+                            } else {
+                                imageMetadataLayout.shutterTime.visibility = View.GONE
+                            }
+                        }
+                        exifSubDirectory.getString(ExifSubIFDDirectory.TAG_ISO_SPEED).let {
+                            property ->
+                            if (!property.isNullOrEmpty()) {
+                                imageMetadataLayout.iso.text =
+                                    "${resources.getString(R.string.iso)}: $property"
+                            } else {
+                                imageMetadataLayout.iso.visibility = View.GONE
+                            }
+                        }
+                        exifSubDirectory.getString(
+                            ExifSubIFDDirectory
+                                .TAG_ISO_SPEED_LATITUDE_YYY
+                        ).let {
+                            property ->
+                            if (!property.isNullOrEmpty()) {
+                                imageMetadataLayout.location.text =
+                                    "${resources.getString(R.string.location)}: $property " +
+                                    "| ${exifSubDirectory.getString(
+                                        ExifSubIFDDirectory
+                                            .TAG_ISO_SPEED_LATITUDE_ZZZ
+                                    ) ?: ""}"
+                            } else {
+                                imageMetadataLayout.location.visibility = View.GONE
+                            }
+                        }
+                    }
+//                    viewBinding.metadata.text = result
                 }
             }
         }
