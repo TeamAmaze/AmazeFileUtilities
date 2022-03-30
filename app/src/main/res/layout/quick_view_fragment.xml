@@ -75,6 +75,10 @@
                     android:layout_height="wrap_content"
                     app:bottomBarBgColor="@android:color/transparent"
                     />
+                <include
+                    android:id="@+id/image_metadata_layout"
+                    layout="@layout/fragment_image_viewer_metadata"
+                    />
                 <TextView
                     android:id="@+id/metadata"
                     android:layout_width="match_parent"
