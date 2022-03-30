@@ -15,50 +15,62 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.px
 
 class CustomBottomBarView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
     init {
+        val a = context.obtainStyledAttributes(
+            attrs,
+            R.styleable.CustomBottomBarView, 0, 0
+        )
+        val valueColor = a.getColor(
+            R.styleable.CustomBottomBarView_bottomBarBgColor,
+            resources.getColor(R.color.translucent_toolbar)
+        )
+        a.recycle()
         val inflater = context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.custom_bottom_bar_translucent, this, true)
 
-        orientation = VERTICAL
+        orientation = HORIZONTAL
         gravity = Gravity.CENTER_HORIZONTAL
-//        setBackgroundColor(resources.getColor(R.color.translucent_toolbar))
+        setBackgroundColor(valueColor)
     }
 
-    fun addButton(drawable: Drawable, onPress: () -> Unit) {
-        val imageView = getImageView(drawable)
-        imageView.setOnClickListener {
+    fun addButton(drawable: Drawable, hint: String, onPress: () -> Unit) {
+        val itemView = getItem(drawable, hint)
+        itemView.setOnClickListener {
             onPress.invoke()
         }
-        addView(imageView)
+        addView(itemView)
         invalidate()
     }
 
-    private fun getImageView(drawable: Drawable): ImageView {
-        val imageView = ImageView(context)
-        setParams(imageView)
-        imageView.setImageDrawable(drawable)
-        imageView.setBackgroundColor(resources.getColor(android.R.color.transparent))
-        return imageView
+    private fun getItem(drawable: Drawable, hint: String): View {
+        val itemView = inflate(context, R.layout.bottom_bar_item, null)
+        setParams(itemView)
+        itemView.findViewById<ImageView>(R.id.item_icon).setImageDrawable(drawable)
+        itemView.findViewById<TextView>(R.id.item_hint).text = hint
+        return itemView
     }
 
-    private fun setParams(button: ImageView) {
+    private fun setParams(item: View) {
         val params = LayoutParams(
-            LayoutParams.MATCH_PARENT,
-            LayoutParams.MATCH_PARENT
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
         params.rightMargin = 16.px.toInt()
         params.leftMargin = 16.px.toInt()
-        params.topMargin = 16.px.toInt()
+        params.topMargin = 8.px.toInt()
         params.bottomMargin = 16.px.toInt()
         params.weight = 1f
-        button.layoutParams = params
+        item.layoutParams = params
     }
 }

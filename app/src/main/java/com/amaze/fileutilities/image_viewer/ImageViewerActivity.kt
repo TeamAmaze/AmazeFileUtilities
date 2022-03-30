@@ -12,6 +12,7 @@ package com.amaze.fileutilities.image_viewer
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.widget.ViewPager2
 import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.GenericPagerViewerActivityBinding
@@ -73,6 +74,10 @@ class ImageViewerActivity : PermissionsActivity() {
                 viewBinding.pager.currentItem = position
             }
         }
+    }
+
+    fun getViewpager(): ViewPager2 {
+        return viewBinding.pager
     }
 
     /*override fun onCreate(savedInstanceState: Bundle?) {

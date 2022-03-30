@@ -20,4 +20,7 @@
         <attr name="toolbarTitle" format="string" localization="suggested" />
         <attr name="bgColor" format="color" />
     </declare-styleable>
+    <declare-styleable name="CustomBottomBarView">
+        <attr name="bottomBarBgColor" format="color" />
+    </declare-styleable>
 </resources>

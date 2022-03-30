@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
@@ -129,6 +130,34 @@ fun showShareDialog(context: Context, inflater: LayoutInflater, adapter: ShareAd
     }
     val alertDialog = dialogBuilder.create()
     alertDialog.show()
+}
+
+fun showSetAsDialog(uri: Uri, context: Context) {
+    val intent = Intent(Intent.ACTION_ATTACH_DATA)
+    intent.addCategory(Intent.CATEGORY_DEFAULT)
+    intent.putExtra(Intent.EXTRA_STREAM, uri)
+    intent.setDataAndType(uri, "image/*")
+    intent.putExtra("mimeType", "image/*")
+    intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+    context.startActivity(
+        Intent.createChooser(
+            intent,
+            context.resources.getString(R.string.set_as)
+        )
+    )
+}
+
+fun showEditImageDialog(uri: Uri, context: Context) {
+    val editIntent = Intent(Intent.ACTION_EDIT)
+    editIntent.setDataAndType(uri, "image/*")
+    editIntent.putExtra(Intent.EXTRA_STREAM, uri)
+    editIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+    context.startActivity(
+        Intent.createChooser(
+            editIntent,
+            context.resources.getString(R.string.edit)
+        )
+    )
 }
 
 private fun getShareIntentAction(sharingUris: List<Uri>): String {
