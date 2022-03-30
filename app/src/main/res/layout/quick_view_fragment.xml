@@ -29,7 +29,6 @@
         android:id="@+id/imageViewSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxHeight="@dimen/material_sheet_peek_height"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -46,21 +45,20 @@
         android:id="@+id/layoutBottomSheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxHeight="@dimen/audio_player_sheet_height"
         android:background="@drawable/background_curved_audio_sheet"
         android:clipToPadding="false"
         android:paddingLeft="@dimen/eight_dp"
         android:paddingRight="@dimen/eight_dp"
         android:paddingBottom="@dimen/eight_dp"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="@dimen/audio_player_peek_height"
+        app:behavior_peekHeight="@dimen/image_viewer_peek_height"
         app:layout_behavior="com.amaze.fileutilities.utilis.DragDismissBottomSheetBehaviour"
         android:visibility="gone"
         >
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/material_generic"
+            android:paddingTop="@dimen/eight_dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             >
@@ -74,7 +72,8 @@
                 <com.amaze.fileutilities.home_page.CustomBottomBarView
                     android:id="@+id/custom_bottom_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/material_generic_large"
+                    android:layout_height="wrap_content"
+                    app:bottomBarBgColor="@android:color/transparent"
                     />
                 <TextView
                     android:id="@+id/metadata"

@@ -11,24 +11,25 @@
 package com.amaze.fileutilities.image_viewer
 
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.*
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.documentfile.provider.DocumentFile
+import androidx.fragment.app.activityViewModels
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.QuickViewFragmentBinding
+import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.share.showEditImageDialog
+import com.amaze.fileutilities.utilis.share.showSetAsDialog
+import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.bumptech.glide.Glide
 import com.drew.imaging.ImageMetadataReader
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
-import org.opencv.imgcodecs.Imgcodecs
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.*
 
 class ImageViewerFragment : AbstractMediaFragment() {
 
@@ -37,6 +38,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         QuickViewFragmentBinding.inflate(layoutInflater)
     }
+    private val filesViewModel: FilesViewModel by activityViewModels()
 
     private var hideToolbars = false
 
@@ -103,7 +105,10 @@ class ImageViewerFragment : AbstractMediaFragment() {
             viewBinding.run {
                 imageView.setOnClickListener {
                     hideToolbars = !hideToolbars
-                    refactorSystemUi(hideToolbars)
+                    refactorSystemUi(
+                        hideToolbars,
+                        imageView.scale == imageView.minimumScale
+                    )
                 }
                 frameLayout.setProxyView(imageView)
                 customToolbar.root.visibility = View.VISIBLE
@@ -114,81 +119,16 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 customToolbar.backButton.setOnClickListener {
                     requireActivity().onBackPressed()
                 }
-                customBottomBar.addButton(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        R.drawable.ic_outline_info_32, requireActivity().theme
-                    )!!
-                ) {
-                    ImageMetadataSheet.showMetadata(
-                        quickViewType,
-                        requireActivity().supportFragmentManager
-                    )
-                }
-                customBottomBar.addButton(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        R.drawable.ic_twotone_share_32, requireActivity().theme
-                    )!!
-                ) {
-                    ImageMetadataSheet.showMetadata(
-                        quickViewType,
-                        requireActivity().supportFragmentManager
-                    )
-                }
-                customBottomBar.addButton(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        R.drawable.ic_round_delete_outline_32, requireActivity().theme
-                    )!!
-                ) {
-                    ImageMetadataSheet.showMetadata(
-                        quickViewType,
-                        requireActivity().supportFragmentManager
-                    )
-                }
-
-                val sHeight = Utils.getScreenHeight(requireActivity().windowManager)
-                val imageSmallHeight = sHeight / 3
-                val bottomSheetHeight = (sHeight * 2) / 3
-                viewBinding.imageViewSmall.layoutParams.height = imageSmallHeight
-                viewBinding.layoutBottomSheet.layoutParams.height = bottomSheetHeight
-
-                viewBinding.layoutBottomSheet.visibility = View.VISIBLE
-                val params: CoordinatorLayout.LayoutParams = viewBinding.layoutBottomSheet
-                    .layoutParams as CoordinatorLayout.LayoutParams
-                val behavior = params.behavior as DragDismissBottomSheetBehaviour
-                behavior.addBottomSheetCallback(bottomSheetCallback)
-                behavior.setProxyView(imageView, {
-                    if (!hideToolbars) {
-                        hideToolbars = true
-                        refactorSystemUi(hideToolbars)
-                    }
-                }, {
-                    if (hideToolbars) {
-                        hideToolbars = false
-                        refactorSystemUi(hideToolbars)
-                    }
-                })
-                viewBinding.layoutBottomSheet.setOnClickListener {
-                    if (behavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-                        behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                    } else {
-                        behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                    }
-                }
+                setupBottomBar(quickViewType)
+                setupBottomSheetBehaviour()
 
                 quickViewType.let {
                     val metadata = ImageMetadataReader.readMetadata(
                         it.uri
                             .getFileFromUri(requireContext())
                     )
-                    val matrix = Imgcodecs.imread(it.uri.getFileFromUri(requireContext())!!.path)
-                    val factor = ImgUtils.laplace(matrix)
-                    log.info("Found laplace of image: $factor")
 
                     var result = "\n"
-                    result += "Laplacian variance: $factor\n"
                     metadata.directories.forEach { directory ->
                         directory.tags.forEach {
                             tag ->
@@ -197,54 +137,130 @@ class ImageViewerFragment : AbstractMediaFragment() {
                         }
                         result += "\n\n"
                     }
-
-                    val recognizer = TextRecognition
-                        .getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-                    val imgPath = quickViewType.uri.getFileFromUri(requireContext())!!.path
-                    val image = InputImage.fromBitmap(
-                        BitmapFactory.decodeFile(imgPath),
-                        0
-                    )
-                    recognizer.process(image)
-                        .addOnSuccessListener { visionText ->
-                            // Task completed successfully
-
-                            result += "\n\n\n------ Extracted text --------\n\n"
-                            result += visionText.text
-                            result += "\n\n"
-                            log.info("CUSTOM:\n${visionText.text}")
-                            viewBinding.metadata.text = result
-                        }
-                        .addOnFailureListener { e ->
-                            // Task failed with an exception
-                            // ...
-                            log.warn("failed to recognize image", e)
-                        }
-
-                    /*val thres = ImgUtils.thresholdInvert(ImgUtils.convertBitmapToMat(BitmapFactory
-                        .decodeFile(imgPath)))*/
-                    ImgUtils.convertBitmapToMat(
-                        BitmapFactory
-                            .decodeFile(imgPath)
-                    )?.let {
-                        mat ->
-                        val zeros = ImgUtils.getTotalAndZeros(mat)
-
-//            val bitmap = ImgUtils.convertMatToBitmap(thres)
-                        result += "\n\n\n------ Dark areas --------\n\n"
-                        result += "Total: ${zeros.first}\nZeros: ${zeros.second}" +
-                            "\nRatio: ${(
-                                zeros.second.toDouble() /
-                                    zeros.first.toDouble()
-                                ).toDouble()}"
-                        result += "\n\n"
-                    }
-
                     viewBinding.metadata.text = result
                 }
             }
         }
         quickViewType?.let { showImage(it) }
+    }
+
+    private fun setupBottomSheetBehaviour() {
+        viewBinding.run {
+            val params: CoordinatorLayout.LayoutParams = viewBinding.layoutBottomSheet
+                .layoutParams as CoordinatorLayout.LayoutParams
+            val behavior = params.behavior as DragDismissBottomSheetBehaviour
+
+            imageViewSmall.setOnClickListener {
+                behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+
+            val sHeight = Utils.getScreenHeight(requireActivity().windowManager)
+            val imageSmallHeight = sHeight / 3
+            val bottomSheetHeight = (sHeight * 2) / 3
+            viewBinding.imageViewSmall.layoutParams.height = imageSmallHeight
+            viewBinding.layoutBottomSheet.layoutParams.height = bottomSheetHeight
+
+            viewBinding.layoutBottomSheet.visibility = View.VISIBLE
+            behavior.addBottomSheetCallback(bottomSheetCallback)
+            behavior.setProxyView(imageView, {
+                if (!hideToolbars) {
+                    hideToolbars = true
+                    // disable viewpager swipe while swipe to dismiss gesture
+                    (activity as ImageViewerActivity).getViewpager().isUserInputEnabled = false
+                    refactorSystemUi(hideToolbars, true)
+                }
+            }, {
+                if (hideToolbars) {
+                    hideToolbars = false
+                    (activity as ImageViewerActivity).getViewpager().isUserInputEnabled = true
+                    refactorSystemUi(hideToolbars, true)
+                }
+            })
+            layoutBottomSheet.setOnClickListener {
+                if (behavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                } else {
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                }
+            }
+        }
+    }
+
+    private fun setupBottomBar(localImageModel: LocalImageModel?) {
+        viewBinding.run {
+            customBottomBar.addButton(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_round_edit_32, requireActivity().theme
+                )!!,
+                resources.getString(R.string.edit)
+            ) {
+                localImageModel?.let {
+                    showEditImageDialog(
+                        localImageModel.uri,
+                        this@ImageViewerFragment.requireContext()
+                    )
+                }
+            }
+            customBottomBar.addButton(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_twotone_share_32, requireActivity().theme
+                )!!,
+                resources.getString(R.string.share)
+            ) {
+                var processed = false
+                localImageModel?.let {
+                    filesViewModel.getShareMediaFilesAdapterFromUriList(
+                        Collections
+                            .singletonList(it.uri)
+                    )
+                        .observe(viewLifecycleOwner) {
+                            shareAdapter ->
+                            if (shareAdapter == null) {
+                                if (processed) {
+                                    requireActivity().showToastInCenter(
+                                        this@ImageViewerFragment.resources
+                                            .getString(R.string.failed_to_share)
+                                    )
+                                } else {
+                                    requireActivity()
+                                        .showToastInCenter(
+                                            resources
+                                                .getString(R.string.please_wait)
+                                        )
+                                    processed = true
+                                }
+                            } else {
+                                showShareDialog(
+                                    requireActivity(),
+                                    this@ImageViewerFragment.layoutInflater, shareAdapter
+                                )
+                            }
+                        }
+                }
+            }
+            customBottomBar.addButton(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_baseline_open_in_new_24, requireActivity().theme
+                )!!,
+                resources.getString(R.string.set_as)
+            ) {
+                localImageModel?.let {
+                    showSetAsDialog(localImageModel.uri, this@ImageViewerFragment.requireContext())
+                }
+            }
+            customBottomBar.addButton(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_round_delete_outline_32, requireActivity().theme
+                )!!,
+                resources.getString(R.string.delete)
+            ) {
+                requireActivity().showToastInCenter(resources.getString(R.string.not_allowed))
+            }
+        }
     }
 
     private val bottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
@@ -259,8 +275,17 @@ class ImageViewerFragment : AbstractMediaFragment() {
             if (slideOffset != 0f) {
                 viewBinding.imageViewSmall.visibility = View.VISIBLE
                 viewBinding.imageViewSmall.alpha = slideOffset
+                if (slideOffset == 1f) {
+                    viewBinding.imageView.visibility = View.GONE
+                } else {
+                    viewBinding.imageView.visibility = View.VISIBLE
+                    if ((activity as ImageViewerActivity).getViewpager().isUserInputEnabled) {
+                        (activity as ImageViewerActivity).getViewpager().isUserInputEnabled = false
+                    }
+                }
             } else {
                 viewBinding.imageViewSmall.visibility = View.GONE
+                (activity as ImageViewerActivity).getViewpager().isUserInputEnabled = true
             }
 //            viewBinding.bottomSheetBig.alpha = slideOffset
 //            viewBinding.layoutBottomSheet.alpha = slideOffset
@@ -287,5 +312,55 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 )
             )
             .into(viewBinding.imageViewSmall)
+    }
+
+    private fun showImageProcessingText() {
+
+        /*val matrix = Imgcodecs.imread(it.uri.getFileFromUri(requireContext())!!.path)
+        val factor = ImgUtils.laplace(matrix)
+        log.info("Found laplace of image: $factor")*/
+
+        /*val recognizer = TextRecognition
+            .getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+        val imgPath = quickViewType.uri.getFileFromUri(requireContext())!!.path
+        val image = InputImage.fromBitmap(
+            BitmapFactory.decodeFile(imgPath),
+            0
+        )
+//                    result += "Laplacian variance: $factor\n"
+        recognizer.process(image)
+            .addOnSuccessListener { visionText ->
+                // Task completed successfully
+
+                result += "\n\n\n------ Extracted text --------\n\n"
+                result += visionText.text
+                result += "\n\n"
+                log.info("CUSTOM:\n${visionText.text}")
+                viewBinding.metadata.text = result
+            }
+            .addOnFailureListener { e ->
+                // Task failed with an exception
+                // ...
+                log.warn("failed to recognize image", e)
+            }
+
+        *//*val thres = ImgUtils.thresholdInvert(ImgUtils.convertBitmapToMat(BitmapFactory
+                        .decodeFile(imgPath)))*//*
+                    ImgUtils.convertBitmapToMat(
+                        BitmapFactory
+                            .decodeFile(imgPath)
+                    )?.let {
+                        mat ->
+                        val zeros = ImgUtils.getTotalAndZeros(mat)
+
+//            val bitmap = ImgUtils.convertMatToBitmap(thres)
+                        result += "\n\n\n------ Dark areas --------\n\n"
+                        result += "Total: ${zeros.first}\nZeros: ${zeros.second}" +
+                            "\nRatio: ${(
+                                zeros.second.toDouble() /
+                                    zeros.first.toDouble()
+                                ).toDouble()}"
+                        result += "\n\n"
+                    }*/
     }
 }
