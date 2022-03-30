@@ -14,10 +14,12 @@ import android.app.Activity
 import android.content.*
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.graphics.Point
 import android.net.Uri
 import android.net.wifi.WifiManager
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -236,6 +238,13 @@ class Utils {
 
         fun setScreenRotationSensor(activity: Activity) {
             activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR
+        }
+
+        fun getScreenHeight(windowManager: WindowManager): Int {
+            val deviceDisplay = windowManager.defaultDisplay
+            val size = Point()
+            deviceDisplay?.getSize(size)
+            return size.y
         }
 
         fun containsInPreferences(

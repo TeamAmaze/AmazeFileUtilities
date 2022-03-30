@@ -23,6 +23,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fifty_six_dp">56dp</dimen>
     <dimen name="audio_player_peek_height">86dp</dimen>
+    <dimen name="image_viewer_peek_height">72dp</dimen>
     <dimen name="analysis_footnote">106dp</dimen>
     <dimen name="grid_view">106dp</dimen>
 
