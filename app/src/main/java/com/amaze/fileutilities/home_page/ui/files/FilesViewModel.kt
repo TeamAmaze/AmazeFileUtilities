@@ -530,13 +530,22 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
-    fun getShareMediaFilesAdapter(mediaFileInfoList: List<MediaFileInfo>): LiveData<ShareAdapter?> {
+    fun getShareMediaFilesAdapter(mediaFileInfoList: List<MediaFileInfo>):
+        LiveData<ShareAdapter?> {
+        return getShareMediaFilesAdapterFromUriList(
+            mediaFileInfoList
+                .map { it.getContentUri(applicationContext) }
+        )
+    }
+
+    fun getShareMediaFilesAdapterFromUriList(mediaFileInfoList: List<Uri>):
+        LiveData<ShareAdapter?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
             emit(null)
             log.info("Sharing media files $mediaFileInfoList")
             emit(
                 getShareIntents(
-                    mediaFileInfoList.map { it.getContentUri(applicationContext) },
+                    mediaFileInfoList,
                     applicationContext
                 )
             )

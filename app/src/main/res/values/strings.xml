@@ -297,4 +297,14 @@
         otherwise you\'ll not be able to track the transfer</string>
     <string name="leave">Leave</string>
     <string name="stay">Stay</string>
+    <string name="edit">Edit</string>
+    <string name="set_as">Set as…</string>
+    <string name="delete">Delete</string>
+    <string name="details">Details</string>
+    <string name="make">Make</string>
+    <string name="model">Model</string>
+    <string name="aperture">Aperture</string>
+    <string name="iso">ISO</string>
+    <string name="shutter_time">Shutter time</string>
+    <string name="location">Location</string>
 </resources>
