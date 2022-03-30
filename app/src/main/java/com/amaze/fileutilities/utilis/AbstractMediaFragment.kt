@@ -27,28 +27,37 @@ abstract class AbstractMediaFragment : Fragment() {
 
     abstract fun getBottomBarLayout(): View?
 
-    fun refactorSystemUi(hide: Boolean) {
+    /**
+     * Do hide or show layouts
+     * @param performActionOnSystemBars whether to perform action on status bar,
+     * because that may cause screen ui to refresh
+     */
+    fun refactorSystemUi(hide: Boolean, performActionOnSystemBars: Boolean) {
         if (hide) {
-            WindowInsetsControllerCompat(
-                requireActivity().window,
-                getRootLayout()
-            ).let {
-                controller ->
-                controller.hide(WindowInsetsCompat.Type.systemBars())
-                controller.systemBarsBehavior = WindowInsetsControllerCompat
-                    .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            if (performActionOnSystemBars) {
+                WindowInsetsControllerCompat(
+                    requireActivity().window,
+                    getRootLayout()
+                ).let {
+                    controller ->
+                    controller.hide(WindowInsetsCompat.Type.systemBars())
+                    controller.systemBarsBehavior = WindowInsetsControllerCompat
+                        .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                }
             }
             getToolbarLayout()?.hideFade(ANIM_FADE)
             getBottomBarLayout()?.hideFade(ANIM_FADE)
         } else {
-            WindowInsetsControllerCompat(
-                requireActivity().window,
-                getRootLayout()
-            ).let {
-                controller ->
-                controller.show(WindowInsetsCompat.Type.systemBars())
-                controller.systemBarsBehavior = WindowInsetsControllerCompat
-                    .BEHAVIOR_SHOW_BARS_BY_TOUCH
+            if (performActionOnSystemBars) {
+                WindowInsetsControllerCompat(
+                    requireActivity().window,
+                    getRootLayout()
+                ).let {
+                    controller ->
+                    controller.show(WindowInsetsCompat.Type.systemBars())
+                    controller.systemBarsBehavior = WindowInsetsControllerCompat
+                        .BEHAVIOR_SHOW_BARS_BY_TOUCH
+                }
             }
             getToolbarLayout()?.showFade(ANIM_FADE)
             getBottomBarLayout()?.showFade(ANIM_FADE)
