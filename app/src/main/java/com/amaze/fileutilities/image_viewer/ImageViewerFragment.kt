@@ -30,7 +30,6 @@ import com.drew.imaging.ImageMetadataReader
 import com.drew.metadata.exif.ExifIFD0Directory
 import com.drew.metadata.exif.ExifSubIFDDirectory
 import com.drew.metadata.file.FileSystemDirectory
-import com.drew.metadata.jpeg.JpegDirectory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -143,16 +142,15 @@ class ImageViewerFragment : AbstractMediaFragment() {
                         result += "\n\n"
                     }
                     val file = it.uri.getFileFromUri(requireContext())
-                    val jpegDirectory = metadata.getFirstDirectoryOfType(JpegDirectory::class.java)
+//                    val jpegDirectory = metadata.getFirstDirectoryOfType(JpegDirectory::class.java)
                     val fileSystemDirectory = metadata
                         .getFirstDirectoryOfType(FileSystemDirectory::class.java)
                     if (file != null) {
                         imageMetadataLayout.fileName.text = file.name
-                        val widthAndHeight = "${jpegDirectory.imageWidth}" +
-                            "x${jpegDirectory.imageHeight}"
+                        /*val widthAndHeight = "${jpegDirectory.imageWidth}" +
+                            "x${jpegDirectory.imageHeight}"*/
                         imageMetadataLayout.fileSize.text =
-                            "$widthAndHeight " +
-                            "| ${Formatter.formatFileSize(
+                            "$${Formatter.formatFileSize(
                                 requireContext(),
                                 file.length()
                             )}"
