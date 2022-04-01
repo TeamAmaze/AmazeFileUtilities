@@ -307,4 +307,9 @@
     <string name="iso">ISO</string>
     <string name="shutter_time">Shutter time</string>
     <string name="location">Location</string>
+    <string name="gps">GPS</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="file_name">File Name</string>
+    <string name="path">Path</string>
 </resources>
