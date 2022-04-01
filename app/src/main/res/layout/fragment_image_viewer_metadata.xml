@@ -67,6 +67,7 @@
         android:background="@drawable/background_curved_recents"
         android:padding="@dimen/material_generic"
         android:layout_marginTop="@dimen/material_generic"
+        android:visibility="gone"
         >
         <TextView
             android:layout_width="wrap_content"
@@ -80,7 +81,6 @@
             android:id="@+id/make"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/file"
             android:textColor="@color/white"
             android:textSize="@dimen/twelve_sp"
             android:layout_marginTop="@dimen/eight_dp"
@@ -89,7 +89,6 @@
             android:id="@+id/model"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/file"
             android:textColor="@color/white"
             android:textSize="@dimen/twelve_sp"
             android:layout_marginTop="@dimen/eight_dp"
@@ -98,7 +97,6 @@
             android:id="@+id/aperture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/file"
             android:textColor="@color/white"
             android:textSize="@dimen/twelve_sp"
             android:layout_marginTop="@dimen/eight_dp"
@@ -107,7 +105,6 @@
             android:id="@+id/shutter_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/file"
             android:textColor="@color/white"
             android:textSize="@dimen/twelve_sp"
             android:layout_marginTop="@dimen/eight_dp"
@@ -116,16 +113,43 @@
             android:id="@+id/iso"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/file"
+            android:textColor="@color/white"
+            android:textSize="@dimen/twelve_sp"
+            android:layout_marginTop="@dimen/eight_dp"
+            />
+    </LinearLayout>
+
+    <!-- gps -->
+    <LinearLayout
+        android:id="@+id/gps_info_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/background_curved_recents"
+        android:padding="@dimen/material_generic"
+        android:layout_marginTop="@dimen/material_generic"
+        android:visibility="gone"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gps"
+            android:textColor="@color/highlight_yellow"
+            android:textSize="@dimen/eighteen_sp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/lat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="@dimen/twelve_sp"
             android:layout_marginTop="@dimen/eight_dp"
             />
         <TextView
-            android:id="@+id/location"
+            android:id="@+id/longitude"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/file"
             android:textColor="@color/white"
             android:textSize="@dimen/twelve_sp"
             android:layout_marginTop="@dimen/eight_dp"
