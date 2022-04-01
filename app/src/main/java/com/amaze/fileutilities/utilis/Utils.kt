@@ -23,6 +23,7 @@ import android.view.WindowManager
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
@@ -282,6 +283,12 @@ class Utils {
                 null
             }
             return ipAddressString
+        }
+
+        fun openInMaps(context: Context, latitude: String, longitude: String) {
+            val url = "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            context.startActivity(intent)
         }
     }
 }

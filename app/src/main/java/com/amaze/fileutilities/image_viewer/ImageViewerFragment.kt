@@ -124,37 +124,43 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 }
                 setupBottomBar(quickViewType)
                 setupBottomSheetBehaviour()
-
-                quickViewType.let {
-                    val metadata = ImageMetadataReader.readMetadata(
-                        it.uri
-                            .getFileFromUri(requireContext())
-                    )
-
-                    var result = "\n"
-                    metadata.directories.forEach { directory ->
-                        val dirName = directory.name
-                        result += dirName + "\n"
-                        directory.tags.forEach {
-                            tag ->
-                            result += tag.description
-                            result += "\n"
-                        }
-                        result += "\n\n"
+                setupPropertiesSheet(quickViewType)
+                /*var result = "\n"
+                metadata.directories.forEach { directory ->
+                    val dirName = directory.name
+                    result += dirName + "\n"
+                    directory.tags.forEach {
+                        tag ->
+                        result += tag.description
+                        result += "\n"
                     }
-                    val file = it.uri.getFileFromUri(requireContext())
-                    val exifSubDirectory = metadata
-                        .getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
-                    val descriptor = ExifSubIFDDescriptor(exifSubDirectory)
-                    val fileSystemDirectory = metadata
-                        .getFirstDirectoryOfType(FileSystemDirectory::class.java)
-                    val gpsDirectory = metadata
-                        .getFirstDirectoryOfType(GpsDirectory::class.java)
-                    val gpsDescriptor = GpsDescriptor(gpsDirectory)
-                    if (file != null) {
-                        imageMetadataLayout.fileName.text =
-                            "${resources.getString(R.string.file_name)}: ${file.name}"
-                        var widthAndHeight = ""
+                    result += "\n\n"
+                }*/
+
+//                    viewBinding.metadata.text = result
+            }
+        }
+        quickViewType?.let { showImage(it) }
+    }
+
+    private fun setupPropertiesSheet(quickViewType: LocalImageModel) {
+        quickViewType.let {
+            val file = it.uri.getFileFromUri(requireContext())
+            val metadata = ImageMetadataReader.readMetadata(file)
+            viewBinding.run {
+                val exifSubDirectory = metadata
+                    .getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
+                val descriptor = ExifSubIFDDescriptor(exifSubDirectory)
+                val fileSystemDirectory = metadata
+                    .getFirstDirectoryOfType(FileSystemDirectory::class.java)
+                val gpsDirectory = metadata
+                    .getFirstDirectoryOfType(GpsDirectory::class.java)
+                val gpsDescriptor = GpsDescriptor(gpsDirectory)
+                if (file != null) {
+                    imageMetadataLayout.fileName.text =
+                        "${resources.getString(R.string.file_name)}: ${file.name}"
+                    var widthAndHeight = ""
+                    if (exifSubDirectory != null && descriptor != null) {
                         descriptor.exifImageWidthDescription.let {
                             width ->
                             if (!width.isNullOrEmpty()) {
@@ -168,122 +174,122 @@ class ImageViewerFragment : AbstractMediaFragment() {
                                 }
                             }
                         }
-
-                        imageMetadataLayout.fileSize.text =
-                            "${resources.getString(R.string.size)}: " +
-                            "$widthAndHeight${Formatter.formatFileSize(
-                                requireContext(),
-                                file.length()
-                            )}"
-                        imageMetadataLayout.fileLastModified.text =
-                            Date(file.lastModified()).toString()
-                        imageMetadataLayout.filePath.text =
-                            "${resources.getString(R.string.path)}: ${it.uri.path ?: file.path}"
-                    } else if (fileSystemDirectory != null) {
-                        viewBinding.imageMetadataLayout.fileName.text =
-                            fileSystemDirectory.tags.toMutableList()[0].toString()
-                        viewBinding.imageMetadataLayout.fileSize.text =
-                            Formatter.formatFileSize(
-                                requireContext(),
-                                fileSystemDirectory.tags.toMutableList()[1].toString().toLong()
-                            )
-
-                        imageMetadataLayout.fileLastModified.text =
-                            "${resources.getString(R.string.last_modified)}: " +
-                            "${fileSystemDirectory.tags.toMutableList()[2]
-                            }"
                     }
+                    imageMetadataLayout.fileSize.text =
+                        "${resources.getString(R.string.size)}: " +
+                        "$widthAndHeight${Formatter.formatFileSize(
+                            requireContext(),
+                            file.length()
+                        )}"
+                    imageMetadataLayout.fileLastModified.text =
+                        "${resources.getString(R.string.last_modified)}: " +
+                        "${Date(file.lastModified())}"
+                    imageMetadataLayout.filePath.text =
+                        "${resources.getString(R.string.path)}: ${it.uri.path ?: file.path}"
+                } else if (fileSystemDirectory != null) {
+                    viewBinding.imageMetadataLayout.fileName.text =
+                        fileSystemDirectory.tags.toMutableList()[0].toString()
+                    viewBinding.imageMetadataLayout.fileSize.text =
+                        Formatter.formatFileSize(
+                            requireContext(),
+                            fileSystemDirectory.tags.toMutableList()[1].toString().toLong()
+                        )
 
-                    val exifDirectory = metadata
-                        .getFirstDirectoryOfType(ExifIFD0Directory::class.java)
-                    if (exifDirectory != null) {
-                        exifDirectory.getString(ExifIFD0Directory.TAG_MODEL).let {
-                            property ->
-                            if (!property.isNullOrEmpty()) {
-                                imageMetadataLayout.model.visibility = View.VISIBLE
-                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                                imageMetadataLayout.model.text =
-                                    "${resources.getString(R.string.model)}: $property"
-                            } else {
-                                imageMetadataLayout.model.visibility = View.GONE
-                            }
-                        }
-                        exifDirectory.getString(ExifIFD0Directory.TAG_MAKE).let {
-                            property ->
-                            if (!property.isNullOrEmpty()) {
-                                imageMetadataLayout.make.visibility = View.VISIBLE
-                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                                imageMetadataLayout.make.text =
-                                    "${resources.getString(R.string.make)}: $property"
-                            } else {
-                                imageMetadataLayout.make.visibility = View.GONE
-                            }
+                    imageMetadataLayout.fileLastModified.text =
+                        "${resources.getString(R.string.last_modified)}: " +
+                        "${fileSystemDirectory.tags.toMutableList()[2]
+                        }"
+                }
+
+                val exifDirectory = metadata
+                    .getFirstDirectoryOfType(ExifIFD0Directory::class.java)
+                if (exifDirectory != null) {
+                    exifDirectory.getString(ExifIFD0Directory.TAG_MODEL).let {
+                        property ->
+                        if (!property.isNullOrEmpty()) {
+                            imageMetadataLayout.model.visibility = View.VISIBLE
+                            imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                            imageMetadataLayout.model.text =
+                                "${resources.getString(R.string.model)}: $property"
+                        } else {
+                            imageMetadataLayout.model.visibility = View.GONE
                         }
                     }
-                    if (exifSubDirectory != null && descriptor != null) {
-                        descriptor.apertureValueDescription.let {
-                            property ->
-                            if (!property.isNullOrEmpty()) {
-                                imageMetadataLayout.aperture.visibility = View.VISIBLE
-                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                                imageMetadataLayout.aperture.text =
-                                    "${resources.getString(R.string.aperture)}: $property"
-                            } else {
-                                imageMetadataLayout.aperture.visibility = View.GONE
-                            }
-                        }
-                        descriptor.shutterSpeedDescription.let {
-                            property ->
-                            if (!property.isNullOrEmpty()) {
-                                imageMetadataLayout.shutterTime.visibility = View.VISIBLE
-                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                                imageMetadataLayout.shutterTime.text =
-                                    "${resources.getString(R.string.shutter_time)}: $property"
-                            } else {
-                                imageMetadataLayout.shutterTime.visibility = View.GONE
-                            }
-                        }
-                        descriptor.isoEquivalentDescription.let {
-                            property ->
-                            if (!property.isNullOrEmpty()) {
-                                imageMetadataLayout.iso.visibility = View.VISIBLE
-                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                                imageMetadataLayout.iso.text =
-                                    "${resources.getString(R.string.iso)}: $property"
-                            } else {
-                                imageMetadataLayout.iso.visibility = View.GONE
-                            }
+                    exifDirectory.getString(ExifIFD0Directory.TAG_MAKE).let {
+                        property ->
+                        if (!property.isNullOrEmpty()) {
+                            imageMetadataLayout.make.visibility = View.VISIBLE
+                            imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                            imageMetadataLayout.make.text =
+                                "${resources.getString(R.string.make)}: $property"
+                        } else {
+                            imageMetadataLayout.make.visibility = View.GONE
                         }
                     }
-                    if (gpsDirectory != null && gpsDescriptor != null) {
-                        gpsDescriptor.gpsLatitudeDescription.let {
-                            property ->
-                            if (!property.isNullOrEmpty()) {
-                                imageMetadataLayout.lat.visibility = View.VISIBLE
-                                imageMetadataLayout.gpsInfoParent.visibility = View.VISIBLE
-                                imageMetadataLayout.lat.text =
-                                    "${resources.getString(R.string.latitude)}: $property"
-                            } else {
-                                imageMetadataLayout.lat.visibility = View.GONE
-                            }
+                }
+                if (exifSubDirectory != null && descriptor != null) {
+                    descriptor.apertureValueDescription.let {
+                        property ->
+                        if (!property.isNullOrEmpty()) {
+                            imageMetadataLayout.aperture.visibility = View.VISIBLE
+                            imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                            imageMetadataLayout.aperture.text =
+                                "${resources.getString(R.string.aperture)}: $property"
+                        } else {
+                            imageMetadataLayout.aperture.visibility = View.GONE
                         }
+                    }
+                    descriptor.shutterSpeedDescription.let {
+                        property ->
+                        if (!property.isNullOrEmpty()) {
+                            imageMetadataLayout.shutterTime.visibility = View.VISIBLE
+                            imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                            imageMetadataLayout.shutterTime.text =
+                                "${resources.getString(R.string.shutter_time)}: $property"
+                        } else {
+                            imageMetadataLayout.shutterTime.visibility = View.GONE
+                        }
+                    }
+                    descriptor.isoEquivalentDescription.let {
+                        property ->
+                        if (!property.isNullOrEmpty()) {
+                            imageMetadataLayout.iso.visibility = View.VISIBLE
+                            imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                            imageMetadataLayout.iso.text =
+                                "${resources.getString(R.string.iso)}: $property"
+                        } else {
+                            imageMetadataLayout.iso.visibility = View.GONE
+                        }
+                    }
+                }
+                if (gpsDirectory != null && gpsDescriptor != null) {
+                    gpsDescriptor.gpsLatitudeDescription.let {
+                        latitude ->
                         gpsDescriptor.gpsLongitudeDescription.let {
-                            property ->
-                            if (!property.isNullOrEmpty()) {
+                            longitude ->
+                            if (!longitude.isNullOrEmpty() && !latitude.isNullOrEmpty()) {
                                 imageMetadataLayout.longitude.visibility = View.VISIBLE
                                 imageMetadataLayout.gpsInfoParent.visibility = View.VISIBLE
                                 imageMetadataLayout.longitude.text =
-                                    "${resources.getString(R.string.longitude)}: $property"
+                                    "${resources.getString(R.string.longitude)}: $longitude"
+                                imageMetadataLayout.lat.visibility = View.VISIBLE
+                                imageMetadataLayout.lat.text =
+                                    "${resources.getString(R.string.latitude)}: $latitude"
+                                imageMetadataLayout.openInMapsImage.setOnClickListener {
+                                    Utils.openInMaps(requireContext(), latitude, longitude)
+                                }
+                                imageMetadataLayout.openInMapsText.setOnClickListener {
+                                    Utils.openInMaps(requireContext(), latitude, longitude)
+                                }
                             } else {
                                 imageMetadataLayout.longitude.visibility = View.GONE
+                                imageMetadataLayout.lat.visibility = View.GONE
                             }
                         }
                     }
-//                    viewBinding.metadata.text = result
                 }
             }
         }
-        quickViewType?.let { showImage(it) }
     }
 
     private fun setupBottomSheetBehaviour() {
