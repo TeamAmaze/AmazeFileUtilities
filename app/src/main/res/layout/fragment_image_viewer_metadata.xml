@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="@dimen/eight_dp">
 
@@ -120,39 +121,83 @@
     </LinearLayout>
 
     <!-- gps -->
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/gps_info_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/background_curved_recents"
-        android:padding="@dimen/material_generic"
         android:layout_marginTop="@dimen/material_generic"
-        android:visibility="gone"
-        >
-        <TextView
-            android:layout_width="wrap_content"
+        android:visibility="gone">
+        <com.google.android.material.imageview.ShapeableImageView
+            android:src="@drawable/open_maps_bg"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/gps"
-            android:textColor="@color/highlight_yellow"
-            android:textSize="@dimen/eighteen_sp"
-            android:textStyle="bold"
+            android:scaleType="fitXY"
+            android:alpha="0.2"
+            app:shapeAppearanceOverlay="@style/roundedImageView"
             />
-        <TextView
-            android:id="@+id/lat"
+        <View
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="@dimen/twelve_sp"
-            android:layout_marginTop="@dimen/eight_dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:background="@drawable/fading_gradient_curved"
             />
-        <TextView
-            android:id="@+id/longitude"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="@dimen/twelve_sp"
-            android:layout_marginTop="@dimen/eight_dp"
-            />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:padding="@dimen/material_generic"
+            android:gravity="start"
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gps"
+                    android:textColor="@color/highlight_yellow"
+                    android:textSize="@dimen/eighteen_sp"
+                    android:textStyle="bold"
+                    android:layout_alignParentStart="true"
+                    />
+                <TextView
+                    android:id="@+id/open_in_maps_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/open_in_maps"
+                    android:textColor="@color/highlight_yellow"
+                    android:textSize="@dimen/eighteen_sp"
+                    android:textStyle="bold"
+                    android:layout_toStartOf="@id/open_in_maps_image"
+                    />
+                <ImageView
+                    android:id="@+id/open_in_maps_image"
+                    android:src="@drawable/ic_baseline_open_in_new_24"
+                    android:outlineSpotShadowColor="@color/highlight_yellow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="@dimen/eight_dp"
+                    />
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/lat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/twelve_sp"
+                android:layout_marginTop="@dimen/eight_dp"
+                />
+            <TextView
+                android:id="@+id/longitude"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/twelve_sp"
+                android:layout_marginTop="@dimen/eight_dp"
+                />
+        </LinearLayout>
+    </FrameLayout>
 </LinearLayout>
