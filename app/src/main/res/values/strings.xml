@@ -314,4 +314,6 @@
     <string name="path">Path</string>
     <string name="open_in_maps">Open in Map</string>
     <string name="share">Share</string>
+    <string name="no_app_found">No App found to open this file</string>
+    <string name="file_not_found">File not found</string>
 </resources>
