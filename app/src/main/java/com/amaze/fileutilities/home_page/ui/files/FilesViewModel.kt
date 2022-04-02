@@ -290,24 +290,27 @@ class FilesViewModel(val applicationContext: Application) :
                         return@forEach
                     }
                     var features = ImgUtils.ImageFeatures()
-                    ImgUtils.getImageFeatures(
-                        applicationContext,
-                        faceDetector,
-                        it.getContentUri(applicationContext)
-                    ) { isSuccess, imageFeatures ->
-                        if (isSuccess) {
-                            imageFeatures?.run {
-                                features = this
-                            }
-                            dao.insert(
-                                ImageAnalysis(
-                                    it.path,
-                                    features.isSad,
-                                    features.isDistracted,
-                                    features.isSleeping,
-                                    features.facesCount
+                    it.getContentUri(applicationContext)?.let {
+                        uri ->
+                        ImgUtils.getImageFeatures(
+                            applicationContext,
+                            faceDetector,
+                            uri
+                        ) { isSuccess, imageFeatures ->
+                            if (isSuccess) {
+                                imageFeatures?.run {
+                                    features = this
+                                }
+                                dao.insert(
+                                    ImageAnalysis(
+                                        it.path,
+                                        features.isSad,
+                                        features.isDistracted,
+                                        features.isSleeping,
+                                        features.facesCount
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
                 }
@@ -373,16 +376,19 @@ class FilesViewModel(val applicationContext: Application) :
                         // hard limit in a single run
                         return@forEach
                     }
-                    ImgUtils.isImageMeme(
-                        applicationContext,
-                        textRecognizer,
-                        it.getContentUri(applicationContext),
-                    ) { isMeme ->
-                        dao.insert(
-                            MemeAnalysis(
-                                it.path, isMeme
+                    it.getContentUri(applicationContext)?.let {
+                        uri ->
+                        ImgUtils.isImageMeme(
+                            applicationContext,
+                            textRecognizer,
+                            uri,
+                        ) { isMeme ->
+                            dao.insert(
+                                MemeAnalysis(
+                                    it.path, isMeme
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
@@ -533,8 +539,8 @@ class FilesViewModel(val applicationContext: Application) :
     fun getShareMediaFilesAdapter(mediaFileInfoList: List<MediaFileInfo>):
         LiveData<ShareAdapter?> {
         return getShareMediaFilesAdapterFromUriList(
-            mediaFileInfoList
-                .map { it.getContentUri(applicationContext) }
+            mediaFileInfoList.filter { it.getContentUri(applicationContext) != null }
+                .map { it.getContentUri(applicationContext)!! }
         )
     }
 
