@@ -76,6 +76,8 @@ class DragDismissBottomSheetBehaviour<V : View?>(
                         // finish activity
                         proxyView?.alpha = 0f
                         proxyView?.visibility = View.INVISIBLE
+                        dragToDismissCallback = null
+                        dragToDismissRestored = null
                         (context as AppCompatActivity).finish()
                     } else {
                         proxyView?.let {
