@@ -15,5 +15,6 @@
         <item name="actionBarTheme">@style/ThemeOverlay.Actionbar</item>
 
         <item name="colorAccent">@color/highlight_yellow</item>
+        <item name="android:colorEdgeEffect">@color/highlight_yellow</item>
     </style>
 </resources>
