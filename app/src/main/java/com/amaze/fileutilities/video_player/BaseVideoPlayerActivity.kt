@@ -85,6 +85,16 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
     private var onStopCalled = false
     private lateinit var appDatabase: AppDatabase
     private var rotationDisableView: ImageView? = null
+    private var originalPlayerX = 0f
+    private var originalPlayerY = 0f
+    private val verticalFinishActivityThreshold = 300
+    private val videoPlayerSwipeThresold = 100
+    private var lockUiVisibilityCounter: CountDownTimer? = null
+    private var touchDownTime = System.currentTimeMillis()
+    private var touchDownThresholdMillis = 100
+    private var continuousTouchThresholdMillis = 300
+    private var continuousTouches = false
+    private var swipeToDismissInvoked = false
 
     private var mAttrs: AudioAttributes? = null
 
@@ -145,6 +155,8 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             viewBinding.brightnessHintParent.bringToFront()
             viewBinding.lockUi.bringToFront()
             viewBinding.continuePlaying.bringToFront()
+            originalPlayerX = viewBinding.videoView.x
+            originalPlayerY = viewBinding.videoView.y
         }
     }
 
@@ -190,42 +202,23 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         super.onDestroy()
     }
 
-    var lockUiVisibilityCounter: CountDownTimer? = null
-
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         when (event!!.action) {
             MotionEvent.ACTION_DOWN -> {
                 // touch is start
                 downX = event.x
                 downY = event.y
-                when {
-                    viewBinding.videoView.isControllerVisible -> {
-                        viewBinding.videoView.hideController()
-                    }
-                    videoPlayerViewModel?.isUiLocked == true -> {
-                        viewBinding.lockUi.showFade(300)
-                        if (lockUiVisibilityCounter == null) {
-                            lockUiVisibilityCounter = object : CountDownTimer(
-                                3000,
-                                3000
-                            ) {
-                                override fun onTick(millisUntilFinished: Long) {
-                                    // do nothing
-                                }
 
-                                override fun onFinish() {
-                                    if (viewBinding.lockUi.isVisible) {
-                                        viewBinding.lockUi.hideFade(300)
-                                    }
-                                    lockUiVisibilityCounter = null
-                                }
-                            }.start()
-                        }
-                        return true
-                    }
-                    else -> {
-                        viewBinding.videoView.showController()
-                    }
+                // reset touch down time
+                // we want to show/hide controller if it's just a single tap, else
+                // we either skip / rewind few seconds or user is swiping
+                if (System.currentTimeMillis() - touchDownTime < continuousTouchThresholdMillis) {
+                    // multiple continuous touches
+                    continuousTouches = true
+                    touchDownTime = System.currentTimeMillis()
+                } else {
+                    continuousTouches = false
+                    touchDownTime = System.currentTimeMillis()
                 }
 
                 if (event.x < sWidth / 2) {
@@ -245,7 +238,71 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                     gestureSkipStepMs = ((player?.duration!! * 5.0) / sWidth).toInt()
                 }
             }
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_MOVE -> {
+            MotionEvent.ACTION_UP -> {
+                if (videoPlayerViewModel?.isUiLocked == true) {
+                    return true
+                }
+                diffX = ceil((event.x - downX).toDouble()).toLong()
+                diffY = ceil((event.y - downY).toDouble()).toLong()
+
+                if (System.currentTimeMillis() - touchDownTime < touchDownThresholdMillis) {
+                    // simple tap, show/hide controller or lock ui or skip for continuous touches
+                    if (continuousTouches) {
+                        if (intRight) {
+                            player?.seekForward()
+                        } else {
+                            player?.seekBack()
+                        }
+                    } else {
+                        when {
+                            viewBinding.videoView.isControllerVisible -> {
+                                viewBinding.videoView.hideController()
+                            }
+                            videoPlayerViewModel?.isUiLocked == true -> {
+                                viewBinding.lockUi.showFade(300)
+                                if (lockUiVisibilityCounter == null) {
+                                    lockUiVisibilityCounter = object : CountDownTimer(
+                                        3000,
+                                        3000
+                                    ) {
+                                        override fun onTick(millisUntilFinished: Long) {
+                                            // do nothing
+                                        }
+
+                                        override fun onFinish() {
+                                            if (viewBinding.lockUi.isVisible) {
+                                                viewBinding.lockUi.hideFade(300)
+                                            }
+                                            lockUiVisibilityCounter = null
+                                        }
+                                    }.start()
+                                }
+                                return true
+                            }
+                            else -> {
+                                viewBinding.videoView.showController()
+                            }
+                        }
+                    }
+                }
+
+                viewBinding.volumeHintParent.hideFade(300)
+                viewBinding.brightnessHintParent.hideFade(300)
+                if (swipeToDismissInvoked) {
+                    // return player view to orignal location
+                    viewBinding.videoView.x = originalPlayerX
+                    viewBinding.videoView.y = originalPlayerY
+//                    viewBinding.videoView.alpha = 1f
+                    swipeToDismissInvoked = false
+                    if (player?.isPlaying == false &&
+                        videoPlayerViewModel?.currentlyPlaying == true
+                    ) {
+                        player?.play()
+                        viewBinding.videoView.hideController()
+                    }
+                }
+            }
+            MotionEvent.ACTION_MOVE -> {
                 if (videoPlayerViewModel?.isUiLocked == true) {
                     return true
                 }
@@ -253,42 +310,62 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 val y2 = event.y
                 diffX = ceil((event.x - downX).toDouble()).toLong()
                 diffY = ceil((event.y - downY).toDouble()).toLong()
-                if (abs(diffY) > abs(diffX) && abs(diffY) > verticalSwipeThreshold) {
-                    if (intLeft) {
-                        // if left its for brightness
-                        if (viewBinding.brightnessHintParent.visibility != View.VISIBLE &&
-                            event.action != MotionEvent.ACTION_UP
-                        ) {
-                            viewBinding.brightnessHintParent.showFade(300)
-                        }
-                        invalidateBrightness(downY > y2)
-                    } else if (intRight) {
-                        // if right its for audio
-                        if (viewBinding.volumeHintParent.visibility != View.VISIBLE &&
-                            event.action != MotionEvent.ACTION_UP
-                        ) {
-                            viewBinding.volumeHintParent.showFade(300)
-                        }
-                        invalidateVolume(downY > y2)
-                    }
-                } else if (abs(diffY) < abs(diffX) && abs(diffX) > horizontalSwipeThreshold) {
-                    player?.currentPosition?.let {
-                        if (downX < x2) {
-                            player?.seekTo(it + gestureSkipStepMs)
-                        } else {
-                            player?.seekTo(it - gestureSkipStepMs)
-                        }
-                        if (!viewBinding.videoView.isControllerVisible &&
-                            videoPlayerViewModel?.isUiLocked == false
-                        ) {
-                            viewBinding.videoView.showController()
-                        }
-                    }
-                }
 
-                if (event.action == MotionEvent.ACTION_UP) {
-                    viewBinding.volumeHintParent.hideFade(300)
-                    viewBinding.brightnessHintParent.hideFade(300)
+                if (viewBinding.videoView.isControllerVisible) {
+                    if (abs(diffY) > abs(diffX) && abs(diffY) > verticalSwipeThreshold) {
+                        if (intLeft) {
+                            // if left its for brightness
+                            if (viewBinding.brightnessHintParent.visibility != View.VISIBLE &&
+                                event.action != MotionEvent.ACTION_UP
+                            ) {
+                                viewBinding.brightnessHintParent.showFade(300)
+                            }
+                            invalidateBrightness(downY > y2)
+                        } else if (intRight) {
+                            // if right its for audio
+                            if (viewBinding.volumeHintParent.visibility != View.VISIBLE &&
+                                event.action != MotionEvent.ACTION_UP
+                            ) {
+                                viewBinding.volumeHintParent.showFade(300)
+                            }
+                            invalidateVolume(downY > y2)
+                        }
+                    } else if (abs(diffY) < abs(diffX) && abs(diffX) > horizontalSwipeThreshold) {
+                        player?.currentPosition?.let {
+                            if (downX < x2) {
+                                player?.seekTo(it + gestureSkipStepMs)
+                            } else {
+                                player?.seekTo(it - gestureSkipStepMs)
+                            }
+                            if (!viewBinding.videoView.isControllerVisible &&
+                                videoPlayerViewModel?.isUiLocked == false
+                            ) {
+                                viewBinding.videoView.showController()
+                            }
+                        }
+                    }
+                } else {
+                    swipeToDismissInvoked = true
+                    // no controller visible, we swipe to dismiss
+                    if (abs(diffY) > verticalFinishActivityThreshold) {
+                        // finish activity
+//                        viewBinding.videoView.alpha = 0f
+                        viewBinding.videoView.visibility = View.INVISIBLE
+                        this.finish()
+                    } else if (abs(diffY) > videoPlayerSwipeThresold) {
+                        if (player?.isPlaying == true) {
+                            player?.pause()
+                            viewBinding.videoView.hideController()
+                        }
+                        viewBinding.videoView.x = originalPlayerX + diffX
+                        viewBinding.videoView.y = originalPlayerY + diffY
+                        /*viewBinding.videoView.alpha = (
+                                1f - (
+                                        diffY.toFloat() /
+                                                verticalFinishActivityThreshold.toFloat()
+                                        )
+                                )*/
+                    }
                 }
             }
         }
