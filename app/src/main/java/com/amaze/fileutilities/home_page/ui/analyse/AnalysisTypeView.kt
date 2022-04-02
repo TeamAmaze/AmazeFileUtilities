@@ -27,7 +27,7 @@ import java.lang.ref.WeakReference
 
 class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
 
-    private val imagesListScroll: HorizontalScrollView
+    private val imagesListScroll: FrameLayout
     private val titleParent: LinearLayout
     private val titleTextView: TextView
     private val titleHint: ImageView
@@ -45,7 +45,7 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         val inflater = context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.analysis_type_view, this, true)
-        imagesListScroll = getChildAt(0) as HorizontalScrollView
+        imagesListScroll = getChildAt(0) as FrameLayout
         titleParent = getChildAt(1) as LinearLayout
         titleTextView = titleParent.findViewById(R.id.title)
         titleHint = titleParent.findViewById(R.id.title_hint)

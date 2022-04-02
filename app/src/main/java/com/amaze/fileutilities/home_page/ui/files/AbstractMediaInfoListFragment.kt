@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.home_page.ui.files
 
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -139,6 +140,8 @@ abstract class AbstractMediaInfoListFragment :
                 Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
                 getRecyclerView().layoutManager =
                     if (isList) linearLayoutManager else gridLayoutManager
+                val animator = DefaultItemAnimator()
+                getRecyclerView().itemAnimator = animator
                 getRecyclerView().adapter = mediaFileAdapter
             }
         }
