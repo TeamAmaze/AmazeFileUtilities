@@ -60,65 +60,83 @@
     </LinearLayout>
 
     <!-- lens info -->
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/lens_info_parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/background_curved_recents"
-        android:padding="@dimen/material_generic"
         android:layout_marginTop="@dimen/material_generic"
-        android:visibility="gone"
-        >
-        <TextView
-            android:layout_width="wrap_content"
+        android:visibility="gone">
+        <com.google.android.material.imageview.ShapeableImageView
+            android:src="@drawable/camera_details_bg"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/details"
-            android:textColor="@color/highlight_yellow"
-            android:textSize="@dimen/eighteen_sp"
-            android:textStyle="bold"
+            android:scaleType="fitXY"
+            android:alpha="0.2"
+            app:shapeAppearanceOverlay="@style/roundedImageView"
             />
-        <TextView
-            android:id="@+id/make"
+        <View
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="@dimen/twelve_sp"
-            android:layout_marginTop="@dimen/eight_dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left"
+            android:background="@drawable/fading_gradient_curved"
             />
-        <TextView
-            android:id="@+id/model"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="@dimen/twelve_sp"
-            android:layout_marginTop="@dimen/eight_dp"
-            />
-        <TextView
-            android:id="@+id/aperture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="@dimen/twelve_sp"
-            android:layout_marginTop="@dimen/eight_dp"
-            />
-        <TextView
-            android:id="@+id/shutter_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="@dimen/twelve_sp"
-            android:layout_marginTop="@dimen/eight_dp"
-            />
-        <TextView
-            android:id="@+id/iso"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:textSize="@dimen/twelve_sp"
-            android:layout_marginTop="@dimen/eight_dp"
-            />
-    </LinearLayout>
+            android:orientation="vertical"
+            android:padding="@dimen/material_generic"
+            android:gravity="start"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/details"
+                android:textColor="@color/highlight_yellow"
+                android:textSize="@dimen/eighteen_sp"
+                android:textStyle="bold"
+                />
+            <TextView
+                android:id="@+id/make"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/twelve_sp"
+                android:layout_marginTop="@dimen/eight_dp"
+                />
+            <TextView
+                android:id="@+id/model"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/twelve_sp"
+                android:layout_marginTop="@dimen/eight_dp"
+                />
+            <TextView
+                android:id="@+id/aperture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/twelve_sp"
+                android:layout_marginTop="@dimen/eight_dp"
+                />
+            <TextView
+                android:id="@+id/shutter_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/twelve_sp"
+                android:layout_marginTop="@dimen/eight_dp"
+                />
+            <TextView
+                android:id="@+id/iso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/twelve_sp"
+                android:layout_marginTop="@dimen/eight_dp"
+                />
+        </LinearLayout>
+    </FrameLayout>
 
     <!-- gps -->
     <FrameLayout
