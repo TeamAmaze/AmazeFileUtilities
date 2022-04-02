@@ -180,10 +180,10 @@ class MediaFileAdapter(
                         ),
                     R.drawable.background_curved_bottom_peach
                 )
-                holder.mediaTypeHeaderView.setTypeImageSrc(
+                holder.mediaTypeHeaderView.setAccentImageSrc(
                     ResourcesCompat.getDrawable(
                         context.resources,
-                        R.drawable.ic_header_audio, context.theme
+                        R.drawable.banner_audio_list, context.theme
                     )!!
                 )
             }
@@ -196,10 +196,10 @@ class MediaFileAdapter(
                         ),
                     R.drawable.background_curved_bottom_orange
                 )
-                holder.mediaTypeHeaderView.setTypeImageSrc(
+                holder.mediaTypeHeaderView.setAccentImageSrc(
                     ResourcesCompat.getDrawable(
                         context.resources,
-                        R.drawable.ic_header_video, context.theme
+                        R.drawable.banner_video_list, context.theme
                     )!!
                 )
             }
@@ -212,10 +212,10 @@ class MediaFileAdapter(
                         ),
                     R.drawable.background_curved_bottom_pink
                 )
-                holder.mediaTypeHeaderView.setTypeImageSrc(
+                holder.mediaTypeHeaderView.setAccentImageSrc(
                     ResourcesCompat.getDrawable(
                         context.resources,
-                        R.drawable.ic_header_image, context.theme
+                        R.drawable.banner_image_list, context.theme
                     )!!
                 )
             }
@@ -228,10 +228,10 @@ class MediaFileAdapter(
                         ),
                     R.drawable.background_curved_bottom_green
                 )
-                holder.mediaTypeHeaderView.setTypeImageSrc(
+                holder.mediaTypeHeaderView.setAccentImageSrc(
                     ResourcesCompat.getDrawable(
                         context.resources,
-                        R.drawable.ic_header_docs, context.theme
+                        R.drawable.banner_document_list, context.theme
                     )!!
                 )
             }

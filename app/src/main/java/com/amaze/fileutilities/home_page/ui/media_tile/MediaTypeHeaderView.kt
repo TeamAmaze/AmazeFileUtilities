@@ -16,7 +16,6 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.*
 import android.widget.LinearLayout
@@ -29,9 +28,12 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileListSorter
 import com.amaze.fileutilities.utilis.*
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.progressindicator.LinearProgressIndicator
 
-class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
+class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
+    private val accentImageView: ShapeableImageView
+    private val parentLinearLayout: LinearLayout
     private val typeHeaderParent: RelativeLayout
     private val typeImageView: ImageView
     private val mediaRouteButton: MediaRouteButton
@@ -62,13 +64,16 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         val inflater = context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.media_type_header_layout, this, true)
-        typeHeaderParent = getChildAt(0) as RelativeLayout
+        accentImageView = getChildAt(0) as ShapeableImageView
+        parentLinearLayout = getChildAt(2) as LinearLayout
+        typeHeaderParent = parentLinearLayout.findViewById(R.id.type_header_parent)
         typeImageView = typeHeaderParent.findViewById(R.id.type_image)
         mediaRouteButton = typeHeaderParent.findViewById(R.id.media_route_button)
-        infoLayoutParent = getChildAt(1) as LinearLayout
-        optionsParentLayout = getChildAt(2) as LinearLayout
-        optionsItemsScroll = getChildAt(4) as HorizontalScrollView
-        optionsRecyclerViewParent = getChildAt(3) as FrameLayout
+        infoLayoutParent = parentLinearLayout.findViewById(R.id.infoLayoutParent)
+        optionsParentLayout = parentLinearLayout.findViewById(R.id.optionsParent)
+        optionsItemsScroll = parentLinearLayout.findViewById(R.id.options_list_scroll)
+        optionsRecyclerViewParent = parentLinearLayout
+            .findViewById(R.id.options_recycler_view_parent)
         optionsRecyclerView = optionsRecyclerViewParent.findViewById(R.id.options_recycler_view)
         optionsItemsScroll.isHorizontalScrollBarEnabled = false
         usedSpaceTextView = infoLayoutParent.findViewById(R.id.usedSpaceTextView)
@@ -86,8 +91,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
         optionsSortView = optionsParentLayout.findViewById(R.id.sort_view)
         optionsListParent = optionsItemsScroll.findViewById(R.id.options_list_parent)
 
-        orientation = VERTICAL
-        gravity = Gravity.CENTER_HORIZONTAL
+//        orientation = VERTICAL
+//        gravity = Gravity.CENTER_HORIZONTAL
 
         // init values
         usedSpaceTextView.text = resources.getString(R.string.used_space)
@@ -121,11 +126,13 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
     }
 
     fun setTypeImageSrc(imageRes: Drawable) {
-        typeImageView.setImageDrawable(imageRes)
+//        typeImageView.setImageDrawable(imageRes)
     }
 
-    fun setMediaImageSrc(mediaRes: Drawable) {
-        background = mediaRes
+    fun setAccentImageSrc(accentImage: Drawable) {
+        accentImageView.setImageDrawable(accentImage)
+//        accentImageView.alpha = 0.2f
+//        accentImageView.imageAlpha = 30
     }
 
     fun getMediaRouteButton(): MediaRouteButton {
@@ -134,7 +141,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : LinearLayout
 
     fun setHeaderColor(headerColor: Int, headerRes: Int) {
 //        setBackgroundResource(headerRes)
-        setBackgroundResource(R.drawable.background_curved)
+//        setBackgroundResource(R.drawable.background_curved)
         mediaProgressIndicator.trackColor = ColorUtils.blendARGB(
             headerColor,
             Color.BLACK, .2f
