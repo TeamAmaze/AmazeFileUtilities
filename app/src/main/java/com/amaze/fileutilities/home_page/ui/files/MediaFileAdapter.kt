@@ -123,9 +123,11 @@ class MediaFileAdapter(
                                     ) {
                                         AudioPlayerService.runService(
                                             uri,
-                                            mediaFileInfoList.map {
-                                                it.getContentUri(context)
-                                            },
+                                            mediaFileInfoList
+                                                .filter { it.getContentUri(context) != null }
+                                                .map {
+                                                    it.getContentUri(context)!!
+                                                },
                                             context
                                         )
                                     }
