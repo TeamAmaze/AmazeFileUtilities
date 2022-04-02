@@ -182,7 +182,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
                             file.length()
                         )}"
                     imageMetadataLayout.fileLastModified.text =
-                        "${resources.getString(R.string.last_modified)}: " +
+                        "${resources.getString(R.string.date)}: " +
                         "${Date(file.lastModified())}"
                     imageMetadataLayout.filePath.text =
                         "${resources.getString(R.string.path)}: ${it.uri.path ?: file.path}"
@@ -196,7 +196,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
                         )
 
                     imageMetadataLayout.fileLastModified.text =
-                        "${resources.getString(R.string.last_modified)}: " +
+                        "${resources.getString(R.string.date)}: " +
                         "${fileSystemDirectory.tags.toMutableList()[2]
                         }"
                 }
