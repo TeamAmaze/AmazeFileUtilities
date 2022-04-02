@@ -4,29 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-    <HorizontalScrollView
+    <FrameLayout
         android:id="@+id/images_list_scroll"
         android:layout_width="match_parent"
         android:layout_height="@dimen/grid_view"
         android:layout_marginBottom="@dimen/material_generic"
-        android:scrollbars="none"
-        android:visibility="gone"
-        >
-        <LinearLayout
-            android:id="@+id/images_list_parent"
+        android:visibility="gone">
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="@dimen/grid_view"
-            android:orientation="horizontal"
-            >
-            <ProgressBar
-                android:id="@+id/scroll_progress"
-                android:layout_width="match_parent"
+            android:scrollbars="none">
+            <LinearLayout
+                android:id="@+id/images_list_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/grid_view"
-                android:indeterminate="true"
-                />
-            <!-- placeholder for dynamic elements -->
-        </LinearLayout>
-    </HorizontalScrollView>
+                android:layout_toLeftOf="@+id/fading_start"
+                android:layout_toRightOf="@id/fading_end"
+                android:orientation="horizontal"
+                >
+                <ProgressBar
+                    android:id="@+id/scroll_progress"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/grid_view"
+                    android:indeterminate="true"
+                    android:layout_gravity="center_horizontal"
+                    />
+                <!-- placeholder for dynamic elements -->
+            </LinearLayout>
+        </HorizontalScrollView>
+        <View
+            android:id="@+id/fading_start"
+            android:layout_width="@dimen/material_generic_large"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@drawable/fading_gradient"
+            />
+        <View
+            android:id="@+id/fading_end"
+            android:layout_width="@dimen/material_generic_large"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@drawable/fading_gradient_reverse"
+            />
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/title_parent"
