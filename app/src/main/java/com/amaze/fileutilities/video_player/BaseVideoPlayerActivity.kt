@@ -95,6 +95,8 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
     private var continuousTouchThresholdMillis = 300
     private var continuousTouches = false
     private var swipeToDismissInvoked = false
+    private var swipeVerticalPivotMoved = false
+    private var swipeHorizontalPivotMoved = false
 
     private var mAttrs: AudioAttributes? = null
 
@@ -239,15 +241,12 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 }
             }
             MotionEvent.ACTION_UP -> {
-                if (videoPlayerViewModel?.isUiLocked == true) {
-                    return true
-                }
                 diffX = ceil((event.x - downX).toDouble()).toLong()
                 diffY = ceil((event.y - downY).toDouble()).toLong()
 
                 if (System.currentTimeMillis() - touchDownTime < touchDownThresholdMillis) {
                     // simple tap, show/hide controller or lock ui or skip for continuous touches
-                    if (continuousTouches) {
+                    if (continuousTouches && videoPlayerViewModel?.isUiLocked == false) {
                         if (intRight) {
                             player?.seekForward()
                         } else {
@@ -286,6 +285,8 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                     }
                 }
 
+                swipeVerticalPivotMoved = false
+                swipeHorizontalPivotMoved = false
                 viewBinding.volumeHintParent.hideFade(300)
                 viewBinding.brightnessHintParent.hideFade(300)
                 if (swipeToDismissInvoked) {
@@ -308,11 +309,14 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 }
                 val x2 = event.x
                 val y2 = event.y
-                diffX = ceil((event.x - downX).toDouble()).toLong()
-                diffY = ceil((event.y - downY).toDouble()).toLong()
+                diffX = ceil((x2 - downX).toDouble()).toLong()
+                diffY = ceil((y2 - downY).toDouble()).toLong()
 
-                if (viewBinding.videoView.isControllerVisible) {
-                    if (abs(diffY) > abs(diffX) && abs(diffY) > verticalSwipeThreshold) {
+//                if (viewBinding.videoView.isControllerVisible) {
+                if (true) {
+                    if (abs(diffY) > abs(diffX) && abs(diffY) > verticalSwipeThreshold ||
+                        swipeVerticalPivotMoved
+                    ) {
                         if (intLeft) {
                             // if left its for brightness
                             if (viewBinding.brightnessHintParent.visibility != View.VISIBLE &&
@@ -330,7 +334,14 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                             }
                             invalidateVolume(downY > y2)
                         }
-                    } else if (abs(diffY) < abs(diffX) && abs(diffX) > horizontalSwipeThreshold) {
+
+                        // reset pivot points to current position
+                        swipeVerticalPivotMoved = true
+                        downX = x2
+                        downY = y2
+                    } else if (abs(diffY) < abs(diffX) && abs(diffX) > horizontalSwipeThreshold ||
+                        swipeHorizontalPivotMoved
+                    ) {
                         player?.currentPosition?.let {
                             if (downX < x2) {
                                 player?.seekTo(it + gestureSkipStepMs)
@@ -343,8 +354,13 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                                 viewBinding.videoView.showController()
                             }
                         }
+
+                        // reset pivot points to current position
+                        swipeHorizontalPivotMoved = true
+                        downX = x2
+                        downY = y2
                     }
-                } else {
+                } /* else {
                     swipeToDismissInvoked = true
                     // no controller visible, we swipe to dismiss
                     if (abs(diffY) > verticalFinishActivityThreshold) {
@@ -359,14 +375,14 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                         }
                         viewBinding.videoView.x = originalPlayerX + diffX
                         viewBinding.videoView.y = originalPlayerY + diffY
-                        /*viewBinding.videoView.alpha = (
+                        *//*viewBinding.videoView.alpha = (
                                 1f - (
                                         diffY.toFloat() /
                                                 verticalFinishActivityThreshold.toFloat()
                                         )
-                                )*/
+                                )*//*
                     }
-                }
+                }*/
             }
         }
         return true
