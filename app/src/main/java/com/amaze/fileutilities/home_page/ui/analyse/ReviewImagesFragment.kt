@@ -472,6 +472,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                                     resources
                                         .getString(R.string.analysis_updated)
                                 )
+                                setupShowActionBar()
                             }
                         }
                     }

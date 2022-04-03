@@ -9,7 +9,18 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/grid_view"
         android:layout_marginBottom="@dimen/material_generic"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_marginStart="@dimen/eight_dp"
+        android:layout_marginEnd="@dimen/eight_dp"
+        >
+        <ProgressBar
+            android:id="@+id/scroll_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_gravity="center_horizontal|center_vertical"
+            />
         <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="@dimen/grid_view"
@@ -22,13 +33,6 @@
                 android:layout_toRightOf="@id/fading_end"
                 android:orientation="horizontal"
                 >
-                <ProgressBar
-                    android:id="@+id/scroll_progress"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/grid_view"
-                    android:indeterminate="true"
-                    android:layout_gravity="center_horizontal"
-                    />
                 <!-- placeholder for dynamic elements -->
             </LinearLayout>
         </HorizontalScrollView>

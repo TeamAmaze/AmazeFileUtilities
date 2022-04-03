@@ -43,12 +43,12 @@ abstract class AbstractMediaFilesAdapter(
     val checkItemsList: MutableList<ListItem> = mutableListOf()
 
     fun toggleChecked(listItem: ListItem) {
-        if (listItem.isChecked) {
+        listItem.toggleChecked()
+        if (!listItem.isChecked) {
             checkItemsList.remove(listItem)
         } else {
             checkItemsList.add(listItem)
         }
-        listItem.toggleChecked()
     }
 
     fun toggleChecked(listItem: ListItem, holder: MediaInfoRecyclerViewHolder) {
@@ -72,9 +72,16 @@ abstract class AbstractMediaFilesAdapter(
     }
 
     fun uncheckChecked() {
-        val removeItemsIdx = checkItemsList.map { it.position }
-        for (listItem in checkItemsList) {
+//        val removeItemsIdx = checkItemsList.map { it.position }
+        val removeItemsIdx = arrayListOf<Int>()
+        /*for (listItem in checkItemsList) {
             listItem.toggleChecked()
+        }*/
+        getMediaFilesListItems().forEachIndexed { index, listItem ->
+            if (listItem.isChecked) {
+                removeItemsIdx.add(index)
+                listItem.toggleChecked()
+            }
         }
         checkItemsList.clear()
         removeItemsIdx.forEach {
@@ -84,15 +91,26 @@ abstract class AbstractMediaFilesAdapter(
 
     fun removeChecked(): Boolean {
         val syncList = Collections.synchronizedList(getMediaFilesListItems())
-        val removeItemsIdx = checkItemsList.map { it.position }
+//        val removeItemsIdx = arrayListOf<Int>()
+        val toRemove = arrayListOf<ListItem>()
+//        val removeItemsIdx = checkItemsList.map { it.position }
         synchronized(syncList) {
-            return if (syncList.removeAll { removeItemsIdx.contains(it.position) }) {
-                removeItemsIdx.forEach { notifyItemRemoved(it) }
-                true
-            } else {
-                false
+            syncList.forEachIndexed { index, listItem ->
+                if (listItem.isChecked) {
+//                    removeItemsIdx.add(index)
+                    toRemove.add(listItem)
+                    listItem.toggleChecked()
+                }
             }
+
+            syncList.removeAll(toRemove)
+            notifyDataSetChanged()
+            /*removeItemsIdx.forEach {
+                notifyItemRemoved(it)
+            }*/
         }
+        checkItemsList.clear()
+        return true
     }
 
     fun checkedItemBytes(): String {
@@ -287,16 +305,16 @@ abstract class AbstractMediaFilesAdapter(
         var mediaFileInfo: MediaFileInfo?,
         var listItemType: @ListItemType Int = TYPE_ITEM,
         var header: String? = null,
-        val position: Int,
+//        val position: Int,
         var isChecked: Boolean = false
     ) {
-        constructor(listItemType: @ListItemType Int, position: Int) : this(
+        constructor(listItemType: @ListItemType Int) : this(
             null,
-            listItemType, position = position
+            listItemType
         )
-        constructor(listItemType: @ListItemType Int, header: String, position: Int) : this(
+        constructor(listItemType: @ListItemType Int, header: String) : this(
             null,
-            listItemType, header, position
+            listItemType, header
         )
 
         fun toggleChecked() {

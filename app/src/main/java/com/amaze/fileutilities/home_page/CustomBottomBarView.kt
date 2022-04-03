@@ -68,8 +68,8 @@ class CustomBottomBarView(context: Context, attrs: AttributeSet?) : LinearLayout
         )
         params.rightMargin = 16.px.toInt()
         params.leftMargin = 16.px.toInt()
-        params.topMargin = 8.px.toInt()
-        params.bottomMargin = 16.px.toInt()
+//        params.topMargin = 8.px.toInt()
+//        params.bottomMargin = 16.px.toInt()
         params.weight = 1f
         item.layoutParams = params
     }

@@ -10,15 +10,18 @@
 
 package com.amaze.fileutilities.home_page.ui.files
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.text.format.DateUtils
 import androidx.core.content.FileProvider
 import com.amaze.fileutilities.CastActivity
+import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
 import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.utilis.FileUtils
+import com.amaze.fileutilities.utilis.showToastOnBottom
 import com.amaze.fileutilities.video_player.VideoPlayerDialogActivity
 import java.io.File
 import java.lang.ref.WeakReference
@@ -55,18 +58,39 @@ data class MediaFileInfo(
     }
 
     fun getParentName(): String {
-        return File(path).parentFile?.name ?: UNKNOWN
+        return if (exists()) {
+            File(path).parentFile?.name ?: UNKNOWN
+        } else {
+            UNKNOWN
+        }
     }
 
     fun getFormattedSize(context: Context): String {
         return FileUtils.formatStorageLength(context, longSize)
     }
 
-    fun getContentUri(context: Context): Uri {
-        return FileProvider.getUriForFile(context, context.packageName, File(path))
+    fun delete(): Boolean {
+        if (!exists()) {
+            return true
+        }
+        return File(path).delete()
+    }
+
+    fun getContentUri(context: Context): Uri? {
+        return if (exists()) {
+            FileProvider.getUriForFile(context, context.packageName, File(path))
+        } else {
+            null
+        }
     }
 
     fun triggerMediaFileInfoAction(contextRef: WeakReference<Context>) {
+        if (!exists()) {
+            contextRef.get()?.let {
+                context ->
+                context.showToastOnBottom(context.resources.getString(R.string.file_not_found))
+            }
+        }
         contextRef.get()?.let {
             context ->
             val castActivity = (context as CastActivity)
@@ -110,13 +134,22 @@ data class MediaFileInfo(
         }
     }
 
+    fun exists(): Boolean {
+        val file = File(this.path)
+        return file.exists()
+    }
+
     private fun startExternalViewAction(mediaFileInfo: MediaFileInfo, context: Context) {
         val intent = Intent()
         intent.data = mediaFileInfo.getContentUri(context)
         intent.action = Intent.ACTION_VIEW
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            context.showToastOnBottom(context.resources.getString(R.string.no_app_found))
+        }
     }
 
     private fun startImageViewer(mediaFileInfo: MediaFileInfo, context: Context) {
