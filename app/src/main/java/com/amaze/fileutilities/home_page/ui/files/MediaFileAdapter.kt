@@ -61,16 +61,15 @@ class MediaFileAdapter(
             )
             var lastHeader: String? = null
             var position = 0
-            value.add(ListItem(TYPE_BANNER, position))
+            value.add(ListItem(TYPE_BANNER))
             preloader.addItem("")
             for (i in 0 until mediaFileInfoList.size) {
                 if (lastHeader == null || mediaFileInfoList[i].listHeader != lastHeader) {
-                    value.add(ListItem(TYPE_HEADER, mediaFileInfoList[i].listHeader, ++position))
+                    value.add(ListItem(TYPE_HEADER, mediaFileInfoList[i].listHeader))
                     preloader.addItem("")
                     headerListItems.add(
                         ListItem(
-                            TYPE_HEADER, mediaFileInfoList[i].listHeader,
-                            value.size - 1
+                            TYPE_HEADER, mediaFileInfoList[i].listHeader
                         )
                     )
                     lastHeader = mediaFileInfoList[i].listHeader
@@ -79,13 +78,13 @@ class MediaFileAdapter(
                 value.add(
                     ListItem(
                         mediaFileInfo = mediaFileInfoList[i],
-                        header = mediaFileInfoList[i].listHeader, position = ++position
+                        header = mediaFileInfoList[i].listHeader
                     )
                 )
                 preloader.addItem(mediaFileInfoList[i].path)
             }
             preloader.addItem("")
-            value.add(ListItem(EMPTY_LAST_ITEM, -1))
+            value.add(ListItem(EMPTY_LAST_ITEM))
             field = value
         }
 
@@ -123,9 +122,11 @@ class MediaFileAdapter(
                                     ) {
                                         AudioPlayerService.runService(
                                             uri,
-                                            mediaFileInfoList.map {
-                                                it.getContentUri(context)
-                                            },
+                                            mediaFileInfoList
+                                                .filter { it.getContentUri(context) != null }
+                                                .map {
+                                                    it.getContentUri(context)!!
+                                                },
                                             context
                                         )
                                     }
@@ -251,6 +252,6 @@ class MediaFileAdapter(
         fun sortBy(sortingPreference: MediaFileListSorter.SortingPreference)
         fun groupBy(sortingPreference: MediaFileListSorter.SortingPreference)
         fun switchView(isList: Boolean)
-        fun select(headerPosition: Int)
+        fun select(headerItem: ListItem)
     }
 }

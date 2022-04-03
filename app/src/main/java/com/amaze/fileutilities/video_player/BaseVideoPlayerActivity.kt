@@ -75,8 +75,6 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
     private var diffY = 0L
     private var downX = 0f
     private var downY = 0f
-    private var currentBrightness = 0.3f
-    private var currentVolume = 0.3f
     private var size: Point? = null
     private var deviceDisplay: Display? = null
     private var gestureSkipStepMs: Int = 200
@@ -159,6 +157,8 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             viewBinding.continuePlaying.bringToFront()
             originalPlayerX = viewBinding.videoView.x
             originalPlayerY = viewBinding.videoView.y
+            invalidateBrightness()
+            invalidateVolume()
         }
     }
 
@@ -872,35 +872,51 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
     }
 
     private fun invalidateBrightness(doIncrease: Boolean) {
-        if (doIncrease) {
-            if (currentBrightness <= 0.993f) {
-                currentBrightness += 0.007f
+        videoPlayerViewModel?.let {
+            videoPlayerViewModel ->
+            if (doIncrease) {
+                if (videoPlayerViewModel.brightnessLevel <= 0.993f) {
+                    videoPlayerViewModel.brightnessLevel += 0.007f
+                }
+            } else {
+                if (videoPlayerViewModel.brightnessLevel >= 0.007f) {
+                    videoPlayerViewModel.brightnessLevel -= 0.007f
+                }
             }
-        } else {
-            if (currentBrightness >= 0.007f) {
-                currentBrightness -= 0.007f
-            }
+            invalidateBrightness()
+            viewBinding.brightnessProgress.max = 100
+            viewBinding.brightnessProgress.progress =
+                (videoPlayerViewModel.brightnessLevel * 100).toInt()
         }
-        val layout = window.attributes
-        layout.screenBrightness = currentBrightness
-        window.attributes = layout
-        viewBinding.brightnessProgress.max = 100
-        viewBinding.brightnessProgress.progress = (currentBrightness * 100).toInt()
     }
 
     private fun invalidateVolume(doIncrease: Boolean) {
-        if (doIncrease) {
-            if (currentVolume <= 0.993f) {
-                currentVolume += 0.007f
+        videoPlayerViewModel?.let {
+            videoPlayerViewModel ->
+            if (doIncrease) {
+                if (videoPlayerViewModel.volumeLevel <= 0.993f) {
+                    videoPlayerViewModel.volumeLevel += 0.007f
+                }
+            } else {
+                if (videoPlayerViewModel.volumeLevel >= 0.007f) {
+                    videoPlayerViewModel.volumeLevel -= 0.007f
+                }
             }
-        } else {
-            if (currentVolume >= 0.007f) {
-                currentVolume -= 0.007f
-            }
+            invalidateVolume()
+            viewBinding.volumeProgress.max = 100
+            viewBinding.volumeProgress.progress =
+                (videoPlayerViewModel.volumeLevel * 100).toInt()
         }
-        player?.volume = currentVolume
-        viewBinding.volumeProgress.max = 100
-        viewBinding.volumeProgress.progress = (currentVolume * 100).toInt()
+    }
+
+    private fun invalidateBrightness() {
+        val layout = window.attributes
+        layout.screenBrightness = videoPlayerViewModel?.brightnessLevel ?: 0.3f
+        window.attributes = layout
+    }
+
+    private fun invalidateVolume() {
+        player?.volume = videoPlayerViewModel?.volumeLevel ?: 0.3f
     }
 
     private fun getScreenSize() {

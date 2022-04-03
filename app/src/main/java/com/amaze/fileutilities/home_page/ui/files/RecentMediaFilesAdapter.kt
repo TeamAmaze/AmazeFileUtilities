@@ -24,12 +24,12 @@ class RecentMediaFilesAdapter(
         set(value) {
             value.clear()
             mediaFileInfoList.forEach {
-                value.add(ListItem(mediaFileInfo = it, position = 0))
+                value.add(ListItem(mediaFileInfo = it))
                 preloader.addItem(it.path)
             }
             if (mediaFileInfoList.size != 0) {
                 preloader.addItem("")
-                value.add(ListItem(EMPTY_LAST_ITEM, -1))
+                value.add(ListItem(EMPTY_LAST_ITEM))
             }
             field = value
         }

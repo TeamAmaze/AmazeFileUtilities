@@ -10,14 +10,17 @@
 
 package com.amaze.fileutilities.utilis
 
+import android.text.format.Formatter
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
+import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
 
 abstract class ItemsActionBarFragment : Fragment() {
@@ -72,6 +75,10 @@ abstract class ItemsActionBarFragment : Fragment() {
         return optionsActionBar?.findViewById(R.id.shareFiles)
     }
 
+    private fun getTrashButton(): ImageView? {
+        return optionsActionBar?.findViewById(R.id.trashButton)
+    }
+
     fun setupCommonButtons() {
         getShareButton()?.setOnClickListener {
             var processed = false
@@ -97,6 +104,55 @@ abstract class ItemsActionBarFragment : Fragment() {
                             showShareDialog(requireActivity(), this.layoutInflater, shareAdapter)
                         }
                     }
+            }
+        }
+        getTrashButton()?.setOnClickListener {
+            getMediaFileAdapter()?.checkItemsList?.filter {
+                it.mediaFileInfo != null
+            }?.map { it.mediaFileInfo!! }?.let {
+                toDelete ->
+                val progressDialogBuilder = requireContext()
+                    .showProcessingDialog(layoutInflater, "")
+                val progressDialog = progressDialogBuilder.create()
+                val summaryDialogBuilder = Utils.buildDeleteSummaryDialog(requireContext()) {
+                    progressDialog.show()
+                    filesViewModel.deleteMediaFiles(toDelete).observe(viewLifecycleOwner) {
+                        progressDialog.findViewById<TextView>(R.id.please_wait_text)?.text =
+                            resources.getString(R.string.deleted_progress)
+                                .format(it.first, toDelete.size)
+                        if (it.second == toDelete.size) {
+                            if (getMediaFileAdapter()?.removeChecked() != true) {
+                                log.warn("Failed to update list after deletion")
+                                requireContext().showToastOnBottom(
+                                    getString(
+                                        R.string
+                                            .failed_to_update_list_reopen
+                                    )
+                                )
+                            }
+                            // deletion complete, no need to check analysis data to remove
+                            // as it will get deleted lazily while loading analysis lists
+                            requireContext().showToastOnBottom(
+                                resources
+                                    .getString(R.string.successfully_deleted)
+                            )
+                            if (hideActionBarOnClick()) {
+                                hideActionBar()
+                            }
+                            progressDialog.dismiss()
+                        }
+                    }
+                }
+                val summaryDialog = summaryDialogBuilder.create()
+                summaryDialog.show()
+                filesViewModel.getMediaFileListSize(toDelete).observe(viewLifecycleOwner) {
+                    sizeRaw ->
+                    val size = Formatter.formatFileSize(requireContext(), sizeRaw)
+                    summaryDialog.setMessage(
+                        resources
+                            .getString(R.string.delete_files_message).format(toDelete.size, size)
+                    )
+                }
             }
         }
     }

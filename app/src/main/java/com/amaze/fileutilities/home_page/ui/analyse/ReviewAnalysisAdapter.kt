@@ -42,12 +42,12 @@ class ReviewAnalysisAdapter(
         set(value) {
             value.clear()
             for (i in mediaFileInfoList.indices) {
-                value.add(ListItem(mediaFileInfo = mediaFileInfoList[i], position = i))
+                value.add(ListItem(mediaFileInfo = mediaFileInfoList[i]))
                 preloader.addItem(mediaFileInfoList[i].path)
             }
             if (mediaFileInfoList.size != 0) {
                 preloader.addItem("")
-                value.add(ListItem(EMPTY_LAST_ITEM, -1))
+                value.add(ListItem(EMPTY_LAST_ITEM))
             }
             field = value
         }
