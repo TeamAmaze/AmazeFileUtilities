@@ -42,7 +42,7 @@ class MediaTypeViewOptionsListAdapter(
         if (holder is ButtonViewHolder) {
             holder.headerListButton.text = headerListItems[position].header
             holder.headerListButton.setOnClickListener {
-                optionsMenuSelected.select(headerListItems[position].position)
+                optionsMenuSelected.select(headerListItems[position])
             }
         }
     }

@@ -43,8 +43,13 @@ abstract class AbstractMediaInfoListFragment :
         resetAdapter()
     }
 
-    override fun select(headerPosition: Int) {
-        getRecyclerView().scrollToPosition(headerPosition + 5)
+    override fun select(headerItem: AbstractMediaFilesAdapter.ListItem) {
+        getMediaFileAdapter()?.getMediaFilesListItems()?.forEachIndexed { index, listItem ->
+            if (listItem == headerItem) {
+                getRecyclerView().scrollToPosition(index + 5)
+                return@forEachIndexed
+            }
+        }
     }
 
     abstract fun getFileStorageSummaryAndMediaFileInfoPair():
