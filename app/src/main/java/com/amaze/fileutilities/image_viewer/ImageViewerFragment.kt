@@ -427,12 +427,14 @@ class ImageViewerFragment : AbstractMediaFragment() {
                     viewBinding.imageView.visibility = View.GONE
                 } else {
                     viewBinding.imageView.visibility = View.VISIBLE
+                    viewBinding.sheetUpArrow.visibility = View.INVISIBLE
                     if ((activity as ImageViewerActivity).getViewpager().isUserInputEnabled) {
                         (activity as ImageViewerActivity).getViewpager().isUserInputEnabled = false
                     }
                 }
             } else {
                 viewBinding.imageViewSmall.visibility = View.GONE
+                viewBinding.sheetUpArrow.visibility = View.VISIBLE
                 (activity as ImageViewerActivity).getViewpager().isUserInputEnabled = true
             }
 //            viewBinding.bottomSheetBig.alpha = slideOffset

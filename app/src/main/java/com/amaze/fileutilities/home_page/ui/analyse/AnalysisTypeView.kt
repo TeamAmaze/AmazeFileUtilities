@@ -23,6 +23,8 @@ import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.px
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.bumptech.glide.Glide
+import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.shape.CornerFamily
 import java.lang.ref.WeakReference
 
 class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
@@ -53,7 +55,7 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         imagesListParent = imagesListScroll.findViewById(R.id.images_list_parent)
         cleanButton = cleanButtonParent.findViewById(R.id.clean_button)
         loadingProgress = cleanButtonParent.findViewById(R.id.loading_progress)
-        loadingHorizontalScroll = imagesListParent.findViewById(R.id.scroll_progress)
+        loadingHorizontalScroll = imagesListScroll.findViewById(R.id.scroll_progress)
 
         val a = context.obtainStyledAttributes(
             attrs,
@@ -83,7 +85,7 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         loadingProgress.visibility = if (doShow) View.VISIBLE else View.GONE
     }
 
-    fun loadPreviews(mediaFileInfoList: List<MediaFileInfo>) {
+    fun loadPreviews(mediaFileInfoList: List<MediaFileInfo>, cleanButtonClick: () -> Unit) {
         loadingHorizontalScroll.visibility = View.GONE
         if (mediaFileInfoList.isEmpty()) {
             hideFade(300)
@@ -96,10 +98,15 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
             imagesListParent.addView(imageView)
         }
         imagesListParent.addView(getSummaryView(mediaFileInfoList.size))
+        cleanButton.setOnClickListener {
+            cleanButtonClick.invoke()
+        }
     }
 
     private fun getImageView(mediaFileInfo: MediaFileInfo): ImageView {
-        val imageView = ImageView(context)
+        val imageView = ShapeableImageView(context)
+        imageView.shapeAppearanceModel = imageView.shapeAppearanceModel.toBuilder()
+            .setAllCorners(CornerFamily.ROUNDED, 16.px).build()
         imageView.setOnClickListener {
             mediaFileInfo.triggerMediaFileInfoAction(WeakReference(context))
         }

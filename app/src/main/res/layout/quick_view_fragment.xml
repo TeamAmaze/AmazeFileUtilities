@@ -58,7 +58,6 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/eight_dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             >
@@ -69,11 +68,20 @@
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
                 >
+                <ImageView
+                    android:id="@+id/sheet_up_arrow"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/material_generic"
+                    android:layout_gravity="center_horizontal"
+                    android:clickable="false"
+                    app:srcCompat="@drawable/ic_round_keyboard_arrow_up_24"
+                    />
                 <com.amaze.fileutilities.home_page.CustomBottomBarView
                     android:id="@+id/custom_bottom_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:bottomBarBgColor="@android:color/transparent"
+                    android:layout_marginBottom="@dimen/material_generic"
                     />
                 <include
                     android:id="@+id/image_metadata_layout"

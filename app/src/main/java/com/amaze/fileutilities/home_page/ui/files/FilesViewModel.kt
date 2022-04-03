@@ -29,7 +29,6 @@ import kotlinx.coroutines.launch
 import java.io.*
 import java.lang.ref.WeakReference
 import java.util.*
-import kotlin.collections.ArrayList
 
 class FilesViewModel(val applicationContext: Application) :
     AndroidViewModel(applicationContext) {
@@ -290,24 +289,27 @@ class FilesViewModel(val applicationContext: Application) :
                         return@forEach
                     }
                     var features = ImgUtils.ImageFeatures()
-                    ImgUtils.getImageFeatures(
-                        applicationContext,
-                        faceDetector,
-                        it.getContentUri(applicationContext)
-                    ) { isSuccess, imageFeatures ->
-                        if (isSuccess) {
-                            imageFeatures?.run {
-                                features = this
-                            }
-                            dao.insert(
-                                ImageAnalysis(
-                                    it.path,
-                                    features.isSad,
-                                    features.isDistracted,
-                                    features.isSleeping,
-                                    features.facesCount
+                    it.getContentUri(applicationContext)?.let {
+                        uri ->
+                        ImgUtils.getImageFeatures(
+                            applicationContext,
+                            faceDetector,
+                            uri
+                        ) { isSuccess, imageFeatures ->
+                            if (isSuccess) {
+                                imageFeatures?.run {
+                                    features = this
+                                }
+                                dao.insert(
+                                    ImageAnalysis(
+                                        it.path,
+                                        features.isSad,
+                                        features.isDistracted,
+                                        features.isSleeping,
+                                        features.facesCount
+                                    )
                                 )
-                            )
+                            }
                         }
                     }
                 }
@@ -373,16 +375,19 @@ class FilesViewModel(val applicationContext: Application) :
                         // hard limit in a single run
                         return@forEach
                     }
-                    ImgUtils.isImageMeme(
-                        applicationContext,
-                        textRecognizer,
-                        it.getContentUri(applicationContext),
-                    ) { isMeme ->
-                        dao.insert(
-                            MemeAnalysis(
-                                it.path, isMeme
+                    it.getContentUri(applicationContext)?.let {
+                        uri ->
+                        ImgUtils.isImageMeme(
+                            applicationContext,
+                            textRecognizer,
+                            uri,
+                        ) { isMeme ->
+                            dao.insert(
+                                MemeAnalysis(
+                                    it.path, isMeme
+                                )
                             )
-                        )
+                        }
                     }
                 }
             }
@@ -533,8 +538,8 @@ class FilesViewModel(val applicationContext: Application) :
     fun getShareMediaFilesAdapter(mediaFileInfoList: List<MediaFileInfo>):
         LiveData<ShareAdapter?> {
         return getShareMediaFilesAdapterFromUriList(
-            mediaFileInfoList
-                .map { it.getContentUri(applicationContext) }
+            mediaFileInfoList.filter { it.getContentUri(applicationContext) != null }
+                .map { it.getContentUri(applicationContext)!! }
         )
     }
 
@@ -549,6 +554,56 @@ class FilesViewModel(val applicationContext: Application) :
                     applicationContext
                 )
             )
+        }
+    }
+
+    fun deleteMediaFiles(mediaFileInfoList: List<MediaFileInfo>): LiveData<Pair<Int, Int>> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            log.info("Sharing media files $mediaFileInfoList")
+            var successProcessedPair = Pair(0, 0)
+            mediaFileInfoList.forEachIndexed { index, mediaFileInfo ->
+                successProcessedPair = if (mediaFileInfo.delete()) {
+                    successProcessedPair.copy(
+                        successProcessedPair.first + 1,
+                        successProcessedPair.second + 1
+                    )
+                } else {
+                    successProcessedPair.copy(
+                        successProcessedPair.first,
+                        successProcessedPair.second + 1
+                    )
+                }
+
+                try {
+                    Utils.deleteFromMediaDatabase(applicationContext, mediaFileInfo.path)
+                } catch (e: Exception) {
+                    log.warn("failed to delete media from system database", e)
+                    mediaFileInfo.getContentUri(applicationContext)?.let {
+                        uri ->
+                        FileUtils.scanFile(
+                            uri,
+                            applicationContext
+                        )
+                    }
+                }
+                if (index % 5 == 0) {
+                    emit(successProcessedPair)
+                }
+            }
+            emit(successProcessedPair)
+        }
+    }
+
+    fun getMediaFileListSize(mediaFileInfoList: List<MediaFileInfo>): LiveData<Long> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+            var size = 0L
+            mediaFileInfoList.forEachIndexed { index, mediaFileInfo ->
+                size += mediaFileInfo.longSize
+                if (index % 5 == 0) {
+                    emit(size)
+                }
+            }
+            emit(size)
         }
     }
 

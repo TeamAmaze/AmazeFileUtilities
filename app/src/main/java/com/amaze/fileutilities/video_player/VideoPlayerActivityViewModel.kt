@@ -48,6 +48,8 @@ class VideoPlayerActivityViewModel : ViewModel() {
     var subtitleFilePath: String? = null
     var isContinuePlayingDisplayed = false
     var isRotationLocked = false
+    var brightnessLevel = 0.3f
+    var volumeLevel = 0.3f
 
     fun getPlaybackSavedState(videoPlayerStateDao: VideoPlayerStateDao):
         LiveData<VideoPlayerState?> {
