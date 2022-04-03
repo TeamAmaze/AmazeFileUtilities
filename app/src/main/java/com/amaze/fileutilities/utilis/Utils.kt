@@ -17,13 +17,13 @@ import android.content.res.Configuration
 import android.graphics.Point
 import android.net.Uri
 import android.net.wifi.WifiManager
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
@@ -85,7 +85,8 @@ class Utils {
             layoutInflater: LayoutInflater,
             message: String
         ): AlertDialog.Builder {
-            val dialogBuilder = AlertDialog.Builder(this).setCancelable(false)
+            val dialogBuilder = AlertDialog.Builder(this, R.style.Custom_Dialog_Dark)
+                .setCancelable(false)
             val dialogView: View = layoutInflater.inflate(R.layout.please_wait_dialog, null)
             val textView = dialogView.findViewById<TextView>(R.id.please_wait_text)
             textView.text = message
@@ -289,6 +290,37 @@ class Utils {
             val url = "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             context.startActivity(intent)
+        }
+
+        fun buildDeleteSummaryDialog(
+            context: Context,
+            positiveCallback: () -> Unit
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.delete_files_title)
+                .setMessage(R.string.delete_files_message)
+                .setPositiveButton(
+                    context.resources.getString(R.string.yes)
+                ) { dialog, _ ->
+                    positiveCallback.invoke()
+                    dialog.dismiss()
+                }
+                .setNegativeButton(
+                    context.resources.getString(R.string.no)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun deleteFromMediaDatabase(context: Context, file: String) {
+            val where = MediaStore.MediaColumns.DATA + "=?"
+            val selectionArgs = arrayOf(file)
+            val contentResolver = context.contentResolver
+            val filesUri = MediaStore.Files.getContentUri("external")
+            // Delete the entry from the media database. This will actually delete media files.
+            contentResolver.delete(filesUri, where, selectionArgs)
         }
     }
 }

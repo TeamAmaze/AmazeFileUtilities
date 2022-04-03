@@ -316,4 +316,10 @@
     <string name="share">Share</string>
     <string name="no_app_found">No App found to open this file</string>
     <string name="file_not_found">File not found</string>
+    <string name="delete_files_title">Delete</string>
+    <string name="delete_files_message">You\'re about to permanently delete these files.
+        Are you sure you want to proceed?\n\n%s Files, %s Size</string>
+    <string name="deleted_progress">Deleted %s of %s</string>
+    <string name="successfully_deleted">Successfully deleted</string>
+    <string name="failed_to_update_list_reopen">Failed to update list, please restart the app</string>
 </resources>
