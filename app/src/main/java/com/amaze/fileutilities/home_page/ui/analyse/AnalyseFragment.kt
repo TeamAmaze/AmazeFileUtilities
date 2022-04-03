@@ -12,18 +12,23 @@ package com.amaze.fileutilities.home_page.ui.analyse
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
+import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentAnalyseBinding
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
-import com.amaze.fileutilities.utilis.PreferencesConstants
-import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
+import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
+import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 
 class AnalyseFragment : Fragment() {
 
@@ -63,53 +68,53 @@ class AnalyseFragment : Fragment() {
 
             analyseViewModel.getBlurImages(blurAnalysisDao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    blurredPicsPreview.loadPreviews(it)
+                    blurredPicsPreview.loadPreviews(it) { cleanButtonClick(it) }
                 }
             }
 
             analyseViewModel.getLowLightImages(lowLightAnalysisDao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    lowLightPreview.loadPreviews(it)
+                    lowLightPreview.loadPreviews(it) { cleanButtonClick(it) }
                 }
             }
 
             analyseViewModel.getMemeImages(memeAnalysisDao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    memesPreview.loadPreviews(it)
+                    memesPreview.loadPreviews(it) { cleanButtonClick(it) }
                 }
             }
 
             analyseViewModel.getSadImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    sadPreview.loadPreviews(it)
+                    sadPreview.loadPreviews(it) { cleanButtonClick(it) }
                 }
             }
             sadPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getDistractedImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    distractedPreview.loadPreviews(it)
+                    distractedPreview.loadPreviews(it) { cleanButtonClick(it) }
                 }
             }
             distractedPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getSleepingImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    sleepingPreview.loadPreviews(it)
+                    sleepingPreview.loadPreviews(it) { cleanButtonClick(it) }
                 }
             }
             sleepingPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getSelfieImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    selfiePreview.loadPreviews(it)
+                    selfiePreview.loadPreviews(it) { cleanButtonClick(it) }
                 }
             }
             selfiePreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getGroupPicImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    groupPicPreview.loadPreviews(it)
+                    groupPicPreview.loadPreviews(it) { cleanButtonClick(it) }
                 }
             }
             groupPicPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
@@ -129,7 +134,7 @@ class AnalyseFragment : Fragment() {
                 analyseViewModel.getEmptyFiles(internalStorageDao)
                     .observe(viewLifecycleOwner) {
                         if (it != null) {
-                            emptyFilesPreview.loadPreviews(it)
+                            emptyFilesPreview.loadPreviews(it) { cleanButtonClick(it) }
                         }
                     }
             }
@@ -142,7 +147,9 @@ class AnalyseFragment : Fragment() {
                 internalStorageDao, searchMediaFiles, deepSearch
             ).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    duplicateFilesPreview.loadPreviews(it.flatten())
+                    duplicateFilesPreview.loadPreviews(it.flatten()) {
+                        cleanButtonClick(it.flatten())
+                    }
                 }
             }
 
@@ -155,7 +162,9 @@ class AnalyseFragment : Fragment() {
                             .observe(viewLifecycleOwner) { clutteredVideosInfo ->
                                 clutteredVideosInfo?.let {
                                     clutteredVideoPreview.invalidateProgress(false)
-                                    clutteredVideoPreview.loadPreviews(clutteredVideosInfo)
+                                    clutteredVideoPreview.loadPreviews(clutteredVideosInfo) {
+                                        cleanButtonClick(it)
+                                    }
                                 }
                             }
                         analyseViewModel.getLargeVideos(mediaFilePair.second)
@@ -163,7 +172,9 @@ class AnalyseFragment : Fragment() {
                                 largeVideosList ->
                                 largeVideosList?.let {
                                     largeVideoPreview.invalidateProgress(false)
-                                    largeVideoPreview.loadPreviews(largeVideosList)
+                                    largeVideoPreview.loadPreviews(largeVideosList) {
+                                        cleanButtonClick(it)
+                                    }
                                 }
                             }
                     }
@@ -176,7 +187,9 @@ class AnalyseFragment : Fragment() {
                         largeDownloadPreview.invalidateProgress(true)
                         largeDownloads?.let {
                             largeDownloadPreview.invalidateProgress(false)
-                            largeDownloadPreview.loadPreviews(largeDownloads)
+                            largeDownloadPreview.loadPreviews(largeDownloads) {
+                                cleanButtonClick(it)
+                            }
                         }
                     }
                 analyseViewModel.getOldDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
@@ -184,7 +197,7 @@ class AnalyseFragment : Fragment() {
                     oldDownloadPreview.invalidateProgress(true)
                     oldDownloads?.let {
                         oldDownloadPreview.invalidateProgress(false)
-                        oldDownloadPreview.loadPreviews(oldDownloads)
+                        oldDownloadPreview.loadPreviews(oldDownloads) { cleanButtonClick(it) }
                     }
                 }
             }
@@ -195,7 +208,9 @@ class AnalyseFragment : Fragment() {
                         oldScreenshotsPreview.invalidateProgress(true)
                         oldScreenshots?.let {
                             oldScreenshotsPreview.invalidateProgress(false)
-                            oldScreenshotsPreview.loadPreviews(oldScreenshots)
+                            oldScreenshotsPreview.loadPreviews(oldScreenshots) {
+                                cleanButtonClick(it)
+                            }
                         }
                     }
             }
@@ -205,7 +220,7 @@ class AnalyseFragment : Fragment() {
                     oldRecordingsPreview.invalidateProgress(true)
                     oldRecordings?.let {
                         oldRecordingsPreview.invalidateProgress(false)
-                        oldRecordingsPreview.loadPreviews(oldRecordings)
+                        oldRecordingsPreview.loadPreviews(oldRecordings) { cleanButtonClick(it) }
                     }
                 }
             }
@@ -216,6 +231,42 @@ class AnalyseFragment : Fragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    private fun cleanButtonClick(toDelete: List<MediaFileInfo>) {
+        val progressDialogBuilder = requireContext()
+            .showProcessingDialog(layoutInflater, "")
+        val progressDialog = progressDialogBuilder.create()
+        val summaryDialogBuilder = Utils.buildDeleteSummaryDialog(requireContext()) {
+            progressDialog.show()
+            filesViewModel.deleteMediaFiles(toDelete).observe(viewLifecycleOwner) {
+                progressDialog.findViewById<TextView>(R.id.please_wait_text)?.text =
+                    resources.getString(R.string.deleted_progress)
+                        .format(it.first, toDelete.size)
+                if (it.second == toDelete.size) {
+                    // deletion complete, no need to check analysis data to remove
+                    // as it will get deleted lazily while loading analysis lists
+                    requireContext().showToastOnBottom(
+                        resources
+                            .getString(R.string.successfully_deleted)
+                    )
+                    val navController = NavHostFragment.findNavController(this)
+                    navController.popBackStack()
+                    navController.navigate(R.id.navigation_analyse)
+                    progressDialog.dismiss()
+                }
+            }
+        }
+        val summaryDialog = summaryDialogBuilder.create()
+        summaryDialog.show()
+        filesViewModel.getMediaFileListSize(toDelete).observe(viewLifecycleOwner) {
+            sizeRaw ->
+            val size = Formatter.formatFileSize(requireContext(), sizeRaw)
+            summaryDialog.setMessage(
+                resources
+                    .getString(R.string.delete_files_message).format(toDelete.size, size)
+            )
+        }
     }
 
     private fun setVisibility(sharedPrefs: SharedPreferences) {

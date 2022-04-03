@@ -69,6 +69,13 @@ data class MediaFileInfo(
         return FileUtils.formatStorageLength(context, longSize)
     }
 
+    fun delete(): Boolean {
+        if (!exists()) {
+            return true
+        }
+        return File(path).delete()
+    }
+
     fun getContentUri(context: Context): Uri? {
         return if (exists()) {
             FileProvider.getUriForFile(context, context.packageName, File(path))
