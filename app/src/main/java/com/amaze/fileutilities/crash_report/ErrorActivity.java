@@ -179,20 +179,23 @@ public class ErrorActivity extends AppCompatActivity {
 
     reportTelegramButton.setOnClickListener(
         (View v) -> {
-          Utils.Companion.copyToClipboard(this, buildMarkdown());
+          Utils.Companion.copyToClipboard(
+              this, buildMarkdown(), getString(R.string.clipboard_path_copy));
           Toast.makeText(this, R.string.crash_report_copied, Toast.LENGTH_SHORT).show();
           Utils.Companion.openTelegramURL(this);
         });
 
     copyButton.setOnClickListener(
         (View v) -> {
-          Utils.Companion.copyToClipboard(this, buildMarkdown());
+          Utils.Companion.copyToClipboard(
+              this, buildMarkdown(), getString(R.string.clipboard_path_copy));
           Toast.makeText(this, R.string.crash_report_copied, Toast.LENGTH_SHORT).show();
         });
 
     reportGithubButton.setOnClickListener(
         (View v) -> {
-          Utils.Companion.copyToClipboard(this, buildMarkdown());
+          Utils.Companion.copyToClipboard(
+              this, buildMarkdown(), getString(R.string.clipboard_path_copy));
           Toast.makeText(this, R.string.crash_report_copied, Toast.LENGTH_SHORT).show();
           Utils.Companion.openURL(ERROR_GITHUB_ISSUE_URL, this);
         });

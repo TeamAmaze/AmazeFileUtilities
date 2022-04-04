@@ -36,7 +36,6 @@ import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.home_page.ui.files.AbstractMediaInfoListFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
-import com.amaze.fileutilities.home_page.ui.options.AboutActivity
 import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
@@ -69,6 +68,7 @@ class MainActivity :
         binding = ActivityMainBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
 //        viewModel.copyTrainedData()
+//        viewModel.getAndSaveUniqueDeviceId()
         actionBarBinding = ActivityMainActionbarBinding.inflate(layoutInflater)
         searchActionBarBinding = ActivityMainActionbarSearchBinding.inflate(layoutInflater)
         selectedItemActionBarBinding = ActivityMainActionbarItemSelectedBinding
@@ -117,12 +117,16 @@ class MainActivity :
             invalidateOptionsTabs()
         }
         binding.aboutText.setOnClickListener {
-            startActivity(Intent(this, AboutActivity::class.java))
+            val intent = Intent(this, PreferenceActivity::class.java)
+            intent.putExtra(PreferenceActivity.KEY_IS_SETTINGS, false)
+            startActivity(intent)
             isOptionsVisible = !isOptionsVisible
             invalidateOptionsTabs()
         }
         binding.settingsText.setOnClickListener {
-            startActivity(Intent(this, PreferenceActivity::class.java))
+            val intent = Intent(this, PreferenceActivity::class.java)
+            intent.putExtra(PreferenceActivity.KEY_IS_SETTINGS, true)
+            startActivity(intent)
             isOptionsVisible = !isOptionsVisible
             invalidateOptionsTabs()
         }
