@@ -12,6 +12,7 @@ package com.amaze.fileutilities.home_page.ui.files
 
 import android.app.Application
 import android.net.Uri
+import android.provider.Settings
 import androidx.lifecycle.*
 import com.amaze.fileutilities.home_page.database.*
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
@@ -28,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.*
 import java.lang.ref.WeakReference
+import java.nio.charset.Charset
 import java.util.*
 
 class FilesViewModel(val applicationContext: Application) :
@@ -103,7 +105,7 @@ class FilesViewModel(val applicationContext: Application) :
             emit(mediaFileInfoList)
         }
 
-    val usedImagesSummaryTransformations:
+    var usedImagesSummaryTransformations:
         LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> =
             Transformations.switchMap(internalStorageStats) {
                 input ->
@@ -124,7 +126,7 @@ class FilesViewModel(val applicationContext: Application) :
                 getVideosSummaryLiveData(input)
             }
 
-    val usedDocsSummaryTransformations:
+    var usedDocsSummaryTransformations:
         LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> =
             Transformations.switchMap(internalStorageStats) {
                 input ->
@@ -607,6 +609,77 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
+    /*var uniqueDeviceId = ""
+    fun getAndSaveUniqueDeviceId() {
+        viewModelScope.launch(Dispatchers.Default) {
+            applicationContext.getExternalStorageDirectory()?.let { internalStoragePath ->
+                val basePath = "${internalStoragePath.path}/" +
+                        "${TransferFragment.RECEIVER_BASE_PATH}/" +
+                        TransferFragment.NO_MEDIA
+                val baseFile = File(basePath)
+                val uniqueFile = File(baseFile, TransferFragment.ID_LOG)
+                if (!uniqueFile.exists()) {
+                    baseFile.mkdirs()
+                    var `in`: InputStream? = null
+                    var out: OutputStream? = null
+                    try {
+                        val id = UUID.randomUUID().toString()
+                        `in` = id.byteInputStream(Charset.defaultCharset())
+                        out = FileOutputStream(uniqueFile)
+                        val buffer = ByteArray(4096)
+                        var bytesRead: Int
+                        while (`in`.read(buffer).also { bytesRead = it } != -1) {
+                            out.write(buffer, 0, bytesRead)
+                        }
+                        uniqueDeviceId = id
+                    } finally {
+                        out!!.close()
+                        `in`!!.close()
+                    }
+                } else {
+                    val fileReader = FileReader(uniqueFile)
+                    BufferedReader(fileReader).use { bufferedReader ->
+                        var line: String?
+                        while (bufferedReader.readLine().also { line = it } != null) {
+                            uniqueDeviceId = line ?: ""
+                            break
+                        }
+                    }
+                }
+            }
+        }
+    }*/
+
+    /*fun getUniqueId2(): String? {
+        applicationContext.getExternalStorageDirectory()?.let { internalStoragePath ->
+            val basePath = "${internalStoragePath.path}/" +
+                    "${TransferFragment.RECEIVER_BASE_PATH}/" +
+                    TransferFragment.NO_MEDIA
+            val baseFile = File(basePath)
+            val uniqueFile = File(baseFile, TransferFragment.ID_LOG)
+            if (uniqueFile.exists()) {
+                val fileReader = FileReader(uniqueFile)
+                BufferedReader(fileReader).use { bufferedReader ->
+                    var line: String?
+                    while (bufferedReader.readLine().also { line = it } != null) {
+                        return line
+                    }
+                }
+            } else {
+                return null
+            }
+        }
+        return null
+    }*/
+
+    fun getUniqueId(): String {
+        val secureId = Settings.Secure.getString(
+            applicationContext.contentResolver,
+            Settings.Secure.ANDROID_ID
+        )
+        return FileUtils.getSHA256Checksum(secureId.byteInputStream(Charset.defaultCharset()))
+    }
+
     override fun onCleared() {
 //        faceDetector.close()
 //        textRecognizer.close()
@@ -680,7 +753,7 @@ class FilesViewModel(val applicationContext: Application) :
                     )
                 )
             } else {
-                val checksum = FileUtils.getSHA256Checksum(file)
+                val checksum = FileUtils.getSHA256Checksum(file.inputStream())
                 val existingChecksum = dao.findBySha256Checksum(checksum)
                 if (existingChecksum != null && !existingChecksum.files.contains(file.path)) {
                     dao.insert(
@@ -711,7 +784,7 @@ class FilesViewModel(val applicationContext: Application) :
         if (!file.exists()) {
             return
         }
-        val checksum = FileUtils.getSHA256Checksum(file)
+        val checksum = FileUtils.getSHA256Checksum(file.inputStream())
         val existingChecksum = dao.findMediaFileBySha256Checksum(checksum)
         if (existingChecksum != null && !existingChecksum.files.contains(file.path)) {
             dao.insert(
