@@ -43,6 +43,8 @@ class Utils {
         var log: Logger = LoggerFactory.getLogger(Utils::class.java)
 
         const val URL_PRIVACY_POLICY = "https://www.teamamaze.xyz/privacy-policy"
+        const val URL_GITHUB_ISSUES =
+            "https://github.com/TeamAmaze/AmazeFileUtilities-Issue-Tracker/issues"
         const val AMAZE_FILE_MANAGER_MAIN = "com.amaze.filemanager.ui.activities.MainActivity"
         const val AMAZE_PACKAGE = "com.amaze.filemanager"
 
@@ -133,7 +135,7 @@ class Utils {
             }
         }
 
-        fun copyToClipboard(context: Context, text: String?): Boolean {
+        fun copyToClipboard(context: Context, text: String?, message: String): Boolean {
             return try {
                 val clipboard =
                     context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
