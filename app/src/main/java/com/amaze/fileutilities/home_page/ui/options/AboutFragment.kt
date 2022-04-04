@@ -53,8 +53,15 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
         addPreferencesFromResource(R.xml.preferences_about)
         KEYS.forEach {
             findPreference<Preference>(it)?.onPreferenceClickListener = this
-            val deviceIdPref = findPreference<Preference>(KEY_DEVICE_ID)
-            deviceIdPref?.summary = filesViewModel.getUniqueId()
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val deviceIdPref = findPreference<Preference>(KEY_DEVICE_ID)
+        filesViewModel.getUniqueId().observe(viewLifecycleOwner) {
+            deviceId ->
+            deviceIdPref?.summary = deviceId
         }
     }
 
@@ -105,11 +112,14 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
                 }
             }
             KEY_DEVICE_ID -> {
-                Utils.copyToClipboard(
-                    requireContext(), filesViewModel.getUniqueId(),
-                    getString(R.string.device_id_copied)
-                )
-                requireContext().showToastOnBottom(getString(R.string.device_id_copied))
+                filesViewModel.getUniqueId().observe(viewLifecycleOwner) {
+                    deviceId ->
+                    Utils.copyToClipboard(
+                        requireContext(), deviceId,
+                        getString(R.string.device_id_copied)
+                    )
+                    requireContext().showToastOnBottom(getString(R.string.device_id_copied))
+                }
             }
             KEY_CONTACT -> {
                 Utils.openTelegramURL(requireContext())

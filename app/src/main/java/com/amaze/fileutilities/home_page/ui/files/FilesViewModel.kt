@@ -27,6 +27,7 @@ import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Retrofit
 import java.io.*
 import java.lang.ref.WeakReference
 import java.nio.charset.Charset
@@ -672,12 +673,37 @@ class FilesViewModel(val applicationContext: Application) :
         return null
     }*/
 
-    fun getUniqueId(): String {
-        val secureId = Settings.Secure.getString(
-            applicationContext.contentResolver,
-            Settings.Secure.ANDROID_ID
-        )
-        return FileUtils.getSHA256Checksum(secureId.byteInputStream(Charset.defaultCharset()))
+    fun getUniqueId(): LiveData<String> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+            val secureId = Settings.Secure.getString(
+                applicationContext.contentResolver,
+                Settings.Secure.ANDROID_ID
+            )
+            emit(FileUtils.getSHA256Checksum(secureId.byteInputStream(Charset.defaultCharset())))
+        }
+    }
+
+    fun getTrialStatus(deviceId: String): LiveData<TrialValidationApi.TrialResponse?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+            val retrofit = Retrofit.Builder()
+                .baseUrl(TrialValidationApi.CLOUD_FUNCTION_BASE)
+                .build()
+            val service = retrofit.create(TrialValidationApi::class.java)
+            service.postValidation(
+                TrialValidationApi.TrialRequest(TrialValidationApi.AUTH_TOKEN, deviceId)
+            )?.execute()?.let { response ->
+                if (response.isSuccessful && response.body() != null) {
+                    log.info("get trial response ${response.body()}")
+                    emit(response.body())
+                } else {
+                    log.warn(
+                        "failed to get trial response code: ${response.code()} " +
+                            "error: ${response.message()}"
+                    )
+                    emit(null)
+                }
+            }
+        }
     }
 
     override fun onCleared() {
