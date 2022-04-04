@@ -27,7 +27,6 @@ import com.amaze.fileutilities.home_page.database.PathPreferences
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
 import java.security.MessageDigest
@@ -281,24 +280,24 @@ class FileUtils {
         }
 
         @Throws(NoSuchAlgorithmException::class, IOException::class)
-        fun getSHA256Checksum(file: File): String {
+        fun getSHA256Checksum(inputStream: InputStream): String {
             val messageDigest = MessageDigest.getInstance("SHA-256")
             val input = ByteArray(DEFAULT_BUFFER_SIZE)
             var length: Int
-            val inputStream: InputStream = FileInputStream(file)
-            while (inputStream.read(input).also { length = it } != -1) {
-                if (length > 0) messageDigest.update(input, 0, length)
+            inputStream.use {
+                while (inputStream.read(input).also { length = it } != -1) {
+                    if (length > 0) messageDigest.update(input, 0, length)
+                }
+                val hash = messageDigest.digest()
+                val hexString = StringBuilder()
+                for (aHash in hash) {
+                    // convert hash to base 16
+                    val hex = Integer.toHexString(0xff and aHash.toInt())
+                    if (hex.length == 1) hexString.append('0')
+                    hexString.append(hex)
+                }
+                return hexString.toString()
             }
-            val hash = messageDigest.digest()
-            val hexString = StringBuilder()
-            for (aHash in hash) {
-                // convert hash to base 16
-                val hex = Integer.toHexString(0xff and aHash.toInt())
-                if (hex.length == 1) hexString.append('0')
-                hexString.append(hex)
-            }
-            inputStream.close()
-            return hexString.toString()
         }
 
         /**
