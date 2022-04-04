@@ -31,7 +31,19 @@ class AboutActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
         _binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.subscriptionStatus.text = getString(R.string.subscription_status).format("trial")
+        viewModel.getUniqueId().observe(this) {
+            deviceId ->
+            viewModel.getTrialStatus(deviceId).observe(this) {
+                response ->
+                if (response == null) {
+                    binding.subscriptionStatus.text = getString(R.string.subscription_status)
+                        .format("null")
+                } else {
+                    binding.subscriptionStatus.text = getString(R.string.subscription_status)
+                        .format(response.getTrialStatus())
+                }
+            }
+        }
     }
 
     override fun onDestroy() {
