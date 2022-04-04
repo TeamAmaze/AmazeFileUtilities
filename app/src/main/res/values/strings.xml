@@ -65,7 +65,7 @@
     <string name="its_quiet_here">It\'s quiet in here…</string>
     <string name="settings">Settings</string>
     <string name="about">About</string>
-    <string name="rights_reserved">Copyright © 2021–2022\nAll Rights Reserved</string>
+    <string name="rights_reserved">Copyright © 2021–2022 Team Amaze\nAll Rights Reserved</string>
     <string name="open_source_licenses">Open-source licenses</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="pre_production">This is a pre-production copy. Redistribution is strictly prohibited.</string>
@@ -322,4 +322,13 @@
     <string name="deleted_progress">Deleted %s of %s</string>
     <string name="successfully_deleted">Successfully deleted</string>
     <string name="failed_to_update_list_reopen">Failed to update list, please restart the app</string>
+    <string name="device_id">Device ID</string>
+    <string name="subscription_status">Subscription status: %s</string>
+    <string name="device_id_copied">Device ID copied to clipboard</string>
+    <string name="version_title">Version</string>
+    <string name="license">License</string>
+    <string name="submit_issue">Submit Issue</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="about_app_title">About app</string>
+    <string name="made_in_india">Made with ❤ in India</string>
 </resources>
