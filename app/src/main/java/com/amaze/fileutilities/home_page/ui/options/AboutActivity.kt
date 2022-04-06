@@ -15,7 +15,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ActivityAboutBinding
+import com.amaze.fileutilities.home_page.database.AppDatabase
+import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
+import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
 
 class AboutActivity : AppCompatActivity() {
 
@@ -31,16 +34,24 @@ class AboutActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
         _binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         viewModel.getUniqueId().observe(this) {
             deviceId ->
-            viewModel.getTrialStatus(deviceId).observe(this) {
-                response ->
-                if (response == null) {
+            val dao = AppDatabase.getInstance(applicationContext).trialValidatorDao()
+            val trial = dao.findByDeviceId(deviceId)
+            if (trial != null) {
+                binding.subscriptionStatus.text = getString(R.string.subscription_status)
+                    .format(trial.deviceId)
+            }
+            trial?.let {
+                if (it.trialStatus == TrialValidationApi.TrialResponse.TRIAL_ACTIVE &&
+                    it.subscriptionStatus == Trial.SUBSCRIPTION_STATUS_DEFAULT
+                ) {
                     binding.subscriptionStatus.text = getString(R.string.subscription_status)
-                        .format("null")
+                        .format(trial.getTrialStatusName()) + " (${it.trialDaysLeft} days left)"
                 } else {
                     binding.subscriptionStatus.text = getString(R.string.subscription_status)
-                        .format(response.getTrialStatus())
+                        .format(trial.getTrialStatusName())
                 }
             }
         }

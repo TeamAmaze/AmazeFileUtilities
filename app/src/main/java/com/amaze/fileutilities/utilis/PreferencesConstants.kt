@@ -27,6 +27,7 @@ class PreferencesConstants {
         const val KEY_AUDIO_PLAYER_REPEAT_MODE = "audio_player_repeat_mode"
         const val KEY_ENABLE_WAVEFORM = "pref_enable_waveform"
         const val KEY_SUBTITLE_LANGUAGE_CODE = "subtitle_language_code"
+        const val KEY_LICENSE_LAST_DAY_DONT_SHOW = "license_last_day_dont_show"
 
         const val VAL_SEARCH_DUPLICATES_MEDIA_STORE = 0
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1
@@ -53,5 +54,6 @@ class PreferencesConstants {
         const val DEFAULT_AUDIO_PLAYER_REPEAT_MODE = AudioPlayerService.REPEAT_NONE
         const val DEFAULT_AUDIO_PLAYER_WAVEFORM = true
         const val DEFAULT_SUBTITLE_LANGUAGE_CODE = "eng"
+        const val DEFAULT_LICENSE_LAST_DAY_DONT_SHOW = false
     }
 }

@@ -65,7 +65,6 @@
         android:layout_marginTop="@dimen/material_generic_medium"
         android:textSize="@dimen/eighteen_sp"
         android:textColor="@color/white"
-        android:text="@string/licenses"
         />
 
     <TextView

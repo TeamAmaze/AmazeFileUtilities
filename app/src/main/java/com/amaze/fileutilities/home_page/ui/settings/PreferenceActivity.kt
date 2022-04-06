@@ -19,7 +19,11 @@ import androidx.fragment.app.Fragment
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ActivityPreferencesBinding
 import com.amaze.fileutilities.home_page.MainActivity
+import com.amaze.fileutilities.home_page.database.AppDatabase
+import com.amaze.fileutilities.home_page.database.Trial
+import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
 import com.amaze.fileutilities.home_page.ui.options.AboutFragment
+import com.amaze.fileutilities.utilis.showToastInCenter
 import java.util.*
 
 class PreferenceActivity : AppCompatActivity() {
@@ -50,8 +54,25 @@ class PreferenceActivity : AppCompatActivity() {
     override fun onBackPressed() {
         val fragment = getFragmentAtFrame()
         if (fragment is PreferenceFragment || fragment is AboutFragment) {
-            val intent = Intent(this, MainActivity::class.java)
-            NavUtils.navigateUpTo(this, intent)
+            // check if license expired...
+            val dao = AppDatabase.getInstance(applicationContext).trialValidatorDao()
+            var isActive = false
+            var isSubscribed = false
+            dao.getAll().forEach {
+                if (it.trialStatus == TrialValidationApi.TrialResponse.TRIAL_ACTIVE) {
+                    isActive = true
+                }
+                if (it.subscriptionStatus != Trial.SUBSCRIPTION_STATUS_DEFAULT) {
+                    isSubscribed = true
+                }
+            }
+            if (!isActive && !isSubscribed) {
+                this.showToastInCenter(getString(R.string.trial_expired_title))
+                return
+            } else {
+                val intent = Intent(this, MainActivity::class.java)
+                NavUtils.navigateUpTo(this, intent)
+            }
         } else {
             super.onBackPressed()
             title = titleStack.pop()
