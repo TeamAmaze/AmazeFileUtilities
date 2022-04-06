@@ -47,6 +47,7 @@ class MediaFileAdapter(
         const val MEDIA_TYPE_VIDEO = 1
         const val MEDIA_TYPE_DOCS = 2
         const val MEDIA_TYPE_IMAGES = 3
+        const val MEDIA_TYPE_UNKNOWN = 4
     }
 
     private var headerListItems: MutableList<ListItem> = mutableListOf()

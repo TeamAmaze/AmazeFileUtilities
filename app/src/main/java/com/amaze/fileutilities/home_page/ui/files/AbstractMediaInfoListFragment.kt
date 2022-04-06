@@ -59,8 +59,6 @@ abstract class AbstractMediaInfoListFragment :
 
     abstract fun getRecyclerView(): RecyclerView
 
-    abstract fun getMediaListType(): Int
-
     abstract fun getItemPressedCallback(mediaFileInfo: MediaFileInfo)
 
     override fun hideActionBarOnClick(): Boolean {

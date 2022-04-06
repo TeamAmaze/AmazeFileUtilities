@@ -26,6 +26,7 @@ import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaAdapterPreloader
+import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.*
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter.*
@@ -49,6 +50,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
     private var preloader: MediaAdapterPreloader? = null
     private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
     private val MAX_PRELOAD = 50
+    private var analysisType: Int? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -101,7 +103,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
 
         _binding = FragmentReviewImagesBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        val analysisType: Int = arguments?.getInt(ANALYSIS_TYPE)!!
+        analysisType = arguments?.getInt(ANALYSIS_TYPE)!!
         viewModel.analysisType = analysisType
         setupShowActionBar()
         (activity as MainActivity).invalidateBottomBar(false)
@@ -118,7 +120,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
             sizeProvider,
             MAX_PRELOAD
         )
-        initAnalysisView(analysisType)
+        initAnalysisView(analysisType!!)
         return root
     }
 
@@ -128,6 +130,27 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
 
     override fun getMediaFileAdapter(): AbstractMediaFilesAdapter? {
         return mediaFileAdapter
+    }
+
+    /**
+     * Required because we need to know while deleting what type of media file info we want to delete
+     */
+    override fun getMediaListType(): Int {
+        return when (analysisType) {
+            TYPE_BLUR, TYPE_LOW_LIGHT, TYPE_MEME, TYPE_SAD, TYPE_DISTRACTED, TYPE_SLEEPING,
+            TYPE_SELFIE, TYPE_GROUP_PIC -> {
+                MediaFileAdapter.MEDIA_TYPE_IMAGES
+            }
+            TYPE_LARGE_VIDEOS, TYPE_CLUTTERED_VIDEOS -> {
+                MediaFileAdapter.MEDIA_TYPE_VIDEO
+            }
+            TYPE_OLD_RECORDINGS -> {
+                MediaFileAdapter.MEDIA_TYPE_AUDIO
+            }
+            else -> {
+                MediaFileAdapter.MEDIA_TYPE_UNKNOWN
+            }
+        }
     }
 
     private fun initAnalysisView(analysisType: Int) {

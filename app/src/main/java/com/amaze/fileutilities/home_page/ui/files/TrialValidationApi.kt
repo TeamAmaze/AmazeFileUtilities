@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.home_page.ui.files
 
+import com.amaze.fileutilities.home_page.database.Trial
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -21,7 +22,7 @@ interface TrialValidationApi {
         const val AUTH_TOKEN = "anG*XojCjZQ44x"
     }
 
-    @POST("/amaze-utils-trial-validator")
+    @POST("/amaze-utils-trial-validator-1")
     fun postValidation(
         @Body trialRequest: TrialRequest
     ): Call<TrialResponse>?
@@ -33,9 +34,11 @@ interface TrialValidationApi {
     )
 
     data class TrialResponse(
-        val isLastDay: Boolean,
-        val isNewSignup: Boolean,
-        val trialStatus: Int
+        val isLastDay: Boolean = false,
+        val isNewSignup: Boolean = false,
+        val trialStatus: Int,
+        val trialDaysLeft: Int = 0,
+        val subscriptionStatus: Int = Trial.SUBSCRIPTION_STATUS_DEFAULT
     ) {
 
         companion object {
@@ -43,17 +46,34 @@ interface TrialValidationApi {
             const val TRIAL_EXPIRED = "trial_expired"
             const val TRIAL_INACTIVE = "trial_inactive"
             const val TRIAL_EXCLUSIVE = "trial_exclusive"
+            const val SUBSCRIPTION = "subscribed"
+            const val CODE_TRIAL_ACTIVE = 12341343
+            const val CODE_TRIAL_EXPIRED = 24523424
+            const val CODE_TRIAL_INACTIVE = 33452345
+            const val CODE_TRIAL_EXCLUSIVE = 45345234
+
+            val trialStatusMap = mapOf(
+                Pair(TRIAL_ACTIVE, "trial"),
+                Pair(TRIAL_EXPIRED, "trial-expired"),
+                Pair(TRIAL_INACTIVE, "inactive"),
+                Pair(TRIAL_EXCLUSIVE, "exclusive")
+            )
+
+            private val trialStatusCodeMap = mapOf(
+                Pair(CODE_TRIAL_ACTIVE, TRIAL_ACTIVE),
+                Pair(CODE_TRIAL_EXPIRED, TRIAL_EXPIRED),
+                Pair(CODE_TRIAL_INACTIVE, TRIAL_INACTIVE),
+                Pair(CODE_TRIAL_EXCLUSIVE, TRIAL_EXCLUSIVE)
+            )
         }
 
-        private val trialStatusMap = mapOf(
-            Pair(12341343, TRIAL_ACTIVE),
-            Pair(24523424, TRIAL_EXPIRED),
-            Pair(33452345, TRIAL_INACTIVE),
-            Pair(45345234, TRIAL_EXCLUSIVE)
-        )
-
         fun getTrialStatus(): String {
-            return trialStatusMap[trialStatus] ?: TRIAL_ACTIVE
+            val statusCode = getTrialStatusCode()
+            return trialStatusMap[statusCode] ?: SUBSCRIPTION
+        }
+
+        fun getTrialStatusCode(): String {
+            return trialStatusCodeMap[trialStatus] ?: TRIAL_ACTIVE
         }
     }
 }
