@@ -11,8 +11,10 @@
 package com.amaze.fileutilities.home_page
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.speech.RecognizerIntent
 import android.view.MotionEvent
 import android.view.View
@@ -36,6 +38,7 @@ import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.home_page.ui.files.AbstractMediaInfoListFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
+import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
 import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
@@ -117,11 +120,7 @@ class MainActivity :
             invalidateOptionsTabs()
         }
         binding.aboutText.setOnClickListener {
-            val intent = Intent(this, PreferenceActivity::class.java)
-            intent.putExtra(PreferenceActivity.KEY_IS_SETTINGS, false)
-            startActivity(intent)
-            isOptionsVisible = !isOptionsVisible
-            invalidateOptionsTabs()
+            showAboutActivity()
         }
         binding.settingsText.setOnClickListener {
             val intent = Intent(this, PreferenceActivity::class.java)
@@ -140,20 +139,21 @@ class MainActivity :
                     if (it) {
                         mediaInfoStorageSummaryPair?.second.let { list ->
                             list?.run {
+                                val mediaFileInfoList = ArrayList(this)
                                 viewModel.analyseImageFeatures(
-                                    this,
+                                    mediaFileInfoList,
                                     pathPreferences
                                 )
                                 viewModel.analyseMemeImages(
-                                    this,
+                                    mediaFileInfoList,
                                     pathPreferences
                                 )
                                 viewModel.analyseBlurImages(
-                                    this,
+                                    mediaFileInfoList,
                                     pathPreferences
                                 )
                                 viewModel.analyseLowLightImages(
-                                    this,
+                                    mediaFileInfoList,
                                     pathPreferences
                                 )
                             }
@@ -177,6 +177,33 @@ class MainActivity :
                 observeMediaInfoLists { isLoading, aggregatedFiles ->
                     if (!isLoading && aggregatedFiles != null) {
                         viewModel.analyseMediaStoreFiles(aggregatedFiles)
+                    }
+                }
+            }
+        }
+        viewModel.getUniqueId().observe(this) {
+            viewModel.validateTrial(it, isNetworkAvailable()).observe(this) {
+                trialResponse ->
+                if (trialResponse != null) {
+                    when (trialResponse.getTrialStatusCode()) {
+                        TrialValidationApi.TrialResponse.TRIAL_ACTIVE -> {
+                            // check if it's first day or last day
+                            if (trialResponse.isNewSignup) {
+                                Utils.buildTrialStartedDialog(this).create().show()
+                            } else if (trialResponse.isLastDay) {
+                                Utils.buildLastTrialDayDialog(this) {
+                                    // wants to subscribe
+                                }.create().show()
+                            }
+                        }
+                        TrialValidationApi.TrialResponse.TRIAL_EXPIRED -> {
+//                            startExpiredInactiveCountdown(applicationContext)
+                            showAboutActivity()
+                        }
+                        TrialValidationApi.TrialResponse.TRIAL_INACTIVE -> {
+//                            startTrialInactiveCountdown(applicationContext)
+                            showAboutActivity()
+                        }
                     }
                 }
             }
@@ -362,6 +389,48 @@ class MainActivity :
                 binding.navView.hideTranslateY(500)
             }
         }
+    }
+
+    private fun startTrialInactiveCountdown(context: Context) {
+        object : CountDownTimer(
+            3000,
+            3000
+        ) {
+            override fun onTick(millisUntilFinished: Long) {
+                // do nothing
+            }
+
+            override fun onFinish() {
+                Utils.buildTrialExclusiveInactiveDialog(context) {
+                    // subscribe
+                }.create().show()
+            }
+        }.start()
+    }
+
+    private fun startExpiredInactiveCountdown(context: Context) {
+        object : CountDownTimer(
+            3000,
+            3000
+        ) {
+            override fun onTick(millisUntilFinished: Long) {
+                // do nothing
+            }
+
+            override fun onFinish() {
+                Utils.buildTrialExpiredDialog(context) {
+                    // subscribe
+                }.create().show()
+            }
+        }.start()
+    }
+
+    private fun showAboutActivity() {
+        val intent = Intent(this, PreferenceActivity::class.java)
+        intent.putExtra(PreferenceActivity.KEY_IS_SETTINGS, false)
+        startActivity(intent)
+        isOptionsVisible = !isOptionsVisible
+        invalidateOptionsTabs()
     }
 
     private fun showSearchFragment() {

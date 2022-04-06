@@ -28,10 +28,12 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.*
 import java.lang.ref.WeakReference
 import java.nio.charset.Charset
 import java.util.*
+import kotlin.collections.ArrayList
 
 class FilesViewModel(val applicationContext: Application) :
     AndroidViewModel(applicationContext) {
@@ -44,6 +46,7 @@ class FilesViewModel(val applicationContext: Application) :
     var isMediaStoreAnalysing = true
     var isCasting = false
     var wifiIpAddress: String? = null
+    val uniqueIdSalt = "#%36zkpCE2"
 
     private val highAccuracyOpts = FaceDetectorOptions.Builder()
         .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
@@ -106,29 +109,53 @@ class FilesViewModel(val applicationContext: Application) :
             emit(mediaFileInfoList)
         }
 
+    fun deleteMediaFilesFromList(
+        mediaFileInfoList: ArrayList<MediaFileInfo>,
+        toDelete: List<MediaFileInfo>
+    ) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val syncList = Collections.synchronizedList(mediaFileInfoList)
+            val toDeletePaths = toDelete.map { it.path }
+            synchronized(syncList) {
+                /*syncList.forEachIndexed { index, mediaFileInfo ->
+                    if (toDeletePaths.contains(mediaFileInfo.path)) {
+                        syncList.removeAt(index)
+                    }
+                }*/
+                /*while (syncList.iterator().hasNext()) {
+                    val next = syncList.iterator().next()
+                    if (toDeletePaths.contains(next.path)) {
+                        syncList.iterator().remove()
+                    }
+                }*/
+                syncList.removeAll(toDelete)
+            }
+        }
+    }
+
     var usedImagesSummaryTransformations:
-        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> =
+        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
             Transformations.switchMap(internalStorageStats) {
                 input ->
                 getImagesSummaryLiveData(input)
             }
 
     val usedAudiosSummaryTransformations:
-        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> =
+        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
             Transformations.switchMap(internalStorageStats) {
                 input ->
                 getAudiosSummaryLiveData(input)
             }
 
     val usedVideosSummaryTransformations:
-        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> =
+        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
             Transformations.switchMap(internalStorageStats) {
                 input ->
                 getVideosSummaryLiveData(input)
             }
 
     var usedDocsSummaryTransformations:
-        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> =
+        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
             Transformations.switchMap(internalStorageStats) {
                 input ->
                 getDocumentsSummaryLiveData(input)
@@ -454,17 +481,33 @@ class FilesViewModel(val applicationContext: Application) :
         viewModelScope.launch(Dispatchers.IO) {
             val dao = AppDatabase.getInstance(applicationContext).internalStorageAnalysisDao()
             isMediaStoreAnalysing = true
-            aggregatedMediaFiles.imagesMediaFilesList?.forEach {
-                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path + ""))
+            aggregatedMediaFiles.imagesMediaFilesList?.let {
+                val imagesList = ArrayList(it)
+                imagesList.forEach {
+                    image ->
+                    getMediaFileChecksumAndWriteToDatabase(dao, File(image.path + ""))
+                }
             }
-            aggregatedMediaFiles.audiosMediaFilesList?.forEach {
-                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path + ""))
+            aggregatedMediaFiles.audiosMediaFilesList?.let {
+                val audiosList = ArrayList(it)
+                audiosList.forEach {
+                    audio ->
+                    getMediaFileChecksumAndWriteToDatabase(dao, File(audio.path + ""))
+                }
             }
-            aggregatedMediaFiles.videosMediaFilesList?.forEach {
-                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path + ""))
+            aggregatedMediaFiles.videosMediaFilesList?.let {
+                val videosList = ArrayList(it)
+                videosList.forEach {
+                    video ->
+                    getMediaFileChecksumAndWriteToDatabase(dao, File(video.path + ""))
+                }
             }
-            aggregatedMediaFiles.docsMediaFilesList?.forEach {
-                getMediaFileChecksumAndWriteToDatabase(dao, File(it.path + ""))
+            aggregatedMediaFiles.docsMediaFilesList?.let {
+                val docsList = ArrayList(it)
+                docsList.forEach {
+                    docs ->
+                    getMediaFileChecksumAndWriteToDatabase(dao, File(docs.path + ""))
+                }
             }
             isMediaStoreAnalysing = false
         }
@@ -675,35 +718,132 @@ class FilesViewModel(val applicationContext: Application) :
 
     fun getUniqueId(): LiveData<String> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-            val secureId = Settings.Secure.getString(
+            var secureId = Settings.Secure.getString(
                 applicationContext.contentResolver,
                 Settings.Secure.ANDROID_ID
             )
-            emit(FileUtils.getSHA256Checksum(secureId.byteInputStream(Charset.defaultCharset())))
+            for (i in 1..7) {
+                // hash secret 7 times
+                if (i % 2 == 0) {
+                    // add salt alternatively
+                    secureId + uniqueIdSalt
+                }
+                secureId = FileUtils
+                    .getSHA256Checksum(secureId.byteInputStream(Charset.defaultCharset()))
+            }
+            emit(secureId)
         }
     }
 
-    fun getTrialStatus(deviceId: String): LiveData<TrialValidationApi.TrialResponse?> {
+    fun validateTrial(deviceId: String, isNetworkAvailable: Boolean):
+        LiveData<TrialValidationApi.TrialResponse?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-            val retrofit = Retrofit.Builder()
-                .baseUrl(TrialValidationApi.CLOUD_FUNCTION_BASE)
-                .build()
-            val service = retrofit.create(TrialValidationApi::class.java)
-            service.postValidation(
-                TrialValidationApi.TrialRequest(TrialValidationApi.AUTH_TOKEN, deviceId)
-            )?.execute()?.let { response ->
-                if (response.isSuccessful && response.body() != null) {
-                    log.info("get trial response ${response.body()}")
-                    emit(response.body())
+            val dao = AppDatabase.getInstance(applicationContext).trialValidatorDao()
+            val trial = dao.findByDeviceId(deviceId)
+            if (trial == null) {
+                if (isNetworkAvailable) {
+                    emit(fetchAndSaveTrial(deviceId, dao))
                 } else {
-                    log.warn(
-                        "failed to get trial response code: ${response.code()} " +
-                            "error: ${response.message()}"
-                    )
                     emit(null)
+                }
+            } else {
+                if (trial.subscriptionStatus != Trial.SUBSCRIPTION_STATUS_DEFAULT) {
+                    emit(
+                        TrialValidationApi.TrialResponse(
+                            false, false,
+                            TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
+                            trial.trialDaysLeft,
+                            Trial.SUBSCRIPTION_STATUS_DEFAULT
+                        )
+                    )
+                } else if (trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXPIRED) {
+                    emit(
+                        TrialValidationApi.TrialResponse(
+                            false, false,
+                            TrialValidationApi.TrialResponse.CODE_TRIAL_EXPIRED,
+                            trial.trialDaysLeft,
+                            Trial.SUBSCRIPTION_STATUS_DEFAULT
+                        )
+                    )
+                } else if (trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_INACTIVE) {
+                    emit(
+                        TrialValidationApi.TrialResponse(
+                            false, false,
+                            TrialValidationApi.TrialResponse.CODE_TRIAL_INACTIVE,
+                            trial.trialDaysLeft,
+                            Trial.SUBSCRIPTION_STATUS_DEFAULT
+                        )
+                    )
+                } else {
+                    // trial is active, if we've already processed today, don't fetch
+                    val cal = GregorianCalendar.getInstance()
+                    cal.time = trial.fetchTime
+                    cal.add(Calendar.DAY_OF_YEAR, 1)
+                    if (cal.time.before(Date())) {
+                        // we haven't fetched today, check if active from remote
+                        emit(fetchAndSaveTrial(deviceId, dao))
+                    } else {
+                        // we've fetcehd today, consider it active
+                        emit(
+                            TrialValidationApi.TrialResponse(
+                                false, false,
+                                TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
+                                trial.trialDaysLeft,
+                                Trial.SUBSCRIPTION_STATUS_DEFAULT
+                            )
+                        )
+                    }
                 }
             }
         }
+    }
+
+    private fun fetchAndSaveTrial(
+        deviceId: String,
+        dao: TrialValidatorDao
+    ): TrialValidationApi.TrialResponse {
+        val trialResponse = getTrialResponse(deviceId)
+        return if (trialResponse != null) {
+            val cal = GregorianCalendar.getInstance()
+            cal.time = Date()
+            cal.add(Calendar.DAY_OF_YEAR, -1)
+            dao.insert(
+                Trial(
+                    deviceId, trialResponse.getTrialStatusCode(), trialResponse.trialDaysLeft,
+                    cal.time, Trial.SUBSCRIPTION_STATUS_DEFAULT
+                )
+            )
+            trialResponse
+        } else {
+            TrialValidationApi.TrialResponse(
+                false, true,
+                TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE, 7
+            )
+        }
+    }
+
+    private fun getTrialResponse(deviceId: String): TrialValidationApi.TrialResponse? {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(TrialValidationApi.CLOUD_FUNCTION_BASE)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val service = retrofit.create(TrialValidationApi::class.java)
+        service.postValidation(
+            TrialValidationApi.TrialRequest(TrialValidationApi.AUTH_TOKEN, deviceId)
+        )?.execute()?.let { response ->
+            return if (response.isSuccessful && response.body() != null) {
+                log.info("get trial response ${response.body()}")
+                response.body()
+            } else {
+                log.warn(
+                    "failed to get trial response code: ${response.code()} " +
+                        "error: ${response.message()}"
+                )
+                null
+            }
+        }
+        log.warn("failed to call trial validation api")
+        return null
     }
 
     override fun onCleared() {
@@ -753,7 +893,8 @@ class FilesViewModel(val applicationContext: Application) :
                 dao.insert(
                     InternalStorageAnalysis(
                         file.path, listOf(file.path),
-                        true, false, true, false, currentDepth
+                        true, false, true, false,
+                        currentDepth
                     )
                 )
             } else {
@@ -794,7 +935,8 @@ class FilesViewModel(val applicationContext: Application) :
                     dao.insert(
                         InternalStorageAnalysis(
                             checksum,
-                            listOf(file.path), false, false, false, false,
+                            listOf(file.path), false, false, false,
+                            false,
                             currentDepth
                         )
                     )
@@ -824,7 +966,8 @@ class FilesViewModel(val applicationContext: Application) :
             dao.insert(
                 InternalStorageAnalysis(
                     checksum,
-                    listOf(file.path), false, false, false, true,
+                    listOf(file.path), false, false, false,
+                    true,
                     0
                 )
             )
@@ -853,7 +996,7 @@ class FilesViewModel(val applicationContext: Application) :
     }
 
     private fun getImagesSummaryLiveData(storageSummary: StorageSummary?):
-        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> {
+        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             if (storageSummary == null) {
@@ -885,7 +1028,7 @@ class FilesViewModel(val applicationContext: Application) :
     }
 
     private fun getAudiosSummaryLiveData(storageSummary: StorageSummary?):
-        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> {
+        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             if (storageSummary == null) {
@@ -906,7 +1049,7 @@ class FilesViewModel(val applicationContext: Application) :
     }
 
     private fun getVideosSummaryLiveData(storageSummary: StorageSummary?):
-        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> {
+        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             if (storageSummary == null) {
@@ -920,7 +1063,7 @@ class FilesViewModel(val applicationContext: Application) :
     }
 
     private fun getDocumentsSummaryLiveData(storageSummary: StorageSummary?):
-        LiveData<Pair<StorageSummary, List<MediaFileInfo>>?> {
+        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
             if (storageSummary == null) {

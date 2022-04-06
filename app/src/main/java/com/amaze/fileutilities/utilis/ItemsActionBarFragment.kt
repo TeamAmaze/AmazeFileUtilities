@@ -20,6 +20,8 @@ import androidx.fragment.app.activityViewModels
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
+import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
+import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
 
@@ -27,6 +29,7 @@ abstract class ItemsActionBarFragment : Fragment() {
 
     abstract fun hideActionBarOnClick(): Boolean
     abstract fun getMediaFileAdapter(): AbstractMediaFilesAdapter?
+    abstract fun getMediaListType(): Int
 
     private val filesViewModel: FilesViewModel by activityViewModels()
 
@@ -77,6 +80,42 @@ abstract class ItemsActionBarFragment : Fragment() {
 
     private fun getTrashButton(): ImageView? {
         return optionsActionBar?.findViewById(R.id.trashButton)
+    }
+
+    private fun deleteFromFileViewmodelLists(toDelete: List<MediaFileInfo>) {
+        when (getMediaListType()) {
+            MediaFileAdapter.MEDIA_TYPE_IMAGES -> {
+                filesViewModel.usedImagesSummaryTransformations.observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        filesViewModel.deleteMediaFilesFromList(it.second, toDelete)
+                    }
+                }
+            }
+            MediaFileAdapter.MEDIA_TYPE_VIDEO -> {
+                filesViewModel.usedVideosSummaryTransformations.observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        filesViewModel.deleteMediaFilesFromList(it.second, toDelete)
+                    }
+                }
+            }
+            MediaFileAdapter.MEDIA_TYPE_AUDIO -> {
+                filesViewModel.usedAudiosSummaryTransformations.observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        filesViewModel.deleteMediaFilesFromList(it.second, toDelete)
+                    }
+                }
+            }
+            MediaFileAdapter.MEDIA_TYPE_DOCS -> {
+                filesViewModel.usedDocsSummaryTransformations.observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        filesViewModel.deleteMediaFilesFromList(it.second, toDelete)
+                    }
+                }
+            }
+            else -> {
+                // do nothing
+            }
+        }
     }
 
     fun setupCommonButtons() {
@@ -130,6 +169,9 @@ abstract class ItemsActionBarFragment : Fragment() {
                                     )
                                 )
                             }
+                            // delete deleted data from observables in fileviewmodel
+                            deleteFromFileViewmodelLists(toDelete)
+
                             // deletion complete, no need to check analysis data to remove
                             // as it will get deleted lazily while loading analysis lists
                             requireContext().showToastOnBottom(
