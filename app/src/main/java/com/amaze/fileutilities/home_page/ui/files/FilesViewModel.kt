@@ -782,13 +782,13 @@ class FilesViewModel(val applicationContext: Application) :
     ): TrialValidationApi.TrialResponse {
         val trialResponse = getTrialResponse(deviceId)
         return if (trialResponse != null) {
-            val cal = GregorianCalendar.getInstance()
+            /*val cal = GregorianCalendar.getInstance()
             cal.time = Date()
-            cal.add(Calendar.DAY_OF_YEAR, -1)
+            cal.add(Calendar.DAY_OF_YEAR, -1)*/
             dao.insert(
                 Trial(
                     deviceId, trialResponse.getTrialStatusCode(), trialResponse.trialDaysLeft,
-                    cal.time, Trial.SUBSCRIPTION_STATUS_DEFAULT
+                    Date(), Trial.SUBSCRIPTION_STATUS_DEFAULT
                 )
             )
             trialResponse
