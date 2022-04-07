@@ -323,7 +323,7 @@
     <string name="successfully_deleted">Successfully deleted</string>
     <string name="failed_to_update_list_reopen">Failed to update list, please restart the app</string>
     <string name="device_id">Device ID</string>
-    <string name="subscription_status">Subscription status: %s</string>
+    <string name="subscription_status">Subscription status</string>
     <string name="device_id_copied">Device ID copied to clipboard</string>
     <string name="version_title">Version</string>
     <string name="license">License</string>

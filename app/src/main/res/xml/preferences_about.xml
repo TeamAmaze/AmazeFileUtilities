@@ -39,4 +39,8 @@
         app:key="open_source"
         app:title="@string/open_source_licenses"
         />
+    <Preference
+        app:key="subscription_status"
+        app:title="@string/subscription_status"
+        />
 </PreferenceScreen>
