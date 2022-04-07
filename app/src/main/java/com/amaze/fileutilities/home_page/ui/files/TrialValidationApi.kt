@@ -46,17 +46,17 @@ interface TrialValidationApi {
             const val TRIAL_EXPIRED = "trial_expired"
             const val TRIAL_INACTIVE = "trial_inactive"
             const val TRIAL_EXCLUSIVE = "trial_exclusive"
-            const val SUBSCRIPTION = "subscribed"
+            const val SUBSCRIPTION = "Subscribed"
             const val CODE_TRIAL_ACTIVE = 12341343
             const val CODE_TRIAL_EXPIRED = 24523424
             const val CODE_TRIAL_INACTIVE = 33452345
             const val CODE_TRIAL_EXCLUSIVE = 45345234
 
             val trialStatusMap = mapOf(
-                Pair(TRIAL_ACTIVE, "trial"),
-                Pair(TRIAL_EXPIRED, "trial-expired"),
-                Pair(TRIAL_INACTIVE, "inactive"),
-                Pair(TRIAL_EXCLUSIVE, "exclusive")
+                Pair(TRIAL_ACTIVE, "Trial"),
+                Pair(TRIAL_EXPIRED, "Trial Expired"),
+                Pair(TRIAL_INACTIVE, "Inactive"),
+                Pair(TRIAL_EXCLUSIVE, "Exclusive")
             )
 
             private val trialStatusCodeMap = mapOf(
