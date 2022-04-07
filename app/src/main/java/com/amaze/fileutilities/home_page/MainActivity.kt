@@ -32,6 +32,7 @@ import com.amaze.fileutilities.databinding.ActivityMainActionbarBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarItemSelectedBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
 import com.amaze.fileutilities.databinding.ActivityMainBinding
+import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.home_page.ui.files.AbstractMediaInfoListFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
@@ -41,8 +42,14 @@ import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity :
     WifiP2PActivity(),
@@ -61,6 +68,8 @@ class MainActivity :
     companion object {
         private const val VOICE_REQUEST_CODE = 1000
         const val KEY_INTENT_AUDIO_PLAYER = "audio_player_intent"
+        private const val DAYS_FOR_IMMEDIATE_UPDATE = Trial.TRIAL_DEFAULT_DAYS
+        private const val UPDATE_REQUEST_CODE = 123234
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -180,25 +189,27 @@ class MainActivity :
             }
         }
         viewModel.getUniqueId().observe(this) {
-            viewModel.validateTrial(it, isNetworkAvailable()).observe(this) {
-                trialResponse ->
-                if (trialResponse != null) {
-                    when (trialResponse.getTrialStatusCode()) {
-                        TrialValidationApi.TrialResponse.TRIAL_ACTIVE -> {
-                            // check if it's first day or last day
-                            if (trialResponse.isNewSignup) {
-                                Utils.buildTrialStartedDialog(this).create().show()
-                            } else if (trialResponse.isLastDay) {
-                                Utils.buildLastTrialDayDialog(this) {
-                                    // wants to subscribe
-                                }.create().show()
+            if (it != null) {
+                viewModel.validateTrial(it, isNetworkAvailable()).observe(this) {
+                    trialResponse ->
+                    if (trialResponse != null) {
+                        when (trialResponse.getTrialStatusCode()) {
+                            TrialValidationApi.TrialResponse.TRIAL_ACTIVE -> {
+                                // check if it's first day or last day
+                                if (trialResponse.isNewSignup) {
+                                    Utils.buildTrialStartedDialog(this).create().show()
+                                } else if (trialResponse.isLastDay) {
+                                    Utils.buildLastTrialDayDialog(this) {
+                                        // wants to subscribe
+                                    }.create().show()
+                                }
                             }
-                        }
-                        TrialValidationApi.TrialResponse.TRIAL_EXPIRED -> {
-                            showAboutActivity(true, false)
-                        }
-                        TrialValidationApi.TrialResponse.TRIAL_INACTIVE -> {
-                            showAboutActivity(false, true)
+                            TrialValidationApi.TrialResponse.TRIAL_EXPIRED -> {
+                                showAboutActivity(true, false)
+                            }
+                            TrialValidationApi.TrialResponse.TRIAL_INACTIVE -> {
+                                showAboutActivity(false, true)
+                            }
                         }
                     }
                 }
@@ -284,6 +295,85 @@ class MainActivity :
                 isOptionsVisible = !isOptionsVisible
                 invalidateOptionsTabs()
             }
+        }
+    }
+
+    fun checkForAppUpdates() {
+        val cal1 = GregorianCalendar.getInstance()
+        cal1.time = Date()
+        cal1.add(Calendar.DAY_OF_YEAR, -2)
+        val fetchTime = applicationContext.getAppCommonSharedPreferences()
+            .getLong(PreferencesConstants.KEY_UPDATE_APP_LAST_SHOWN_DATE, cal1.timeInMillis)
+        val cal = GregorianCalendar.getInstance()
+        cal.time = Date(fetchTime)
+        cal.add(Calendar.DAY_OF_YEAR, 1)
+        if (cal.time.before(Date())) {
+            // check for update only once a day
+            val appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
+            // Returns an intent object that you use to check for an update.
+            val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+
+            // Checks that the platform will allow the specified type of update.
+            appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+                if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                    // This example applies an immediate update. To apply a flexible update
+                    // instead, pass in AppUpdateType.FLEXIBLE
+                ) {
+                    if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) &&
+                        (
+                            (appUpdateInfo.clientVersionStalenessDays() ?: -1)
+                                >= DAYS_FOR_IMMEDIATE_UPDATE || appUpdateInfo.updatePriority() >= 4
+                            )
+                    ) {
+                        appUpdateManager.startUpdateFlowForResult(
+                            // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                            appUpdateInfo,
+                            // The current activity making the update request.
+                            this,
+                            // Or pass 'AppUpdateType.FLEXIBLE' to newBuilder() for
+                            // flexible updates.
+                            AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE)
+                                .setAllowAssetPackDeletion(true)
+                                .build(),
+                            // Include a request code to later monitor this update request.
+                            UPDATE_REQUEST_CODE
+                        )
+                    } else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+                        appUpdateManager.startUpdateFlowForResult(
+                            // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                            appUpdateInfo,
+                            // The current activity making the update request.
+                            this,
+                            // Or pass 'AppUpdateType.FLEXIBLE' to newBuilder() for
+                            // flexible updates.
+                            AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE)
+                                .setAllowAssetPackDeletion(true)
+                                .build(),
+                            // Include a request code to later monitor this update request.
+                            UPDATE_REQUEST_CODE
+                        )
+                    }
+                }
+
+                /*if (appUpdateInfo.updateAvailability()
+                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+                ) {
+                    // If an in-app update is already running, resume the update.
+                    appUpdateManager.startUpdateFlowForResult(
+                        appUpdateInfo,
+                        this,
+                        AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE)
+                            .setAllowAssetPackDeletion(true)
+                            .build(),
+                        UPDATE_REQUEST_CODE)
+                }*/
+            }
+
+            applicationContext.getAppCommonSharedPreferences()
+                .edit().putLong(
+                    PreferencesConstants.KEY_UPDATE_APP_LAST_SHOWN_DATE,
+                    cal1.timeInMillis
+                ).apply()
         }
     }
 
