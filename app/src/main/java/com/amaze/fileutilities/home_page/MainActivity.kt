@@ -11,10 +11,8 @@
 package com.amaze.fileutilities.home_page
 
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.speech.RecognizerIntent
 import android.view.MotionEvent
 import android.view.View
@@ -120,7 +118,7 @@ class MainActivity :
             invalidateOptionsTabs()
         }
         binding.aboutText.setOnClickListener {
-            showAboutActivity()
+            showAboutActivity(false, false)
         }
         binding.settingsText.setOnClickListener {
             val intent = Intent(this, PreferenceActivity::class.java)
@@ -197,12 +195,10 @@ class MainActivity :
                             }
                         }
                         TrialValidationApi.TrialResponse.TRIAL_EXPIRED -> {
-//                            startExpiredInactiveCountdown(applicationContext)
-                            showAboutActivity()
+                            showAboutActivity(true, false)
                         }
                         TrialValidationApi.TrialResponse.TRIAL_INACTIVE -> {
-//                            startTrialInactiveCountdown(applicationContext)
-                            showAboutActivity()
+                            showAboutActivity(false, true)
                         }
                     }
                 }
@@ -391,43 +387,11 @@ class MainActivity :
         }
     }
 
-    private fun startTrialInactiveCountdown(context: Context) {
-        object : CountDownTimer(
-            3000,
-            3000
-        ) {
-            override fun onTick(millisUntilFinished: Long) {
-                // do nothing
-            }
-
-            override fun onFinish() {
-                Utils.buildTrialExclusiveInactiveDialog(context) {
-                    // subscribe
-                }.create().show()
-            }
-        }.start()
-    }
-
-    private fun startExpiredInactiveCountdown(context: Context) {
-        object : CountDownTimer(
-            3000,
-            3000
-        ) {
-            override fun onTick(millisUntilFinished: Long) {
-                // do nothing
-            }
-
-            override fun onFinish() {
-                Utils.buildTrialExpiredDialog(context) {
-                    // subscribe
-                }.create().show()
-            }
-        }.start()
-    }
-
-    private fun showAboutActivity() {
+    private fun showAboutActivity(isTrialExpired: Boolean, isTrialInactive: Boolean) {
         val intent = Intent(this, PreferenceActivity::class.java)
         intent.putExtra(PreferenceActivity.KEY_IS_SETTINGS, false)
+        intent.putExtra(PreferenceActivity.KEY_IS_TRIAL_EXPIRED, isTrialExpired)
+        intent.putExtra(PreferenceActivity.KEY_IS_TRIAL_INACTIVE, isTrialInactive)
         startActivity(intent)
         isOptionsVisible = !isOptionsVisible
         invalidateOptionsTabs()

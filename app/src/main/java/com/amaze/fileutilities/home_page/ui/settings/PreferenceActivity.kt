@@ -23,7 +23,7 @@ import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
 import com.amaze.fileutilities.home_page.ui.options.AboutFragment
-import com.amaze.fileutilities.utilis.showToastInCenter
+import com.amaze.fileutilities.utilis.Utils
 import java.util.*
 
 class PreferenceActivity : AppCompatActivity() {
@@ -32,6 +32,8 @@ class PreferenceActivity : AppCompatActivity() {
 
     companion object {
         const val KEY_IS_SETTINGS = "key_settings"
+        const val KEY_IS_TRIAL_EXPIRED = "key_is_trial_expired"
+        const val KEY_IS_TRIAL_INACTIVE = "key_is_trial_inactive"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +46,15 @@ class PreferenceActivity : AppCompatActivity() {
                 inflatePreferenceFragment(PreferenceFragment(), R.string.settings)
                 titleStack.push(resources.getString(R.string.settings))
             } else {
+                if (extras.getBoolean(KEY_IS_TRIAL_EXPIRED)) {
+                    Utils.buildTrialExpiredDialog(this) {
+                        // subscribe
+                    }.create().show()
+                } else if (extras.getBoolean(KEY_IS_TRIAL_INACTIVE)) {
+                    Utils.buildTrialExclusiveInactiveDialog(this) {
+                        // subscribe
+                    }.create().show()
+                }
                 inflatePreferenceFragment(AboutFragment(), R.string.about)
                 titleStack.push(resources.getString(R.string.about))
             }
@@ -59,7 +70,9 @@ class PreferenceActivity : AppCompatActivity() {
             var isActive = false
             var isSubscribed = false
             dao.getAll().forEach {
-                if (it.trialStatus == TrialValidationApi.TrialResponse.TRIAL_ACTIVE) {
+                if (it.trialStatus == TrialValidationApi.TrialResponse.TRIAL_ACTIVE ||
+                    it.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE
+                ) {
                     isActive = true
                 }
                 if (it.subscriptionStatus != Trial.SUBSCRIPTION_STATUS_DEFAULT) {
@@ -67,8 +80,7 @@ class PreferenceActivity : AppCompatActivity() {
                 }
             }
             if (!isActive && !isSubscribed) {
-                this.showToastInCenter(getString(R.string.trial_expired_title))
-                return
+                finishAffinity()
             } else {
                 val intent = Intent(this, MainActivity::class.java)
                 NavUtils.navigateUpTo(this, intent)

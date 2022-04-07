@@ -19,7 +19,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.home_page.database.AppDatabase
+import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
+import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
 import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.amaze.fileutilities.utilis.showToastInCenter
@@ -41,10 +44,11 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
         private const val KEY_DEVICE_ID = "device_id"
         private const val KEY_CONTACT = "contact"
         private const val KEY_OPEN_SOURCE = "open_source"
+        private const val KEY_SUBSCRIPTION_STATUS = "subscription_status"
         private val KEYS = listOf(
             KEY_VERSION,
             KEY_ABOUT, KEY_LICENSE, KEY_PRIVACY_POLICY, KEY_SUBMIT_ISSUE, KEY_LOGS, KEY_DEVICE_ID,
-            KEY_CONTACT, KEY_OPEN_SOURCE
+            KEY_CONTACT, KEY_OPEN_SOURCE, KEY_SUBSCRIPTION_STATUS
         )
     }
 
@@ -59,9 +63,24 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val deviceIdPref = findPreference<Preference>(KEY_DEVICE_ID)
+        val subscriptionStatus = findPreference<Preference>(KEY_SUBSCRIPTION_STATUS)
         filesViewModel.getUniqueId().observe(viewLifecycleOwner) {
             deviceId ->
             deviceIdPref?.summary = deviceId
+
+            val dao = AppDatabase.getInstance(requireContext()).trialValidatorDao()
+            val trial = dao.findByDeviceId(deviceId)
+            if (trial != null) {
+                subscriptionStatus?.summary =
+                    if (trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_ACTIVE &&
+                        trial.subscriptionStatus == Trial.SUBSCRIPTION_STATUS_DEFAULT
+                    ) {
+                        trial.getTrialStatusName() +
+                            " (${trial.trialDaysLeft} days left)"
+                    } else {
+                        trial.getTrialStatusName()
+                    }
+            }
         }
     }
 

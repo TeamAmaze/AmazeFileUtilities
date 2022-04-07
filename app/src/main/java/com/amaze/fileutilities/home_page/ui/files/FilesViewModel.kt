@@ -747,33 +747,11 @@ class FilesViewModel(val applicationContext: Application) :
                     emit(null)
                 }
             } else {
-                if (trial.subscriptionStatus != Trial.SUBSCRIPTION_STATUS_DEFAULT) {
-                    emit(
-                        TrialValidationApi.TrialResponse(
-                            false, false,
-                            TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
-                            trial.trialDaysLeft,
-                            Trial.SUBSCRIPTION_STATUS_DEFAULT
-                        )
-                    )
-                } else if (trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXPIRED) {
-                    emit(
-                        TrialValidationApi.TrialResponse(
-                            false, false,
-                            TrialValidationApi.TrialResponse.CODE_TRIAL_EXPIRED,
-                            trial.trialDaysLeft,
-                            Trial.SUBSCRIPTION_STATUS_DEFAULT
-                        )
-                    )
-                } else if (trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_INACTIVE) {
-                    emit(
-                        TrialValidationApi.TrialResponse(
-                            false, false,
-                            TrialValidationApi.TrialResponse.CODE_TRIAL_INACTIVE,
-                            trial.trialDaysLeft,
-                            Trial.SUBSCRIPTION_STATUS_DEFAULT
-                        )
-                    )
+                if (trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXPIRED ||
+                    trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_INACTIVE
+                ) {
+                    // check immediately if there's an update in trial status
+                    emit(fetchAndSaveTrial(deviceId, dao))
                 } else {
                     // trial is active, if we've already processed today, don't fetch
                     val cal = GregorianCalendar.getInstance()
