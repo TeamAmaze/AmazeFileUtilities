@@ -39,6 +39,7 @@ data class Trial(
 
     companion object {
         const val SUBSCRIPTION_STATUS_DEFAULT = 1001
+        const val TRIAL_DEFAULT_DAYS = 7
     }
 
     fun getTrialStatusName(): String {
