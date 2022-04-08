@@ -28,10 +28,10 @@
 
     <application
         android:name=".AppConfig"
-        android:banner="@drawable/about_header"
+        android:banner="@drawable/banner_app"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher_normal"
-        android:label="@string/app_name"
+        android:label="@string/app_name_launcher"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.AmazeFileUtilities"
@@ -40,7 +40,7 @@
         <activity
             android:name=".home_page.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
+            android:label="@string/app_name_launcher"
             android:theme="@style/Theme.AmazeFileUtilities"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
@@ -51,6 +51,8 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".home_page.WelcomeScreen"
+            android:theme="@style/CustomWelcomeScreenTheme"/>
         <activity
             android:name=".image_viewer.ImageViewerDialogActivity"
             android:exported="true"

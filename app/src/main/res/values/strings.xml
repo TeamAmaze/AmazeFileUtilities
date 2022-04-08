@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Amaze File Utilities</string>
+    <string name="app_name_launcher">Amaze Utilities</string>
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
     <string name="app_version" translatable="false">v1.0</string>
@@ -331,7 +332,7 @@
     <string name="contact_us">Contact Us</string>
     <string name="about_app_title">About app</string>
     <string name="made_in_india">Made with ❤ in India</string>
-    <string name="trial_started_title">Trial started</string>
+    <string name="trial_started_title">Trial started (%s days)</string>
     <string name="trial_started_message">Thank you for choosing Amaze File Utilities.\n
         We are a team of open source developers working hard to provide an ad-free experience,
         and your subscription will really help us in development.\n
@@ -379,4 +380,17 @@
     <string name="dont_show_again">Don\'t show again</string>
     <string name="exit">Exit</string>
     <string name="num_days">% Days</string>
+    <string name="your_media_assistant">You media files assistant</string>
+    <string name="welcome_media_title">Manage media files</string>
+    <string name="welcome_media_summary">View images, videos, audios, documents in list or grid\nOpen using inbuilt players\nGesture support for easy navigation\nJump to any date instantly\nGroup or sort list\nCast on TV</string>
+    <string name="welcome_analyse_summary">Analyse storage for junk files to delete\nGroup images by memes, low-light, blurry, selfies or group\nGroup large files in storage\nGroup old downloads, recordings or screenshots\n</string>
+    <string name="welcome_transfer_summary">Transfer data between devices through wifi\nHigh transfer speeds using android wifi direct</string>
+    <string name="welcome_permission">We need storage permissions to access your media files</string>
+    <string name="before_we_start">Before we start…</string>
+    <string name="privacy_title">We care for your privacy!</string>
+    <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.
+        Hence we assure you that we do not collect any of your private information.\n We don\'t say this, our track record does.\n
+        We\'re a group of open source developers and are managing Amaze File Manager for around 8 years now.\n
+        Still we\'d encourage you to read our privacy policy below.
+    </string>
 </resources>
