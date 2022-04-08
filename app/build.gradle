@@ -146,6 +146,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.14.3'
     implementation 'org.slf4j:slf4j-api:1.7.32'
     implementation 'com.github.tony19:logback-android:2.0.0'
+    implementation 'com.stephentuso:welcome:1.4.1'
 
     //Detect memory leaks
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'

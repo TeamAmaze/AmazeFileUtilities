@@ -20,6 +20,9 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -keep class com.shockwave.**
+-keepclassmembers class * extends com.stephentuso.welcome.WelcomeActivity {
+    public static java.lang.String welcomeKey();
+}
 #-keep class com.amaze.fileutilities.cast.CastOptionsProvider { *; }
 #-keep class android.support.** { *; }
 #-keep class com.google.** { *; }
