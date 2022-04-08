@@ -55,24 +55,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         />
-    <TextView
-        android:id="@+id/subscription_status"
-        android:layout_width="@dimen/zero_dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/rights_reserved"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="@dimen/material_generic_medium"
-        android:textSize="@dimen/eighteen_sp"
-        android:textColor="@color/white"
-        android:text="@string/licenses"
-        />
 
     <TextView
         android:id="@+id/preprod_copy"
         android:layout_width="@dimen/zero_dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/subscription_status"
+        app:layout_constraintTop_toBottomOf="@id/rights_reserved"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"

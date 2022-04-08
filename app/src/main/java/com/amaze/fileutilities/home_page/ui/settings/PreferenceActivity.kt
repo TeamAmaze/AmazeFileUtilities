@@ -19,7 +19,11 @@ import androidx.fragment.app.Fragment
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ActivityPreferencesBinding
 import com.amaze.fileutilities.home_page.MainActivity
+import com.amaze.fileutilities.home_page.database.AppDatabase
+import com.amaze.fileutilities.home_page.database.Trial
+import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
 import com.amaze.fileutilities.home_page.ui.options.AboutFragment
+import com.amaze.fileutilities.utilis.Utils
 import java.util.*
 
 class PreferenceActivity : AppCompatActivity() {
@@ -28,6 +32,8 @@ class PreferenceActivity : AppCompatActivity() {
 
     companion object {
         const val KEY_IS_SETTINGS = "key_settings"
+        const val KEY_IS_TRIAL_EXPIRED = "key_is_trial_expired"
+        const val KEY_IS_TRIAL_INACTIVE = "key_is_trial_inactive"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,6 +46,15 @@ class PreferenceActivity : AppCompatActivity() {
                 inflatePreferenceFragment(PreferenceFragment(), R.string.settings)
                 titleStack.push(resources.getString(R.string.settings))
             } else {
+                if (extras.getBoolean(KEY_IS_TRIAL_EXPIRED)) {
+                    Utils.buildTrialExpiredDialog(this) {
+                        // subscribe
+                    }.create().show()
+                } else if (extras.getBoolean(KEY_IS_TRIAL_INACTIVE)) {
+                    Utils.buildTrialExclusiveInactiveDialog(this) {
+                        // subscribe
+                    }.create().show()
+                }
                 inflatePreferenceFragment(AboutFragment(), R.string.about)
                 titleStack.push(resources.getString(R.string.about))
             }
@@ -50,8 +65,26 @@ class PreferenceActivity : AppCompatActivity() {
     override fun onBackPressed() {
         val fragment = getFragmentAtFrame()
         if (fragment is PreferenceFragment || fragment is AboutFragment) {
-            val intent = Intent(this, MainActivity::class.java)
-            NavUtils.navigateUpTo(this, intent)
+            // check if license expired...
+            val dao = AppDatabase.getInstance(applicationContext).trialValidatorDao()
+            var isActive = false
+            var isSubscribed = false
+            dao.getAll().forEach {
+                if (it.trialStatus == TrialValidationApi.TrialResponse.TRIAL_ACTIVE ||
+                    it.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE
+                ) {
+                    isActive = true
+                }
+                if (it.subscriptionStatus != Trial.SUBSCRIPTION_STATUS_DEFAULT) {
+                    isSubscribed = true
+                }
+            }
+            if (!isActive && !isSubscribed) {
+                finishAffinity()
+            } else {
+                val intent = Intent(this, MainActivity::class.java)
+                NavUtils.navigateUpTo(this, intent)
+            }
         } else {
             super.onBackPressed()
             title = titleStack.pop()

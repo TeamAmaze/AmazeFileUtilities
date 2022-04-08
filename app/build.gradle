@@ -96,6 +96,7 @@ dependencies {
         // Excludes the support library because it's already included by Glide.
         transitive = false
     }
+    implementation 'com.google.android.play:core-ktx:1.8.1'
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
     implementation 'androidx.webkit:webkit:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
@@ -141,9 +142,11 @@ dependencies {
     implementation 'androidx.mediarouter:mediarouter:1.2.6'
     implementation 'com.google.android.gms:play-services-cast-framework:21.0.1'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'org.jsoup:jsoup:1.14.3'
     implementation 'org.slf4j:slf4j-api:1.7.32'
     implementation 'com.github.tony19:logback-android:2.0.0'
+    implementation 'com.stephentuso:welcome:1.4.1'
 
     //Detect memory leaks
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'

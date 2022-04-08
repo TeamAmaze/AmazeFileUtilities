@@ -89,6 +89,7 @@ data class MediaFileInfo(
             contextRef.get()?.let {
                 context ->
                 context.showToastOnBottom(context.resources.getString(R.string.file_not_found))
+                return
             }
         }
         contextRef.get()?.let {

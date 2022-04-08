@@ -32,16 +32,24 @@ import com.amaze.fileutilities.databinding.ActivityMainActionbarBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarItemSelectedBinding
 import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
 import com.amaze.fileutilities.databinding.ActivityMainBinding
+import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.home_page.ui.files.AbstractMediaInfoListFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
+import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
 import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
+import com.stephentuso.welcome.WelcomeHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.*
 
 class MainActivity :
     WifiP2PActivity(),
@@ -56,15 +64,19 @@ class MainActivity :
 //    var showSearchFragment = false
     private lateinit var viewModel: FilesViewModel
     private var isOptionsVisible = false
+    private var welcomeScreen: WelcomeHelper? = null
 
     companion object {
         private const val VOICE_REQUEST_CODE = 1000
         const val KEY_INTENT_AUDIO_PLAYER = "audio_player_intent"
+        private const val DAYS_FOR_IMMEDIATE_UPDATE = Trial.TRIAL_DEFAULT_DAYS
+        private const val UPDATE_REQUEST_CODE = 123234
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        welcomeScreen = WelcomeHelper(this, WelcomeScreen::class.java)
+        welcomeScreen!!.show(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
 //        viewModel.copyTrainedData()
@@ -117,11 +129,7 @@ class MainActivity :
             invalidateOptionsTabs()
         }
         binding.aboutText.setOnClickListener {
-            val intent = Intent(this, PreferenceActivity::class.java)
-            intent.putExtra(PreferenceActivity.KEY_IS_SETTINGS, false)
-            startActivity(intent)
-            isOptionsVisible = !isOptionsVisible
-            invalidateOptionsTabs()
+            showAboutActivity(false, false)
         }
         binding.settingsText.setOnClickListener {
             val intent = Intent(this, PreferenceActivity::class.java)
@@ -140,20 +148,21 @@ class MainActivity :
                     if (it) {
                         mediaInfoStorageSummaryPair?.second.let { list ->
                             list?.run {
+                                val mediaFileInfoList = ArrayList(this)
                                 viewModel.analyseImageFeatures(
-                                    this,
+                                    mediaFileInfoList,
                                     pathPreferences
                                 )
                                 viewModel.analyseMemeImages(
-                                    this,
+                                    mediaFileInfoList,
                                     pathPreferences
                                 )
                                 viewModel.analyseBlurImages(
-                                    this,
+                                    mediaFileInfoList,
                                     pathPreferences
                                 )
                                 viewModel.analyseLowLightImages(
-                                    this,
+                                    mediaFileInfoList,
                                     pathPreferences
                                 )
                             }
@@ -181,7 +190,92 @@ class MainActivity :
                 }
             }
         }
+
+        checkForAppUpdates()
+        viewModel.getUniqueId().observe(this) {
+            if (it != null) {
+                viewModel.validateTrial(it, isNetworkAvailable()).observe(this) {
+                    trialResponse ->
+                    if (trialResponse != null) {
+                        when (trialResponse.getTrialStatusCode()) {
+                            TrialValidationApi.TrialResponse.TRIAL_ACTIVE -> {
+                                // check if it's first day or last day
+                                if (trialResponse.isNewSignup) {
+                                    Utils.buildTrialStartedDialog(
+                                        this,
+                                        trialResponse.trialDaysLeft
+                                    ).create().show()
+                                } else if (trialResponse.isLastDay) {
+                                    Utils.buildLastTrialDayDialog(this) {
+                                        // wants to subscribe
+                                    }.create().show()
+                                }
+                            }
+                            TrialValidationApi.TrialResponse.TRIAL_EXPIRED -> {
+                                showAboutActivity(true, false)
+                            }
+                            TrialValidationApi.TrialResponse.TRIAL_INACTIVE -> {
+                                showAboutActivity(false, true)
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        welcomeScreen?.onSaveInstanceState(outState)
+    }
+
+    /*override fun onResume() {
+        super.onResume()
+
+        // observe for content changes
+        applicationContext
+            .contentResolver
+            .registerContentObserver(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, false,
+                imagesObserver
+            )
+        applicationContext
+            .contentResolver
+            .registerContentObserver(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, false,
+                audiosObserver
+            )
+        applicationContext
+            .contentResolver
+            .registerContentObserver(
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, false,
+                videosObserver
+            )
+        applicationContext
+            .contentResolver
+            .registerContentObserver(
+                MediaStore.Files.getContentUri("external"), false,
+                documentsObserver
+            )
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        // observe for content changes
+        applicationContext
+            .contentResolver
+            .unregisterContentObserver(imagesObserver)
+        applicationContext
+            .contentResolver
+            .unregisterContentObserver(audiosObserver)
+        applicationContext
+            .contentResolver
+            .unregisterContentObserver(videosObserver)
+        applicationContext
+            .contentResolver
+            .unregisterContentObserver(documentsObserver)
+    }*/
 
     override fun getTransferFragment(): TransferFragment? {
         val fragment = getFragmentAtFrame()
@@ -261,6 +355,108 @@ class MainActivity :
                 isOptionsVisible = !isOptionsVisible
                 invalidateOptionsTabs()
             }
+        }
+    }
+
+    /*private val imagesObserver = UriObserver(Handler()) {
+        showToastInCenter("changes in images")
+    }
+    private val videosObserver = UriObserver(Handler()) {
+        showToastInCenter("changes in videos")
+    }
+    private val audiosObserver = UriObserver(Handler()) {
+        showToastInCenter("changes in audios")
+    }
+    private val documentsObserver = UriObserver(Handler()) {
+        showToastInCenter("changes in documents")
+    }*/
+
+    private fun checkForAppUpdates() {
+        val cal1 = GregorianCalendar.getInstance()
+        cal1.time = Date()
+        cal1.add(Calendar.DAY_OF_YEAR, -2)
+        val fetchTime = applicationContext.getAppCommonSharedPreferences()
+            .getLong(PreferencesConstants.KEY_UPDATE_APP_LAST_SHOWN_DATE, cal1.timeInMillis)
+        val cal = GregorianCalendar.getInstance()
+        cal.time = Date(fetchTime)
+        cal.add(Calendar.DAY_OF_YEAR, 1)
+        if (cal.time.before(Date())) {
+            // check for update only once a day
+            log.info("Checking for app update")
+            val appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
+            // Returns an intent object that you use to check for an update.
+            val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+
+            // Checks that the platform will allow the specified type of update.
+            appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+                if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                    // This example applies an immediate update. To apply a flexible update
+                    // instead, pass in AppUpdateType.FLEXIBLE
+                ) {
+                    /**
+                     * check for app updates - flexible update dialog is showing till 7 days for any
+                     * app update which has priority less than 4 after which he is shown
+                     * immediate update dialog, for priority 4 and 5 user is asked to update
+                     * immediately
+                     */
+                    log.info("App update available")
+                    if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) &&
+                        (
+                            (appUpdateInfo.clientVersionStalenessDays() ?: -1)
+                                >= DAYS_FOR_IMMEDIATE_UPDATE || appUpdateInfo.updatePriority() >= 4
+                            )
+                    ) {
+                        log.info("Immediate update conditions met, triggering immediate update")
+                        appUpdateManager.startUpdateFlowForResult(
+                            // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                            appUpdateInfo,
+                            // The current activity making the update request.
+                            this,
+                            // Or pass 'AppUpdateType.FLEXIBLE' to newBuilder() for
+                            // flexible updates.
+                            AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE)
+                                .setAllowAssetPackDeletion(true)
+                                .build(),
+                            // Include a request code to later monitor this update request.
+                            UPDATE_REQUEST_CODE
+                        )
+                    } else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+                        log.info("flexible update conditions met, triggering flexible update")
+                        appUpdateManager.startUpdateFlowForResult(
+                            // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                            appUpdateInfo,
+                            // The current activity making the update request.
+                            this,
+                            // Or pass 'AppUpdateType.FLEXIBLE' to newBuilder() for
+                            // flexible updates.
+                            AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE)
+                                .setAllowAssetPackDeletion(true)
+                                .build(),
+                            // Include a request code to later monitor this update request.
+                            UPDATE_REQUEST_CODE
+                        )
+                    }
+                }
+
+                /*if (appUpdateInfo.updateAvailability()
+                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+                ) {
+                    // If an in-app update is already running, resume the update.
+                    appUpdateManager.startUpdateFlowForResult(
+                        appUpdateInfo,
+                        this,
+                        AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE)
+                            .setAllowAssetPackDeletion(true)
+                            .build(),
+                        UPDATE_REQUEST_CODE)
+                }*/
+            }
+
+            applicationContext.getAppCommonSharedPreferences()
+                .edit().putLong(
+                    PreferencesConstants.KEY_UPDATE_APP_LAST_SHOWN_DATE,
+                    Date().time
+                ).apply()
         }
     }
 
@@ -362,6 +558,16 @@ class MainActivity :
                 binding.navView.hideTranslateY(500)
             }
         }
+    }
+
+    private fun showAboutActivity(isTrialExpired: Boolean, isTrialInactive: Boolean) {
+        val intent = Intent(this, PreferenceActivity::class.java)
+        intent.putExtra(PreferenceActivity.KEY_IS_SETTINGS, false)
+        intent.putExtra(PreferenceActivity.KEY_IS_TRIAL_EXPIRED, isTrialExpired)
+        intent.putExtra(PreferenceActivity.KEY_IS_TRIAL_INACTIVE, isTrialInactive)
+        startActivity(intent)
+        isOptionsVisible = !isOptionsVisible
+        invalidateOptionsTabs()
     }
 
     private fun showSearchFragment() {

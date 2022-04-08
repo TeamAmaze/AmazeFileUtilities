@@ -20,7 +20,8 @@ import com.amaze.fileutilities.utilis.DbConverters
 @Database(
     entities = [
         ImageAnalysis::class, InternalStorageAnalysis::class, PathPreferences::class,
-        BlurAnalysis::class, LowLightAnalysis::class, MemeAnalysis::class, VideoPlayerState::class
+        BlurAnalysis::class, LowLightAnalysis::class, MemeAnalysis::class, VideoPlayerState::class,
+        Trial::class
     ],
     version = 1
 )
@@ -33,6 +34,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun internalStorageAnalysisDao(): InternalStorageAnalysisDao
     abstract fun pathPreferencesDao(): PathPreferencesDao
     abstract fun videoPlayerStateDao(): VideoPlayerStateDao
+    abstract fun trialValidatorDao(): TrialValidatorDao
 
     companion object {
         private var appDatabase: AppDatabase? = null
