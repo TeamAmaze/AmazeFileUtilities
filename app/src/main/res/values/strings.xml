@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Amaze File Utilities</string>
+    <string name="app_name_launcher">Amaze Utilities</string>
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
     <string name="app_version" translatable="false">v1.0</string>
@@ -323,7 +324,7 @@
     <string name="successfully_deleted">Successfully deleted</string>
     <string name="failed_to_update_list_reopen">Failed to update list, please restart the app</string>
     <string name="device_id">Device ID</string>
-    <string name="subscription_status">Subscription status: %s</string>
+    <string name="subscription_status">Subscription status</string>
     <string name="device_id_copied">Device ID copied to clipboard</string>
     <string name="version_title">Version</string>
     <string name="license">License</string>
@@ -331,4 +332,65 @@
     <string name="contact_us">Contact Us</string>
     <string name="about_app_title">About app</string>
     <string name="made_in_india">Made with ❤ in India</string>
+    <string name="trial_started_title">Trial started (%s days)</string>
+    <string name="trial_started_message">Thank you for choosing Amaze File Utilities.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and your subscription will really help us in development.\n
+        At any point if you need any help feel free to contact us in About section.
+        You\'ll be able to contact directly to our team on Telegram.\n
+        Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
+    <string name="trial_last_day_title">Trial about to expire</string>
+    <string name="trial_last_day_message">Hey There! Thank you for choosing Amaze File Utilities.\n
+        Your trial is going to expire tomorrow,
+        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and we need funds to us to keep us afloat.\n
+        You can write to us if you want to extend the trial period a bit more.
+    </string>
+    <string name="trial_expired_title">Trial expired</string>
+    <string name="trial_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
+        Your trial has expired,
+        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and we need funds to us to keep us afloat.\n
+        You can write to us if you want to extend the trial period a bit more.
+    </string>
+    <string name="trial_inactive_title">Trial inactive</string>
+    <string name="trial_inactive_message">Hey There! Thank you for choosing Amaze File Utilities.\n
+        Your trial is inactive and you\'re not longer an exclusive member,
+        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and we need funds to us to keep us afloat.\n
+        You can write to us if you want to extend the trial period a bit more.</string>
+    <string name="subscription_purchased_title">Subscribed</string>
+    <string name="subscription_purchased_message">Thank you for choosing Amaze File Utilities.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and your subscription will really help us in development.\n
+        At any point if you need any help feel free to contact us in About section.
+        You\'ll be able to contact directly to our team on Telegram.\n
+        Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
+    <string name="subscription_expired_title">Subscription expired</string>
+    <string name="subscription_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
+        Your subscription has expired,
+        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and we need funds to us to keep us afloat.\n
+        You can write to us if you want to extend the trial period a bit more.</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="dont_show_again">Don\'t show again</string>
+    <string name="exit">Exit</string>
+    <string name="num_days">% Days</string>
+    <string name="your_media_assistant">You media files assistant</string>
+    <string name="welcome_media_title">Manage media files</string>
+    <string name="welcome_media_summary">View images, videos, audios, documents in list or grid\nOpen using inbuilt players\nGesture support for easy navigation\nJump to any date instantly\nGroup or sort list\nCast on TV</string>
+    <string name="welcome_analyse_summary">Analyse storage for junk files to delete\nGroup images by memes, low-light, blurry, selfies or group\nGroup large files in storage\nGroup old downloads, recordings or screenshots\n</string>
+    <string name="welcome_transfer_summary">Transfer data between devices through wifi\nHigh transfer speeds using android wifi direct</string>
+    <string name="welcome_permission">We need storage permissions to access your media files</string>
+    <string name="before_we_start">Before we start…</string>
+    <string name="privacy_title">We care for your privacy!</string>
+    <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.
+        Hence we assure you that we do not collect any of your private information.\n We don\'t say this, our track record does.\n
+        We\'re a group of open source developers and are managing Amaze File Manager for around 8 years now.\n
+        Still we\'d encourage you to read our privacy policy below.
+    </string>
 </resources>

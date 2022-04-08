@@ -13,7 +13,6 @@ package com.amaze.fileutilities.home_page.ui.options
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ActivityAboutBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 
@@ -31,19 +30,6 @@ class AboutActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
         _binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel.getUniqueId().observe(this) {
-            deviceId ->
-            viewModel.getTrialStatus(deviceId).observe(this) {
-                response ->
-                if (response == null) {
-                    binding.subscriptionStatus.text = getString(R.string.subscription_status)
-                        .format("null")
-                } else {
-                    binding.subscriptionStatus.text = getString(R.string.subscription_status)
-                        .format(response.getTrialStatus())
-                }
-            }
-        }
     }
 
     override fun onDestroy() {

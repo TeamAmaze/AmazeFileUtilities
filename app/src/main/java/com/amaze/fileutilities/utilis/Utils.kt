@@ -42,7 +42,7 @@ class Utils {
     companion object {
         var log: Logger = LoggerFactory.getLogger(Utils::class.java)
 
-        const val URL_PRIVACY_POLICY = "https://www.teamamaze.xyz/privacy-policy"
+        const val URL_PRIVACY_POLICY = "https://teamamaze.xyz/privacy-policy-utilities"
         const val URL_GITHUB_ISSUES =
             "https://github.com/TeamAmaze/AmazeFileUtilities-Issue-Tracker/issues"
         const val AMAZE_FILE_MANAGER_MAIN = "com.amaze.filemanager.ui.activities.MainActivity"
@@ -310,6 +310,121 @@ class Utils {
                 }
                 .setNegativeButton(
                     context.resources.getString(R.string.no)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun buildTrialStartedDialog(context: Context, trialDays: Int): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(context.getString(R.string.trial_started_title).format(trialDays))
+                .setMessage(R.string.trial_started_message)
+                .setPositiveButton(
+                    context.resources.getString(R.string.close)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun buildLastTrialDayDialog(
+            context: Context,
+            positiveCallback: () -> Unit
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.trial_last_day_title)
+                .setMessage(R.string.trial_last_day_message)
+                .setPositiveButton(
+                    context.resources.getString(R.string.subscribe)
+                ) { dialog, _ ->
+                    positiveCallback.invoke()
+                    dialog.dismiss()
+                }.setNegativeButton(
+                    context.resources.getString(R.string.close)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun buildTrialExpiredDialog(
+            context: Context,
+            positiveCallback: () -> Unit
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.trial_expired_title)
+                .setMessage(R.string.trial_expired_message)
+                .setPositiveButton(
+                    context.resources.getString(R.string.subscribe)
+                ) { dialog, _ ->
+                    positiveCallback.invoke()
+                    dialog.dismiss()
+                }
+                .setNegativeButton(
+                    context.resources.getString(R.string.close)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun buildTrialExclusiveInactiveDialog(
+            context: Context,
+            positiveCallback: () -> Unit
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.trial_inactive_title)
+                .setMessage(R.string.trial_inactive_message)
+                .setPositiveButton(
+                    context.resources.getString(R.string.subscribe)
+                ) { dialog, _ ->
+                    positiveCallback.invoke()
+                    dialog.dismiss()
+                }
+                .setNegativeButton(
+                    context.resources.getString(R.string.close)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun buildSubscriptionPurchasedDialog(
+            context: Context
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.subscription_purchased_title)
+                .setMessage(R.string.subscription_purchased_message)
+                .setPositiveButton(
+                    context.resources.getString(R.string.close)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun buildSubscriptionExpiredDialog(
+            context: Context,
+            positiveCallback: () -> Unit
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.subscription_expired_title)
+                .setMessage(R.string.subscription_expired_message)
+                .setPositiveButton(
+                    context.resources.getString(R.string.subscribe)
+                ) { dialog, _ ->
+                    positiveCallback.invoke()
+                    dialog.dismiss()
+                }
+                .setNegativeButton(
+                    context.resources.getString(R.string.close)
                 ) { dialog, _ ->
                     dialog.dismiss()
                 }
