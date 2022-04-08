@@ -104,9 +104,14 @@ class FilesViewModel(val applicationContext: Application) :
     val recentFilesLiveData: LiveData<List<MediaFileInfo>?> =
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(null)
-            val mediaFileInfoList = CursorUtils
-                .listRecentFiles(applicationContext.applicationContext)
-            emit(mediaFileInfoList)
+            try {
+                val mediaFileInfoList = CursorUtils
+                    .listRecentFiles(applicationContext.applicationContext)
+                emit(mediaFileInfoList)
+            } catch (se: SecurityException) {
+                log.warn("failed to list recent files due to no permission", se)
+                emit(null)
+            }
         }
 
     fun deleteMediaFilesFromList(
@@ -115,7 +120,7 @@ class FilesViewModel(val applicationContext: Application) :
     ) {
         viewModelScope.launch(Dispatchers.Default) {
             val syncList = Collections.synchronizedList(mediaFileInfoList)
-            val toDeletePaths = toDelete.map { it.path }
+//            val toDeletePaths = toDelete.map { it.path }
             synchronized(syncList) {
                 /*syncList.forEachIndexed { index, mediaFileInfo ->
                     if (toDeletePaths.contains(mediaFileInfo.path)) {
@@ -794,7 +799,7 @@ class FilesViewModel(val applicationContext: Application) :
             trialResponse
         } else {
             TrialValidationApi.TrialResponse(
-                false, true,
+                false, false,
                 TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE, 7
             )
         }
@@ -806,19 +811,24 @@ class FilesViewModel(val applicationContext: Application) :
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val service = retrofit.create(TrialValidationApi::class.java)
-        service.postValidation(
-            TrialValidationApi.TrialRequest(TrialValidationApi.AUTH_TOKEN, deviceId)
-        )?.execute()?.let { response ->
-            return if (response.isSuccessful && response.body() != null) {
-                log.info("get trial response ${response.body()}")
-                response.body()
-            } else {
-                log.warn(
-                    "failed to get trial response code: ${response.code()} " +
-                        "error: ${response.message()}"
-                )
-                null
+        try {
+            service.postValidation(
+                TrialValidationApi.TrialRequest(TrialValidationApi.AUTH_TOKEN, deviceId)
+            )?.execute()?.let { response ->
+                return if (response.isSuccessful && response.body() != null) {
+                    log.info("get trial response ${response.body()}")
+                    response.body()
+                } else {
+                    log.warn(
+                        "failed to get trial response code: ${response.code()} " +
+                            "error: ${response.message()}"
+                    )
+                    null
+                }
             }
+        } catch (e: Exception) {
+            log.warn("failed to contact function for trial validation", e)
+            return null
         }
         log.warn("failed to call trial validation api")
         return null
