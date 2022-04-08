@@ -56,7 +56,7 @@
         app:layout_constraintRight_toRightOf="parent"
         />
 
-    <TextView
+    <!--<TextView
         android:id="@+id/preprod_copy"
         android:layout_width="@dimen/zero_dp"
         android:layout_height="wrap_content"
@@ -69,19 +69,19 @@
         android:layout_marginTop="@dimen/material_generic"
         android:textSize="@dimen/twelve_sp"
         android:text="@string/pre_production"
-        />
+        />-->
 
     <TextView
         android:layout_width="@dimen/zero_dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/preprod_copy"
+        app:layout_constraintTop_toBottomOf="@id/rights_reserved"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center_horizontal"
         android:textColor="@color/white"
-        android:layout_marginTop="@dimen/material_generic"
+        android:layout_marginTop="@dimen/material_generic_medium"
         android:textSize="@dimen/twelve_sp"
         android:text="@string/made_in_india"
         />
