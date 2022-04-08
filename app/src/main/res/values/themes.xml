@@ -18,9 +18,9 @@
 
     <style name="Theme.AmazeFileUtilities.Dark" parent="Theme.MaterialComponents">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/highlight_yellow</item>
+        <item name="colorPrimary">@color/navy_blue</item>
         <item name="colorPrimaryVariant">@color/navy_blue</item>
-        <item name="colorOnPrimary">@color/navy_blue</item>
+        <item name="colorOnPrimary">@color/highlight_yellow</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/blue</item>
         <item name="colorSecondaryVariant">@color/blue</item>
@@ -88,5 +88,15 @@
     <style name="roundedImageView" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">@dimen/twenty_four_dp</item>
+    </style>
+
+    <!-- welcome screen -->
+    <style name="CustomWelcomeScreenTheme" parent="WelcomeScreenTheme.SolidNavigation">
+        <item name="welcomeIndicatorStyle">@style/MyWelcomeIndicator</item>
+    </style>
+    <style name="MyWelcomeIndicator" parent="WelcomeScreenPageIndicator">
+        <item name="indicatorColor">@color/highlight_yellow_trans</item>
+        <item name="currentPageColor">@color/yellow</item>
+        <item name="animation">slide</item>
     </style>
 </resources>

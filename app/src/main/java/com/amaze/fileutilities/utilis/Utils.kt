@@ -42,7 +42,7 @@ class Utils {
     companion object {
         var log: Logger = LoggerFactory.getLogger(Utils::class.java)
 
-        const val URL_PRIVACY_POLICY = "https://www.teamamaze.xyz/privacy-policy"
+        const val URL_PRIVACY_POLICY = "https://teamamaze.xyz/privacy-policy-utilities"
         const val URL_GITHUB_ISSUES =
             "https://github.com/TeamAmaze/AmazeFileUtilities-Issue-Tracker/issues"
         const val AMAZE_FILE_MANAGER_MAIN = "com.amaze.filemanager.ui.activities.MainActivity"
@@ -316,10 +316,10 @@ class Utils {
             return builder
         }
 
-        fun buildTrialStartedDialog(context: Context): AlertDialog.Builder {
+        fun buildTrialStartedDialog(context: Context, trialDays: Int): AlertDialog.Builder {
             val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
             builder
-                .setTitle(R.string.trial_started_title)
+                .setTitle(context.getString(R.string.trial_started_title).format(trialDays))
                 .setMessage(R.string.trial_started_message)
                 .setPositiveButton(
                     context.resources.getString(R.string.close)
