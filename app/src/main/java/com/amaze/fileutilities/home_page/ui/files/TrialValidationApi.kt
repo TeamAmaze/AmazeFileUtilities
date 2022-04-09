@@ -10,7 +10,6 @@
 
 package com.amaze.fileutilities.home_page.ui.files
 
-import com.amaze.fileutilities.home_page.database.Trial
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -30,7 +29,8 @@ interface TrialValidationApi {
     data class TrialRequest(
         val token: String,
         val deviceId: String,
-        var subscriptionStatus: Int = 1001
+        var subscriptionStatus: Int,
+        var purchaseToken: String?
     )
 
     data class TrialResponse(
@@ -38,7 +38,8 @@ interface TrialValidationApi {
         val isNewSignup: Boolean = false,
         val trialStatus: Int,
         val trialDaysLeft: Int = 0,
-        val subscriptionStatus: Int = Trial.SUBSCRIPTION_STATUS_DEFAULT
+        val subscriptionStatus: Int,
+        val purchaseToken: String?
     ) {
 
         companion object {
