@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.home_page.ui.options
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,58 +25,109 @@ import com.amaze.fileutilities.databinding.AdapterDonationBinding
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
+import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.android.billingclient.api.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
-class Billing(val activity: AppCompatActivity, val uniqueId: String) :
+class Billing(val context: Context, private var uniqueId: String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder?>(),
     PurchasesUpdatedListener {
+    constructor(activity: AppCompatActivity, uniqueId: String) : this(
+        activity.applicationContext,
+        uniqueId
+    ) {
+        this.activity = activity
+        this.uniqueId = uniqueId
+    }
+
     private val skuList: MutableList<String>
     private var skuDetails: List<SkuDetails>? = null
+    private var activity: AppCompatActivity? = null
 
     // create new donations client
     private var billingClient: BillingClient? = null
+
+    companion object {
+        private val TAG = Billing::class.java.simpleName
+
+        fun getInstance(activity: AppCompatActivity): Billing? {
+            var billing: Billing? = null
+            val deviceId = activity.getAppCommonSharedPreferences()
+                .getString(PreferencesConstants.KEY_DEVICE_UNIQUE_ID, null)
+            deviceId?.let {
+                billing = Billing(activity, deviceId)
+            }
+            return billing
+        }
+
+        fun getInstance(context: Context): Billing? {
+            var billing: Billing? = null
+            val deviceId = context.getAppCommonSharedPreferences()
+                .getString(PreferencesConstants.KEY_DEVICE_UNIQUE_ID, null)
+            deviceId?.let {
+                billing = Billing(context, deviceId)
+            }
+            return billing
+        }
+    }
+
+    init {
+        skuList = ArrayList()
+        skuList.add("subscription_1")
+        skuList.add("subscription_2")
+        skuList.add("subscription_3")
+        skuList.add("subscription_4")
+        billingClient =
+            BillingClient.newBuilder(context).setListener(this)
+                .enablePendingPurchases().build()
+    }
 
     /** True if billing service is connected now.  */
     private var isServiceConnected = false
     override fun onPurchasesUpdated(response: BillingResult, purchases: List<Purchase>?) {
         if (response.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
-            for (purchase in purchases) {
-                val dao = AppDatabase.getInstance(activity).trialValidatorDao()
-                val listener =
-                    ConsumeResponseListener { responseCode1: BillingResult?,
-                        purchaseToken: String? ->
-                        // we consume the purchase, so that user can perform purchase again
-                        responseCode1?.responseCode?.let {
-                            responseCode ->
-                            val existingTrial = dao.findByDeviceId(uniqueId)
-                            if (existingTrial != null) {
-                                existingTrial.subscriptionStatus = responseCode
-                                dao.insert(existingTrial)
-                            } else {
-                                dao.insert(
-                                    Trial(
-                                        uniqueId,
-                                        TrialValidationApi.TrialResponse.TRIAL_ACTIVE,
-                                        Trial.TRIAL_DEFAULT_DAYS, Date(), responseCode
-                                    )
-                                )
-                            }
-                            Utils.buildSubscriptionPurchasedDialog(activity)
+            val latestPurchase = handlePurchases(purchases)
+            val listener =
+                ConsumeResponseListener { responseCode1: BillingResult?,
+                    purchaseToken: String? ->
+                    // we consume the purchase, so that user can perform purchase again
+                    responseCode1?.responseCode?.let {
+                        responseCode ->
+                        activity?.runOnUiThread {
+                            Utils.buildSubscriptionPurchasedDialog(context)
+                            // mark our cloud function to update subscription status
                         }
                     }
+                }
+            latestPurchase?.let {
                 val consumeParams =
-                    ConsumeParams.newBuilder().setPurchaseToken(purchase.purchaseToken).build()
+                    ConsumeParams.newBuilder().setPurchaseToken(
+                        latestPurchase
+                            .purchaseToken
+                    ).build()
                 billingClient!!.consumeAsync(consumeParams, listener)
             }
         }
     }
 
+    fun getSubscriptions(resultCallback: suspend () -> Unit) {
+        billingClient?.queryPurchasesAsync(
+            BillingClient.SkuType.SUBS
+        ) { p0, p1 ->
+            handlePurchases(p1)
+            GlobalScope.launch(Dispatchers.Default) { resultCallback.invoke() }
+        }
+    }
+
     /** Start a purchase flow  */
-    private fun initiatePurchaseFlow() {
+    fun initiatePurchaseFlow() {
         val purchaseFlowRequest = Runnable {
             val params = SkuDetailsParams.newBuilder()
             params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS)
@@ -87,8 +139,8 @@ class Billing(val activity: AppCompatActivity, val uniqueId: String) :
                     skuDetails = skuDetailsList
                     popProductsList(responseCode, skuDetailsList)
                 } else {
-                    activity.showToastInCenter(
-                        activity.getString(
+                    context.showToastInCenter(
+                        context.getString(
                             R.string
                                 .error_fetching_google_play_product_list
                         )
@@ -104,6 +156,43 @@ class Billing(val activity: AppCompatActivity, val uniqueId: String) :
             }
         }
         executeServiceRequest(purchaseFlowRequest)
+    }
+
+    private fun handlePurchases(purchases: List<Purchase>): Purchase? {
+        val dao = AppDatabase.getInstance(context).trialValidatorDao()
+        var latestPurchase: Purchase? = null
+        for (purchase in purchases) {
+            if (latestPurchase == null ||
+                purchase.purchaseTime > latestPurchase.purchaseTime
+            ) {
+                latestPurchase = purchase
+            }
+        }
+        if (latestPurchase != null) {
+            val existingTrial = dao.findByDeviceId(uniqueId)
+            if (existingTrial != null) {
+                existingTrial.subscriptionStatus = latestPurchase.purchaseState
+                existingTrial.purchaseToken = latestPurchase.purchaseToken
+                dao.insert(existingTrial)
+            } else {
+                val trial = Trial(
+                    uniqueId,
+                    TrialValidationApi.TrialResponse.TRIAL_ACTIVE,
+                    Trial.TRIAL_DEFAULT_DAYS, Date(), latestPurchase.purchaseState
+                )
+                trial.purchaseToken = latestPurchase.purchaseToken
+                dao.insert(trial)
+            }
+        } else {
+            // no subscription found, expire existing
+            val existingTrial = dao.findByDeviceId(uniqueId)
+            if (existingTrial != null) {
+                existingTrial.subscriptionStatus = Trial.SUBSCRIPTION_STATUS_DEFAULT
+                existingTrial.purchaseToken = null
+                dao.insert(existingTrial)
+            }
+        }
+        return latestPurchase
     }
 
     /**
@@ -123,7 +212,7 @@ class Billing(val activity: AppCompatActivity, val uniqueId: String) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val rootView: View = AdapterDonationBinding.inflate(
             LayoutInflater.from(
-                activity
+                context
             ),
             parent, false
         ).getRoot()
@@ -163,7 +252,9 @@ class Billing(val activity: AppCompatActivity, val uniqueId: String) :
             val billingFlowParams = BillingFlowParams.newBuilder().setSkuDetails(
                 skuDetails!!
             ).build()
-            billingClient!!.launchBillingFlow(activity, billingFlowParams)
+            activity?.let {
+                billingClient!!.launchBillingFlow(it, billingFlowParams)
+            }
         }
 
         override fun purchaseCancel() {
@@ -226,13 +317,13 @@ class Billing(val activity: AppCompatActivity, val uniqueId: String) :
      *
      *
      */
-        activity.runOnUiThread {
-            val dialogBuilder = AlertDialog.Builder(activity)
+        activity?.runOnUiThread {
+            val dialogBuilder = AlertDialog.Builder(context)
                 .setTitle(R.string.subscribe)
                 .setNegativeButton(R.string.close) { dialog, _ ->
                     dialog.dismiss()
                 }
-            val inflater = activity.layoutInflater
+            val inflater = activity!!.layoutInflater
             val dialogView: View = inflater.inflate(R.layout.subtitles_search_results_view, null)
             dialogBuilder.setView(dialogView)
             val recyclerView = dialogView.findViewById<RecyclerView>(R.id.search_results_list)
@@ -245,20 +336,5 @@ class Billing(val activity: AppCompatActivity, val uniqueId: String) :
             val alertDialog = dialogBuilder.create()
             alertDialog.show()
         }
-    }
-
-    companion object {
-        private val TAG = Billing::class.java.simpleName
-    }
-
-    init {
-        skuList = ArrayList()
-        skuList.add("subscription_1")
-        skuList.add("subscription_2")
-        skuList.add("subscription_3")
-        skuList.add("subscription_4")
-        billingClient =
-            BillingClient.newBuilder(activity).setListener(this).enablePendingPurchases().build()
-        initiatePurchaseFlow()
     }
 }
