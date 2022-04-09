@@ -29,6 +29,7 @@ class PreferencesConstants {
         const val KEY_ENABLE_WAVEFORM = "pref_enable_waveform"
         const val KEY_SUBTITLE_LANGUAGE_CODE = "subtitle_language_code"
         const val KEY_UPDATE_APP_LAST_SHOWN_DATE = "update_app_last_show_date"
+        const val KEY_DEVICE_UNIQUE_ID = "device_unique_id"
 
         const val VAL_SEARCH_DUPLICATES_MEDIA_STORE = 0
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1
