@@ -3,7 +3,7 @@
     <string name="app_name_launcher">Amaze Utilities</string>
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.0</string>
+    <string name="app_version" translatable="false">v1.1</string>
     <string name="image_viewer">Amaze Image Viewer</string>
     <string name="video_player">Amaze Video Player</string>
     <string name="amaze_audio_player">Amaze Music Player</string>
@@ -393,4 +393,5 @@
         We\'re a group of open source developers and are managing Amaze File Manager for around 8 years now.\n
         Still we\'d encourage you to read our privacy policy below.
     </string>
+    <string name="error_fetching_google_play_product_list">Error fetching product list from Google Play.</string>
 </resources>

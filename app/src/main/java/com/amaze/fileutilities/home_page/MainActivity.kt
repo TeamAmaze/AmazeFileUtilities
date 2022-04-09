@@ -38,6 +38,7 @@ import com.amaze.fileutilities.home_page.ui.files.AbstractMediaInfoListFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
 import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
+import com.amaze.fileutilities.home_page.ui.options.Billing
 import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
@@ -194,6 +195,8 @@ class MainActivity :
         checkForAppUpdates()
         viewModel.getUniqueId().observe(this) {
             if (it != null) {
+                getAppCommonSharedPreferences().edit()
+                    .putString(PreferencesConstants.KEY_DEVICE_UNIQUE_ID, it).apply()
                 viewModel.validateTrial(it, isNetworkAvailable()).observe(this) {
                     trialResponse ->
                     if (trialResponse != null) {
@@ -208,6 +211,7 @@ class MainActivity :
                                 } else if (trialResponse.isLastDay) {
                                     Utils.buildLastTrialDayDialog(this) {
                                         // wants to subscribe
+                                        Billing(this, it)
                                     }.create().show()
                                 }
                             }

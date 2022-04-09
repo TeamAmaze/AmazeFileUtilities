@@ -23,7 +23,10 @@ import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
 import com.amaze.fileutilities.home_page.ui.options.AboutFragment
+import com.amaze.fileutilities.home_page.ui.options.Billing
+import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import java.util.*
 
 class PreferenceActivity : AppCompatActivity() {
@@ -46,13 +49,21 @@ class PreferenceActivity : AppCompatActivity() {
                 inflatePreferenceFragment(PreferenceFragment(), R.string.settings)
                 titleStack.push(resources.getString(R.string.settings))
             } else {
+                val deviceId = getAppCommonSharedPreferences()
+                    .getString(PreferencesConstants.KEY_DEVICE_UNIQUE_ID, null)
                 if (extras.getBoolean(KEY_IS_TRIAL_EXPIRED)) {
                     Utils.buildTrialExpiredDialog(this) {
                         // subscribe
+                        if (deviceId != null) {
+                            Billing(this, deviceId)
+                        }
                     }.create().show()
                 } else if (extras.getBoolean(KEY_IS_TRIAL_INACTIVE)) {
                     Utils.buildTrialExclusiveInactiveDialog(this) {
                         // subscribe
+                        if (deviceId != null) {
+                            Billing(this, deviceId)
+                        }
                     }.create().show()
                 }
                 inflatePreferenceFragment(AboutFragment(), R.string.about)

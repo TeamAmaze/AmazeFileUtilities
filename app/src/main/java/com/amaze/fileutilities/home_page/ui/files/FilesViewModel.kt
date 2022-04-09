@@ -736,6 +736,7 @@ class FilesViewModel(val applicationContext: Application) :
                 secureId = FileUtils
                     .getSHA256Checksum(secureId.byteInputStream(Charset.defaultCharset()))
             }
+
             emit(secureId)
         }
     }
