@@ -58,6 +58,7 @@ class WelcomeScreen : WelcomePermissionScreen() {
             )
             .canSkip(false)
             .swipeToDismiss(false)
+            .useCustomDoneButton(true)
             .build()
     }
 }

@@ -159,12 +159,11 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
                 libsBuilder.start(requireContext())
             }
             KEY_SUBSCRIPTION_STATUS -> {
-                val deviceId = requireActivity().getAppCommonSharedPreferences()
-                    .getString(PreferencesConstants.KEY_DEVICE_UNIQUE_ID, null)
-                if (deviceId != null) {
-                    log.info("purchase subscription for device {}", deviceId)
-                    Billing(requireActivity() as PreferenceActivity, deviceId)
-                }
+                log.info("purchase subscription for device")
+                Billing.getInstance(
+                    requireActivity()
+                        as PreferenceActivity
+                )?.initiatePurchaseFlow()
             }
         }
         return true

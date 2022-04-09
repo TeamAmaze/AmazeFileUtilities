@@ -394,4 +394,5 @@
         Still we\'d encourage you to read our privacy policy below.
     </string>
     <string name="error_fetching_google_play_product_list">Error fetching product list from Google Play.</string>
+    <string name="done">Done</string>
 </resources>

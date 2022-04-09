@@ -38,6 +38,12 @@ open class PermissionsActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+
+    /**
+     * Invokes permission check when we don't show welcome screen.
+     */
+    fun invokePermissionCheck() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!checkStoragePermission()) {
                 requestStoragePermission(onPermissionGranted, true)
@@ -46,6 +52,20 @@ open class PermissionsActivity :
                 requestAllFilesAccess(onPermissionGranted)
             }
         }
+    }
+
+    fun haveStoragePermissions(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!checkStoragePermission()) {
+                return false
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+                !Environment.isExternalStorageManager()
+            ) {
+                return false
+            }
+        }
+        return true
     }
 
     companion object {
