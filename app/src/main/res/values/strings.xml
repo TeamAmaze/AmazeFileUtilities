@@ -3,7 +3,7 @@
     <string name="app_name_launcher">Amaze Utilities</string>
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.1</string>
+    <string name="app_version" translatable="false">v1.2</string>
     <string name="image_viewer">Amaze Image Viewer</string>
     <string name="video_player">Amaze Video Player</string>
     <string name="amaze_audio_player">Amaze Music Player</string>
@@ -73,7 +73,6 @@
     <string name="licenses">Licenses</string>
     <string name="libraries">Libraries</string>
     <string name="install_amaze">Please install Amaze File Manager to manage internal storage</string>
-    <string name="version" translatable="false">v0.1</string>
     <string name="information">Information</string>
     <string name="unsupported_content">Unsupported content</string>
     <string name="parent">Parent</string>
