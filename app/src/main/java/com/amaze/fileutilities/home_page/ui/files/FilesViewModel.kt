@@ -743,16 +743,17 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
-    fun validateTrial(deviceId: String, isNetworkAvailable: Boolean):
-        LiveData<TrialValidationApi.TrialResponse?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+    fun validateTrial(
+        deviceId: String,
+        isNetworkAvailable: Boolean,
+        trialResponse: (TrialValidationApi.TrialResponse) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.Default) {
             val dao = AppDatabase.getInstance(applicationContext).trialValidatorDao()
             val trial = dao.findByDeviceId(deviceId)
             // in this method decide when do we refresh trial / subscription, immediately or after some time
             if (trial == null) {
-                fetchBillingStatusAndInitTrial(deviceId, dao, isNetworkAvailable) {
-                    emit(it)
-                }
+                fetchBillingStatusAndInitTrial(deviceId, dao, isNetworkAvailable, trialResponse)
             } else {
                 if ((
                     trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXPIRED ||
@@ -761,9 +762,7 @@ class FilesViewModel(val applicationContext: Application) :
                     trial.subscriptionStatus == Trial.SUBSCRIPTION_STATUS_DEFAULT
                 ) {
                     // check immediately if there's an update in trial status
-                    fetchBillingStatusAndInitTrial(deviceId, dao, isNetworkAvailable) {
-                        emit(it)
-                    }
+                    fetchBillingStatusAndInitTrial(deviceId, dao, isNetworkAvailable, trialResponse)
                 } else {
                     // trial is active, if we've already processed today, don't fetch
                     val cal = GregorianCalendar.getInstance()
@@ -771,12 +770,13 @@ class FilesViewModel(val applicationContext: Application) :
                     cal.add(Calendar.DAY_OF_YEAR, 1)
                     if (cal.time.before(Date())) {
                         // we haven't fetched today, check if active from remote
-                        fetchBillingStatusAndInitTrial(deviceId, dao, isNetworkAvailable) {
-                            emit(it)
-                        }
+                        fetchBillingStatusAndInitTrial(
+                            deviceId, dao, isNetworkAvailable,
+                            trialResponse
+                        )
                     } else {
                         // we've fetcehd today, consider it active
-                        emit(
+                        trialResponse.invoke(
                             TrialValidationApi.TrialResponse(
                                 false, false,
                                 TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
@@ -838,7 +838,9 @@ class FilesViewModel(val applicationContext: Application) :
                 } else {
                     return TrialValidationApi.TrialResponse(
                         false, false,
-                        TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
+                        TrialValidationApi.TrialResponse
+                            .trialCodeStatusMap[trial.trialStatus]
+                            ?: TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
                         trial.trialDaysLeft,
                         trial.subscriptionStatus,
                         null
@@ -869,11 +871,11 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
-    private suspend fun fetchBillingStatusAndInitTrial(
+    private fun fetchBillingStatusAndInitTrial(
         deviceId: String,
         dao: TrialValidatorDao,
         isNetworkAvailable: Boolean,
-        trialResponse: suspend (TrialValidationApi.TrialResponse) -> Unit
+        trialResponse: (TrialValidationApi.TrialResponse) -> Unit
     ) {
         val billing = Billing.getInstance(applicationContext)
         if (billing != null) {

@@ -200,9 +200,9 @@ class MainActivity :
             checkForAppUpdates()
             viewModel.getUniqueId().observe(this) {
                 if (it != null) {
-                    viewModel.validateTrial(it, isNetworkAvailable()).observe(this) {
+                    viewModel.validateTrial(it, isNetworkAvailable()) {
                         trialResponse ->
-                        if (trialResponse != null) {
+                        this@MainActivity.runOnUiThread {
                             if (trialResponse.subscriptionStatus
                                 == Trial.SUBSCRIPTION_STATUS_DEFAULT
                             ) {
