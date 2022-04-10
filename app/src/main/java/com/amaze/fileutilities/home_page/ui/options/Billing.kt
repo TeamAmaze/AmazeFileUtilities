@@ -30,9 +30,6 @@ import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.android.billingclient.api.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -117,12 +114,12 @@ class Billing(val context: Context, private var uniqueId: String) :
         }
     }
 
-    fun getSubscriptions(resultCallback: suspend () -> Unit) {
+    fun getSubscriptions(resultCallback: () -> Unit) {
         billingClient?.queryPurchasesAsync(
             BillingClient.SkuType.SUBS
         ) { p0, p1 ->
             handlePurchases(p1)
-            GlobalScope.launch(Dispatchers.Default) { resultCallback.invoke() }
+            resultCallback.invoke()
         }
     }
 

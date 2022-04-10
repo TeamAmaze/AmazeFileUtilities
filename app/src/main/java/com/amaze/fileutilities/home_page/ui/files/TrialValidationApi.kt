@@ -66,6 +66,13 @@ interface TrialValidationApi {
                 Pair(CODE_TRIAL_INACTIVE, TRIAL_INACTIVE),
                 Pair(CODE_TRIAL_EXCLUSIVE, TRIAL_EXCLUSIVE)
             )
+
+            val trialCodeStatusMap = mapOf(
+                Pair(TRIAL_ACTIVE, CODE_TRIAL_ACTIVE),
+                Pair(TRIAL_EXPIRED, CODE_TRIAL_EXPIRED),
+                Pair(TRIAL_INACTIVE, CODE_TRIAL_INACTIVE),
+                Pair(TRIAL_EXCLUSIVE, CODE_TRIAL_EXCLUSIVE)
+            )
         }
 
         fun getTrialStatus(): String {
