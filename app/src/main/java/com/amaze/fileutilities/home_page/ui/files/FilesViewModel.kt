@@ -843,7 +843,7 @@ class FilesViewModel(val applicationContext: Application) :
                             ?: TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
                         trial.trialDaysLeft,
                         trial.subscriptionStatus,
-                        null
+                        trial.purchaseToken
                     )
                 }
             } else {
@@ -862,10 +862,12 @@ class FilesViewModel(val applicationContext: Application) :
                 log.info("no network available, return database saved trial state")
                 return TrialValidationApi.TrialResponse(
                     false, false,
-                    TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
+                    TrialValidationApi.TrialResponse
+                        .trialCodeStatusMap[trial.trialStatus]
+                        ?: TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
                     trial.trialDaysLeft,
                     trial.subscriptionStatus,
-                    null
+                    trial.purchaseToken
                 )
             }
         }
@@ -936,7 +938,11 @@ class FilesViewModel(val applicationContext: Application) :
     private fun copyLogsFileToInternalStorage(): String? {
         applicationContext.getExternalStorageDirectory()?.let {
             internalStoragePath ->
-            FileInputStream(File("${applicationContext.filesDir}/logs.txt")).use {
+            val inputFile = File("/data/data/${applicationContext.packageName}/cache/logs.txt")
+            if (!inputFile.exists()) {
+                return null
+            }
+            FileInputStream(inputFile).use {
                 inputStream ->
                 val file = File(
                     internalStoragePath.path +

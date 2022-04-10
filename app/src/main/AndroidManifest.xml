@@ -178,7 +178,7 @@
         <activity android:name=".home_page.ui.settings.PreferenceActivity"
             android:theme="@style/Theme.AmazeFileUtilities.Dark"
             android:configChanges=""
-            android:label="Error"
+            android:label="@string/settings"
             />
 
         <service
