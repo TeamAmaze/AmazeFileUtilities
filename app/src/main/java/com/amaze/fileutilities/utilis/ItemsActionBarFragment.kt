@@ -24,8 +24,12 @@ import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 abstract class ItemsActionBarFragment : Fragment() {
+
+    private var log: Logger = LoggerFactory.getLogger(ItemsActionBarFragment::class.java)
 
     abstract fun hideActionBarOnClick(): Boolean
     abstract fun getMediaFileAdapter(): AbstractMediaFilesAdapter?

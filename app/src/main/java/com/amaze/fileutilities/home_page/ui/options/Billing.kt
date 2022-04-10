@@ -30,6 +30,10 @@ import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.android.billingclient.api.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -37,16 +41,19 @@ class Billing(val context: Context, private var uniqueId: String) :
     RecyclerView.Adapter<RecyclerView.ViewHolder?>(),
     PurchasesUpdatedListener {
     constructor(activity: AppCompatActivity, uniqueId: String) : this(
-        activity.applicationContext,
+        activity.baseContext,
         uniqueId
     ) {
         this.activity = activity
         this.uniqueId = uniqueId
     }
 
+    var log: Logger = LoggerFactory.getLogger(Billing::class.java)
+
     private val skuList: MutableList<String>
     private var skuDetails: List<SkuDetails>? = null
     private var activity: AppCompatActivity? = null
+    private var purchaseDialog: AlertDialog? = null
 
     // create new donations client
     private var billingClient: BillingClient? = null
@@ -97,9 +104,35 @@ class Billing(val context: Context, private var uniqueId: String) :
                     // we consume the purchase, so that user can perform purchase again
                     responseCode1?.responseCode?.let {
                         responseCode ->
+                        // mark our cloud function to update subscription status
+                        val retrofit = Retrofit.Builder()
+                            .baseUrl(TrialValidationApi.CLOUD_FUNCTION_BASE)
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build()
+                        val service = retrofit.create(TrialValidationApi::class.java)
+                        try {
+                            service.postValidation(
+                                TrialValidationApi.TrialRequest(
+                                    TrialValidationApi.AUTH_TOKEN, uniqueId,
+                                    latestPurchase?.purchaseState
+                                        ?: Trial.SUBSCRIPTION_STATUS_DEFAULT,
+                                    latestPurchase?.purchaseToken
+                                )
+                            )?.execute()?.let { response ->
+                                if (response.isSuccessful && response.body() != null) {
+                                    log.info(
+                                        "updated subscription state with " +
+                                            "response ${response.body()}"
+                                    )
+                                    response.body()
+                                }
+                            }
+                        } catch (e: Exception) {
+                            log.warn("failed to update subscription state for trial validation", e)
+                        }
                         activity?.runOnUiThread {
-                            Utils.buildSubscriptionPurchasedDialog(context)
-                            // mark our cloud function to update subscription status
+                            purchaseDialog?.dismiss()
+                            Utils.buildSubscriptionPurchasedDialog(activity!!).show()
                         }
                     }
                 }
@@ -115,11 +148,26 @@ class Billing(val context: Context, private var uniqueId: String) :
     }
 
     fun getSubscriptions(resultCallback: () -> Unit) {
-        billingClient?.queryPurchasesAsync(
-            BillingClient.SkuType.SUBS
-        ) { p0, p1 ->
-            handlePurchases(p1)
-            resultCallback.invoke()
+        val runnable = Runnable {
+            log.info("querying for subscriptions")
+            billingClient?.queryPurchasesAsync(
+                BillingClient.SkuType.SUBS
+            ) { p0, p1 ->
+                log.info("found subscriptions")
+                handlePurchases(p1)
+                resultCallback.invoke()
+            }
+        }
+        executeGetSubscriptions(runnable)
+    }
+
+    private fun executeGetSubscriptions(runnable: Runnable) {
+        if (isServiceConnected) {
+            runnable.run()
+        } else {
+            // If billing service was disconnected, we try to reconnect 1 time.
+            // (feel free to introduce your retry policy here).
+            startServiceConnection(runnable)
         }
     }
 
@@ -159,6 +207,7 @@ class Billing(val context: Context, private var uniqueId: String) :
         val dao = AppDatabase.getInstance(context).trialValidatorDao()
         var latestPurchase: Purchase? = null
         for (purchase in purchases) {
+            log.info("querying purchase {}", purchase)
             if (latestPurchase == null ||
                 purchase.purchaseTime > latestPurchase.purchaseTime
             ) {
@@ -166,6 +215,7 @@ class Billing(val context: Context, private var uniqueId: String) :
             }
         }
         if (latestPurchase != null) {
+            log.info("found latest purchase {}", latestPurchase)
             val existingTrial = dao.findByDeviceId(uniqueId)
             if (existingTrial != null) {
                 existingTrial.subscriptionStatus = latestPurchase.purchaseState
@@ -182,6 +232,7 @@ class Billing(val context: Context, private var uniqueId: String) :
             }
         } else {
             // no subscription found, expire existing
+            log.info("no subscription found")
             val existingTrial = dao.findByDeviceId(uniqueId)
             if (existingTrial != null) {
                 existingTrial.subscriptionStatus = Trial.SUBSCRIPTION_STATUS_DEFAULT
@@ -209,7 +260,7 @@ class Billing(val context: Context, private var uniqueId: String) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val rootView: View = AdapterDonationBinding.inflate(
             LayoutInflater.from(
-                context
+                activity
             ),
             parent, false
         ).getRoot()
@@ -218,19 +269,16 @@ class Billing(val context: Context, private var uniqueId: String) :
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is DonationViewHolder && skuDetails!!.size > 0) {
+            log.info("display sku details {}", skuDetails!![position])
             val titleRaw = skuDetails!![position].title
-            (holder as DonationViewHolder).TITLE.setText(
-                titleRaw.subSequence(
-                    0,
-                    titleRaw.lastIndexOf("(")
-                )
-            )
-            (holder as DonationViewHolder).SUMMARY.setText(skuDetails!![position].description)
-            (holder as DonationViewHolder).PRICE.setText(skuDetails!![position].price)
-            (holder as DonationViewHolder).ROOT_VIEW.setOnClickListener { v ->
+            holder.TITLE.text = titleRaw.substring(0, titleRaw.indexOf("("))
+            holder.SUMMARY.text = skuDetails!![position].description
+            holder.PRICE.text = skuDetails!![position].price
+            holder.ROOT_VIEW.setOnClickListener { v ->
                 purchaseProduct.purchaseItem(
                     skuDetails!![position]
                 )
+                purchaseDialog?.dismiss()
             }
         }
     }
@@ -315,7 +363,7 @@ class Billing(val context: Context, private var uniqueId: String) :
      *
      */
         activity?.runOnUiThread {
-            val dialogBuilder = AlertDialog.Builder(context)
+            val dialogBuilder = AlertDialog.Builder(activity!!, R.style.Custom_Dialog_Dark)
                 .setTitle(R.string.subscribe)
                 .setNegativeButton(R.string.close) { dialog, _ ->
                     dialog.dismiss()
@@ -330,8 +378,8 @@ class Billing(val context: Context, private var uniqueId: String) :
             recyclerView.visibility = View.VISIBLE
             recyclerView.layoutManager = LinearLayoutManager(activity)
             recyclerView.adapter = this
-            val alertDialog = dialogBuilder.create()
-            alertDialog.show()
+            purchaseDialog = dialogBuilder.create()
+            purchaseDialog?.show()
         }
     }
 }
