@@ -32,8 +32,8 @@ android {
         applicationId "com.amaze.fileutilities"
         minSdk 19
         targetSdk 30
-        versionCode 3
-        versionName "1.2"
+        versionCode 15
+        versionName "1.14"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -41,8 +41,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -62,8 +62,8 @@ android {
         }
 
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
         }
     }
 

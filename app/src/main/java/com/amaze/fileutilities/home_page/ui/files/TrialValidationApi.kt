@@ -26,6 +26,7 @@ interface TrialValidationApi {
         @Body trialRequest: TrialRequest
     ): Call<TrialResponse>?
 
+//    @Keep
     data class TrialRequest(
         val token: String,
         val deviceId: String,
@@ -33,6 +34,7 @@ interface TrialValidationApi {
         var purchaseToken: String?
     )
 
+//    @Keep
     data class TrialResponse(
         val isLastDay: Boolean = false,
         val isNewSignup: Boolean = false,
