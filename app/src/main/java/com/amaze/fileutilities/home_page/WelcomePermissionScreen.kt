@@ -44,6 +44,20 @@ abstract class WelcomePermissionScreen :
         super.onCreate(savedInstanceState)
     }
 
+    fun haveStoragePermissions(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!checkStoragePermission()) {
+                return false
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+                !Environment.isExternalStorageManager()
+            ) {
+                return false
+            }
+        }
+        return true
+    }
+
     companion object {
         private const val PERMISSION_LENGTH = 3
         private const val STORAGE_PERMISSION = 0
@@ -57,10 +71,10 @@ abstract class WelcomePermissionScreen :
         override fun onPermissionGranted(isGranted: Boolean) {
             if (isGranted) {
 //                Utils.enableScreenRotation(this@PermissionsActivity)
-                val action = Intent(this@WelcomePermissionScreen, MainActivity::class.java)
+                /*val action = Intent(this@WelcomePermissionScreen, MainActivity::class.java)
                 action.addCategory(Intent.CATEGORY_LAUNCHER)
                 startActivity(action)
-                finish()
+                finish()*/
             } else {
                 Toast.makeText(
                     this@WelcomePermissionScreen, R.string.grantfailed,
@@ -278,7 +292,7 @@ abstract class WelcomePermissionScreen :
                 .setTitle(R.string.grant_permission)
                 .setNegativeButton(R.string.cancel) { dialog, _ ->
                     run {
-                        finish()
+                        dialog.dismiss()
                     }
                 }
                 .setPositiveButton(R.string.grant) { dialog, _ ->
