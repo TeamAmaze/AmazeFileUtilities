@@ -14,6 +14,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.format.Formatter
 import android.view.*
+import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.documentfile.provider.DocumentFile
@@ -21,7 +22,9 @@ import androidx.fragment.app.activityViewModels
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.QuickViewFragmentBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
+import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.amaze.fileutilities.utilis.share.showEditImageDialog
 import com.amaze.fileutilities.utilis.share.showSetAsDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
@@ -146,17 +149,19 @@ class ImageViewerFragment : AbstractMediaFragment() {
     private fun setupPropertiesSheet(quickViewType: LocalImageModel) {
         quickViewType.let {
             val file = it.uri.getFileFromUri(requireContext())
-            val metadata = ImageMetadataReader.readMetadata(file)
-            viewBinding.run {
-                val exifSubDirectory = metadata
-                    .getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
-                val descriptor = ExifSubIFDDescriptor(exifSubDirectory)
-                val fileSystemDirectory = metadata
-                    .getFirstDirectoryOfType(FileSystemDirectory::class.java)
-                val gpsDirectory = metadata
-                    .getFirstDirectoryOfType(GpsDirectory::class.java)
-                val gpsDescriptor = GpsDescriptor(gpsDirectory)
-                if (file != null) {
+            file?.let {
+                file ->
+                val metadata = ImageMetadataReader.readMetadata(file)
+                viewBinding.run {
+                    val exifSubDirectory = metadata
+                        .getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
+                    val descriptor = ExifSubIFDDescriptor(exifSubDirectory)
+                    val fileSystemDirectory = metadata
+                        .getFirstDirectoryOfType(FileSystemDirectory::class.java)
+                    val gpsDirectory = metadata
+                        .getFirstDirectoryOfType(GpsDirectory::class.java)
+                    val gpsDescriptor = GpsDescriptor(gpsDirectory)
+
                     imageMetadataLayout.fileName.text =
                         "${resources.getString(R.string.file_name)}: ${file.name}"
                     var widthAndHeight = ""
@@ -169,7 +174,10 @@ class ImageViewerFragment : AbstractMediaFragment() {
                                     if (!height.isNullOrEmpty()) {
                                         widthAndHeight =
                                             "${width.replace(" pixels", "")}" +
-                                            "x${height.replace(" pixels", "")} | "
+                                            "x${height.replace(
+                                                " pixels",
+                                                ""
+                                            )} | "
                                     }
                                 }
                             }
@@ -186,104 +194,105 @@ class ImageViewerFragment : AbstractMediaFragment() {
                         "${Date(file.lastModified())}"
                     imageMetadataLayout.filePath.text =
                         "${resources.getString(R.string.path)}: ${it.uri.path ?: file.path}"
-                } else if (fileSystemDirectory != null) {
-                    viewBinding.imageMetadataLayout.fileName.text =
-                        fileSystemDirectory.tags.toMutableList()[0].toString()
-                    viewBinding.imageMetadataLayout.fileSize.text =
-                        Formatter.formatFileSize(
-                            requireContext(),
-                            fileSystemDirectory.tags.toMutableList()[1].toString().toLong()
-                        )
+                    /*else if (fileSystemDirectory != null) {
+                        viewBinding.imageMetadataLayout.fileName.text =
+                            fileSystemDirectory.tags.toMutableList()[0].toString()
+                        viewBinding.imageMetadataLayout.fileSize.text =
+                            Formatter.formatFileSize(
+                                requireContext(),
+                                fileSystemDirectory.tags.toMutableList()[1].toString().toLong()
+                            )
 
-                    imageMetadataLayout.fileLastModified.text =
-                        "${resources.getString(R.string.date)}: " +
-                        "${fileSystemDirectory.tags.toMutableList()[2]
-                        }"
-                }
+                        imageMetadataLayout.fileLastModified.text =
+                            "${resources.getString(R.string.date)}: " +
+                                    "${fileSystemDirectory.tags.toMutableList()[2]
+                                    }"
+                    }*/
 
-                val exifDirectory = metadata
-                    .getFirstDirectoryOfType(ExifIFD0Directory::class.java)
-                if (exifDirectory != null) {
-                    exifDirectory.getString(ExifIFD0Directory.TAG_MODEL).let {
-                        property ->
-                        if (!property.isNullOrEmpty()) {
-                            imageMetadataLayout.model.visibility = View.VISIBLE
-                            imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                            imageMetadataLayout.model.text =
-                                "${resources.getString(R.string.model)}: $property"
-                        } else {
-                            imageMetadataLayout.model.visibility = View.GONE
-                        }
-                    }
-                    exifDirectory.getString(ExifIFD0Directory.TAG_MAKE).let {
-                        property ->
-                        if (!property.isNullOrEmpty()) {
-                            imageMetadataLayout.make.visibility = View.VISIBLE
-                            imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                            imageMetadataLayout.make.text =
-                                "${resources.getString(R.string.make)}: $property"
-                        } else {
-                            imageMetadataLayout.make.visibility = View.GONE
-                        }
-                    }
-                }
-                if (exifSubDirectory != null && descriptor != null) {
-                    descriptor.apertureValueDescription.let {
-                        property ->
-                        if (!property.isNullOrEmpty()) {
-                            imageMetadataLayout.aperture.visibility = View.VISIBLE
-                            imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                            imageMetadataLayout.aperture.text =
-                                "${resources.getString(R.string.aperture)}: $property"
-                        } else {
-                            imageMetadataLayout.aperture.visibility = View.GONE
-                        }
-                    }
-                    descriptor.shutterSpeedDescription.let {
-                        property ->
-                        if (!property.isNullOrEmpty()) {
-                            imageMetadataLayout.shutterTime.visibility = View.VISIBLE
-                            imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                            imageMetadataLayout.shutterTime.text =
-                                "${resources.getString(R.string.shutter_time)}: $property"
-                        } else {
-                            imageMetadataLayout.shutterTime.visibility = View.GONE
-                        }
-                    }
-                    descriptor.isoEquivalentDescription.let {
-                        property ->
-                        if (!property.isNullOrEmpty()) {
-                            imageMetadataLayout.iso.visibility = View.VISIBLE
-                            imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                            imageMetadataLayout.iso.text =
-                                "${resources.getString(R.string.iso)}: $property"
-                        } else {
-                            imageMetadataLayout.iso.visibility = View.GONE
-                        }
-                    }
-                }
-                if (gpsDirectory != null && gpsDescriptor != null) {
-                    gpsDescriptor.gpsLatitudeDescription.let {
-                        latitude ->
-                        gpsDescriptor.gpsLongitudeDescription.let {
-                            longitude ->
-                            if (!longitude.isNullOrEmpty() && !latitude.isNullOrEmpty()) {
-                                imageMetadataLayout.longitude.visibility = View.VISIBLE
-                                imageMetadataLayout.gpsInfoParent.visibility = View.VISIBLE
-                                imageMetadataLayout.longitude.text =
-                                    "${resources.getString(R.string.longitude)}: $longitude"
-                                imageMetadataLayout.lat.visibility = View.VISIBLE
-                                imageMetadataLayout.lat.text =
-                                    "${resources.getString(R.string.latitude)}: $latitude"
-                                imageMetadataLayout.openInMapsImage.setOnClickListener {
-                                    Utils.openInMaps(requireContext(), latitude, longitude)
-                                }
-                                imageMetadataLayout.openInMapsText.setOnClickListener {
-                                    Utils.openInMaps(requireContext(), latitude, longitude)
-                                }
+                    val exifDirectory = metadata
+                        .getFirstDirectoryOfType(ExifIFD0Directory::class.java)
+                    if (exifDirectory != null) {
+                        exifDirectory.getString(ExifIFD0Directory.TAG_MODEL).let {
+                            property ->
+                            if (!property.isNullOrEmpty()) {
+                                imageMetadataLayout.model.visibility = View.VISIBLE
+                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                                imageMetadataLayout.model.text =
+                                    "${resources.getString(R.string.model)}: $property"
                             } else {
-                                imageMetadataLayout.longitude.visibility = View.GONE
-                                imageMetadataLayout.lat.visibility = View.GONE
+                                imageMetadataLayout.model.visibility = View.GONE
+                            }
+                        }
+                        exifDirectory.getString(ExifIFD0Directory.TAG_MAKE).let {
+                            property ->
+                            if (!property.isNullOrEmpty()) {
+                                imageMetadataLayout.make.visibility = View.VISIBLE
+                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                                imageMetadataLayout.make.text =
+                                    "${resources.getString(R.string.make)}: $property"
+                            } else {
+                                imageMetadataLayout.make.visibility = View.GONE
+                            }
+                        }
+                    }
+                    if (exifSubDirectory != null && descriptor != null) {
+                        descriptor.apertureValueDescription.let {
+                            property ->
+                            if (!property.isNullOrEmpty()) {
+                                imageMetadataLayout.aperture.visibility = View.VISIBLE
+                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                                imageMetadataLayout.aperture.text =
+                                    "${resources.getString(R.string.aperture)}: $property"
+                            } else {
+                                imageMetadataLayout.aperture.visibility = View.GONE
+                            }
+                        }
+                        descriptor.shutterSpeedDescription.let {
+                            property ->
+                            if (!property.isNullOrEmpty()) {
+                                imageMetadataLayout.shutterTime.visibility = View.VISIBLE
+                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                                imageMetadataLayout.shutterTime.text =
+                                    "${resources.getString(R.string.shutter_time)}: $property"
+                            } else {
+                                imageMetadataLayout.shutterTime.visibility = View.GONE
+                            }
+                        }
+                        descriptor.isoEquivalentDescription.let {
+                            property ->
+                            if (!property.isNullOrEmpty()) {
+                                imageMetadataLayout.iso.visibility = View.VISIBLE
+                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                                imageMetadataLayout.iso.text =
+                                    "${resources.getString(R.string.iso)}: $property"
+                            } else {
+                                imageMetadataLayout.iso.visibility = View.GONE
+                            }
+                        }
+                    }
+                    if (gpsDirectory != null && gpsDescriptor != null) {
+                        gpsDescriptor.gpsLatitudeDescription.let {
+                            latitude ->
+                            gpsDescriptor.gpsLongitudeDescription.let {
+                                longitude ->
+                                if (!longitude.isNullOrEmpty() && !latitude.isNullOrEmpty()) {
+                                    imageMetadataLayout.longitude.visibility = View.VISIBLE
+                                    imageMetadataLayout.gpsInfoParent.visibility = View.VISIBLE
+                                    imageMetadataLayout.longitude.text =
+                                        "${resources.getString(R.string.longitude)}: $longitude"
+                                    imageMetadataLayout.lat.visibility = View.VISIBLE
+                                    imageMetadataLayout.lat.text =
+                                        "${resources.getString(R.string.latitude)}: $latitude"
+                                    imageMetadataLayout.openInMapsImage.setOnClickListener {
+                                        Utils.openInMaps(requireContext(), latitude, longitude)
+                                    }
+                                    imageMetadataLayout.openInMapsText.setOnClickListener {
+                                        Utils.openInMaps(requireContext(), latitude, longitude)
+                                    }
+                                } else {
+                                    imageMetadataLayout.longitude.visibility = View.GONE
+                                    imageMetadataLayout.lat.visibility = View.GONE
+                                }
                             }
                         }
                     }
@@ -406,7 +415,66 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 )!!,
                 resources.getString(R.string.delete)
             ) {
-                requireActivity().showToastInCenter(resources.getString(R.string.not_allowed))
+                localImageModel!!.uri
+                    .getFileFromUri(requireContext())?.let {
+                        file ->
+                        val toDelete = Collections.singletonList(
+                            MediaFileInfo.fromFile(
+                                file,
+                                MediaFileInfo.ExtraInfo(
+                                    MediaFileInfo.MEDIA_TYPE_UNKNOWN,
+                                    null, null, null
+                                )
+                            )
+                        )
+                        val progressDialogBuilder = requireContext()
+                            .showProcessingDialog(layoutInflater, "")
+                        val progressDialog = progressDialogBuilder.create()
+                        val summaryDialogBuilder = Utils
+                            .buildDeleteSummaryDialog(requireContext()) {
+                                progressDialog.show()
+                                filesViewModel.deleteMediaFiles(toDelete)
+                                    .observe(viewLifecycleOwner) {
+                                        progressDialog
+                                            .findViewById<TextView>(R.id.please_wait_text)?.text =
+                                            resources.getString(R.string.deleted_progress)
+                                                .format(it.first, toDelete.size)
+                                        if (it.second == toDelete.size) {
+                                            // delete deleted data from observables in fileviewmodel
+                                    /*filesViewModel.usedImagesSummaryTransformations
+                                        .observe(viewLifecycleOwner) {
+                                            summary ->
+                                        if (summary != null) {
+                                            filesViewModel.deleteMediaFilesFromList(summary.second,
+                                                toDelete)
+                                        }
+                                    }*/
+
+                                            // deletion complete, no need to check analysis data to remove
+                                            // as it will get deleted lazily while loading analysis lists
+                                            requireContext().showToastOnBottom(
+                                                resources
+                                                    .getString(R.string.successfully_deleted)
+                                            )
+                                            requireActivity().finish()
+                                            progressDialog.dismiss()
+                                        }
+                                    }
+                            }
+                        val summaryDialog = summaryDialogBuilder.create()
+                        summaryDialog.show()
+                        filesViewModel.getMediaFileListSize(toDelete).observe(viewLifecycleOwner) {
+                            sizeRaw ->
+                            val size = Formatter.formatFileSize(requireContext(), sizeRaw)
+                            summaryDialog.setMessage(
+                                resources
+                                    .getString(R.string.delete_files_message).format(
+                                        toDelete.size,
+                                        size
+                                    )
+                            )
+                        }
+                    }
             }
         }
     }
