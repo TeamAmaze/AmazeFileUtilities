@@ -3,7 +3,8 @@
         <!-- lazy initialization: don't create the file until 1st write -->
 <!--        <lazy>true</lazy>-->
 
-        <file>/data/user/0/com.amaze.fileutilities.debug/files/logs.txt</file>
+        <file>/data/data/com.amaze.fileutilities.debug/cache/logs.txt</file>
+<!--        <file>/data/data/com.amaze.fileutilities/cache/logs.txt</file>-->
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{35} - %msg%n</pattern>
         </encoder>

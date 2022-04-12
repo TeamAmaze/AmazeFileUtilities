@@ -16,6 +16,7 @@ import android.provider.Settings
 import androidx.lifecycle.*
 import com.amaze.fileutilities.home_page.database.*
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
+import com.amaze.fileutilities.home_page.ui.options.Billing
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
 import com.amaze.fileutilities.utilis.share.ShareAdapter
@@ -62,17 +63,22 @@ class FilesViewModel(val applicationContext: Application) :
             storageData?.let {
                 data ->
                 val file = File(data.path)
-                val items = CursorUtils.getMediaFilesCount(applicationContext)
-                FileUtils.scanFile(Uri.fromFile(file), applicationContext)
-                val usedSpace = file.totalSpace - file.usableSpace
-                val progress = (usedSpace * 100) / file.totalSpace
-                emit(
-                    StorageSummary(
-                        items, progress.toInt(), usedSpace, usedSpace,
-                        file.usableSpace,
-                        file.totalSpace
+                try {
+                    val items = CursorUtils.getMediaFilesCount(applicationContext)
+                    FileUtils.scanFile(Uri.fromFile(file), applicationContext)
+                    val usedSpace = file.totalSpace - file.usableSpace
+                    val progress = (usedSpace * 100) / file.totalSpace
+                    emit(
+                        StorageSummary(
+                            items, progress.toInt(), usedSpace, usedSpace,
+                            file.usableSpace,
+                            file.totalSpace
+                        )
                     )
-                )
+                } catch (se: SecurityException) {
+                    log.warn("failed to list recent files due to no permission", se)
+                    emit(null)
+                }
             }
         }
 
@@ -736,27 +742,32 @@ class FilesViewModel(val applicationContext: Application) :
                 secureId = FileUtils
                     .getSHA256Checksum(secureId.byteInputStream(Charset.defaultCharset()))
             }
+            applicationContext.getAppCommonSharedPreferences().edit()
+                .putString(PreferencesConstants.KEY_DEVICE_UNIQUE_ID, secureId).apply()
             emit(secureId)
         }
     }
 
-    fun validateTrial(deviceId: String, isNetworkAvailable: Boolean):
-        LiveData<TrialValidationApi.TrialResponse?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+    fun validateTrial(
+        deviceId: String,
+        isNetworkAvailable: Boolean,
+        trialResponse: (TrialValidationApi.TrialResponse) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.Default) {
             val dao = AppDatabase.getInstance(applicationContext).trialValidatorDao()
             val trial = dao.findByDeviceId(deviceId)
+            // in this method decide when do we refresh trial / subscription, immediately or after some time
             if (trial == null) {
-                if (isNetworkAvailable) {
-                    emit(fetchAndSaveTrial(deviceId, dao))
-                } else {
-                    emit(null)
-                }
+                fetchBillingStatusAndInitTrial(deviceId, dao, isNetworkAvailable, trialResponse)
             } else {
-                if (trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXPIRED ||
-                    trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_INACTIVE
+                if ((
+                    trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXPIRED ||
+                        trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_INACTIVE
+                    ) &&
+                    trial.subscriptionStatus == Trial.SUBSCRIPTION_STATUS_DEFAULT
                 ) {
                     // check immediately if there's an update in trial status
-                    emit(fetchAndSaveTrial(deviceId, dao))
+                    fetchBillingStatusAndInitTrial(deviceId, dao, isNetworkAvailable, trialResponse)
                 } else {
                     // trial is active, if we've already processed today, don't fetch
                     val cal = GregorianCalendar.getInstance()
@@ -764,15 +775,19 @@ class FilesViewModel(val applicationContext: Application) :
                     cal.add(Calendar.DAY_OF_YEAR, 1)
                     if (cal.time.before(Date())) {
                         // we haven't fetched today, check if active from remote
-                        emit(fetchAndSaveTrial(deviceId, dao))
+                        fetchBillingStatusAndInitTrial(
+                            deviceId, dao, isNetworkAvailable,
+                            trialResponse
+                        )
                     } else {
                         // we've fetcehd today, consider it active
-                        emit(
+                        trialResponse.invoke(
                             TrialValidationApi.TrialResponse(
                                 false, false,
                                 TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
                                 trial.trialDaysLeft,
-                                Trial.SUBSCRIPTION_STATUS_DEFAULT
+                                trial.subscriptionStatus,
+                                null
                             )
                         )
                     }
@@ -781,39 +796,121 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
-    private fun fetchAndSaveTrial(
+    /**
+     * If trial not null then save it's billing state in remote
+     * Remote is never the source of truth for billing state, sending just for audit
+     */
+    private fun fetchAndSaveTrail(
         deviceId: String,
-        dao: TrialValidatorDao
-    ): TrialValidationApi.TrialResponse {
-        val trialResponse = getTrialResponse(deviceId)
+        dao: TrialValidatorDao,
+        trial: Trial?
+    ): TrialValidationApi.TrialResponse? {
+        val trialResponse = getTrialResponse(deviceId, trial)
         return if (trialResponse != null) {
             /*val cal = GregorianCalendar.getInstance()
             cal.time = Date()
             cal.add(Calendar.DAY_OF_YEAR, -1)*/
-            dao.insert(
-                Trial(
-                    deviceId, trialResponse.getTrialStatusCode(), trialResponse.trialDaysLeft,
-                    Date(), Trial.SUBSCRIPTION_STATUS_DEFAULT
-                )
+            val saveTrial = Trial(
+                deviceId, trialResponse.getTrialStatusCode(), trialResponse.trialDaysLeft,
+                Date(), trialResponse.subscriptionStatus
             )
+            saveTrial.purchaseToken = trialResponse.purchaseToken
+            dao.insert(saveTrial)
             trialResponse
+        } else null
+    }
+
+    private fun submitTrialToRemote(
+        deviceId: String,
+        dao: TrialValidatorDao,
+        isNetworkAvailable: Boolean,
+    ): TrialValidationApi.TrialResponse {
+        val trial = dao.findByDeviceId(deviceId)
+        val nullTrialResponse = TrialValidationApi.TrialResponse(
+            false, false,
+            TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
+            Trial.TRIAL_DEFAULT_DAYS,
+            Trial.SUBSCRIPTION_STATUS_DEFAULT,
+            null
+        )
+        // for now always call remote to update subscription state
+        if (isNetworkAvailable) {
+            log.info("updated remote trial state")
+            val fetchedTrialResponse = fetchAndSaveTrail(deviceId, dao, trial)
+            if (fetchedTrialResponse == null) {
+                if (trial == null) {
+                    return nullTrialResponse
+                } else {
+                    return TrialValidationApi.TrialResponse(
+                        false, false,
+                        TrialValidationApi.TrialResponse
+                            .trialCodeStatusMap[trial.trialStatus]
+                            ?: TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
+                        trial.trialDaysLeft,
+                        trial.subscriptionStatus,
+                        trial.purchaseToken
+                    )
+                }
+            } else {
+                return fetchedTrialResponse
+            }
         } else {
-            TrialValidationApi.TrialResponse(
-                false, false,
-                TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE, 7
-            )
+            // no network available, no local info, return active temporarily
+            if (trial == null) {
+                log.warn(
+                    "no network available to check trial, " +
+                        "no local subscription status for {}",
+                    deviceId
+                )
+                return nullTrialResponse
+            } else {
+                log.info("no network available, return database saved trial state")
+                return TrialValidationApi.TrialResponse(
+                    false, false,
+                    TrialValidationApi.TrialResponse
+                        .trialCodeStatusMap[trial.trialStatus]
+                        ?: TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
+                    trial.trialDaysLeft,
+                    trial.subscriptionStatus,
+                    trial.purchaseToken
+                )
+            }
         }
     }
 
-    private fun getTrialResponse(deviceId: String): TrialValidationApi.TrialResponse? {
+    private fun fetchBillingStatusAndInitTrial(
+        deviceId: String,
+        dao: TrialValidatorDao,
+        isNetworkAvailable: Boolean,
+        trialResponse: (TrialValidationApi.TrialResponse) -> Unit
+    ) {
+        val billing = Billing.getInstance(applicationContext)
+        if (billing != null) {
+            billing.getSubscriptions {
+                trialResponse.invoke(submitTrialToRemote(deviceId, dao, isNetworkAvailable))
+            }
+        } else {
+            // unable to get billing, temporarily respond with success
+            log.warn("unable to get billing info, try to fetch from remote regardless")
+            trialResponse.invoke(submitTrialToRemote(deviceId, dao, isNetworkAvailable))
+        }
+    }
+
+    private fun getTrialResponse(deviceId: String, trial: Trial?):
+        TrialValidationApi.TrialResponse? {
         val retrofit = Retrofit.Builder()
             .baseUrl(TrialValidationApi.CLOUD_FUNCTION_BASE)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val service = retrofit.create(TrialValidationApi::class.java)
         try {
+            val subscriptionStatus = trial?.subscriptionStatus ?: Trial.SUBSCRIPTION_STATUS_DEFAULT
+            val purchaseToken = trial?.purchaseToken
             service.postValidation(
-                TrialValidationApi.TrialRequest(TrialValidationApi.AUTH_TOKEN, deviceId)
+                TrialValidationApi.TrialRequest(
+                    TrialValidationApi.AUTH_TOKEN, deviceId,
+                    subscriptionStatus, purchaseToken
+                )
             )?.execute()?.let { response ->
                 return if (response.isSuccessful && response.body() != null) {
                     log.info("get trial response ${response.body()}")
@@ -846,7 +943,11 @@ class FilesViewModel(val applicationContext: Application) :
     private fun copyLogsFileToInternalStorage(): String? {
         applicationContext.getExternalStorageDirectory()?.let {
             internalStoragePath ->
-            FileInputStream(File("${applicationContext.filesDir}/logs.txt")).use {
+            val inputFile = File("/data/data/${applicationContext.packageName}/cache/logs.txt")
+            if (!inputFile.exists()) {
+                return null
+            }
+            FileInputStream(inputFile).use {
                 inputStream ->
                 val file = File(
                     internalStoragePath.path +

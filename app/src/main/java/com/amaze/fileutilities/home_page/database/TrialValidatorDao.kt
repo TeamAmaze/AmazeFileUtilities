@@ -18,7 +18,7 @@ interface TrialValidatorDao {
     @Query("SELECT * FROM trial")
     fun getAll(): List<Trial>
 
-    @Query("SELECT * FROM trial WHERE subscription_status=1001")
+    @Query("SELECT * FROM trial WHERE subscription_status<>1001")
     fun getAllSubscribed(): List<Trial>
 
     @Query("SELECT * FROM trial WHERE device_id=:deviceId")

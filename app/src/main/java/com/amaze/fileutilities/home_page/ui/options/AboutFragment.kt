@@ -23,10 +23,9 @@ import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
-import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
+import com.amaze.fileutilities.utilis.*
 import com.amaze.fileutilities.utilis.share.showShareDialog
-import com.amaze.fileutilities.utilis.showToastInCenter
-import com.amaze.fileutilities.utilis.showToastOnBottom
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 
@@ -64,10 +63,10 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
         super.onViewCreated(view, savedInstanceState)
         val deviceIdPref = findPreference<Preference>(KEY_DEVICE_ID)
         val subscriptionStatus = findPreference<Preference>(KEY_SUBSCRIPTION_STATUS)
-        filesViewModel.getUniqueId().observe(viewLifecycleOwner) {
-            deviceId ->
+        val deviceId = requireActivity().getAppCommonSharedPreferences()
+            .getString(PreferencesConstants.KEY_DEVICE_UNIQUE_ID, null)
+        if (deviceId != null) {
             deviceIdPref?.summary = deviceId
-
             val dao = AppDatabase.getInstance(requireContext()).trialValidatorDao()
             val trial = dao.findByDeviceId(deviceId)
             if (trial != null) {
@@ -77,6 +76,8 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
                     ) {
                         trial.getTrialStatusName() +
                             " (${trial.trialDaysLeft} days left)"
+                    } else if (trial.subscriptionStatus != Trial.SUBSCRIPTION_STATUS_DEFAULT) {
+                        TrialValidationApi.TrialResponse.SUBSCRIPTION
                     } else {
                         trial.getTrialStatusName()
                     }
@@ -131,8 +132,9 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
                 }
             }
             KEY_DEVICE_ID -> {
-                filesViewModel.getUniqueId().observe(viewLifecycleOwner) {
-                    deviceId ->
+                val deviceId = requireActivity().getAppCommonSharedPreferences()
+                    .getString(PreferencesConstants.KEY_DEVICE_UNIQUE_ID, null)
+                if (deviceId != null) {
                     Utils.copyToClipboard(
                         requireContext(), deviceId,
                         getString(R.string.device_id_copied)
@@ -155,6 +157,13 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
                     .withLicenseShown(true)
                 libsBuilder.withActivityStyle(Libs.ActivityStyle.DARK)
                 libsBuilder.start(requireContext())
+            }
+            KEY_SUBSCRIPTION_STATUS -> {
+                log.info("purchase subscription for device")
+                Billing.getInstance(
+                    requireActivity()
+                        as PreferenceActivity
+                )?.initiatePurchaseFlow()
             }
         }
         return true

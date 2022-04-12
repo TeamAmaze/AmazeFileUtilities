@@ -23,6 +23,7 @@ import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
 import com.amaze.fileutilities.home_page.ui.options.AboutFragment
+import com.amaze.fileutilities.home_page.ui.options.Billing
 import com.amaze.fileutilities.utilis.Utils
 import java.util.*
 
@@ -49,10 +50,12 @@ class PreferenceActivity : AppCompatActivity() {
                 if (extras.getBoolean(KEY_IS_TRIAL_EXPIRED)) {
                     Utils.buildTrialExpiredDialog(this) {
                         // subscribe
+                        Billing.getInstance(this)?.initiatePurchaseFlow()
                     }.create().show()
                 } else if (extras.getBoolean(KEY_IS_TRIAL_INACTIVE)) {
                     Utils.buildTrialExclusiveInactiveDialog(this) {
                         // subscribe
+                        Billing.getInstance(this)?.initiatePurchaseFlow()
                     }.create().show()
                 }
                 inflatePreferenceFragment(AboutFragment(), R.string.about)
