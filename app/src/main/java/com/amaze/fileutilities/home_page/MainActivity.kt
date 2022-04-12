@@ -38,6 +38,7 @@ import com.amaze.fileutilities.home_page.ui.files.AbstractMediaInfoListFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
 import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
+import com.amaze.fileutilities.home_page.ui.options.Billing
 import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
@@ -65,6 +66,7 @@ class MainActivity :
     private lateinit var viewModel: FilesViewModel
     private var isOptionsVisible = false
     private var welcomeScreen: WelcomeHelper? = null
+    private var didShowWelcomeScreen = true
 
     companion object {
         private const val VOICE_REQUEST_CODE = 1000
@@ -76,7 +78,10 @@ class MainActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         welcomeScreen = WelcomeHelper(this, WelcomeScreen::class.java)
-        welcomeScreen!!.show(savedInstanceState)
+        if (!welcomeScreen!!.show(savedInstanceState)) {
+            didShowWelcomeScreen = false
+            invokePermissionCheck()
+        }
         binding = ActivityMainBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
 //        viewModel.copyTrainedData()
@@ -191,31 +196,42 @@ class MainActivity :
             }
         }
 
-        checkForAppUpdates()
-        viewModel.getUniqueId().observe(this) {
-            if (it != null) {
-                viewModel.validateTrial(it, isNetworkAvailable()).observe(this) {
-                    trialResponse ->
-                    if (trialResponse != null) {
-                        when (trialResponse.getTrialStatusCode()) {
-                            TrialValidationApi.TrialResponse.TRIAL_ACTIVE -> {
-                                // check if it's first day or last day
-                                if (trialResponse.isNewSignup) {
-                                    Utils.buildTrialStartedDialog(
-                                        this,
-                                        trialResponse.trialDaysLeft
-                                    ).create().show()
-                                } else if (trialResponse.isLastDay) {
-                                    Utils.buildLastTrialDayDialog(this) {
-                                        // wants to subscribe
-                                    }.create().show()
+        if (!didShowWelcomeScreen) {
+            checkForAppUpdates()
+            viewModel.getUniqueId().observe(this) {
+                if (it != null) {
+                    viewModel.validateTrial(it, isNetworkAvailable()) {
+                        trialResponse ->
+                        this@MainActivity.runOnUiThread {
+                            if (trialResponse.subscriptionStatus
+                                == Trial.SUBSCRIPTION_STATUS_DEFAULT
+                            ) {
+                                when (trialResponse.getTrialStatusCode()) {
+                                    TrialValidationApi.TrialResponse.TRIAL_ACTIVE -> {
+                                        // check if it's first day or last day
+                                        if (trialResponse.isNewSignup) {
+                                            Utils.buildTrialStartedDialog(
+                                                this,
+                                                trialResponse.trialDaysLeft
+                                            ).create().show()
+                                        } else if (trialResponse.isLastDay) {
+                                            Utils.buildLastTrialDayDialog(this) {
+                                                // wants to subscribe
+                                                Billing.getInstance(
+                                                    this
+                                                )?.initiatePurchaseFlow()
+                                            }.create().show()
+                                        }
+                                    }
+                                    TrialValidationApi.TrialResponse.TRIAL_EXPIRED -> {
+                                        showAboutActivity(true, false)
+                                    }
+                                    TrialValidationApi.TrialResponse.TRIAL_INACTIVE -> {
+                                        showAboutActivity(false, true)
+                                    }
                                 }
-                            }
-                            TrialValidationApi.TrialResponse.TRIAL_EXPIRED -> {
-                                showAboutActivity(true, false)
-                            }
-                            TrialValidationApi.TrialResponse.TRIAL_INACTIVE -> {
-                                showAboutActivity(false, true)
+                            } else {
+                                log.info("user subscribed {}", it)
                             }
                         }
                     }

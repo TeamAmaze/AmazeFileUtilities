@@ -26,7 +26,8 @@ data class Trial(
     @ColumnInfo(name = "trial_status") val trialStatus: String,
     @ColumnInfo(name = "trial_days_left") val trialDaysLeft: Int,
     @ColumnInfo(name = "fetch_time") val fetchTime: Date,
-    @ColumnInfo(name = "subscription_status") val subscriptionStatus: Int
+    @ColumnInfo(name = "subscription_status") var subscriptionStatus: Int,
+    @ColumnInfo(name = "purchase_token") var purchaseToken: String? = null
 ) {
     constructor(
         deviceId: String,

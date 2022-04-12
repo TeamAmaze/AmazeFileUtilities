@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory
 
 class ReviewImagesFragment : ItemsActionBarFragment() {
 
-    var log: Logger = LoggerFactory.getLogger(ReviewImagesFragment::class.java)
+    private var log: Logger = LoggerFactory.getLogger(ReviewImagesFragment::class.java)
 
     private var _binding: FragmentReviewImagesBinding? = null
 

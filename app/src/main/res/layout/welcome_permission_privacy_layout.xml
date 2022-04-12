@@ -104,4 +104,16 @@
                 />
         </LinearLayout>
     </ScrollView>
+    <Button
+        android:id="@+id/doneButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cornerRadius="@dimen/material_generic"
+        app:backgroundTint="@color/highlight_yellow"
+        android:textColor="@color/navy_blue"
+        android:layout_marginTop="@dimen/material_generic"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:text="@string/done"
+        />
 </RelativeLayout>

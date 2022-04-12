@@ -20,12 +20,6 @@ class WelcomeScreen : WelcomePermissionScreen() {
         return WelcomeConfiguration.Builder(this)
             .defaultBackgroundColor(R.color.navy_blue)
             .page(
-                TitlePage(
-                    R.drawable.ic_launcher_normal,
-                    getString(R.string.your_media_assistant)
-                )
-            )
-            .page(
                 BasicPage(
                     R.drawable.banner_app,
                     getString(R.string.welcome_media_title),
@@ -58,6 +52,7 @@ class WelcomeScreen : WelcomePermissionScreen() {
             )
             .canSkip(false)
             .swipeToDismiss(false)
+            .useCustomDoneButton(true)
             .build()
     }
 }

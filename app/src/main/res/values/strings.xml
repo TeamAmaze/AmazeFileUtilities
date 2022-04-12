@@ -3,7 +3,7 @@
     <string name="app_name_launcher">Amaze Utilities</string>
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.0</string>
+    <string name="app_version" translatable="false">v1.15</string>
     <string name="image_viewer">Amaze Image Viewer</string>
     <string name="video_player">Amaze Video Player</string>
     <string name="amaze_audio_player">Amaze Music Player</string>
@@ -13,9 +13,6 @@
     <string name="welcome_launcher">Thank you for purchasing Amaze File Utilities. Your support is greatly appreciated.
         Feel free to contact us on our telegram channel @AmazeFileManager
     </string>
-    <string name="instruction">Instruction - This is just a plugin, no need to open again and again.
-        Simply choose \'Amaze Image Viewer\' or \'Amaze Music Player\'
-        when opening your media files from any file manager</string>
     <string name="please_rate">Please rate</string>
     <string name="intent_image_viewer">Amaze Image Viewer</string>
     <string name="intent_video_player">Amaze Video Player</string>
@@ -73,7 +70,6 @@
     <string name="licenses">Licenses</string>
     <string name="libraries">Libraries</string>
     <string name="install_amaze">Please install Amaze File Manager to manage internal storage</string>
-    <string name="version" translatable="false">v0.1</string>
     <string name="information">Information</string>
     <string name="unsupported_content">Unsupported content</string>
     <string name="parent">Parent</string>
@@ -388,9 +384,9 @@
     <string name="welcome_permission">We need storage permissions to access your media files</string>
     <string name="before_we_start">Before we start…</string>
     <string name="privacy_title">We care for your privacy!</string>
-    <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.
-        Hence we assure you that we do not collect any of your private information.\n We don\'t say this, our track record does.\n
-        We\'re a group of open source developers and are managing Amaze File Manager for around 8 years now.\n
-        Still we\'d encourage you to read our privacy policy below.
+    <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.\n
+        We assure you that we do not collect any of your private information.\nWe don\'t say this, our track record does.\nWe\'re a group of open source developers and are managing Amaze File Manager for around 8 years now.\n\nWe look forward to your subscription.
     </string>
+    <string name="error_fetching_google_play_product_list">Error fetching product list from Google Play.</string>
+    <string name="done">Done</string>
 </resources>
