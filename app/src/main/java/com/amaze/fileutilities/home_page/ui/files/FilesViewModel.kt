@@ -63,17 +63,22 @@ class FilesViewModel(val applicationContext: Application) :
             storageData?.let {
                 data ->
                 val file = File(data.path)
-                val items = CursorUtils.getMediaFilesCount(applicationContext)
-                FileUtils.scanFile(Uri.fromFile(file), applicationContext)
-                val usedSpace = file.totalSpace - file.usableSpace
-                val progress = (usedSpace * 100) / file.totalSpace
-                emit(
-                    StorageSummary(
-                        items, progress.toInt(), usedSpace, usedSpace,
-                        file.usableSpace,
-                        file.totalSpace
+                try {
+                    val items = CursorUtils.getMediaFilesCount(applicationContext)
+                    FileUtils.scanFile(Uri.fromFile(file), applicationContext)
+                    val usedSpace = file.totalSpace - file.usableSpace
+                    val progress = (usedSpace * 100) / file.totalSpace
+                    emit(
+                        StorageSummary(
+                            items, progress.toInt(), usedSpace, usedSpace,
+                            file.usableSpace,
+                            file.totalSpace
+                        )
                     )
-                )
+                } catch (se: SecurityException) {
+                    log.warn("failed to list recent files due to no permission", se)
+                    emit(null)
+                }
             }
         }
 

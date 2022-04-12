@@ -94,6 +94,9 @@ fun Uri.getFileFromUri(context: Context): File? {
             songFile = File(this.path)
         }
     }
+    if (songFile == null || !songFile.exists()) {
+        return null
+    }
     return songFile
 }
 
