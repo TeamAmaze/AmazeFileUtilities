@@ -111,7 +111,7 @@ class MediaFileAdapter(
                         // for audio list fragment we want to just show bottom sheet
                         val listItem = mediaFileListItems[position]
                         if (checkItemsList.size > 0) {
-                            toggleChecked(listItem, holder)
+                            toggleChecked(listItem, position)
                             invalidateCheckedTitle()
                         } else {
                             listItem.mediaFileInfo?.getContentUri(context)?.let {

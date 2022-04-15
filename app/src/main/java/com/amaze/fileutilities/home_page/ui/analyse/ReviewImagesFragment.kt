@@ -136,6 +136,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
      * Required because we need to know while deleting what type of media file info we want to delete
      */
     override fun getMediaListType(): Int {
+        // this will never be called, as it's only used by abstract media list fragment
         return when (analysisType) {
             TYPE_BLUR, TYPE_LOW_LIGHT, TYPE_MEME, TYPE_SAD, TYPE_DISTRACTED, TYPE_SLEEPING,
             TYPE_SELFIE, TYPE_GROUP_PIC -> {
