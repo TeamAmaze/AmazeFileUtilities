@@ -48,11 +48,8 @@ import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.MediaItem.SubtitleConfiguration
-import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.util.MimeTypes
 import com.google.common.collect.ImmutableList
@@ -63,7 +60,10 @@ import java.util.*
 import kotlin.math.abs
 import kotlin.math.ceil
 
-abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchListener {
+abstract class BaseVideoPlayerActivity :
+    PermissionsActivity(),
+    View.OnTouchListener,
+    Player.Listener {
 
     var log: Logger = LoggerFactory.getLogger(BaseVideoPlayerActivity::class.java)
 
@@ -160,6 +160,14 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             invalidateBrightness()
             invalidateVolume()
         }
+    }
+
+    override fun onPlaybackStateChanged(playbackState: Int) {
+        super.onPlaybackStateChanged(playbackState)
+        viewBinding.videoView.keepScreenOn = !(
+            playbackState == Player.STATE_IDLE || playbackState == Player.STATE_ENDED ||
+                player?.playWhenReady == false || player?.isPlaying == false
+            )
     }
 
     override fun onPause() {
@@ -977,7 +985,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
 
     private fun showFetchSubtitlesOnlineDialog(mediaFile: File) {
         var adapter: LanguageSelectionAdapter? = null
-        val dialogBuilder = AlertDialog.Builder(this)
+        val dialogBuilder = AlertDialog.Builder(this, R.style.Custom_Dialog_Dark)
             .setTitle(R.string.download_subtitles)
             .setNegativeButton(R.string.close) { dialog, _ ->
                 player?.play()
@@ -1044,7 +1052,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         targetFile: File
     ) {
         val adapter: SubtitlesSearchResultsAdapter?
-        val dialogBuilder = AlertDialog.Builder(this)
+        val dialogBuilder = AlertDialog.Builder(this, R.style.Custom_Dialog_Dark)
             .setTitle(R.string.download_subtitles)
             .setNegativeButton(R.string.close) { dialog, _ ->
                 player?.play()
@@ -1246,6 +1254,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 exoPlayer.prepare()
                 val param = PlaybackParameters(videoPlayerViewModel?.playbackSpeed ?: 1f)
                 exoPlayer.playbackParameters = param
+                exoPlayer.addListener(this@BaseVideoPlayerActivity)
                 if (videoPlayerViewModel?.currentlyPlaying == true) {
                     exoPlayer.play()
                 } else {

@@ -18,6 +18,7 @@ import androidx.lifecycle.viewModelScope
 import com.amaze.fileutilities.home_page.database.VideoPlayerState
 import com.amaze.fileutilities.home_page.database.VideoPlayerStateDao
 import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.Utils
 import kotlinx.coroutines.Dispatchers
 import org.jsoup.Jsoup
 import org.slf4j.Logger
@@ -73,6 +74,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
             emit(null)
             val retrofit = Retrofit.Builder()
                 .baseUrl(SubtitlesApi.OPEN_SUBTITLES_BASE)
+                .client(Utils.getOkHttpClient())
                 .build()
             val service = retrofit.create(SubtitlesApi::class.java)
             service.searchSubsConfigs()?.execute()?.let {
@@ -150,6 +152,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
             emit(null)
             val retrofit = Retrofit.Builder()
                 .baseUrl(SubtitlesApi.OPEN_SUBTITLES_BASE)
+                .client(Utils.getOkHttpClient())
                 .build()
             val service = retrofit.create(SubtitlesApi::class.java)
             val languageListRequestString = languageList.map { it.code }.filter { it.isNotEmpty() }
@@ -212,6 +215,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
             emit(null)
             val retrofit = Retrofit.Builder()
                 .baseUrl(SubtitlesApi.DOWNLOAD_SUBTITLES_BASE)
+                .client(Utils.getOkHttpClient())
                 .build()
             val service = retrofit.create(SubtitlesApi::class.java)
             log.debug("Download request for id $downloadId")
@@ -310,6 +314,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
     ): List<SubtitlesSearchResultsAdapter.SubtitleResult>? {
         val retrofit = Retrofit.Builder()
             .baseUrl(SubtitlesApi.OPEN_SUBTITLES_BASE)
+            .client(Utils.getOkHttpClient())
             .build()
         val service = retrofit.create(SubtitlesApi::class.java)
         service.getSearchResultsInfo(

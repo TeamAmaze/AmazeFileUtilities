@@ -108,6 +108,7 @@ class Billing(val context: Context, private var uniqueId: String) :
                         val retrofit = Retrofit.Builder()
                             .baseUrl(TrialValidationApi.CLOUD_FUNCTION_BASE)
                             .addConverterFactory(GsonConverterFactory.create())
+                            .client(Utils.getOkHttpClient())
                             .build()
                         val service = retrofit.create(TrialValidationApi::class.java)
                         try {

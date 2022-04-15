@@ -35,6 +35,7 @@ class PreferenceActivity : AppCompatActivity() {
         const val KEY_IS_SETTINGS = "key_settings"
         const val KEY_IS_TRIAL_EXPIRED = "key_is_trial_expired"
         const val KEY_IS_TRIAL_INACTIVE = "key_is_trial_inactive"
+        const val KEY_NOT_CONNECTED = "key_not_connected"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +58,8 @@ class PreferenceActivity : AppCompatActivity() {
                         // subscribe
                         Billing.getInstance(this)?.initiatePurchaseFlow()
                     }.create().show()
+                } else if (extras.getBoolean(KEY_NOT_CONNECTED)) {
+                    Utils.buildNotConnectedTrialValidationDialog(this).create().show()
                 }
                 inflatePreferenceFragment(AboutFragment(), R.string.about)
                 titleStack.push(resources.getString(R.string.about))

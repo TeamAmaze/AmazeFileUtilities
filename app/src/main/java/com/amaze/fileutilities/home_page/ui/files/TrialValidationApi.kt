@@ -41,7 +41,8 @@ interface TrialValidationApi {
         val trialStatus: Int,
         val trialDaysLeft: Int = 0,
         val subscriptionStatus: Int,
-        val purchaseToken: String?
+        val purchaseToken: String?,
+        var isNotConnected: Boolean = false
     ) {
 
         companion object {
