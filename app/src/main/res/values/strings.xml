@@ -372,6 +372,9 @@
         We are a team of open source developers working hard to provide an ad-free experience,
         and we need funds to us to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.</string>
+    <string name="not_connected_trial_title">Failed to validate</string>
+    <string name="not_connected_trial_message">Hey There! Thank you for choosing Amaze File Utilities.\n
+        We\'re not able to validate your license, please connect to internet and restart the app.</string>
     <string name="subscribe">Subscribe</string>
     <string name="dont_show_again">Don\'t show again</string>
     <string name="exit">Exit</string>

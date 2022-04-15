@@ -20,7 +20,7 @@ interface SubtitlesApi {
 
     companion object {
         const val OPEN_SUBTITLES_BASE = "https://www.opensubtitles.org/"
-        const val DOWNLOAD_SUBTITLES_BASE = "https://dl.opensubtitles.org"
+        const val DOWNLOAD_SUBTITLES_BASE = "https://dl.opensubtitles.org/"
     }
 
     @GET("en/search/subs")
