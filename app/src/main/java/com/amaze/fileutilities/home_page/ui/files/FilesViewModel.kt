@@ -48,6 +48,7 @@ class FilesViewModel(val applicationContext: Application) :
     var isInternalStorageAnalysing = true
     var isMediaStoreAnalysing = true
     var isCasting = false
+    var castSetupSuccess = true
     var wifiIpAddress: String? = null
     val uniqueIdSalt = "#%36zkpCE2"
 
