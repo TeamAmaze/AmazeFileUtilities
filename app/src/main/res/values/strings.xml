@@ -392,4 +392,5 @@
     </string>
     <string name="error_fetching_google_play_product_list">Error fetching product list from Google Play.</string>
     <string name="done">Done</string>
+    <string name="cast_framework_unavailable">Unable to initialize cast framework, please update Google Play services</string>
 </resources>

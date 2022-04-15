@@ -30,6 +30,8 @@ import com.afollestad.materialdialogs.files.fileChooser
 import com.afollestad.materialdialogs.files.folderChooser
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.*
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -80,10 +82,10 @@ fun Uri.getFileFromUri(context: Context): File? {
             this.path!!.split(":".toRegex(), 2).toTypedArray()[1]
         )
     }
-    if (songFile == null) {
+    /*if (songFile == null) {
         val path: String? = getContentResolverFilePathFromUri(context, this)
         if (path != null) songFile = File(path)
-    }
+    }*/
     if ((songFile == null || !songFile.exists()) && this.path != null) {
         songFile = File(
             this.path?.substring(
@@ -373,4 +375,9 @@ fun Context.showFileChooserDialog(filter: FileFilter = null, chooserPath: (file:
 
 fun String.removeExtension(): String {
     return this.substring(0, this.lastIndexOf("."))
+}
+
+fun Context.isPlayServicesAvailable(): Boolean {
+    return GoogleApiAvailability.getInstance()
+        .isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS
 }
