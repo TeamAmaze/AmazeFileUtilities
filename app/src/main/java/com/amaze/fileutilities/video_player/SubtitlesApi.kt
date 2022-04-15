@@ -10,35 +10,72 @@
 
 package com.amaze.fileutilities.video_player
 
+import com.amaze.fileutilities.BuildConfig
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Streaming
+import retrofit2.http.*
 
 interface SubtitlesApi {
 
     companion object {
-        const val OPEN_SUBTITLES_BASE = "https://www.opensubtitles.org/"
-        const val DOWNLOAD_SUBTITLES_BASE = "https://dl.opensubtitles.org"
+        const val API_OPEN_SUBTITLES_BASE = "https://api.opensubtitles.com/api/v1/"
+        const val API_SEARCH_SUBTITLES = "subtitles"
+        const val API_DOWNLOAD_SUBTITLES = "download"
+        const val API_LANGUAGE = "infos/languages"
+        private const val API_KEY = BuildConfig.OPENSUBTITLES_API_KEY
+        private const val USER_AGENT = "AmazeFileUtils"
     }
 
-    @GET("en/search/subs")
-    fun searchSubsConfigs(): Call<ResponseBody>?
+    @Headers(value = ["Accept: application/json", "Api-Key: $API_KEY", "User-Agent: $USER_AGENT"])
+    @GET(API_LANGUAGE)
+    fun getLanguageList(): Call<LanguageResult>?
 
-    @GET("en/search2/sublanguageid-{languages}/moviename-{name}")
-    fun postSearchQuery(
-        @Path("languages") languages: String,
-        @Path("name") name: String
-    ): Call<ResponseBody>?
+    @Headers(
+        value = [
+            "Accept: application/json",
+            "Api-Key: $API_KEY", "User-Agent: $USER_AGENT"
+        ]
+    )
+    @GET(API_SEARCH_SUBTITLES)
+    fun getSearchResults(
+        @Query(value = "query") query: String,
+        @Query(value = "languages") languages: String
+    ): Call<SearchResultsResponse>?
 
-    @GET("en/search/sublanguageid-{languages}/idmovie-{id}")
-    fun getSearchResultsInfo(
-        @Path("languages") languages: String,
-        @Path("id") id: String
-    ): Call<ResponseBody>?
+    @Headers(
+        value = [
+            "Accept: application/json",
+            "Content-type:application/json", "Api-Key: $API_KEY", "User-Agent: $USER_AGENT"
+        ]
+    )
+    @POST(API_DOWNLOAD_SUBTITLES)
+    fun getDownloadLink(
+        @Body downloadLinkRequest: GetDownloadLinkRequest
+    ): Call<GetDownloadLinkResponse>?
 
-    @GET("en/download/sub/{downloadId}")
+    @GET
     @Streaming
-    fun downloadSubtitle(@Path("downloadId") downloadId: String): Call<ResponseBody>?
+    fun downloadSubtitleFile(@Url downloadUrl: String): Call<ResponseBody>?
+
+    data class SearchResultsResponse(val data: List<Data>) {
+        data class Attributes(
+            val language: String?,
+            val ratings: String?,
+            val download_count: String?,
+            val upload_date: String?,
+            val uploader: Uploader?,
+            val files: List<Files>?
+        )
+        data class Uploader(val name: String?, val rank: String?)
+        data class Files(val file_id: String?, val file_name: String?, val cd_number: String?)
+        data class Data(val attributes: Attributes?)
+    }
+
+    data class GetDownloadLinkRequest(val file_id: String?)
+
+    data class GetDownloadLinkResponse(val link: String?, val file_name: String?)
+
+    data class LanguageResult(val data: List<Data>) {
+        data class Data(val language_code: String?, val language_name: String?)
+    }
 }

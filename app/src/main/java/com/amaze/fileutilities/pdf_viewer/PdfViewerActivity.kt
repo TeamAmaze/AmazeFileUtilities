@@ -158,7 +158,8 @@ class PdfViewerActivity :
             content = Html.fromHtml(resources.getString(R.string.pdf_password_required))
             retryPassword = !retryPassword
         }
-        val dialog = AlertDialog.Builder(this).setTitle(R.string.pdf_password_title)
+        val dialog = AlertDialog.Builder(this, R.style.Custom_Dialog_Dark)
+            .setTitle(R.string.pdf_password_title)
             .setMessage(content)
             .setView(inputEditTextField)
             .setCancelable(false)
@@ -274,7 +275,7 @@ class PdfViewerActivity :
             }
         }
         val builder: AlertDialog.Builder = this.let {
-            AlertDialog.Builder(it)
+            AlertDialog.Builder(it, R.style.Custom_Dialog_Dark)
         }
         builder.setMessage(dialogMessage)
             .setTitle(R.string.information)
@@ -286,7 +287,7 @@ class PdfViewerActivity :
     private fun showBookmarksDialog(tree: List<Bookmark>, sep: String) {
         val bookmarksText = getBookmarksTree(tree, sep)
         val builder: AlertDialog.Builder = this.let {
-            AlertDialog.Builder(it)
+            AlertDialog.Builder(it, R.style.Custom_Dialog_Dark)
         }
         builder.setMessage(bookmarksText)
             .setTitle(R.string.bookmarks)

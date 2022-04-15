@@ -72,9 +72,6 @@ class LanguageSelectionAdapter(
         if (listState.isNotEmpty() && position == 0) {
             holder.mCheckBox?.visibility = View.INVISIBLE
             listState[position].isSelected = false
-        } else if (listState.isNotEmpty() && position == 1) {
-            holder.mCheckBox?.isChecked = true
-            listState[position].isSelected = true
         } else {
             holder.mCheckBox?.visibility = View.VISIBLE
         }

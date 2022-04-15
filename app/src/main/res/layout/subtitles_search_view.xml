@@ -20,7 +20,7 @@
         />
     <AutoCompleteTextView
         android:id="@+id/movie_name_edit_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:textColorHint="@color/white"

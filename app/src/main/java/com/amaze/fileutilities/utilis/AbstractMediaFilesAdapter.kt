@@ -51,24 +51,9 @@ abstract class AbstractMediaFilesAdapter(
         }
     }
 
-    fun toggleChecked(listItem: ListItem, holder: MediaInfoRecyclerViewHolder) {
+    fun toggleChecked(listItem: ListItem, position: Int) {
         toggleChecked(listItem)
-        if (listItem.isChecked) {
-            if (isGrid) {
-                holder.checkIconGrid.visibility = View.VISIBLE
-            } else {
-                holder.root.setBackgroundColor(
-                    superContext.resources
-                        .getColor(R.color.highlight_yellow_50)
-                )
-            }
-        } else {
-            if (isGrid) {
-                holder.checkIconGrid.visibility = View.INVISIBLE
-            } else {
-                holder.root.background = superContext.resources.getDrawable(R.drawable.ripple)
-            }
-        }
+        notifyItemChanged(position)
     }
 
     fun uncheckChecked() {
@@ -197,7 +182,7 @@ abstract class AbstractMediaFilesAdapter(
                         }
                     }
                     holder.root.setOnLongClickListener {
-                        toggleChecked(this, holder)
+                        toggleChecked(this, position)
                         invalidateCheckedTitle()
                         true
                     }
@@ -221,11 +206,19 @@ abstract class AbstractMediaFilesAdapter(
                             MediaFileInfo.MEDIA_TYPE_UNKNOWN -> {
                                 holder.infoSummary.text = "$formattedDate | $formattedSize"
                                 holder.extraInfo.text = ""
-                                holder.root.background = ResourcesCompat
-                                    .getDrawable(
-                                        superContext.resources,
-                                        R.drawable.background_curved_recents, superContext.theme
+                                if (isChecked) {
+                                    holder.root.setBackgroundColor(
+                                        superContext.resources
+                                            .getColor(R.color.highlight_yellow_50)
                                     )
+                                } else {
+                                    holder.root.background = ResourcesCompat
+                                        .getDrawable(
+                                            superContext.resources,
+                                            R.drawable.background_curved_recents,
+                                            superContext.theme
+                                        )
+                                }
                             }
                         }
                     }
@@ -234,7 +227,7 @@ abstract class AbstractMediaFilesAdapter(
 
                     holder.root.setOnClickListener {
                         if (checkItemsList.size > 0) {
-                            toggleChecked(this, holder)
+                            toggleChecked(this, position)
                             invalidateCheckedTitle()
                         } else {
                             listItemPressedCallback?.invoke(mediaFileInfo)
