@@ -275,7 +275,7 @@ class PdfViewerActivity :
             }
         }
         val builder: AlertDialog.Builder = this.let {
-            AlertDialog.Builder(it)
+            AlertDialog.Builder(it, R.style.Custom_Dialog_Dark)
         }
         builder.setMessage(dialogMessage)
             .setTitle(R.string.information)
@@ -287,7 +287,7 @@ class PdfViewerActivity :
     private fun showBookmarksDialog(tree: List<Bookmark>, sep: String) {
         val bookmarksText = getBookmarksTree(tree, sep)
         val builder: AlertDialog.Builder = this.let {
-            AlertDialog.Builder(it)
+            AlertDialog.Builder(it, R.style.Custom_Dialog_Dark)
         }
         builder.setMessage(bookmarksText)
             .setTitle(R.string.bookmarks)

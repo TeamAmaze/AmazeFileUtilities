@@ -59,7 +59,7 @@ class PreferencesConstants {
         const val DEFAULT_AUDIO_PLAYER_SHUFFLE = false
         const val DEFAULT_AUDIO_PLAYER_REPEAT_MODE = AudioPlayerService.REPEAT_NONE
         const val DEFAULT_AUDIO_PLAYER_WAVEFORM = true
-        const val DEFAULT_SUBTITLE_LANGUAGE_CODE = "eng"
+        const val DEFAULT_SUBTITLE_LANGUAGE_CODE = "en"
         val DEFAULT_LICENSE_LAST_DAY_DONT_SHOW = Date()
     }
 }

@@ -460,10 +460,13 @@ class Utils {
         }
 
         fun getOkHttpClient(): OkHttpClient {
-            return OkHttpClient.Builder().readTimeout(1, TimeUnit.MINUTES)
-                .connectTimeout(1, TimeUnit.MINUTES)
+            return OkHttpClient.Builder().readTimeout(2, TimeUnit.MINUTES)
+                .connectTimeout(2, TimeUnit.MINUTES)
                 .connectionPool(ConnectionPool(0, 5, TimeUnit.MINUTES))
-                .protocols(listOf(Protocol.HTTP_1_1)).build()
+                .protocols(listOf(Protocol.HTTP_1_1))
+                .followRedirects(true)
+                .followSslRedirects(true)
+                .build()
         }
     }
 }

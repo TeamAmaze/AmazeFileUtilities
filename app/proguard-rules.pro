@@ -23,6 +23,10 @@
 -keepclassmembers class * extends com.stephentuso.welcome.WelcomeActivity {
     public static java.lang.String welcomeKey();
 }
+-keep class ch.qos.** { *; }
+-keep class org.slf4j.** { *; }
+-keepattributes *Annotation*
+-dontwarn ch.qos.logback.core.net.*
 #-keep class com.amaze.fileutilities.cast.CastOptionsProvider { *; }
 #-keep class android.support.** { *; }
 #-keep class com.google.** { *; }
