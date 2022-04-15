@@ -30,6 +30,8 @@ class PreferencesConstants {
         const val KEY_SUBTITLE_LANGUAGE_CODE = "subtitle_language_code"
         const val KEY_UPDATE_APP_LAST_SHOWN_DATE = "update_app_last_show_date"
         const val KEY_DEVICE_UNIQUE_ID = "device_unique_id"
+        const val KEY_NOT_CONNECTED_TRIAL_COUNT = "not_connected_trial"
+        const val KEY_NOT_CONNECTED_SUBSCRIBED_COUNT = "not_connected_subscribed"
 
         const val VAL_SEARCH_DUPLICATES_MEDIA_STORE = 0
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1
@@ -41,6 +43,8 @@ class PreferencesConstants {
         const val VAL_MIGRATION_FEATURE_ANALYSIS_BLUR = 1
         const val VAL_MIGRATION_FEATURE_ANALYSIS_IMAGE_FEATURES = 1
         const val VAL_MIGRATION_FEATURE_ANALYSIS_LOW_LIGHT = 1
+        const val VAL_THRES_NOT_CONNECTED_TRIAL = 10
+        const val VAL_THRES_NOT_CONNECTED_SUBSCRIBED = 100
 
         const val DEFAULT_MEDIA_LIST_TYPE = true
         const val DEFAULT_MEDIA_LIST_GROUP_BY = 5

@@ -158,7 +158,8 @@ class PdfViewerActivity :
             content = Html.fromHtml(resources.getString(R.string.pdf_password_required))
             retryPassword = !retryPassword
         }
-        val dialog = AlertDialog.Builder(this).setTitle(R.string.pdf_password_title)
+        val dialog = AlertDialog.Builder(this, R.style.Custom_Dialog_Dark)
+            .setTitle(R.string.pdf_password_title)
             .setMessage(content)
             .setView(inputEditTextField)
             .setCancelable(false)
