@@ -22,15 +22,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentFilesBinding
 import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
-import com.amaze.fileutilities.utilis.FileUtils
-import com.amaze.fileutilities.utilis.Utils
-import com.amaze.fileutilities.utilis.showToastInCenter
+import com.amaze.fileutilities.utilis.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
 import com.ramijemli.percentagechartview.callback.AdaptiveColorProvider
 
-class FilesFragment : Fragment() {
+class FilesFragment : ItemsActionBarFragment() {
 
     private val filesViewModel: FilesViewModel by activityViewModels()
     private var _binding: FragmentFilesBinding? = null
@@ -294,7 +292,20 @@ class FilesFragment : Fragment() {
                         requireActivity(),
                         preloader!!,
                         ArrayList(this)
-                    )
+                    ) {
+                        checkedSize, itemsCount, bytesFormatted ->
+                        val title = "$checkedSize / $itemsCount" +
+                            " ($bytesFormatted)"
+                        if (checkedSize > 0) {
+                            setupShowActionBar()
+                            setupCommonButtons()
+                        } else {
+                            hideActionBar()
+                        }
+
+                        val countView = getCountView()
+                        countView?.text = title
+                    }
                     binding.recentFilesList
                         .addOnScrollListener(recyclerViewPreloader!!)
                     binding.recentFilesList.layoutManager = linearLayoutManager
@@ -310,6 +321,18 @@ class FilesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun hideActionBarOnClick(): Boolean {
+        return true
+    }
+
+    override fun getMediaFileAdapter(): AbstractMediaFilesAdapter? {
+        return mediaFileAdapter
+    }
+
+    override fun getMediaListType(): Int {
+        return MediaFileAdapter.MEDIA_TYPE_UNKNOWN
     }
 
     private fun startListFragment(listFragment: Fragment) {

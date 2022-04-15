@@ -20,7 +20,6 @@ import androidx.fragment.app.activityViewModels
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
-import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
@@ -87,37 +86,44 @@ abstract class ItemsActionBarFragment : Fragment() {
     }
 
     private fun deleteFromFileViewmodelLists(toDelete: List<MediaFileInfo>) {
-        when (getMediaListType()) {
-            MediaFileAdapter.MEDIA_TYPE_IMAGES -> {
-                filesViewModel.usedImagesSummaryTransformations.observe(viewLifecycleOwner) {
-                    if (it != null) {
-                        filesViewModel.deleteMediaFilesFromList(it.second, toDelete)
-                    }
+        val imagesToDelete = toDelete.filter {
+            it.extraInfo?.mediaType == MediaFileInfo.MEDIA_TYPE_IMAGE
+        }
+        val videosToDelete = toDelete.filter {
+            it.extraInfo?.mediaType == MediaFileInfo.MEDIA_TYPE_VIDEO
+        }
+        val audioToDelete = toDelete.filter {
+            it.extraInfo?.mediaType == MediaFileInfo.MEDIA_TYPE_AUDIO
+        }
+        val docsToDelete = toDelete.filter {
+            it.extraInfo?.mediaType == MediaFileInfo.MEDIA_TYPE_DOCUMENT
+        }
+        if (!imagesToDelete.isNullOrEmpty()) {
+            filesViewModel.usedImagesSummaryTransformations.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    filesViewModel.deleteMediaFilesFromList(it.second, imagesToDelete)
                 }
             }
-            MediaFileAdapter.MEDIA_TYPE_VIDEO -> {
-                filesViewModel.usedVideosSummaryTransformations.observe(viewLifecycleOwner) {
-                    if (it != null) {
-                        filesViewModel.deleteMediaFilesFromList(it.second, toDelete)
-                    }
+        }
+        if (!videosToDelete.isNullOrEmpty()) {
+            filesViewModel.usedVideosSummaryTransformations.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    filesViewModel.deleteMediaFilesFromList(it.second, videosToDelete)
                 }
             }
-            MediaFileAdapter.MEDIA_TYPE_AUDIO -> {
-                filesViewModel.usedAudiosSummaryTransformations.observe(viewLifecycleOwner) {
-                    if (it != null) {
-                        filesViewModel.deleteMediaFilesFromList(it.second, toDelete)
-                    }
+        }
+        if (!audioToDelete.isNullOrEmpty()) {
+            filesViewModel.usedAudiosSummaryTransformations.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    filesViewModel.deleteMediaFilesFromList(it.second, audioToDelete)
                 }
             }
-            MediaFileAdapter.MEDIA_TYPE_DOCS -> {
-                filesViewModel.usedDocsSummaryTransformations.observe(viewLifecycleOwner) {
-                    if (it != null) {
-                        filesViewModel.deleteMediaFilesFromList(it.second, toDelete)
-                    }
+        }
+        if (!docsToDelete.isNullOrEmpty()) {
+            filesViewModel.usedDocsSummaryTransformations.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    filesViewModel.deleteMediaFilesFromList(it.second, docsToDelete)
                 }
-            }
-            else -> {
-                // do nothing
             }
         }
     }

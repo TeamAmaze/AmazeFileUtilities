@@ -21,7 +21,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,12 +28,14 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentSearchListBinding
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
+import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
+import com.amaze.fileutilities.utilis.ItemsActionBarFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
 
 class SearchListFragment :
-    Fragment(),
+    ItemsActionBarFragment(),
     AggregatedMediaFileInfoObserver,
     TextView.OnEditorActionListener,
     TextWatcher {
@@ -117,7 +118,20 @@ class SearchListFragment :
             requireActivity(),
             preloader!!,
             mutableListOf()
-        )
+        ) {
+            checkedSize, itemsCount, bytesFormatted ->
+            val title = "$checkedSize / $itemsCount" +
+                " ($bytesFormatted)"
+            if (checkedSize > 0) {
+                setupShowActionBar()
+                setupCommonButtons()
+            } else {
+                hideActionBar()
+            }
+
+            val countView = getCountView()
+            countView?.text = title
+        }
         invalidateFilterButtons()
         binding.run {
             searchQueryInput.searchFilter.let {
@@ -250,6 +264,18 @@ class SearchListFragment :
         count: Int
     ) {
         // do nothing
+    }
+
+    override fun hideActionBarOnClick(): Boolean {
+        return true
+    }
+
+    override fun getMediaFileAdapter(): AbstractMediaFilesAdapter? {
+        return mediaFileAdapter
+    }
+
+    override fun getMediaListType(): Int {
+        return MediaFileAdapter.MEDIA_TYPE_UNKNOWN
     }
 
     private fun showLoadingViews(doShow: Boolean) {

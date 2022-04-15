@@ -16,9 +16,13 @@ import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 class RecentMediaFilesAdapter(
     val context: Context,
     val preloader: MediaAdapterPreloader,
-    private val mediaFileInfoList: MutableList<MediaFileInfo>
+    private val mediaFileInfoList: MutableList<MediaFileInfo>,
+    toggleCheckCallback: (Int, Int, String) -> Unit,
 ) :
-    AbstractMediaFilesAdapter(context, preloader, false, null, null) {
+    AbstractMediaFilesAdapter(
+        context, preloader, false, null,
+        toggleCheckCallback
+    ) {
 
     private var mediaFileListItems: MutableList<ListItem> = mutableListOf()
         set(value) {

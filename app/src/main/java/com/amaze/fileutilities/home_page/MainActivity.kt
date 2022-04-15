@@ -34,7 +34,6 @@ import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
 import com.amaze.fileutilities.databinding.ActivityMainBinding
 import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
-import com.amaze.fileutilities.home_page.ui.files.AbstractMediaInfoListFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
 import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
@@ -302,9 +301,9 @@ class MainActivity :
         } else {
             if (::selectedItemActionBarBinding.isInitialized) {
                 if (!actionBarBinding.root.isVisible) {
-                    var abstractListFragment: AbstractMediaInfoListFragment? = null
+                    var abstractListFragment: ItemsActionBarFragment? = null
                     fragment?.childFragmentManager?.fragments?.forEach {
-                        if (it is AbstractMediaInfoListFragment) {
+                        if (it is ItemsActionBarFragment) {
                             abstractListFragment = it
                         }
                     }
