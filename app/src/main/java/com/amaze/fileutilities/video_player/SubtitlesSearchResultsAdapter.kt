@@ -24,7 +24,7 @@ import com.amaze.fileutilities.utilis.showToastInCenter
 class SubtitlesSearchResultsAdapter(
     val appContext: Context,
     val listState: List<SubtitleResult>,
-    val downloadFileCallback: (String) -> Unit
+    private val downloadFileCallback: (String?, String?) -> Unit
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -51,8 +51,8 @@ class SubtitlesSearchResultsAdapter(
                 "${subtitleResult.language ?: ""} | " +
                 "${appContext.resources.getString(R.string.uploader)}:" +
                 " ${subtitleResult.uploader ?: ""} | " +
-                "${appContext.resources.getString(R.string.imdb)}: " +
-                "${subtitleResult.imdb ?: ""}"
+                "${appContext.resources.getString(R.string.downloads)}: " +
+                "${subtitleResult.downloads ?: ""}"
             holder.parentLayout.setOnClickListener {
                 if (subtitleResult.downloadId == null) {
                     appContext.showToastInCenter(
@@ -60,7 +60,10 @@ class SubtitlesSearchResultsAdapter(
                             .getString(R.string.choose_different_subtitle)
                     )
                 } else {
-                    downloadFileCallback.invoke(subtitleResult.downloadId!!)
+                    downloadFileCallback.invoke(
+                        subtitleResult.downloadId,
+                        subtitleResult.downloadFileName
+                    )
                 }
             }
         }
@@ -83,8 +86,9 @@ class SubtitlesSearchResultsAdapter(
         var uploadDate: String? = null,
         var downloadId: String? = null,
         var subtitleRating: String? = null,
-        var imdb: String? = null,
-        var uploader: String? = null
+        var downloads: String? = null,
+        var uploader: String? = null,
+        var downloadFileName: String? = null,
     )
 
     class SubtitlesSearchResultsViewHolder(view: View) : RecyclerView.ViewHolder(view) {

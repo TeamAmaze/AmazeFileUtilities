@@ -31,12 +31,16 @@ import com.google.android.gms.cast.MediaInfo
 import com.google.android.gms.cast.MediaLoadRequestData
 import com.google.android.gms.cast.MediaMetadata
 import com.google.android.gms.cast.framework.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.lang.ref.WeakReference
 
 abstract class CastActivity :
     PermissionsActivity(),
     SessionManagerListener<CastSession> {
+
+    private var log: Logger = LoggerFactory.getLogger(CastActivity::class.java)
 
     private var mCastContext: CastContext? = null
     private var mCastSession: CastSession? = null
@@ -50,22 +54,32 @@ abstract class CastActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mCastContext = CastContext.getSharedInstance(applicationContext)
-        mSessionManager = mCastContext!!.sessionManager
-        mCastSession = mSessionManager?.currentCastSession
+        try {
+            mCastContext = CastContext.getSharedInstance(applicationContext)
+            mSessionManager = mCastContext!!.sessionManager
+            mCastSession = mSessionManager?.currentCastSession
+        } catch (e: Exception) {
+            log.warn("failed to init cast context", e)
+            getFilesModel().castSetupSuccess = false
+            getFilesModel().isCasting = false
+        }
         /*val mediaRouter = MediaRouter.getInstance(this)
         mediaRouter.setMediaSession(mSessionManager?.currentCastSession)*/
-
         streamerServiceConnection =
             CloudStreamerServiceConnection(WeakReference(this))
     }
 
     override fun onResume() {
         super.onResume()
-        mSessionManager = CastContext.getSharedInstance(applicationContext).sessionManager
-        mCastSession = mSessionManager?.currentCastSession
-        mSessionManager?.addSessionManagerListener(this, CastSession::class.java)
-
+        try {
+            mSessionManager = CastContext.getSharedInstance(applicationContext).sessionManager
+            mCastSession = mSessionManager?.currentCastSession
+            mSessionManager?.addSessionManagerListener(this, CastSession::class.java)
+        } catch (e: Exception) {
+            log.warn("failed to init cast context", e)
+            getFilesModel().castSetupSuccess = false
+            getFilesModel().isCasting = false
+        }
         val intent = Intent(this, CloudStreamerService::class.java)
         this.bindService(intent, streamerServiceConnection, 0)
     }
@@ -120,11 +134,18 @@ abstract class CastActivity :
 
     override fun onSessionStarted(p0: CastSession, p1: String) {
         showToastOnBottom(resources.getString(R.string.ready_to_cast))
-        mCastContext = CastContext.getSharedInstance(applicationContext)
-        getFilesModel().isCasting = true
-        getFilesModel().wifiIpAddress = Utils.wifiIpAddress(this)
-        if (cloudStreamerService == null) {
-            CloudStreamerService.runService(this)
+        try {
+            mCastContext = CastContext.getSharedInstance(applicationContext)
+            getFilesModel().isCasting = true
+            getFilesModel().wifiIpAddress = Utils.wifiIpAddress(this)
+            if (cloudStreamerService == null) {
+                CloudStreamerService.runService(this)
+            }
+        } catch (e: Exception) {
+            log.warn("failed to start cast session", e)
+            getFilesModel().castSetupSuccess = false
+            getFilesModel().isCasting = false
+            showToastOnBottom(resources.getString(R.string.failed_to_start_cast))
         }
     }
 
@@ -159,10 +180,16 @@ abstract class CastActivity :
             if (wifiIpAddress != null) {
                 mediaRouteButton.visibility = View.VISIBLE
 
-                CastButtonFactory.setUpMediaRouteButton(
-                    applicationContext,
-                    mediaRouteButton
-                )
+                if (!getFilesModel().castSetupSuccess) {
+                    mediaRouteButton.setOnClickListener {
+                        showToastOnBottom(getString(R.string.cast_framework_unavailable))
+                    }
+                } else {
+                    CastButtonFactory.setUpMediaRouteButton(
+                        applicationContext,
+                        mediaRouteButton
+                    )
+                }
             } else {
                 mediaRouteButton.visibility = View.GONE
             }
@@ -209,10 +236,17 @@ abstract class CastActivity :
     }
 
     private fun initCastContext() {
-        mCastContext = CastContext.getSharedInstance(applicationContext)
-        mSessionManager = mCastContext!!.sessionManager
-        mCastSession = mSessionManager?.currentCastSession
-        mSessionManager?.addSessionManagerListener(this, CastSession::class.java)
+        try {
+            mCastContext = CastContext.getSharedInstance(applicationContext)
+            mSessionManager = mCastContext!!.sessionManager
+            mCastSession = mSessionManager?.currentCastSession
+            mSessionManager?.addSessionManagerListener(this, CastSession::class.java)
+        } catch (e: Exception) {
+            log.warn("failed to init cast context", e)
+            showToastOnBottom(resources.getString(R.string.failed_to_start_cast))
+            getFilesModel().castSetupSuccess = false
+            getFilesModel().isCasting = false
+        }
     }
 
     private fun submitStreamSrc(mediaFileInfo: MediaFileInfo) {

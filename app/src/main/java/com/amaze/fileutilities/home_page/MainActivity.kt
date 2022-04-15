@@ -34,7 +34,6 @@ import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
 import com.amaze.fileutilities.databinding.ActivityMainBinding
 import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
-import com.amaze.fileutilities.home_page.ui.files.AbstractMediaInfoListFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
 import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
@@ -134,7 +133,7 @@ class MainActivity :
             invalidateOptionsTabs()
         }
         binding.aboutText.setOnClickListener {
-            showAboutActivity(false, false)
+            showAboutActivity(false, false, false)
         }
         binding.settingsText.setOnClickListener {
             val intent = Intent(this, PreferenceActivity::class.java)
@@ -199,40 +198,12 @@ class MainActivity :
         if (!didShowWelcomeScreen) {
             checkForAppUpdates()
             viewModel.getUniqueId().observe(this) {
-                if (it != null) {
-                    viewModel.validateTrial(it, isNetworkAvailable()) {
-                        trialResponse ->
-                        this@MainActivity.runOnUiThread {
-                            if (trialResponse.subscriptionStatus
-                                == Trial.SUBSCRIPTION_STATUS_DEFAULT
-                            ) {
-                                when (trialResponse.getTrialStatusCode()) {
-                                    TrialValidationApi.TrialResponse.TRIAL_ACTIVE -> {
-                                        // check if it's first day or last day
-                                        if (trialResponse.isNewSignup) {
-                                            Utils.buildTrialStartedDialog(
-                                                this,
-                                                trialResponse.trialDaysLeft
-                                            ).create().show()
-                                        } else if (trialResponse.isLastDay) {
-                                            Utils.buildLastTrialDayDialog(this) {
-                                                // wants to subscribe
-                                                Billing.getInstance(
-                                                    this
-                                                )?.initiatePurchaseFlow()
-                                            }.create().show()
-                                        }
-                                    }
-                                    TrialValidationApi.TrialResponse.TRIAL_EXPIRED -> {
-                                        showAboutActivity(true, false)
-                                    }
-                                    TrialValidationApi.TrialResponse.TRIAL_INACTIVE -> {
-                                        showAboutActivity(false, true)
-                                    }
-                                }
-                            } else {
-                                log.info("user subscribed {}", it)
-                            }
+                deviceId ->
+                if (deviceId != null) {
+                    viewModel.checkInternetConnection(30000).observe(this) {
+                        viewModel.validateTrial(deviceId, it) {
+                            trialResponse ->
+                            handleValidateTrial(trialResponse)
                         }
                     }
                 }
@@ -330,9 +301,9 @@ class MainActivity :
         } else {
             if (::selectedItemActionBarBinding.isInitialized) {
                 if (!actionBarBinding.root.isVisible) {
-                    var abstractListFragment: AbstractMediaInfoListFragment? = null
+                    var abstractListFragment: ItemsActionBarFragment? = null
                     fragment?.childFragmentManager?.fragments?.forEach {
-                        if (it is AbstractMediaInfoListFragment) {
+                        if (it is ItemsActionBarFragment) {
                             abstractListFragment = it
                         }
                     }
@@ -386,6 +357,80 @@ class MainActivity :
     private val documentsObserver = UriObserver(Handler()) {
         showToastInCenter("changes in documents")
     }*/
+
+    private fun handleValidateTrial(trialResponse: TrialValidationApi.TrialResponse) {
+        this@MainActivity.runOnUiThread {
+            if (trialResponse.subscriptionStatus
+                == Trial.SUBSCRIPTION_STATUS_DEFAULT
+            ) {
+                log.debug("user not subscribed {}", trialResponse)
+                if (trialResponse.isNotConnected) {
+                    val notConnectedCount = getAppCommonSharedPreferences()
+                        .getInt(PreferencesConstants.KEY_NOT_CONNECTED_TRIAL_COUNT, 0)
+                    getAppCommonSharedPreferences().edit()
+                        .putInt(
+                            PreferencesConstants.KEY_NOT_CONNECTED_TRIAL_COUNT,
+                            notConnectedCount + 1
+                        ).apply()
+                    if (notConnectedCount > PreferencesConstants.VAL_THRES_NOT_CONNECTED_TRIAL) {
+                        showAboutActivity(false, false, true)
+                    }
+                    log.warn("internet not connected count $notConnectedCount")
+                } else {
+                    getAppCommonSharedPreferences().edit()
+                        .putInt(PreferencesConstants.KEY_NOT_CONNECTED_TRIAL_COUNT, 0).apply()
+                    getAppCommonSharedPreferences().edit()
+                        .putInt(PreferencesConstants.KEY_NOT_CONNECTED_SUBSCRIBED_COUNT, 0).apply()
+                    when (trialResponse.getTrialStatusCode()) {
+                        TrialValidationApi.TrialResponse.TRIAL_ACTIVE -> {
+                            // check if it's first day or last day
+                            if (trialResponse.isNewSignup) {
+                                Utils.buildTrialStartedDialog(
+                                    this,
+                                    trialResponse.trialDaysLeft
+                                ).create().show()
+                            } else if (trialResponse.isLastDay) {
+                                Utils.buildLastTrialDayDialog(this) {
+                                    // wants to subscribe
+                                    Billing.getInstance(
+                                        this
+                                    )?.initiatePurchaseFlow()
+                                }.create().show()
+                            }
+                        }
+                        TrialValidationApi.TrialResponse.TRIAL_EXPIRED -> {
+                            showAboutActivity(true, false, false)
+                        }
+                        TrialValidationApi.TrialResponse.TRIAL_INACTIVE -> {
+                            showAboutActivity(false, true, false)
+                        }
+                    }
+                }
+            } else {
+                log.debug("user subscribed {}", trialResponse)
+                if (trialResponse.isNotConnected) {
+                    val notConnectedCount = getAppCommonSharedPreferences()
+                        .getInt(PreferencesConstants.KEY_NOT_CONNECTED_SUBSCRIBED_COUNT, 0)
+                    getAppCommonSharedPreferences().edit()
+                        .putInt(
+                            PreferencesConstants.KEY_NOT_CONNECTED_SUBSCRIBED_COUNT,
+                            notConnectedCount + 1
+                        ).apply()
+                    if (notConnectedCount > PreferencesConstants
+                        .VAL_THRES_NOT_CONNECTED_SUBSCRIBED
+                    ) {
+                        showAboutActivity(false, false, true)
+                    }
+                    log.warn("subscribed and internet not connected count $notConnectedCount")
+                } else {
+                    getAppCommonSharedPreferences().edit()
+                        .putInt(PreferencesConstants.KEY_NOT_CONNECTED_TRIAL_COUNT, 0).apply()
+                    getAppCommonSharedPreferences().edit()
+                        .putInt(PreferencesConstants.KEY_NOT_CONNECTED_SUBSCRIBED_COUNT, 0).apply()
+                }
+            }
+        }
+    }
 
     private fun checkForAppUpdates() {
         val cal1 = GregorianCalendar.getInstance()
@@ -576,11 +621,16 @@ class MainActivity :
         }
     }
 
-    private fun showAboutActivity(isTrialExpired: Boolean, isTrialInactive: Boolean) {
+    private fun showAboutActivity(
+        isTrialExpired: Boolean,
+        isTrialInactive: Boolean,
+        isNotConnected: Boolean
+    ) {
         val intent = Intent(this, PreferenceActivity::class.java)
         intent.putExtra(PreferenceActivity.KEY_IS_SETTINGS, false)
         intent.putExtra(PreferenceActivity.KEY_IS_TRIAL_EXPIRED, isTrialExpired)
         intent.putExtra(PreferenceActivity.KEY_IS_TRIAL_INACTIVE, isTrialInactive)
+        intent.putExtra(PreferenceActivity.KEY_NOT_CONNECTED, isNotConnected)
         startActivity(intent)
         isOptionsVisible = !isOptionsVisible
         invalidateOptionsTabs()

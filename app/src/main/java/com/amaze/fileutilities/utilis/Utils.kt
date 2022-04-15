@@ -30,12 +30,16 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewAnalysisAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
+import okhttp3.ConnectionPool
+import okhttp3.OkHttpClient
+import okhttp3.Protocol
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.math.BigInteger
 import java.net.InetAddress
 import java.net.UnknownHostException
 import java.nio.ByteOrder
+import java.util.concurrent.TimeUnit
 
 class Utils {
 
@@ -431,6 +435,21 @@ class Utils {
             return builder
         }
 
+        fun buildNotConnectedTrialValidationDialog(
+            context: Context
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.not_connected_trial_title)
+                .setMessage(R.string.not_connected_trial_message)
+                .setPositiveButton(
+                    context.resources.getString(R.string.close)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
         fun deleteFromMediaDatabase(context: Context, file: String) {
             val where = MediaStore.MediaColumns.DATA + "=?"
             val selectionArgs = arrayOf(file)
@@ -438,6 +457,16 @@ class Utils {
             val filesUri = MediaStore.Files.getContentUri("external")
             // Delete the entry from the media database. This will actually delete media files.
             contentResolver.delete(filesUri, where, selectionArgs)
+        }
+
+        fun getOkHttpClient(): OkHttpClient {
+            return OkHttpClient.Builder().readTimeout(2, TimeUnit.MINUTES)
+                .connectTimeout(2, TimeUnit.MINUTES)
+                .connectionPool(ConnectionPool(0, 5, TimeUnit.MINUTES))
+                .protocols(listOf(Protocol.HTTP_1_1))
+                .followRedirects(true)
+                .followSslRedirects(true)
+                .build()
         }
     }
 }
