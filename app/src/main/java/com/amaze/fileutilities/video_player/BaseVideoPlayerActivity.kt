@@ -680,7 +680,7 @@ abstract class BaseVideoPlayerActivity :
 
     private fun showPlaybackSpeedDialog() {
         val builder: AlertDialog.Builder = this.let {
-            AlertDialog.Builder(it)
+            AlertDialog.Builder(it, R.style.Custom_Dialog_Dark)
         }
         val items = arrayOf(
             "0.25x", "0.50x", "0.75x",
@@ -778,7 +778,7 @@ abstract class BaseVideoPlayerActivity :
                 "${it.recordingMonth}/${it.recordingYear}" + "\n"
         }
         val builder: AlertDialog.Builder = this.let {
-            AlertDialog.Builder(it)
+            AlertDialog.Builder(it, R.style.Custom_Dialog_Dark)
         }
         builder.setMessage(dialogMessage)
             .setTitle(R.string.information)
@@ -1031,6 +1031,7 @@ abstract class BaseVideoPlayerActivity :
                         resultList ->
                         if (resultList == null) {
                             pleaseWaitDialog.show()
+                            dialog.dismiss()
                         } else {
                             pleaseWaitDialog.dismiss()
                             showSubtitlesSearchResultsList(resultList, mediaFile)
@@ -1040,7 +1041,6 @@ abstract class BaseVideoPlayerActivity :
                     showToastOnBottom(resources.getString(R.string.no_language_selected))
                 }
             }
-            dialog.dismiss()
         }
         val alertDialog = dialogBuilder.create()
         alertDialog.show()
@@ -1071,22 +1071,29 @@ abstract class BaseVideoPlayerActivity :
         } else {
             recyclerView.visibility = View.VISIBLE
             adapter = SubtitlesSearchResultsAdapter(this, subtitleResultsList) {
-                downloadId ->
+                downloadLink, downloadFileName ->
                 alertDialog.dismiss()
-                downloadSubtitle(downloadId, targetFile)
+                downloadLink?.let {
+                    downloadSubtitle(downloadLink, downloadFileName, targetFile)
+                }
             }
             recyclerView.layoutManager = LinearLayoutManager(this)
             recyclerView.adapter = adapter
         }
     }
 
-    private fun downloadSubtitle(downloadId: String, targetFile: File) {
+    private fun downloadSubtitle(
+        downloadLink: String,
+        downloadFileName: String?,
+        targetFile: File
+    ) {
         val pleaseWaitDialog = this.showProcessingDialog(
             layoutInflater,
             resources.getString(R.string.downloading)
         ).create()
         videoPlayerViewModel?.downloadSubtitle(
-            downloadId,
+            downloadLink,
+            downloadFileName,
             targetFile,
             this.getExternalStorageDirectory()?.path +
                 "/${TransferFragment.RECEIVER_BASE_PATH}/files"
