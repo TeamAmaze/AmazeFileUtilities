@@ -32,6 +32,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.*
 import java.lang.ref.WeakReference
+import java.net.InetSocketAddress
+import java.net.Socket
 import java.nio.charset.Charset
 import java.util.*
 import kotlin.collections.ArrayList
@@ -46,6 +48,7 @@ class FilesViewModel(val applicationContext: Application) :
     var isInternalStorageAnalysing = true
     var isMediaStoreAnalysing = true
     var isCasting = false
+    var castSetupSuccess = true
     var wifiIpAddress: String? = null
     val uniqueIdSalt = "#%36zkpCE2"
 
@@ -748,6 +751,22 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
+    fun checkInternetConnection(timeoutMs: Int): LiveData<Boolean> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+            try {
+                val socket = Socket()
+                val socketAddress = InetSocketAddress("8.8.8.8", 53)
+
+                socket.connect(socketAddress, timeoutMs)
+                socket.close()
+                emit(true)
+            } catch (ex: IOException) {
+                log.warn("failed to ping for connection", ex)
+                emit(false)
+            }
+        }
+    }
+
     fun validateTrial(
         deviceId: String,
         isNetworkAvailable: Boolean,
@@ -784,7 +803,9 @@ class FilesViewModel(val applicationContext: Application) :
                         trialResponse.invoke(
                             TrialValidationApi.TrialResponse(
                                 false, false,
-                                TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
+                                TrialValidationApi.TrialResponse
+                                    .trialCodeStatusMap[trial.trialStatus]
+                                    ?: TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
                                 trial.trialDaysLeft,
                                 trial.subscriptionStatus,
                                 null
@@ -862,6 +883,7 @@ class FilesViewModel(val applicationContext: Application) :
                         "no local subscription status for {}",
                     deviceId
                 )
+                nullTrialResponse.isNotConnected = true
                 return nullTrialResponse
             } else {
                 log.info("no network available, return database saved trial state")
@@ -872,7 +894,8 @@ class FilesViewModel(val applicationContext: Application) :
                         ?: TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
                     trial.trialDaysLeft,
                     trial.subscriptionStatus,
-                    trial.purchaseToken
+                    trial.purchaseToken,
+                    true
                 )
             }
         }
@@ -901,6 +924,7 @@ class FilesViewModel(val applicationContext: Application) :
         val retrofit = Retrofit.Builder()
             .baseUrl(TrialValidationApi.CLOUD_FUNCTION_BASE)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(Utils.getOkHttpClient())
             .build()
         val service = retrofit.create(TrialValidationApi::class.java)
         try {

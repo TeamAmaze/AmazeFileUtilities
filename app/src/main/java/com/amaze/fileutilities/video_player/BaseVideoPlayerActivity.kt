@@ -48,11 +48,8 @@ import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.MediaItem.SubtitleConfiguration
-import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.util.MimeTypes
 import com.google.common.collect.ImmutableList
@@ -63,7 +60,10 @@ import java.util.*
 import kotlin.math.abs
 import kotlin.math.ceil
 
-abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchListener {
+abstract class BaseVideoPlayerActivity :
+    PermissionsActivity(),
+    View.OnTouchListener,
+    Player.Listener {
 
     var log: Logger = LoggerFactory.getLogger(BaseVideoPlayerActivity::class.java)
 
@@ -160,6 +160,14 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
             invalidateBrightness()
             invalidateVolume()
         }
+    }
+
+    override fun onPlaybackStateChanged(playbackState: Int) {
+        super.onPlaybackStateChanged(playbackState)
+        viewBinding.videoView.keepScreenOn = !(
+            playbackState == Player.STATE_IDLE || playbackState == Player.STATE_ENDED ||
+                player?.playWhenReady == false || player?.isPlaying == false
+            )
     }
 
     override fun onPause() {
@@ -672,7 +680,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
 
     private fun showPlaybackSpeedDialog() {
         val builder: AlertDialog.Builder = this.let {
-            AlertDialog.Builder(it)
+            AlertDialog.Builder(it, R.style.Custom_Dialog_Dark)
         }
         val items = arrayOf(
             "0.25x", "0.50x", "0.75x",
@@ -770,7 +778,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 "${it.recordingMonth}/${it.recordingYear}" + "\n"
         }
         val builder: AlertDialog.Builder = this.let {
-            AlertDialog.Builder(it)
+            AlertDialog.Builder(it, R.style.Custom_Dialog_Dark)
         }
         builder.setMessage(dialogMessage)
             .setTitle(R.string.information)
@@ -977,7 +985,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
 
     private fun showFetchSubtitlesOnlineDialog(mediaFile: File) {
         var adapter: LanguageSelectionAdapter? = null
-        val dialogBuilder = AlertDialog.Builder(this)
+        val dialogBuilder = AlertDialog.Builder(this, R.style.Custom_Dialog_Dark)
             .setTitle(R.string.download_subtitles)
             .setNegativeButton(R.string.close) { dialog, _ ->
                 player?.play()
@@ -1023,6 +1031,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                         resultList ->
                         if (resultList == null) {
                             pleaseWaitDialog.show()
+                            dialog.dismiss()
                         } else {
                             pleaseWaitDialog.dismiss()
                             showSubtitlesSearchResultsList(resultList, mediaFile)
@@ -1032,7 +1041,6 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                     showToastOnBottom(resources.getString(R.string.no_language_selected))
                 }
             }
-            dialog.dismiss()
         }
         val alertDialog = dialogBuilder.create()
         alertDialog.show()
@@ -1044,7 +1052,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         targetFile: File
     ) {
         val adapter: SubtitlesSearchResultsAdapter?
-        val dialogBuilder = AlertDialog.Builder(this)
+        val dialogBuilder = AlertDialog.Builder(this, R.style.Custom_Dialog_Dark)
             .setTitle(R.string.download_subtitles)
             .setNegativeButton(R.string.close) { dialog, _ ->
                 player?.play()
@@ -1063,22 +1071,29 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
         } else {
             recyclerView.visibility = View.VISIBLE
             adapter = SubtitlesSearchResultsAdapter(this, subtitleResultsList) {
-                downloadId ->
+                downloadLink, downloadFileName ->
                 alertDialog.dismiss()
-                downloadSubtitle(downloadId, targetFile)
+                downloadLink?.let {
+                    downloadSubtitle(downloadLink, downloadFileName, targetFile)
+                }
             }
             recyclerView.layoutManager = LinearLayoutManager(this)
             recyclerView.adapter = adapter
         }
     }
 
-    private fun downloadSubtitle(downloadId: String, targetFile: File) {
+    private fun downloadSubtitle(
+        downloadLink: String,
+        downloadFileName: String?,
+        targetFile: File
+    ) {
         val pleaseWaitDialog = this.showProcessingDialog(
             layoutInflater,
             resources.getString(R.string.downloading)
         ).create()
         videoPlayerViewModel?.downloadSubtitle(
-            downloadId,
+            downloadLink,
+            downloadFileName,
             targetFile,
             this.getExternalStorageDirectory()?.path +
                 "/${TransferFragment.RECEIVER_BASE_PATH}/files"
@@ -1246,6 +1261,7 @@ abstract class BaseVideoPlayerActivity : PermissionsActivity(), View.OnTouchList
                 exoPlayer.prepare()
                 val param = PlaybackParameters(videoPlayerViewModel?.playbackSpeed ?: 1f)
                 exoPlayer.playbackParameters = param
+                exoPlayer.addListener(this@BaseVideoPlayerActivity)
                 if (videoPlayerViewModel?.currentlyPlaying == true) {
                     exoPlayer.play()
                 } else {
