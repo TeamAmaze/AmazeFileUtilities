@@ -10,28 +10,35 @@
 
 package com.amaze.fileutilities.image_viewer
 
-import android.net.Uri
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import com.amaze.fileutilities.utilis.getSiblingUriFiles
 import com.amaze.fileutilities.utilis.isImageMimeType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ImageViewerViewModel : ViewModel() {
-    private var imageModelList: ArrayList<LocalImageModel>? = null
 
-    fun getSiblingImageModels(imageModel: LocalImageModel, uriList: ArrayList<Uri>?):
-        ArrayList<LocalImageModel>? {
-        if (imageModelList == null) {
-            uriList.run {
-                imageModelList = ArrayList()
-                if (this != null) {
-                    imageModelList?.addAll(
-                        this.filter { it.isImageMimeType() }
-                            .map { LocalImageModel(it, "") }.asReversed()
-                    )
-                } else {
-                    imageModelList?.add(imageModel)
+    var siblingImagesLiveData = MutableLiveData<ArrayList<LocalImageModel>?>()
+
+    fun processSiblingImageModels(imageModel: LocalImageModel) {
+        viewModelScope.launch(Dispatchers.Default) {
+            /*withContext(Dispatchers.Main) {
+                siblingImagesLiveData.value = null
+            }*/
+            if (siblingImagesLiveData.value.isNullOrEmpty()) {
+                imageModel.uri.getSiblingUriFiles().run {
+                    val imageModelList = ArrayList<LocalImageModel>()
+                    if (this != null) {
+                        imageModelList.addAll(
+                            this.filter { it.isImageMimeType() }
+                                .map { LocalImageModel(it, "") }.asReversed()
+                        )
+                    } else {
+                        imageModelList.add(imageModel)
+                    }
+                    siblingImagesLiveData.postValue(imageModelList)
                 }
             }
         }
-        return imageModelList
     }
 }
