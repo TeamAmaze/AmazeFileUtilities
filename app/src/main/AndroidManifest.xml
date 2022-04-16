@@ -59,7 +59,7 @@
             android:name=".image_viewer.ImageViewerDialogActivity"
             android:exported="true"
             android:label="@string/image_viewer"
-            android:theme="@style/Theme.AppCompat.Dialog">
+            android:theme="@style/Custom.Dialog.Dark">
             <intent-filter
                 android:label="@string/intent_image_viewer"
                 tools:ignore="AppLinkUrlError">
@@ -77,7 +77,7 @@
             android:label="@string/video_player"
             android:supportsPictureInPicture="true"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.AppCompat.Dialog">
+            android:theme="@style/Custom.Dialog.Dark">
             <intent-filter
                 android:label="@string/intent_video_player"
                 tools:ignore="AppLinkUrlError">
@@ -92,7 +92,7 @@
         <activity
             android:name=".audio_player.AudioPlayerDialogActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Dialog">
+            android:theme="@style/Custom.Dialog.Dark">
             <intent-filter
                 android:label="@string/amaze_audio_player"
                 tools:ignore="AppLinkUrlError">
@@ -136,7 +136,7 @@
             android:name=".epub_viewer.EpubViewerActivity"
             android:exported="true"
             android:label="@string/epub_viewer"
-            android:theme="@style/Theme.AppCompat.Dialog">
+            android:theme="@style/Custom.Dialog.Dark">
             <intent-filter
                 android:label="@string/epub_viewer"
                 tools:ignore="AppLinkUrlError">
@@ -167,7 +167,7 @@
         <activity
             android:name=".home_page.ui.options.AboutActivity"
             android:exported="true"
-            android:theme="@style/Theme.AppCompat.Dialog">
+            android:theme="@style/Custom.Dialog.Dark">
         </activity>
 
         <activity android:name="com.amaze.fileutilities.crash_report.ErrorActivity"
