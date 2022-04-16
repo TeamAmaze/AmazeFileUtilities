@@ -22,6 +22,7 @@ import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.AudioPlayerDialogActivityBinding
 import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.google.android.material.slider.Slider
 import com.masoudss.lib.WaveformSeekBar
 import org.slf4j.Logger
@@ -78,17 +79,21 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
                 "Loading audio from path ${audioUri?.path} " +
                     "and mimetype $mimeType"
             )
-            viewModel.uriList = ArrayList(
-                audioUri!!.getSiblingUriFiles(this)!!.filter {
-                    it.isAudioMimeType()
-                }.asReversed()
-            )
-            audioUri.getFileFromUri(this)?.length()?.also {
-                if (it > AudioPlayerInterfaceHandlerViewModel.WAVEFORM_THRESHOLD_BYTES) {
-                    viewModel.forceShowSeekbar = true
+            viewModel.processSiblings(audioUri!!)
+            viewModel.siblingsLiveData.observe(this) {
+                uriList ->
+                if (uriList == null) {
+                    showProcessingDialog(layoutInflater, getString(R.string.please_wait)).create()
+                        .show()
+                } else {
+                    audioUri.getFileFromUri()?.length()?.also {
+                        if (it > AudioPlayerInterfaceHandlerViewModel.WAVEFORM_THRESHOLD_BYTES) {
+                            viewModel.forceShowSeekbar = true
+                        }
+                    }
+                    AudioPlayerService.runService(audioUri, uriList, this)
                 }
             }
-            AudioPlayerService.runService(audioUri, viewModel.uriList, this)
         }
         title = getString(R.string.amaze_audio_player)
         audioPlaybackServiceConnection =
