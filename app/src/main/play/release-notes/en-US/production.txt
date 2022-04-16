@@ -1,0 +1,4 @@
+Changelog:
+- Keep video player awake while playing
+- Allow recents and search lists to be selectable
+- Other minor fixes
