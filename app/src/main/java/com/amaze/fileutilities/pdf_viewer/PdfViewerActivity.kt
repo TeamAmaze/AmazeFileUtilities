@@ -83,7 +83,7 @@ class PdfViewerActivity :
     override fun loadComplete(nbPages: Int) {
         val meta: PdfDocument.Meta = viewBinding.pdfView.documentMeta
         viewModel.pdfFileName = if (meta.title.isEmpty()) {
-            pdfModel.uri.getFileFromUri(this)?.name
+            pdfModel.uri.getFileFromUri()?.name
         } else {
             meta.title
         }

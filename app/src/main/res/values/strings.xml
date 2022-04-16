@@ -3,7 +3,7 @@
     <string name="app_name_launcher">Amaze Utilities</string>
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.16</string>
+    <string name="app_version" translatable="false">v1.18</string>
     <string name="image_viewer">Amaze Image Viewer</string>
     <string name="video_player">Amaze Video Player</string>
     <string name="amaze_audio_player">Amaze Music Player</string>
@@ -393,4 +393,14 @@
     <string name="error_fetching_google_play_product_list">Error fetching product list from Google Play.</string>
     <string name="done">Done</string>
     <string name="cast_framework_unavailable">Unable to initialize cast framework, please update Google Play services</string>
+    <string name="rate_now_title">Please read!</string>
+    <string name="rate_now_message">Thank you for choosing Amaze File Utilities.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and your rating / review will really help us in development.\n
+        Please write about your experience on Play Store.\n
+        At any point if you need any help feel free to contact us in About section.
+        You\'ll be able to contact directly to our team on Telegram.\n
+        Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
+    <string name="take_me">Take me</string>
+    <string name="later">Later</string>
 </resources>

@@ -208,6 +208,7 @@ class MainActivity :
                     }
                 }
             }
+            shouldRateApp()
         }
     }
 
@@ -357,6 +358,28 @@ class MainActivity :
     private val documentsObserver = UriObserver(Handler()) {
         showToastInCenter("changes in documents")
     }*/
+
+    private fun shouldRateApp() {
+        val alreadyRated = getAppCommonSharedPreferences()
+            .getBoolean(PreferencesConstants.KEY_RATE_APP_AUTOMATED, false)
+        if (!alreadyRated) {
+            val random = Random()
+            val chance = random.nextInt(10) + 1
+            if (chance == 5) {
+                Utils.buildRateNowDialog(this, {
+                    getAppCommonSharedPreferences()
+                        .edit().putBoolean(PreferencesConstants.KEY_RATE_APP_AUTOMATED, true)
+                        .apply()
+                    val url = "market://details?id=com.amaze.fileutilities"
+                    Utils.openURL(url, this)
+                }, {
+                    getAppCommonSharedPreferences()
+                        .edit().putBoolean(PreferencesConstants.KEY_RATE_APP_AUTOMATED, true)
+                        .apply()
+                }).create().show()
+            }
+        }
+    }
 
     private fun handleValidateTrial(trialResponse: TrialValidationApi.TrialResponse) {
         this@MainActivity.runOnUiThread {
