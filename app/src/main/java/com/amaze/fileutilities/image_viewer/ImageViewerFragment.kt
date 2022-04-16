@@ -121,7 +121,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 customToolbar.title.text = DocumentFile.fromSingleUri(
                     requireContext(),
                     quickViewType!!.uri
-                )?.name ?: quickViewType.uri.getFileFromUri(requireContext())?.name
+                )?.name ?: quickViewType.uri.getFileFromUri()?.name
                 customToolbar.backButton.setOnClickListener {
                     requireActivity().onBackPressed()
                 }
@@ -148,7 +148,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
 
     private fun setupPropertiesSheet(quickViewType: LocalImageModel) {
         quickViewType.let {
-            val file = it.uri.getFileFromUri(requireContext())
+            val file = it.uri.getFileFromUri()
             file?.let {
                 file ->
                 val metadata = ImageMetadataReader.readMetadata(file)
@@ -416,7 +416,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 resources.getString(R.string.delete)
             ) {
                 localImageModel!!.uri
-                    .getFileFromUri(requireContext())?.let {
+                    .getFileFromUri()?.let {
                         file ->
                         val toDelete = Collections.singletonList(
                             MediaFileInfo.fromFile(

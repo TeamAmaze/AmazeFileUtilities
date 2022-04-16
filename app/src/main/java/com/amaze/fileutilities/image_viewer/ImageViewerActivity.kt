@@ -16,7 +16,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.GenericPagerViewerActivityBinding
-import com.amaze.fileutilities.utilis.getSiblingUriFiles
+import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.amaze.fileutilities.utilis.showToastInCenter
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -50,22 +50,22 @@ class ImageViewerActivity : PermissionsActivity() {
         )
 
         val imageModel = LocalImageModel(uri = imageUri, mimeType = mimeType)
-        viewModel.getSiblingImageModels(
-            imageModel,
-            imageModel.uri
-                .getSiblingUriFiles(this)
-        ).let {
-            val pagerAdapter = ImageViewerAdapter(
-                supportFragmentManager,
-                lifecycle, it ?: Collections.singletonList(imageModel)
-            )
-            viewBinding.pager.adapter = pagerAdapter
-            if (it != null) {
+        viewModel.processSiblingImageModels(imageModel)
+        viewModel.siblingImagesLiveData.observe(this) {
+            if (it == null) {
+                showProcessingDialog(layoutInflater, getString(R.string.please_wait)).create()
+                    .show()
+            } else {
+                val pagerAdapter = ImageViewerAdapter(
+                    supportFragmentManager,
+                    lifecycle, it
+                )
+                viewBinding.pager.adapter = pagerAdapter
                 var position = 0
                 if (it.size > 1) {
                     for (i in it.indices) {
                         // TODO: avoid using file
-                        if (File(it[i].uri.path).name.equals(File(imageModel.uri.path).name)) {
+                        if (File(it[i].uri.path!!).name.equals(File(imageModel.uri.path!!).name)) {
                             position = i
                             break
                         }
