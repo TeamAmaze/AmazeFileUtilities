@@ -1,0 +1,32 @@
+Required storage access 'All files' permission to analyse, transfer and open files.
+
+Analyse
+- Analyse storage for junk files to delete
+- Group images by memes, low-light, blurry, selfies or group
+- Group large files in storage
+- Group old downloads, recordings or screenshots
+
+Transfer
+- Transfer data between devices through wifi
+- High transfer speeds using android Wifi-direct
+
+Image / Videos / Documents / Music -
+- View/group/sort in list or grid
+- Delete / share them
+- Open using inbuilt player
+- Jump to any date instantly
+- Cast on tv
+
+Audio player
+- Shuffle, play on repeat
+- View waveform data for better insight of song
+
+Video player -
+- Play videos with gestures to skip, manage volume, brightness within player
+- View in picture-in-picture mode
+- Play in background
+- Lock gestures or orientation
+- Search and download online subtitles within player
+
+Image viewer -
+- View, share or delete images
