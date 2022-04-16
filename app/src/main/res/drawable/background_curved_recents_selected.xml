@@ -9,7 +9,7 @@
                 android:bottomLeftRadius="@dimen/twenty_four_dp"
                 android:bottomRightRadius="@dimen/twenty_four_dp"
                 />
-            <solid android:color="@color/navy_blue_alt" />
+            <solid android:color="@color/highlight_yellow_50" />
         </shape>
     </item>
     <item android:drawable="@drawable/ripple_curved_24" />

@@ -12,5 +12,5 @@
             <solid android:color="@color/navy_blue_alt" />
         </shape>
     </item>
-    <item android:drawable="@drawable/ripple" />
+    <item android:drawable="@drawable/ripple_curved_32" />
 </layer-list>

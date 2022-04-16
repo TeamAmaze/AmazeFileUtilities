@@ -207,10 +207,12 @@ abstract class AbstractMediaFilesAdapter(
                                 holder.infoSummary.text = "$formattedDate | $formattedSize"
                                 holder.extraInfo.text = ""
                                 if (isChecked) {
-                                    holder.root.setBackgroundColor(
-                                        superContext.resources
-                                            .getColor(R.color.highlight_yellow_50)
-                                    )
+                                    holder.root.background = ResourcesCompat
+                                        .getDrawable(
+                                            superContext.resources,
+                                            R.drawable.background_curved_recents_selected,
+                                            superContext.theme
+                                        )
                                 } else {
                                     holder.root.background = ResourcesCompat
                                         .getDrawable(
