@@ -31,6 +31,7 @@
         android:banner="@drawable/banner_app"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher_normal"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name_launcher"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
