@@ -11,6 +11,9 @@
 package com.amaze.fileutilities.video_player
 
 import android.os.Bundle
+import android.widget.RelativeLayout
+import com.amaze.fileutilities.R
+import com.amaze.fileutilities.utilis.px
 
 class VideoPlayerDialogActivity : BaseVideoPlayerActivity() {
 
@@ -22,6 +25,10 @@ class VideoPlayerDialogActivity : BaseVideoPlayerActivity() {
         initLocalVideoModel(intent)
         super.onCreate(savedInstanceState)
         handleViewPlayerDialogActivityResources()
+        findViewById<RelativeLayout>(R.id.video_parent).setPadding(
+            16.px.toInt(), 16.px.toInt(),
+            16.px.toInt(), 16.px.toInt()
+        )
     }
 
     /*override fun onNewIntent(intent: Intent?) {
