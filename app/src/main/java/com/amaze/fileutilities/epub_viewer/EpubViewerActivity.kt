@@ -53,7 +53,7 @@ class EpubViewerActivity : PermissionsActivity() {
                 .setShowTts(false)
             FolioReader.get()
                 .setConfig(config, true)
-                .openBook(epubUri.getFileFromUri(this)!!.canonicalPath)
+                .openBook(epubUri.getFileFromUri()!!.canonicalPath)
             finish()
         }
     }

@@ -227,7 +227,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             getContextWeakRef().get()?.let {
                 context ->
                 val file = progressHandler.audioPlaybackInfo
-                    .audioModel.getUri().getFileFromUri(context)
+                    .audioModel.getUri().getFileFromUri()
                 if (file != null) {
                     try {
                         // TODO: hack to get valid wavebar path
@@ -259,7 +259,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                 context ->
                 if (context != null) {
                     val file = audioService?.getAudioProgressHandlerCallback()?.audioPlaybackInfo
-                        ?.audioModel?.getUri()?.getFileFromUri(context)
+                        ?.audioModel?.getUri()?.getFileFromUri()
                     if (file != null) {
                         try {
                             getWaveformSeekbar()?.setSampleFrom(file)

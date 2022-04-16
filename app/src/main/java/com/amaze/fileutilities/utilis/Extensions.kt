@@ -28,7 +28,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.FileFilter
 import com.afollestad.materialdialogs.files.fileChooser
 import com.afollestad.materialdialogs.files.folderChooser
-import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.*
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -38,9 +37,9 @@ import java.io.File
 
 var log: Logger = LoggerFactory.getLogger(Utils::class.java)
 
-fun Uri.getSiblingUriFiles(context: Context): ArrayList<Uri>? {
+fun Uri.getSiblingUriFiles(): ArrayList<Uri>? {
     try {
-        val currentPath = getFileFromUri(context)
+        val currentPath = getFileFromUri()
         currentPath?.let {
             if (currentPath.exists()) {
                 val parent = currentPath.parentFile
@@ -71,7 +70,7 @@ fun Uri.getSiblingUriFiles(context: Context): ArrayList<Uri>? {
     return null
 }
 
-fun Uri.getFileFromUri(context: Context): File? {
+fun Uri.getFileFromUri(): File? {
     if (this == Uri.EMPTY) {
         return null
     }
