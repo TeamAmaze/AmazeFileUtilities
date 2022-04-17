@@ -1,1 +1,1 @@
-Amaze File Analyzer & Player
+Amaze File Utilities
