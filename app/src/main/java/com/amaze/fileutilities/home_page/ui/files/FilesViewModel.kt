@@ -974,7 +974,7 @@ class FilesViewModel(val applicationContext: Application) :
                 inputStream ->
                 val file = File(
                     internalStoragePath.path +
-                        "/${TransferFragment.RECEIVER_BASE_PATH}/files"
+                        "/${TransferFragment.RECEIVER_BASE_PATH}/cache"
                 )
                 file.mkdirs()
                 val logFile = File(file, "logs.txt")
