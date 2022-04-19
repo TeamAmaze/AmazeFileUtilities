@@ -33,9 +33,8 @@ fun getShareIntents(sharingUris: List<Uri>, context: Context): ShareAdapter? {
     val drawables = ArrayList<Drawable>()
 
     var b = true
-    var mime: String? = null
+    var mime: String? = MimeTypes.getMimeType(sharingUris[0].path, false)
     if (sharingUris.size > 1) {
-        mime = MimeTypes.getMimeType(sharingUris[0].path, false)
         for (f in sharingUris) {
             if (mime != MimeTypes.getMimeType(f.path, false)) {
                 b = false
