@@ -30,12 +30,13 @@ import org.slf4j.LoggerFactory
 )
 class AppConfig : AmazeApplication() {
 
-    var log: Logger = LoggerFactory.getLogger(AppConfig::class.java)
+    private var log: Logger? = null
 
     override fun onCreate() {
         super.onCreate()
 
         // disabling file exposure method check for api n+
+        log = LoggerFactory.getLogger(AppConfig::class.java)
         val builder = VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
     }
@@ -44,9 +45,9 @@ class AppConfig : AmazeApplication() {
         super.attachBaseContext(base)
         initACRA()
         if (!OpenCVLoader.initDebug())
-            log.warn("Unable to load OpenCV!")
+            log?.warn("Unable to load OpenCV!")
         else
-            log.debug("OpenCV loaded Successfully!")
+            log?.debug("OpenCV loaded Successfully!")
     }
 
     /**
@@ -66,7 +67,7 @@ class AppConfig : AmazeApplication() {
                 .build()
             ACRA.init(this, acraConfig)
         } catch (ace: ACRAConfigurationException) {
-            log.warn("cannot init acra", ace)
+            log?.warn("cannot init acra", ace)
             ErrorActivity.reportError(
                 this,
                 ace,

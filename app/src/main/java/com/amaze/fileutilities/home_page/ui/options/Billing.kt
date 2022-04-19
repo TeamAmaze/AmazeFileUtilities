@@ -363,24 +363,27 @@ class Billing(val context: Context, private var uniqueId: String) :
      *
      *
      */
-        activity?.runOnUiThread {
-            val dialogBuilder = AlertDialog.Builder(activity!!, R.style.Custom_Dialog_Dark)
-                .setTitle(R.string.subscribe)
-                .setNegativeButton(R.string.close) { dialog, _ ->
-                    dialog.dismiss()
+        if (activity?.isFinishing == false && activity?.isDestroyed == false) {
+            activity?.runOnUiThread {
+                val dialogBuilder = AlertDialog.Builder(activity!!, R.style.Custom_Dialog_Dark)
+                    .setTitle(R.string.subscribe)
+                    .setNegativeButton(R.string.close) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                val inflater = activity!!.layoutInflater
+                val dialogView: View = inflater
+                    .inflate(R.layout.subtitles_search_results_view, null)
+                dialogBuilder.setView(dialogView)
+                val recyclerView = dialogView.findViewById<RecyclerView>(R.id.search_results_list)
+                dialogBuilder.setOnCancelListener {
+                    purchaseProduct.purchaseCancel()
                 }
-            val inflater = activity!!.layoutInflater
-            val dialogView: View = inflater.inflate(R.layout.subtitles_search_results_view, null)
-            dialogBuilder.setView(dialogView)
-            val recyclerView = dialogView.findViewById<RecyclerView>(R.id.search_results_list)
-            dialogBuilder.setOnCancelListener {
-                purchaseProduct.purchaseCancel()
+                recyclerView.visibility = View.VISIBLE
+                recyclerView.layoutManager = LinearLayoutManager(activity)
+                recyclerView.adapter = this
+                purchaseDialog = dialogBuilder.create()
+                purchaseDialog?.show()
             }
-            recyclerView.visibility = View.VISIBLE
-            recyclerView.layoutManager = LinearLayoutManager(activity)
-            recyclerView.adapter = this
-            purchaseDialog = dialogBuilder.create()
-            purchaseDialog?.show()
         }
     }
 }
