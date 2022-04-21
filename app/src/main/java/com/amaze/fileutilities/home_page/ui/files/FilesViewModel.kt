@@ -1062,27 +1062,32 @@ class FilesViewModel(val applicationContext: Application) :
         file: File
     ) {
         if (!file.exists()) {
+            log.info("file not found while calculating checksum at path {}", file.path)
             return
         }
-        val checksum = FileUtils.getSHA256Checksum(file.inputStream())
-        val existingChecksum = dao.findMediaFileBySha256Checksum(checksum)
-        if (existingChecksum != null && !existingChecksum.files.contains(file.path)) {
-            dao.insert(
-                InternalStorageAnalysis(
-                    existingChecksum.checksum,
-                    existingChecksum.files + file.path,
-                    false, false, false, true, 0
+        try {
+            val checksum = FileUtils.getSHA256Checksum(file.inputStream())
+            val existingChecksum = dao.findMediaFileBySha256Checksum(checksum)
+            if (existingChecksum != null && !existingChecksum.files.contains(file.path)) {
+                dao.insert(
+                    InternalStorageAnalysis(
+                        existingChecksum.checksum,
+                        existingChecksum.files + file.path,
+                        false, false, false, true, 0
+                    )
                 )
-            )
-        } else {
-            dao.insert(
-                InternalStorageAnalysis(
-                    checksum,
-                    listOf(file.path), false, false, false,
-                    true,
-                    0
+            } else {
+                dao.insert(
+                    InternalStorageAnalysis(
+                        checksum,
+                        listOf(file.path), false, false, false,
+                        true,
+                        0
+                    )
                 )
-            )
+            }
+        } catch (e: Exception) {
+            log.warn("failed to get checksum and write to database", e)
         }
     }
 
