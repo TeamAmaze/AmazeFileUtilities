@@ -45,12 +45,15 @@
             android:theme="@style/Theme.AmazeFileUtilities"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
+            <nav-graph android:value="@navigation/mobile_navigation" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
+            <meta-data android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
         <activity android:name=".home_page.WelcomeScreen"
             android:screenOrientation="portrait"
