@@ -3,7 +3,7 @@
     <string name="app_name_launcher">Amaze Utilities</string>
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.27</string>
+    <string name="app_version" translatable="false">v1.28</string>
     <string name="image_viewer">Amaze Image Viewer</string>
     <string name="video_player">Amaze Video Player</string>
     <string name="amaze_audio_player">Amaze Music Player</string>
@@ -407,4 +407,7 @@
     <string name="app_updated">App updated successfully</string>
     <string name="update_cancelled">Update cancelled</string>
     <string name="failed_to_update_app">Failed to update the app…</string>
+    <string name="shortcut_short">Shortcut short</string>
+    <string name="shortcut_long">Shortcut long</string>
+    <string name="shortcut_disable">Disable shortcut</string>
 </resources>

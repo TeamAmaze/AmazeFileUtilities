@@ -1,0 +1,27 @@
+<shortcuts
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="AnalyseFragment"
+        android:enabled="true"
+        android:shortcutShortLabel="@string/title_analyse"
+        android:shortcutLongLabel="@string/title_analyse"
+        android:shortcutDisabledMessage=
+            "@string/title_analyse"
+        android:icon="@drawable/ic_launcher_normal">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="amazeutils://teamamaze.xyz/analyse" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="TransferFragment"
+        android:enabled="true"
+        android:shortcutShortLabel="@string/title_transfer"
+        android:shortcutLongLabel="@string/title_transfer"
+        android:shortcutDisabledMessage=
+            "@string/title_transfer"
+        android:icon="@drawable/ic_launcher_normal">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="amazeutils://teamamaze.xyz/transfer" />
+    </shortcut>
+</shortcuts>

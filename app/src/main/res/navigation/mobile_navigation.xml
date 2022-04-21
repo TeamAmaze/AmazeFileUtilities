@@ -9,7 +9,12 @@
         android:id="@+id/navigation_analyse"
         android:name="com.amaze.fileutilities.home_page.ui.analyse.AnalyseFragment"
         android:label="@string/title_analyse"
-        tools:layout="@layout/fragment_analyse" />
+        tools:layout="@layout/fragment_analyse">
+        <deepLink
+            android:id="@+id/deepLink3"
+            app:action="ACTION_VIEW"
+            app:uri="amaze://teamamaze.xyz/analyse" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_files"
@@ -21,5 +26,10 @@
         android:id="@+id/navigation_transfer"
         android:name="com.amaze.fileutilities.home_page.ui.transfer.TransferFragment"
         android:label="@string/title_transfer"
-        tools:layout="@layout/fragment_transfer" />
+        tools:layout="@layout/fragment_transfer">
+        <deepLink
+            android:id="@+id/deepLink2"
+            app:action="ACTION_VIEW"
+            app:uri="amaze://teamamaze.xyz/transfer" />
+    </fragment>
 </navigation>
