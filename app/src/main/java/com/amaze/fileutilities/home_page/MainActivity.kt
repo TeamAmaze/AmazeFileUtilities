@@ -80,6 +80,7 @@ class MainActivity :
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
         super.onCreate(savedInstanceState)
         welcomeScreen = WelcomeHelper(this, WelcomeScreen::class.java)
         if (!welcomeScreen!!.show(savedInstanceState)) {
@@ -87,7 +88,6 @@ class MainActivity :
             invokePermissionCheck()
         }
         binding = ActivityMainBinding.inflate(layoutInflater)
-        viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
 //        viewModel.copyTrainedData()
 //        viewModel.getAndSaveUniqueDeviceId()
         actionBarBinding = ActivityMainActionbarBinding.inflate(layoutInflater)
