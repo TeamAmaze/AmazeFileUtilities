@@ -8,8 +8,8 @@
     <string name="video_player">Amaze Video Player</string>
     <string name="amaze_audio_player">Amaze Music Player</string>
     <string name="pdf_viewer">Amaze Pdf Viewer</string>
-    <string name="epub_viewer">Epub Viewer</string>
-    <string name="docx_viewer">Doc Viewer</string>
+    <string name="epub_viewer">Amaze Epub Viewer</string>
+    <string name="docx_viewer">Amaze Doc Viewer</string>
     <string name="welcome_launcher">Thank you for purchasing Amaze File Utilities. Your support is greatly appreciated.
         Feel free to contact us on our telegram channel @AmazeFileManager
     </string>
@@ -410,4 +410,5 @@
     <string name="shortcut_short">Shortcut short</string>
     <string name="shortcut_long">Shortcut long</string>
     <string name="shortcut_disable">Disable shortcut</string>
+    <string name="home_screen_design"><![CDATA[Home screen design - <a href="https://dribbble.com/topu-roy-antu">Topu Roy Antu</a>]]></string>
 </resources>

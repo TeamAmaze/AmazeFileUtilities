@@ -62,6 +62,7 @@
             android:name=".image_viewer.ImageViewerDialogActivity"
             android:exported="true"
             android:label="@string/image_viewer"
+            android:excludeFromRecents="true"
             android:theme="@style/Custom.Dialog.Dark">
             <intent-filter
                 android:label="@string/intent_image_viewer"
@@ -80,6 +81,7 @@
             android:label="@string/video_player"
             android:supportsPictureInPicture="true"
             android:launchMode="singleTask"
+            android:excludeFromRecents="true"
             android:theme="@style/Custom.Dialog.Dark">
             <intent-filter
                 android:label="@string/intent_video_player"
@@ -95,6 +97,7 @@
         <activity
             android:name=".audio_player.AudioPlayerDialogActivity"
             android:exported="true"
+            android:excludeFromRecents="true"
             android:theme="@style/Custom.Dialog.Dark">
             <intent-filter
                 android:label="@string/amaze_audio_player"
