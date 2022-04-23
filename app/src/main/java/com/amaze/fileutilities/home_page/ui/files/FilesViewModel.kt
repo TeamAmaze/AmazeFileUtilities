@@ -69,7 +69,10 @@ class FilesViewModel(val applicationContext: Application) :
                     val items = CursorUtils.getMediaFilesCount(applicationContext)
                     FileUtils.scanFile(Uri.fromFile(file), applicationContext)
                     val usedSpace = file.totalSpace - file.usableSpace
-                    val progress = (usedSpace * 100) / file.totalSpace
+
+                    val progress = if(file.totalSpace != 0L) {
+                            (usedSpace * 100) / file.totalSpace
+                    } else 0
                     emit(
                         StorageSummary(
                             items, progress.toInt(), usedSpace, usedSpace,
