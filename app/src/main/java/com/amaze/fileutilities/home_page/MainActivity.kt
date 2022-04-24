@@ -326,62 +326,58 @@ class MainActivity :
 
     override fun onBackPressed() {
         val fragment = getFragmentAtFrame()
-        if (fragment is NavHostFragment && fragment.childFragmentManager.backStackEntryCount > 1) {
-            supportFragmentManager.popBackStack()
-        } else {
-            if (selectedItemActionBarBinding.root.isVisible &&
-                !searchActionBarBinding.root.isVisible
-            ) {
-                if (!actionBarBinding.root.isVisible) {
-                    var abstractListFragment: ItemsActionBarFragment? = null
-                    fragment?.childFragmentManager?.fragments?.forEach {
-                        if (it is ItemsActionBarFragment) {
-                            abstractListFragment = it
-                        }
+        if (selectedItemActionBarBinding.root.isVisible &&
+            !searchActionBarBinding.root.isVisible
+        ) {
+            if (!actionBarBinding.root.isVisible) {
+                var abstractListFragment: ItemsActionBarFragment? = null
+                fragment?.childFragmentManager?.fragments?.forEach {
+                    if (it is ItemsActionBarFragment) {
+                        abstractListFragment = it
                     }
-                    if (abstractListFragment != null) {
-                        invalidateSelectedActionBar(
-                            false, abstractListFragment!!.hideActionBarOnClick(),
-                            abstractListFragment!!.handleBackPressed()
-                        )
-                        abstractListFragment!!.handleBackPressed().invoke()
-                    } else {
-                        super.onBackPressed()
-                    }
+                }
+                if (abstractListFragment != null) {
+                    invalidateSelectedActionBar(
+                        false, abstractListFragment!!.hideActionBarOnClick(),
+                        abstractListFragment!!.handleBackPressed()
+                    )
+                    abstractListFragment!!.handleBackPressed().invoke()
                 } else {
-                    var didShowTransfer = false
-                    var isTransferFragment = false
-                    fragment?.childFragmentManager?.fragments?.forEach {
-                        if (it is TransferFragment) {
-                            isTransferFragment = true
-                            // check if transfer in progress, avoid back press if it is
-                            if (it.getTransferViewModel().isTransferInProgress) {
-                                didShowTransfer = true
-                                it.warnTransferInProgress {
-                                    super.onBackPressed()
-                                }
+                    super.onBackPressed()
+                }
+            } else {
+                var didShowTransfer = false
+                var isTransferFragment = false
+                fragment?.childFragmentManager?.fragments?.forEach {
+                    if (it is TransferFragment) {
+                        isTransferFragment = true
+                        // check if transfer in progress, avoid back press if it is
+                        if (it.getTransferViewModel().isTransferInProgress) {
+                            didShowTransfer = true
+                            it.warnTransferInProgress {
+                                super.onBackPressed()
                             }
                         }
                     }
-                    if (!didShowTransfer || !isTransferFragment) {
-                        super.onBackPressed()
-                    }
                 }
-            } else if (searchActionBarBinding.root.isVisible) {
-                val searchFragment = supportFragmentManager
-                    .findFragmentByTag(SearchListFragment.FRAGMENT_TAG)
-                val transaction = supportFragmentManager.beginTransaction()
-                searchFragment?.let {
-                    transaction.remove(searchFragment)
-                    transaction.commit()
+                if (!didShowTransfer || !isTransferFragment) {
+                    super.onBackPressed()
                 }
-            } else {
-                super.onBackPressed()
             }
-            if (isOptionsVisible) {
-                isOptionsVisible = !isOptionsVisible
-                invalidateOptionsTabs()
+        } else if (searchActionBarBinding.root.isVisible) {
+            val searchFragment = supportFragmentManager
+                .findFragmentByTag(SearchListFragment.FRAGMENT_TAG)
+            val transaction = supportFragmentManager.beginTransaction()
+            searchFragment?.let {
+                transaction.remove(searchFragment)
+                transaction.commit()
             }
+        } else {
+            super.onBackPressed()
+        }
+        if (isOptionsVisible) {
+            isOptionsVisible = !isOptionsVisible
+            invalidateOptionsTabs()
         }
     }
 

@@ -59,6 +59,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
     companion object {
 
         private const val ANALYSIS_TYPE = "analysis_type"
+        const val FRAGMENT_TAG = "review_fragment"
         const val TYPE_BLUR = 1
         const val TYPE_MEME = 2
         const val TYPE_DUPLICATES = 3
@@ -87,7 +88,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
             }
 
             val transaction = fragment.parentFragmentManager.beginTransaction()
-            transaction.add(R.id.nav_host_fragment_activity_main, analyseFragment)
+            transaction.add(R.id.nav_host_fragment_activity_main, analyseFragment, FRAGMENT_TAG)
             transaction.addToBackStack(null)
             transaction.commit()
         }
