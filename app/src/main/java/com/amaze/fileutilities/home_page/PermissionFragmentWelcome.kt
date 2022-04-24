@@ -13,10 +13,12 @@ package com.amaze.fileutilities.home_page
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
+import android.text.method.LinkMovementMethod
+import android.text.util.Linkify
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.WelcomePermissionPrivacyLayoutBinding
@@ -41,10 +43,10 @@ class PermissionFragmentWelcome : Fragment() {
             false
         )
         val root: View = binding.root
-        root.findViewById<Button>(R.id.privacyPolicyButton)?.setOnClickListener {
+        binding.privacyPolicyButton.setOnClickListener {
             Utils.openURL(Utils.URL_PRIVACY_POLICY, requireContext())
         }
-        root.findViewById<Button>(R.id.grantStorageButton)?.setOnClickListener {
+        binding.grantStorageButton.setOnClickListener {
             val activity = requireActivity() as WelcomeScreen
             activity.run {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -57,11 +59,13 @@ class PermissionFragmentWelcome : Fragment() {
                 }
             }
         }
-        root.findViewById<Button>(R.id.doneButton)?.setOnClickListener {
+        binding.doneButton.setOnClickListener {
             val activity = requireActivity() as WelcomeScreen
             activity.run {
                 if (!activity.haveStoragePermissions()) {
                     showToastInCenter(getString(R.string.grantfailed))
+                } else if (!binding.licenseAgreementCheckbox.isChecked) {
+                    showToastInCenter(getString(R.string.license_agreement_not_accepted))
                 } else {
                     WelcomeFinisher(this@PermissionFragmentWelcome).finish()
                     val action = Intent(this, MainActivity::class.java)
@@ -71,6 +75,9 @@ class PermissionFragmentWelcome : Fragment() {
                 }
             }
         }
+        binding.licenseAgreementText.text = Html.fromHtml(getString(R.string.license_agreement))
+        Linkify.addLinks(binding.licenseAgreementText, Linkify.WEB_URLS)
+        binding.licenseAgreementText.movementMethod = LinkMovementMethod.getInstance()
         return root
     }
 

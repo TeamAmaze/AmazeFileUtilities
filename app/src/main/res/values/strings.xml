@@ -407,4 +407,6 @@
     <string name="shortcut_long">Shortcut long</string>
     <string name="shortcut_disable">Disable shortcut</string>
     <string name="home_screen_design"><![CDATA[Home screen design - <a href="https://dribbble.com/topu-roy-antu">Topu Roy Antu</a>]]></string>
+    <string name="license_agreement"><![CDATA[I accept the <a href="https://teamamaze.xyz/license-agreement-utilities">License Agreement</a>]]></string>
+    <string name="license_agreement_not_accepted">Please accept license agreement</string>
 </resources>
