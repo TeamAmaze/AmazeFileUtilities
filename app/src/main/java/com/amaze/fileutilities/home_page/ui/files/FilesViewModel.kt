@@ -70,8 +70,8 @@ class FilesViewModel(val applicationContext: Application) :
                     FileUtils.scanFile(Uri.fromFile(file), applicationContext)
                     val usedSpace = file.totalSpace - file.usableSpace
 
-                    val progress = if(file.totalSpace != 0L) {
-                            (usedSpace * 100) / file.totalSpace
+                    val progress = if (file.totalSpace != 0L) {
+                        (usedSpace * 100) / file.totalSpace
                     } else 0
                     emit(
                         StorageSummary(

@@ -99,7 +99,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel =
-            ViewModelProvider(this).get(AnalyseViewModel::class.java)
+            ViewModelProvider(this.requireActivity()).get(AnalyseViewModel::class.java)
 
         _binding = FragmentReviewImagesBinding.inflate(inflater, container, false)
         val root: View = binding.root
