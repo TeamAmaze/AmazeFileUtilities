@@ -48,7 +48,7 @@ class WelcomeScreen : WelcomePermissionScreen() {
                     override fun fragment(): Fragment {
                         return PermissionFragmentWelcome()
                     }
-                }.background(R.color.blue)
+                }.background(R.color.navy_blue)
             )
             .canSkip(false)
             .swipeToDismiss(false)
