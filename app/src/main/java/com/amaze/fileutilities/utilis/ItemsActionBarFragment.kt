@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.MainActivity
+import com.amaze.fileutilities.home_page.ui.analyse.ReviewImagesFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
@@ -64,7 +65,13 @@ abstract class ItemsActionBarFragment : Fragment() {
             if (hideActionBarOnClick()) {
                 getMediaFileAdapter()?.uncheckChecked()
             } else {
-                // do nothing when we want to go back on back pressed
+                val reviewFragment = parentFragmentManager
+                    .findFragmentByTag(ReviewImagesFragment.FRAGMENT_TAG)
+                val transaction = parentFragmentManager.beginTransaction()
+                reviewFragment?.let {
+                    transaction.remove(reviewFragment)
+                    transaction.commit()
+                }
             }
         }
     }
