@@ -135,24 +135,33 @@ abstract class ItemsActionBarFragment : Fragment() {
                 checkedItems ->
                 val checkedMediaFiles = checkedItems.filter { it.mediaFileInfo != null }
                     .map { it.mediaFileInfo!! }
-                filesViewModel.getShareMediaFilesAdapter(checkedMediaFiles)
-                    .observe(viewLifecycleOwner) {
-                        shareAdapter ->
-                        if (shareAdapter == null) {
-                            if (processed) {
-                                requireActivity().showToastInCenter(
-                                    this.resources
-                                        .getString(R.string.failed_to_share)
-                                )
+                if (!checkedMediaFiles.isNullOrEmpty()) {
+                    filesViewModel.getShareMediaFilesAdapter(checkedMediaFiles)
+                        .observe(viewLifecycleOwner) {
+                            shareAdapter ->
+                            if (shareAdapter == null) {
+                                if (processed) {
+                                    requireActivity().showToastInCenter(
+                                        this.resources.getString(R.string.failed_to_share)
+                                    )
+                                } else {
+                                    requireActivity()
+                                        .showToastInCenter(
+                                            resources
+                                                .getString(R.string.please_wait)
+                                        )
+                                    processed = true
+                                }
                             } else {
-                                requireActivity()
-                                    .showToastInCenter(resources.getString(R.string.please_wait))
-                                processed = true
+                                showShareDialog(
+                                    requireActivity(), this.layoutInflater,
+                                    shareAdapter
+                                )
                             }
-                        } else {
-                            showShareDialog(requireActivity(), this.layoutInflater, shareAdapter)
                         }
-                    }
+                } else {
+                    requireContext().showToastOnBottom(getString(R.string.no_item_selected))
+                }
             }
         }
         getTrashButton()?.setOnClickListener {
@@ -160,6 +169,10 @@ abstract class ItemsActionBarFragment : Fragment() {
                 it.mediaFileInfo != null
             }?.map { it.mediaFileInfo!! }?.let {
                 toDelete ->
+                if (toDelete.isNullOrEmpty()) {
+                    requireContext().showToastOnBottom(getString(R.string.no_item_selected))
+                    return@let
+                }
                 val progressDialogBuilder = requireContext()
                     .showProcessingDialog(layoutInflater, "")
                 val progressDialog = progressDialogBuilder.create()
@@ -201,8 +214,8 @@ abstract class ItemsActionBarFragment : Fragment() {
                     sizeRaw ->
                     val size = Formatter.formatFileSize(requireContext(), sizeRaw)
                     summaryDialog.setMessage(
-                        resources
-                            .getString(R.string.delete_files_message).format(toDelete.size, size)
+                        resources.getString(R.string.delete_files_message)
+                            .format(toDelete.size, size)
                     )
                 }
             }

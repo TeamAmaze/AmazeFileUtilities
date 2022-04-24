@@ -17,6 +17,7 @@ import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.invalidate
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
@@ -25,65 +26,184 @@ class AnalyseViewModel : ViewModel() {
 
     var analysisType: Int? = null
 
+    private var duplicateFilesLiveData: MutableLiveData<List<List<MediaFileInfo>>?>? = null
+    private var emptyFilesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var oldRecordingsLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var oldScreenshotsLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var oldDownloadsLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var largeDownloadsLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var largeVideosLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var clutteredVideosLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var blurImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var lowLightImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var memeImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var sleepingImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var sadImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var distractedImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var selfieImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var groupPicImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+
     fun getBlurImages(dao: BlurAnalysisDao): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(null)
-            emit(transformAnalysisToMediaFileInfo(dao.getAllBlur(), dao))
+        if (blurImagesLiveData == null) {
+            blurImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            blurImagesLiveData?.value = null
+            processBlurImages(dao)
+        }
+        return blurImagesLiveData!!
+    }
+
+    private fun processBlurImages(dao: BlurAnalysisDao) {
+        viewModelScope.launch(Dispatchers.IO) {
+            blurImagesLiveData?.postValue(transformAnalysisToMediaFileInfo(dao.getAllBlur(), dao))
         }
     }
 
     fun getLowLightImages(dao: LowLightAnalysisDao): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(null)
-            emit(transformAnalysisToMediaFileInfo(dao.getAllLowLight(), dao))
+        if (lowLightImagesLiveData == null) {
+            lowLightImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            lowLightImagesLiveData?.value = null
+            processLowLightImages(dao)
+        }
+        return lowLightImagesLiveData!!
+    }
+
+    private fun processLowLightImages(dao: LowLightAnalysisDao) {
+        viewModelScope.launch(Dispatchers.IO) {
+            lowLightImagesLiveData?.postValue(
+                transformAnalysisToMediaFileInfo(
+                    dao
+                        .getAllLowLight(),
+                    dao
+                )
+            )
         }
     }
 
     fun getMemeImages(dao: MemeAnalysisDao): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(null)
-            emit(transformAnalysisToMediaFileInfo(dao.getAllMeme(), dao))
+        if (memeImagesLiveData == null) {
+            memeImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            memeImagesLiveData?.value = null
+            processMemeImages(dao)
+        }
+        return memeImagesLiveData!!
+    }
+
+    private fun processMemeImages(dao: MemeAnalysisDao) {
+        viewModelScope.launch(Dispatchers.IO) {
+            memeImagesLiveData?.postValue(transformAnalysisToMediaFileInfo(dao.getAllMeme(), dao))
         }
     }
 
     fun getSleepingImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(null)
-            emit(transformAnalysisToMediaFileInfo(dao.getAllSleeping(), dao))
+        if (sleepingImagesLiveData == null) {
+            sleepingImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            sleepingImagesLiveData?.value = null
+            processSleepingImages(dao)
+        }
+        return sleepingImagesLiveData!!
+    }
+
+    private fun processSleepingImages(dao: ImageAnalysisDao) {
+        viewModelScope.launch(Dispatchers.IO) {
+            sleepingImagesLiveData?.postValue(
+                transformAnalysisToMediaFileInfo(
+                    dao
+                        .getAllSleeping(),
+                    dao
+                )
+            )
         }
     }
 
     fun getSadImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(null)
-            emit(transformAnalysisToMediaFileInfo(dao.getAllSad(), dao))
+        if (sadImagesLiveData == null) {
+            sadImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            sadImagesLiveData?.value = null
+            processSadImages(dao)
+        }
+        return sadImagesLiveData!!
+    }
+
+    private fun processSadImages(dao: ImageAnalysisDao) {
+        viewModelScope.launch(Dispatchers.IO) {
+            sadImagesLiveData?.postValue(transformAnalysisToMediaFileInfo(dao.getAllSad(), dao))
         }
     }
 
     fun getDistractedImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(null)
-            emit(transformAnalysisToMediaFileInfo(dao.getAllDistracted(), dao))
+        if (distractedImagesLiveData == null) {
+            distractedImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            distractedImagesLiveData?.value = null
+            processDistractedImages(dao)
+        }
+        return distractedImagesLiveData!!
+    }
+
+    private fun processDistractedImages(dao: ImageAnalysisDao) {
+        viewModelScope.launch(Dispatchers.IO) {
+            distractedImagesLiveData?.postValue(
+                transformAnalysisToMediaFileInfo(
+                    dao
+                        .getAllDistracted(),
+                    dao
+                )
+            )
         }
     }
 
     fun getSelfieImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(null)
-            emit(transformAnalysisToMediaFileInfo(dao.getAllSelfie(), dao))
+        if (selfieImagesLiveData == null) {
+            selfieImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            selfieImagesLiveData?.value = null
+            processSelfieImages(dao)
+        }
+        return selfieImagesLiveData!!
+    }
+
+    private fun processSelfieImages(dao: ImageAnalysisDao) {
+        viewModelScope.launch(Dispatchers.IO) {
+            selfieImagesLiveData?.postValue(
+                transformAnalysisToMediaFileInfo(
+                    dao
+                        .getAllSelfie(),
+                    dao
+                )
+            )
         }
     }
 
     fun getGroupPicImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(null)
-            emit(transformAnalysisToMediaFileInfo(dao.getAllGroupPic(), dao))
+        if (groupPicImagesLiveData == null) {
+            groupPicImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            groupPicImagesLiveData?.value = null
+            processGroupPicImages(dao)
+        }
+        return groupPicImagesLiveData!!
+    }
+
+    private fun processGroupPicImages(dao: ImageAnalysisDao) {
+        viewModelScope.launch(Dispatchers.IO) {
+            groupPicImagesLiveData?.postValue(
+                transformAnalysisToMediaFileInfo(
+                    dao
+                        .getAllGroupPic(),
+                    dao
+                )
+            )
         }
     }
 
     fun getClutteredVideos(videosList: List<MediaFileInfo>): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-            emit(null)
+        if (clutteredVideosLiveData == null) {
+            clutteredVideosLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            clutteredVideosLiveData?.value = null
+            processClutteredVideos(videosList)
+        }
+        return clutteredVideosLiveData!!
+    }
+
+    private fun processClutteredVideos(videosList: List<MediaFileInfo>) {
+        viewModelScope.launch(Dispatchers.IO) {
             val countIdx = IntArray(101) { 0 }
             videosList.forEach {
                 it.extraInfo?.videoMetaData?.duration?.let {
@@ -111,13 +231,21 @@ class AnalyseViewModel : ViewModel() {
                 }
                 return@filter false
             }
-            emit(result)
+            clutteredVideosLiveData?.postValue(result)
         }
     }
 
     fun getLargeVideos(videosList: List<MediaFileInfo>): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-            emit(null)
+        if (largeVideosLiveData == null) {
+            largeVideosLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            largeVideosLiveData?.value = null
+            processLargeVideos(videosList)
+        }
+        return largeVideosLiveData!!
+    }
+
+    private fun processLargeVideos(videosList: List<MediaFileInfo>) {
+        viewModelScope.launch(Dispatchers.IO) {
             val priorityQueue = PriorityQueue<MediaFileInfo>(
                 100
             ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
@@ -133,20 +261,31 @@ class AnalyseViewModel : ViewModel() {
                     result.add(it)
                 }
             }
-            emit(result.reversed())
+            largeVideosLiveData?.postValue(result.reversed())
         }
     }
 
     fun getLargeDownloads(dao: PathPreferencesDao): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-            emit(null)
+        if (largeDownloadsLiveData == null) {
+            largeDownloadsLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            largeDownloadsLiveData?.value = null
+            processLargeDownloads(dao)
+        }
+        return largeDownloadsLiveData!!
+    }
+
+    private fun processLargeDownloads(dao: PathPreferencesDao) {
+        viewModelScope.launch(Dispatchers.IO) {
             val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS)
             val priorityQueue = PriorityQueue<MediaFileInfo>(
                 100
             ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
 
             prefPaths.forEach {
-                processFileRecursive(File(it.path), priorityQueue, MediaFileInfo.MEDIA_TYPE_UNKNOWN)
+                processFileRecursive(
+                    File(it.path), priorityQueue,
+                    MediaFileInfo.MEDIA_TYPE_UNKNOWN
+                )
             }
 
             val result = ArrayList<MediaFileInfo>()
@@ -155,20 +294,31 @@ class AnalyseViewModel : ViewModel() {
                     result.add(it)
                 }
             }
-            emit(result.reversed())
+            largeDownloadsLiveData?.postValue(result.reversed())
         }
     }
 
     fun getOldDownloads(dao: PathPreferencesDao): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-            emit(null)
+        if (oldDownloadsLiveData == null) {
+            oldDownloadsLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            oldDownloadsLiveData?.value = null
+            processOldDownloads(dao)
+        }
+        return oldDownloadsLiveData!!
+    }
+
+    private fun processOldDownloads(dao: PathPreferencesDao) {
+        viewModelScope.launch(Dispatchers.IO) {
             val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS)
             val priorityQueue = PriorityQueue<MediaFileInfo>(
                 100
             ) { o1, o2 -> -1 * o1.date.compareTo(o2.date) }
 
             prefPaths.forEach {
-                processFileRecursive(File(it.path), priorityQueue, MediaFileInfo.MEDIA_TYPE_UNKNOWN)
+                processFileRecursive(
+                    File(it.path), priorityQueue,
+                    MediaFileInfo.MEDIA_TYPE_UNKNOWN
+                )
             }
 
             val result = ArrayList<MediaFileInfo>()
@@ -177,13 +327,21 @@ class AnalyseViewModel : ViewModel() {
                     result.add(it)
                 }
             }
-            emit(result.reversed())
+            oldDownloadsLiveData?.postValue(result.reversed())
         }
     }
 
     fun getOldScreenshots(dao: PathPreferencesDao): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-            emit(null)
+        if (oldScreenshotsLiveData == null) {
+            oldScreenshotsLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            oldScreenshotsLiveData?.value = null
+            processOldScreenshots(dao)
+        }
+        return oldScreenshotsLiveData!!
+    }
+
+    private fun processOldScreenshots(dao: PathPreferencesDao) {
+        viewModelScope.launch(Dispatchers.IO) {
             val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS)
             val priorityQueue = PriorityQueue<MediaFileInfo>(
                 100
@@ -199,13 +357,21 @@ class AnalyseViewModel : ViewModel() {
                     result.add(it)
                 }
             }
-            emit(result.reversed())
+            oldScreenshotsLiveData?.postValue(result.reversed())
         }
     }
 
     fun getOldRecordings(dao: PathPreferencesDao): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-            emit(null)
+        if (oldRecordingsLiveData == null) {
+            oldRecordingsLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            oldRecordingsLiveData?.value = null
+            processOldRecordings(dao)
+        }
+        return oldRecordingsLiveData!!
+    }
+
+    private fun processOldRecordings(dao: PathPreferencesDao) {
+        viewModelScope.launch(Dispatchers.IO) {
             val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_RECORDING)
             val priorityQueue = PriorityQueue<MediaFileInfo>(
                 100
@@ -221,7 +387,7 @@ class AnalyseViewModel : ViewModel() {
                     result.add(it)
                 }
             }
-            emit(result.reversed())
+            oldRecordingsLiveData?.postValue(result.reversed())
         }
     }
 
@@ -229,18 +395,42 @@ class AnalyseViewModel : ViewModel() {
         dao: InternalStorageAnalysisDao,
         searchMediaFiles: Boolean,
         deepSearch: Boolean
-    ):
-        LiveData<List<List<MediaFileInfo>>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(null)
-            emit(transformInternalStorageAnalysisToMediaFileList(dao, searchMediaFiles, deepSearch))
+    ): LiveData<List<List<MediaFileInfo>>?> {
+        if (duplicateFilesLiveData == null) {
+            duplicateFilesLiveData = MutableLiveData<List<List<MediaFileInfo>>?>()
+            duplicateFilesLiveData?.value = null
+            processDuplicateDirectories(dao, searchMediaFiles, deepSearch)
+        }
+        return duplicateFilesLiveData!!
+    }
+
+    private fun processDuplicateDirectories(
+        dao: InternalStorageAnalysisDao,
+        searchMediaFiles: Boolean,
+        deepSearch: Boolean
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            duplicateFilesLiveData?.postValue(
+                transformInternalStorageAnalysisToMediaFileList(
+                    dao,
+                    searchMediaFiles, deepSearch
+                )
+            )
         }
     }
 
     fun getEmptyFiles(dao: InternalStorageAnalysisDao): LiveData<List<MediaFileInfo>?> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(null)
-            emit(transformInternalStorageAnalysisToMediaFile(dao))
+        if (emptyFilesLiveData == null) {
+            emptyFilesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            emptyFilesLiveData?.value = null
+            processEmptyFiles(dao)
+        }
+        return emptyFilesLiveData!!
+    }
+
+    private fun processEmptyFiles(dao: InternalStorageAnalysisDao) {
+        viewModelScope.launch(Dispatchers.IO) {
+            emptyFilesLiveData?.postValue(transformInternalStorageAnalysisToMediaFile(dao))
         }
     }
 
