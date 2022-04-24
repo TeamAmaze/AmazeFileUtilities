@@ -329,7 +329,9 @@ class MainActivity :
         if (fragment is NavHostFragment && fragment.childFragmentManager.backStackEntryCount > 1) {
             supportFragmentManager.popBackStack()
         } else {
-            if (::selectedItemActionBarBinding.isInitialized) {
+            if (selectedItemActionBarBinding.root.isVisible &&
+                !searchActionBarBinding.root.isVisible
+            ) {
                 if (!actionBarBinding.root.isVisible) {
                     var abstractListFragment: ItemsActionBarFragment? = null
                     fragment?.childFragmentManager?.fragments?.forEach {
@@ -364,6 +366,14 @@ class MainActivity :
                     if (!didShowTransfer || !isTransferFragment) {
                         super.onBackPressed()
                     }
+                }
+            } else if (searchActionBarBinding.root.isVisible) {
+                val searchFragment = supportFragmentManager
+                    .findFragmentByTag(SearchListFragment.FRAGMENT_TAG)
+                val transaction = supportFragmentManager.beginTransaction()
+                searchFragment?.let {
+                    transaction.remove(searchFragment)
+                    transaction.commit()
                 }
             } else {
                 super.onBackPressed()
@@ -728,7 +738,10 @@ class MainActivity :
 
     private fun showSearchFragment() {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.nav_host_fragment_activity_main, SearchListFragment())
+        transaction.add(
+            R.id.nav_host_fragment_activity_main, SearchListFragment(),
+            SearchListFragment.FRAGMENT_TAG
+        )
         transaction.addToBackStack(null)
         transaction.commit()
     }
