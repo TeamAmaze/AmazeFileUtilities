@@ -742,7 +742,6 @@ public abstract class CloudStreamServer {
           byte[] buff = new byte[8192];
           int read = 0;
           while ((read = data.read(buff)) > 0) {
-            // if(SolidExplorer.LOG)Log.d(CloudUtil.TAG, "Read: "+ read +", pending: "+
             // data.availableExact());
             out.write(buff, 0, read);
           }
