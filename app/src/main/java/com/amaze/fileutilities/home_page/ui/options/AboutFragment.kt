@@ -105,6 +105,7 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
                 startActivity(Intent(requireContext(), AboutActivity::class.java))
             }
             KEY_LICENSE -> {
+                Utils.openURL(Utils.URL_LICENSE_AGREEMENT, requireContext())
             }
             KEY_PRIVACY_POLICY -> {
                 Utils.openURL(Utils.URL_PRIVACY_POLICY, requireContext())

@@ -56,7 +56,6 @@
                 android:resource="@xml/shortcuts" />
         </activity>
         <activity android:name=".home_page.WelcomeScreen"
-            android:screenOrientation="portrait"
             android:theme="@style/CustomWelcomeScreenTheme"/>
         <activity
             android:name=".image_viewer.ImageViewerDialogActivity"

@@ -159,6 +159,9 @@ class FileUtils {
                     return StorageDirectoryParcelable(file.path, name)
                 } else if (!volume.isRemovable) {
                     return StorageDirectoryParcelable(file.path, name)
+                } else {
+                    // last resort
+                    return StorageDirectoryParcelable("/storage/emulated/0", name)
                 }
             }
             throw RuntimeException(
