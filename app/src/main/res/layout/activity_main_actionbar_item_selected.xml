@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
-    android:padding="@dimen/two_dp">
+    android:padding="@dimen/two_dp"
+    android:visibility="gone"
+    >
 
     <ImageView
         android:id="@+id/backActionBar"
