@@ -92,6 +92,10 @@ abstract class ItemsActionBarFragment : Fragment() {
         return optionsActionBar?.findViewById(R.id.trashButton)
     }
 
+    fun getLocateFileButton(): ImageView? {
+        return optionsActionBar?.findViewById(R.id.locateFile)
+    }
+
     private fun deleteFromFileViewmodelLists(toDelete: List<MediaFileInfo>) {
         val imagesToDelete = toDelete.filter {
             it.extraInfo?.mediaType == MediaFileInfo.MEDIA_TYPE_IMAGE
@@ -140,8 +144,7 @@ abstract class ItemsActionBarFragment : Fragment() {
             var processed = false
             getMediaFileAdapter()?.checkItemsList?.let {
                 checkedItems ->
-                val checkedMediaFiles = checkedItems.filter { it.mediaFileInfo != null }
-                    .map { it.mediaFileInfo!! }
+                val checkedMediaFiles = checkedItems.map { it.mediaFileInfo!! }
                 if (!checkedMediaFiles.isNullOrEmpty()) {
                     filesViewModel.getShareMediaFilesAdapter(checkedMediaFiles)
                         .observe(viewLifecycleOwner) {
@@ -166,15 +169,14 @@ abstract class ItemsActionBarFragment : Fragment() {
                                 )
                             }
                         }
+                    getMediaFileAdapter()?.uncheckChecked()
                 } else {
                     requireContext().showToastOnBottom(getString(R.string.no_item_selected))
                 }
             }
         }
         getTrashButton()?.setOnClickListener {
-            getMediaFileAdapter()?.checkItemsList?.filter {
-                it.mediaFileInfo != null
-            }?.map { it.mediaFileInfo!! }?.let {
+            getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }?.let {
                 toDelete ->
                 if (toDelete.isNullOrEmpty()) {
                     requireContext().showToastOnBottom(getString(R.string.no_item_selected))
@@ -229,6 +231,15 @@ abstract class ItemsActionBarFragment : Fragment() {
                         resources.getString(R.string.delete_files_message)
                             .format(toDelete.size, size)
                     )
+                }
+            }
+        }
+        getLocateFileButton()?.setOnClickListener {
+            getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }?.let {
+                openFile ->
+                if (openFile.isNotEmpty()) {
+                    openFile[0].startLocateFileAction(requireContext())
+                    getMediaFileAdapter()?.uncheckChecked()
                 }
             }
         }

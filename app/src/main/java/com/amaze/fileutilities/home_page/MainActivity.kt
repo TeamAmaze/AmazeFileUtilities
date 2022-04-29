@@ -510,13 +510,13 @@ class MainActivity :
                  * immediately
                  */
                 log.info("App update available")
-                val immediateUpdate = (
+                /*val immediateUpdate = (
                     appUpdateInfo.clientVersionStalenessDays()
                         ?: -1
                     ) >= DAYS_FOR_IMMEDIATE_UPDATE || appUpdateInfo.updatePriority() >= 4
-                log.info("Immediate criteria $immediateUpdate")
+                log.info("Immediate criteria $immediateUpdate")*/
                 if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) &&
-                    immediateUpdate
+                    appUpdateInfo.updatePriority() >= 4
                 ) {
                     log.info("Immediate update conditions met, triggering immediate update")
                     appUpdateManager?.startUpdateFlowForResult(
@@ -532,7 +532,9 @@ class MainActivity :
                         // Include a request code to later monitor this update request.
                         UPDATE_REQUEST_CODE
                     )
-                } else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
+                } else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE) &&
+                    appUpdateInfo.updatePriority() >= 2
+                ) {
                     log.info("flexible update conditions met, triggering flexible update")
                     appUpdateManager?.startUpdateFlowForResult(
                         // Pass the intent that is returned by 'getAppUpdateInfo()'.
