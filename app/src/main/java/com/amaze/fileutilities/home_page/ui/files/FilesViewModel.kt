@@ -58,9 +58,19 @@ class FilesViewModel(val applicationContext: Application) :
     private val faceDetector = FaceDetection.getClient(highAccuracyOpts)
     private val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
-    val internalStorageStats: LiveData<StorageSummary?> =
-        liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(null)
+    var internalStorageStatsLiveData: MutableLiveData<StorageSummary?>? = null
+
+    fun internalStorageStats(): LiveData<StorageSummary?> {
+        if (internalStorageStatsLiveData == null) {
+            internalStorageStatsLiveData = MutableLiveData()
+            internalStorageStatsLiveData?.value = null
+            processInternalStorageStats()
+        }
+        return internalStorageStatsLiveData!!
+    }
+
+    private fun processInternalStorageStats() {
+        viewModelScope.launch(Dispatchers.IO) {
             val storageData = applicationContext.applicationContext.getExternalStorageDirectory()
             storageData?.let {
                 data ->
@@ -73,19 +83,19 @@ class FilesViewModel(val applicationContext: Application) :
                     val progress = if (file.totalSpace != 0L) {
                         (usedSpace * 100) / file.totalSpace
                     } else 0
-                    emit(
-                        StorageSummary(
-                            items, progress.toInt(), usedSpace, usedSpace,
-                            file.usableSpace,
-                            file.totalSpace
-                        )
+                    val result = StorageSummary(
+                        items, progress.toInt(), usedSpace, usedSpace,
+                        file.usableSpace,
+                        file.totalSpace
                     )
+                    internalStorageStatsLiveData?.postValue(result)
                 } catch (se: SecurityException) {
                     log.warn("failed to list recent files due to no permission", se)
-                    emit(null)
+                    internalStorageStatsLiveData?.postValue(null)
                 }
             }
         }
+    }
 
     val initAnalysisMigrations: LiveData<Boolean> =
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
@@ -151,28 +161,28 @@ class FilesViewModel(val applicationContext: Application) :
 
     var usedImagesSummaryTransformations:
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
-            Transformations.switchMap(internalStorageStats) {
+            Transformations.switchMap(internalStorageStats()) {
                 input ->
                 getImagesSummaryLiveData(input)
             }
 
     val usedAudiosSummaryTransformations:
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
-            Transformations.switchMap(internalStorageStats) {
+            Transformations.switchMap(internalStorageStats()) {
                 input ->
                 getAudiosSummaryLiveData(input)
             }
 
     val usedVideosSummaryTransformations:
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
-            Transformations.switchMap(internalStorageStats) {
+            Transformations.switchMap(internalStorageStats()) {
                 input ->
                 getVideosSummaryLiveData(input)
             }
 
     var usedDocsSummaryTransformations:
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
-            Transformations.switchMap(internalStorageStats) {
+            Transformations.switchMap(internalStorageStats()) {
                 input ->
                 getDocumentsSummaryLiveData(input)
             }
@@ -648,11 +658,8 @@ class FilesViewModel(val applicationContext: Application) :
                         )
                     }
                 }
-                if (index % 5 == 0) {
-                    emit(successProcessedPair)
-                }
+                emit(successProcessedPair)
             }
-            emit(successProcessedPair)
         }
     }
 

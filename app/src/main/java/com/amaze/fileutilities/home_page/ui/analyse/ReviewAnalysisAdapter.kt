@@ -97,6 +97,17 @@ class ReviewAnalysisAdapter(
     }
 
     /**
+     * for review fragments, adapter underlying list is the main list fetched from analysis, so we
+     * can directly delete from that list
+     */
+    override fun removeChecked(): Boolean {
+        val toRemove = getMediaFilesListItems().filter { it.isChecked && it.mediaFileInfo != null }
+            .map { it.mediaFileInfo }
+        val didRemove = mediaFileInfoList.removeAll(toRemove)
+        return super.removeChecked() && didRemove
+    }
+
+    /**
      * Set list elements
      */
     fun setData(data: List<MediaFileInfo>) {
