@@ -26,26 +26,26 @@ class AnalyseViewModel : ViewModel() {
 
     var analysisType: Int? = null
 
-    private var duplicateFilesLiveData: MutableLiveData<List<List<MediaFileInfo>>?>? = null
-    private var emptyFilesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
-    private var oldRecordingsLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
-    private var oldScreenshotsLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
-    private var oldDownloadsLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
-    private var largeDownloadsLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
-    private var largeVideosLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
-    private var clutteredVideosLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
-    private var blurImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
-    private var lowLightImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
-    private var memeImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
-    private var sleepingImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
-    private var sadImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
-    private var distractedImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
-    private var selfieImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
-    private var groupPicImagesLiveData: MutableLiveData<List<MediaFileInfo>?>? = null
+    private var duplicateFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var emptyFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var oldRecordingsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var oldScreenshotsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var oldDownloadsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var largeDownloadsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var largeVideosLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var clutteredVideosLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var blurImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var lowLightImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var memeImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var sleepingImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var sadImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var distractedImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var selfieImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    private var groupPicImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
 
-    fun getBlurImages(dao: BlurAnalysisDao): LiveData<List<MediaFileInfo>?> {
+    fun getBlurImages(dao: BlurAnalysisDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (blurImagesLiveData == null) {
-            blurImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            blurImagesLiveData = MutableLiveData()
             blurImagesLiveData?.value = null
             processBlurImages(dao)
         }
@@ -58,9 +58,9 @@ class AnalyseViewModel : ViewModel() {
         }
     }
 
-    fun getLowLightImages(dao: LowLightAnalysisDao): LiveData<List<MediaFileInfo>?> {
+    fun getLowLightImages(dao: LowLightAnalysisDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (lowLightImagesLiveData == null) {
-            lowLightImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            lowLightImagesLiveData = MutableLiveData()
             lowLightImagesLiveData?.value = null
             processLowLightImages(dao)
         }
@@ -79,9 +79,9 @@ class AnalyseViewModel : ViewModel() {
         }
     }
 
-    fun getMemeImages(dao: MemeAnalysisDao): LiveData<List<MediaFileInfo>?> {
+    fun getMemeImages(dao: MemeAnalysisDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (memeImagesLiveData == null) {
-            memeImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            memeImagesLiveData = MutableLiveData()
             memeImagesLiveData?.value = null
             processMemeImages(dao)
         }
@@ -94,9 +94,9 @@ class AnalyseViewModel : ViewModel() {
         }
     }
 
-    fun getSleepingImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+    fun getSleepingImages(dao: ImageAnalysisDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (sleepingImagesLiveData == null) {
-            sleepingImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            sleepingImagesLiveData = MutableLiveData()
             sleepingImagesLiveData?.value = null
             processSleepingImages(dao)
         }
@@ -115,9 +115,9 @@ class AnalyseViewModel : ViewModel() {
         }
     }
 
-    fun getSadImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+    fun getSadImages(dao: ImageAnalysisDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (sadImagesLiveData == null) {
-            sadImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            sadImagesLiveData = MutableLiveData()
             sadImagesLiveData?.value = null
             processSadImages(dao)
         }
@@ -130,9 +130,9 @@ class AnalyseViewModel : ViewModel() {
         }
     }
 
-    fun getDistractedImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+    fun getDistractedImages(dao: ImageAnalysisDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (distractedImagesLiveData == null) {
-            distractedImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            distractedImagesLiveData = MutableLiveData()
             distractedImagesLiveData?.value = null
             processDistractedImages(dao)
         }
@@ -151,9 +151,9 @@ class AnalyseViewModel : ViewModel() {
         }
     }
 
-    fun getSelfieImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+    fun getSelfieImages(dao: ImageAnalysisDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (selfieImagesLiveData == null) {
-            selfieImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            selfieImagesLiveData = MutableLiveData()
             selfieImagesLiveData?.value = null
             processSelfieImages(dao)
         }
@@ -172,9 +172,9 @@ class AnalyseViewModel : ViewModel() {
         }
     }
 
-    fun getGroupPicImages(dao: ImageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+    fun getGroupPicImages(dao: ImageAnalysisDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (groupPicImagesLiveData == null) {
-            groupPicImagesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            groupPicImagesLiveData = MutableLiveData()
             groupPicImagesLiveData?.value = null
             processGroupPicImages(dao)
         }
@@ -193,9 +193,9 @@ class AnalyseViewModel : ViewModel() {
         }
     }
 
-    fun getClutteredVideos(videosList: List<MediaFileInfo>): LiveData<List<MediaFileInfo>?> {
+    fun getClutteredVideos(videosList: List<MediaFileInfo>): LiveData<ArrayList<MediaFileInfo>?> {
         if (clutteredVideosLiveData == null) {
-            clutteredVideosLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            clutteredVideosLiveData = MutableLiveData()
             clutteredVideosLiveData?.value = null
             processClutteredVideos(videosList)
         }
@@ -231,13 +231,13 @@ class AnalyseViewModel : ViewModel() {
                 }
                 return@filter false
             }
-            clutteredVideosLiveData?.postValue(result)
+            clutteredVideosLiveData?.postValue(ArrayList(result))
         }
     }
 
-    fun getLargeVideos(videosList: List<MediaFileInfo>): LiveData<List<MediaFileInfo>?> {
+    fun getLargeVideos(videosList: List<MediaFileInfo>): LiveData<ArrayList<MediaFileInfo>?> {
         if (largeVideosLiveData == null) {
-            largeVideosLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            largeVideosLiveData = MutableLiveData()
             largeVideosLiveData?.value = null
             processLargeVideos(videosList)
         }
@@ -261,13 +261,13 @@ class AnalyseViewModel : ViewModel() {
                     result.add(it)
                 }
             }
-            largeVideosLiveData?.postValue(result.reversed())
+            largeVideosLiveData?.postValue(ArrayList(result.reversed()))
         }
     }
 
-    fun getLargeDownloads(dao: PathPreferencesDao): LiveData<List<MediaFileInfo>?> {
+    fun getLargeDownloads(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (largeDownloadsLiveData == null) {
-            largeDownloadsLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            largeDownloadsLiveData = MutableLiveData()
             largeDownloadsLiveData?.value = null
             processLargeDownloads(dao)
         }
@@ -294,13 +294,13 @@ class AnalyseViewModel : ViewModel() {
                     result.add(it)
                 }
             }
-            largeDownloadsLiveData?.postValue(result.reversed())
+            largeDownloadsLiveData?.postValue(ArrayList(result.reversed()))
         }
     }
 
-    fun getOldDownloads(dao: PathPreferencesDao): LiveData<List<MediaFileInfo>?> {
+    fun getOldDownloads(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (oldDownloadsLiveData == null) {
-            oldDownloadsLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            oldDownloadsLiveData = MutableLiveData()
             oldDownloadsLiveData?.value = null
             processOldDownloads(dao)
         }
@@ -327,13 +327,13 @@ class AnalyseViewModel : ViewModel() {
                     result.add(it)
                 }
             }
-            oldDownloadsLiveData?.postValue(result.reversed())
+            oldDownloadsLiveData?.postValue(ArrayList(result.reversed()))
         }
     }
 
-    fun getOldScreenshots(dao: PathPreferencesDao): LiveData<List<MediaFileInfo>?> {
+    fun getOldScreenshots(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (oldScreenshotsLiveData == null) {
-            oldScreenshotsLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            oldScreenshotsLiveData = MutableLiveData()
             oldScreenshotsLiveData?.value = null
             processOldScreenshots(dao)
         }
@@ -357,13 +357,13 @@ class AnalyseViewModel : ViewModel() {
                     result.add(it)
                 }
             }
-            oldScreenshotsLiveData?.postValue(result.reversed())
+            oldScreenshotsLiveData?.postValue(ArrayList(result.reversed()))
         }
     }
 
-    fun getOldRecordings(dao: PathPreferencesDao): LiveData<List<MediaFileInfo>?> {
+    fun getOldRecordings(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (oldRecordingsLiveData == null) {
-            oldRecordingsLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            oldRecordingsLiveData = MutableLiveData()
             oldRecordingsLiveData?.value = null
             processOldRecordings(dao)
         }
@@ -387,7 +387,7 @@ class AnalyseViewModel : ViewModel() {
                     result.add(it)
                 }
             }
-            oldRecordingsLiveData?.postValue(result.reversed())
+            oldRecordingsLiveData?.postValue(ArrayList(result.reversed()))
         }
     }
 
@@ -395,9 +395,9 @@ class AnalyseViewModel : ViewModel() {
         dao: InternalStorageAnalysisDao,
         searchMediaFiles: Boolean,
         deepSearch: Boolean
-    ): LiveData<List<List<MediaFileInfo>>?> {
+    ): LiveData<ArrayList<MediaFileInfo>?> {
         if (duplicateFilesLiveData == null) {
-            duplicateFilesLiveData = MutableLiveData<List<List<MediaFileInfo>>?>()
+            duplicateFilesLiveData = MutableLiveData()
             duplicateFilesLiveData?.value = null
             processDuplicateDirectories(dao, searchMediaFiles, deepSearch)
         }
@@ -419,9 +419,9 @@ class AnalyseViewModel : ViewModel() {
         }
     }
 
-    fun getEmptyFiles(dao: InternalStorageAnalysisDao): LiveData<List<MediaFileInfo>?> {
+    fun getEmptyFiles(dao: InternalStorageAnalysisDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (emptyFilesLiveData == null) {
-            emptyFilesLiveData = MutableLiveData<List<MediaFileInfo>?>()
+            emptyFilesLiveData = MutableLiveData()
             emptyFilesLiveData?.value = null
             processEmptyFiles(dao)
         }
@@ -546,7 +546,7 @@ class AnalyseViewModel : ViewModel() {
     }
 
     private fun transformInternalStorageAnalysisToMediaFile(dao: InternalStorageAnalysisDao):
-        List<MediaFileInfo> {
+        ArrayList<MediaFileInfo> {
         val analysis = dao.getAllEmptyFiles()
         val response = analysis.filter {
             it.invalidate(dao)
@@ -559,7 +559,7 @@ class AnalyseViewModel : ViewModel() {
                 )
             )
         }
-        return response
+        return ArrayList(response)
     }
 
     private fun transformInternalStorageAnalysisToMediaFileList(
@@ -567,7 +567,7 @@ class AnalyseViewModel : ViewModel() {
         searchMediaFiles: Boolean,
         deepSearch: Boolean
     ):
-        List<List<MediaFileInfo>> {
+        ArrayList<MediaFileInfo> {
         val analysis: List<InternalStorageAnalysis> = when {
             searchMediaFiles -> {
                 dao.getAllMediaFiles()
@@ -595,14 +595,14 @@ class AnalyseViewModel : ViewModel() {
                 )
             }
         }
-        return response
+        return ArrayList(response.flatten())
     }
 
     private fun transformAnalysisToMediaFileInfo(
         imageAnalysis: List<ImageAnalysis>,
         dao: ImageAnalysisDao
     ):
-        List<MediaFileInfo> {
+        ArrayList<MediaFileInfo> {
         val response = imageAnalysis.filter {
             it.invalidate(dao)
         }.map {
@@ -614,14 +614,14 @@ class AnalyseViewModel : ViewModel() {
                 )
             )
         }
-        return response
+        return ArrayList(response)
     }
 
     private fun transformAnalysisToMediaFileInfo(
         analysis: List<BlurAnalysis>,
         dao: BlurAnalysisDao
     ):
-        List<MediaFileInfo> {
+        ArrayList<MediaFileInfo> {
         val response = analysis.filter {
             it.invalidate(dao)
         }.map {
@@ -633,14 +633,14 @@ class AnalyseViewModel : ViewModel() {
                 )
             )
         }
-        return response
+        return ArrayList(response)
     }
 
     private fun transformAnalysisToMediaFileInfo(
         analysis: List<LowLightAnalysis>,
         dao: LowLightAnalysisDao
     ):
-        List<MediaFileInfo> {
+        ArrayList<MediaFileInfo> {
         val response = analysis.filter {
             it.invalidate(dao)
         }.map {
@@ -652,14 +652,14 @@ class AnalyseViewModel : ViewModel() {
                 )
             )
         }
-        return response
+        return ArrayList(response)
     }
 
     private fun transformAnalysisToMediaFileInfo(
         analysis: List<MemeAnalysis>,
         dao: MemeAnalysisDao
     ):
-        List<MediaFileInfo> {
+        ArrayList<MediaFileInfo> {
         val response = analysis.filter {
             it.invalidate(dao)
         }.map {
@@ -671,6 +671,6 @@ class AnalyseViewModel : ViewModel() {
                 )
             )
         }
-        return response
+        return ArrayList(response)
     }
 }
