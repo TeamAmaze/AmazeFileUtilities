@@ -15,10 +15,12 @@
         android:textSize="@dimen/twenty_four_sp"
         />
     <ScrollView
+        android:id="@+id/conditions_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/before_we_start_text"
-        android:layout_marginTop="@dimen/material_generic_large"
+        android:layout_above="@id/bottom_view"
+        android:layout_marginTop="@dimen/material_generic_medium"
         >
         <LinearLayout
             android:layout_width="wrap_content"
@@ -105,6 +107,7 @@
         </LinearLayout>
     </ScrollView>
     <RelativeLayout
+        android:id="@+id/bottom_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/material_generic"
@@ -120,11 +123,12 @@
             android:id="@+id/license_agreement_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/privacy_summary"
+            android:text="@string/license_agreement"
             android:layout_marginLeft="@dimen/eight_dp"
             android:textColor="@color/white"
             android:textSize="@dimen/eighteen_sp"
             android:layout_toRightOf="@id/license_agreement_checkbox"
+            android:layout_toLeftOf="@id/doneButton"
             />
         <Button
             android:id="@+id/doneButton"

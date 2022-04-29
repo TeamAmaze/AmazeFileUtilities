@@ -147,8 +147,8 @@ class AnalyseFragment : Fragment() {
                 internalStorageDao, searchMediaFiles, deepSearch
             ).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    duplicateFilesPreview.loadPreviews(it.flatten()) {
-                        cleanButtonClick(it.flatten())
+                    duplicateFilesPreview.loadPreviews(it) {
+                        cleanButtonClick(it)
                     }
                 }
             }

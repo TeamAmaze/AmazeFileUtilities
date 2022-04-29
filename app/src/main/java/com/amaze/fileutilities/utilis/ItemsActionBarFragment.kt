@@ -200,7 +200,12 @@ abstract class ItemsActionBarFragment : Fragment() {
                                 )
                             }
                             // delete deleted data from observables in fileviewmodel
+                            // for fileviewmodels, underlying list isn't passed in adapters beacause of size
+                            // and because that list is continuously iterated by dupe analysis
                             deleteFromFileViewmodelLists(toDelete)
+
+                            // reset interal storage stats so that we recalculate storage remaining
+                            filesViewModel.internalStorageStatsLiveData = null
 
                             // deletion complete, no need to check analysis data to remove
                             // as it will get deleted lazily while loading analysis lists

@@ -56,7 +56,7 @@ class FilesFragment : ItemsActionBarFragment() {
         // needed to avoid NPE in progress library when closing activity
         binding.storagePercent.isSaveEnabled = false
         filesViewModel.run {
-            internalStorageStats.observe(
+            internalStorageStats().observe(
                 viewLifecycleOwner
             ) {
                 it?.run {
