@@ -457,10 +457,15 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                 " ($bytesFormatted)"
             val countView = getCountView()
             countView?.text = title
-            if (checkedSize > 0 && doShowDown) {
-                thumbsDownButton?.visibility = View.VISIBLE
+            if (checkedSize > 0) {
+                if (doShowDown) {
+                    thumbsDownButton?.visibility = View.VISIBLE
+                }
+                getLocateFileButton()?.visibility = if (checkedSize == 1)
+                    View.VISIBLE else View.GONE
             } else {
                 thumbsDownButton?.visibility = View.GONE
+                getLocateFileButton()?.visibility = View.GONE
             }
         }
         setupActionBarButtons(cleanData)
