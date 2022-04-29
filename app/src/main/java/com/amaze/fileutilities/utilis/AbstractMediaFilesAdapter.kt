@@ -72,6 +72,7 @@ abstract class AbstractMediaFilesAdapter(
         removeItemsIdx.forEach {
             notifyItemChanged(it)
         }
+        toggleCheckCallback?.invoke(checkItemsList.size, itemCount, checkedItemBytes())
     }
 
     open fun removeChecked(): Boolean {
