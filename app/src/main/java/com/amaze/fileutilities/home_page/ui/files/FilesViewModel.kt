@@ -801,8 +801,18 @@ class FilesViewModel(val applicationContext: Application) :
                     val cal = GregorianCalendar.getInstance()
                     cal.time = trial.fetchTime
                     cal.add(Calendar.DAY_OF_YEAR, 1)
-                    if (cal.time.before(Date())) {
-                        // we haven't fetched today, check if active from remote
+
+                    val calWeek = GregorianCalendar.getInstance()
+                    calWeek.time = trial.fetchTime
+                    calWeek.add(Calendar.DAY_OF_YEAR, 7)
+                    if ((
+                        cal.time.before(Date()) && trial.trialStatus
+                            != TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE
+                        ) ||
+                        calWeek.time.before(Date()) &&
+                        trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE
+                    ) {
+                        // fetch if membership liftime once every week. else fetch everyday.
                         fetchBillingStatusAndInitTrial(
                             deviceId, dao, isNetworkAvailable,
                             trialResponse
@@ -817,7 +827,7 @@ class FilesViewModel(val applicationContext: Application) :
                                     ?: TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
                                 trial.trialDaysLeft,
                                 trial.subscriptionStatus,
-                                null
+                                trial.purchaseToken
                             )
                         )
                     }
