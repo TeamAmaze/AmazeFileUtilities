@@ -51,7 +51,11 @@ class Billing(val context: Context, private var uniqueId: String) :
     var log: Logger = LoggerFactory.getLogger(Billing::class.java)
 
     private val skuList: MutableList<String>
-    private var skuDetails: List<SkuDetails>? = null
+    private val skuListInApp: MutableList<String>
+    private var skuDetails: ArrayList<SkuDetails> = ArrayList()
+    private var fetchedSubs = false
+    private var fetchedInApp = false
+    private var isPurchaseInApp = false
     private var activity: AppCompatActivity? = null
     private var purchaseDialog: AlertDialog? = null
 
@@ -86,8 +90,9 @@ class Billing(val context: Context, private var uniqueId: String) :
         skuList = ArrayList()
         skuList.add("subscription_1")
         skuList.add("subscription_2")
-        skuList.add("subscription_3")
-        skuList.add("subscription_4")
+        skuListInApp = ArrayList()
+        skuListInApp.add("lifetime_1")
+        skuListInApp.add("lifetime_2")
         billingClient =
             BillingClient.newBuilder(context).setListener(this)
                 .enablePendingPurchases().build()
@@ -117,7 +122,7 @@ class Billing(val context: Context, private var uniqueId: String) :
                                     TrialValidationApi.AUTH_TOKEN, uniqueId,
                                     latestPurchase?.purchaseState
                                         ?: Trial.SUBSCRIPTION_STATUS_DEFAULT,
-                                    latestPurchase?.purchaseToken
+                                    latestPurchase?.purchaseToken + "@gplay", isPurchaseInApp
                                 )
                             )?.execute()?.let { response ->
                                 if (response.isSuccessful && response.body() != null) {
@@ -131,9 +136,11 @@ class Billing(val context: Context, private var uniqueId: String) :
                         } catch (e: Exception) {
                             log.warn("failed to update subscription state for trial validation", e)
                         }
-                        activity?.runOnUiThread {
-                            purchaseDialog?.dismiss()
-                            Utils.buildSubscriptionPurchasedDialog(activity!!).show()
+                        if (activity?.isFinishing == false && activity?.isDestroyed == false) {
+                            activity?.runOnUiThread {
+                                purchaseDialog?.dismiss()
+                                Utils.buildSubscriptionPurchasedDialog(activity!!).show()
+                            }
                         }
                     }
                 }
@@ -153,10 +160,18 @@ class Billing(val context: Context, private var uniqueId: String) :
             log.info("querying for subscriptions")
             billingClient?.queryPurchasesAsync(
                 BillingClient.SkuType.SUBS
-            ) { p0, p1 ->
-                log.info("found subscriptions")
-                handlePurchases(p1)
-                resultCallback.invoke()
+            ) { p0, subscriptions ->
+                log.info("found subscriptions {}", subscriptions)
+                billingClient?.queryPurchasesAsync(
+                    BillingClient.SkuType.INAPP
+                ) { p0, inApp ->
+                    log.info("found in app purchases {}", inApp)
+                    val purchases = ArrayList<Purchase>()
+                    purchases.addAll(subscriptions)
+                    purchases.addAll(inApp)
+                    handlePurchases(purchases)
+                    resultCallback.invoke()
+                }
             }
         }
         executeGetSubscriptions(runnable)
@@ -182,8 +197,9 @@ class Billing(val context: Context, private var uniqueId: String) :
             ) { responseCode: BillingResult, skuDetailsList: List<SkuDetails>? ->
                 if (skuDetailsList != null && skuDetailsList.isNotEmpty()) {
                     // Successfully fetched product details
-                    skuDetails = skuDetailsList
-                    popProductsList(responseCode, skuDetailsList)
+                    skuDetails.addAll(skuDetailsList)
+                    fetchedSubs = true
+                    popProductsList(responseCode)
                 } else {
                     context.showToastInCenter(
                         context.getString(
@@ -192,8 +208,32 @@ class Billing(val context: Context, private var uniqueId: String) :
                         )
                     )
                     if (BuildConfig.DEBUG) {
-                        Log.w(
-                            TAG,
+                        log.warn(
+                            "Error fetching product list - " +
+                                "looks like you are running a DEBUG build."
+                        )
+                    }
+                }
+            }
+            val paramsInApp = SkuDetailsParams.newBuilder()
+            paramsInApp.setSkusList(skuListInApp).setType(BillingClient.SkuType.INAPP)
+            billingClient!!.querySkuDetailsAsync(
+                paramsInApp.build()
+            ) { responseCode: BillingResult, skuDetailsList: List<SkuDetails>? ->
+                if (skuDetailsList != null && skuDetailsList.isNotEmpty()) {
+                    // Successfully fetched product details
+                    skuDetails.addAll(skuDetailsList)
+                    fetchedInApp = true
+                    popProductsList(responseCode)
+                } else {
+                    context.showToastInCenter(
+                        context.getString(
+                            R.string
+                                .error_fetching_google_play_product_list
+                        )
+                    )
+                    if (BuildConfig.DEBUG) {
+                        log.warn(
                             "Error fetching product list - " +
                                 "looks like you are running a DEBUG build."
                         )
@@ -209,8 +249,11 @@ class Billing(val context: Context, private var uniqueId: String) :
         var latestPurchase: Purchase? = null
         for (purchase in purchases) {
             log.info("querying purchase {}", purchase)
-            if (latestPurchase == null ||
-                purchase.purchaseTime > latestPurchase.purchaseTime
+            var containsInApp = false
+            purchase.skus.forEach {
+                containsInApp = containsInApp || skuListInApp.contains(it)
+            }
+            if (latestPurchase == null || containsInApp
             ) {
                 latestPurchase = purchase
             }
@@ -218,17 +261,24 @@ class Billing(val context: Context, private var uniqueId: String) :
         if (latestPurchase != null) {
             log.info("found latest purchase {}", latestPurchase)
             val existingTrial = dao.findByDeviceId(uniqueId)
+            latestPurchase.skus.forEach {
+                isPurchaseInApp = isPurchaseInApp || skuListInApp.contains(it)
+            }
+            val trialStatus = if (isPurchaseInApp)
+                TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE
+            else TrialValidationApi.TrialResponse.TRIAL_ACTIVE
             if (existingTrial != null) {
                 existingTrial.subscriptionStatus = latestPurchase.purchaseState
-                existingTrial.purchaseToken = latestPurchase.purchaseToken
+                existingTrial.purchaseToken = latestPurchase.purchaseToken + "@gplay"
+                existingTrial.trialStatus = trialStatus
                 dao.insert(existingTrial)
             } else {
                 val trial = Trial(
                     uniqueId,
-                    TrialValidationApi.TrialResponse.TRIAL_ACTIVE,
+                    trialStatus,
                     Trial.TRIAL_DEFAULT_DAYS, Date(), latestPurchase.purchaseState
                 )
-                trial.purchaseToken = latestPurchase.purchaseToken
+                trial.purchaseToken = latestPurchase.purchaseToken + "@gplay"
                 dao.insert(trial)
             }
         } else {
@@ -250,9 +300,9 @@ class Billing(val context: Context, private var uniqueId: String) :
      * @param response
      * @param skuDetailsList
      */
-    private fun popProductsList(response: BillingResult, skuDetailsList: List<SkuDetails>?) {
+    private fun popProductsList(response: BillingResult) {
         if (response.responseCode == BillingClient.BillingResponseCode.OK &&
-            skuDetailsList != null
+            skuDetails.isNotEmpty() && fetchedInApp && fetchedSubs
         ) {
             showPaymentsDialog()
         }
@@ -269,15 +319,21 @@ class Billing(val context: Context, private var uniqueId: String) :
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (holder is DonationViewHolder && skuDetails!!.size > 0) {
-            log.info("display sku details {}", skuDetails!![position])
-            val titleRaw = skuDetails!![position].title
+        if (holder is DonationViewHolder && skuDetails.size > 0) {
+            log.info("display sku details {}", skuDetails[position])
+            val titleRaw = skuDetails[position].title
             holder.TITLE.text = titleRaw.substring(0, titleRaw.indexOf("("))
-            holder.SUMMARY.text = skuDetails!![position].description
-            holder.PRICE.text = skuDetails!![position].price
+            if (skuDetails[position].type == BillingClient.SkuType.INAPP) {
+                holder.RENEWAL_CYCLE.text = context.getString(R.string.lifetime_membership)
+            } else {
+                holder.RENEWAL_CYCLE.text = context.getString(R.string.renewal_cycle)
+                    .format(skuDetails[position].subscriptionPeriod)
+            }
+            holder.SUMMARY.text = skuDetails[position].description
+            holder.PRICE.text = skuDetails[position].price
             holder.ROOT_VIEW.setOnClickListener { v ->
                 purchaseProduct.purchaseItem(
-                    skuDetails!![position]
+                    skuDetails[position]
                 )
                 purchaseDialog?.dismiss()
             }
@@ -285,7 +341,7 @@ class Billing(val context: Context, private var uniqueId: String) :
     }
 
     override fun getItemCount(): Int {
-        return skuList.size
+        return skuDetails.size
     }
 
     private interface PurchaseProduct {

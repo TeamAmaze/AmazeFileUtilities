@@ -28,4 +28,7 @@ class DonationViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     @JvmField
     val PRICE: TextView = itemView.findViewById(R.id.adapter_donation_price)
+
+    @JvmField
+    val RENEWAL_CYCLE: TextView = itemView.findViewById(R.id.adapter_donation_cycle)
 }

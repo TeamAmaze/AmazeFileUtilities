@@ -34,6 +34,13 @@
                 android:layout_marginTop="@dimen/material_generic"
                 style="@style/Base.TextAppearance.AppCompat.Small"
                 />
+            <TextView
+                android:id="@+id/adapter_donation_cycle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/green_banner"
+                style="@style/Base.TextAppearance.AppCompat.Small"
+                />
         </LinearLayout>
 
         <TextView
