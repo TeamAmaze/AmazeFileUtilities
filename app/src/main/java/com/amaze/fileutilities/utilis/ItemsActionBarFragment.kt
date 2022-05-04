@@ -235,7 +235,6 @@ abstract class ItemsActionBarFragment : Fragment() {
             }
         }
         getLocateFileButton()?.setOnClickListener {
-            1 / 0
             getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }?.let {
                 openFile ->
                 if (openFile.isNotEmpty()) {

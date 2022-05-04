@@ -299,6 +299,8 @@ class FilesFragment : ItemsActionBarFragment() {
                         if (checkedSize > 0) {
                             setupShowActionBar()
                             setupCommonButtons()
+                            getLocateFileButton()?.visibility = if (checkedSize == 1)
+                                View.VISIBLE else View.GONE
                         } else {
                             hideActionBar()
                         }
