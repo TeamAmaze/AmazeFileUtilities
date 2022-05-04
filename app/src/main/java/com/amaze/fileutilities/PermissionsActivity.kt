@@ -18,6 +18,7 @@ import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings

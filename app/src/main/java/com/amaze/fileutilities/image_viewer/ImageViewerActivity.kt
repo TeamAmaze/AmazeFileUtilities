@@ -52,10 +52,14 @@ class ImageViewerActivity : PermissionsActivity() {
         val imageModel = LocalImageModel(uri = imageUri, mimeType = mimeType)
         viewModel.processSiblingImageModels(imageModel)
         viewModel.siblingImagesLiveData.observe(this) {
+            val dialog = showProcessingDialog(
+                layoutInflater,
+                getString(R.string.please_wait)
+            ).create()
             if (it == null) {
-                showProcessingDialog(layoutInflater, getString(R.string.please_wait)).create()
-                    .show()
+                dialog.show()
             } else {
+                dialog.dismiss()
                 val pagerAdapter = ImageViewerAdapter(
                     supportFragmentManager,
                     lifecycle, it

@@ -31,7 +31,8 @@ interface TrialValidationApi {
         val token: String,
         val deviceId: String,
         var subscriptionStatus: Int,
-        var purchaseToken: String?
+        var purchaseToken: String?,
+        val isPurchaseInApp: Boolean = false,
     )
 
 //    @Keep
@@ -50,7 +51,7 @@ interface TrialValidationApi {
             const val TRIAL_EXPIRED = "trial_expired"
             const val TRIAL_INACTIVE = "trial_inactive"
             const val TRIAL_EXCLUSIVE = "trial_exclusive"
-            const val SUBSCRIPTION = "Subscribed"
+            const val SUBSCRIPTION = "Yearly"
             const val CODE_TRIAL_ACTIVE = 12341343
             const val CODE_TRIAL_EXPIRED = 24523424
             const val CODE_TRIAL_INACTIVE = 33452345
@@ -60,7 +61,7 @@ interface TrialValidationApi {
                 Pair(TRIAL_ACTIVE, "Trial"),
                 Pair(TRIAL_EXPIRED, "Trial Expired"),
                 Pair(TRIAL_INACTIVE, "Inactive"),
-                Pair(TRIAL_EXCLUSIVE, "Exclusive")
+                Pair(TRIAL_EXCLUSIVE, "Lifetime")
             )
 
             private val trialStatusCodeMap = mapOf(

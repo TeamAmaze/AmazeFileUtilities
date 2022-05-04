@@ -25,7 +25,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.PdfViewerActivityBinding
+import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
+import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.github.barteksc.pdfviewer.listener.OnTapListener
@@ -35,6 +38,7 @@ import com.shockwave.pdfium.PdfDocument.Bookmark
 import com.shockwave.pdfium.PdfPasswordException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.*
 
 class PdfViewerActivity :
     PermissionsActivity(),
@@ -48,6 +52,7 @@ class PdfViewerActivity :
         PdfViewerActivityBinding.inflate(layoutInflater)
     }
     private lateinit var viewModel: PdfViewerActivityViewModel
+    private lateinit var filesViewModel: FilesViewModel
     private lateinit var pdfModel: LocalPdfModel
     private var isToolbarVisible = true
     private var retryPassword = false
@@ -61,6 +66,7 @@ class PdfViewerActivity :
         setContentView(viewBinding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         viewModel = ViewModelProvider(this).get(PdfViewerActivityViewModel::class.java)
+        filesViewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
         if (viewModel.getPdfModel(intent) == null) {
             showToastInCenter(resources.getString(R.string.unsupported_content))
             finish()
@@ -106,6 +112,40 @@ class PdfViewerActivity :
                 }
                 R.id.bookmarks -> {
                     showBookmarksDialog(viewBinding.pdfView.tableOfContents, "-")
+                }
+                R.id.share -> {
+                    var processed = false
+                    pdfModel.uri.getFileFromUri()?.let {
+                        file ->
+                        val mediaFile = MediaFileInfo.fromFile(
+                            file,
+                            MediaFileInfo.ExtraInfo(
+                                MediaFileInfo.MEDIA_TYPE_DOCUMENT,
+                                null, null, null
+                            )
+                        )
+                        filesViewModel.getShareMediaFilesAdapter(listOf(mediaFile))
+                            .observe(this) { shareAdapter ->
+                                if (shareAdapter == null) {
+                                    if (processed) {
+                                        showToastInCenter(
+                                            this.resources.getString(R.string.failed_to_share)
+                                        )
+                                    } else {
+                                        showToastInCenter(
+                                            resources
+                                                .getString(R.string.please_wait)
+                                        )
+                                        processed = true
+                                    }
+                                } else {
+                                    showShareDialog(
+                                        this, this.layoutInflater,
+                                        shareAdapter
+                                    )
+                                }
+                            }
+                    }
                 }
             }
             true

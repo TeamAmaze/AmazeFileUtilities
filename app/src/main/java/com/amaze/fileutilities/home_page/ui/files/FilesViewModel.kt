@@ -17,11 +17,9 @@ import androidx.lifecycle.*
 import com.amaze.fileutilities.home_page.database.*
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.home_page.ui.options.Billing
-import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
 import com.amaze.fileutilities.utilis.share.ShareAdapter
 import com.amaze.fileutilities.utilis.share.getShareIntents
-import com.google.common.io.ByteStreams
 import com.google.mlkit.vision.face.FaceDetection
 import com.google.mlkit.vision.face.FaceDetectorOptions
 import com.google.mlkit.vision.text.TextRecognition
@@ -58,9 +56,19 @@ class FilesViewModel(val applicationContext: Application) :
     private val faceDetector = FaceDetection.getClient(highAccuracyOpts)
     private val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
-    val internalStorageStats: LiveData<StorageSummary?> =
-        liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            emit(null)
+    var internalStorageStatsLiveData: MutableLiveData<StorageSummary?>? = null
+
+    fun internalStorageStats(): LiveData<StorageSummary?> {
+        if (internalStorageStatsLiveData == null) {
+            internalStorageStatsLiveData = MutableLiveData()
+            internalStorageStatsLiveData?.value = null
+            processInternalStorageStats()
+        }
+        return internalStorageStatsLiveData!!
+    }
+
+    private fun processInternalStorageStats() {
+        viewModelScope.launch(Dispatchers.IO) {
             val storageData = applicationContext.applicationContext.getExternalStorageDirectory()
             storageData?.let {
                 data ->
@@ -69,20 +77,23 @@ class FilesViewModel(val applicationContext: Application) :
                     val items = CursorUtils.getMediaFilesCount(applicationContext)
                     FileUtils.scanFile(Uri.fromFile(file), applicationContext)
                     val usedSpace = file.totalSpace - file.usableSpace
-                    val progress = (usedSpace * 100) / file.totalSpace
-                    emit(
-                        StorageSummary(
-                            items, progress.toInt(), usedSpace, usedSpace,
-                            file.usableSpace,
-                            file.totalSpace
-                        )
+
+                    val progress = if (file.totalSpace != 0L) {
+                        (usedSpace * 100) / file.totalSpace
+                    } else 0
+                    val result = StorageSummary(
+                        items, progress.toInt(), usedSpace, usedSpace,
+                        file.usableSpace,
+                        file.totalSpace
                     )
+                    internalStorageStatsLiveData?.postValue(result)
                 } catch (se: SecurityException) {
                     log.warn("failed to list recent files due to no permission", se)
-                    emit(null)
+                    internalStorageStatsLiveData?.postValue(null)
                 }
             }
         }
+    }
 
     val initAnalysisMigrations: LiveData<Boolean> =
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
@@ -148,28 +159,28 @@ class FilesViewModel(val applicationContext: Application) :
 
     var usedImagesSummaryTransformations:
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
-            Transformations.switchMap(internalStorageStats) {
+            Transformations.switchMap(internalStorageStats()) {
                 input ->
                 getImagesSummaryLiveData(input)
             }
 
     val usedAudiosSummaryTransformations:
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
-            Transformations.switchMap(internalStorageStats) {
+            Transformations.switchMap(internalStorageStats()) {
                 input ->
                 getAudiosSummaryLiveData(input)
             }
 
     val usedVideosSummaryTransformations:
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
-            Transformations.switchMap(internalStorageStats) {
+            Transformations.switchMap(internalStorageStats()) {
                 input ->
                 getVideosSummaryLiveData(input)
             }
 
     var usedDocsSummaryTransformations:
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
-            Transformations.switchMap(internalStorageStats) {
+            Transformations.switchMap(internalStorageStats()) {
                 input ->
                 getDocumentsSummaryLiveData(input)
             }
@@ -577,7 +588,7 @@ class FilesViewModel(val applicationContext: Application) :
     fun getShareLogsAdapter(): LiveData<ShareAdapter?> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
             emit(null)
-            val outputPath = copyLogsFileToInternalStorage()
+            val outputPath = Utils.copyLogsFileToInternalStorage(applicationContext)
             if (outputPath != null) {
                 log.info("Sharing logs file at path $outputPath")
                 val logsFile = File(outputPath)
@@ -645,11 +656,8 @@ class FilesViewModel(val applicationContext: Application) :
                         )
                     }
                 }
-                if (index % 5 == 0) {
-                    emit(successProcessedPair)
-                }
+                emit(successProcessedPair)
             }
-            emit(successProcessedPair)
         }
     }
 
@@ -791,8 +799,18 @@ class FilesViewModel(val applicationContext: Application) :
                     val cal = GregorianCalendar.getInstance()
                     cal.time = trial.fetchTime
                     cal.add(Calendar.DAY_OF_YEAR, 1)
-                    if (cal.time.before(Date())) {
-                        // we haven't fetched today, check if active from remote
+
+                    val calWeek = GregorianCalendar.getInstance()
+                    calWeek.time = trial.fetchTime
+                    calWeek.add(Calendar.DAY_OF_YEAR, 7)
+                    if ((
+                        cal.time.before(Date()) && trial.trialStatus
+                            != TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE
+                        ) ||
+                        calWeek.time.before(Date()) &&
+                        trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE
+                    ) {
+                        // fetch if membership liftime once every week. else fetch everyday.
                         fetchBillingStatusAndInitTrial(
                             deviceId, dao, isNetworkAvailable,
                             trialResponse
@@ -807,7 +825,7 @@ class FilesViewModel(val applicationContext: Application) :
                                     ?: TrialValidationApi.TrialResponse.CODE_TRIAL_ACTIVE,
                                 trial.trialDaysLeft,
                                 trial.subscriptionStatus,
-                                null
+                                trial.purchaseToken
                             )
                         )
                     }
@@ -960,34 +978,6 @@ class FilesViewModel(val applicationContext: Application) :
         super.onCleared()
     }
 
-    /**
-     * Copies logs file to internal storage and returns the written file path
-     */
-    private fun copyLogsFileToInternalStorage(): String? {
-        applicationContext.getExternalStorageDirectory()?.let {
-            internalStoragePath ->
-            val inputFile = File("/data/data/${applicationContext.packageName}/cache/logs.txt")
-            if (!inputFile.exists()) {
-                return null
-            }
-            FileInputStream(inputFile).use {
-                inputStream ->
-                val file = File(
-                    internalStoragePath.path +
-                        "/${TransferFragment.RECEIVER_BASE_PATH}/files"
-                )
-                file.mkdirs()
-                val logFile = File(file, "logs.txt")
-                FileOutputStream(logFile).use {
-                    outputStream ->
-                    ByteStreams.copy(inputStream, outputStream)
-                }
-                return logFile.path
-            }
-        }
-        return null
-    }
-
     private fun processInternalStorageAnalysis(
         dao: InternalStorageAnalysisDao,
         file: File,
@@ -1062,27 +1052,32 @@ class FilesViewModel(val applicationContext: Application) :
         file: File
     ) {
         if (!file.exists()) {
+            log.info("file not found while calculating checksum at path {}", file.path)
             return
         }
-        val checksum = FileUtils.getSHA256Checksum(file.inputStream())
-        val existingChecksum = dao.findMediaFileBySha256Checksum(checksum)
-        if (existingChecksum != null && !existingChecksum.files.contains(file.path)) {
-            dao.insert(
-                InternalStorageAnalysis(
-                    existingChecksum.checksum,
-                    existingChecksum.files + file.path,
-                    false, false, false, true, 0
+        try {
+            val checksum = FileUtils.getSHA256Checksum(file.inputStream())
+            val existingChecksum = dao.findMediaFileBySha256Checksum(checksum)
+            if (existingChecksum != null && !existingChecksum.files.contains(file.path)) {
+                dao.insert(
+                    InternalStorageAnalysis(
+                        existingChecksum.checksum,
+                        existingChecksum.files + file.path,
+                        false, false, false, true, 0
+                    )
                 )
-            )
-        } else {
-            dao.insert(
-                InternalStorageAnalysis(
-                    checksum,
-                    listOf(file.path), false, false, false,
-                    true,
-                    0
+            } else {
+                dao.insert(
+                    InternalStorageAnalysis(
+                        checksum,
+                        listOf(file.path), false, false, false,
+                        true,
+                        0
+                    )
                 )
-            )
+            }
+        } catch (e: Exception) {
+            log.warn("failed to get checksum and write to database", e)
         }
     }
 

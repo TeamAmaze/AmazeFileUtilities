@@ -10,11 +10,34 @@
 
 package com.amaze.fileutilities.home_page
 
+import android.content.pm.ActivityInfo
+import android.os.Build
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.amaze.fileutilities.R
-import com.stephentuso.welcome.*
+import com.stephentuso.welcome.BasicPage
+import com.stephentuso.welcome.FragmentWelcomePage
+import com.stephentuso.welcome.WelcomeConfiguration
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 class WelcomeScreen : WelcomePermissionScreen() {
+    private var log: Logger = LoggerFactory.getLogger(WelcomeScreen::class.java)
+
+    companion object {
+        fun welcomeKey(): String {
+            return "WelcomeScreen"
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        /*WelcomeSharedPreferencesHelper.storeWelcomeCompleted(this,
+            WelcomeScreen.welcomeKey())*/
+        if (Build.VERSION.SDK_INT != Build.VERSION_CODES.O) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+        }
+    }
 
     override fun configuration(): WelcomeConfiguration? {
         return WelcomeConfiguration.Builder(this)
@@ -48,7 +71,7 @@ class WelcomeScreen : WelcomePermissionScreen() {
                     override fun fragment(): Fragment {
                         return PermissionFragmentWelcome()
                     }
-                }.background(R.color.blue)
+                }.background(R.color.navy_blue)
             )
             .canSkip(false)
             .swipeToDismiss(false)

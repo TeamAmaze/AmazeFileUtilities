@@ -55,6 +55,7 @@ class SearchListFragment :
         const val SEARCH_THRESHOLD = 2
         const val SEARCH_HINT_THRESHOLD = 3
         const val SEARCH_HINT_RESULTS_THRESHOLD = 3
+        const val FRAGMENT_TAG = "search_fragment"
     }
     // This property is only valid between onCreateView and
     // onDestroyView.

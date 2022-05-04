@@ -59,6 +59,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
     companion object {
 
         private const val ANALYSIS_TYPE = "analysis_type"
+        const val FRAGMENT_TAG = "review_fragment"
         const val TYPE_BLUR = 1
         const val TYPE_MEME = 2
         const val TYPE_DUPLICATES = 3
@@ -87,7 +88,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
             }
 
             val transaction = fragment.parentFragmentManager.beginTransaction()
-            transaction.add(R.id.nav_host_fragment_activity_main, analyseFragment)
+            transaction.add(R.id.nav_host_fragment_activity_main, analyseFragment, FRAGMENT_TAG)
             transaction.addToBackStack(null)
             transaction.commit()
         }
@@ -99,7 +100,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         savedInstanceState: Bundle?
     ): View {
         viewModel =
-            ViewModelProvider(this).get(AnalyseViewModel::class.java)
+            ViewModelProvider(this.requireActivity()).get(AnalyseViewModel::class.java)
 
         _binding = FragmentReviewImagesBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -179,7 +180,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                                 filesViewModel.isImageFeaturesAnalysing
                             )
                         } else {
-                            setMediaInfoList(ArrayList(it), true) {
+                            setMediaInfoList(it, true) {
                                 checkedItems ->
                                 viewModel.cleanBlurAnalysis(blurAnalysisDao, checkedItems)
                             }
@@ -199,7 +200,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                                 filesViewModel.isImageFeaturesAnalysing
                             )
                         } else {
-                            setMediaInfoList(ArrayList(it), true) {
+                            setMediaInfoList(it, true) {
                                 checkedItems ->
                                 viewModel.cleanLowLightAnalysis(
                                     lowLightAnalysisDao,
@@ -221,7 +222,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                             filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
-                        setMediaInfoList(ArrayList(it), true) {
+                        setMediaInfoList(it, true) {
                             checkedItems ->
                             viewModel.cleanMemeAnalysis(memeAnalysisDao, checkedItems)
                         }
@@ -249,7 +250,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                         if (it == null) {
                             invalidateProcessing(true, invalidateProgress)
                         } else {
-                            setMediaInfoList(ArrayList(it.flatten()), false)
+                            setMediaInfoList(it, false)
                             invalidateProcessing(false, invalidateProgress)
                         }
                     }
@@ -262,7 +263,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                             filesViewModel.isInternalStorageAnalysing
                         )
                     } else {
-                        setMediaInfoList(ArrayList(it), false)
+                        setMediaInfoList(it, false)
                         invalidateProcessing(
                             false,
                             filesViewModel.isInternalStorageAnalysing
@@ -278,7 +279,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                             filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
-                        setMediaInfoList(ArrayList(it), true) {
+                        setMediaInfoList(it, true) {
                             checkedItems ->
                             viewModel.cleanImageAnalysis(dao, TYPE_SAD, checkedItems)
                         }
@@ -297,7 +298,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                             filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
-                        setMediaInfoList(ArrayList(it), true) {
+                        setMediaInfoList(it, true) {
                             checkedItems ->
                             viewModel.cleanImageAnalysis(dao, TYPE_DISTRACTED, checkedItems)
                         }
@@ -316,7 +317,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                             filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
-                        setMediaInfoList(ArrayList(it), true) {
+                        setMediaInfoList(it, true) {
                             checkedItems ->
                             viewModel.cleanImageAnalysis(dao, TYPE_SLEEPING, checkedItems)
                         }
@@ -335,7 +336,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                             filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
-                        setMediaInfoList(ArrayList(it), true) {
+                        setMediaInfoList(it, true) {
                             checkedItems ->
                             viewModel.cleanImageAnalysis(dao, TYPE_SELFIE, checkedItems)
                         }
@@ -354,7 +355,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                             filesViewModel.isImageFeaturesAnalysing
                         )
                     } else {
-                        setMediaInfoList(ArrayList(it), true) {
+                        setMediaInfoList(it, true) {
                             checkedItems ->
                             viewModel.cleanImageAnalysis(dao, TYPE_GROUP_PIC, checkedItems)
                         }
@@ -373,7 +374,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                             viewModel.getClutteredVideos(mediaFilePair.second)
                                 .observe(viewLifecycleOwner) { clutteredVideosInfo ->
                                     clutteredVideosInfo?.let {
-                                        setMediaInfoList(ArrayList(it), false)
+                                        setMediaInfoList(it, false)
                                         invalidateProcessing(false, false)
                                     }
                                 }
@@ -388,7 +389,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                             viewModel.getLargeVideos(mediaFilePair.second)
                                 .observe(viewLifecycleOwner) { largeVideosList ->
                                     largeVideosList?.let {
-                                        setMediaInfoList(ArrayList(it), false)
+                                        setMediaInfoList(it, false)
                                         invalidateProcessing(false, false)
                                     }
                                 }
@@ -400,7 +401,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                     largeDownloads ->
                     invalidateProcessing(true, false)
                     largeDownloads?.let {
-                        setMediaInfoList(ArrayList(it), false)
+                        setMediaInfoList(it, false)
                         invalidateProcessing(false, false)
                     }
                 }
@@ -410,7 +411,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                     oldDownloads ->
                     invalidateProcessing(true, false)
                     oldDownloads?.let {
-                        setMediaInfoList(ArrayList(it), false)
+                        setMediaInfoList(it, false)
                         invalidateProcessing(false, false)
                     }
                 }
@@ -420,7 +421,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                     oldScreenshots ->
                     invalidateProcessing(true, false)
                     oldScreenshots?.let {
-                        setMediaInfoList(ArrayList(it), false)
+                        setMediaInfoList(it, false)
                         invalidateProcessing(false, false)
                     }
                 }
@@ -430,7 +431,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                     oldRecordings ->
                     invalidateProcessing(true, false)
                     oldRecordings?.let {
-                        setMediaInfoList(ArrayList(it), false)
+                        setMediaInfoList(it, false)
                         invalidateProcessing(false, false)
                     }
                 }
@@ -456,10 +457,15 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                 " ($bytesFormatted)"
             val countView = getCountView()
             countView?.text = title
-            if (checkedSize > 0 && doShowDown) {
-                thumbsDownButton?.visibility = View.VISIBLE
+            if (checkedSize > 0) {
+                if (doShowDown) {
+                    thumbsDownButton?.visibility = View.VISIBLE
+                }
+                getLocateFileButton()?.visibility = if (checkedSize == 1)
+                    View.VISIBLE else View.GONE
             } else {
                 thumbsDownButton?.visibility = View.GONE
+                getLocateFileButton()?.visibility = View.GONE
             }
         }
         setupActionBarButtons(cleanData)

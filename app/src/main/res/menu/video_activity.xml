@@ -16,4 +16,8 @@
         android:id="@+id/info"
         android:title="@string/information"
         />
+    <item
+        android:id="@+id/share"
+        android:title="@string/share"
+        />
 </menu>

@@ -23,7 +23,7 @@ data class Trial(
     @ColumnInfo(name = "_id")
     val uid: Int,
     @ColumnInfo(name = "device_id") val deviceId: String,
-    @ColumnInfo(name = "trial_status") val trialStatus: String,
+    @ColumnInfo(name = "trial_status") var trialStatus: String,
     @ColumnInfo(name = "trial_days_left") val trialDaysLeft: Int,
     @ColumnInfo(name = "fetch_time") val fetchTime: Date,
     @ColumnInfo(name = "subscription_status") var subscriptionStatus: Int,

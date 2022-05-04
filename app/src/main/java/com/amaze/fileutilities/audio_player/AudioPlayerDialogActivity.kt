@@ -82,10 +82,14 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
             viewModel.processSiblings(audioUri!!)
             viewModel.siblingsLiveData.observe(this) {
                 uriList ->
+                val dialog = showProcessingDialog(
+                    layoutInflater,
+                    getString(R.string.please_wait)
+                ).create()
                 if (uriList == null) {
-                    showProcessingDialog(layoutInflater, getString(R.string.please_wait)).create()
-                        .show()
+                    dialog.show()
                 } else {
+                    dialog.dismiss()
                     audioUri.getFileFromUri()?.length()?.also {
                         if (it > AudioPlayerInterfaceHandlerViewModel.WAVEFORM_THRESHOLD_BYTES) {
                             viewModel.forceShowSeekbar = true

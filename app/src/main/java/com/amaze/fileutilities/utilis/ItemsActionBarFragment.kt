@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.MainActivity
+import com.amaze.fileutilities.home_page.ui.analyse.ReviewImagesFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
@@ -64,7 +65,13 @@ abstract class ItemsActionBarFragment : Fragment() {
             if (hideActionBarOnClick()) {
                 getMediaFileAdapter()?.uncheckChecked()
             } else {
-                // do nothing when we want to go back on back pressed
+                val reviewFragment = parentFragmentManager
+                    .findFragmentByTag(ReviewImagesFragment.FRAGMENT_TAG)
+                val transaction = parentFragmentManager.beginTransaction()
+                reviewFragment?.let {
+                    transaction.remove(reviewFragment)
+                    transaction.commit()
+                }
             }
         }
     }
@@ -83,6 +90,10 @@ abstract class ItemsActionBarFragment : Fragment() {
 
     private fun getTrashButton(): ImageView? {
         return optionsActionBar?.findViewById(R.id.trashButton)
+    }
+
+    fun getLocateFileButton(): ImageView? {
+        return optionsActionBar?.findViewById(R.id.locateFile)
     }
 
     private fun deleteFromFileViewmodelLists(toDelete: List<MediaFileInfo>) {
@@ -133,33 +144,44 @@ abstract class ItemsActionBarFragment : Fragment() {
             var processed = false
             getMediaFileAdapter()?.checkItemsList?.let {
                 checkedItems ->
-                val checkedMediaFiles = checkedItems.filter { it.mediaFileInfo != null }
-                    .map { it.mediaFileInfo!! }
-                filesViewModel.getShareMediaFilesAdapter(checkedMediaFiles)
-                    .observe(viewLifecycleOwner) {
-                        shareAdapter ->
-                        if (shareAdapter == null) {
-                            if (processed) {
-                                requireActivity().showToastInCenter(
-                                    this.resources
-                                        .getString(R.string.failed_to_share)
-                                )
+                val checkedMediaFiles = checkedItems.map { it.mediaFileInfo!! }
+                if (!checkedMediaFiles.isNullOrEmpty()) {
+                    filesViewModel.getShareMediaFilesAdapter(checkedMediaFiles)
+                        .observe(viewLifecycleOwner) {
+                            shareAdapter ->
+                            if (shareAdapter == null) {
+                                if (processed) {
+                                    requireActivity().showToastInCenter(
+                                        this.resources.getString(R.string.failed_to_share)
+                                    )
+                                } else {
+                                    requireActivity()
+                                        .showToastInCenter(
+                                            resources
+                                                .getString(R.string.please_wait)
+                                        )
+                                    processed = true
+                                }
                             } else {
-                                requireActivity()
-                                    .showToastInCenter(resources.getString(R.string.please_wait))
-                                processed = true
+                                showShareDialog(
+                                    requireActivity(), this.layoutInflater,
+                                    shareAdapter
+                                )
                             }
-                        } else {
-                            showShareDialog(requireActivity(), this.layoutInflater, shareAdapter)
                         }
-                    }
+                    getMediaFileAdapter()?.uncheckChecked()
+                } else {
+                    requireContext().showToastOnBottom(getString(R.string.no_item_selected))
+                }
             }
         }
         getTrashButton()?.setOnClickListener {
-            getMediaFileAdapter()?.checkItemsList?.filter {
-                it.mediaFileInfo != null
-            }?.map { it.mediaFileInfo!! }?.let {
+            getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }?.let {
                 toDelete ->
+                if (toDelete.isNullOrEmpty()) {
+                    requireContext().showToastOnBottom(getString(R.string.no_item_selected))
+                    return@let
+                }
                 val progressDialogBuilder = requireContext()
                     .showProcessingDialog(layoutInflater, "")
                 val progressDialog = progressDialogBuilder.create()
@@ -180,7 +202,12 @@ abstract class ItemsActionBarFragment : Fragment() {
                                 )
                             }
                             // delete deleted data from observables in fileviewmodel
+                            // for fileviewmodels, underlying list isn't passed in adapters beacause of size
+                            // and because that list is continuously iterated by dupe analysis
                             deleteFromFileViewmodelLists(toDelete)
+
+                            // reset interal storage stats so that we recalculate storage remaining
+                            filesViewModel.internalStorageStatsLiveData = null
 
                             // deletion complete, no need to check analysis data to remove
                             // as it will get deleted lazily while loading analysis lists
@@ -201,9 +228,18 @@ abstract class ItemsActionBarFragment : Fragment() {
                     sizeRaw ->
                     val size = Formatter.formatFileSize(requireContext(), sizeRaw)
                     summaryDialog.setMessage(
-                        resources
-                            .getString(R.string.delete_files_message).format(toDelete.size, size)
+                        resources.getString(R.string.delete_files_message)
+                            .format(toDelete.size, size)
                     )
+                }
+            }
+        }
+        getLocateFileButton()?.setOnClickListener {
+            getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }?.let {
+                openFile ->
+                if (openFile.isNotEmpty()) {
+                    openFile[0].startLocateFileAction(requireContext())
+                    getMediaFileAdapter()?.uncheckChecked()
                 }
             }
         }

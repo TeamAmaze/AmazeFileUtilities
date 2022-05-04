@@ -47,7 +47,7 @@ class AnalyseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         analyseViewModel =
-            ViewModelProvider(this).get(AnalyseViewModel::class.java)
+            ViewModelProvider(this.requireActivity()).get(AnalyseViewModel::class.java)
         _binding = FragmentAnalyseBinding.inflate(inflater, container, false)
         val root: View = binding.root
         val prefs = requireContext().getAppCommonSharedPreferences()
@@ -147,8 +147,8 @@ class AnalyseFragment : Fragment() {
                 internalStorageDao, searchMediaFiles, deepSearch
             ).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    duplicateFilesPreview.loadPreviews(it.flatten()) {
-                        cleanButtonClick(it.flatten())
+                    duplicateFilesPreview.loadPreviews(it) {
+                        cleanButtonClick(it)
                     }
                 }
             }

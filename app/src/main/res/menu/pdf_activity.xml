@@ -12,6 +12,10 @@
         android:id="@+id/invert_colors"
         android:title="@string/invert_colors"
         />
+    <item
+        android:id="@+id/share"
+        android:title="@string/share"
+        />
     <!--<item
         android:id="@+id/copy_page"
         android:title="@string/copy_page"
