@@ -24,7 +24,6 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
-import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.stephentuso.welcome.WelcomeActivity
@@ -38,7 +37,7 @@ abstract class WelcomePermissionScreen :
     WelcomeActivity(),
     ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private var log: Logger = LoggerFactory.getLogger(PermissionsActivity::class.java)
+    private var log: Logger = LoggerFactory.getLogger(WelcomePermissionScreen::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

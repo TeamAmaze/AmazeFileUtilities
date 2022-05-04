@@ -11,6 +11,7 @@
         <item name="colorOnSecondary">@color/blue</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:navigationBarColor" tools:targetApi="l">@color/yellow_dark</item>
         <!-- Customize your theme here. -->
         <item name="actionBarTheme">@style/ThemeOverlay.Actionbar</item>
         <item name="colorAccent">@color/highlight_yellow</item>
@@ -27,6 +28,7 @@
         <item name="colorOnSecondary">@color/blue</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:navigationBarColor" tools:targetApi="l">@color/yellow_dark</item>
         <!-- Customize your theme here. -->
         <item name="actionBarTheme">@style/ThemeOverlay.Actionbar</item>
         <item name="colorAccent">@color/highlight_yellow</item>
@@ -86,6 +88,10 @@
     <style name="Custom.Dialog.Dark" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@drawable/background_curved_recents</item>
         <item name="android:windowMinWidthMinor">85%</item>
+    </style>
+
+    <style name="Custom.Dialog.Dark.NoStretch" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/background_curved_recents</item>
     </style>
 
     <style name="roundedImageView" parent="">

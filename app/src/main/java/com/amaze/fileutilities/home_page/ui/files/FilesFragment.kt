@@ -56,7 +56,7 @@ class FilesFragment : ItemsActionBarFragment() {
         // needed to avoid NPE in progress library when closing activity
         binding.storagePercent.isSaveEnabled = false
         filesViewModel.run {
-            internalStorageStats.observe(
+            internalStorageStats().observe(
                 viewLifecycleOwner
             ) {
                 it?.run {
@@ -299,6 +299,8 @@ class FilesFragment : ItemsActionBarFragment() {
                         if (checkedSize > 0) {
                             setupShowActionBar()
                             setupCommonButtons()
+                            getLocateFileButton()?.visibility = if (checkedSize == 1)
+                                View.VISIBLE else View.GONE
                         } else {
                             hideActionBar()
                         }

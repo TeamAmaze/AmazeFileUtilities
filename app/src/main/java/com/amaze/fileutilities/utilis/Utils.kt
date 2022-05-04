@@ -24,17 +24,23 @@ import android.view.WindowManager
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewAnalysisAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
+import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
+import com.google.common.io.ByteStreams
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.math.BigInteger
 import java.net.InetAddress
 import java.net.UnknownHostException
@@ -47,6 +53,7 @@ class Utils {
         var log: Logger = LoggerFactory.getLogger(Utils::class.java)
 
         const val URL_PRIVACY_POLICY = "https://teamamaze.xyz/privacy-policy-utilities"
+        const val URL_LICENSE_AGREEMENT = "https://teamamaze.xyz/license-agreement-utilities"
         const val URL_GITHUB_ISSUES =
             "https://github.com/TeamAmaze/AmazeFileUtilities-Issue-Tracker/issues"
         const val AMAZE_FILE_MANAGER_MAIN = "com.amaze.filemanager.ui.activities.MainActivity"
@@ -160,7 +167,7 @@ class Utils {
          * @param supportMail support mail for given intent
          * @return intent
          */
-        fun buildEmailIntent(text: String?, supportMail: String): Intent? {
+        fun buildEmailIntent(text: String?, supportMail: String, context: Context): Intent {
             val emailIntent = Intent(Intent.ACTION_SEND)
             val aEmailList = arrayOf(supportMail)
             val aEmailCCList = arrayOf(
@@ -177,8 +184,48 @@ class Utils {
             if (!isNullOrEmpty(text)) {
                 emailIntent.putExtra(Intent.EXTRA_TEXT, text)
             }
+            val logFilePath = copyLogsFileToInternalStorage(context)
+            if (logFilePath != null) {
+                val logFile = File(logFilePath)
+                if (logFile.exists()) {
+                    log.info("Attaching logs file at path $logFilePath")
+                    val logsFileUri = FileProvider.getUriForFile(
+                        context, context.packageName,
+                        logFile
+                    )
+                    emailIntent.putExtra(Intent.EXTRA_STREAM, logsFileUri)
+                }
+            }
             emailIntent.type = "message/rfc822"
             return emailIntent
+        }
+
+        /**
+         * Copies logs file to internal storage and returns the written file path
+         */
+        fun copyLogsFileToInternalStorage(context: Context): String? {
+            context.getExternalStorageDirectory()?.let {
+                internalStoragePath ->
+                val inputFile = File("/data/data/${context.packageName}/cache/logs.txt")
+                if (!inputFile.exists()) {
+                    return null
+                }
+                FileInputStream(inputFile).use {
+                    inputStream ->
+                    val file = File(
+                        internalStoragePath.path +
+                            "/${TransferFragment.RECEIVER_BASE_PATH}/cache"
+                    )
+                    file.mkdirs()
+                    val logFile = File(file, "logs.txt")
+                    FileOutputStream(logFile).use {
+                        outputStream ->
+                        ByteStreams.copy(inputStream, outputStream)
+                    }
+                    return logFile.path
+                }
+            }
+            return null
         }
 
         /** Open telegram in browser  */

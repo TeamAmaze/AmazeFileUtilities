@@ -3,17 +3,13 @@
     <string name="app_name_launcher">Amaze Utilities</string>
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.18</string>
+    <string name="app_version" translatable="false">v1.39</string>
     <string name="image_viewer">Amaze Image Viewer</string>
     <string name="video_player">Amaze Video Player</string>
     <string name="amaze_audio_player">Amaze Music Player</string>
     <string name="pdf_viewer">Amaze Pdf Viewer</string>
-    <string name="epub_viewer">Epub Viewer</string>
-    <string name="docx_viewer">Doc Viewer</string>
-    <string name="welcome_launcher">Thank you for purchasing Amaze File Utilities. Your support is greatly appreciated.
-        Feel free to contact us on our telegram channel @AmazeFileManager
-    </string>
-    <string name="please_rate">Please rate</string>
+    <string name="epub_viewer">Amaze Epub Viewer</string>
+    <string name="docx_viewer">Amaze Doc Viewer</string>
     <string name="intent_image_viewer">Amaze Image Viewer</string>
     <string name="intent_video_player">Amaze Video Player</string>
     <string name="grantfailed">Storage permission not granted</string>
@@ -94,7 +90,7 @@
     <string name="error_snackbar_action">Report</string>
     <string name="what_device_headline">Info:</string>
     <string name="what_happened_headline">What happened:</string>
-    <string name="info_labels">What:\\nRequest:\\nGMT Time:\\nPackage:\\nVersion:\\nOS version:\\nDevice:\\nModel:\\nProduct:</string>
+    <string name="info_labels">What:\\nRequest:\\nGMT Time:\\nPackage:\\nVersion:\\nOS version:\\nDevice:\\nModel:\\nProduct:\\nDevice ID:</string>
     <string name="your_comment">Your comment (in English):</string>
     <string name="error_details_headline">Details:</string>
     <string name="app_ui_crash">App/UI crashed</string>
@@ -403,4 +399,17 @@
         Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
     <string name="take_me">Take me</string>
     <string name="later">Later</string>
+    <string name="updating_app">Closing app during update…</string>
+    <string name="app_updated">App updated successfully</string>
+    <string name="update_cancelled">Update cancelled</string>
+    <string name="failed_to_update_app">Failed to update the app…</string>
+    <string name="shortcut_short">Shortcut short</string>
+    <string name="shortcut_long">Shortcut long</string>
+    <string name="shortcut_disable">Disable shortcut</string>
+    <string name="home_screen_design"><![CDATA[Home screen design - <a href="https://dribbble.com/topu-roy-antu">Topu Roy Antu</a>]]></string>
+    <string name="license_agreement"><![CDATA[I accept the <a href="https://teamamaze.xyz/license-agreement-utilities">License Agreement</a>]]></string>
+    <string name="license_agreement_not_accepted">Please accept license agreement</string>
+    <string name="renewal_cycle">Renewal cycle - %s</string>
+    <string name="lifetime_membership">Lifetime Membership</string>
+    <string name="one_year">1 Year</string>
 </resources>

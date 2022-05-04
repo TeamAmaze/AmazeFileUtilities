@@ -28,6 +28,7 @@ import com.amaze.fileutilities.utilis.*
 import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
+import com.mikepenz.aboutlibraries.util.Colors
 
 class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener {
 
@@ -71,7 +72,9 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
             val trial = dao.findByDeviceId(deviceId)
             if (trial != null) {
                 subscriptionStatus?.summary =
-                    if (trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_ACTIVE &&
+                    if (trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE) {
+                        trial.getTrialStatusName()
+                    } else if (trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_ACTIVE &&
                         trial.subscriptionStatus == Trial.SUBSCRIPTION_STATUS_DEFAULT
                     ) {
                         trial.getTrialStatusName() +
@@ -104,6 +107,7 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
                 startActivity(Intent(requireContext(), AboutActivity::class.java))
             }
             KEY_LICENSE -> {
+                Utils.openURL(Utils.URL_LICENSE_AGREEMENT, requireContext())
             }
             KEY_PRIVACY_POLICY -> {
                 Utils.openURL(Utils.URL_PRIVACY_POLICY, requireContext())
@@ -155,6 +159,7 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
                     .withAboutSpecial1(getString(R.string.licenses))
                     .withAboutSpecial1Description(getString(R.string.amaze_license))
                     .withLicenseShown(true)
+                    .withActivityColor(Colors(R.color.blue, R.color.blue))
                 libsBuilder.withActivityStyle(Libs.ActivityStyle.DARK)
                 libsBuilder.start(requireContext())
             }
