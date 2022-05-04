@@ -526,7 +526,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
                     )
             )
         if (activity is ImageViewerDialogActivity) {
-            glide = glide.transform(RoundedCorners(50))
+            glide = glide.transform(RoundedCorners(24.px.toInt()))
         }
         _binding?.let {
             glide.into(it.imageView)
