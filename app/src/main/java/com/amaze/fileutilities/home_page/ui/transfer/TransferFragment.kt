@@ -118,10 +118,12 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
                     "${viewModel.selfIP}"
             )
         } else {
-            binding.devicesParent.removeAllViews()
-            binding.searchingText.visibility = View.VISIBLE
-            binding.scanButton.visibility = View.VISIBLE
-            binding.searchingText.text = resources.getString(R.string.start_scan_both_devices)
+            _binding?.run {
+                devicesParent.removeAllViews()
+                searchingText.visibility = View.VISIBLE
+                scanButton.visibility = View.VISIBLE
+                searchingText.text = resources.getString(R.string.start_scan_both_devices)
+            }
         }
     }
 
@@ -134,7 +136,7 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
     }
 
     private fun locationPermissionDenied() {
-        binding.run {
+        _binding?.run {
             this@TransferFragment.resetViewsOnDisconnect()
             scanButton.visibility = View.GONE
             searchingText.text = resources.getString(R.string.location_permission_not_granted)
@@ -153,8 +155,8 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
 
     val monitorDiscoveryTime = object : CountDownTimer(30000, 1000) {
         override fun onTick(millisUntilFinished: Long) {
-            binding.searchingText.visibility = View.VISIBLE
-            binding.searchingText.text = resources.getString(R.string.searching_timer)
+            _binding?.searchingText?.visibility = View.VISIBLE
+            _binding?.searchingText?.text = resources.getString(R.string.searching_timer)
                 .format(abs(millisUntilFinished / 1000))
         }
 
@@ -203,186 +205,188 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
     }
 
     private fun setupButtonClicks() {
-        binding.scanButton.setOnClickListener {
-            binding.searchingProgress.visibility = View.VISIBLE
-            binding.searchingText.visibility = View.VISIBLE
-            binding.searchingText.text = resources.getString(R.string.searching)
-            binding.scanButton.visibility = View.GONE
-            binding.stopScanButton.showFade(300)
-            monitorDiscoveryTime.start()
-            mainActivity?.getWifiP2PManager()?.discoverPeers(
-                mainActivity?.getWifiP2PChannel(),
-                object : WifiP2pManager.ActionListener {
+        _binding?.run {
+            scanButton.setOnClickListener {
+                searchingProgress.visibility = View.VISIBLE
+                searchingText.visibility = View.VISIBLE
+                searchingText.text = resources.getString(R.string.searching)
+                scanButton.visibility = View.GONE
+                stopScanButton.showFade(300)
+                monitorDiscoveryTime.start()
+                mainActivity?.getWifiP2PManager()?.discoverPeers(
+                    mainActivity?.getWifiP2PChannel(),
+                    object : WifiP2pManager.ActionListener {
 
-                    override fun onSuccess() {
-                        // do nothing, handle when peers are found
-                        log.info("Peers discovered")
-                    }
+                        override fun onSuccess() {
+                            // do nothing, handle when peers are found
+                            log.info("Peers discovered")
+                        }
 
-                    override fun onFailure(reasonCode: Int) {
-                        binding.searchingProgress.visibility = View.GONE
-                        monitorDiscoveryTime.cancel()
-                        viewModel.groupOwnerIP = null
-                        viewModel.peerIP = null
-                        viewModel.selfIP = null
-                        viewModel.isConnectedToPeer = false
-                        binding.searchingText.visibility = View.VISIBLE
-                        binding.searchingText.text = resources
-                            .getString(R.string.connected_send_receive_hint)
-                        requireActivity()
-                            .showToastOnBottom(
-                                "${getString(R.string.discovery_failure)} " +
-                                    ": $reasonCode"
-                            )
-                        initScreenComponents()
-                        binding.stopScanButton.visibility = View.GONE
-                        binding.scanButton.visibility = View.VISIBLE
-                    }
-                }
-            )
-        }
-        binding.stopScanButton.setOnClickListener {
-            mainActivity?.getWifiP2PManager()?.stopPeerDiscovery(
-                mainActivity?.channel,
-                object : WifiP2pManager.ActionListener {
-                    override fun onSuccess() {
-                        binding.searchingText.hideFade(300)
-                        binding.searchingProgress.visibility = View.GONE
-                        binding.searchingText.visibility = View.VISIBLE
-                        binding.searchingText.text = resources
-                            .getString(R.string.start_scan_both_devices)
-                        binding.deviceStatus.visibility = View.GONE
-                        binding.deviceName.visibility = View.GONE
-                        binding.scanButton.visibility = View.VISIBLE
-                        binding.stopScanButton.hideFade(300)
-                        monitorDiscoveryTime.cancel()
-                        initConnectionTimer.cancel()
-                    }
-
-                    override fun onFailure(p0: Int) {
-                        binding.searchingText.text = resources
-                            .getString(R.string.failed_to_stop_peer_discovery)
-                        binding.searchingText.visibility = View.VISIBLE
-                        binding.searchingProgress.visibility = View.GONE
-                        binding.searchingText.visibility = View.GONE
-                        binding.stopScanButton.hideFade(300)
-                        monitorDiscoveryTime.cancel()
-                        initConnectionTimer.cancel()
-                    }
-                }
-            )
-        }
-        binding.disconnectButton.setOnClickListener {
-            this.resetViewsOnDisconnect()
-            resetNetworkGroup()
-            requireContext().showToastInCenter(resources.getString(R.string.disconnected))
-        }
-
-        binding.sendButton.setOnClickListener {
-            requireContext().showFileChooserDialog {
-                if (viewModel.peerIP == null) {
-                    this.resetViewsOnDisconnect()
-                    resetNetworkGroup()
-                    requireContext().showToastInCenter(
-                        resources
-                            .getString(R.string.failed_filename_send_reconnecct)
-                    )
-                } else if (viewModel.isTransferInProgress) {
-                    requireContext().showToastInCenter(
-                        resources
-                            .getString(R.string.transfer_in_progress_title)
-                    )
-                } else {
-                    binding.sendReceiveParent.hideFade(400)
-                    initConnectionTimer.start()
-                    viewModel
-                        .sendMessage("${it.name}$SEND_FILE_META_SPLITTER${it.length()}")
-                        .observe(viewLifecycleOwner) {
-                            didSendFileName ->
-                            if (!didSendFileName) {
-                                requireContext().showToastInCenter(
-                                    resources
-                                        .getString(R.string.failed_filename_send)
+                        override fun onFailure(reasonCode: Int) {
+                            searchingProgress.visibility = View.GONE
+                            monitorDiscoveryTime.cancel()
+                            viewModel.groupOwnerIP = null
+                            viewModel.peerIP = null
+                            viewModel.selfIP = null
+                            viewModel.isConnectedToPeer = false
+                            searchingText.visibility = View.VISIBLE
+                            searchingText.text = resources
+                                .getString(R.string.connected_send_receive_hint)
+                            requireActivity()
+                                .showToastOnBottom(
+                                    "${getString(R.string.discovery_failure)} " +
+                                        ": $reasonCode"
                                 )
-                                this.resetViewsOnDisconnect()
-                                initConnectionTimer.cancel()
-                            } else {
+                            initScreenComponents()
+                            stopScanButton.visibility = View.GONE
+                            scanButton.visibility = View.VISIBLE
+                        }
+                    }
+                )
+            }
+            stopScanButton.setOnClickListener {
+                mainActivity?.getWifiP2PManager()?.stopPeerDiscovery(
+                    mainActivity?.channel,
+                    object : WifiP2pManager.ActionListener {
+                        override fun onSuccess() {
+                            searchingText.hideFade(300)
+                            searchingProgress.visibility = View.GONE
+                            searchingText.visibility = View.VISIBLE
+                            searchingText.text = resources
+                                .getString(R.string.start_scan_both_devices)
+                            deviceStatus.visibility = View.GONE
+                            deviceName.visibility = View.GONE
+                            scanButton.visibility = View.VISIBLE
+                            stopScanButton.hideFade(300)
+                            monitorDiscoveryTime.cancel()
+                            initConnectionTimer.cancel()
+                        }
+
+                        override fun onFailure(p0: Int) {
+                            searchingText.text = resources
+                                .getString(R.string.failed_to_stop_peer_discovery)
+                            searchingText.visibility = View.VISIBLE
+                            searchingProgress.visibility = View.GONE
+                            searchingText.visibility = View.GONE
+                            stopScanButton.hideFade(300)
+                            monitorDiscoveryTime.cancel()
+                            initConnectionTimer.cancel()
+                        }
+                    }
+                )
+            }
+            disconnectButton.setOnClickListener {
+                resetViewsOnDisconnect()
+                resetNetworkGroup()
+                requireContext().showToastInCenter(resources.getString(R.string.disconnected))
+            }
+
+            sendButton.setOnClickListener {
+                requireContext().showFileChooserDialog {
+                    if (viewModel.peerIP == null) {
+                        resetViewsOnDisconnect()
+                        resetNetworkGroup()
+                        requireContext().showToastInCenter(
+                            resources
+                                .getString(R.string.failed_filename_send_reconnecct)
+                        )
+                    } else if (viewModel.isTransferInProgress) {
+                        requireContext().showToastInCenter(
+                            resources
+                                .getString(R.string.transfer_in_progress_title)
+                        )
+                    } else {
+                        sendReceiveParent.hideFade(400)
+                        initConnectionTimer.start()
+                        viewModel
+                            .sendMessage("${it.name}$SEND_FILE_META_SPLITTER${it.length()}")
+                            .observe(viewLifecycleOwner) {
+                                didSendFileName ->
+                                if (!didSendFileName) {
+                                    requireContext().showToastInCenter(
+                                        resources
+                                            .getString(R.string.failed_filename_send)
+                                    )
+                                    resetViewsOnDisconnect()
+                                    initConnectionTimer.cancel()
+                                } else {
+                                    var lastProgress = 0L
+                                    viewModel.initClientTransfer(it)
+                                        .observe(viewLifecycleOwner) {
+                                            progress ->
+                                            initConnectionTimer.cancel()
+                                            invalidateTransferProgressBar(
+                                                progress, lastProgress,
+                                                it.name
+                                            )
+                                            lastProgress = progress.split("/")[0].toLong()
+                                        }
+                                }
+                            }
+                    }
+                }
+            }
+
+            transferCancel.setOnClickListener {
+                viewModel.serverTransferSocket?.close()
+                viewModel.clientTransferSocket?.close()
+                requireActivity().showToastOnBottom("Transfer cancelled")
+                initTransferFinishViews()
+            }
+
+            receiveStopButton.setOnClickListener {
+                viewModel.serverHandshakeSocket?.close()
+                sendButton.visibility = View.VISIBLE
+                receiveButton.visibility = View.VISIBLE
+                receiveStopButton.visibility = View.GONE
+                searchingText.text = resources.getString(R.string.connected_send_receive_hint)
+            }
+
+            receiveButton.setOnClickListener {
+                requireContext().getExternalStorageDirectory()?.path?.let {
+                    if (viewModel.peerIP == null) {
+                        resetViewsOnDisconnect()
+                        requireContext().showToastInCenter(
+                            resources
+                                .getString(R.string.failed_filename_receive_reconnecct)
+                        )
+                        searchingText.text = getString(R.string.failed_to_handshake)
+                        scanButton.visibility = View.VISIBLE
+                    } else if (viewModel.isTransferInProgress) {
+                        requireContext().showToastInCenter(
+                            resources
+                                .getString(R.string.transfer_in_progress_title)
+                        )
+                    } else {
+                        receiveButton.visibility = View.GONE
+                        receiveStopButton.visibility = View.VISIBLE
+                        sendButton.visibility = View.GONE
+                        searchingText.visibility = View.VISIBLE
+                        searchingText.text = resources.getString(R.string.receiving_files)
+                        viewModel.receiveMessage().observe(viewLifecycleOwner) {
+                            receivedFileNameAndBytes ->
+                            if (receivedFileNameAndBytes != null) {
+                                val array = receivedFileNameAndBytes.split(SEND_FILE_META_SPLITTER)
+                                val filePath = "$it/$RECEIVER_BASE_PATH/${array[0]}"
+                                val fileLength = array[1].toLong()
+                                searchingText.visibility = View.VISIBLE
+                                searchingText.text = getString(R.string.receiving_files)
                                 var lastProgress = 0L
-                                viewModel.initClientTransfer(it)
+                                viewModel.initServerConnection(filePath, fileLength)
                                     .observe(viewLifecycleOwner) {
                                         progress ->
-                                        initConnectionTimer.cancel()
                                         invalidateTransferProgressBar(
                                             progress, lastProgress,
-                                            it.name
+                                            array[0]
                                         )
                                         lastProgress = progress.split("/")[0].toLong()
                                     }
+                            } else {
+                                requireContext().showToastInCenter(
+                                    resources
+                                        .getString(R.string.failed_filename_receive)
+                                )
                             }
-                        }
-                }
-            }
-        }
-
-        binding.transferCancel.setOnClickListener {
-            viewModel.serverTransferSocket?.close()
-            viewModel.clientTransferSocket?.close()
-            requireActivity().showToastOnBottom("Transfer cancelled")
-            initTransferFinishViews()
-        }
-
-        binding.receiveStopButton.setOnClickListener {
-            viewModel.serverHandshakeSocket?.close()
-            binding.sendButton.visibility = View.VISIBLE
-            binding.receiveButton.visibility = View.VISIBLE
-            binding.receiveStopButton.visibility = View.GONE
-            binding.searchingText.text = resources.getString(R.string.connected_send_receive_hint)
-        }
-
-        binding.receiveButton.setOnClickListener {
-            requireContext().getExternalStorageDirectory()?.path?.let {
-                if (viewModel.peerIP == null) {
-                    this.resetViewsOnDisconnect()
-                    requireContext().showToastInCenter(
-                        resources
-                            .getString(R.string.failed_filename_receive_reconnecct)
-                    )
-                    binding.searchingText.text = getString(R.string.failed_to_handshake)
-                    binding.scanButton.visibility = View.VISIBLE
-                } else if (viewModel.isTransferInProgress) {
-                    requireContext().showToastInCenter(
-                        resources
-                            .getString(R.string.transfer_in_progress_title)
-                    )
-                } else {
-                    binding.receiveButton.visibility = View.GONE
-                    binding.receiveStopButton.visibility = View.VISIBLE
-                    binding.sendButton.visibility = View.GONE
-                    binding.searchingText.visibility = View.VISIBLE
-                    binding.searchingText.text = resources.getString(R.string.receiving_files)
-                    viewModel.receiveMessage().observe(viewLifecycleOwner) {
-                        receivedFileNameAndBytes ->
-                        if (receivedFileNameAndBytes != null) {
-                            val array = receivedFileNameAndBytes.split(SEND_FILE_META_SPLITTER)
-                            val filePath = "$it/$RECEIVER_BASE_PATH/${array[0]}"
-                            val fileLength = array[1].toLong()
-                            binding.searchingText.visibility = View.VISIBLE
-                            binding.searchingText.text = getString(R.string.receiving_files)
-                            var lastProgress = 0L
-                            viewModel.initServerConnection(filePath, fileLength)
-                                .observe(viewLifecycleOwner) {
-                                    progress ->
-                                    invalidateTransferProgressBar(
-                                        progress, lastProgress,
-                                        array[0]
-                                    )
-                                    lastProgress = progress.split("/")[0].toLong()
-                                }
-                        } else {
-                            requireContext().showToastInCenter(
-                                resources
-                                    .getString(R.string.failed_filename_receive)
-                            )
                         }
                     }
                 }
@@ -391,7 +395,7 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
     }
 
     private fun locationDisabled() {
-        binding.run {
+        _binding?.run {
             this@TransferFragment.resetViewsOnDisconnect()
             scanButton.visibility = View.GONE
             enableLocationButton.visibility = View.VISIBLE
@@ -415,17 +419,19 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
     }
 
     private fun initTransferFinishViews() {
-        binding.transferFileText.text = ""
-        binding.transferBytesText.text = ""
-        binding.transferProgress.visibility = View.GONE
-        binding.transferInfoParent.hideFade(300)
-        binding.searchingText.text = resources.getString(R.string.connected_send_receive_hint)
-        binding.searchingText.visibility = View.VISIBLE
-        binding.searchingProgress.visibility = View.GONE
-        binding.receiveStopButton.visibility = View.GONE
-        binding.sendButton.visibility = View.VISIBLE
-        binding.receiveButton.visibility = View.VISIBLE
-        binding.sendReceiveParent.showFade(300)
+        _binding?.run {
+            transferFileText.text = ""
+            transferBytesText.text = ""
+            transferProgress.visibility = View.GONE
+            transferInfoParent.hideFade(300)
+            searchingText.text = resources.getString(R.string.connected_send_receive_hint)
+            searchingText.visibility = View.VISIBLE
+            searchingProgress.visibility = View.GONE
+            receiveStopButton.visibility = View.GONE
+            sendButton.visibility = View.VISIBLE
+            receiveButton.visibility = View.VISIBLE
+            sendReceiveParent.showFade(300)
+        }
     }
 
     private fun invalidateTransferProgressBar(
@@ -438,28 +444,29 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
             initTransferFinishViews()
             requireContext().showToastInCenter(resources.getString(R.string.transfer_complete))
         } else {
-            binding.searchingProgress.visibility = View.GONE
-            binding.searchingText.visibility = View.GONE
-
-            binding.sendReceiveParent.hideFade(400)
-            binding.transferInfoParent.visibility = View.VISIBLE
-            binding.transferFileText.text = fileName
-            binding.transferProgress.visibility = View.VISIBLE
-            progress.let {
-                val progressArr = progress.split("/")
-                val done = FileUtils.formatStorageLength(
-                    requireContext(), progressArr[0].toLong()
-                )
-                val total = FileUtils.formatStorageLength(
-                    requireContext(), progressArr[1].toLong()
-                )
-                val bytesPerSec = (progressArr[0].toLong() - lastProgress) / 4
-                val speed = FileUtils.formatStorageLength(
-                    requireContext(), bytesPerSec
-                )
-                binding.transferBytesText.text = "$done / $total ($speed/s)"
-                binding.transferProgress.max = progressArr[1].toInt()
-                binding.transferProgress.progress = progressArr[0].toInt()
+            _binding?.run {
+                searchingProgress.visibility = View.GONE
+                searchingText.visibility = View.GONE
+                sendReceiveParent.hideFade(400)
+                transferInfoParent.visibility = View.VISIBLE
+                transferFileText.text = fileName
+                transferProgress.visibility = View.VISIBLE
+                progress.let {
+                    val progressArr = progress.split("/")
+                    val done = FileUtils.formatStorageLength(
+                        requireContext(), progressArr[0].toLong()
+                    )
+                    val total = FileUtils.formatStorageLength(
+                        requireContext(), progressArr[1].toLong()
+                    )
+                    val bytesPerSec = (progressArr[0].toLong() - lastProgress) / 4
+                    val speed = FileUtils.formatStorageLength(
+                        requireContext(), bytesPerSec
+                    )
+                    transferBytesText.text = "$done / $total ($speed/s)"
+                    transferProgress.max = progressArr[1].toInt()
+                    transferProgress.progress = progressArr[0].toInt()
+                }
             }
         }
     }
@@ -500,28 +507,32 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
         viewModel.serverTransferSocket?.close()
         viewModel.clientTransferSocket?.close()
 
-        binding.devicesParent.removeAllViews()
-        binding.stopScanButton.visibility = View.GONE
-        binding.searchingText.visibility = View.VISIBLE
-        binding.searchingText.text = resources.getString(R.string.start_scan_both_devices)
-        binding.deviceStatus.visibility = View.GONE
-        binding.deviceName.visibility = View.GONE
-        binding.searchingProgress.visibility = View.GONE
-        binding.sendReceiveParent.visibility = View.GONE
-        binding.transferInfoParent.visibility = View.GONE
-        binding.scanButton.visibility = View.VISIBLE
+        _binding?.run {
+            devicesParent.removeAllViews()
+            stopScanButton.visibility = View.GONE
+            searchingText.visibility = View.VISIBLE
+            searchingText.text = resources.getString(R.string.start_scan_both_devices)
+            deviceStatus.visibility = View.GONE
+            deviceName.visibility = View.GONE
+            searchingProgress.visibility = View.GONE
+            sendReceiveParent.visibility = View.GONE
+            transferInfoParent.visibility = View.GONE
+            scanButton.visibility = View.VISIBLE
+        }
     }
 
     val initConnectionTimer = object : CountDownTimer(30000, 1000) {
         override fun onTick(millisUntilFinished: Long) {
             if (!viewModel.isConnectedToPeer || !viewModel.isTransferInProgress) {
-                binding.devicesParent.removeAllViews()
-                binding.scanButton.visibility = View.GONE
-                binding.searchingProgress.visibility = View.VISIBLE
-                binding.searchingText.visibility = View.VISIBLE
-                binding.searchingText.text = resources
-                    .getString(R.string.connecting_please_wait)
-                    .format(abs(millisUntilFinished / 1000))
+                _binding?.run {
+                    devicesParent.removeAllViews()
+                    scanButton.visibility = View.GONE
+                    searchingProgress.visibility = View.VISIBLE
+                    searchingText.visibility = View.VISIBLE
+                    searchingText.text = resources
+                        .getString(R.string.connecting_please_wait)
+                        .format(abs(millisUntilFinished / 1000))
+                }
             }
         }
 
@@ -549,11 +560,12 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
         config.wps.setup = WpsInfo.PBC
         button.setOnClickListener {
             requireContext().showToastInCenter(resources.getString(R.string.connecting))
-            binding.searchingText.visibility = View.VISIBLE
-            binding.searchingProgress.visibility = View.VISIBLE
-
-            binding.scanButton.visibility = View.GONE
-            binding.devicesParent.removeAllViews()
+            _binding?.run {
+                searchingText.visibility = View.VISIBLE
+                searchingProgress.visibility = View.VISIBLE
+                scanButton.visibility = View.GONE
+                devicesParent.removeAllViews()
+            }
             initConnectionTimer.start()
             mainActivity?.getWifiP2PManager()?.connect(
                 mainActivity?.getWifiP2PChannel(),
@@ -639,13 +651,15 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
         }
     }
 
-    fun initAfterHandshake() {
-        binding.scanButton.visibility = View.GONE
-        binding.devicesParent.removeAllViews()
-        binding.searchingProgress.visibility = View.GONE
-        binding.sendReceiveParent.showFade(200)
-        binding.searchingText.visibility = View.VISIBLE
-        binding.searchingText.text = resources.getString(R.string.connected_send_receive_hint)
+    private fun initAfterHandshake() {
+        _binding?.run {
+            scanButton.visibility = View.GONE
+            devicesParent.removeAllViews()
+            searchingProgress.visibility = View.GONE
+            sendReceiveParent.showFade(200)
+            searchingText.visibility = View.VISIBLE
+            searchingText.text = resources.getString(R.string.connected_send_receive_hint)
+        }
 
         log.info(
             "Connection established with group owner" +
@@ -657,36 +671,38 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
         // Handle peers list
         log.info("Found peers: $peers")
         peers?.let {
-            binding.stopScanButton.visibility = View.GONE
-            binding.searchingText.visibility = View.VISIBLE
+            _binding?.stopScanButton?.visibility = View.GONE
+            _binding?.searchingText?.visibility = View.VISIBLE
             if (it.deviceList.isEmpty()) {
-                binding.searchingText.text =
+                _binding?.searchingText?.text =
                     getString(R.string.no_devices_found)
             } else {
-                binding.devicesParent.removeAllViews()
+                _binding?.devicesParent?.removeAllViews()
                 monitorDiscoveryTime.cancel()
                 peers.deviceList.forEach {
                     device ->
                     log.info("Found peer: $device")
-                    binding.devicesParent.addView(getPeerButton(device))
+                    _binding?.devicesParent?.addView(getPeerButton(device))
                 }
-                binding.searchingText.text = resources.getString(R.string.devices_present_select)
+                _binding?.searchingText?.text = resources.getString(R.string.devices_present_select)
             }
         }
 
-        binding.searchingProgress.visibility = View.GONE
-        binding.searchingText.visibility = View.GONE
+        _binding?.searchingProgress?.visibility = View.GONE
+        _binding?.searchingText?.visibility = View.GONE
     }
 
     fun updateThisDevice(device: WifiP2pDevice?) {
         device?.also {
             this.device = device
-            binding.deviceName.visibility = View.VISIBLE
-            binding.deviceStatus.visibility = View.VISIBLE
-            binding.deviceName.text = resources.getString(R.string.my_device)
-                .format(device.deviceName)
-            binding.deviceStatus.text = resources.getString(R.string.device_status)
-                .format(getDeviceStatus(device.status))
+            _binding?.run {
+                deviceName.visibility = View.VISIBLE
+                deviceStatus.visibility = View.VISIBLE
+                deviceName.text = resources.getString(R.string.my_device)
+                    .format(device.deviceName)
+                deviceStatus.text = resources.getString(R.string.device_status)
+                    .format(getDeviceStatus(device.status))
+            }
         }
     }
 

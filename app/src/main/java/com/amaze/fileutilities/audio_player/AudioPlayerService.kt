@@ -196,12 +196,12 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                             cycleRepeat()
                         }
                         else -> {
-                            initCurrentUriAndPlayer(intentUri!!, false)
+                            initCurrentUriAndPlayer(intentUri!!, exoPlayer?.isPlaying == true)
                         }
                     }
                 }
                 else -> {
-                    initCurrentUriAndPlayer(intentUri!!, false)
+                    initCurrentUriAndPlayer(intentUri!!, exoPlayer?.isPlaying == true)
                 }
             }
         }
