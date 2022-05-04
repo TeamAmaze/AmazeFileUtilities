@@ -29,6 +29,7 @@ import com.amaze.fileutilities.utilis.share.showEditImageDialog
 import com.amaze.fileutilities.utilis.share.showSetAsDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.drew.imaging.ImageMetadataReader
 import com.drew.metadata.exif.*
 import com.drew.metadata.file.FileSystemDirectory
@@ -516,13 +517,17 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 "and mimetype ${localTypeModel.mimeType}"
         )
 
-        Glide.with(this).load(localTypeModel.uri.toString())
+        var glide = Glide.with(this).load(localTypeModel.uri.toString())
             .thumbnail(
-                Glide.with(this).load(
-                    resources.getDrawable(R.drawable.ic_outline_image_32)
-                )
+                Glide.with(this)
+                    .load(
+                        resources.getDrawable(R.drawable.ic_outline_image_32)
+                    )
             )
-            .into(viewBinding.imageView)
+        if (activity is ImageViewerDialogActivity) {
+            glide = glide.transform(RoundedCorners(50))
+        }
+        glide.into(viewBinding.imageView)
         Glide.with(this).load(localTypeModel.uri.toString())
             .thumbnail(
                 Glide.with(this).load(

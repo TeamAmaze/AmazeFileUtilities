@@ -326,8 +326,12 @@ class Billing(val context: Context, private var uniqueId: String) :
             if (skuDetails[position].type == BillingClient.SkuType.INAPP) {
                 holder.RENEWAL_CYCLE.text = context.getString(R.string.lifetime_membership)
             } else {
+                var cycle = context.getString(R.string.one_year)
+                if (!skuDetails[position].subscriptionPeriod.equals("P1Y", true)) {
+                    cycle = skuDetails[position].subscriptionPeriod
+                }
                 holder.RENEWAL_CYCLE.text = context.getString(R.string.renewal_cycle)
-                    .format(skuDetails[position].subscriptionPeriod)
+                    .format(cycle)
             }
             holder.SUMMARY.text = skuDetails[position].description
             holder.PRICE.text = skuDetails[position].price
