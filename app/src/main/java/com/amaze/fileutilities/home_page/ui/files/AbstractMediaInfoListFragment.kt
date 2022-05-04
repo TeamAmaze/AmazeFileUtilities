@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.home_page.ui.files
 
+import android.view.View
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -131,6 +132,8 @@ abstract class AbstractMediaInfoListFragment :
                     if (checkedSize > 0) {
                         setupShowActionBar()
                         setupCommonButtons()
+                        getLocateFileButton()?.visibility = if (checkedSize == 1)
+                            View.VISIBLE else View.GONE
                     } else {
                         hideActionBar()
                     }

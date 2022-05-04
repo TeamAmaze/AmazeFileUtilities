@@ -11,10 +11,11 @@
         <item name="colorOnSecondary">@color/blue</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:navigationBarColor" tools:targetApi="l">@color/yellow_dark</item>
         <!-- Customize your theme here. -->
         <item name="actionBarTheme">@style/ThemeOverlay.Actionbar</item>
 
         <item name="colorAccent">@color/highlight_yellow</item>
-        <item name="android:colorEdgeEffect">@color/highlight_yellow</item>
+        <item name="android:colorEdgeEffect" tools:targetApi="l">@color/highlight_yellow</item>
     </style>
 </resources>

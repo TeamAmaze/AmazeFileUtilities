@@ -42,9 +42,13 @@ import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.ActivityResult.RESULT_IN_APP_UPDATE_FAILED
 import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.stephentuso.welcome.WelcomeHelper
 import org.slf4j.Logger
@@ -66,6 +70,7 @@ class MainActivity :
     private var isOptionsVisible = false
     private var welcomeScreen: WelcomeHelper? = null
     private var didShowWelcomeScreen = true
+    private var appUpdateManager: AppUpdateManager? = null
 
     companion object {
         private const val VOICE_REQUEST_CODE = 1000
@@ -75,6 +80,8 @@ class MainActivity :
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
+        setTheme(R.style.Theme_AmazeFileUtilities)
         super.onCreate(savedInstanceState)
         welcomeScreen = WelcomeHelper(this, WelcomeScreen::class.java)
         if (!welcomeScreen!!.show(savedInstanceState)) {
@@ -82,7 +89,6 @@ class MainActivity :
             invokePermissionCheck()
         }
         binding = ActivityMainBinding.inflate(layoutInflater)
-        viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
 //        viewModel.copyTrainedData()
 //        viewModel.getAndSaveUniqueDeviceId()
         actionBarBinding = ActivityMainActionbarBinding.inflate(layoutInflater)
@@ -265,6 +271,11 @@ class MainActivity :
             .unregisterContentObserver(documentsObserver)
     }*/
 
+    override fun onPause() {
+        super.onPause()
+        appUpdateManager?.unregisterListener(updateListener)
+    }
+
     override fun getTransferFragment(): TransferFragment? {
         val fragment = getFragmentAtFrame()
         return if (fragment is NavHostFragment) {
@@ -291,58 +302,83 @@ class MainActivity :
                     searchActionBarBinding.actionBarEditText.setText(matches[0])
                 }
             }
+        } else if (requestCode == UPDATE_REQUEST_CODE) {
+            when (resultCode) {
+                RESULT_OK -> {
+                    log.info("user accepted the update")
+                    //  handle user's approval
+                    showToastOnBottom(getString(R.string.app_updated))
+                }
+                RESULT_CANCELED -> {
+                    //  handle user's rejection
+                    log.info("user rejected the update")
+                    showToastOnBottom(getString(R.string.update_cancelled))
+                }
+                RESULT_IN_APP_UPDATE_FAILED -> {
+                    // if you want to request the update again just call checkUpdate()
+                    //  handle update failure
+                    log.info("failed to update the app")
+                    showToastOnBottom(getString(R.string.failed_to_update_app))
+                }
+            }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onBackPressed() {
         val fragment = getFragmentAtFrame()
-        if (fragment is NavHostFragment && fragment.childFragmentManager.backStackEntryCount > 1) {
-            supportFragmentManager.popBackStack()
-        } else {
-            if (::selectedItemActionBarBinding.isInitialized) {
-                if (!actionBarBinding.root.isVisible) {
-                    var abstractListFragment: ItemsActionBarFragment? = null
-                    fragment?.childFragmentManager?.fragments?.forEach {
-                        if (it is ItemsActionBarFragment) {
-                            abstractListFragment = it
-                        }
+        if (selectedItemActionBarBinding.root.isVisible &&
+            !searchActionBarBinding.root.isVisible
+        ) {
+            if (!actionBarBinding.root.isVisible) {
+                var abstractListFragment: ItemsActionBarFragment? = null
+                fragment?.childFragmentManager?.fragments?.forEach {
+                    if (it is ItemsActionBarFragment) {
+                        abstractListFragment = it
                     }
-                    if (abstractListFragment != null) {
-                        invalidateSelectedActionBar(
-                            false, abstractListFragment!!.hideActionBarOnClick(),
-                            abstractListFragment!!.handleBackPressed()
-                        )
-                        abstractListFragment!!.handleBackPressed().invoke()
-                    } else {
-                        super.onBackPressed()
-                    }
+                }
+                if (abstractListFragment != null) {
+                    invalidateSelectedActionBar(
+                        false, abstractListFragment!!.hideActionBarOnClick(),
+                        abstractListFragment!!.handleBackPressed()
+                    )
+                    abstractListFragment!!.handleBackPressed().invoke()
                 } else {
-                    var didShowTransfer = false
-                    var isTransferFragment = false
-                    fragment?.childFragmentManager?.fragments?.forEach {
-                        if (it is TransferFragment) {
-                            isTransferFragment = true
-                            // check if transfer in progress, avoid back press if it is
-                            if (it.getTransferViewModel().isTransferInProgress) {
-                                didShowTransfer = true
-                                it.warnTransferInProgress {
-                                    super.onBackPressed()
-                                }
+                    super.onBackPressed()
+                }
+            } else {
+                var didShowTransfer = false
+                var isTransferFragment = false
+                fragment?.childFragmentManager?.fragments?.forEach {
+                    if (it is TransferFragment) {
+                        isTransferFragment = true
+                        // check if transfer in progress, avoid back press if it is
+                        if (it.getTransferViewModel().isTransferInProgress) {
+                            didShowTransfer = true
+                            it.warnTransferInProgress {
+                                super.onBackPressed()
                             }
                         }
                     }
-                    if (!didShowTransfer || !isTransferFragment) {
-                        super.onBackPressed()
-                    }
                 }
-            } else {
-                super.onBackPressed()
+                if (!didShowTransfer || !isTransferFragment) {
+                    super.onBackPressed()
+                }
             }
-            if (isOptionsVisible) {
-                isOptionsVisible = !isOptionsVisible
-                invalidateOptionsTabs()
+        } else if (searchActionBarBinding.root.isVisible) {
+            val searchFragment = supportFragmentManager
+                .findFragmentByTag(SearchListFragment.FRAGMENT_TAG)
+            val transaction = supportFragmentManager.beginTransaction()
+            searchFragment?.let {
+                transaction.remove(searchFragment)
+                transaction.commit()
             }
+        } else {
+            super.onBackPressed()
+        }
+        if (isOptionsVisible) {
+            isOptionsVisible = !isOptionsVisible
+            invalidateOptionsTabs()
         }
     }
 
@@ -456,71 +492,100 @@ class MainActivity :
     }
 
     private fun checkForAppUpdates() {
-        val cal1 = GregorianCalendar.getInstance()
+
+        log.info("Checking for app update")
+        appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
+        // Returns an intent object that you use to check for an update.
+        val appUpdateInfoTask = appUpdateManager?.appUpdateInfo
+
+        // Checks that the platform will allow the specified type of update.
+        appUpdateInfoTask?.addOnSuccessListener { appUpdateInfo ->
+            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                // This example applies an immediate update. To apply a flexible update
+                // instead, pass in AppUpdateType.FLEXIBLE
+            ) {
+                /**
+                 * check for app updates - flexible update dialog is showing till 7 days for any
+                 * app update which has priority less than 4 after which he is shown
+                 * immediate update dialog, for priority 4 and 5 user is asked to update
+                 * immediately
+                 */
+                log.info("App update available")
+                /*val immediateUpdate = (
+                    appUpdateInfo.clientVersionStalenessDays()
+                        ?: -1
+                    ) >= DAYS_FOR_IMMEDIATE_UPDATE || appUpdateInfo.updatePriority() >= 4
+                log.info("Immediate criteria $immediateUpdate")*/
+                if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) &&
+                    appUpdateInfo.updatePriority() >= 4
+                ) {
+                    log.info("Immediate update conditions met, triggering immediate update")
+                    appUpdateManager?.startUpdateFlowForResult(
+                        // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                        appUpdateInfo,
+                        // The current activity making the update request.
+                        this,
+                        // Or pass 'AppUpdateType.FLEXIBLE' to newBuilder() for
+                        // flexible updates.
+                        AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE)
+                            .setAllowAssetPackDeletion(true)
+                            .build(),
+                        // Include a request code to later monitor this update request.
+                        UPDATE_REQUEST_CODE
+                    )
+                } else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE) &&
+                    appUpdateInfo.updatePriority() >= 2
+                ) {
+                    log.info("flexible update conditions met, triggering flexible update")
+                    appUpdateManager?.startUpdateFlowForResult(
+                        // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                        appUpdateInfo,
+                        // The current activity making the update request.
+                        this,
+                        // Or pass 'AppUpdateType.FLEXIBLE' to newBuilder() for
+                        // flexible updates.
+                        AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE)
+                            .setAllowAssetPackDeletion(true)
+                            .build(),
+                        // Include a request code to later monitor this update request.
+                        UPDATE_REQUEST_CODE
+                    )
+                }
+            } else if (appUpdateInfo.updateAvailability()
+                == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+            ) {
+                // Checks that the update is not stalled during 'onResume()'.
+                // However, you should execute this check at all entry points into the app.
+                log.info("resuming update that was already in progress")
+                appUpdateManager?.startUpdateFlowForResult(
+                    // Pass the intent that is returned by 'getAppUpdateInfo()'.
+                    appUpdateInfo,
+                    // The current activity making the update request.
+                    this,
+                    // Or pass 'AppUpdateType.FLEXIBLE' to newBuilder() for
+                    // flexible updates.
+                    AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE)
+                        .setAllowAssetPackDeletion(true)
+                        .build(),
+                    // Include a request code to later monitor this update request.
+                    UPDATE_REQUEST_CODE
+                )
+            }
+
+            appUpdateManager?.registerListener(updateListener)
+
+        /*val cal1 = GregorianCalendar.getInstance()
         cal1.time = Date()
         cal1.add(Calendar.DAY_OF_YEAR, -2)
         val fetchTime = applicationContext.getAppCommonSharedPreferences()
             .getLong(PreferencesConstants.KEY_UPDATE_APP_LAST_SHOWN_DATE, cal1.timeInMillis)
+
+        // check for update only once a day
         val cal = GregorianCalendar.getInstance()
         cal.time = Date(fetchTime)
         cal.add(Calendar.DAY_OF_YEAR, 1)
-        if (cal.time.before(Date())) {
-            // check for update only once a day
-            log.info("Checking for app update")
-            val appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
-            // Returns an intent object that you use to check for an update.
-            val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+        if (cal.time.before(Date()) || true) {
 
-            // Checks that the platform will allow the specified type of update.
-            appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-                if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                    // This example applies an immediate update. To apply a flexible update
-                    // instead, pass in AppUpdateType.FLEXIBLE
-                ) {
-                    /**
-                     * check for app updates - flexible update dialog is showing till 7 days for any
-                     * app update which has priority less than 4 after which he is shown
-                     * immediate update dialog, for priority 4 and 5 user is asked to update
-                     * immediately
-                     */
-                    log.info("App update available")
-                    if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) &&
-                        (
-                            (appUpdateInfo.clientVersionStalenessDays() ?: -1)
-                                >= DAYS_FOR_IMMEDIATE_UPDATE || appUpdateInfo.updatePriority() >= 4
-                            )
-                    ) {
-                        log.info("Immediate update conditions met, triggering immediate update")
-                        appUpdateManager.startUpdateFlowForResult(
-                            // Pass the intent that is returned by 'getAppUpdateInfo()'.
-                            appUpdateInfo,
-                            // The current activity making the update request.
-                            this,
-                            // Or pass 'AppUpdateType.FLEXIBLE' to newBuilder() for
-                            // flexible updates.
-                            AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE)
-                                .setAllowAssetPackDeletion(true)
-                                .build(),
-                            // Include a request code to later monitor this update request.
-                            UPDATE_REQUEST_CODE
-                        )
-                    } else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE)) {
-                        log.info("flexible update conditions met, triggering flexible update")
-                        appUpdateManager.startUpdateFlowForResult(
-                            // Pass the intent that is returned by 'getAppUpdateInfo()'.
-                            appUpdateInfo,
-                            // The current activity making the update request.
-                            this,
-                            // Or pass 'AppUpdateType.FLEXIBLE' to newBuilder() for
-                            // flexible updates.
-                            AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE)
-                                .setAllowAssetPackDeletion(true)
-                                .build(),
-                            // Include a request code to later monitor this update request.
-                            UPDATE_REQUEST_CODE
-                        )
-                    }
-                }
 
                 /*if (appUpdateInfo.updateAvailability()
                     == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
@@ -534,15 +599,26 @@ class MainActivity :
                             .build(),
                         UPDATE_REQUEST_CODE)
                 }*/
-            }
 
             applicationContext.getAppCommonSharedPreferences()
                 .edit().putLong(
                     PreferencesConstants.KEY_UPDATE_APP_LAST_SHOWN_DATE,
                     Date().time
                 ).apply()
+        }*/
         }
     }
+
+    private val updateListener: InstallStateUpdatedListener =
+        InstallStateUpdatedListener { installState ->
+            if (installState.installStatus() == InstallStatus.DOWNLOADED) {
+                // After the update is downloaded, show a notification
+                // and request user confirmation to restart the app.
+                log.info("update has been downloaded")
+                showToastOnBottom(getString(R.string.updating_app))
+                appUpdateManager!!.completeUpdate()
+            }
+        }
 
     private fun getFragmentAtFrame(): Fragment? {
         return supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)
@@ -661,7 +737,10 @@ class MainActivity :
 
     private fun showSearchFragment() {
         val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.nav_host_fragment_activity_main, SearchListFragment())
+        transaction.add(
+            R.id.nav_host_fragment_activity_main, SearchListFragment(),
+            SearchListFragment.FRAGMENT_TAG
+        )
         transaction.addToBackStack(null)
         transaction.commit()
     }

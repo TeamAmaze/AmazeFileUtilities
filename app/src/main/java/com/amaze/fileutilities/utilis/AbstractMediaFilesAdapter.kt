@@ -72,9 +72,10 @@ abstract class AbstractMediaFilesAdapter(
         removeItemsIdx.forEach {
             notifyItemChanged(it)
         }
+        toggleCheckCallback?.invoke(checkItemsList.size, itemCount, checkedItemBytes())
     }
 
-    fun removeChecked(): Boolean {
+    open fun removeChecked(): Boolean {
         val syncList = Collections.synchronizedList(getMediaFilesListItems())
 //        val removeItemsIdx = arrayListOf<Int>()
         val toRemove = arrayListOf<ListItem>()

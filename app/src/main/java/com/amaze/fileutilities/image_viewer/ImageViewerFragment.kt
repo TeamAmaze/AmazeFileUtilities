@@ -29,6 +29,7 @@ import com.amaze.fileutilities.utilis.share.showEditImageDialog
 import com.amaze.fileutilities.utilis.share.showSetAsDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.drew.imaging.ImageMetadataReader
 import com.drew.metadata.exif.*
 import com.drew.metadata.file.FileSystemDirectory
@@ -40,10 +41,7 @@ import java.util.*
 class ImageViewerFragment : AbstractMediaFragment() {
 
     var log: Logger = LoggerFactory.getLogger(ImageViewerFragment::class.java)
-
-    private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
-        QuickViewFragmentBinding.inflate(layoutInflater)
-    }
+    private var _binding: QuickViewFragmentBinding? = null
     private val filesViewModel: FilesViewModel by activityViewModels()
 
     private var hideToolbars = false
@@ -69,15 +67,15 @@ class ImageViewerFragment : AbstractMediaFragment() {
     }
 
     override fun getRootLayout(): View {
-        return viewBinding.root
+        return _binding?.root!!
     }
 
     override fun getToolbarLayout(): View {
-        return viewBinding.customToolbar.root
+        return _binding?.customToolbar?.root!!
     }
 
     override fun getBottomBarLayout(): View {
-        return viewBinding.layoutBottomSheet
+        return _binding?.layoutBottomSheet!!
     }
 
     override fun onCreateView(
@@ -85,15 +83,16 @@ class ImageViewerFragment : AbstractMediaFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return viewBinding.root
+        _binding = QuickViewFragmentBinding.inflate(inflater, container, false)
+        return _binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val quickViewType = requireArguments().getParcelable<LocalImageModel>(VIEW_TYPE_ARGUMENT)
         if (activity is ImageViewerDialogActivity) {
-            viewBinding.layoutBottomSheet.visibility = View.GONE
-            viewBinding.imageView.setOnClickListener {
+            _binding?.layoutBottomSheet?.visibility = View.GONE
+            _binding?.imageView?.setOnClickListener {
                 val intent = Intent(requireContext(), ImageViewerActivity::class.java)
                 intent.setDataAndType(quickViewType?.uri, quickViewType?.mimeType)
                 if (!quickViewType?.uri?.authority.equals(
@@ -108,7 +107,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 activity?.finish()
             }
         } else if (activity is ImageViewerActivity) {
-            viewBinding.run {
+            _binding?.run {
                 imageView.setOnClickListener {
                     hideToolbars = !hideToolbars
                     refactorSystemUi(
@@ -152,7 +151,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
             file?.let {
                 file ->
                 val metadata = ImageMetadataReader.readMetadata(file)
-                viewBinding.run {
+                _binding?.run {
                     val exifSubDirectory = metadata
                         .getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
                     val descriptor = ExifSubIFDDescriptor(exifSubDirectory)
@@ -302,8 +301,8 @@ class ImageViewerFragment : AbstractMediaFragment() {
     }
 
     private fun setupBottomSheetBehaviour() {
-        viewBinding.run {
-            val params: CoordinatorLayout.LayoutParams = viewBinding.layoutBottomSheet
+        _binding?.run {
+            val params: CoordinatorLayout.LayoutParams = layoutBottomSheet
                 .layoutParams as CoordinatorLayout.LayoutParams
             val behavior = params.behavior as DragDismissBottomSheetBehaviour
 
@@ -314,10 +313,10 @@ class ImageViewerFragment : AbstractMediaFragment() {
             val sHeight = Utils.getScreenHeight(requireActivity().windowManager)
             val imageSmallHeight = sHeight / 3
             val bottomSheetHeight = (sHeight * 2) / 3
-            viewBinding.imageViewSmall.layoutParams.height = imageSmallHeight
-            viewBinding.layoutBottomSheet.layoutParams.height = bottomSheetHeight
+            imageViewSmall.layoutParams.height = imageSmallHeight
+            layoutBottomSheet.layoutParams.height = bottomSheetHeight
 
-            viewBinding.layoutBottomSheet.visibility = View.VISIBLE
+            layoutBottomSheet.visibility = View.VISIBLE
             behavior.addBottomSheetCallback(bottomSheetCallback)
             behavior.setProxyView(imageView, {
                 if (!hideToolbars) {
@@ -344,7 +343,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
     }
 
     private fun setupBottomBar(localImageModel: LocalImageModel?) {
-        viewBinding.run {
+        _binding?.run {
             customBottomBar.addButton(
                 ResourcesCompat.getDrawable(
                     resources,
@@ -487,26 +486,29 @@ class ImageViewerFragment : AbstractMediaFragment() {
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            viewBinding.imageView.alpha = 1 - slideOffset
-            if (slideOffset != 0f) {
-                viewBinding.imageViewSmall.visibility = View.VISIBLE
-                viewBinding.imageViewSmall.alpha = slideOffset
-                if (slideOffset == 1f) {
-                    viewBinding.imageView.visibility = View.GONE
-                } else {
-                    viewBinding.imageView.visibility = View.VISIBLE
-                    viewBinding.sheetUpArrow.visibility = View.INVISIBLE
-                    if ((activity as ImageViewerActivity).getViewpager().isUserInputEnabled) {
-                        (activity as ImageViewerActivity).getViewpager().isUserInputEnabled = false
+            _binding?.run {
+                imageView.alpha = 1 - slideOffset
+                if (slideOffset != 0f) {
+                    imageViewSmall.visibility = View.VISIBLE
+                    imageViewSmall.alpha = slideOffset
+                    if (slideOffset == 1f) {
+                        imageView.visibility = View.GONE
+                    } else {
+                        imageView.visibility = View.VISIBLE
+                        sheetUpArrow.visibility = View.INVISIBLE
+                        if ((activity as ImageViewerActivity).getViewpager().isUserInputEnabled) {
+                            (activity as ImageViewerActivity).getViewpager()
+                                .isUserInputEnabled = false
+                        }
                     }
+                } else {
+                    imageViewSmall.visibility = View.GONE
+                    sheetUpArrow.visibility = View.VISIBLE
+                    (activity as ImageViewerActivity).getViewpager().isUserInputEnabled = true
                 }
-            } else {
-                viewBinding.imageViewSmall.visibility = View.GONE
-                viewBinding.sheetUpArrow.visibility = View.VISIBLE
-                (activity as ImageViewerActivity).getViewpager().isUserInputEnabled = true
-            }
 //            viewBinding.bottomSheetBig.alpha = slideOffset
 //            viewBinding.layoutBottomSheet.alpha = slideOffset
+            }
         }
     }
 
@@ -516,20 +518,26 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 "and mimetype ${localTypeModel.mimeType}"
         )
 
-        Glide.with(this).load(localTypeModel.uri.toString())
+        var glide = Glide.with(this).load(localTypeModel.uri.toString())
             .thumbnail(
-                Glide.with(this).load(
-                    resources.getDrawable(R.drawable.ic_outline_image_32)
-                )
+                Glide.with(this)
+                    .load(
+                        resources.getDrawable(R.drawable.ic_outline_image_32)
+                    )
             )
-            .into(viewBinding.imageView)
-        Glide.with(this).load(localTypeModel.uri.toString())
-            .thumbnail(
-                Glide.with(this).load(
-                    resources.getDrawable(R.drawable.ic_outline_image_32)
+        if (activity is ImageViewerDialogActivity) {
+            glide = glide.transform(RoundedCorners(24.px.toInt()))
+        }
+        _binding?.let {
+            glide.into(it.imageView)
+            Glide.with(this).load(localTypeModel.uri.toString())
+                .thumbnail(
+                    Glide.with(this).load(
+                        resources.getDrawable(R.drawable.ic_outline_image_32)
+                    )
                 )
-            )
-            .into(viewBinding.imageViewSmall)
+                .into(it.imageViewSmall)
+        }
     }
 
     private fun showImageProcessingText() {

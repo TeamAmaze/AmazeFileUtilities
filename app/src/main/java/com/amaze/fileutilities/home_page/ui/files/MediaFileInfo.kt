@@ -65,6 +65,14 @@ data class MediaFileInfo(
         }
     }
 
+    fun getParentFile(): File? {
+        return if (exists()) {
+            File(path).parentFile
+        } else {
+            null
+        }
+    }
+
     fun getFormattedSize(context: Context): String {
         return FileUtils.formatStorageLength(context, longSize)
     }
@@ -138,6 +146,25 @@ data class MediaFileInfo(
     fun exists(): Boolean {
         val file = File(this.path)
         return file.exists()
+    }
+
+    fun startLocateFileAction(context: Context) {
+        this.getParentFile()?.let {
+            file ->
+            val intent = Intent()
+            intent.setDataAndType(
+                FileProvider.getUriForFile(context, context.packageName, file),
+                "resource/folder"
+            )
+            intent.action = Intent.ACTION_VIEW
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            try {
+                context.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                context.showToastOnBottom(context.resources.getString(R.string.no_app_found))
+            }
+        }
     }
 
     private fun startExternalViewAction(mediaFileInfo: MediaFileInfo, context: Context) {

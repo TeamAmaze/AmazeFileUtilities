@@ -17,7 +17,7 @@
         />
     <TextView
         android:id="@+id/team_amaze"
-        android:layout_width="@dimen/zero_dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/six_dp"
         android:text="@string/team_amaze"
@@ -26,7 +26,6 @@
         app:layout_goneMarginTop="@dimen/eight_dp"
         app:layout_constraintTop_toBottomOf="@id/launcher_icon"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         />
 
     <TextView
@@ -40,7 +39,6 @@
         app:layout_goneMarginTop="@dimen/eight_dp"
         app:layout_constraintTop_toBottomOf="@id/team_amaze"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         />
     <TextView
         android:id="@+id/rights_reserved"
@@ -53,7 +51,17 @@
         app:layout_goneMarginTop="@dimen/eight_dp"
         app:layout_constraintTop_toBottomOf="@id/version"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        />
+    <TextView
+        android:id="@+id/home_screen_design"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/six_dp"
+        android:textSize="@dimen/twelve_sp"
+        android:textColor="@color/white"
+        app:layout_goneMarginTop="@dimen/eight_dp"
+        app:layout_constraintTop_toBottomOf="@id/rights_reserved"
+        app:layout_constraintLeft_toLeftOf="parent"
         />
 
     <!--<TextView
@@ -74,7 +82,7 @@
     <TextView
         android:layout_width="@dimen/zero_dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/rights_reserved"
+        app:layout_constraintTop_toBottomOf="@id/home_screen_design"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -31,6 +31,8 @@ import com.amaze.fileutilities.BuildConfig;
 import com.amaze.fileutilities.R;
 import com.amaze.fileutilities.cast.cloud.CloudStreamServer;
 import com.amaze.fileutilities.home_page.MainActivity;
+import com.amaze.fileutilities.utilis.ExtensionsKt;
+import com.amaze.fileutilities.utilis.PreferencesConstants;
 import com.amaze.fileutilities.utilis.Utils;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -246,7 +248,8 @@ public class ErrorActivity extends AppCompatActivity {
   }
 
   private void sendReportEmail() {
-    final Intent i = Utils.Companion.buildEmailIntent(buildMarkdown(), Utils.EMAIL_NOREPLY_REPORTS);
+    final Intent i =
+        Utils.Companion.buildEmailIntent(buildMarkdown(), Utils.EMAIL_NOREPLY_REPORTS, this);
     if (i.resolveActivity(getPackageManager()) != null) {
       startActivity(i);
     }
@@ -275,6 +278,9 @@ public class ErrorActivity extends AppCompatActivity {
     String text = "";
 
     infoLabelView.setText(getString(R.string.info_labels).replace("\\n", "\n"));
+    String deviceId =
+        ExtensionsKt.getAppCommonSharedPreferences(this)
+            .getString(PreferencesConstants.KEY_DEVICE_UNIQUE_ID, null);
 
     text +=
         errorInfo.userAction
@@ -293,7 +299,9 @@ public class ErrorActivity extends AppCompatActivity {
             + "\n"
             + Build.MODEL
             + "\n"
-            + Build.PRODUCT;
+            + Build.PRODUCT
+            + "\n"
+            + deviceId;
 
     infoView.setText(text);
   }
@@ -328,6 +336,9 @@ public class ErrorActivity extends AppCompatActivity {
       if (!TextUtils.isEmpty(userCommentBox.getText())) {
         userComment = userCommentBox.getText().toString();
       }
+      String deviceId =
+          ExtensionsKt.getAppCommonSharedPreferences(this)
+              .getString(PreferencesConstants.KEY_DEVICE_UNIQUE_ID, null);
 
       // basic error info
       htmlErrorReport
@@ -352,6 +363,8 @@ public class ErrorActivity extends AppCompatActivity {
           .append(Build.MODEL)
           .append("\n* __Product:__ ")
           .append(Build.PRODUCT)
+          .append("\n* __Device ID:__ ")
+          .append(deviceId)
           .append("\n");
 
       // Collapse all logs to a single paragraph when there are more than one
@@ -360,7 +373,7 @@ public class ErrorActivity extends AppCompatActivity {
         htmlErrorReport
             .append("<details><summary><b>Exceptions (")
             .append(errorList.length)
-            .append(")</b></summary><p>\n");
+            .append(")</b></summary>\n");
       }
 
       // add the logs
@@ -371,7 +384,7 @@ public class ErrorActivity extends AppCompatActivity {
         }
         htmlErrorReport
             .append("</b>")
-            .append("</summary><p>\n")
+            .append("</summary>\n")
             .append("\n```\n")
             .append(errorList[i])
             .append("\n```\n")
