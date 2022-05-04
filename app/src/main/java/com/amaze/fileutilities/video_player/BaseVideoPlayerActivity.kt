@@ -45,9 +45,12 @@ import com.amaze.fileutilities.audio_player.AudioPlayerService
 import com.amaze.fileutilities.databinding.VideoPlayerActivityBinding
 import com.amaze.fileutilities.home_page.CustomToolbar
 import com.amaze.fileutilities.home_page.database.AppDatabase
+import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
+import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.*
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
+import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.MediaItem.SubtitleConfiguration
 import com.google.android.exoplayer2.audio.AudioAttributes
@@ -104,6 +107,7 @@ abstract class BaseVideoPlayerActivity :
 
     private var player: ExoPlayer? = null
     private var videoPlayerViewModel: VideoPlayerActivityViewModel? = null
+    private var filesViewModel: FilesViewModel? = null
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         VideoPlayerActivityBinding.inflate(layoutInflater)
     }
@@ -126,7 +130,7 @@ abstract class BaseVideoPlayerActivity :
         appDatabase = AppDatabase.getInstance(applicationContext)
         videoPlayerViewModel = ViewModelProvider(this)
             .get(VideoPlayerActivityViewModel::class.java)
-
+        filesViewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
         if (intent != null && savedInstanceState == null) {
             val pos = intent.getLongExtra(
                 VideoPlayerActivity.VIDEO_PLAYBACK_POSITION,
@@ -545,7 +549,8 @@ abstract class BaseVideoPlayerActivity :
             customToolbar.setBackButtonClickListener {
                 onBackPressed()
             }
-            val fileName = videoPlayerViewModel?.videoModel?.uri?.getFileFromUri()?.name
+            val mediaFile = videoPlayerViewModel?.videoModel?.uri?.getFileFromUri()
+            val fileName = mediaFile?.name
             customToolbar.setTitle(fileName ?: "")
             customToolbar.setOverflowPopup(R.menu.video_activity) { item ->
                 when (item!!.itemId) {
@@ -558,9 +563,49 @@ abstract class BaseVideoPlayerActivity :
                     R.id.subtitles -> {
                         showSubtitlePopup()
                     }
+                    R.id.share -> {
+                        showShareDialog(mediaFile)
+                    }
                 }
                 true
             }
+        }
+    }
+
+    private fun showShareDialog(mediaFile: File?) {
+        var processed = false
+        mediaFile?.let {
+            file ->
+            val mediaFileInfo = MediaFileInfo.fromFile(
+                file,
+                MediaFileInfo.ExtraInfo(
+                    MediaFileInfo.MEDIA_TYPE_DOCUMENT,
+                    null, null, null
+                )
+            )
+            filesViewModel?.getShareMediaFilesAdapter(listOf(mediaFileInfo))
+                ?.observe(this@BaseVideoPlayerActivity) { shareAdapter ->
+                    if (shareAdapter == null) {
+                        if (processed) {
+                            showToastInCenter(
+                                this@BaseVideoPlayerActivity.resources
+                                    .getString(R.string.failed_to_share)
+                            )
+                        } else {
+                            showToastInCenter(
+                                resources
+                                    .getString(R.string.please_wait)
+                            )
+                            processed = true
+                        }
+                    } else {
+                        showShareDialog(
+                            this@BaseVideoPlayerActivity,
+                            this@BaseVideoPlayerActivity.layoutInflater,
+                            shareAdapter
+                        )
+                    }
+                }
         }
     }
 
