@@ -42,7 +42,7 @@
             android:name=".home_page.MainActivity"
             android:exported="true"
             android:label="@string/app_name_launcher"
-            android:theme="@style/Theme.AmazeFileUtilities"
+            android:theme="@style/Theme.AmazeFileUtilities.Dark"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <nav-graph android:value="@navigation/mobile_navigation" />

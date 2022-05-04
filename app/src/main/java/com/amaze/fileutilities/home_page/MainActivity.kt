@@ -81,6 +81,7 @@ class MainActivity :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
+        setTheme(R.style.Theme_AmazeFileUtilities)
         super.onCreate(savedInstanceState)
         welcomeScreen = WelcomeHelper(this, WelcomeScreen::class.java)
         if (!welcomeScreen!!.show(savedInstanceState)) {
