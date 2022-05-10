@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.video_player
 
+import androidx.annotation.Keep
 import com.amaze.fileutilities.BuildConfig
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -57,7 +58,9 @@ interface SubtitlesApi {
     @Streaming
     fun downloadSubtitleFile(@Url downloadUrl: String): Call<ResponseBody>?
 
+    @Keep
     data class SearchResultsResponse(val data: List<Data>) {
+        @Keep
         data class Attributes(
             val language: String?,
             val ratings: String?,
@@ -66,16 +69,23 @@ interface SubtitlesApi {
             val uploader: Uploader?,
             val files: List<Files>?
         )
+        @Keep
         data class Uploader(val name: String?, val rank: String?)
+        @Keep
         data class Files(val file_id: String?, val file_name: String?, val cd_number: String?)
+        @Keep
         data class Data(val attributes: Attributes?)
     }
 
+    @Keep
     data class GetDownloadLinkRequest(val file_id: String?)
 
+    @Keep
     data class GetDownloadLinkResponse(val link: String?, val file_name: String?)
 
+    @Keep
     data class LanguageResult(val data: List<Data>) {
+        @Keep
         data class Data(val language_code: String?, val language_name: String?)
     }
 }

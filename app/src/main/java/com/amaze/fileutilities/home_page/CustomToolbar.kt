@@ -13,6 +13,7 @@ package com.amaze.fileutilities.home_page
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -22,6 +23,7 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.iterator
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.px
 
@@ -91,14 +93,14 @@ class CustomToolbar(context: Context, attrs: AttributeSet?) : ConstraintLayout(c
         onMenuItemClickListener: PopupMenu.OnMenuItemClickListener
     ) {
         val overflowContext = ContextThemeWrapper(context, R.style.custom_action_mode_dark)
+        overflowButton.visibility = View.VISIBLE
         val popupMenu = PopupMenu(
-            overflowContext, overflowButton
+            overflowContext, this, Gravity.END
         )
         popupMenu.setOnMenuItemClickListener { item: MenuItem ->
             onMenuItemClickListener.onMenuItemClick(item)
         }
         popupMenu.inflate(menuRes)
-        overflowButton.visibility = View.VISIBLE
         overflowButton.setOnClickListener {
             popupMenu.show()
         }

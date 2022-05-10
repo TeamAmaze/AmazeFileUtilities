@@ -81,8 +81,6 @@
     </style>
 
     <style name="custom_action_mode_dark" parent="Widget.AppCompat.ActionMode">
-        <item name="background">@color/black</item>
-        <item name="android:background">@color/black</item>
     </style>
 
     <style name="Custom.Dialog.Dark" parent="Theme.AppCompat.Dialog.Alert">

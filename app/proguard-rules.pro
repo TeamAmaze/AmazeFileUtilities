@@ -27,6 +27,10 @@
 -keep class org.slf4j.** { *; }
 -keepattributes *Annotation*
 -dontwarn ch.qos.logback.core.net.*
-#-keep class com.amaze.fileutilities.cast.CastOptionsProvider { *; }
-#-keep class android.support.** { *; }
-#-keep class com.google.** { *; }
+-keep class com.masoudss.lib.** { *; }
+-keep class linc.com.amplituda.** { *; }
+-keep class com.amaze.fileutilities.cast.CastOptionsProvider { *; }
+-keep class android.support.** { *; }
+-keep class com.google.** { *; }
+-keep class com.folioreader.** { *; }
+-keep class org.opencv.** { *; }
