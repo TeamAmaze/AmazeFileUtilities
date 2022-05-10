@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.database.Cursor
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -23,6 +24,7 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.FileFilter
@@ -379,4 +381,12 @@ fun String.removeExtension(): String {
 fun Context.isPlayServicesAvailable(): Boolean {
     return GoogleApiAvailability.getInstance()
         .isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS
+}
+
+fun Context.isNetworkAvailable(): Boolean {
+    log.info("fetching network connection")
+    val connectivityManager = getSystemService(AppCompatActivity.CONNECTIVITY_SERVICE)
+        as ConnectivityManager
+    val activeNetworkInfo = connectivityManager.activeNetworkInfo
+    return activeNetworkInfo != null && activeNetworkInfo.isConnected
 }

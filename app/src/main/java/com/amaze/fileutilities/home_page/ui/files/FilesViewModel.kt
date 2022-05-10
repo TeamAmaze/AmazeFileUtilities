@@ -769,7 +769,7 @@ class FilesViewModel(val applicationContext: Application) :
                 emit(true)
             } catch (ex: IOException) {
                 log.warn("failed to ping for connection", ex)
-                emit(false)
+                emit(applicationContext.isNetworkAvailable())
             }
         }
     }
@@ -789,6 +789,9 @@ class FilesViewModel(val applicationContext: Application) :
                 if ((
                     trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXPIRED ||
                         trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_INACTIVE
+                    //     || trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE
+                    // maybe done to force validate for exclusive refunded people, want to convert to custom exclusive
+                    // but downside is this'll always check for valid license for customer exclusive people
                     ) &&
                     trial.subscriptionStatus == Trial.SUBSCRIPTION_STATUS_DEFAULT
                 ) {

@@ -149,20 +149,25 @@ data class MediaFileInfo(
     }
 
     fun startLocateFileAction(context: Context) {
-        this.getParentFile()?.let {
+        File(this.path).let {
             file ->
-            val intent = Intent()
-            intent.setDataAndType(
-                FileProvider.getUriForFile(context, context.packageName, file),
-                "resource/folder"
-            )
-            intent.action = Intent.ACTION_VIEW
+            if (file.parentFile != null) {
+                val intent = Intent()
+                intent.setDataAndType(
+                    FileProvider.getUriForFile(context, context.packageName, file.parentFile),
+                    "resource/folder"
+                )
+                intent.putExtra("com.amaze.fileutilities.AFM_LOCATE_FILE_NAME", file.name)
+                intent.action = Intent.ACTION_VIEW
 //            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 //            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            try {
-                context.startActivity(intent)
-            } catch (e: ActivityNotFoundException) {
-                context.showToastOnBottom(context.resources.getString(R.string.no_app_found))
+                try {
+                    context.startActivity(intent)
+                } catch (e: ActivityNotFoundException) {
+                    context.showToastOnBottom(context.resources.getString(R.string.no_app_found))
+                }
+            } else {
+                context.showToastOnBottom(context.resources.getString(R.string.operation_failed))
             }
         }
     }
