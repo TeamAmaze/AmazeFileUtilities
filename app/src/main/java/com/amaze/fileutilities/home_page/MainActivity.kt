@@ -460,7 +460,8 @@ class MainActivity :
                         TrialValidationApi.TrialResponse.TRIAL_EXPIRED -> {
                             showAboutActivity(true, false, false)
                         }
-                        TrialValidationApi.TrialResponse.TRIAL_INACTIVE -> {
+                        TrialValidationApi.TrialResponse.TRIAL_INACTIVE,
+                        TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE -> {
                             showAboutActivity(false, true, false)
                         }
                     }
