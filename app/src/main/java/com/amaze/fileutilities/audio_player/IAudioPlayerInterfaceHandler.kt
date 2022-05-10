@@ -28,6 +28,7 @@ import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
 import linc.com.amplituda.exceptions.io.FileNotFoundException
 import org.slf4j.Logger
+import java.lang.Exception
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
@@ -238,6 +239,9 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                     } catch (fe: FileNotFoundException) {
                         getLogger().warn("file not found for waveform, force seekbar", fe)
                         getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                    } catch (e: Exception) {
+                        getLogger().warn("waveform seekbar exception, force seekbar", e)
+                        getAudioPlayerHandlerViewModel().forceShowSeekbar = true
                     }
                 } else {
                     getAudioPlayerHandlerViewModel().forceShowSeekbar = true
@@ -268,6 +272,9 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                             getAudioPlayerHandlerViewModel().forceShowSeekbar = true
                             setupSeekBars(audioService)
                             return
+                        } catch (e: Exception) {
+                            getLogger().warn("waveform seekbar exception, force seekbar", e)
+                            getAudioPlayerHandlerViewModel().forceShowSeekbar = true
                         }
                     } else {
                         getAudioPlayerHandlerViewModel().forceShowSeekbar = true

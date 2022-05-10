@@ -50,6 +50,7 @@ import com.google.android.play.core.install.model.ActivityResult.RESULT_IN_APP_U
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.android.play.core.review.ReviewManagerFactory
 import com.stephentuso.welcome.WelcomeHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -215,6 +216,11 @@ class MainActivity :
                 }
             }
             shouldRateApp()
+        } else {
+            // add install time in preferences
+            getAppCommonSharedPreferences()
+                .edit().putLong(PreferencesConstants.KEY_INSTALL_DATE, Date().time)
+                .apply()
         }
     }
 
@@ -402,17 +408,31 @@ class MainActivity :
             val random = Random()
             val chance = random.nextInt(10) + 1
             if (chance == 5) {
-                Utils.buildRateNowDialog(this, {
-                    getAppCommonSharedPreferences()
-                        .edit().putBoolean(PreferencesConstants.KEY_RATE_APP_AUTOMATED, true)
-                        .apply()
-                    val url = "market://details?id=com.amaze.fileutilities"
-                    Utils.openURL(url, this)
-                }, {
-                    getAppCommonSharedPreferences()
-                        .edit().putBoolean(PreferencesConstants.KEY_RATE_APP_AUTOMATED, true)
-                        .apply()
-                }).create().show()
+                // check if user using app for over 7 days
+                val calWeek = GregorianCalendar.getInstance()
+                val installDate = getAppCommonSharedPreferences()
+                    .getLong(PreferencesConstants.KEY_INSTALL_DATE, Date().time)
+                calWeek.time = Date(installDate)
+                calWeek.add(Calendar.DAY_OF_YEAR, 7)
+                if (calWeek.time.before(Date())) {
+                    val manager = ReviewManagerFactory.create(this)
+                    val request = manager.requestReviewFlow()
+                    request.addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            // We got the ReviewInfo object
+                            val reviewInfo = task.result
+                            val flow = manager.launchReviewFlow(this, reviewInfo)
+                            flow.addOnCompleteListener { _ ->
+                                // The flow has finished. The API does not indicate whether the user
+                                // reviewed or not, or even whether the review dialog was shown. Thus, no
+                                // matter the result, we continue our app flow.
+                            }
+                        } else {
+                            // There was some problem, log or handle the error code.
+                            log.warn("failed to request review", task.exception)
+                        }
+                    }
+                }
             }
         }
     }

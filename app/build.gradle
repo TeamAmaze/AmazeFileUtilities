@@ -33,8 +33,8 @@ android {
         applicationId "com.amaze.fileutilities"
         minSdk 19
         targetSdk 30
-        versionCode 41
-        versionName "1.40"
+        versionCode 43
+        versionName "1.42"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -43,15 +43,16 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"5CZlDmqIhLoRcalZHXItm5Thwq57MDE2\""
         }
 
         release {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
@@ -94,10 +95,10 @@ play {
     serviceAccountCredentials.set(file("useful-cathode-91310-9986d18df1a5.json"))
     defaultToAppBundles.set(true)
 
-    track.set("internal")
-//    track.set("production")
+//    track.set("internal")
+    track.set("production")
     userFraction.set(1.0d)
-    updatePriority.set(1)
+    updatePriority.set(2)
     releaseStatus.set(com.github.triplet.gradle.androidpublisher.ReleaseStatus.COMPLETED)
 }
 
@@ -140,7 +141,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.16.0'
     implementation 'com.google.android.exoplayer:extension-mediasession:2.16.0'
     implementation 'com.ramijemli.percentagechartview:percentagechartview:0.3.1'
-    implementation  'com.github.massoudss:waveformSeekBar:4.1.0'
+    implementation 'com.github.massoudss:waveformSeekBar:4.1.0'
     implementation 'com.github.lincollincol:amplituda:2.1.2'
     //Simple library show
     implementation('com.mikepenz:aboutlibraries:6.1.1@aar') {
@@ -154,7 +155,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
     implementation "androidx.preference:preference-ktx:1.2.0"
     implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.0'
-    implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.0'
+    implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.1'
 //    implementation 'com.google.mlkit:face-detection:16.1.5'
 
     implementation 'com.afollestad.material-dialogs:files:3.3.0'

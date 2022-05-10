@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.home_page.database
 
+import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
@@ -18,6 +19,7 @@ import androidx.room.PrimaryKey
 /**
  * While fetching and processing, be sure to validate that file exists
  */
+@Keep
 @Entity(indices = [Index(value = ["file_path"], unique = true)])
 data class ImageAnalysis(
     @PrimaryKey(autoGenerate = true)

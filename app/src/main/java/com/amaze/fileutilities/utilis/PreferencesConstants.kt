@@ -33,6 +33,7 @@ class PreferencesConstants {
         const val KEY_NOT_CONNECTED_TRIAL_COUNT = "not_connected_trial"
         const val KEY_NOT_CONNECTED_SUBSCRIBED_COUNT = "not_connected_subscribed"
         const val KEY_RATE_APP_AUTOMATED = "rate_app_automated"
+        const val KEY_INSTALL_DATE = "install_date"
 
         const val VAL_SEARCH_DUPLICATES_MEDIA_STORE = 0
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1
