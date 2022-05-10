@@ -12,6 +12,7 @@ package com.amaze.fileutilities.home_page.database
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
@@ -22,6 +23,7 @@ import java.lang.ref.WeakReference
 /**
  * While fetching and processing, be sure to validate that file exists
  */
+@Keep
 @Entity(indices = [Index(value = ["path", "feature"], unique = true)])
 data class PathPreferences(
     @PrimaryKey(autoGenerate = true)

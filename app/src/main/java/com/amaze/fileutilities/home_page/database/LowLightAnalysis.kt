@@ -10,11 +10,13 @@
 
 package com.amaze.fileutilities.home_page.database
 
+import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
+@Keep
 @Entity(indices = [Index(value = ["file_path"], unique = true)])
 data class LowLightAnalysis(
 

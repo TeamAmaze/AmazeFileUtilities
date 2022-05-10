@@ -10,12 +10,14 @@
 
 package com.amaze.fileutilities.home_page.database
 
+import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(indices = [Index(value = ["file_path"], unique = true)])
+@Keep
 data class BlurAnalysis(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
