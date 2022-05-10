@@ -15,7 +15,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
-import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION
@@ -123,12 +122,6 @@ open class PermissionsActivity :
                 permissionCallbacks[LOCATION_PERMISSION] = null
             }
         }
-    }
-
-    fun isNetworkAvailable(): Boolean {
-        val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-        val activeNetworkInfo = connectivityManager.activeNetworkInfo
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected
     }
 
     private fun checkStoragePermission(): Boolean {
