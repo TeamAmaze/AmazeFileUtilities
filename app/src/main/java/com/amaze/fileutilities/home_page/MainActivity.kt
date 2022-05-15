@@ -410,8 +410,11 @@ class MainActivity :
             if (chance == 5) {
                 // check if user using app for over 7 days
                 val calWeek = GregorianCalendar.getInstance()
+                val calWeekDefault = GregorianCalendar.getInstance()
+                calWeekDefault.time = Date()
+                calWeekDefault.add(Calendar.DAY_OF_YEAR, 8)
                 val installDate = getAppCommonSharedPreferences()
-                    .getLong(PreferencesConstants.KEY_INSTALL_DATE, Date().time)
+                    .getLong(PreferencesConstants.KEY_INSTALL_DATE, calWeekDefault.time.time)
                 calWeek.time = Date(installDate)
                 calWeek.add(Calendar.DAY_OF_YEAR, 7)
                 if (calWeek.time.before(Date())) {
@@ -426,6 +429,10 @@ class MainActivity :
                                 // The flow has finished. The API does not indicate whether the user
                                 // reviewed or not, or even whether the review dialog was shown. Thus, no
                                 // matter the result, we continue our app flow.
+                                // add install time in preferences
+                                getAppCommonSharedPreferences()
+                                    .edit().putLong(PreferencesConstants.KEY_INSTALL_DATE, Date().time)
+                                    .apply()
                             }
                         } else {
                             // There was some problem, log or handle the error code.
