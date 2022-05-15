@@ -11,6 +11,7 @@
 package com.amaze.fileutilities.home_page.ui.files
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import com.amaze.fileutilities.R
@@ -23,7 +24,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 
-class MediaAdapterPreloader(context: Context, private val loadingDrawable: Int) :
+class MediaAdapterPreloader(private val context: Context, private val loadingDrawable: Int) :
     PreloadModelProvider<String> {
     private var request: RequestBuilder<Drawable> = Glide.with(context).asDrawable().fitCenter()
     private var items: MutableList<String>? = null
@@ -49,9 +50,11 @@ class MediaAdapterPreloader(context: Context, private val loadingDrawable: Int) 
             .placeholder(loadingDrawable).load(item)
     }
 
-    fun loadImage(item: String, v: ImageView, isGrid: Boolean) {
+    fun loadImage(item: MediaFileInfo, v: ImageView, isGrid: Boolean) {
+        val toLoadPath: String = item.path
+        val toLoadBitmap: Bitmap? = item.extraInfo?.audioMetaData?.albumArt
         request.fallback(R.drawable.ic_outline_broken_image_24)
-            .placeholder(loadingDrawable).load(item)
+            .placeholder(loadingDrawable).load(toLoadBitmap ?: toLoadPath)
             .addListener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,

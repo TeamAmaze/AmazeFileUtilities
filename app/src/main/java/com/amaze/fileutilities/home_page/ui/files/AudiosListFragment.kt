@@ -258,6 +258,14 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         return _binding?.repeatButton
     }
 
+    override fun getAlbumImage(): ImageView? {
+        return _binding?.albumImage
+    }
+
+    override fun getAlbumSmallImage(): ImageView? {
+        return _binding?.albumImageSmall
+    }
+
     override fun getContextWeakRef(): WeakReference<Context> {
         return try {
             WeakReference(requireContext())

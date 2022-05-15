@@ -431,7 +431,10 @@ class MainActivity :
                                 // matter the result, we continue our app flow.
                                 // add install time in preferences
                                 getAppCommonSharedPreferences()
-                                    .edit().putLong(PreferencesConstants.KEY_INSTALL_DATE, Date().time)
+                                    .edit().putLong(
+                                        PreferencesConstants.KEY_INSTALL_DATE,
+                                        Date().time
+                                    )
                                     .apply()
                             }
                         } else {
