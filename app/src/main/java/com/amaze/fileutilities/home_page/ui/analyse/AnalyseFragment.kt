@@ -68,53 +68,69 @@ class AnalyseFragment : Fragment() {
 
             analyseViewModel.getBlurImages(blurAnalysisDao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    blurredPicsPreview.loadPreviews(it) { cleanButtonClick(it) }
+                    blurredPicsPreview.loadPreviews(it) { cleanButtonClick(it) {
+                        analyseViewModel.blurImagesLiveData = null
+                    } }
                 }
             }
 
             analyseViewModel.getLowLightImages(lowLightAnalysisDao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    lowLightPreview.loadPreviews(it) { cleanButtonClick(it) }
+                    lowLightPreview.loadPreviews(it) { cleanButtonClick(it) {
+                        analyseViewModel.lowLightImagesLiveData = null
+                    } }
                 }
             }
 
             analyseViewModel.getMemeImages(memeAnalysisDao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    memesPreview.loadPreviews(it) { cleanButtonClick(it) }
+                    memesPreview.loadPreviews(it) { cleanButtonClick(it) {
+                        analyseViewModel.memeImagesLiveData = null
+                    } }
                 }
             }
 
             analyseViewModel.getSadImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    sadPreview.loadPreviews(it) { cleanButtonClick(it) }
+                    sadPreview.loadPreviews(it) { cleanButtonClick(it) {
+                        analyseViewModel.sadImagesLiveData = null
+                    } }
                 }
             }
             sadPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getDistractedImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    distractedPreview.loadPreviews(it) { cleanButtonClick(it) }
+                    distractedPreview.loadPreviews(it) { cleanButtonClick(it) {
+                        analyseViewModel.distractedImagesLiveData = null
+                    } }
                 }
             }
             distractedPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getSleepingImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    sleepingPreview.loadPreviews(it) { cleanButtonClick(it) }
+                    sleepingPreview.loadPreviews(it) { cleanButtonClick(it) {
+                        analyseViewModel.sleepingImagesLiveData = null
+                    } }
                 }
             }
             sleepingPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getSelfieImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    selfiePreview.loadPreviews(it) { cleanButtonClick(it) }
+                    selfiePreview.loadPreviews(it) { cleanButtonClick(it) {
+                        analyseViewModel.selfieImagesLiveData = null
+                    } }
                 }
             }
             selfiePreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getGroupPicImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    groupPicPreview.loadPreviews(it) { cleanButtonClick(it) }
+                    groupPicPreview.loadPreviews(it) { cleanButtonClick(it) {
+                        analyseViewModel.groupPicImagesLiveData = null
+                    } }
                 }
             }
             groupPicPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
@@ -134,7 +150,9 @@ class AnalyseFragment : Fragment() {
                 analyseViewModel.getEmptyFiles(internalStorageDao)
                     .observe(viewLifecycleOwner) {
                         if (it != null) {
-                            emptyFilesPreview.loadPreviews(it) { cleanButtonClick(it) }
+                            emptyFilesPreview.loadPreviews(it) { cleanButtonClick(it) {
+                                analyseViewModel.emptyFilesLiveData = null
+                            } }
                         }
                     }
             }
@@ -148,7 +166,9 @@ class AnalyseFragment : Fragment() {
             ).observe(viewLifecycleOwner) {
                 if (it != null) {
                     duplicateFilesPreview.loadPreviews(it) {
-                        cleanButtonClick(it)
+                        cleanButtonClick(it) {
+                            analyseViewModel.duplicateFilesLiveData = null
+                        }
                     }
                 }
             }
@@ -163,7 +183,9 @@ class AnalyseFragment : Fragment() {
                                 clutteredVideosInfo?.let {
                                     clutteredVideoPreview.invalidateProgress(false)
                                     clutteredVideoPreview.loadPreviews(clutteredVideosInfo) {
-                                        cleanButtonClick(it)
+                                        cleanButtonClick(it) {
+                                            analyseViewModel.clutteredVideosLiveData = null
+                                        }
                                     }
                                 }
                             }
@@ -173,7 +195,9 @@ class AnalyseFragment : Fragment() {
                                 largeVideosList?.let {
                                     largeVideoPreview.invalidateProgress(false)
                                     largeVideoPreview.loadPreviews(largeVideosList) {
-                                        cleanButtonClick(it)
+                                        cleanButtonClick(it) {
+                                            analyseViewModel.largeVideosLiveData = null
+                                        }
                                     }
                                 }
                             }
@@ -188,7 +212,9 @@ class AnalyseFragment : Fragment() {
                         largeDownloads?.let {
                             largeDownloadPreview.invalidateProgress(false)
                             largeDownloadPreview.loadPreviews(largeDownloads) {
-                                cleanButtonClick(it)
+                                cleanButtonClick(it) {
+                                    analyseViewModel.largeDownloadsLiveData = null
+                                }
                             }
                         }
                     }
@@ -197,7 +223,9 @@ class AnalyseFragment : Fragment() {
                     oldDownloadPreview.invalidateProgress(true)
                     oldDownloads?.let {
                         oldDownloadPreview.invalidateProgress(false)
-                        oldDownloadPreview.loadPreviews(oldDownloads) { cleanButtonClick(it) }
+                        oldDownloadPreview.loadPreviews(oldDownloads) { cleanButtonClick(it) {
+                            analyseViewModel.oldDownloadsLiveData = null
+                        } }
                     }
                 }
             }
@@ -209,7 +237,9 @@ class AnalyseFragment : Fragment() {
                         oldScreenshots?.let {
                             oldScreenshotsPreview.invalidateProgress(false)
                             oldScreenshotsPreview.loadPreviews(oldScreenshots) {
-                                cleanButtonClick(it)
+                                cleanButtonClick(it) {
+                                    analyseViewModel.oldScreenshotsLiveData = null
+                                }
                             }
                         }
                     }
@@ -220,7 +250,9 @@ class AnalyseFragment : Fragment() {
                     oldRecordingsPreview.invalidateProgress(true)
                     oldRecordings?.let {
                         oldRecordingsPreview.invalidateProgress(false)
-                        oldRecordingsPreview.loadPreviews(oldRecordings) { cleanButtonClick(it) }
+                        oldRecordingsPreview.loadPreviews(oldRecordings) { cleanButtonClick(it) {
+                            analyseViewModel.oldRecordingsLiveData = null
+                        } }
                     }
                 }
             }
@@ -233,7 +265,7 @@ class AnalyseFragment : Fragment() {
         super.onDestroyView()
     }
 
-    private fun cleanButtonClick(toDelete: List<MediaFileInfo>) {
+    private fun cleanButtonClick(toDelete: List<MediaFileInfo>, deletedCallback: () -> Unit) {
         val progressDialogBuilder = requireContext()
             .showProcessingDialog(layoutInflater, "")
         val progressDialog = progressDialogBuilder.create()
@@ -244,12 +276,17 @@ class AnalyseFragment : Fragment() {
                     resources.getString(R.string.deleted_progress)
                         .format(it.first, toDelete.size)
                 if (it.second == toDelete.size) {
+                    // reset interal storage stats so that we recalculate storage remaining
+                    filesViewModel.internalStorageStatsLiveData = null
+                    deletedCallback.invoke()
+
                     // deletion complete, no need to check analysis data to remove
                     // as it will get deleted lazily while loading analysis lists
                     requireContext().showToastOnBottom(
                         resources
                             .getString(R.string.successfully_deleted)
                     )
+
                     val navController = NavHostFragment.findNavController(this)
                     navController.popBackStack()
                     navController.navigate(R.id.navigation_analyse)
