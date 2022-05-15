@@ -11,6 +11,7 @@
 package com.amaze.fileutilities.audio_player
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Parcelable
 import android.provider.BaseColumns
@@ -32,6 +33,7 @@ data class AudioPlaybackInfo(
     var albumName: String = "",
     var artistId: Long = -1,
     var artistName: String = "",
+    var albumArt: Bitmap?,
     var currentPosition: Long = -1,
     var isPlaying: Boolean = false
 ) : Parcelable {
@@ -54,7 +56,7 @@ data class AudioPlaybackInfo(
 
         val EMPTY_PLAYBACK = AudioPlaybackInfo(
             LocalAudioModel(-1, Uri.EMPTY, ""), "", -1, -1, -1, "", -1, -1,
-            "", -1, "",
+            "", -1, "", null,
             -1, false
         )
 
@@ -80,10 +82,12 @@ data class AudioPlaybackInfo(
                 val artistId = cursor.getLong(9)
                 val artistName = cursor.getString(10)
                 audioModel.id = id
+                val albumUri = AudioUtils.getMediaStoreAlbumCoverUri(albumId)
+                val albumBitmap = AudioUtils.getAlbumBitmap(context, albumUri)
                 return AudioPlaybackInfo(
                     audioModel,
                     title, trackNumber, year, duration, data, dateModified, albumId, albumName,
-                    artistId, artistName, -1, false
+                    artistId, artistName, albumBitmap, -1, false
                 )
             } else {
                 val playbackInfo = EMPTY_PLAYBACK

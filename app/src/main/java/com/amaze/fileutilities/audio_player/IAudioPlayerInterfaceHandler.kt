@@ -23,6 +23,7 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.getFileFromUri
 import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.showFade
+import com.bumptech.glide.Glide
 import com.google.android.material.slider.Slider
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
@@ -45,6 +46,8 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     fun getNextButton(): ImageView?
     fun getShuffleButton(): ImageView?
     fun getRepeatButton(): ImageView?
+    fun getAlbumImage(): ImageView?
+    fun getAlbumSmallImage(): ImageView?
     fun getContextWeakRef(): WeakReference<Context>
     fun getAudioPlayerHandlerViewModel(): AudioPlayerInterfaceHandlerViewModel
     fun getLogger(): Logger
@@ -87,6 +90,20 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         // invalidate wavebar
         if (renderWaveform) {
             loadWaveFormSeekbar(progressHandler)
+            getContextWeakRef().get()?.let {
+                getAlbumImage()?.let {
+                    imageView ->
+                    Glide.with(it).load(progressHandler.audioPlaybackInfo.albumArt)
+                        .fallback(R.drawable.ic_outline_audio_file_32)
+                        .placeholder(R.drawable.ic_outline_audio_file_32).into(imageView)
+                }
+                getAlbumSmallImage()?.let {
+                    imageView ->
+                    Glide.with(it).load(progressHandler.audioPlaybackInfo.albumArt)
+                        .fallback(R.drawable.ic_outline_audio_file_32)
+                        .placeholder(R.drawable.ic_outline_audio_file_32).into(imageView)
+                }
+            }
         }
     }
 
@@ -95,6 +112,20 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         getTitleTextView()?.text = audioService?.getAudioPlaybackInfo()?.title
         getAlbumTextView()?.text = audioService?.getAudioPlaybackInfo()?.albumName
         getArtistTextView()?.text = audioService?.getAudioPlaybackInfo()?.artistName
+        getContextWeakRef().get()?.let {
+            getAlbumImage()?.let {
+                imageView ->
+                Glide.with(it).load(audioService?.getAudioPlaybackInfo()?.albumArt)
+                    .fallback(R.drawable.ic_outline_audio_file_32)
+                    .placeholder(R.drawable.ic_outline_audio_file_32).into(imageView)
+            }
+            getAlbumSmallImage()?.let {
+                imageView ->
+                Glide.with(it).load(audioService?.getAudioPlaybackInfo()?.albumArt)
+                    .fallback(R.drawable.ic_outline_audio_file_32)
+                    .placeholder(R.drawable.ic_outline_audio_file_32).into(imageView)
+            }
+        }
 
         audioService?.let {
             setShuffleButton(it.getShuffle())

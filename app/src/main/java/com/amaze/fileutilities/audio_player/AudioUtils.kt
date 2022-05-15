@@ -13,13 +13,16 @@ package com.amaze.fileutilities.audio_player
 import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
+import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
 import android.provider.MediaStore.Audio.AudioColumns
 import com.amaze.fileutilities.utilis.log
+import java.io.FileDescriptor
 import java.util.*
-import kotlin.collections.ArrayList
 
 class AudioUtils {
 
@@ -36,6 +39,25 @@ class AudioUtils {
         fun getMediaStoreAlbumCoverUri(albumId: Long): Uri {
             val sArtworkUri = Uri.parse("content://media/external/audio/albumart")
             return ContentUris.withAppendedId(sArtworkUri, albumId)
+        }
+
+        /**
+         * Returns bitmap for content uri compatible album art
+         * eg: content://media/external/audio/albumart/1234
+         */
+        fun getAlbumBitmap(context: Context, uri: Uri): Bitmap? {
+            var bitmap: Bitmap? = null
+            try {
+                val parcelFileDescriptor: ParcelFileDescriptor? =
+                    context.contentResolver.openFileDescriptor(uri, "r")
+                if (parcelFileDescriptor != null) {
+                    val fileDescriptor: FileDescriptor = parcelFileDescriptor.fileDescriptor
+                    bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+                }
+            } catch (e: Exception) {
+                log.warn("failed to extract album art", e)
+            }
+            return bitmap
         }
 
         fun makeSongCursor(
