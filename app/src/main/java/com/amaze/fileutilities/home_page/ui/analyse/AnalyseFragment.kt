@@ -68,69 +68,85 @@ class AnalyseFragment : Fragment() {
 
             analyseViewModel.getBlurImages(blurAnalysisDao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    blurredPicsPreview.loadPreviews(it) { cleanButtonClick(it) {
-                        analyseViewModel.blurImagesLiveData = null
-                    } }
+                    blurredPicsPreview.loadPreviews(it) {
+                        cleanButtonClick(it) {
+                            analyseViewModel.blurImagesLiveData = null
+                        }
+                    }
                 }
             }
 
             analyseViewModel.getLowLightImages(lowLightAnalysisDao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    lowLightPreview.loadPreviews(it) { cleanButtonClick(it) {
-                        analyseViewModel.lowLightImagesLiveData = null
-                    } }
+                    lowLightPreview.loadPreviews(it) {
+                        cleanButtonClick(it) {
+                            analyseViewModel.lowLightImagesLiveData = null
+                        }
+                    }
                 }
             }
 
             analyseViewModel.getMemeImages(memeAnalysisDao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    memesPreview.loadPreviews(it) { cleanButtonClick(it) {
-                        analyseViewModel.memeImagesLiveData = null
-                    } }
+                    memesPreview.loadPreviews(it) {
+                        cleanButtonClick(it) {
+                            analyseViewModel.memeImagesLiveData = null
+                        }
+                    }
                 }
             }
 
             analyseViewModel.getSadImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    sadPreview.loadPreviews(it) { cleanButtonClick(it) {
-                        analyseViewModel.sadImagesLiveData = null
-                    } }
+                    sadPreview.loadPreviews(it) {
+                        cleanButtonClick(it) {
+                            analyseViewModel.sadImagesLiveData = null
+                        }
+                    }
                 }
             }
             sadPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getDistractedImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    distractedPreview.loadPreviews(it) { cleanButtonClick(it) {
-                        analyseViewModel.distractedImagesLiveData = null
-                    } }
+                    distractedPreview.loadPreviews(it) {
+                        cleanButtonClick(it) {
+                            analyseViewModel.distractedImagesLiveData = null
+                        }
+                    }
                 }
             }
             distractedPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getSleepingImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    sleepingPreview.loadPreviews(it) { cleanButtonClick(it) {
-                        analyseViewModel.sleepingImagesLiveData = null
-                    } }
+                    sleepingPreview.loadPreviews(it) {
+                        cleanButtonClick(it) {
+                            analyseViewModel.sleepingImagesLiveData = null
+                        }
+                    }
                 }
             }
             sleepingPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getSelfieImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    selfiePreview.loadPreviews(it) { cleanButtonClick(it) {
-                        analyseViewModel.selfieImagesLiveData = null
-                    } }
+                    selfiePreview.loadPreviews(it) {
+                        cleanButtonClick(it) {
+                            analyseViewModel.selfieImagesLiveData = null
+                        }
+                    }
                 }
             }
             selfiePreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
 
             analyseViewModel.getGroupPicImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
-                    groupPicPreview.loadPreviews(it) { cleanButtonClick(it) {
-                        analyseViewModel.groupPicImagesLiveData = null
-                    } }
+                    groupPicPreview.loadPreviews(it) {
+                        cleanButtonClick(it) {
+                            analyseViewModel.groupPicImagesLiveData = null
+                        }
+                    }
                 }
             }
             groupPicPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing)
@@ -150,9 +166,11 @@ class AnalyseFragment : Fragment() {
                 analyseViewModel.getEmptyFiles(internalStorageDao)
                     .observe(viewLifecycleOwner) {
                         if (it != null) {
-                            emptyFilesPreview.loadPreviews(it) { cleanButtonClick(it) {
-                                analyseViewModel.emptyFilesLiveData = null
-                            } }
+                            emptyFilesPreview.loadPreviews(it) {
+                                cleanButtonClick(it) {
+                                    analyseViewModel.emptyFilesLiveData = null
+                                }
+                            }
                         }
                     }
             }
@@ -223,9 +241,11 @@ class AnalyseFragment : Fragment() {
                     oldDownloadPreview.invalidateProgress(true)
                     oldDownloads?.let {
                         oldDownloadPreview.invalidateProgress(false)
-                        oldDownloadPreview.loadPreviews(oldDownloads) { cleanButtonClick(it) {
-                            analyseViewModel.oldDownloadsLiveData = null
-                        } }
+                        oldDownloadPreview.loadPreviews(oldDownloads) {
+                            cleanButtonClick(it) {
+                                analyseViewModel.oldDownloadsLiveData = null
+                            }
+                        }
                     }
                 }
             }
@@ -250,9 +270,11 @@ class AnalyseFragment : Fragment() {
                     oldRecordingsPreview.invalidateProgress(true)
                     oldRecordings?.let {
                         oldRecordingsPreview.invalidateProgress(false)
-                        oldRecordingsPreview.loadPreviews(oldRecordings) { cleanButtonClick(it) {
-                            analyseViewModel.oldRecordingsLiveData = null
-                        } }
+                        oldRecordingsPreview.loadPreviews(oldRecordings) {
+                            cleanButtonClick(it) {
+                                analyseViewModel.oldRecordingsLiveData = null
+                            }
+                        }
                     }
                 }
             }

@@ -13,12 +13,14 @@ package com.amaze.fileutilities.utilis
 import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import com.amaze.fileutilities.audio_player.AudioUtils
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import org.slf4j.Logger
@@ -88,7 +90,8 @@ class CursorUtils {
             val projection = arrayOf(
                 MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.AudioColumns.DURATION,
-                MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.AudioColumns.ARTIST
+                MediaStore.Audio.AudioColumns.ALBUM, MediaStore.Audio.AudioColumns.ARTIST,
+                MediaStore.Audio.AudioColumns.ALBUM_ID
             )
             return listMediaCommon(
                 context,
@@ -127,24 +130,29 @@ class CursorUtils {
                 return Pair(FilesViewModel.StorageSummary(0, 0), docs)
             } else if (cursor.count > 0 && cursor.moveToFirst()) {
                 do {
-                    val path =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))
-                    if (path != null &&
-                        (
-                            path.endsWith(".pdf") ||
-                                path.endsWith(".epub") ||
-                                path.endsWith(".docx")
+                    if (cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA) >= 0) {
+                        val path =
+                            cursor.getString(
+                                cursor
+                                    .getColumnIndex(MediaStore.Files.FileColumns.DATA)
                             )
-                    ) {
-                        val mediaFileInfo = MediaFileInfo.fromFile(
-                            File(path),
-                            MediaFileInfo.ExtraInfo(
-                                MediaFileInfo.MEDIA_TYPE_DOCUMENT,
-                                null, null, null
+                        if (path != null &&
+                            (
+                                path.endsWith(".pdf") ||
+                                    path.endsWith(".epub") ||
+                                    path.endsWith(".docx")
+                                )
+                        ) {
+                            val mediaFileInfo = MediaFileInfo.fromFile(
+                                File(path),
+                                MediaFileInfo.ExtraInfo(
+                                    MediaFileInfo.MEDIA_TYPE_DOCUMENT,
+                                    null, null, null
+                                )
                             )
-                        )
-                        docs.add(mediaFileInfo)
-                        longSize += mediaFileInfo.longSize
+                            docs.add(mediaFileInfo)
+                            longSize += mediaFileInfo.longSize
+                        }
                     }
                 } while (cursor.moveToNext())
             }
@@ -212,18 +220,23 @@ class CursorUtils {
             val cursor = queryCursor ?: return recentFiles
             if (cursor.count > 0 && cursor.moveToFirst()) {
                 do {
-                    val path =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))
-                    val f = File(path)
-                    if (d.compareTo(Date(f.lastModified())) != 1 && !f.isDirectory) {
-                        val mediaFileInfo = MediaFileInfo.fromFile(
-                            f,
-                            queryMetaInfo(
-                                cursor,
-                                MediaFileInfo.MEDIA_TYPE_UNKNOWN
+                    if (cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA) >= 0) {
+                        val path =
+                            cursor.getString(
+                                cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)
                             )
-                        )
-                        recentFiles.add(mediaFileInfo)
+                        val f = File(path)
+                        if (d.compareTo(Date(f.lastModified())) != 1 && !f.isDirectory) {
+                            val mediaFileInfo = MediaFileInfo.fromFile(
+                                f,
+                                queryMetaInfo(
+                                    context,
+                                    cursor,
+                                    MediaFileInfo.MEDIA_TYPE_UNKNOWN
+                                )
+                            )
+                            recentFiles.add(mediaFileInfo)
+                        }
                     }
                 } while (cursor.moveToNext())
             }
@@ -276,15 +289,20 @@ class CursorUtils {
 //                storageSummaryCallback.getStorageSummary(cursor.count, 0)
 //                cursorCount = cursor.count
                 do {
-                    val path =
-                        cursor.getString(cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA))
+                    if (cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA) >= 0) {
+                        val path =
+                            cursor.getString(
+                                cursor
+                                    .getColumnIndex(MediaStore.Files.FileColumns.DATA)
+                            )
 
-                    val mediaFileInfo = MediaFileInfo.fromFile(
-                        File(path),
-                        queryMetaInfo(cursor, mediaType)
-                    )
-                    mediaFileInfoFile.add(mediaFileInfo)
-                    longSize += mediaFileInfo.longSize
+                        val mediaFileInfo = MediaFileInfo.fromFile(
+                            File(path),
+                            queryMetaInfo(context, cursor, mediaType)
+                        )
+                        mediaFileInfoFile.add(mediaFileInfo)
+                        longSize += mediaFileInfo.longSize
+                    }
                 } while (cursor.moveToNext())
             }
             cursor.close()
@@ -294,7 +312,11 @@ class CursorUtils {
             )
         }
 
-        private fun queryMetaInfo(cursor: Cursor, mediaType: Int): MediaFileInfo.ExtraInfo {
+        private fun queryMetaInfo(
+            context: Context,
+            cursor: Cursor,
+            mediaType: Int
+        ): MediaFileInfo.ExtraInfo {
             var audioMetaData: MediaFileInfo.AudioMetaData? = null
             var imageMetaData: MediaFileInfo.ImageMetaData? = null
             var videoMetaData: MediaFileInfo.VideoMetaData? = null
@@ -302,49 +324,86 @@ class CursorUtils {
                 when (mediaType) {
                     MediaFileInfo.MEDIA_TYPE_AUDIO -> {
                         // audio
-                        val audioDuration = cursor.getLong(
-                            cursor
-                                .getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)
-                        )
-                        val audioAlbum = cursor.getString(
-                            cursor
-                                .getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM)
-                        )
-                        val audioArtist = cursor.getString(
-                            cursor
-                                .getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST)
-                        )
+                        var audioDuration: Long? = null
+                        var audioAlbum: String? = null
+                        var audioArtist: String? = null
+                        var albumId: Long? = null
+                        var albumBitmap: Bitmap? = null
+                        if (cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION) >= 0) {
+                            audioDuration = cursor.getLong(
+                                cursor
+                                    .getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)
+                            )
+                        }
+                        if (cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM) >= 0) {
+                            audioAlbum = cursor.getString(
+                                cursor
+                                    .getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM)
+                            )
+                        }
+                        if (cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST) >= 0) {
+                            audioArtist = cursor.getString(
+                                cursor
+                                    .getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST)
+                            )
+                        }
+                        if (cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID) >= 0) {
+                            albumId = cursor.getLong(
+                                cursor
+                                    .getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID)
+                            )
+                            val albumUri = AudioUtils.getMediaStoreAlbumCoverUri(albumId)
+                            albumBitmap = AudioUtils.getAlbumBitmap(context, albumUri)
+                        }
                         audioMetaData = MediaFileInfo
-                            .AudioMetaData(audioAlbum, audioArtist, audioDuration)
+                            .AudioMetaData(
+                                audioAlbum, audioArtist, audioDuration, albumId,
+                                albumBitmap
+                            )
                     }
                     MediaFileInfo.MEDIA_TYPE_VIDEO -> {
                         // video
-                        val videoWidth = cursor.getInt(
-                            cursor
-                                .getColumnIndex(MediaStore.Video.VideoColumns.WIDTH)
-                        )
-                        val videoHeight = cursor.getInt(
-                            cursor
-                                .getColumnIndex(MediaStore.Video.VideoColumns.HEIGHT)
-                        )
-                        val videoDuration = cursor.getLong(
-                            cursor
-                                .getColumnIndex(MediaStore.Video.VideoColumns.DURATION)
-                        )
+                        var videoWidth: Int? = null
+                        var videoHeight: Int? = null
+                        var videoDuration: Long? = null
+                        if (cursor.getColumnIndex(MediaStore.Video.VideoColumns.WIDTH) >= 0) {
+                            videoWidth = cursor.getInt(
+                                cursor
+                                    .getColumnIndex(MediaStore.Video.VideoColumns.WIDTH)
+                            )
+                        }
+                        if (cursor.getColumnIndex(MediaStore.Video.VideoColumns.HEIGHT) >= 0) {
+                            videoHeight = cursor.getInt(
+                                cursor
+                                    .getColumnIndex(MediaStore.Video.VideoColumns.HEIGHT)
+                            )
+                        }
+                        if (cursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION) >= 0) {
+                            videoDuration = cursor.getLong(
+                                cursor
+                                    .getColumnIndex(MediaStore.Video.VideoColumns.DURATION)
+                            )
+                        }
                         videoMetaData = MediaFileInfo.VideoMetaData(
                             videoDuration,
                             videoWidth, videoHeight
                         )
                     }
                     MediaFileInfo.MEDIA_TYPE_IMAGE -> {
-                        val imageWidth = cursor.getInt(
-                            cursor
-                                .getColumnIndex(MediaStore.Images.ImageColumns.WIDTH)
-                        )
-                        val imageHeight = cursor.getInt(
-                            cursor
-                                .getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT)
-                        )
+                        var imageWidth: Int? = null
+                        var imageHeight: Int? = null
+                        if (cursor.getColumnIndex(MediaStore.Images.ImageColumns.WIDTH) >= 0) {
+                            imageWidth = cursor.getInt(
+                                cursor
+                                    .getColumnIndex(MediaStore.Images.ImageColumns.WIDTH)
+                            )
+                        }
+                        if (cursor.getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT) >= 0) {
+                            imageHeight = cursor.getInt(
+                                cursor
+                                    .getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT)
+                            )
+                        }
                         imageMetaData = MediaFileInfo.ImageMetaData(imageWidth, imageHeight)
                     }
                 }

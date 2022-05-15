@@ -164,6 +164,14 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
         return _binding.repeatButton
     }
 
+    override fun getAlbumImage(): ImageView? {
+        return _binding.albumImage
+    }
+
+    override fun getAlbumSmallImage(): ImageView? {
+        return null
+    }
+
     override fun serviceDisconnected() {
         // do nothing
     }
