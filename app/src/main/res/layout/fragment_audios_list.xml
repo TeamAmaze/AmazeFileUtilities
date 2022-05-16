@@ -161,8 +161,8 @@
                 />
             <ImageView
                 android:id="@+id/album_image"
-                android:layout_width="@dimen/minimal_icon_size"
-                android:layout_height="@dimen/minimal_icon_size"
+                android:layout_width="@dimen/eighty_dp"
+                android:layout_height="@dimen/eighty_dp"
                 app:srcCompat="@drawable/ic_outline_audio_file_32"
                 android:layout_marginTop="@dimen/material_generic"
                 />

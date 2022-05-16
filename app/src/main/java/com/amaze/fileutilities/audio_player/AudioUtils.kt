@@ -20,6 +20,9 @@ import android.os.Environment
 import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
 import android.provider.MediaStore.Audio.AudioColumns
+import androidx.annotation.ColorInt
+import androidx.palette.graphics.Palette
+import androidx.palette.graphics.Palette.Swatch
 import com.amaze.fileutilities.utilis.log
 import java.io.FileDescriptor
 import java.util.*
@@ -84,6 +87,53 @@ class AudioUtils {
                 val hours = minutes / 60
                 minutes %= 60
                 String.format(Locale.getDefault(), "%d:%02d:%02d", hours, minutes, seconds)
+            }
+        }
+
+        fun generatePalette(bitmap: Bitmap?): Palette? {
+            return if (bitmap == null) null else Palette.from(bitmap).generate()
+        }
+
+        @ColorInt
+        fun getColor(palette: Palette?, fallback: Int): Int {
+            if (palette != null) {
+                if (palette.vibrantSwatch != null) {
+                    return palette.vibrantSwatch!!.rgb
+                } else if (palette.mutedSwatch != null) {
+                    return palette.mutedSwatch!!.rgb
+                } else if (palette.darkVibrantSwatch != null) {
+                    return palette.darkVibrantSwatch!!.rgb
+                } else if (palette.darkMutedSwatch != null) {
+                    return palette.darkMutedSwatch!!.rgb
+                } else if (palette.lightVibrantSwatch != null) {
+                    return palette.lightVibrantSwatch!!.rgb
+                } else if (palette.lightMutedSwatch != null) {
+                    return palette.lightMutedSwatch!!.rgb
+                } else if (palette.swatches.isNotEmpty()) {
+                    return Collections.max(palette.swatches, SwatchComparator.instance).rgb
+                }
+            }
+            return fallback
+        }
+
+        private class SwatchComparator : Comparator<Swatch?> {
+
+            companion object {
+                private var sInstance: SwatchComparator? = null
+                val instance: SwatchComparator?
+                    get() {
+                        if (sInstance == null) {
+                            sInstance = SwatchComparator()
+                        }
+                        return sInstance
+                    }
+            }
+
+            override fun compare(o1: Swatch?, o2: Swatch?): Int {
+                if (o1 != null && o2 != null) {
+                    return o1.population - o2.population
+                }
+                return 0
             }
         }
 

@@ -21,6 +21,8 @@ import com.bumptech.glide.ListPreloader.PreloadModelProvider
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 
@@ -55,6 +57,8 @@ class MediaAdapterPreloader(private val context: Context, private val loadingDra
         val toLoadBitmap: Bitmap? = item.extraInfo?.audioMetaData?.albumArt
         request.fallback(R.drawable.ic_outline_broken_image_24)
             .placeholder(loadingDrawable).load(toLoadBitmap ?: toLoadPath)
+            .centerCrop()
+            .transform(CenterCrop(), GranularRoundedCorners(24.px, 24.px, 0f, 0f))
             .addListener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,

@@ -22,8 +22,11 @@ import androidx.lifecycle.LifecycleOwner
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.getFileFromUri
 import com.amaze.fileutilities.utilis.hideFade
+import com.amaze.fileutilities.utilis.px
 import com.amaze.fileutilities.utilis.showFade
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.slider.Slider
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
@@ -94,12 +97,15 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                 getAlbumImage()?.let {
                     imageView ->
                     Glide.with(it).load(progressHandler.audioPlaybackInfo.albumArt)
+                        .centerCrop()
+                        .transform(CenterCrop(), RoundedCorners(24.px.toInt()))
                         .fallback(R.drawable.ic_outline_audio_file_32)
                         .placeholder(R.drawable.ic_outline_audio_file_32).into(imageView)
                 }
                 getAlbumSmallImage()?.let {
                     imageView ->
                     Glide.with(it).load(progressHandler.audioPlaybackInfo.albumArt)
+                        .transform(RoundedCorners(12.px.toInt()))
                         .fallback(R.drawable.ic_outline_audio_file_32)
                         .placeholder(R.drawable.ic_outline_audio_file_32).into(imageView)
                 }
@@ -116,12 +122,15 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             getAlbumImage()?.let {
                 imageView ->
                 Glide.with(it).load(audioService?.getAudioPlaybackInfo()?.albumArt)
+                    .centerCrop()
+                    .transform(CenterCrop(), RoundedCorners(24.px.toInt()))
                     .fallback(R.drawable.ic_outline_audio_file_32)
                     .placeholder(R.drawable.ic_outline_audio_file_32).into(imageView)
             }
             getAlbumSmallImage()?.let {
                 imageView ->
                 Glide.with(it).load(audioService?.getAudioPlaybackInfo()?.albumArt)
+                    .transform(RoundedCorners(12.px.toInt()))
                     .fallback(R.drawable.ic_outline_audio_file_32)
                     .placeholder(R.drawable.ic_outline_audio_file_32).into(imageView)
             }
