@@ -2,6 +2,12 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference
+        app:key="appearance"
+        app:title="@string/appearance"
+        android:summary="@string/appearance_summary"
+        app:icon="@drawable/ic_pref_appearance"
+        />
+    <Preference
         app:key="analysis"
         app:title="@string/analysis"
         android:summary="@string/analysis_hint"

@@ -17,19 +17,22 @@ import android.view.ViewGroup
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 
-class PreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener {
+class AppearancePrefFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener {
 
     companion object {
-        private const val KEY_APPEARANCE = "appearance"
-        private const val KEY_ANALYSIS = "analysis"
-        private const val KEY_AUDIO_PLAYER = "audio_player"
-        private val KEYS = listOf(KEY_APPEARANCE, KEY_ANALYSIS, KEY_AUDIO_PLAYER)
+        private const val KEY_COLUMNS = "columns"
+        private val KEYS = listOf(
+            KEY_COLUMNS
+        )
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         // Load the preferences from an XML resource
-        addPreferencesFromResource(R.xml.preferences)
+        addPreferencesFromResource(R.xml.appearance_prefs)
         KEYS.forEach {
             findPreference<Preference>(it)?.onPreferenceClickListener = this
         }
@@ -46,22 +49,18 @@ class PreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferenceCl
     }
 
     override fun onPreferenceClick(preference: Preference): Boolean {
+        val prefs = requireContext().getAppCommonSharedPreferences()
         when (preference.key) {
-            KEY_APPEARANCE -> {
-                (activity as PreferenceActivity).inflatePreferenceFragment(
-                    AppearancePrefFragment(),
-                    R.string.appearance
+            KEY_COLUMNS -> {
+                val columnsIdx = prefs.getInt(
+                    PreferencesConstants.KEY_GRID_VIEW_COLUMN_COUNT,
+                    PreferencesConstants.DEFAULT_GRID_VIEW_COLUMN_COUNT
                 )
-            }
-            KEY_ANALYSIS -> {
-                (activity as PreferenceActivity).inflatePreferenceFragment(
-                    AnalysisPrefFragment(),
-                    R.string.analysis
-                )
-            }
-            KEY_AUDIO_PLAYER -> {
-                (activity as PreferenceActivity)
-                    .inflatePreferenceFragment(AudioPlayerPrefFragment(), R.string.audio_player)
+                val dialog = Utils.buildGridColumnsDialog(requireContext(), columnsIdx - 2) {
+                    prefs.edit()
+                        .putInt(PreferencesConstants.KEY_GRID_VIEW_COLUMN_COUNT, it).apply()
+                }
+                dialog.show()
             }
         }
         return true

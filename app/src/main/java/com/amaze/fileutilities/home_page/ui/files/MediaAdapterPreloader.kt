@@ -55,33 +55,39 @@ class MediaAdapterPreloader(private val context: Context, private val loadingDra
     fun loadImage(item: MediaFileInfo, v: ImageView, isGrid: Boolean) {
         val toLoadPath: String = item.path
         val toLoadBitmap: Bitmap? = item.extraInfo?.audioMetaData?.albumArt
-        request.fallback(R.drawable.ic_outline_broken_image_24)
+        var transformedRequest = request.fallback(R.drawable.ic_outline_broken_image_24)
             .placeholder(loadingDrawable).load(toLoadBitmap ?: toLoadPath)
-            .centerCrop()
-            .transform(CenterCrop(), GranularRoundedCorners(24.px, 24.px, 0f, 0f))
-            .addListener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    if (isGrid) {
-                        v.setPadding(16.px.toInt(), 16.px.toInt(), 16.px.toInt(), 16.px.toInt())
-                    }
-                    return false
-                }
+        if (isGrid) {
+            transformedRequest = transformedRequest.centerCrop()
+                .transform(CenterCrop(), GranularRoundedCorners(24.px, 24.px, 0f, 0f))
+        } else {
+            transformedRequest = transformedRequest.centerCrop()
+                .transform(CenterCrop(), GranularRoundedCorners(40.px, 40.px, 40.px, 40.px))
+        }
 
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    // do nothing
-                    return false
+        transformedRequest.addListener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                if (isGrid) {
+                    v.setPadding(16.px.toInt(), 16.px.toInt(), 16.px.toInt(), 16.px.toInt())
                 }
-            }).into(v)
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                // do nothing
+                return false
+            }
+        }).into(v)
     }
 }
