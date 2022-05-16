@@ -143,6 +143,15 @@ abstract class AbstractMediaInfoListFragment :
                 }
                 )
                 getRecyclerView().addOnScrollListener(recyclerViewPreloader!!)
+                gridLayoutManager = GridLayoutManager(
+                    context,
+                    requireContext()
+                        .getAppCommonSharedPreferences()
+                        .getInt(
+                            PreferencesConstants.KEY_GRID_VIEW_COLUMN_COUNT,
+                            PreferencesConstants.DEFAULT_GRID_VIEW_COLUMN_COUNT
+                        )
+                )
                 Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
                 getRecyclerView().layoutManager =
                     if (isList) linearLayoutManager else gridLayoutManager

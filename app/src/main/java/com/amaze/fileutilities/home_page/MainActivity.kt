@@ -431,11 +431,11 @@ class MainActivity :
                                 // matter the result, we continue our app flow.
                                 // add install time in preferences
                                 getAppCommonSharedPreferences()
-                                    .edit().putLong(
-                                        PreferencesConstants.KEY_INSTALL_DATE,
-                                        Date().time
-                                    )
-                                    .apply()
+                                    .edit()
+                                    .putBoolean(
+                                        PreferencesConstants.KEY_RATE_APP_AUTOMATED,
+                                        true
+                                    ).apply()
                             }
                         } else {
                             // There was some problem, log or handle the error code.

@@ -413,4 +413,8 @@
     <string name="lifetime_membership">Lifetime Membership</string>
     <string name="one_year">1 Year</string>
     <string name="operation_failed">Operation failed</string>
+    <string name="columns_grid_title">No. of columns in grid</string>
+    <string name="appearance">Appearance</string>
+    <string name="appearance_summary">App appearance settings</string>
+    <string name="general">General</string>
 </resources>
