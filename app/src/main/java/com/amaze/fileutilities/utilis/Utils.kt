@@ -253,7 +253,7 @@ class Utils {
                     return when (adapter.getItemViewType(position)) {
                         AbstractMediaFilesAdapter.TYPE_ITEM ->
                             1
-                        else -> 3
+                        else -> gridLayoutManager.spanCount
                     }
                 }
             }
@@ -540,6 +540,28 @@ class Utils {
                     context.resources.getString(R.string.dont_show_again)
                 ) { dialog, _ ->
                     neutralCallback.invoke()
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun buildGridColumnsDialog(
+            context: Context,
+            checkedItemIdx: Int,
+            positiveCallback: (gridSize: Int) -> Unit,
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.columns_grid_title)
+                .setSingleChoiceItems(
+                    R.array.columns, checkedItemIdx
+                ) { dialog, which ->
+                    positiveCallback.invoke(which + 2)
+                    dialog?.dismiss()
+                }
+                .setNegativeButton(
+                    context.resources.getString(R.string.close)
+                ) { dialog, _ ->
                     dialog.dismiss()
                 }
             return builder

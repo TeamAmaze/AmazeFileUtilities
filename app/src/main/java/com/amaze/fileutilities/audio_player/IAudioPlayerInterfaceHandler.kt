@@ -98,7 +98,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                     imageView ->
                     Glide.with(it).load(progressHandler.audioPlaybackInfo.albumArt)
                         .centerCrop()
-                        .transform(CenterCrop(), RoundedCorners(24.px.toInt()))
+                        .transform(CenterCrop(), RoundedCorners(80.px.toInt()))
                         .fallback(R.drawable.ic_outline_audio_file_32)
                         .placeholder(R.drawable.ic_outline_audio_file_32).into(imageView)
                 }
@@ -123,7 +123,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                 imageView ->
                 Glide.with(it).load(audioService?.getAudioPlaybackInfo()?.albumArt)
                     .centerCrop()
-                    .transform(CenterCrop(), RoundedCorners(24.px.toInt()))
+                    .transform(CenterCrop(), RoundedCorners(80.px.toInt()))
                     .fallback(R.drawable.ic_outline_audio_file_32)
                     .placeholder(R.drawable.ic_outline_audio_file_32).into(imageView)
             }
