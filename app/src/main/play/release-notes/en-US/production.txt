@@ -1,5 +1,5 @@
 Changelog:
-- Add share in pdf viewer and video player
+- Fetch album art for audio files
 - Fix waveform when change media track in media player
 - Fix startup white flash
 - Add curved edges to video / image dialog viewers
