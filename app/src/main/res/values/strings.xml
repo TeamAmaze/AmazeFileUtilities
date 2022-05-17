@@ -225,6 +225,7 @@
     <string name="connecting">Connecting…</string>
     <string name="aspect_ratio">Aspect ratio</string>
     <string name="playback_speed">Playback Speed</string>
+    <string name="pitch_speed">Pitch speed</string>
     <string name="subtitles">Subtitles</string>
     <string name="file">File</string>
     <string name="media">Media</string>

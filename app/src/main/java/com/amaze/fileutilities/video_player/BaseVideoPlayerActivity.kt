@@ -566,6 +566,20 @@ abstract class BaseVideoPlayerActivity :
                     R.id.share -> {
                         showShareDialog(mediaFile)
                     }
+                    /*R.id.pitch_speed -> {
+                        Utils.showPitchDialog(this@BaseVideoPlayerActivity,
+                            player?.playbackParameters?.pitch?.toInt() ?: 0, {
+                           pitch ->
+                                val speed = player?.playbackParameters?.speed ?: 1f
+                                val param = PlaybackParameters(speed, pitch)
+                                player?.playbackParameters = param
+                                videoPlayerViewModel?.pitchSpeed = pitch
+                        }, {
+
+                                player?.play()
+                        }).show()
+                        player?.pause()
+                    }*/
                 }
                 true
             }

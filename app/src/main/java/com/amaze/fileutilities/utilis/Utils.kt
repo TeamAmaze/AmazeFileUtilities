@@ -45,6 +45,7 @@ import java.math.BigInteger
 import java.net.InetAddress
 import java.net.UnknownHostException
 import java.nio.ByteOrder
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class Utils {
@@ -562,6 +563,78 @@ class Utils {
                 .setNegativeButton(
                     context.resources.getString(R.string.close)
                 ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun showPitchDialog(
+            context: Context,
+            currentPitchIdx: Int,
+            positiveCallback: (pitch: Float) -> Unit,
+            negativeCallback: () -> Unit
+        ): AlertDialog.Builder {
+            val builder: AlertDialog.Builder = this.let {
+                AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            }
+            val items = arrayOf(
+                "0.25x", "0.50x", "0.75x",
+                "1.0x " +
+                    "(${context.getString(R.string.default_name)})",
+                "1.25x", "1.50x", "1.75x", "2.0x"
+            )
+            val itemsMap = mapOf(
+                Pair(-12f, -12),
+                Pair(-11f, -11),
+                Pair(-10f, 2),
+                Pair(-9f, 3),
+                Pair(-8f, 4),
+                Pair(-7f, 5),
+                Pair(-6f, 6),
+                Pair(-5f, 7),
+                Pair(-4f, 0),
+                Pair(-3f, 1),
+                Pair(-2f, 2),
+                Pair(-1f, 3),
+                Pair(0f, 4),
+                Pair(1f, 5),
+                Pair(1f, 6),
+                Pair(2f, 7),
+                Pair(3f, 4),
+                Pair(4f, 5),
+                Pair(5f, 6),
+                Pair(6f, 7),
+                Pair(7f, 0),
+                Pair(8f, 1),
+                Pair(9f, 2),
+                Pair(10f, 3),
+                Pair(11f, 4),
+                Pair(12f, 5),
+            )
+            val itemsArray = arrayOf(
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+            )
+//            val checkedItem = itemsMap[exoPlayer.playbackParameters.pitch] ?: 12
+            builder.setSingleChoiceItems(
+                itemsArray.map { it.toString() }.toTypedArray(), currentPitchIdx
+            ) { dialog, which ->
+                positiveCallback.invoke((which).toFloat())
+                dialog.dismiss()
+            }
+                .setTitle(R.string.pitch_speed)
+                .setNegativeButton(R.string.close) { dialog, _ ->
+                    negativeCallback.invoke()
                     dialog.dismiss()
                 }
             return builder
