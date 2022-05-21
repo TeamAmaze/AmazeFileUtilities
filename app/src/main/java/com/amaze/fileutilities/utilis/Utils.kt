@@ -14,6 +14,8 @@ import android.app.Activity
 import android.content.*
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.Point
 import android.net.Uri
 import android.net.wifi.WifiManager
@@ -22,9 +24,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
+import androidx.annotation.ColorInt
+import androidx.annotation.FloatRange
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.GridLayoutManager
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
@@ -45,6 +50,7 @@ import java.math.BigInteger
 import java.net.InetAddress
 import java.net.UnknownHostException
 import java.nio.ByteOrder
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class Utils {
@@ -253,7 +259,7 @@ class Utils {
                     return when (adapter.getItemViewType(position)) {
                         AbstractMediaFilesAdapter.TYPE_ITEM ->
                             1
-                        else -> 3
+                        else -> gridLayoutManager.spanCount
                     }
                 }
             }
@@ -543,6 +549,163 @@ class Utils {
                     dialog.dismiss()
                 }
             return builder
+        }
+
+        fun buildGridColumnsDialog(
+            context: Context,
+            checkedItemIdx: Int,
+            positiveCallback: (gridSize: Int) -> Unit,
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.columns_grid_title)
+                .setSingleChoiceItems(
+                    R.array.columns, checkedItemIdx
+                ) { dialog, which ->
+                    positiveCallback.invoke(which + 2)
+                    dialog?.dismiss()
+                }
+                .setNegativeButton(
+                    context.resources.getString(R.string.close)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun showPitchDialog(
+            context: Context,
+            currentPitchIdx: Int,
+            positiveCallback: (pitch: Float) -> Unit,
+            negativeCallback: () -> Unit
+        ): AlertDialog.Builder {
+            val builder: AlertDialog.Builder = this.let {
+                AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            }
+            val items = arrayOf(
+                "0.25x", "0.50x", "0.75x",
+                "1.0x " +
+                    "(${context.getString(R.string.default_name)})",
+                "1.25x", "1.50x", "1.75x", "2.0x"
+            )
+            val itemsMap = mapOf(
+                Pair(-12f, -12),
+                Pair(-11f, -11),
+                Pair(-10f, 2),
+                Pair(-9f, 3),
+                Pair(-8f, 4),
+                Pair(-7f, 5),
+                Pair(-6f, 6),
+                Pair(-5f, 7),
+                Pair(-4f, 0),
+                Pair(-3f, 1),
+                Pair(-2f, 2),
+                Pair(-1f, 3),
+                Pair(0f, 4),
+                Pair(1f, 5),
+                Pair(1f, 6),
+                Pair(2f, 7),
+                Pair(3f, 4),
+                Pair(4f, 5),
+                Pair(5f, 6),
+                Pair(6f, 7),
+                Pair(7f, 0),
+                Pair(8f, 1),
+                Pair(9f, 2),
+                Pair(10f, 3),
+                Pair(11f, 4),
+                Pair(12f, 5),
+            )
+            val itemsArray = arrayOf(
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12
+            )
+//            val checkedItem = itemsMap[exoPlayer.playbackParameters.pitch] ?: 12
+            builder.setSingleChoiceItems(
+                itemsArray.map { it.toString() }.toTypedArray(), currentPitchIdx
+            ) { dialog, which ->
+                positiveCallback.invoke((which).toFloat())
+                dialog.dismiss()
+            }
+                .setTitle(R.string.pitch_speed)
+                .setNegativeButton(R.string.close) { dialog, _ ->
+                    negativeCallback.invoke()
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun generatePalette(bitmap: Bitmap?): Palette? {
+            return if (bitmap == null) null else Palette.from(bitmap).generate()
+        }
+
+        @ColorInt
+        fun getColor(palette: Palette?, fallback: Int): Int {
+            var toReturn = fallback
+            if (palette != null) {
+                if (palette.vibrantSwatch != null) {
+                    toReturn = palette.vibrantSwatch!!.rgb
+                } else if (palette.mutedSwatch != null) {
+                    toReturn = palette.mutedSwatch!!.rgb
+                } else if (palette.darkVibrantSwatch != null) {
+                    toReturn = palette.darkVibrantSwatch!!.rgb
+                } else if (palette.darkMutedSwatch != null) {
+                    toReturn = palette.darkMutedSwatch!!.rgb
+                } else if (palette.lightVibrantSwatch != null) {
+                    toReturn = palette.lightVibrantSwatch!!.rgb
+                } else if (palette.lightMutedSwatch != null) {
+                    toReturn = palette.lightMutedSwatch!!.rgb
+                } else if (palette.swatches.isNotEmpty()) {
+                    toReturn = Collections.max(palette.swatches) { o1, o2 ->
+                        o1.population - o2.population
+                    }.rgb
+                }
+            }
+            return shiftBackgroundColorForLightText(toReturn)
+        }
+
+        private fun shiftBackgroundColorForLightText(@ColorInt backgroundColor: Int): Int {
+            var backgroundColor = backgroundColor
+            while (isColorLight(backgroundColor)) {
+                backgroundColor = darkenColor(backgroundColor)
+            }
+            return backgroundColor
+        }
+
+        private fun isColorLight(@ColorInt color: Int): Boolean {
+            val darkness = 1.0 - (
+                0.299 * Color.red(color).toDouble() + 0.587 * Color.green(color)
+                    .toDouble() + 0.114 * Color.blue(color).toDouble()
+                ) / 255.0
+            return darkness < 0.7
+        }
+        private fun darkenColor(@ColorInt color: Int): Int {
+            return shiftColor(color, 0.2f)
+        }
+
+        private fun shiftColor(
+            @ColorInt color: Int,
+            @FloatRange(from = 0.0, to = 2.0) by: Float
+        ): Int {
+            return if (by == 1.0f) {
+                color
+            } else {
+                val alpha = Color.alpha(color)
+                val hsv = FloatArray(3)
+                Color.colorToHSV(color, hsv)
+                hsv[2] *= by
+                (alpha shl 24) + (16777215 and Color.HSVToColor(hsv))
+            }
         }
     }
 }

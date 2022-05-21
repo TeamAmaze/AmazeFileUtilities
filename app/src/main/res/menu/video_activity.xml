@@ -8,6 +8,10 @@
         android:id="@+id/playback_speed"
         android:title="@string/playback_speed"
         />
+    <!--<item
+        android:id="@+id/pitch_speed"
+        android:title="@string/pitch_speed"
+        />-->
     <item
         android:id="@+id/subtitles"
         android:title="@string/subtitles"

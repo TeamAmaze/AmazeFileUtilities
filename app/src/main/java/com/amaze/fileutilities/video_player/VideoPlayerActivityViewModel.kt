@@ -40,6 +40,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
     var fitToScreen = 0
     var isInPictureInPicture = false
     var playbackSpeed = 1f
+    var pitchSpeed = 1f
     var isUiLocked = false
     var isSubtitleAvailable = false
     var isSubtitleEnabled = false

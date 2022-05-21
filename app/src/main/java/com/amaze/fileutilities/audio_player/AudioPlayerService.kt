@@ -13,7 +13,6 @@ package com.amaze.fileutilities.audio_player
 import android.app.PendingIntent
 import android.app.Service
 import android.content.*
-import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.media.audiofx.AudioEffect
 import android.net.Uri
@@ -36,7 +35,6 @@ import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.audio.AudioAttributes
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.File
 import java.lang.ref.WeakReference
 
 class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatingCallback {
@@ -377,17 +375,13 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                     (audioProgressHandler.getPlayingIndex(false)).toLong()
                 )
                 .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, song.year.toLong())
-            val mediaStream = AudioUtils.getMediaStoreAlbumCoverUri(song.audioModel.id)
-            mediaStream?.let {
-                if (File(it.path).exists()) {
-                    metaData.putBitmap(
-                        MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
-                        BitmapFactory.decodeStream(
-                            applicationContext.contentResolver
-                                .openInputStream(it)
-                        )
-                    )
-                }
+            val albumUri = AudioUtils.getMediaStoreAlbumCoverUri(song.albumId)
+            AudioUtils.getAlbumBitmap(applicationContext, albumUri)?.let {
+                bitmap ->
+                metaData.putBitmap(
+                    MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
+                    bitmap
+                )
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

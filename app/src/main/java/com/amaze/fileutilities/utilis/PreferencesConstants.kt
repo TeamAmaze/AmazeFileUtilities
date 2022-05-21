@@ -33,6 +33,8 @@ class PreferencesConstants {
         const val KEY_NOT_CONNECTED_TRIAL_COUNT = "not_connected_trial"
         const val KEY_NOT_CONNECTED_SUBSCRIBED_COUNT = "not_connected_subscribed"
         const val KEY_RATE_APP_AUTOMATED = "rate_app_automated"
+        const val KEY_INSTALL_DATE = "install_date"
+        const val KEY_GRID_VIEW_COLUMN_COUNT = "grid_view_column_count"
 
         const val VAL_SEARCH_DUPLICATES_MEDIA_STORE = 0
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1
@@ -61,6 +63,6 @@ class PreferencesConstants {
         const val DEFAULT_AUDIO_PLAYER_REPEAT_MODE = AudioPlayerService.REPEAT_NONE
         const val DEFAULT_AUDIO_PLAYER_WAVEFORM = true
         const val DEFAULT_SUBTITLE_LANGUAGE_CODE = "en"
-        val DEFAULT_LICENSE_LAST_DAY_DONT_SHOW = Date()
+        const val DEFAULT_GRID_VIEW_COLUMN_COUNT = 3
     }
 }

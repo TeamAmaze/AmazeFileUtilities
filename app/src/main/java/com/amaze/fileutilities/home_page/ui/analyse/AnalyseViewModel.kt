@@ -26,22 +26,22 @@ class AnalyseViewModel : ViewModel() {
 
     var analysisType: Int? = null
 
-    private var duplicateFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var emptyFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var oldRecordingsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var oldScreenshotsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var oldDownloadsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var largeDownloadsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var largeVideosLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var clutteredVideosLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var blurImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var lowLightImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var memeImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var sleepingImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var sadImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var distractedImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var selfieImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    private var groupPicImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var duplicateFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var emptyFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var oldRecordingsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var oldScreenshotsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var oldDownloadsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var largeDownloadsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var largeVideosLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var clutteredVideosLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var blurImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var lowLightImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var memeImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var sleepingImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var sadImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var distractedImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var selfieImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var groupPicImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
 
     fun getBlurImages(dao: BlurAnalysisDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (blurImagesLiveData == null) {
@@ -208,7 +208,7 @@ class AnalyseViewModel : ViewModel() {
             videosList.forEach {
                 it.extraInfo?.videoMetaData?.duration?.let {
                     duration ->
-                    val idx = duration / 60
+                    val idx = duration / 1000 / 60
                     if (idx < 101) {
                         countIdx[idx.toInt()]++
                     }
@@ -225,7 +225,7 @@ class AnalyseViewModel : ViewModel() {
             val result = videosList.filter {
                 it.extraInfo?.videoMetaData?.duration?.let {
                     duration ->
-                    if ((duration / 60).toInt() == maxIdx) {
+                    if ((duration / 1000 / 60).toInt() == maxIdx) {
                         return@filter true
                     }
                 }

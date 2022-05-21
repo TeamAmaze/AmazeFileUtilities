@@ -27,7 +27,6 @@ class VideoPlayerDialogActivity : BaseVideoPlayerActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        initLocalVideoModel(intent)
         super.onCreate(savedInstanceState)
         handleViewPlayerDialogActivityResources()
         findViewById<RelativeLayout>(R.id.video_parent).setPadding(
