@@ -15,6 +15,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.media.AudioManager
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
@@ -102,6 +103,10 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
         title = getString(R.string.amaze_audio_player)
         audioPlaybackServiceConnection =
             AudioPlaybackServiceConnection(WeakReference(this))
+    }
+
+    override fun getParentView(): View? {
+        return null
     }
 
     override fun getSeekbar(): Slider {

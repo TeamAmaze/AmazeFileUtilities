@@ -210,6 +210,10 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         }
     }
 
+    override fun getParentView(): View? {
+        return _binding?.layoutBottomSheet
+    }
+
     override fun getSeekbar(): Slider? {
         return _binding?.seekBar
     }
