@@ -125,6 +125,7 @@ abstract class BaseVideoPlayerActivity :
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        initLocalVideoModel(intent)
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
         appDatabase = AppDatabase.getInstance(applicationContext)
@@ -426,14 +427,13 @@ abstract class BaseVideoPlayerActivity :
     fun initLocalVideoModel(intent: Intent) {
         val mimeType = intent.type
         val videoUri = intent.data
-        if (videoUri == null) {
-            showToastInCenter(resources.getString(R.string.unsupported_content))
-        }
         log.info(
             "Loading video from path ${videoUri?.path} " +
                 "and mimetype $mimeType"
         )
-        localVideoModel = LocalVideoModel(uri = videoUri!!, mimeType = mimeType)
+        if (videoUri != null) {
+            localVideoModel = LocalVideoModel(uri = videoUri!!, mimeType = mimeType)
+        }
     }
 
     fun handleViewPlayerDialogActivityResources() {
@@ -998,7 +998,7 @@ abstract class BaseVideoPlayerActivity :
         }
         if (videoPlayerViewModel?.videoModel == null) {
             this.showToastInCenter(resources.getString(R.string.unsupported_operation))
-            return
+            finish()
         }
         if (videoPlayerViewModel?.subtitleFilePath != null) {
             setMediaItemWithSubtitle(File(videoPlayerViewModel?.subtitleFilePath!!))

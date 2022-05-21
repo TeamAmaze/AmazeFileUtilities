@@ -60,11 +60,26 @@
         <activity
             android:name=".image_viewer.ImageViewerDialogActivity"
             android:exported="true"
-            android:label="@string/image_viewer"
+            android:label="@string/intent_image_viewer_dialog"
             android:excludeFromRecents="true"
             android:theme="@style/Custom.Dialog.Dark.NoStretch">
             <intent-filter
-                android:label="@string/intent_image_viewer"
+                android:label="@string/intent_image_viewer_dialog"
+                tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+
+                <data android:mimeType="image/*" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".image_viewer.ImageViewerActivity"
+            android:label="@string/intent_image_viewer_full_screen"
+            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark">
+            <intent-filter
+                android:label="@string/intent_image_viewer_full_screen"
                 tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -77,13 +92,32 @@
         <activity
             android:name=".video_player.VideoPlayerDialogActivity"
             android:exported="true"
-            android:label="@string/video_player"
+            android:label="@string/video_player_dialog"
             android:supportsPictureInPicture="true"
             android:launchMode="singleTask"
             android:excludeFromRecents="true"
             android:theme="@style/Custom.Dialog.Dark.NoStretch">
             <intent-filter
-                android:label="@string/intent_video_player"
+                android:label="@string/video_player_dialog"
+                tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+
+                <data android:mimeType="video/*" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".video_player.VideoPlayerActivity"
+            android:label="@string/video_player_full_screen"
+            android:supportsPictureInPicture="true"
+            android:resizeableActivity="true"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.amaze.fileutilitiespip"
+            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark">
+            <intent-filter
+                android:label="@string/video_player_full_screen"
                 tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -109,18 +143,6 @@
                 <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".image_viewer.ImageViewerActivity"
-            android:label="@string/image_viewer"
-            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark" />
-        <activity
-            android:name=".video_player.VideoPlayerActivity"
-            android:label="@string/video_player"
-            android:supportsPictureInPicture="true"
-            android:resizeableActivity="true"
-            android:launchMode="singleTask"
-            android:taskAffinity="com.amaze.fileutilitiespip"
-            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark" />
         <activity
             android:name=".pdf_viewer.PdfViewerActivity"
             android:exported="true"

@@ -6,11 +6,15 @@
     <string name="app_version" translatable="false">v1.43</string>
     <string name="image_viewer">Amaze Image Viewer</string>
     <string name="video_player">Amaze Video Player</string>
+    <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
+    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
     <string name="amaze_audio_player">Amaze Music Player</string>
     <string name="pdf_viewer">Amaze Pdf Viewer</string>
     <string name="epub_viewer">Amaze Epub Viewer</string>
     <string name="docx_viewer">Amaze Doc Viewer</string>
     <string name="intent_image_viewer">Amaze Image Viewer</string>
+    <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
+    <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
     <string name="intent_video_player">Amaze Video Player</string>
     <string name="grantfailed">Storage permission not granted</string>
     <string name="grant_location_failed">Location permission not granted</string>
