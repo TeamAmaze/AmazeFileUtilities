@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.home_page.ui.files
 
+import androidx.annotation.Keep
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -26,7 +27,7 @@ interface TrialValidationApi {
         @Body trialRequest: TrialRequest
     ): Call<TrialResponse>?
 
-//    @Keep
+    @Keep
     data class TrialRequest(
         val token: String,
         val deviceId: String,
@@ -35,7 +36,7 @@ interface TrialValidationApi {
         val isPurchaseInApp: Boolean = false,
     )
 
-//    @Keep
+    @Keep
     data class TrialResponse(
         val isLastDay: Boolean = false,
         val isNewSignup: Boolean = false,

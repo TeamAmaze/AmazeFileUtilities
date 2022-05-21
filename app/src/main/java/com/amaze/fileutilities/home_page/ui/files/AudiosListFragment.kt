@@ -210,6 +210,10 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         }
     }
 
+    override fun getParentView(): View? {
+        return _binding?.layoutBottomSheet
+    }
+
     override fun getSeekbar(): Slider? {
         return _binding?.seekBar
     }
@@ -256,6 +260,14 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
 
     override fun getRepeatButton(): ImageView? {
         return _binding?.repeatButton
+    }
+
+    override fun getAlbumImage(): ImageView? {
+        return _binding?.albumImage
+    }
+
+    override fun getAlbumSmallImage(): ImageView? {
+        return _binding?.albumImageSmall
     }
 
     override fun getContextWeakRef(): WeakReference<Context> {

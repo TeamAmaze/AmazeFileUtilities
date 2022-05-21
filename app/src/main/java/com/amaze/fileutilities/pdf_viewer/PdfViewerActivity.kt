@@ -32,7 +32,7 @@ import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.github.barteksc.pdfviewer.listener.OnTapListener
-import com.github.barteksc.pdfviewer.scroll.DefaultScrollHandle
+import com.github.barteksc.pdfviewer.util.FitPolicy
 import com.shockwave.pdfium.PdfDocument
 import com.shockwave.pdfium.PdfDocument.Bookmark
 import com.shockwave.pdfium.PdfPasswordException
@@ -115,8 +115,12 @@ class PdfViewerActivity :
                 }
                 R.id.share -> {
                     var processed = false
-                    pdfModel.uri.getFileFromUri()?.let {
+                    pdfModel.uri.getFileFromUri().let {
                         file ->
+                        if (file == null) {
+                            showToastInCenter(getString(R.string.failed_to_share))
+                            return@let
+                        }
                         val mediaFile = MediaFileInfo.fromFile(
                             file,
                             MediaFileInfo.ExtraInfo(
@@ -219,6 +223,7 @@ class PdfViewerActivity :
         viewBinding.pdfView.fromUri(uri).defaultPage(0)
             .enableSwipe(true)
             .swipeHorizontal(false)
+            .enableDoubletap(true)
             .password(password)
             .onPageChange(this)
             .enableAnnotationRendering(true)
@@ -227,7 +232,9 @@ class PdfViewerActivity :
             .onTap(this)
             .defaultPage(viewModel.pageNumber)
             .nightMode(viewModel.nightMode)
-            .scrollHandle(DefaultScrollHandle(this))
+            .spacing(32.dp.toInt())
+            .pageFitPolicy(FitPolicy.BOTH)
+            .scrollHandle(PdfScrollHandle(this))
             .onError { t ->
                 t?.let {
                     if (t is PdfPasswordException) {

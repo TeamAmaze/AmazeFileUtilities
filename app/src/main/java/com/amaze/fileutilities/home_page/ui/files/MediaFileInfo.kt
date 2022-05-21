@@ -13,6 +13,7 @@ package com.amaze.fileutilities.home_page.ui.files
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.text.format.DateUtils
 import androidx.core.content.FileProvider
@@ -213,7 +214,9 @@ data class MediaFileInfo(
     data class AudioMetaData(
         val albumName: String?,
         val artistName: String?,
-        val duration: Long?
+        val duration: Long?,
+        val albumId: Long?,
+        val albumArt: Bitmap?
     )
     data class VideoMetaData(val duration: Long?, val width: Int?, val height: Int?)
     data class ImageMetaData(val width: Int?, val height: Int?)

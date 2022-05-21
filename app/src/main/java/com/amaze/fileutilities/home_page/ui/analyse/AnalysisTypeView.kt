@@ -23,8 +23,8 @@ import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.px
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.bumptech.glide.Glide
-import com.google.android.material.imageview.ShapeableImageView
-import com.google.android.material.shape.CornerFamily
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.lang.ref.WeakReference
 
 class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(context, attrs) {
@@ -104,15 +104,16 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     }
 
     private fun getImageView(mediaFileInfo: MediaFileInfo): ImageView {
-        val imageView = ShapeableImageView(context)
-        imageView.shapeAppearanceModel = imageView.shapeAppearanceModel.toBuilder()
-            .setAllCorners(CornerFamily.ROUNDED, 16.px).build()
+        val imageView = ImageView(context)
         imageView.setOnClickListener {
             mediaFileInfo.triggerMediaFileInfoAction(WeakReference(context))
         }
         imageView.layoutParams = getParams()
         imageView.scaleType = ImageView.ScaleType.CENTER
-        Glide.with(context).load(mediaFileInfo.path).fallback(R.drawable.ic_outline_broken_image_24)
+        Glide.with(context).load(mediaFileInfo.path)
+            .centerCrop()
+            .transform(CenterCrop(), RoundedCorners(106.px.toInt()))
+            .fallback(R.drawable.ic_outline_broken_image_24)
             .placeholder(R.drawable.ic_outline_insert_drive_file_32).into(imageView)
         return imageView
     }

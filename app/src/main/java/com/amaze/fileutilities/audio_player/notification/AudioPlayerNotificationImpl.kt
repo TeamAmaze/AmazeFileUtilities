@@ -23,13 +23,11 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlaybackInfo
 import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
 import com.amaze.fileutilities.audio_player.AudioPlayerService
-import com.amaze.fileutilities.utilis.BitmapPaletteWrapper
 import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
-import com.bumptech.glide.request.target.Target
 
 class AudioPlayerNotificationImpl : AudioPlayerNotification() {
-    private var target: Target<BitmapPaletteWrapper>? = null
     @Synchronized
     override fun update() {
         stopped = false
@@ -44,6 +42,16 @@ class AudioPlayerNotificationImpl : AudioPlayerNotification() {
             service.packageName,
             R.layout.audio_player_notification_big
         )
+        service.audioProgressHandler?.audioPlaybackInfo?.albumArt?.let {
+            bitmap ->
+            notificationLayoutBig.setImageViewBitmap(R.id.album_image, bitmap)
+            notificationLayout.setImageViewBitmap(R.id.album_image, bitmap)
+            val color = Utils.getColor(
+                Utils.generatePalette(bitmap), R.color.navy_blue_alt_3
+            )
+            notificationLayout.setInt(R.id.root, "setBackgroundColor", color)
+            notificationLayoutBig.setInt(R.id.root, "setBackgroundColor", color)
+        }
         if (TextUtils.isEmpty(playbackInfo.title) && TextUtils.isEmpty(playbackInfo.artistName)) {
             notificationLayout.setViewVisibility(R.id.titles, View.INVISIBLE)
         } else {

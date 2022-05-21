@@ -3,14 +3,18 @@
     <string name="app_name_launcher">Amaze Utilities</string>
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.40</string>
+    <string name="app_version" translatable="false">v1.43</string>
     <string name="image_viewer">Amaze Image Viewer</string>
     <string name="video_player">Amaze Video Player</string>
+    <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
+    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
     <string name="amaze_audio_player">Amaze Music Player</string>
     <string name="pdf_viewer">Amaze Pdf Viewer</string>
     <string name="epub_viewer">Amaze Epub Viewer</string>
     <string name="docx_viewer">Amaze Doc Viewer</string>
     <string name="intent_image_viewer">Amaze Image Viewer</string>
+    <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
+    <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
     <string name="intent_video_player">Amaze Video Player</string>
     <string name="grantfailed">Storage permission not granted</string>
     <string name="grant_location_failed">Location permission not granted</string>
@@ -225,6 +229,7 @@
     <string name="connecting">Connecting…</string>
     <string name="aspect_ratio">Aspect ratio</string>
     <string name="playback_speed">Playback Speed</string>
+    <string name="pitch_speed">Pitch speed</string>
     <string name="subtitles">Subtitles</string>
     <string name="file">File</string>
     <string name="media">Media</string>
@@ -413,4 +418,8 @@
     <string name="lifetime_membership">Lifetime Membership</string>
     <string name="one_year">1 Year</string>
     <string name="operation_failed">Operation failed</string>
+    <string name="columns_grid_title">No. of columns in grid</string>
+    <string name="appearance">Appearance</string>
+    <string name="appearance_summary">App appearance settings</string>
+    <string name="general">General</string>
 </resources>
