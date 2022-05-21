@@ -197,7 +197,7 @@ class FilesViewModel(val applicationContext: Application) :
             if (searchFilter.searchFilter.searchFilterImages) {
                 searchFilter.aggregatedMediaFiles.imagesMediaFilesList?.let { mediaInfoList ->
                     mediaInfoList.forEach {
-                        if (it.title.contains(query)) {
+                        if (it.title.contains(query, true)) {
                             mediaFileResults.add(it)
                             textResults.add(it.title)
                         }
@@ -207,7 +207,7 @@ class FilesViewModel(val applicationContext: Application) :
             if (searchFilter.searchFilter.searchFilterVideos) {
                 searchFilter.aggregatedMediaFiles.videosMediaFilesList?.let { mediaInfoList ->
                     mediaInfoList.forEach {
-                        if (it.title.contains(query)) {
+                        if (it.title.contains(query, true)) {
                             mediaFileResults.add(it)
                             textResults.add(it.title)
                         }
@@ -217,7 +217,7 @@ class FilesViewModel(val applicationContext: Application) :
             if (searchFilter.searchFilter.searchFilterAudios) {
                 searchFilter.aggregatedMediaFiles.audiosMediaFilesList?.let { mediaInfoList ->
                     mediaInfoList.forEach {
-                        if (it.title.contains(query)) {
+                        if (it.title.contains(query, true)) {
                             mediaFileResults.add(it)
                             textResults.add(it.title)
                         }
@@ -227,7 +227,7 @@ class FilesViewModel(val applicationContext: Application) :
             if (searchFilter.searchFilter.searchFilterDocuments) {
                 searchFilter.aggregatedMediaFiles.docsMediaFilesList?.let { mediaInfoList ->
                     mediaInfoList.forEach {
-                        if (it.title.contains(query)) {
+                        if (it.title.contains(query, true)) {
                             mediaFileResults.add(it)
                             textResults.add(it.title)
                         }
@@ -255,7 +255,7 @@ class FilesViewModel(val applicationContext: Application) :
                         if (currentResultsCount> resultsThreshold) {
                             return@il
                         }
-                        if (it.title.contains(query)) {
+                        if (it.title.contains(query, true)) {
                             textResults.add(it.title)
                             currentResultsCount++
                         }
@@ -268,7 +268,7 @@ class FilesViewModel(val applicationContext: Application) :
                         if (currentResultsCount> resultsThreshold) {
                             return@vl
                         }
-                        if (it.title.contains(query)) {
+                        if (it.title.contains(query, true)) {
                             textResults.add(it.title)
                             currentResultsCount++
                         }
@@ -281,7 +281,7 @@ class FilesViewModel(val applicationContext: Application) :
                         if (currentResultsCount> resultsThreshold) {
                             return@al
                         }
-                        if (it.title.contains(query)) {
+                        if (it.title.contains(query, true)) {
                             textResults.add(it.title)
                             currentResultsCount++
                         }
@@ -295,7 +295,7 @@ class FilesViewModel(val applicationContext: Application) :
                         if (currentResultsCount> resultsThreshold) {
                             return@dl
                         }
-                        if (it.title.contains(query)) {
+                        if (it.title.contains(query, true)) {
                             textResults.add(it.title)
                             currentResultsCount++
                         }

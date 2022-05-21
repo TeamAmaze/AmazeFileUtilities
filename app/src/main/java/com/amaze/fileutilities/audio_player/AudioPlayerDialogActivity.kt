@@ -15,6 +15,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.media.AudioManager
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
@@ -104,6 +105,10 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
             AudioPlaybackServiceConnection(WeakReference(this))
     }
 
+    override fun getParentView(): View? {
+        return null
+    }
+
     override fun getSeekbar(): Slider {
         return _binding.seekBar
     }
@@ -162,6 +167,14 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
 
     override fun getRepeatButton(): ImageView {
         return _binding.repeatButton
+    }
+
+    override fun getAlbumImage(): ImageView? {
+        return _binding.albumImage
+    }
+
+    override fun getAlbumSmallImage(): ImageView? {
+        return null
     }
 
     override fun serviceDisconnected() {

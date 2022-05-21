@@ -440,14 +440,19 @@ class ImageViewerFragment : AbstractMediaFragment() {
                                                 .format(it.first, toDelete.size)
                                         if (it.second == toDelete.size) {
                                             // delete deleted data from observables in fileviewmodel
-                                    /*filesViewModel.usedImagesSummaryTransformations
-                                        .observe(viewLifecycleOwner) {
-                                            summary ->
-                                        if (summary != null) {
-                                            filesViewModel.deleteMediaFilesFromList(summary.second,
-                                                toDelete)
-                                        }
-                                    }*/
+                                            filesViewModel.usedImagesSummaryTransformations
+                                                .observe(viewLifecycleOwner) {
+                                                    pair ->
+                                                    if (pair != null) {
+                                                        filesViewModel.deleteMediaFilesFromList(
+                                                            pair.second,
+                                                            toDelete
+                                                        )
+                                                    }
+                                                }
+
+                                            // reset interal storage stats so that we recalculate storage remaining
+                                            filesViewModel.internalStorageStatsLiveData = null
 
                                             // deletion complete, no need to check analysis data to remove
                                             // as it will get deleted lazily while loading analysis lists

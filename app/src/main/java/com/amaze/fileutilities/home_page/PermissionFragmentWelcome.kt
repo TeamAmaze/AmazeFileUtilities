@@ -75,6 +75,9 @@ class PermissionFragmentWelcome : Fragment() {
                 }
             }
         }
+        binding.licenseAgreementText.setOnClickListener {
+            binding.licenseAgreementCheckbox.isChecked = !binding.licenseAgreementCheckbox.isChecked
+        }
         binding.licenseAgreementText.text = Html.fromHtml(getString(R.string.license_agreement))
         Linkify.addLinks(binding.licenseAgreementText, Linkify.WEB_URLS)
         binding.licenseAgreementText.movementMethod = LinkMovementMethod.getInstance()

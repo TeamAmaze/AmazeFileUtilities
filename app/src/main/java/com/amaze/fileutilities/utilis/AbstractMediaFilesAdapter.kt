@@ -164,7 +164,7 @@ abstract class AbstractMediaFilesAdapter(
                     mediaFileInfo ->
                     holder.infoTitle.text = mediaFileInfo.title
                     Glide.with(superContext).clear(holder.iconView)
-                    superPreloader.loadImage(mediaFileInfo.path, holder.iconView, isGrid)
+                    superPreloader.loadImage(mediaFileInfo, holder.iconView, isGrid)
                     if (isChecked) {
                         if (isGrid) {
                             holder.checkIconGrid.visibility = View.VISIBLE

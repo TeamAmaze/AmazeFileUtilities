@@ -28,11 +28,13 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileListSorter
 import com.amaze.fileutilities.utilis.*
-import com.google.android.material.imageview.ShapeableImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.progressindicator.LinearProgressIndicator
 
 class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
-    private val accentImageView: ShapeableImageView
+    private val accentImageView: ImageView
     private val parentLinearLayout: LinearLayout
     private val typeHeaderParent: RelativeLayout
     private val typeImageView: ImageView
@@ -64,7 +66,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(
         val inflater = context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.media_type_header_layout, this, true)
-        accentImageView = getChildAt(0) as ShapeableImageView
+        accentImageView = getChildAt(0) as ImageView
         parentLinearLayout = getChildAt(2) as LinearLayout
         typeHeaderParent = parentLinearLayout.findViewById(R.id.type_header_parent)
         typeImageView = typeHeaderParent.findViewById(R.id.type_image)
@@ -130,9 +132,11 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(
     }
 
     fun setAccentImageSrc(accentImage: Drawable) {
-        accentImageView.setImageDrawable(accentImage)
-//        accentImageView.alpha = 0.2f
-//        accentImageView.imageAlpha = 30
+        Glide.with(context).load(accentImage)
+            .centerCrop()
+            .transform(CenterCrop(), RoundedCorners(24.px.toInt()))
+            .fallback(R.drawable.ic_outline_broken_image_24)
+            .placeholder(R.drawable.ic_outline_image_32).into(accentImageView)
     }
 
     fun getMediaRouteButton(): MediaRouteButton {
