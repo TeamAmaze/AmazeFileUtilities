@@ -13,30 +13,34 @@ package com.amaze.fileutilities.audio_player
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.CountDownTimer
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
 import com.amaze.fileutilities.R
-import com.amaze.fileutilities.utilis.getFileFromUri
-import com.amaze.fileutilities.utilis.hideFade
-import com.amaze.fileutilities.utilis.px
-import com.amaze.fileutilities.utilis.showFade
+import com.amaze.fileutilities.utilis.*
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.slider.Slider
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
 import linc.com.amplituda.exceptions.io.FileNotFoundException
 import org.slf4j.Logger
-import java.lang.Exception
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
 
 interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
+    fun getParentView(): View?
     fun getSeekbar(): Slider?
     fun getWaveformSeekbar(): WaveformSeekBar?
     fun getTimeElapsedTextView(): TextView?
@@ -100,7 +104,40 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                         .centerCrop()
                         .transform(CenterCrop(), RoundedCorners(80.px.toInt()))
                         .fallback(R.drawable.ic_outline_audio_file_32)
-                        .placeholder(R.drawable.ic_outline_audio_file_32).into(imageView)
+                        .placeholder(R.drawable.ic_outline_audio_file_32)
+                        .addListener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                // do nothing
+                                return false
+                            }
+
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                resource?.let {
+                                    val bitmap = it.toBitmap()
+                                    val color = Utils.getColor(
+                                        Utils.generatePalette(bitmap),
+                                        R.color.navy_blue_alt_3
+                                    )
+                                    getParentView()?.background?.setColorFilter(
+                                        color,
+                                        PorterDuff.Mode.SRC_ATOP
+                                    )
+                                }
+                                return true
+                            }
+                        })
+                        .into(imageView)
                 }
                 getAlbumSmallImage()?.let {
                     imageView ->
@@ -125,7 +162,40 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                     .centerCrop()
                     .transform(CenterCrop(), RoundedCorners(80.px.toInt()))
                     .fallback(R.drawable.ic_outline_audio_file_32)
-                    .placeholder(R.drawable.ic_outline_audio_file_32).into(imageView)
+                    .placeholder(R.drawable.ic_outline_audio_file_32)
+                    .addListener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            // do nothing
+                            return false
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            resource?.let {
+                                val bitmap = it.toBitmap()
+                                val color = Utils.getColor(
+                                    Utils.generatePalette(bitmap),
+                                    R.color.navy_blue_alt_3
+                                )
+                                getParentView()?.background?.setColorFilter(
+                                    color,
+                                    PorterDuff.Mode.SRC_ATOP
+                                )
+                            }
+                            return true
+                        }
+                    })
+                    .into(imageView)
             }
             getAlbumSmallImage()?.let {
                 imageView ->
