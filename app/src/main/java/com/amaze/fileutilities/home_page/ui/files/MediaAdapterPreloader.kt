@@ -52,16 +52,16 @@ class MediaAdapterPreloader(private val context: Context, private val loadingDra
             .placeholder(loadingDrawable).load(item)
     }
 
-    fun loadImage(item: MediaFileInfo, v: ImageView, isGrid: Boolean) {
+    fun loadImage(item: MediaFileInfo, view: ImageView, isGrid: Boolean) {
         val toLoadPath: String = item.path
         val toLoadBitmap: Bitmap? = item.extraInfo?.audioMetaData?.albumArt
         var transformedRequest = request.fallback(R.drawable.ic_outline_broken_image_24)
             .placeholder(loadingDrawable).load(toLoadBitmap ?: toLoadPath)
-        if (isGrid) {
-            transformedRequest = transformedRequest.centerCrop()
+        transformedRequest = if (isGrid) {
+            transformedRequest.centerCrop()
                 .transform(CenterCrop(), GranularRoundedCorners(24.px, 24.px, 0f, 0f))
         } else {
-            transformedRequest = transformedRequest.centerCrop()
+            transformedRequest.centerCrop()
                 .transform(CenterCrop(), GranularRoundedCorners(40.px, 40.px, 40.px, 40.px))
         }
 
@@ -73,7 +73,7 @@ class MediaAdapterPreloader(private val context: Context, private val loadingDra
                 isFirstResource: Boolean
             ): Boolean {
                 if (isGrid) {
-                    v.setPadding(16.px.toInt(), 16.px.toInt(), 16.px.toInt(), 16.px.toInt())
+                    view.setPadding(16.px.toInt(), 16.px.toInt(), 16.px.toInt(), 16.px.toInt())
                 }
                 return false
             }
@@ -88,6 +88,6 @@ class MediaAdapterPreloader(private val context: Context, private val loadingDra
                 // do nothing
                 return false
             }
-        }).into(v)
+        }).into(view)
     }
 }
