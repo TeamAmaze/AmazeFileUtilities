@@ -43,8 +43,8 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"5CZlDmqIhLoRcalZHXItm5Thwq57MDE2\""
@@ -169,7 +169,7 @@ dependencies {
     implementation("com.android.billingclient:billing:$billing_version")
 
     //Detect memory leaks
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
