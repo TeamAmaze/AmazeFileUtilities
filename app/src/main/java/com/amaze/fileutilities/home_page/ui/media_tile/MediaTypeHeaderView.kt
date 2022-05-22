@@ -28,9 +28,6 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileListSorter
 import com.amaze.fileutilities.utilis.*
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.progressindicator.LinearProgressIndicator
 
 class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
@@ -132,11 +129,12 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(
     }
 
     fun setAccentImageSrc(accentImage: Drawable) {
-        Glide.with(context).load(accentImage)
+        accentImageView.setImageDrawable(accentImage)
+        /*Glide.with(context).load(accentImage)
             .centerCrop()
             .transform(CenterCrop(), RoundedCorners(24.px.toInt()))
             .fallback(R.drawable.ic_outline_broken_image_24)
-            .placeholder(R.drawable.ic_outline_image_32).into(accentImageView)
+            .placeholder(R.drawable.ic_outline_image_32).into(accentImageView)*/
     }
 
     fun getMediaRouteButton(): MediaRouteButton {

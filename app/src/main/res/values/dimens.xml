@@ -26,6 +26,7 @@
     <dimen name="image_viewer_peek_height">72dp</dimen>
     <dimen name="analysis_footnote">106dp</dimen>
     <dimen name="grid_view">106dp</dimen>
+    <dimen name="thirty_two_dp">32dp</dimen>
 
     <dimen name="eighteen_sp">18sp</dimen>
     <dimen name="twenty_four_sp">24sp</dimen>
@@ -38,6 +39,7 @@
     <dimen name="fastscroller_track_padding">3dp</dimen>
     <dimen name="minimal_row_size">72dp</dimen>
     <dimen name="minimal_icon_size">40dp</dimen>
+    <dimen name="mini_player_seekbar">44dp</dimen>
     <dimen name="minimal_icon_size_small">25dp</dimen>
     <dimen name="list_header_height">48dp</dimen>
     <dimen name="list_header_textsize">16sp</dimen>
