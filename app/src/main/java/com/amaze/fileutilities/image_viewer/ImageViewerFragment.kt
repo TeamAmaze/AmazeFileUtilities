@@ -539,6 +539,8 @@ class ImageViewerFragment : AbstractMediaFragment() {
             )
         if (activity is ImageViewerDialogActivity) {
             glide = glide.transform(RoundedCorners(24.px.toInt()))
+        } else {
+            glide = glide.addListener(paletteListener)
         }
         _binding?.let {
             glide.into(it.imageView)
@@ -548,7 +550,6 @@ class ImageViewerFragment : AbstractMediaFragment() {
                         resources.getDrawable(R.drawable.ic_outline_image_32)
                     )
                 )
-                .addListener(paletteListener)
                 .into(it.imageViewSmall)
         }
     }
@@ -590,6 +591,11 @@ class ImageViewerFragment : AbstractMediaFragment() {
                         PorterDuff.Mode.SRC_ATOP
                     )
                 }
+                _binding?.customToolbar?.customToolbarRoot?.background?.setColorFilter(
+                    resources.getColor(R.color.translucent_toolbar),
+                    PorterDuff.Mode.SRC_ATOP
+                )
+                _binding?.customToolbar?.customToolbarRoot?.invalidate()
                 return false
             }
 
@@ -627,6 +633,12 @@ class ImageViewerFragment : AbstractMediaFragment() {
                                         PorterDuff.Mode.SRC_ATOP
                                     )
                                 }
+                                _binding?.customToolbar?.customToolbarRoot?.background
+                                    ?.setColorFilter(
+                                        colorPair.first,
+                                        PorterDuff.Mode.SRC_ATOP
+                                    )
+                                _binding?.customToolbar?.customToolbarRoot?.invalidate()
                             }
                         }
                 }
