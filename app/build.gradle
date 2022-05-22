@@ -167,6 +167,7 @@ dependencies {
     implementation 'com.github.tony19:logback-android:2.0.0'
     implementation 'com.stephentuso:welcome:1.4.1'
     implementation("com.android.billingclient:billing:$billing_version")
+    implementation 'me.tankery.lib:circularSeekBar:1.4.0'
 
     //Detect memory leaks
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'

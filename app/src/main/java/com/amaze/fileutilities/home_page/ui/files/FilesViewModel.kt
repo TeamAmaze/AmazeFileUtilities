@@ -11,9 +11,12 @@
 package com.amaze.fileutilities.home_page.ui.files
 
 import android.app.Application
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.provider.Settings
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.*
+import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.*
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.home_page.ui.options.Billing
@@ -834,6 +837,18 @@ class FilesViewModel(val applicationContext: Application) :
                     }
                 }
             }
+        }
+    }
+
+    fun getPaletteColors(drawable: Drawable): LiveData<Pair<Int, Int>?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+            emit(null)
+            val bitmap = drawable.toBitmap()
+            val color = Utils.getColor(
+                Utils.generatePalette(bitmap),
+                R.color.navy_blue_alt_3
+            )
+            emit(color)
         }
     }
 
