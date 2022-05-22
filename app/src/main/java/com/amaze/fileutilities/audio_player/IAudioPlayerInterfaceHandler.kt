@@ -20,7 +20,6 @@ import android.os.CountDownTimer
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.LifecycleOwner
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.*
@@ -35,6 +34,7 @@ import com.google.android.material.slider.Slider
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
 import linc.com.amplituda.exceptions.io.FileNotFoundException
+import me.tankery.lib.circularseekbar.CircularSeekBar
 import org.slf4j.Logger
 import java.lang.ref.WeakReference
 import kotlin.math.ceil
@@ -42,6 +42,7 @@ import kotlin.math.ceil
 interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     fun getParentView(): View?
     fun getSeekbar(): Slider?
+    fun getSeekbarSmall(): CircularSeekBar?
     fun getWaveformSeekbar(): WaveformSeekBar?
     fun getTimeElapsedTextView(): TextView?
     fun getTrackLengthTextView(): TextView?
@@ -67,6 +68,13 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                 .coerceAtLeast(0.1f)
             seekbar.value = progressHandler.audioPlaybackInfo.currentPosition.toFloat()
                 .coerceAtMost(seekbar.valueTo)
+        }
+        getSeekbarSmall()?.let {
+            seekbar ->
+            seekbar.max = progressHandler.audioPlaybackInfo.duration.toFloat()
+                .coerceAtLeast(0.1f)
+            seekbar.progress = progressHandler.audioPlaybackInfo.currentPosition.toFloat()
+                .coerceAtMost(seekbar.max)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWaveformSeekbar()?.let {
@@ -105,38 +113,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                         .transform(CenterCrop(), RoundedCorners(80.px.toInt()))
                         .fallback(R.drawable.ic_outline_audio_file_32)
                         .placeholder(R.drawable.ic_outline_audio_file_32)
-                        .addListener(object : RequestListener<Drawable> {
-                            override fun onLoadFailed(
-                                e: GlideException?,
-                                model: Any?,
-                                target: Target<Drawable>?,
-                                isFirstResource: Boolean
-                            ): Boolean {
-                                // do nothing
-                                return false
-                            }
-
-                            override fun onResourceReady(
-                                resource: Drawable?,
-                                model: Any?,
-                                target: Target<Drawable>?,
-                                dataSource: DataSource?,
-                                isFirstResource: Boolean
-                            ): Boolean {
-                                resource?.let {
-                                    val bitmap = it.toBitmap()
-                                    val color = Utils.getColor(
-                                        Utils.generatePalette(bitmap),
-                                        R.color.navy_blue_alt_3
-                                    )
-                                    getParentView()?.background?.setColorFilter(
-                                        color,
-                                        PorterDuff.Mode.SRC_ATOP
-                                    )
-                                }
-                                return true
-                            }
-                        })
+                        .addListener(paletteListener)
                         .into(imageView)
                 }
                 getAlbumSmallImage()?.let {
@@ -163,38 +140,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                     .transform(CenterCrop(), RoundedCorners(80.px.toInt()))
                     .fallback(R.drawable.ic_outline_audio_file_32)
                     .placeholder(R.drawable.ic_outline_audio_file_32)
-                    .addListener(object : RequestListener<Drawable> {
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            // do nothing
-                            return false
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            resource?.let {
-                                val bitmap = it.toBitmap()
-                                val color = Utils.getColor(
-                                    Utils.generatePalette(bitmap),
-                                    R.color.navy_blue_alt_3
-                                )
-                                getParentView()?.background?.setColorFilter(
-                                    color,
-                                    PorterDuff.Mode.SRC_ATOP
-                                )
-                            }
-                            return true
-                        }
-                    })
+                    .addListener(paletteListener)
                     .into(imageView)
             }
             getAlbumSmallImage()?.let {
@@ -233,6 +179,49 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         }
         setupSeekBars(audioService)
     }
+
+    private val paletteListener: RequestListener<Drawable>
+        get() = object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                // do nothing
+                log.warn("failed to load album", e)
+                getContextWeakRef().get()?.resources?.getColor(R.color.navy_blue_alt_3)?.let {
+                    color ->
+                    getParentView()?.background?.setColorFilter(
+                        color,
+                        PorterDuff.Mode.SRC_ATOP
+                    )
+                }
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                resource?.let {
+                    getAudioPlayerHandlerViewModel().getPaletteColor(it)
+                        .observe(this@IAudioPlayerInterfaceHandler) {
+                            color ->
+                            if (color != null) {
+                                getParentView()?.background?.setColorFilter(
+                                    color,
+                                    PorterDuff.Mode.SRC_ATOP
+                                )
+                            }
+                        }
+                }
+                return false
+            }
+        }
 
     private fun setShuffleButton(doShuffle: Boolean) {
         getContextWeakRef().get()?.let {
@@ -310,12 +299,16 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         getSeekbar()?.value = progress.toFloat().coerceAtMost(
             getSeekbar()?.valueTo ?: 0f
         )
+        getSeekbarSmall()?.progress = progress.toFloat().coerceAtMost(
+            getSeekbarSmall()?.max ?: 0f
+        )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWaveformSeekbar()?.visibility = View.VISIBLE
             getSeekbar()?.visibility = View.GONE
             getWaveformSeekbar()?.progress = progress.toFloat()
         } else {
             getSeekbar()?.visibility = View.VISIBLE
+            getSeekbarSmall()?.visibility = View.VISIBLE
             getWaveformSeekbar()?.visibility = View.GONE
         }
     }
@@ -363,6 +356,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     private fun setupSeekBars(audioService: ServiceOperationCallback?) {
         val valueTo = audioService?.getAudioPlaybackInfo()?.duration?.toFloat()
         getSeekbar()?.valueTo = valueTo?.coerceAtLeast(0.1f) ?: 0f
+        getSeekbarSmall()?.max = valueTo?.coerceAtLeast(0.1f) ?: 0f
         getWaveformSeekbar()?.maxProgress = audioService
             ?.getAudioPlaybackInfo()?.duration?.toFloat() ?: 0f
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
@@ -385,6 +379,8 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                         } catch (e: Exception) {
                             getLogger().warn("waveform seekbar exception, force seekbar", e)
                             getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                            setupSeekBars(audioService)
+                            return
                         }
                     } else {
                         getAudioPlayerHandlerViewModel().forceShowSeekbar = true
@@ -420,6 +416,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             }
         } else {
             getSeekbar()?.visibility = View.VISIBLE
+            getSeekbarSmall()?.visibility = View.VISIBLE
             getWaveformSeekbar()?.visibility = View.GONE
         }
         getSeekbar()?.addOnChangeListener(

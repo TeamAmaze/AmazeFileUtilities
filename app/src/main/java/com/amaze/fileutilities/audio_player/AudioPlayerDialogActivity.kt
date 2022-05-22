@@ -26,6 +26,7 @@ import com.amaze.fileutilities.utilis.*
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.google.android.material.slider.Slider
 import com.masoudss.lib.WaveformSeekBar
+import me.tankery.lib.circularseekbar.CircularSeekBar
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.lang.ref.WeakReference
@@ -111,6 +112,10 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
 
     override fun getSeekbar(): Slider {
         return _binding.seekBar
+    }
+
+    override fun getSeekbarSmall(): CircularSeekBar? {
+        return null
     }
 
     override fun getWaveformSeekbar(): WaveformSeekBar {

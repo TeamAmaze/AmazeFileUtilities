@@ -85,7 +85,7 @@
                 app:srcCompat="@drawable/ic_outline_audio_file_32"
                 android:layout_gravity="center_vertical"
                 android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
+                android:layout_alignBottom="@+id/sheet_down_arrow"
                 />
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -96,7 +96,7 @@
                 android:layout_toRightOf="@id/album_image_small"
                 android:layout_toEndOf="@id/album_image_small"
                 android:layout_toLeftOf="@id/time_summary_small"
-                android:layout_toStartOf="@id/time_summary_small"
+                android:layout_alignBottom="@+id/sheet_down_arrow"
                 >
                 <TextView
                     android:id="@+id/title_small"
@@ -126,20 +126,42 @@
                 android:layout_marginRight="@dimen/material_generic"
                 android:layout_marginEnd="@dimen/material_generic"
                 android:gravity="center_vertical"
-                android:layout_toLeftOf="@id/play_button_small"
-                android:layout_toStartOf="@id/play_button_small"
+                android:layout_toLeftOf="@id/play_button_small_parent"
+                android:layout_toStartOf="@id/play_button_small_parent"
                 />
-            <ImageView
-                android:id="@+id/play_button_small"
-                app:srcCompat="@drawable/ic_round_pause_circle_32"
-                android:layout_width="@dimen/minimal_icon_size"
+            <RelativeLayout
+                android:id="@+id/play_button_small_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/material_generic"
-                android:layout_marginEnd="@dimen/material_generic"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                />
+                android:layout_alignParentRight="true">
+                <me.tankery.lib.circularseekbar.CircularSeekBar
+                    android:id="@+id/mini_player_seek_bar"
+                    android:layout_width="@dimen/mini_player_seekbar"
+                    android:layout_height="@dimen/mini_player_seekbar"
+                    android:layout_marginRight="@dimen/material_generic"
+                    android:layout_marginEnd="@dimen/material_generic"
+                    app:cs_negative_enabled="false"
+                    app:cs_circle_style="round"
+                    app:cs_circle_stroke_width="@dimen/four_dp"
+                    app:cs_pointer_stroke_width="@dimen/four_dp"
+                    app:cs_circle_progress_color="@color/yellow_dark"
+                    app:cs_circle_color="@color/highlight_yellow_50"
+                    app:cs_disable_pointer="true"
+                    />
+                <ImageView
+                    android:id="@+id/play_button_small"
+                    app:srcCompat="@drawable/ic_round_pause_32"
+                    android:layout_width="@dimen/thirty_two_dp"
+                    android:layout_height="@dimen/thirty_two_dp"
+                    android:layout_marginLeft="@dimen/six_dp"
+                    android:layout_marginStart="@dimen/six_dp"
+                    android:layout_marginTop="@dimen/six_dp"
+                    android:layout_marginBottom="@dimen/eight_dp"
+                    />
+            </RelativeLayout>
         </RelativeLayout>
         <LinearLayout
             android:id="@+id/bottomSheetBig"

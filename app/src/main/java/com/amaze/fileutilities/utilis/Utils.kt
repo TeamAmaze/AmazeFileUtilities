@@ -649,8 +649,24 @@ class Utils {
             return if (bitmap == null) null else Palette.from(bitmap).generate()
         }
 
+        const val PALETTE_DARKEN_INTENSITY_HIGH = 0.2f
+        const val PALETTE_DARKEN_INTENSITY_MEDIUM = 0.4f
+
         @ColorInt
-        fun getColor(palette: Palette?, fallback: Int): Int {
+        fun getColor(palette: Palette?, intensity: Float, fallback: Int): Int {
+            val toReturn = getPaletteColor(palette, fallback)
+            return shiftBackgroundColorForLightText(toReturn, intensity)
+        }
+
+        @ColorInt
+        fun getColor(palette: Palette?, fallback: Int): Pair<Int, Int> {
+            val toReturn = getPaletteColor(palette, fallback)
+            val light = shiftBackgroundColorForLightText(toReturn, PALETTE_DARKEN_INTENSITY_MEDIUM)
+            val dark = shiftBackgroundColorForLightText(toReturn, PALETTE_DARKEN_INTENSITY_HIGH)
+            return Pair(light, dark)
+        }
+
+        private fun getPaletteColor(palette: Palette?, fallback: Int): Int {
             var toReturn = fallback
             if (palette != null) {
                 if (palette.vibrantSwatch != null) {
@@ -671,13 +687,16 @@ class Utils {
                     }.rgb
                 }
             }
-            return shiftBackgroundColorForLightText(toReturn)
+            return toReturn
         }
 
-        private fun shiftBackgroundColorForLightText(@ColorInt backgroundColor: Int): Int {
+        private fun shiftBackgroundColorForLightText(
+            @ColorInt backgroundColor: Int,
+            intensity: Float
+        ): Int {
             var backgroundColor = backgroundColor
             while (isColorLight(backgroundColor)) {
-                backgroundColor = darkenColor(backgroundColor)
+                backgroundColor = darkenColor(backgroundColor, intensity)
             }
             return backgroundColor
         }
@@ -689,8 +708,9 @@ class Utils {
                 ) / 255.0
             return darkness < 0.7
         }
-        private fun darkenColor(@ColorInt color: Int): Int {
-            return shiftColor(color, 0.2f)
+
+        private fun darkenColor(@ColorInt color: Int, intensity: Float): Int {
+            return shiftColor(color, intensity)
         }
 
         private fun shiftColor(

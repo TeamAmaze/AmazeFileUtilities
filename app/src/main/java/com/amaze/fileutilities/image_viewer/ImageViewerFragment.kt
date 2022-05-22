@@ -11,12 +11,15 @@
 package com.amaze.fileutilities.image_viewer
 
 import android.content.Intent
+import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.format.Formatter
 import android.view.*
 import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.activityViewModels
 import com.amaze.fileutilities.R
@@ -29,7 +32,11 @@ import com.amaze.fileutilities.utilis.share.showEditImageDialog
 import com.amaze.fileutilities.utilis.share.showSetAsDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.drew.imaging.ImageMetadataReader
 import com.drew.metadata.exif.*
 import com.drew.metadata.file.FileSystemDirectory
@@ -162,7 +169,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
                     val gpsDescriptor = GpsDescriptor(gpsDirectory)
 
                     imageMetadataLayout.fileName.text =
-                        "${resources.getString(R.string.file_name)}: ${file.name}"
+                        "${resources.getString(R.string.file_name)}: \n${file.name}\n"
                     var widthAndHeight = ""
                     if (exifSubDirectory != null && descriptor != null) {
                         descriptor.exifImageWidthDescription.let {
@@ -183,16 +190,16 @@ class ImageViewerFragment : AbstractMediaFragment() {
                         }
                     }
                     imageMetadataLayout.fileSize.text =
-                        "${resources.getString(R.string.size)}: " +
+                        "${resources.getString(R.string.size)}: \n" +
                         "$widthAndHeight${Formatter.formatFileSize(
                             requireContext(),
                             file.length()
-                        )}"
+                        )}\n"
                     imageMetadataLayout.fileLastModified.text =
-                        "${resources.getString(R.string.date)}: " +
-                        "${Date(file.lastModified())}"
+                        "${resources.getString(R.string.date)}: \n" +
+                        "${Date(file.lastModified())}\n"
                     imageMetadataLayout.filePath.text =
-                        "${resources.getString(R.string.path)}: ${it.uri.path ?: file.path}"
+                        "${resources.getString(R.string.path)}: \n${it.uri.path ?: file.path}\n"
                     /*else if (fileSystemDirectory != null) {
                         viewBinding.imageMetadataLayout.fileName.text =
                             fileSystemDirectory.tags.toMutableList()[0].toString()
@@ -541,9 +548,91 @@ class ImageViewerFragment : AbstractMediaFragment() {
                         resources.getDrawable(R.drawable.ic_outline_image_32)
                     )
                 )
+                .addListener(paletteListener)
                 .into(it.imageViewSmall)
         }
     }
+
+    private val paletteListener: RequestListener<Drawable>
+        get() = object : RequestListener<Drawable> {
+            val metadataLayout = _binding?.imageMetadataLayout
+            val fileInfoParent = metadataLayout?.fileInfoParent
+            val lensInfoParent = metadataLayout?.lensInfoParent
+            val gpsInfoParent = metadataLayout?.gpsInfoParent
+
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                // do nothing
+                log.warn("failed to load image", e)
+                _binding?.layoutBottomSheet?.background?.setColorFilter(
+                    resources.getColor(R.color.navy_blue_alt_3),
+                    PorterDuff.Mode.SRC_ATOP
+                )
+                if (fileInfoParent?.isVisible == true) {
+                    fileInfoParent.background?.setColorFilter(
+                        resources.getColor(R.color.navy_blue_alt),
+                        PorterDuff.Mode.SRC_ATOP
+                    )
+                }
+                if (lensInfoParent?.isVisible == true) {
+                    lensInfoParent.background?.setColorFilter(
+                        resources.getColor(R.color.navy_blue_alt),
+                        PorterDuff.Mode.SRC_ATOP
+                    )
+                }
+                if (gpsInfoParent?.isVisible == true) {
+                    gpsInfoParent.background?.setColorFilter(
+                        resources.getColor(R.color.navy_blue_alt),
+                        PorterDuff.Mode.SRC_ATOP
+                    )
+                }
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                resource?.let {
+                    filesViewModel.getPaletteColors(it)
+                        .observe(this@ImageViewerFragment) {
+                            colorPair ->
+                            if (colorPair != null) {
+                                _binding?.layoutBottomSheet?.background?.setColorFilter(
+                                    colorPair.first,
+                                    PorterDuff.Mode.SRC_ATOP
+                                )
+                                if (fileInfoParent?.isVisible == true) {
+                                    fileInfoParent.background?.setColorFilter(
+                                        colorPair.second,
+                                        PorterDuff.Mode.SRC_ATOP
+                                    )
+                                }
+                                if (lensInfoParent?.isVisible == true) {
+                                    lensInfoParent.background?.setColorFilter(
+                                        colorPair.second,
+                                        PorterDuff.Mode.SRC_ATOP
+                                    )
+                                }
+                                if (gpsInfoParent?.isVisible == true) {
+                                    gpsInfoParent.background?.setColorFilter(
+                                        colorPair.second,
+                                        PorterDuff.Mode.SRC_ATOP
+                                    )
+                                }
+                            }
+                        }
+                }
+                return false
+            }
+        }
 
     private fun showImageProcessingText() {
 
