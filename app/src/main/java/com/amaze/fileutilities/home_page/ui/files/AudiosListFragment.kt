@@ -275,6 +275,10 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         return _binding?.albumImageSmall
     }
 
+    override fun getPlaybackPropertiesButton(): ImageView? {
+        return _binding?.playbackProperties
+    }
+
     override fun getContextWeakRef(): WeakReference<Context> {
         return try {
             WeakReference(requireContext())
@@ -286,6 +290,10 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
 
     override fun getAudioPlayerHandlerViewModel(): AudioPlayerInterfaceHandlerViewModel {
         return viewModel
+    }
+
+    override fun layoutInflater(): LayoutInflater {
+        return layoutInflater
     }
 
     override fun getLogger(): Logger {

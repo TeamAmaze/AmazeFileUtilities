@@ -15,6 +15,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.media.AudioManager
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -138,6 +139,10 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
         return viewModel
     }
 
+    override fun layoutInflater(): LayoutInflater {
+        return layoutInflater
+    }
+
     override fun getLogger(): Logger {
         return log
     }
@@ -179,6 +184,10 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
     }
 
     override fun getAlbumSmallImage(): ImageView? {
+        return null
+    }
+
+    override fun getPlaybackPropertiesButton(): ImageView? {
         return null
     }
 

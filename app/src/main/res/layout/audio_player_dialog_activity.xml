@@ -51,6 +51,43 @@
         android:gravity="center_horizontal"
         />
 
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/material_generic"
+        android:layout_marginBottom="@dimen/material_generic"
+        android:weightSum="1"
+        >
+        <ImageView
+            android:id="@+id/repeatButton"
+            android:layout_width="@dimen/minimal_icon_size_small"
+            android:layout_height="@dimen/minimal_icon_size_small"
+            app:srcCompat="@drawable/ic_round_repeat_24"
+            android:layout_marginRight="@dimen/material_generic"
+            android:layout_marginEnd="@dimen/material_generic"
+            android:layout_weight="0.33"
+            />
+        <ImageView
+            android:id="@+id/playbackProperties"
+            android:layout_width="@dimen/minimal_icon_size_small"
+            android:layout_height="@dimen/minimal_icon_size_small"
+            app:srcCompat="@drawable/ic_round_speed_32"
+            android:layout_marginRight="@dimen/material_generic"
+            android:layout_marginEnd="@dimen/material_generic"
+            android:layout_weight="0.33"
+            />
+        <ImageView
+            android:id="@+id/shuffleButton"
+            android:layout_width="@dimen/minimal_icon_size_small"
+            android:layout_height="@dimen/minimal_icon_size_small"
+            app:srcCompat="@drawable/ic_round_shuffle_24"
+            android:layout_marginRight="@dimen/material_generic"
+            android:layout_marginEnd="@dimen/material_generic"
+            android:layout_weight="0.33"
+            />
+    </LinearLayout>-->
     <LinearLayout
         android:id="@+id/seekbar_parent"
         android:layout_width="match_parent"

@@ -846,7 +846,8 @@ class FilesViewModel(val applicationContext: Application) :
             val bitmap = drawable.toBitmap()
             val color = Utils.getColor(
                 Utils.generatePalette(bitmap),
-                R.color.navy_blue_alt_3
+                applicationContext.resources.getColor(R.color.navy_blue_alt_3),
+                applicationContext.resources.getColor(R.color.navy_blue_alt)
             )
             emit(color)
         }

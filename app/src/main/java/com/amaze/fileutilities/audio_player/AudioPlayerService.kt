@@ -32,6 +32,7 @@ import com.amaze.fileutilities.utilis.*
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.PlaybackParameters
 import com.google.android.exoplayer2.audio.AudioAttributes
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -598,6 +599,15 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
 
     override fun invokePlayPausePlayer() {
         playMediaItem()
+    }
+
+    override fun invokePlaybackProperties(playbackSpeed: Float, pitch: Float) {
+        val param = PlaybackParameters(playbackSpeed, pitch)
+        exoPlayer?.playbackParameters = param
+    }
+
+    override fun getPlaybackParameters(): PlaybackParameters? {
+        return exoPlayer?.playbackParameters
     }
 
     override fun invokeSeekPlayer(position: Long) {

@@ -17,6 +17,7 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.CountDownTimer
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -56,8 +57,10 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     fun getRepeatButton(): ImageView?
     fun getAlbumImage(): ImageView?
     fun getAlbumSmallImage(): ImageView?
+    fun getPlaybackPropertiesButton(): ImageView?
     fun getContextWeakRef(): WeakReference<Context>
     fun getAudioPlayerHandlerViewModel(): AudioPlayerInterfaceHandlerViewModel
+    fun layoutInflater(): LayoutInflater
     fun getLogger(): Logger
 
     override fun onPositionUpdate(progressHandler: AudioProgressHandler) {
@@ -161,6 +164,26 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             getPlayButton()?.setOnClickListener {
                 audioService.invokePlayPausePlayer()
                 invalidateActionButtons(audioService.getAudioProgressHandlerCallback())
+            }
+            getPlaybackPropertiesButton()?.setOnClickListener {
+                getContextWeakRef().get()?.let {
+                    context ->
+                    val playbackParameters = audioService.getPlaybackParameters()
+                    Utils.showPlaybackPropertiesDialog(
+                        context,
+                        layoutInflater(),
+                        playbackParameters?.speed ?: 1f,
+                        playbackParameters?.pitch ?: 1f,
+                        {
+                            playbackSpeed, pitch ->
+                            audioService.invokePlaybackProperties(playbackSpeed, pitch)
+                            audioService.invokePlayPausePlayer()
+                        }, {
+                        audioService.invokePlayPausePlayer()
+                    }
+                    ).show()
+                    audioService.invokePlayPausePlayer()
+                }
             }
             getPrevButton()?.setOnClickListener {
                 getContextWeakRef()

@@ -422,4 +422,6 @@
     <string name="appearance">Appearance</string>
     <string name="appearance_summary">App appearance settings</string>
     <string name="general">General</string>
+    <string name="playback_properties">Playback properties</string>
+    <string name="apply">Apply</string>
 </resources>
