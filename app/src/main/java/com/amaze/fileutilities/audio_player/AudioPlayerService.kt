@@ -57,6 +57,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         const val REPEAT_ALL = 100
         const val REPEAT_SINGLE = 101
         const val REPEAT_NONE = 102
+        const val BACK_KEEP_PLAYING_THRESHOLD = 50000
         val REPEAT_ARRAY = arrayListOf(REPEAT_NONE, REPEAT_ALL, REPEAT_SINGLE)
 
         fun runService(uri: Uri, uriList: List<Uri>?, context: Context, action: String? = null) {
@@ -135,7 +136,8 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                         ACTION_NEXT -> {
                             uriList?.let {
                                 audioProgressHandler?.let { handler ->
-                                    if (handler.getPlayingIndex(false) < 0) {
+                                    val nextIndex = handler.getNextPlayingIndex()
+                                    if (nextIndex < 0) {
                                         // do nothing
                                         Toast.makeText(
                                             baseContext,
@@ -143,45 +145,39 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                                             Toast.LENGTH_LONG
                                         ).show()
                                         return super.onStartCommand(intent, flags, startId)
+                                    } else {
+                                        initCurrentUriAndPlayer(
+                                            it[nextIndex],
+                                            true
+                                        )
                                     }
-                                    if (handler
-                                        .getPlayingIndex(false) < it.size - 1
-                                    ) {
-                                        handler.playingIndex =
-                                            handler.getPlayingIndex(false) + 1
-                                    }
-                                    initCurrentUriAndPlayer(
-                                        it[
-                                            handler
-                                                .getPlayingIndex(false)
-                                        ],
-                                        true
-                                    )
                                 }
                             }
                         }
                         ACTION_PREVIOUS -> {
                             uriList?.let {
                                 audioProgressHandler?.let { handler ->
-                                    if (handler.getPlayingIndex(false) < 0) {
-                                        // do nothing
-                                        Toast.makeText(
-                                            baseContext, resources.getString(R.string.not_allowed),
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                        return super.onStartCommand(intent, flags, startId)
+                                    if (handler.audioPlaybackInfo.currentPosition
+                                        >= BACK_KEEP_PLAYING_THRESHOLD
+                                    ) {
+                                        exoPlayer?.seekTo(0)
+                                    } else {
+                                        val previousIndex = handler.getPreviousPlayingIndex()
+                                        if (previousIndex < 0) {
+                                            // do nothing
+                                            Toast.makeText(
+                                                baseContext,
+                                                resources.getString(R.string.not_allowed),
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                            return super.onStartCommand(intent, flags, startId)
+                                        } else {
+                                            initCurrentUriAndPlayer(
+                                                it[previousIndex],
+                                                true
+                                            )
+                                        }
                                     }
-                                    if (handler.getPlayingIndex(false) > 0) {
-                                        handler.playingIndex = handler
-                                            .getPlayingIndex(false) - 1
-                                    }
-                                    initCurrentUriAndPlayer(
-                                        it[
-                                            handler
-                                                .getPlayingIndex(false)
-                                        ],
-                                        true
-                                    )
                                 }
                             }
                         }
@@ -261,10 +257,18 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
             PreferencesConstants.DEFAULT_AUDIO_PLAYER_REPEAT_MODE
         )
         val audioPlaybackInfo = AudioPlaybackInfo.init(baseContext, uri)
-        audioProgressHandler = AudioProgressHandler(
-            false, uriList,
-            AudioProgressHandler.INDEX_UNDEFINED, audioPlaybackInfo, doShuffle, repeatMode
-        )
+        if (audioProgressHandler == null) {
+            audioProgressHandler = AudioProgressHandler(
+                false, uriList,
+                AudioProgressHandler.INDEX_UNDEFINED, audioPlaybackInfo, doShuffle, repeatMode
+            )
+        } else {
+            audioProgressHandler?.isCancelled = false
+            audioProgressHandler?.uriList = uriList
+            audioProgressHandler?.audioPlaybackInfo = audioPlaybackInfo
+            audioProgressHandler?.doShuffle = doShuffle
+            audioProgressHandler?.repeatMode = repeatMode
+        }
         audioProgressHandler!!.getPlayingIndex(true)
     }
 
@@ -372,7 +376,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                 .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, song.duration)
                 .putLong(
                     MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER,
-                    (audioProgressHandler.getPlayingIndex(false)).toLong()
+                    (audioProgressHandler.playingIndex).toLong()
                 )
                 .putLong(MediaMetadataCompat.METADATA_KEY_YEAR, song.year.toLong())
             val albumUri = AudioUtils.getMediaStoreAlbumCoverUri(song.albumId)
@@ -661,6 +665,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
             if (getShuffle()) {
                 if (!uriList.isNullOrEmpty()) {
                     val randomIdx = Utils.generateRandom(0, uriList!!.size - 1)
+                    audioProgressHandler.playingIndexStack.push(randomIdx)
                     runService(
                         uriList!![randomIdx],
                         uriList!!, applicationContext
