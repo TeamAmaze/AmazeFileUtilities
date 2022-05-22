@@ -37,6 +37,7 @@ import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewAnalysisAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
+import com.google.android.material.slider.Slider
 import com.google.common.io.ByteStreams
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
@@ -573,84 +574,85 @@ class Utils {
             return builder
         }
 
-        fun showPitchDialog(
+        fun showPlaybackPropertiesDialog(
             context: Context,
-            currentPitchIdx: Int,
-            positiveCallback: (pitch: Float) -> Unit,
-            negativeCallback: () -> Unit
+            layoutInflater: LayoutInflater,
+            defaultPlayback: Float,
+            defaultPitch: Float,
+            applyCallback: (Float, Float) -> Unit,
+            dismissCallback: () -> Unit
         ): AlertDialog.Builder {
-            val builder: AlertDialog.Builder = this.let {
-                AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
-            }
-            val items = arrayOf(
-                "0.25x", "0.50x", "0.75x",
-                "1.0x " +
-                    "(${context.getString(R.string.default_name)})",
-                "1.25x", "1.50x", "1.75x", "2.0x"
-            )
-            val itemsMap = mapOf(
-                Pair(-12f, -12),
-                Pair(-11f, -11),
-                Pair(-10f, 2),
-                Pair(-9f, 3),
-                Pair(-8f, 4),
-                Pair(-7f, 5),
-                Pair(-6f, 6),
-                Pair(-5f, 7),
-                Pair(-4f, 0),
-                Pair(-3f, 1),
-                Pair(-2f, 2),
-                Pair(-1f, 3),
-                Pair(0f, 4),
-                Pair(1f, 5),
-                Pair(1f, 6),
-                Pair(2f, 7),
-                Pair(3f, 4),
-                Pair(4f, 5),
-                Pair(5f, 6),
-                Pair(6f, 7),
-                Pair(7f, 0),
-                Pair(8f, 1),
-                Pair(9f, 2),
-                Pair(10f, 3),
-                Pair(11f, 4),
-                Pair(12f, 5),
-            )
-            val itemsArray = arrayOf(
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12
-            )
-//            val checkedItem = itemsMap[exoPlayer.playbackParameters.pitch] ?: 12
-            builder.setSingleChoiceItems(
-                itemsArray.map { it.toString() }.toTypedArray(), currentPitchIdx
-            ) { dialog, which ->
-                positiveCallback.invoke((which).toFloat())
-                dialog.dismiss()
-            }
-                .setTitle(R.string.pitch_speed)
+            val dialogBuilder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+                .setTitle(R.string.playback_properties)
                 .setNegativeButton(R.string.close) { dialog, _ ->
-                    negativeCallback.invoke()
+                    dismissCallback.invoke()
                     dialog.dismiss()
                 }
-            return builder
+            val dialogView: View = layoutInflater
+                .inflate(R.layout.playback_speed_pitch_dialog, null)
+            dialogBuilder.setView(dialogView)
+            val playbackSlider = dialogView.findViewById(R.id.playback_speed_slider) as Slider
+            val playbackValue = dialogView.findViewById<TextView>(R.id.playback_speed_value)
+            playbackSlider.valueFrom = 0.25f
+            playbackSlider.valueTo = 2.0f
+            playbackSlider.stepSize = 0.05f
+            playbackSlider.value = defaultPlayback
+            playbackValue.text = playbackSlider.value.toString()
+            playbackSlider.addOnChangeListener(
+                Slider.OnChangeListener { _, value, fromUser ->
+                    if (fromUser) {
+                        playbackValue.text = value.toString()
+                    }
+                }
+            )
+            val pitchSlider = dialogView.findViewById(R.id.pitch_slider) as Slider
+            val pitchValue = dialogView.findViewById<TextView>(R.id.pitch_value)
+            pitchSlider.valueFrom = 0.25f
+            pitchSlider.valueTo = 2.0f
+            pitchSlider.stepSize = 0.05f
+            pitchSlider.value = defaultPitch
+            pitchValue.text = pitchSlider.value.toString()
+            pitchSlider.addOnChangeListener(
+                Slider.OnChangeListener { _, value, fromUser ->
+                    if (fromUser) {
+                        pitchValue.text = value.toString()
+                    }
+                }
+            )
+            dialogBuilder.setPositiveButton(
+                R.string.apply
+            ) { dialog, _ ->
+                applyCallback.invoke(playbackSlider.value, pitchSlider.value)
+                dialog.dismiss()
+            }
+            return dialogBuilder
         }
 
         fun generatePalette(bitmap: Bitmap?): Palette? {
             return if (bitmap == null) null else Palette.from(bitmap).generate()
         }
 
+        const val PALETTE_DARKEN_INTENSITY_HIGH = 0.2f
+        const val PALETTE_DARKEN_INTENSITY_MEDIUM = 0.4f
+
         @ColorInt
-        fun getColor(palette: Palette?, fallback: Int): Int {
+        fun getColor(palette: Palette?, intensity: Float, fallback: Int): Int {
+            val toReturn = getPaletteColor(palette, fallback)
+            return shiftBackgroundColorForLightText(toReturn, intensity)
+        }
+
+        @ColorInt
+        fun getColor(palette: Palette?, fallback1: Int, fallback2: Int): Pair<Int, Int> {
+            val toReturn = getPaletteColor(palette, fallback1)
+            val light = shiftBackgroundColorForLightText(toReturn, PALETTE_DARKEN_INTENSITY_MEDIUM)
+            val dark = shiftBackgroundColorForLightText(toReturn, PALETTE_DARKEN_INTENSITY_HIGH)
+            if (light == dark || toReturn == fallback1) {
+                return Pair(fallback1, fallback2)
+            }
+            return Pair(light, dark)
+        }
+
+        private fun getPaletteColor(palette: Palette?, fallback: Int): Int {
             var toReturn = fallback
             if (palette != null) {
                 if (palette.vibrantSwatch != null) {
@@ -671,13 +673,16 @@ class Utils {
                     }.rgb
                 }
             }
-            return shiftBackgroundColorForLightText(toReturn)
+            return toReturn
         }
 
-        private fun shiftBackgroundColorForLightText(@ColorInt backgroundColor: Int): Int {
+        private fun shiftBackgroundColorForLightText(
+            @ColorInt backgroundColor: Int,
+            intensity: Float
+        ): Int {
             var backgroundColor = backgroundColor
             while (isColorLight(backgroundColor)) {
-                backgroundColor = darkenColor(backgroundColor)
+                backgroundColor = darkenColor(backgroundColor, intensity)
             }
             return backgroundColor
         }
@@ -689,8 +694,9 @@ class Utils {
                 ) / 255.0
             return darkness < 0.7
         }
-        private fun darkenColor(@ColorInt color: Int): Int {
-            return shiftColor(color, 0.2f)
+
+        private fun darkenColor(@ColorInt color: Int, intensity: Float): Int {
+            return shiftColor(color, intensity)
         }
 
         private fun shiftColor(

@@ -557,8 +557,24 @@ abstract class BaseVideoPlayerActivity :
                     R.id.info -> {
                         showInfoDialog()
                     }
-                    R.id.playback_speed -> {
-                        showPlaybackSpeedDialog()
+                    R.id.playback_properties -> {
+                        player?.pause()
+                        Utils.showPlaybackPropertiesDialog(
+                            this@BaseVideoPlayerActivity,
+                            layoutInflater,
+                            player?.playbackParameters?.speed ?: 1f,
+                            player?.playbackParameters?.pitch ?: 1f,
+                            {
+                                playbackSpeed, pitch ->
+                                val param = PlaybackParameters(playbackSpeed, pitch)
+                                player?.playbackParameters = param
+                                videoPlayerViewModel?.playbackSpeed = playbackSpeed
+                                videoPlayerViewModel?.pitchSpeed = pitch
+                                player?.play()
+                            }, {
+                            player?.play()
+                        }
+                        ).show()
                     }
                     R.id.subtitles -> {
                         showSubtitlePopup()
@@ -566,20 +582,6 @@ abstract class BaseVideoPlayerActivity :
                     R.id.share -> {
                         showShareDialog(mediaFile)
                     }
-                    /*R.id.pitch_speed -> {
-                        Utils.showPitchDialog(this@BaseVideoPlayerActivity,
-                            player?.playbackParameters?.pitch?.toInt() ?: 0, {
-                           pitch ->
-                                val speed = player?.playbackParameters?.speed ?: 1f
-                                val param = PlaybackParameters(speed, pitch)
-                                player?.playbackParameters = param
-                                videoPlayerViewModel?.pitchSpeed = pitch
-                        }, {
-
-                                player?.play()
-                        }).show()
-                        player?.pause()
-                    }*/
                 }
                 true
             }
@@ -733,49 +735,6 @@ abstract class BaseVideoPlayerActivity :
             item.setChecked(videoPlayerViewModel?.isSubtitleEnabled == true)
         }
         popupMenu.show()
-    }
-
-    private fun showPlaybackSpeedDialog() {
-        val builder: AlertDialog.Builder = this.let {
-            AlertDialog.Builder(it, R.style.Custom_Dialog_Dark)
-        }
-        val items = arrayOf(
-            "0.25x", "0.50x", "0.75x",
-            "1.0x " +
-                "(${resources.getString(R.string.default_name)})",
-            "1.25x", "1.50x", "1.75x", "2.0x"
-        )
-        val itemsMap = mapOf(
-            Pair(0.25f, 0),
-            Pair(0.50f, 1),
-            Pair(0.75f, 2),
-            Pair(1.0f, 3),
-            Pair(1.25f, 4),
-            Pair(1.50f, 5),
-            Pair(1.75f, 6),
-            Pair(2.0f, 7),
-        )
-        val checkedItem = itemsMap[player?.playbackParameters?.speed] ?: 3
-        builder.setSingleChoiceItems(
-            items, checkedItem
-        ) { dialog, which ->
-            for (i in itemsMap.entries) {
-                if (i.value == which) {
-                    val param = PlaybackParameters(i.key)
-                    player?.playbackParameters = param
-                    videoPlayerViewModel?.playbackSpeed = i.key
-                    break
-                }
-            }
-            player?.play()
-            dialog.dismiss()
-        }
-            .setTitle(R.string.playback_speed)
-            .setNegativeButton(R.string.close) { dialog, _ ->
-                player?.play()
-                dialog.dismiss()
-            }.show()
-        player?.pause()
     }
 
     private fun showInfoDialog() {
