@@ -12,8 +12,9 @@ package com.amaze.fileutilities.audio_player
 
 import android.net.Uri
 import com.amaze.fileutilities.utilis.PreferencesConstants
-import java.io.File
+import com.amaze.fileutilities.utilis.Utils
 import java.lang.ref.WeakReference
+import java.util.*
 
 data class AudioProgressHandler(
     var isCancelled: Boolean = false,
@@ -29,9 +30,49 @@ data class AudioProgressHandler(
         const val INDEX_NOT_FOUND = -1
     }
 
+    val playingIndexStack: Stack<Int> = Stack()
+
     fun getPlayingIndex(recalculate: Boolean): Int {
-        if (playingIndex == INDEX_UNDEFINED || recalculate) {
+        if (playingIndex < 0 || recalculate) {
             playingIndex = calculatePlayingIndex()
+        }
+        playingIndexStack.push(playingIndex)
+        return playingIndex
+    }
+
+    fun getNextPlayingIndex(): Int {
+        if (playingIndex < 0) {
+            playingIndex = calculatePlayingIndex()
+        }
+        if (playingIndex < 0) {
+            // recalculating didn't help, return
+            return playingIndex
+        }
+        if (doShuffle) {
+            playingIndex = Utils.generateRandom(0, uriList!!.size - 1)
+        } else {
+            // force repeat next on custom next press
+            if (!uriList.isNullOrEmpty()) {
+                if (playingIndex >= uriList!!.size - 1) {
+                    playingIndex = 0
+                } else {
+                    playingIndex++
+                }
+            }
+        }
+        return playingIndex
+    }
+
+    fun getPreviousPlayingIndex(): Int {
+        if (playingIndexStack.size > 1) {
+            // pop current extra
+            playingIndexStack.pop()
+            playingIndex = playingIndexStack.pop()
+        } else if (playingIndex > 0) {
+            if (playingIndexStack.size == 1) {
+                playingIndexStack.pop()
+            }
+            playingIndex--
         }
         return playingIndex
     }
@@ -40,12 +81,8 @@ data class AudioProgressHandler(
         if (uriList != null) {
             var index = 0
             for (uri in uriList!!) {
-                if (File(uri.path).name.equals(
-                        File(
-                                audioPlaybackInfo.audioModel
-                                    .getUri().path
-                            ).name
-                    )
+                if (audioPlaybackInfo.audioModel
+                    .getUri() == uri
                 ) {
                     return index
                 } else {
