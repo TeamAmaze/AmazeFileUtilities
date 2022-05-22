@@ -14,6 +14,7 @@ import android.content.ComponentName
 import android.content.ServiceConnection
 import android.os.IBinder
 import com.amaze.fileutilities.utilis.ObtainableServiceBinder
+import com.google.android.exoplayer2.PlaybackParameters
 import java.lang.ref.WeakReference
 
 class AudioPlaybackServiceConnection(private val activityRef: WeakReference<OnPlaybackInfoUpdate>) :
@@ -49,4 +50,6 @@ interface ServiceOperationCallback {
     fun cycleRepeat(): Int
     fun getShuffle(): Boolean
     fun getRepeat(): Int
+    fun invokePlaybackProperties(playbackSpeed: Float, pitch: Float): Unit
+    fun getPlaybackParameters(): PlaybackParameters?
 }

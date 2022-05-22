@@ -5,13 +5,9 @@
         android:title="@string/aspect_ratio"
         />-->
     <item
-        android:id="@+id/playback_speed"
-        android:title="@string/playback_speed"
+        android:id="@+id/playback_properties"
+        android:title="@string/playback_properties"
         />
-    <!--<item
-        android:id="@+id/pitch_speed"
-        android:title="@string/pitch_speed"
-        />-->
     <item
         android:id="@+id/subtitles"
         android:title="@string/subtitles"

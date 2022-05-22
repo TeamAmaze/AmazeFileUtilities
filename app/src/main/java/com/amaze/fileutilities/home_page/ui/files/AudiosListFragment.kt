@@ -33,6 +33,7 @@ import com.amaze.fileutilities.utilis.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.slider.Slider
 import com.masoudss.lib.WaveformSeekBar
+import me.tankery.lib.circularseekbar.CircularSeekBar
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -168,7 +169,7 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
             summarySmall.text = "${album.text} | ${artist.text}"
 
             audioService?.let {
-                playButtonSmall.setOnClickListener {
+                playButtonSmallParent.setOnClickListener {
                     audioService.invokePlayPausePlayer()
                     invalidateActionButtons(audioService.getAudioProgressHandlerCallback())
                 }
@@ -216,6 +217,10 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
 
     override fun getSeekbar(): Slider? {
         return _binding?.seekBar
+    }
+
+    override fun getSeekbarSmall(): CircularSeekBar? {
+        return _binding?.miniPlayerSeekBar
     }
 
     override fun getWaveformSeekbar(): WaveformSeekBar? {
@@ -270,6 +275,10 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         return _binding?.albumImageSmall
     }
 
+    override fun getPlaybackPropertiesButton(): ImageView? {
+        return _binding?.playbackProperties
+    }
+
     override fun getContextWeakRef(): WeakReference<Context> {
         return try {
             WeakReference(requireContext())
@@ -283,6 +292,10 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         return viewModel
     }
 
+    override fun layoutInflater(): LayoutInflater {
+        return layoutInflater
+    }
+
     override fun getLogger(): Logger {
         return log
     }
@@ -292,9 +305,9 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
             info ->
             _binding?.let {
                 if (progressHandler.isCancelled || !info.isPlaying) {
-                    binding.playButtonSmall.setImageResource(R.drawable.ic_round_play_circle_32)
+                    binding.playButtonSmall.setImageResource(R.drawable.ic_round_play_arrow_32)
                 } else {
-                    binding.playButtonSmall.setImageResource(R.drawable.ic_round_pause_circle_32)
+                    binding.playButtonSmall.setImageResource(R.drawable.ic_round_pause_32)
                 }
                 it.titleSmall.text = info.title
                 it.summarySmall.text = "${it.album.text} | ${it.artist.text}"

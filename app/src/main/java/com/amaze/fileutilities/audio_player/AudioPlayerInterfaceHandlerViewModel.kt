@@ -10,10 +10,12 @@
 
 package com.amaze.fileutilities.audio_player
 
+import android.graphics.drawable.Drawable
 import android.net.Uri
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.core.graphics.drawable.toBitmap
+import androidx.lifecycle.*
+import com.amaze.fileutilities.R
+import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getSiblingUriFiles
 import com.amaze.fileutilities.utilis.isAudioMimeType
 import kotlinx.coroutines.Dispatchers
@@ -70,6 +72,19 @@ class AudioPlayerInterfaceHandlerViewModel : ViewModel() {
                 }
                 siblingsLiveData.postValue(uriList)
             }
+        }
+    }
+
+    fun getPaletteColor(drawable: Drawable): LiveData<Int?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
+            emit(null)
+            val bitmap = drawable.toBitmap()
+            val color = Utils.getColor(
+                Utils.generatePalette(bitmap),
+                Utils.PALETTE_DARKEN_INTENSITY_HIGH,
+                R.color.navy_blue_alt_3
+            )
+            emit(color)
         }
     }
 }
