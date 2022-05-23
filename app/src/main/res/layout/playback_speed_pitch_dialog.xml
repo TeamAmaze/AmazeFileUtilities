@@ -37,15 +37,41 @@
         android:textColor="@color/white"
         android:layout_marginBottom="@dimen/material_generic"
         />
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/pitch_speed"
-        android:textSize="@dimen/eighteen_sp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pitch_speed"
+            android:textSize="@dimen/eighteen_sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="@dimen/material_generic"
+            android:layout_marginBottom="@dimen/material_generic"
+            />
+        <ImageView
+            android:id="@+id/pitch_hint"
+            android:layout_width="@dimen/material_generic"
+            android:layout_height="@dimen/material_generic"
+            android:src="@drawable/ic_outline_info_32"
+            android:layout_marginLeft="@dimen/eight_dp"
+            android:layout_gravity="center_vertical"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/pitch_hint_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pitch_hint_text"
+        android:textSize="@dimen/twelve_dp"
         android:textColor="@color/white"
-        android:layout_marginTop="@dimen/material_generic"
-        android:layout_marginBottom="@dimen/material_generic"
+        android:layout_marginTop="@dimen/eight_dp"
+        android:visibility="gone"
+        android:gravity="center_horizontal"
         />
+
     <com.google.android.material.slider.Slider
         android:id="@+id/pitch_slider"
         android:layout_width="match_parent"

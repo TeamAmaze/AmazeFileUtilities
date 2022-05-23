@@ -23,12 +23,14 @@ import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.core.view.isVisible
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.GridLayoutManager
 import com.amaze.fileutilities.BuildConfig
@@ -51,6 +53,7 @@ import java.math.BigInteger
 import java.net.InetAddress
 import java.net.UnknownHostException
 import java.nio.ByteOrder
+import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -588,6 +591,7 @@ class Utils {
                     dismissCallback.invoke()
                     dialog.dismiss()
                 }
+
             val dialogView: View = layoutInflater
                 .inflate(R.layout.playback_speed_pitch_dialog, null)
             dialogBuilder.setView(dialogView)
@@ -597,25 +601,50 @@ class Utils {
             playbackSlider.valueTo = 2.0f
             playbackSlider.stepSize = 0.05f
             playbackSlider.value = defaultPlayback
-            playbackValue.text = playbackSlider.value.toString()
+            playbackValue.text = playbackSlider.value.toString() + "x"
             playbackSlider.addOnChangeListener(
                 Slider.OnChangeListener { _, value, fromUser ->
                     if (fromUser) {
-                        playbackValue.text = value.toString()
+                        playbackValue.text = value.toString() + "x"
                     }
                 }
             )
             val pitchSlider = dialogView.findViewById(R.id.pitch_slider) as Slider
             val pitchValue = dialogView.findViewById<TextView>(R.id.pitch_value)
-            pitchSlider.valueFrom = 0.25f
-            pitchSlider.valueTo = 2.0f
-            pitchSlider.stepSize = 0.05f
+            val pitchHintImageView = dialogView.findViewById<ImageView>(R.id.pitch_hint)
+            val pitchHintTextView = dialogView.findViewById<TextView>(R.id.pitch_hint_text_view)
+            pitchHintImageView.setOnClickListener {
+                if (pitchHintTextView.isVisible) {
+                    pitchHintTextView.hideFade(300)
+                } else {
+                    pitchHintTextView.showFade(300)
+                }
+            }
+            pitchSlider.valueFrom = 0.28f
+            pitchSlider.valueTo = 1.72f
+            pitchSlider.stepSize = 0.03f
+            var pitchInputText = defaultPitch
+            if (pitchInputText < 1.0f) {
+                pitchInputText -= 1.0f
+            } else if (pitchInputText == 1.0f) {
+                pitchInputText = 0.0f
+            } else {
+                pitchInputText -= 1.0f
+            }
             pitchSlider.value = defaultPitch
-            pitchValue.text = pitchSlider.value.toString()
+            pitchValue.text = roundOffDecimal(pitchInputText / 0.06f)
             pitchSlider.addOnChangeListener(
                 Slider.OnChangeListener { _, value, fromUser ->
                     if (fromUser) {
-                        pitchValue.text = value.toString()
+                        pitchInputText = value
+                        if (pitchInputText < 1.0f) {
+                            pitchInputText -= 1.0f
+                        } else if (pitchInputText == 1.0f) {
+                            pitchInputText = 0.0f
+                        } else {
+                            pitchInputText -= 1.0f
+                        }
+                        pitchValue.text = roundOffDecimal(pitchInputText / 0.06f)
                     }
                 }
             )
@@ -625,7 +654,26 @@ class Utils {
                 applyCallback.invoke(playbackSlider.value, pitchSlider.value)
                 dialog.dismiss()
             }
+            dialogBuilder.setNeutralButton(
+                context.resources.getString(R.string.reset)
+            ) { _, _ ->
+                playbackSlider.value = 1.0f
+                playbackValue.text = playbackSlider.value.toString() + "x"
+
+                pitchSlider.value = 1.0f
+                pitchValue.text = roundOffDecimal(0f / 0.06f)
+            }
             return dialogBuilder
+        }
+
+        private fun getPitchFromSemitone(pitch: Float): Float {
+            return Math.pow(2.0, (pitch / 12).toDouble()).toFloat()
+        }
+
+        private fun roundOffDecimal(number: Float): String {
+            val df = DecimalFormat("#.#")
+//            df.roundingMode = RoundingMode.CEILING
+            return df.format(number).toString()
         }
 
         fun generatePalette(bitmap: Bitmap?): Palette? {
@@ -636,9 +684,14 @@ class Utils {
         const val PALETTE_DARKEN_INTENSITY_MEDIUM = 0.4f
 
         @ColorInt
-        fun getColor(palette: Palette?, intensity: Float, fallback: Int): Int {
+        fun getColorDark(palette: Palette?, fallback: Int): Int {
             val toReturn = getPaletteColor(palette, fallback)
-            return shiftBackgroundColorForLightText(toReturn, intensity)
+            val light = shiftBackgroundColorForLightText(toReturn, PALETTE_DARKEN_INTENSITY_MEDIUM)
+            val dark = shiftBackgroundColorForLightText(toReturn, PALETTE_DARKEN_INTENSITY_HIGH)
+            if (light == dark || toReturn == fallback) {
+                return fallback
+            }
+            return dark
         }
 
         @ColorInt

@@ -95,7 +95,8 @@
                 android:layout_marginStart="@dimen/material_generic"
                 android:layout_toRightOf="@id/album_image_small"
                 android:layout_toEndOf="@id/album_image_small"
-                android:layout_toLeftOf="@id/time_summary_small"
+                android:layout_toLeftOf="@id/play_button_small_parent"
+                android:layout_toStartOf="@id/play_button_small_parent"
                 android:layout_alignBottom="@+id/sheet_down_arrow"
                 >
                 <TextView
