@@ -35,6 +35,7 @@ class PreferencesConstants {
         const val KEY_RATE_APP_AUTOMATED = "rate_app_automated"
         const val KEY_INSTALL_DATE = "install_date"
         const val KEY_GRID_VIEW_COLUMN_COUNT = "grid_view_column_count"
+        const val KEY_PLAYBACK_SEMITONES = "playback_semitones"
 
         const val VAL_SEARCH_DUPLICATES_MEDIA_STORE = 0
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1
@@ -64,5 +65,6 @@ class PreferencesConstants {
         const val DEFAULT_AUDIO_PLAYER_WAVEFORM = true
         const val DEFAULT_SUBTITLE_LANGUAGE_CODE = "en"
         const val DEFAULT_GRID_VIEW_COLUMN_COUNT = 3
+        const val DEFAULT_PLAYBACK_SEMITONES = 0f
     }
 }

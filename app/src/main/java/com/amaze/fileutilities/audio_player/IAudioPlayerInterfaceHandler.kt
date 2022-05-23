@@ -169,11 +169,18 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                 getContextWeakRef().get()?.let {
                     context ->
                     val playbackParameters = audioService.getPlaybackParameters()
+                    // required because conversion from pitch to semitones doesn't match slider steps
+                    val defaultSemitones =
+                        context.getAppCommonSharedPreferences()
+                            .getFloat(
+                                PreferencesConstants.KEY_PLAYBACK_SEMITONES,
+                                PreferencesConstants.DEFAULT_PLAYBACK_SEMITONES
+                            )
                     Utils.showPlaybackPropertiesDialog(
                         context,
                         layoutInflater(),
                         playbackParameters?.speed ?: 1f,
-                        playbackParameters?.pitch ?: 1f,
+                        defaultSemitones,
                         {
                             playbackSpeed, pitch ->
                             audioService.invokePlaybackProperties(playbackSpeed, pitch)
