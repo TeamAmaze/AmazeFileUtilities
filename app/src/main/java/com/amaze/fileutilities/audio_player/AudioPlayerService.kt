@@ -523,6 +523,9 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
 
     private fun initializePlayer() {
         exoPlayer = ExoPlayer.Builder(this).build()
+        // reset playback parameter
+        getAppCommonSharedPreferences().edit()
+            .remove(PreferencesConstants.KEY_PLAYBACK_SEMITONES).apply()
     }
 
     private fun pausePlayer() {

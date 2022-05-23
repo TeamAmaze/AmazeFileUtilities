@@ -140,6 +140,9 @@ abstract class BaseVideoPlayerActivity :
             videoPlayerViewModel?.playbackPosition = pos
         }
         player = ExoPlayer.Builder(this).build()
+        // reset playback properties
+        getAppCommonSharedPreferences().edit()
+            .remove(PreferencesConstants.KEY_PLAYBACK_SEMITONES).apply()
         viewBinding.videoView.player = player
         initMediaItem()
         initializePlayer()
@@ -559,11 +562,18 @@ abstract class BaseVideoPlayerActivity :
                     }
                     R.id.playback_properties -> {
                         player?.pause()
+                        // required because conversion from pitch to semitones doesn't match slider steps
+                        val defaultSemitones =
+                            getAppCommonSharedPreferences()
+                                .getFloat(
+                                    PreferencesConstants.KEY_PLAYBACK_SEMITONES,
+                                    PreferencesConstants.DEFAULT_PLAYBACK_SEMITONES
+                                )
                         Utils.showPlaybackPropertiesDialog(
                             this@BaseVideoPlayerActivity,
                             layoutInflater,
                             player?.playbackParameters?.speed ?: 1f,
-                            player?.playbackParameters?.pitch ?: 1f,
+                            defaultSemitones,
                             {
                                 playbackSpeed, pitch ->
                                 val param = PlaybackParameters(playbackSpeed, pitch)
