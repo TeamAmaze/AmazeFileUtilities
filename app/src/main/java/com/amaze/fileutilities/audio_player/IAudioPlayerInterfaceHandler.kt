@@ -230,18 +230,25 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                 dataSource: DataSource?,
                 isFirstResource: Boolean
             ): Boolean {
-                resource?.let {
-                    getAudioPlayerHandlerViewModel().getPaletteColor(it)
-                        .observe(this@IAudioPlayerInterfaceHandler) {
-                            color ->
-                            if (color != null) {
-                                getParentView()?.background?.setColorFilter(
-                                    color,
-                                    PorterDuff.Mode.SRC_ATOP
-                                )
+                getContextWeakRef().get()?.let {
+                    context ->
+                    resource?.let {
+                        getAudioPlayerHandlerViewModel().getPaletteColor(
+                            it,
+                            context.getColor(R.color.navy_blue_alt_3)
+                        )
+                            .observe(this@IAudioPlayerInterfaceHandler) {
+                                color ->
+                                if (color != null) {
+                                    getParentView()?.background?.setColorFilter(
+                                        color,
+                                        PorterDuff.Mode.SRC_ATOP
+                                    )
+                                }
                             }
-                        }
+                    }
                 }
+
                 return false
             }
         }

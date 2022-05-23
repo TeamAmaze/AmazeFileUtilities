@@ -46,9 +46,9 @@ class AudioPlayerNotificationImpl : AudioPlayerNotification() {
             bitmap ->
             notificationLayoutBig.setImageViewBitmap(R.id.album_image, bitmap)
             notificationLayout.setImageViewBitmap(R.id.album_image, bitmap)
-            val color = Utils.getColor(
-                Utils.generatePalette(bitmap), Utils.PALETTE_DARKEN_INTENSITY_HIGH,
-                R.color.navy_blue_alt_3
+            val color = Utils.getColorDark(
+                Utils.generatePalette(bitmap),
+                service.resources.getColor(R.color.navy_blue_alt_3)
             )
             notificationLayout.setInt(R.id.root, "setBackgroundColor", color)
             notificationLayoutBig.setInt(R.id.root, "setBackgroundColor", color)
