@@ -3,8 +3,9 @@
     <string name="app_name_launcher">Amaze Utilities</string>
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.45</string>
+    <string name="app_version" translatable="false">v1.46</string>
     <string name="image_viewer">Amaze Image Viewer</string>
+    <string name="image_viewer_normal">Image Viewer</string>
     <string name="video_player">Amaze Video Player</string>
     <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
     <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
@@ -156,6 +157,7 @@
     <string name="exclusions_summary">Paths to exclude while scanning media</string>
     <string name="audio_player">Audio Player</string>
     <string name="audio_player_hint">Control audio player settings such as paths to exclude</string>
+    <string name="image_viewer_hint">Control image viewer settings</string>
     <string name="search_duplicates">Search duplicates in…</string>
     <string name="media_store">Android media store (fastest)</string>
     <string name="internal_storage_shallow">Internal Storage (Shallow / slow)</string>
@@ -426,4 +428,8 @@
     <string name="apply">Apply</string>
     <string name="pitch_hint_text">A value of zero means that the key is not changed.\nOne full step corresponds to one semitone.\nA change of -12 semitones means that the song is played one octave lower.</string>
     <string name="reset">Reset</string>
+    <string name="audio_player_enable_palette">Extract palette color from album</string>
+    <string name="audio_player_enable_palette_summary">Sets background color for audio player</string>
+    <string name="image_viewer_enable_palette">Extract palette color from image</string>
+    <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
 </resources>
