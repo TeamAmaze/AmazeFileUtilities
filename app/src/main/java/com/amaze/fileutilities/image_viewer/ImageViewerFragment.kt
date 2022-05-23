@@ -540,7 +540,14 @@ class ImageViewerFragment : AbstractMediaFragment() {
         if (activity is ImageViewerDialogActivity) {
             glide = glide.transform(RoundedCorners(24.px.toInt()))
         } else {
-            glide = glide.addListener(paletteListener)
+            val paletteEnabled = requireContext().getAppCommonSharedPreferences()
+                .getBoolean(
+                    PreferencesConstants.KEY_ENABLE_IMAGE_PALETTE,
+                    PreferencesConstants.DEFAULT_PALETTE_EXTRACT
+                )
+            if (paletteEnabled) {
+                glide = glide.addListener(paletteListener)
+            }
         }
         _binding?.let {
             glide.into(it.imageView)

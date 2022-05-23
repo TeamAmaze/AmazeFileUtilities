@@ -10,4 +10,10 @@
         app:title="@string/enable_waveform"
         app:defaultValue="true"
         />
+    <CheckBoxPreference
+        app:key="pref_audio_enable_palette"
+        app:title="@string/audio_player_enable_palette"
+        app:summary="@string/audio_player_enable_palette_summary"
+        app:defaultValue="true"
+        />
 </PreferenceScreen>
