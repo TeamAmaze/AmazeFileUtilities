@@ -36,6 +36,8 @@ class PreferencesConstants {
         const val KEY_INSTALL_DATE = "install_date"
         const val KEY_GRID_VIEW_COLUMN_COUNT = "grid_view_column_count"
         const val KEY_PLAYBACK_SEMITONES = "playback_semitones"
+        const val KEY_ENABLE_AUDIO_PALETTE = "pref_audio_enable_palette"
+        const val KEY_ENABLE_IMAGE_PALETTE = "pref_image_enable_palette"
 
         const val VAL_SEARCH_DUPLICATES_MEDIA_STORE = 0
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1
@@ -66,5 +68,6 @@ class PreferencesConstants {
         const val DEFAULT_SUBTITLE_LANGUAGE_CODE = "en"
         const val DEFAULT_GRID_VIEW_COLUMN_COUNT = 3
         const val DEFAULT_PLAYBACK_SEMITONES = 0f
+        const val DEFAULT_PALETTE_EXTRACT = true
     }
 }
