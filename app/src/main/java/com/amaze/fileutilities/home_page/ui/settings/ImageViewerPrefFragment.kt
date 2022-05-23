@@ -19,55 +19,38 @@ import androidx.preference.CheckBoxPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.amaze.fileutilities.R
-import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 
-class AudioPlayerPrefFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener {
+class ImageViewerPrefFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener {
 
     private lateinit var sharedPrefs: SharedPreferences
 
     companion object {
-        private const val KEY_EXCLUSIONS = "exclusion_audio_player"
-        private const val KEY_ENABLE_WAVEFORM = "pref_enable_waveform"
-        private const val KEY_ENABLE_PALETTE = "pref_audio_enable_palette"
-        private val KEYS = listOf(KEY_EXCLUSIONS)
+        private const val KEY_ENABLE_PALETTE = "pref_image_enable_palette"
+        private val KEYS = emptyList<String>()
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         // Load the preferences from an XML resource
-        addPreferencesFromResource(R.xml.audio_player_prefs)
+        addPreferencesFromResource(R.xml.image_viewer_prefs)
         sharedPrefs = requireContext().getAppCommonSharedPreferences()
         KEYS.forEach {
             findPreference<Preference>(it)?.onPreferenceClickListener = this
         }
-        val enableWaveformChange = Preference.OnPreferenceChangeListener { pref, newValue ->
-            sharedPrefs.edit().putBoolean(
-                PreferencesConstants.KEY_ENABLE_WAVEFORM, newValue as Boolean
-            ).apply()
-            true
-        }
         val enablePaletteChange = Preference.OnPreferenceChangeListener { pref, newValue ->
             sharedPrefs.edit().putBoolean(
-                PreferencesConstants.KEY_ENABLE_AUDIO_PALETTE, newValue as Boolean
+                PreferencesConstants.KEY_ENABLE_IMAGE_PALETTE, newValue as Boolean
             ).apply()
             PreferencesConstants.DEFAULT_PALETTE_EXTRACT
         }
-        val waveformCheckbox = findPreference<CheckBoxPreference>(KEY_ENABLE_WAVEFORM)
-        waveformCheckbox?.setDefaultValue(
-            sharedPrefs.getBoolean(
-                PreferencesConstants.KEY_ENABLE_WAVEFORM,
-                PreferencesConstants.DEFAULT_AUDIO_PLAYER_WAVEFORM
-            )
-        )
         val paletteCheckbox = findPreference<CheckBoxPreference>(KEY_ENABLE_PALETTE)
         paletteCheckbox?.setDefaultValue(
             sharedPrefs.getBoolean(
-                PreferencesConstants.KEY_ENABLE_AUDIO_PALETTE,
+                PreferencesConstants.KEY_ENABLE_IMAGE_PALETTE,
                 PreferencesConstants.DEFAULT_PALETTE_EXTRACT
             )
         )
-        waveformCheckbox?.onPreferenceChangeListener = enableWaveformChange
         paletteCheckbox?.onPreferenceChangeListener = enablePaletteChange
     }
 
@@ -83,12 +66,6 @@ class AudioPlayerPrefFragment : PreferenceFragmentCompat(), Preference.OnPrefere
 
     override fun onPreferenceClick(preference: Preference): Boolean {
         when (preference.key) {
-            KEY_EXCLUSIONS -> {
-                (activity as PreferenceActivity).inflatePreferenceFragment(
-                    PathPreferencesFragment.newInstance(PathPreferences.FEATURE_AUDIO_PLAYER),
-                    R.string.audio_player
-                )
-            }
         }
         return true
     }

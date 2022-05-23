@@ -24,7 +24,8 @@ class PreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferenceCl
         private const val KEY_APPEARANCE = "appearance"
         private const val KEY_ANALYSIS = "analysis"
         private const val KEY_AUDIO_PLAYER = "audio_player"
-        private val KEYS = listOf(KEY_APPEARANCE, KEY_ANALYSIS, KEY_AUDIO_PLAYER)
+        private const val KEY_IMAGE_VIEWER = "image_viewer"
+        private val KEYS = listOf(KEY_APPEARANCE, KEY_ANALYSIS, KEY_AUDIO_PLAYER, KEY_IMAGE_VIEWER)
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -62,6 +63,13 @@ class PreferenceFragment : PreferenceFragmentCompat(), Preference.OnPreferenceCl
             KEY_AUDIO_PLAYER -> {
                 (activity as PreferenceActivity)
                     .inflatePreferenceFragment(AudioPlayerPrefFragment(), R.string.audio_player)
+            }
+            KEY_IMAGE_VIEWER -> {
+                (activity as PreferenceActivity)
+                    .inflatePreferenceFragment(
+                        ImageViewerPrefFragment(),
+                        R.string.image_viewer_normal
+                    )
             }
         }
         return true

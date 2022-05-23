@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <CheckBoxPreference
+        app:key="pref_image_enable_palette"
+        app:title="@string/image_viewer_enable_palette"
+        app:summary="@string/image_viewer_enable_palette_summary"
+        app:defaultValue="true"
+        />
+</PreferenceScreen>

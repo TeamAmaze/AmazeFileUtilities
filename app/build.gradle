@@ -33,8 +33,8 @@ android {
         applicationId "com.amaze.fileutilities"
         minSdk 19
         targetSdk 30
-        versionCode 46
-        versionName "1.45"
+        versionCode 47
+        versionName "1.46"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
