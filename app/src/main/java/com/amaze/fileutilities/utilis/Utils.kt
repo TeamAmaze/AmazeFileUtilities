@@ -56,6 +56,8 @@ import java.nio.ByteOrder
 import java.text.DecimalFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.math.ln
+import kotlin.math.pow
 
 class Utils {
 
@@ -620,60 +622,57 @@ class Utils {
                     pitchHintTextView.showFade(300)
                 }
             }
-            pitchSlider.valueFrom = 0.28f
-            pitchSlider.valueTo = 1.72f
-            pitchSlider.stepSize = 0.03f
-            var pitchInputText = defaultPitch
-            if (pitchInputText < 1.0f) {
-                pitchInputText -= 1.0f
-            } else if (pitchInputText == 1.0f) {
-                pitchInputText = 0.0f
-            } else {
-                pitchInputText -= 1.0f
-            }
+            pitchSlider.valueFrom = -12f
+            pitchSlider.valueTo = 12f
+            pitchSlider.stepSize = 0.5f
+
             pitchSlider.value = defaultPitch
-            pitchValue.text = roundOffDecimal(pitchInputText / 0.06f)
+            pitchValue.text = roundOffDecimal(pitchSlider.value)
             pitchSlider.addOnChangeListener(
                 Slider.OnChangeListener { _, value, fromUser ->
                     if (fromUser) {
-                        pitchInputText = value
-                        if (pitchInputText < 1.0f) {
-                            pitchInputText -= 1.0f
-                        } else if (pitchInputText == 1.0f) {
-                            pitchInputText = 0.0f
-                        } else {
-                            pitchInputText -= 1.0f
-                        }
-                        pitchValue.text = roundOffDecimal(pitchInputText / 0.06f)
+                        pitchValue.text = pitchSlider.value.toString()
                     }
                 }
             )
             dialogBuilder.setPositiveButton(
                 R.string.apply
             ) { dialog, _ ->
-                applyCallback.invoke(playbackSlider.value, pitchSlider.value)
+                context.getAppCommonSharedPreferences().edit()
+                    .putFloat(
+                        PreferencesConstants.KEY_PLAYBACK_SEMITONES,
+                        pitchSlider.value
+                    ).apply()
+                applyCallback.invoke(playbackSlider.value, fromSemitoneToPitch(pitchSlider.value))
                 dialog.dismiss()
             }
             dialogBuilder.setNeutralButton(
                 context.resources.getString(R.string.reset)
-            ) { _, _ ->
+            ) { dialog, _ ->
                 playbackSlider.value = 1.0f
-                playbackValue.text = playbackSlider.value.toString() + "x"
-
-                pitchSlider.value = 1.0f
-                pitchValue.text = roundOffDecimal(0f / 0.06f)
+//                playbackValue.text = playbackSlider.value.toString() + "x"
+                context.getAppCommonSharedPreferences().edit()
+                    .remove(PreferencesConstants.KEY_PLAYBACK_SEMITONES).apply()
+                pitchSlider.value = 0f
+//                pitchValue.text = roundOffDecimal(0f / 0.06f)
+                applyCallback.invoke(playbackSlider.value, fromSemitoneToPitch(pitchSlider.value))
+                dialog.dismiss()
             }
             return dialogBuilder
         }
 
-        private fun getPitchFromSemitone(pitch: Float): Float {
-            return Math.pow(2.0, (pitch / 12).toDouble()).toFloat()
+        private fun fromSemitoneToPitch(semitone: Float): Float {
+            return 2.0.pow((semitone / 12).toDouble()).toFloat()
+        }
+
+        private fun fromPitchToSemitone(pitch: Float): Float {
+            return (ln(pitch.toDouble()) * 12).toFloat()
         }
 
         private fun roundOffDecimal(number: Float): String {
             val df = DecimalFormat("#.#")
 //            df.roundingMode = RoundingMode.CEILING
-            return df.format(number).toString()
+            return df.format(number)
         }
 
         fun generatePalette(bitmap: Bitmap?): Palette? {
