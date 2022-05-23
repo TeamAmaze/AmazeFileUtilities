@@ -14,6 +14,12 @@
         app:icon="@drawable/ic_pref_analysis"
         />
     <Preference
+        app:key="image_viewer"
+        app:title="@string/image_viewer_normal"
+        android:summary="@string/image_viewer_hint"
+        app:icon="@drawable/ic_header_image"
+        />
+    <Preference
         app:key="audio_player"
         app:title="@string/audio_player"
         android:summary="@string/audio_player_hint"
