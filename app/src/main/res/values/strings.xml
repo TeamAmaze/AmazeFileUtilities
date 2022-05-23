@@ -3,7 +3,7 @@
     <string name="app_name_launcher">Amaze Utilities</string>
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.43</string>
+    <string name="app_version" translatable="false">v1.44</string>
     <string name="image_viewer">Amaze Image Viewer</string>
     <string name="video_player">Amaze Video Player</string>
     <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
@@ -229,7 +229,7 @@
     <string name="connecting">Connecting…</string>
     <string name="aspect_ratio">Aspect ratio</string>
     <string name="playback_speed">Playback Speed</string>
-    <string name="pitch_speed">Pitch speed</string>
+    <string name="pitch_speed">Pitch (semitones)</string>
     <string name="subtitles">Subtitles</string>
     <string name="file">File</string>
     <string name="media">Media</string>
@@ -424,4 +424,6 @@
     <string name="general">General</string>
     <string name="playback_properties">Playback properties</string>
     <string name="apply">Apply</string>
+    <string name="pitch_hint_text">A value of zero means that the key is not changed.\nOne full step corresponds to one semitone.\nA change of -12 semitones means that the song is played one octave lower.</string>
+    <string name="reset">Reset</string>
 </resources>

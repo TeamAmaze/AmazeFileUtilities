@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape
+            android:shape="rectangle">
+            <corners
+                android:topLeftRadius="@dimen/twenty_four_dp"
+                android:topRightRadius="@dimen/twenty_four_dp"
+                android:bottomLeftRadius="@dimen/twenty_four_dp"
+                android:bottomRightRadius="@dimen/twenty_four_dp"
+                />
+            <solid android:color="@color/navy_blue_alt_90" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/ripple_curved_24" />
+</layer-list>
