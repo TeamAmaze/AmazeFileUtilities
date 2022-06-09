@@ -20,7 +20,6 @@ import android.graphics.Point
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -31,6 +30,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.FileProvider
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
@@ -992,7 +992,11 @@ abstract class BaseVideoPlayerActivity :
                 val srtFile = File(srt)
                 if (srtFile.exists()) {
                     log.info("Found srt file with name $srt")
-                    val subtitleConfig = SubtitleConfiguration.Builder(Uri.fromFile(srtFile))
+                    val uri = FileProvider.getUriForFile(
+                        applicationContext,
+                        applicationContext.packageName, srtFile
+                    )
+                    val subtitleConfig = SubtitleConfiguration.Builder(uri)
                         .setMimeType(MimeTypes.APPLICATION_SUBRIP)
                         // The correct MIME type (required).
                         .setSelectionFlags(C.SELECTION_FLAG_DEFAULT)

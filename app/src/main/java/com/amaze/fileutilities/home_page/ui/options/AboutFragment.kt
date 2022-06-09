@@ -43,12 +43,13 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
         private const val KEY_LOGS = "share_logs"
         private const val KEY_DEVICE_ID = "device_id"
         private const val KEY_CONTACT = "contact"
+        private const val KEY_TRANSLATE = "translate"
         private const val KEY_OPEN_SOURCE = "open_source"
         private const val KEY_SUBSCRIPTION_STATUS = "subscription_status"
         private val KEYS = listOf(
             KEY_VERSION,
             KEY_ABOUT, KEY_LICENSE, KEY_PRIVACY_POLICY, KEY_SUBMIT_ISSUE, KEY_LOGS, KEY_DEVICE_ID,
-            KEY_CONTACT, KEY_OPEN_SOURCE, KEY_SUBSCRIPTION_STATUS
+            KEY_CONTACT, KEY_TRANSLATE, KEY_OPEN_SOURCE, KEY_SUBSCRIPTION_STATUS
         )
     }
 
@@ -148,6 +149,9 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
             }
             KEY_CONTACT -> {
                 Utils.openTelegramURL(requireContext())
+            }
+            KEY_TRANSLATE -> {
+                Utils.openTranslateURL(this.requireContext())
             }
             KEY_OPEN_SOURCE -> {
                 val libsBuilder = LibsBuilder()
