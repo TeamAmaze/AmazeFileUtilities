@@ -3,7 +3,7 @@
     <string name="app_name_launcher">Amaze Utilities</string>
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.46</string>
+    <string name="app_version" translatable="false">v1.47</string>
     <string name="image_viewer">Amaze Image Viewer</string>
     <string name="image_viewer_normal">Image Viewer</string>
     <string name="video_player">Amaze Video Player</string>
@@ -329,6 +329,8 @@
     <string name="license">License</string>
     <string name="submit_issue">Submit Issue</string>
     <string name="contact_us">Contact Us</string>
+    <string name="translate_title">Translate</string>
+    <string name="translate_summary">Translate Amaze in your language</string>
     <string name="about_app_title">About app</string>
     <string name="made_in_india">Made with ❤ in India</string>
     <string name="trial_started_title">Trial started (%s days)</string>

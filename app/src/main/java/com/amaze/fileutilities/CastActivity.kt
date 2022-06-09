@@ -33,7 +33,6 @@ import com.google.android.gms.cast.MediaMetadata
 import com.google.android.gms.cast.framework.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.File
 import java.lang.ref.WeakReference
 
 abstract class CastActivity :
@@ -262,69 +261,72 @@ abstract class CastActivity :
         submitStreamSrc(mediaFileInfo)
         getFilesModel().wifiIpAddress?.let {
             ipAddress ->
-            val uri = Uri.parse(
-                "http://$ipAddress:${CloudStreamer.PORT}" +
-                    "${Uri.fromFile(File(mediaFileInfo.path)).encodedPath}"
-            )
-            val metadata: MediaMetadata
-            var mediaInfo: MediaInfo? = null
-            when (mediaType) {
-                MediaFileAdapter.MEDIA_TYPE_IMAGES -> {
-                    metadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_PHOTO)
-                    metadata.putString(MediaMetadata.KEY_TITLE, mediaFileInfo.title)
-                    metadata.putString(MediaMetadata.KEY_SUBTITLE, mediaFileInfo.path)
+            mediaFileInfo.getContentUri(this)?.let {
+                mediaFileUri ->
+                val uri = Uri.parse(
+                    "http://$ipAddress:${CloudStreamer.PORT}" +
+                        "${mediaFileUri.encodedPath}"
+                )
+                val metadata: MediaMetadata
+                var mediaInfo: MediaInfo? = null
+                when (mediaType) {
+                    MediaFileAdapter.MEDIA_TYPE_IMAGES -> {
+                        metadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_PHOTO)
+                        metadata.putString(MediaMetadata.KEY_TITLE, mediaFileInfo.title)
+                        metadata.putString(MediaMetadata.KEY_SUBTITLE, mediaFileInfo.path)
 
-                    mediaInfo = MediaInfo.Builder(uri.toString())
-                        .setStreamType(MediaInfo.STREAM_TYPE_NONE)
-                        .setMetadata(metadata)
-                        .setContentType(MimeTypes.IMAGE_JPEG)
-                        .build()
-                }
-                MediaFileAdapter.MEDIA_TYPE_AUDIO -> {
-                    metadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK)
-                    metadata.putString(MediaMetadata.KEY_TITLE, mediaFileInfo.title)
-                    metadata.putString(MediaMetadata.KEY_SUBTITLE, mediaFileInfo.path)
+                        mediaInfo = MediaInfo.Builder(uri.toString())
+                            .setStreamType(MediaInfo.STREAM_TYPE_NONE)
+                            .setMetadata(metadata)
+                            .setContentType(MimeTypes.IMAGE_JPEG)
+                            .build()
+                    }
+                    MediaFileAdapter.MEDIA_TYPE_AUDIO -> {
+                        metadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MUSIC_TRACK)
+                        metadata.putString(MediaMetadata.KEY_TITLE, mediaFileInfo.title)
+                        metadata.putString(MediaMetadata.KEY_SUBTITLE, mediaFileInfo.path)
 //                    metadata.addImage(WebImage(Uri.fromFile()))
-                    val duration = mediaFileInfo.extraInfo?.audioMetaData?.duration ?: 0
+                        val duration = mediaFileInfo.extraInfo?.audioMetaData?.duration ?: 0
 
-                    mediaInfo = MediaInfo.Builder(uri.toString())
-                        .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
-                        .setMetadata(metadata)
+                        mediaInfo = MediaInfo.Builder(uri.toString())
+                            .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+                            .setMetadata(metadata)
 //                        .setStreamDuration(duration)
-                        .setContentType(MimeTypes.BASE_TYPE_AUDIO)
-                        .build()
-                }
-                MediaFileAdapter.MEDIA_TYPE_VIDEO -> {
-                    metadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE)
-                    metadata.putString(MediaMetadata.KEY_TITLE, mediaFileInfo.title)
-                    metadata.putString(MediaMetadata.KEY_SUBTITLE, mediaFileInfo.path)
+                            .setContentType(MimeTypes.BASE_TYPE_AUDIO)
+                            .build()
+                    }
+                    MediaFileAdapter.MEDIA_TYPE_VIDEO -> {
+                        metadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE)
+                        metadata.putString(MediaMetadata.KEY_TITLE, mediaFileInfo.title)
+                        metadata.putString(MediaMetadata.KEY_SUBTITLE, mediaFileInfo.path)
 
-                    val duration = mediaFileInfo.extraInfo?.audioMetaData?.duration ?: 0
+                        val duration = mediaFileInfo.extraInfo?.audioMetaData?.duration ?: 0
 
-                    mediaInfo = MediaInfo.Builder(uri.toString())
-                        .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
-                        .setMetadata(metadata)
-                        .setContentType(MimeTypes.BASE_TYPE_VIDEO)
-                        //            .setStreamDuration(1000 * duration)
-                        .build()
-                }
-                MediaFileAdapter.MEDIA_TYPE_DOCS -> {
-                    metadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_GENERIC)
-                    metadata.putString(MediaMetadata.KEY_TITLE, mediaFileInfo.title)
-                    metadata.putString(MediaMetadata.KEY_SUBTITLE, mediaFileInfo.path)
+                        mediaInfo = MediaInfo.Builder(uri.toString())
+                            .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+                            .setMetadata(metadata)
+                            .setContentType(MimeTypes.BASE_TYPE_VIDEO)
+                            //            .setStreamDuration(1000 * duration)
+                            .build()
+                    }
+                    MediaFileAdapter.MEDIA_TYPE_DOCS -> {
+                        metadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_GENERIC)
+                        metadata.putString(MediaMetadata.KEY_TITLE, mediaFileInfo.title)
+                        metadata.putString(MediaMetadata.KEY_SUBTITLE, mediaFileInfo.path)
 
-                    mediaInfo = MediaInfo.Builder(uri.toString())
-                        .setStreamType(MediaInfo.STREAM_TYPE_NONE)
-                        .setMetadata(metadata)
-                        .setContentType(MimeTypes.BASE_TYPE_APPLICATION)
-                        .build()
+                        mediaInfo = MediaInfo.Builder(uri.toString())
+                            .setStreamType(MediaInfo.STREAM_TYPE_NONE)
+                            .setMetadata(metadata)
+                            .setContentType(MimeTypes.BASE_TYPE_APPLICATION)
+                            .build()
+                    }
                 }
+
+                remoteMediaClient.load(
+                    MediaLoadRequestData
+                        .Builder().setMediaInfo(mediaInfo).setAutoplay(true).build()
+                )
             }
-
-            remoteMediaClient.load(
-                MediaLoadRequestData
-                    .Builder().setMediaInfo(mediaInfo).setAutoplay(true).build()
-            )
         }
         /*remoteMediaClient.registerCallback(object : RemoteMediaClient.Callback() {
             override fun onStatusUpdated() {
