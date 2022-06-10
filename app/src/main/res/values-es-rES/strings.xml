@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Utilidades de Archivos Amaze</string>
+    <string name="app_name_launcher">Utilidades Amaze</string>
+    <string name="about_app">Aplicación de utilidades de archivos con reproductores multimedia incorporados para todas sus necesidades.</string>
+    <string name="image_viewer">Visor de Imágenes Amaze</string>
+    <string name="image_viewer_normal">Visor de Imágenes</string>
+    <string name="video_player">Reproductor de Video Amaze</string>
+    <string name="video_player_dialog">Reproductor de Video Amaze (Diálogo)</string>
+    <string name="video_player_full_screen">Reproductor de Video Amaze (Pantalla Completa)</string>
+    <string name="amaze_audio_player">Reproductor de Música Amaze</string>
+    <string name="pdf_viewer">Visor de Pdf Amaze</string>
+    <string name="epub_viewer">Visor de Epub Amaze</string>
+    <string name="docx_viewer">Visor de Doc Amaze</string>
+    <string name="intent_image_viewer">Visor de Imágenes Amaze</string>
+    <string name="intent_image_viewer_dialog">Visor de Imágenes Amaze (Diálogo)</string>
+    <string name="intent_image_viewer_full_screen">Visor de Imágenes Amaze (Pantalla Completa)</string>
+    <string name="intent_video_player">Reproductor de Video Amaze</string>
+    <string name="grantfailed">Permiso de almacenamiento no otorgado</string>
+    <string name="grant_location_failed">Permiso de ubicación no otorgado</string>
+    <string name="grant_storage_read_permission">La aplicación necesita permisos de lectura de almacenamiento para un rendimiento óptimo.</string>
+    <string name="grant_permission">Otorgar permiso</string>
+    <string name="grant">Otorgar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="play">Reproducir</string>
+    <string name="shuffle">Aleatorio</string>
+    <string name="repeat">Repetir</string>
+    <string name="previous">Anterior</string>
+    <string name="next">Siguiente</string>
+    <string name="not_allowed">No permitido</string>
+    <string name="channel_name_normal">Utilidades de Archivos Amaze</string>
+    <string name="storage_permission_granted">Permiso de almacenamiento otorgado</string>
+    <string name="audio_player_service_description">Reproducción de audios para las Utilidades de Archivos Amaze</string>
+    <string name="invert_colors">Invertir colores</string>
+    <string name="loading">Cargando…</string>
+    <string name="title_activity_main">Actividad Principal</string>
+    <string name="title_analyse">Analizar</string>
+    <string name="title_utilities">Utilidades</string>
+    <string name="title_transfer">Transferir</string>
+    <string name="title_scan">Examinar</string>
+    <string name="title_stop_scan">Detener</string>
+    <string name="internal_storage">Almacenamiento Interno</string>
+    <string name="images">Imágenes</string>
+    <string name="audios">Audios</string>
+    <string name="videos">Videos</string>
+    <string name="documents">Documentos</string>
+    <string name="num_of_files">%s Archivos</string>
+    <string name="num_of_media_files">%s Archivos Multimedia</string>
+    <string name="num_of_files_and_size">%s Archivos | %s</string>
+    <string name="used_space">En uso: %s</string>
+    <string name="used_total_space">/ %s</string>
+    <string name="send">Enviar</string>
+    <string name="receive">Recibir</string>
+    <string name="stop_receiving">Detener recepción</string>
+    <string name="calculating">Calculando…</string>
+    <string name="recent_files">Archivos Recientes</string>
+    <string name="no_files">Sin archivos</string>
+    <string name="internal_storage_subs">Almacenamiento Interno: %s</string>
+    <string name="media_files_subs">Archivos Multimedia: %s</string>
+    <string name="action_bar_search_hint">Buscar archivos…</string>
+    <string name="please_wait">Espere…</string>
+    <string name="its_quiet_here">Está silencioso aquí…</string>
+    <string name="settings">Ajustes</string>
+    <string name="about">Acerca de</string>
+    <string name="rights_reserved">Copyright © 2021–2022 Team Amaze\nTodos los derechos reservados</string>
+    <string name="open_source_licenses">Licencias de código abierto</string>
+    <string name="privacy_policy">Politica de Privacidad</string>
+    <string name="pre_production">Esta es una copia de preproducción, y la redistribución está estrictamente prohibida.</string>
+    <string name="licenses">Licencias</string>
+    <string name="libraries">Bibliotecas</string>
+    <string name="install_amaze">Please install Amaze File Manager to manage internal storage</string>
+    <string name="information">Information</string>
+    <string name="unsupported_content">Unsupported content</string>
+    <string name="parent">Parent</string>
+    <string name="date">Date</string>
+    <string name="name">Name</string>
+    <string name="list_view">List View</string>
+    <string name="grid_view">Grid View</string>
+    <string name="size">Size</string>
+    <string name="album">Album</string>
+    <string name="artist">Artist</string>
+    <string name="duration">Duration</string>
+    <!-- error activity -->
+    <string name="sorry_string">Sorry, that should not have happened.</string>
+    <string name="error_report_button_text">Report this error via e-mail</string>
+    <string name="error_report_button_telegram">Report this error via telegram</string>
+    <string name="copy_for_github">Copy formatted report</string>
+    <string name="error_report_open_issue_button_text">Report on GitHub</string>
+    <string name="error_report_open_github_notice">Please check whether an issue discussing your crash already exists.</string>
+    <string name="error_snackbar_message">Sorry, something went wrong.</string>
+    <string name="error_snackbar_action">Report</string>
+    <string name="what_device_headline">Info:</string>
+    <string name="what_happened_headline">What happened:</string>
+    <string name="info_labels">What:\\nRequest:\\nGMT Time:\\nPackage:\\nVersion:\\nOS version:\\nDevice:\\nModel:\\nProduct:\\nDevice ID:</string>
+    <string name="your_comment">Your comment (in English):</string>
+    <string name="error_details_headline">Details:</string>
+    <string name="app_ui_crash">App/UI crashed</string>
+    <string name="error_report_title">Error report</string>
+    <string name="crash_report_copied">Crash report copied to clipboard</string>
+    <string name="clipboard_path_copy">Path copied to clipboard</string>
+    <string name="pdf_password_title">Password required</string>
+    <string name="pdf_password_required">Please enter the password to open this document</string>
+    <string name="ok">OK</string>
+    <string name="wrong_password">Wrong password</string>
+    <string name="unsupported_operation">Unsupported Operation</string>
+    <string name="grant_all_files_permission"><html><body>Since Android 11, Google requests File Managers to request user permission for managing all files on the device. Details <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">here</a>.
+        \n\nAmaze File Utilities needs this permission too. After pressing &quot;Grant&quot;here, please select <b>Allow access to manage all files</b> option on the next screen.
+        \n\n<font color="#ff6347"><i>Canceling this dialog will exit the app.</i></font></body></html></string>
+    <string name="copy_page">Copy page</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="title">Title</string>
+    <string name="author">Author</string>
+    <string name="creator">Creator</string>
+    <string name="creation_date">Creation date</string>
+    <string name="modification_date">Modification Date</string>
+    <string name="subject">Subject</string>
+    <string name="keywords">Keywords</string>
+    <string name="producer">Producer</string>
+    <string name="close">Close</string>
+    <string name="analysing">Analysing…</string>
+    <string name="page_copied_to_clipboard">Page content copied to clipboard</string>
+    <string name="clean">Clean</string>
+    <string name="blurred_pics">Blurred</string>
+    <string name="low_light">Luz Baja</string>
+    <string name="memes">Memes</string>
+    <string name="frown">Entrecejo</string>
+    <string name="frown_hint">Imágenes que no tienen caras sonrientes</string>
+    <string name="closed_eyes">Ojos Cerrados</string>
+    <string name="closed_eyes_hint">Imágenes que tienen personas con ojos cerrados</string>
+    <string name="distracted">Distraído</string>
+    <string name="distracted_hint">Imágenes que tienen gente mirando a otro lugar</string>
+    <string name="selfie">Selfies</string>
+    <string name="group_pics">Fotos de Grupo</string>
+    <string name="memes_hint">Las memes son imágenes que tienen algo prominente escrito sobre ellas</string>
+    <string name="duplicates">Archivos duplicados</string>
+    <string name="cache">Caché de App</string>
+    <string name="memory">Memoria (RAM)</string>
+    <string name="large_videos">Videos grandes</string>
+    <string name="large_downloads">Descargas grandes</string>
+    <string name="old_screenshots">Capturas de pantalla antiguas</string>
+    <string name="old_downloads">Descargas antiguas</string>
+    <string name="old_recordings">Grabaciones antiguas</string>
+    <string name="empty_files">Archivos / carpetas vacíos</string>
+    <string name="junk_files">Archivos basura</string>
+    <string name="junk_files_hint">Los archivos basura son archivos que quedan de las aplicaciones desinstaladas</string>
+    <string name="telegram_files">Telegram</string>
+    <string name="more_to_come">¡Más optimizaciones por venir!</string>
+    <string name="view_all">Ver todo</string>
+    <string name="analysis">Análisis</string>
+    <string name="analysis_hint">Control analysis tab settings such as paths to include analysis from, show / hide various analysis</string>
+    <string name="exclusions">Exclusions</string>
+    <string name="exclusions_summary">Paths to exclude while scanning media</string>
+    <string name="audio_player">Audio Player</string>
+    <string name="audio_player_hint">Control audio player settings such as paths to exclude</string>
+    <string name="image_viewer_hint">Control image viewer settings</string>
+    <string name="search_duplicates">Search duplicates in…</string>
+    <string name="media_store">Android media store (fastest)</string>
+    <string name="internal_storage_shallow">Internal Storage (Shallow / slow)</string>
+    <string name="internal_storage_deep">Internal Storage (Deep / slowest)</string>
+    <string name="show_analysis">Show analysis</string>
+    <string name="add_item">Add Item</string>
+    <string name="paths_included">Paths Included</string>
+    <string name="paths_excluded">Paths Excluded</string>
+    <string name="delete_preference">Delete Preference</string>
+    <string name="delete_pref_override_message">You\'re about to override an existing path.
+        This will reset the existing analysis data for that path.</string>
+    <string name="confirm">Confirm</string>
+    <string name="image_features">Image Features</string>
+    <string name="features_paths_hint">Includes closed eyes, distracted, sad, selfie, group paths</string>
+    <string name="download_paths">Downloads</string>
+    <string name="download_paths_hint">Includes old, large downloads</string>
+    <string name="select_path">Select Path</string>
+    <string name="new_folder">New Folder</string>
+    <string name="cluttered_videos">Cluttered Videos</string>
+    <string name="cluttered_videos_hint">A group of videos that have similar running time.
+        Most likely to be un-useful videos.</string>
+    <string name="reanalyse">Re-analyse</string>
+    <string name="reanalyse_hint">Clears existing analysis data and starts again</string>
+    <string name="unknown_artist">&lt;UNKNOWN&gt;</string>
+    <string name="unknown_album">&lt;UNKNOWN&gt;</string>
+    <string name="searching">Searching…</string>
+    <string name="searching_timer">Searching… (%s secs)</string>
+    <string name="enable_wifi">Please enable your Wi-Fi</string>
+    <string name="discovery_failure">Failed to discover peers</string>
+    <string name="receiving_files">Receiving files</string>
+    <string name="search_devices">Search for devices…</string>
+    <string name="enable_waveform">Enable waveform seekbar</string>
+    <string name="failed_to_start_cast">Failed to start cast session</string>
+    <string name="ready_to_cast">Ready to cast, select any media</string>
+    <string name="establishing_cast">Establishing cast connection</string>
+    <string name="cast_suspended">Cast session suspended</string>
+    <string name="resuming_cast">Resuming cast session</string>
+    <string name="failed_resume_cast">Failed to resume cast session</string>
+    <string name="cast_resumed">Cast session resumed</string>
+    <string name="cast_ending">Ending cast session</string>
+    <string name="cast_ended">Cast session ended</string>
+    <string name="open_with">Open with…</string>
+    <string name="chromecast">Chromecast</string>
+    <string name="inbuilt_player">In-built player</string>
+    <string name="cast_notification_title">Server running…</string>
+    <string name="cast_notification_summary">Casting content on TV</string>
+    <string name="stop">Stop</string>
+    <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
+    <string name="failed_to_handshake">Failed to establish connection with remote device</string>
+    <string name="connection_successful">Connection successful</string>
+    <string name="failed_filename_send">Failed to send, please ensure remote is set to receive file</string>
+    <string name="failed_filename_send_reconnecct">Failed to send, please reconnect</string>
+    <string name="failed_filename_receive">Failed to receive</string>
+    <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
+    <string name="transfer_complete">Transfer complete</string>
+    <string name="grant_location_permission">App needs location permission to connect with nearby devices.</string>
+    <string name="location_permission_not_granted">Please grant storage permission to connect with nearby devices.</string>
+    <string name="waiting_for_permissions">Waiting for permissions…</string>
+    <string name="gps_disabled">Your GPS seems to be disabled, please enable to proceed</string>
+    <string name="enable_location">Please enable location to scan.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="enable">Enable</string>
+    <string name="no_devices_found">No devices found nearby,
+        please make sure your device is connected to same network and have WiFi-Direct enabled in settings</string>
+    <string name="failed_to_stop_peer_discovery">Failed to stop peer discovery</string>
+    <string name="resetting_network_discovery">Resetting network discovery</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="existing_connection">Existing connection exists, please disconnect first!</string>
+    <string name="connecting">Connecting…</string>
+    <string name="aspect_ratio">Aspect ratio</string>
+    <string name="playback_speed">Playback Speed</string>
+    <string name="pitch_speed">Pitch (semitones)</string>
+    <string name="subtitles">Subtitles</string>
+    <string name="file">File</string>
+    <string name="media">Media</string>
+    <string name="audio">Audio</string>
+    <string name="video">Video</string>
+    <string name="file_path">Path</string>
+    <string name="last_modified">Last Modified</string>
+    <string name="description">Description</string>
+    <string name="recording_date">Recording month/year</string>
+    <string name="release_date">Release month/year</string>
+    <string name="bitrate">Bitrate</string>
+    <string name="channel">Channel</string>
+    <string name="frame_rate">Frame Rate</string>
+    <string name="mime_type">Container Type</string>
+    <string name="width">Width</string>
+    <string name="height">Height</string>
+    <string name="codecs">Codecs</string>
+    <string name="sample_rate">Sample Rate</string>
+    <string name="default_name">Default</string>
+    <string name="failed_to_gain_focus">Failed to gain audio focus</string>
+    <string name="open">Open</string>
+    <string name="search">Search</string>
+    <string name="search_online">Search online</string>
+    <string name="synchronize">Synchronize</string>
+    <string name="download_subtitles">Download subtitles</string>
+    <string name="download_subtitles_info">Enter keywords and select your language to search subtitles from <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
+    <string name="amaze_fm_redirect">You\'re being redirected to Amaze File Manager. It\'s our open source offering that has all features a modern file manager has completely free of cost with over 2M downloads and 4.3 rating on Play Store.</string>
+    <string name="download">Download</string>
+    <string name="not_connected_to_internet">Device not connected to internet</string>
+    <string name="upload_date">Upload date</string>
+    <string name="rating">Rating</string>
+    <string name="uploader">Uploader</string>
+    <string name="downloads">Downloads</string>
+    <string name="language">Language</string>
+    <string name="no_results_subtitles">No results, please try with different keywords…</string>
+    <string name="downloading">Downloading…</string>
+    <string name="choose_different_subtitle">Can\'t download, choose some other subtitles</string>
+    <string name="subtitles_applied">Subtitles applied</string>
+    <string name="failed_to_download">Failed to download</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="share_logs">Share logs</string>
+    <string name="no_apps_found_to_share">No apps found to share</string>
+    <string name="failed_to_extract_logs">Failed to extract logs file</string>
+    <string name="continue_playing">Continue playing</string>
+    <string name="no_language_selected">No language selected</string>
+    <string name="no_item_selected">No item selected</string>
+    <string name="analysis_updated">Updated analysis</string>
+    <string name="failed_to_share">Failed to share files</string>
+    <string name="connected_send_receive_hint">Connected… before you start sending,
+        make sure to enable receiver on the other device</string>
+    <string name="receiving">Receiving…</string>
+    <string name="devices_present_select">Make sure to initiate connection only from one device not both.</string>
+    <string name="start_scan_both_devices">Make sure to start scan on both the devices</string>
+    <string name="connecting_please_wait">Connecting… (%s secs)</string>
+    <string name="enable_wifi_to_continue">Please enable Wifi to continue</string>
+    <string name="my_device">My device: %s</string>
+    <string name="device_status">Status: %s</string>
+    <string name="transfer_in_progress_title">Transfer in progress</string>
+    <string name="transfer_in_progress_summary">There is a P2P transfer currently in progress,
+        it is recommended that you don\'t leave this screen,
+        otherwise you\'ll not be able to track the transfer</string>
+    <string name="leave">Leave</string>
+    <string name="stay">Stay</string>
+    <string name="edit">Edit</string>
+    <string name="set_as">Set as…</string>
+    <string name="delete">Delete</string>
+    <string name="details">Details</string>
+    <string name="make">Make</string>
+    <string name="model">Model</string>
+    <string name="aperture">Aperture</string>
+    <string name="iso">ISO</string>
+    <string name="shutter_time">Shutter time</string>
+    <string name="location">Location</string>
+    <string name="gps">GPS</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="file_name">File Name</string>
+    <string name="path">Path</string>
+    <string name="open_in_maps">Open in Map</string>
+    <string name="share">Share</string>
+    <string name="no_app_found">No App found to open this file</string>
+    <string name="file_not_found">File not found</string>
+    <string name="delete_files_title">Delete</string>
+    <string name="delete_files_message">You\'re about to permanently delete these files.
+        Are you sure you want to proceed?\n\n%s Files, %s Size</string>
+    <string name="deleted_progress">Deleted %s of %s</string>
+    <string name="successfully_deleted">Successfully deleted</string>
+    <string name="failed_to_update_list_reopen">Failed to update list, please restart the app</string>
+    <string name="device_id">Device ID</string>
+    <string name="subscription_status">Subscription status</string>
+    <string name="device_id_copied">Device ID copied to clipboard</string>
+    <string name="version_title">Version</string>
+    <string name="license">License</string>
+    <string name="submit_issue">Submit Issue</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="about_app_title">About app</string>
+    <string name="made_in_india">Made with ❤ in India</string>
+    <string name="trial_started_title">Trial started (%s days)</string>
+    <string name="trial_started_message">Thank you for choosing Amaze File Utilities.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and your subscription will really help us in development.\n
+        At any point if you need any help feel free to contact us in About section.
+        You\'ll be able to contact directly to our team on Telegram.\n
+        Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
+    <string name="trial_last_day_title">Trial about to expire</string>
+    <string name="trial_last_day_message">Hey There! Thank you for choosing Amaze File Utilities.\n
+        Your trial is going to expire tomorrow,
+        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and we need funds to us to keep us afloat.\n
+        You can write to us if you want to extend the trial period a bit more.
+    </string>
+    <string name="trial_expired_title">Trial expired</string>
+    <string name="trial_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
+        Your trial has expired,
+        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and we need funds to us to keep us afloat.\n
+        You can write to us if you want to extend the trial period a bit more.
+    </string>
+    <string name="trial_inactive_title">Trial inactive</string>
+    <string name="trial_inactive_message">Hey There! Thank you for choosing Amaze File Utilities.\n
+        Your trial is inactive and you\'re not longer an exclusive member,
+        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and we need funds to us to keep us afloat.\n
+        You can write to us if you want to extend the trial period a bit more.</string>
+    <string name="subscription_purchased_title">Subscribed</string>
+    <string name="subscription_purchased_message">Thank you for choosing Amaze File Utilities.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and your subscription will really help us in development.\n
+        At any point if you need any help feel free to contact us in About section.
+        You\'ll be able to contact directly to our team on Telegram.\n
+        Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
+    <string name="subscription_expired_title">Subscription expired</string>
+    <string name="subscription_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
+        Your subscription has expired,
+        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and we need funds to us to keep us afloat.\n
+        You can write to us if you want to extend the trial period a bit more.</string>
+    <string name="not_connected_trial_title">Failed to validate</string>
+    <string name="not_connected_trial_message">Hey There! Thank you for choosing Amaze File Utilities.\n
+        We\'re not able to validate your license, please connect to internet and restart the app.</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="dont_show_again">Don\'t show again</string>
+    <string name="exit">Exit</string>
+    <string name="num_days">% Days</string>
+    <string name="your_media_assistant">You media files assistant</string>
+    <string name="welcome_media_title">Manage media files</string>
+    <string name="welcome_media_summary">View images, videos, audios, documents in list or grid\nOpen using inbuilt players\nGesture support for easy navigation\nJump to any date instantly\nGroup or sort list\nCast on TV</string>
+    <string name="welcome_analyse_summary">Analyse storage for junk files to delete\nGroup images by memes, low-light, blurry, selfies or group\nGroup large files in storage\nGroup old downloads, recordings or screenshots\n</string>
+    <string name="welcome_transfer_summary">Transfer data between devices through wifi\nHigh transfer speeds using android wifi direct</string>
+    <string name="welcome_permission">We need storage permissions to access your media files</string>
+    <string name="before_we_start">Before we start…</string>
+    <string name="privacy_title">We care for your privacy!</string>
+    <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.\n
+        We assure you that we do not collect any of your private information.\nWe don\'t say this, our track record does.\nWe\'re a group of open source developers and are managing Amaze File Manager for around 8 years now.\n\nWe look forward to your subscription.
+    </string>
+    <string name="error_fetching_google_play_product_list">Error fetching product list from Google Play.</string>
+    <string name="done">Done</string>
+    <string name="cast_framework_unavailable">Unable to initialize cast framework, please update Google Play services</string>
+    <string name="rate_now_title">Please read!</string>
+    <string name="rate_now_message">Thank you for choosing Amaze File Utilities.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and your rating / review will really help us in development.\n
+        Please write about your experience on Play Store.\n
+        At any point if you need any help feel free to contact us in About section.
+        You\'ll be able to contact directly to our team on Telegram.\n
+        Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
+    <string name="take_me">Take me</string>
+    <string name="later">Later</string>
+    <string name="updating_app">Closing app during update…</string>
+    <string name="app_updated">App updated successfully</string>
+    <string name="update_cancelled">Update cancelled</string>
+    <string name="failed_to_update_app">Failed to update the app…</string>
+    <string name="shortcut_short">Shortcut short</string>
+    <string name="shortcut_long">Shortcut long</string>
+    <string name="shortcut_disable">Disable shortcut</string>
+    <string name="home_screen_design"><![CDATA[Home screen design - <a href="https://dribbble.com/topu-roy-antu">Topu Roy Antu</a>]]></string>
+    <string name="license_agreement"><![CDATA[I accept the <a href="https://teamamaze.xyz/license-agreement-utilities">License Agreement</a>]]></string>
+    <string name="license_agreement_not_accepted">Please accept license agreement</string>
+    <string name="renewal_cycle">Renewal cycle - %s</string>
+    <string name="lifetime_membership">Lifetime Membership</string>
+    <string name="one_year">1 Year</string>
+    <string name="operation_failed">Operation failed</string>
+    <string name="columns_grid_title">No. of columns in grid</string>
+    <string name="appearance">Appearance</string>
+    <string name="appearance_summary">App appearance settings</string>
+    <string name="general">General</string>
+    <string name="playback_properties">Playback properties</string>
+    <string name="apply">Apply</string>
+    <string name="pitch_hint_text">A value of zero means that the key is not changed.\nOne full step corresponds to one semitone.\nA change of -12 semitones means that the song is played one octave lower.</string>
+    <string name="reset">Reset</string>
+    <string name="audio_player_enable_palette">Extract palette color from album</string>
+    <string name="audio_player_enable_palette_summary">Sets background color for audio player</string>
+    <string name="image_viewer_enable_palette">Extract palette color from image</string>
+    <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
+</resources>

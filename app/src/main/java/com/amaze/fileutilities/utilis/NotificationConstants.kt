@@ -69,11 +69,11 @@ class NotificationConstants {
             if (mNotificationManager.getNotificationChannel(CHANNEL_NORMAL_ID) == null) {
                 val mChannel = NotificationChannel(
                     CHANNEL_NORMAL_ID,
-                    context.getString(R.string.channel_name_normal),
+                    context.getString(R.string.app_name),
                     NotificationManager.IMPORTANCE_LOW
                 )
                 // Configure the notification channel.
-                mChannel.description = context.getString(R.string.channel_name_normal)
+                mChannel.description = context.getString(R.string.app_name)
                 mNotificationManager.createNotificationChannel(mChannel)
             }
         }

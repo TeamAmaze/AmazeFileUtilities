@@ -535,35 +535,6 @@ class Utils {
                 .build()
         }
 
-        fun buildRateNowDialog(
-            context: Context,
-            positiveCallback: () -> Unit,
-            neutralCallback: () -> Unit
-        ): AlertDialog.Builder {
-            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
-            builder
-                .setTitle(R.string.rate_now_title)
-                .setMessage(R.string.rate_now_message)
-                .setPositiveButton(
-                    context.resources.getString(R.string.take_me)
-                ) { dialog, _ ->
-                    positiveCallback.invoke()
-                    dialog.dismiss()
-                }
-                .setNegativeButton(
-                    context.resources.getString(R.string.later)
-                ) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .setNeutralButton(
-                    context.resources.getString(R.string.dont_show_again)
-                ) { dialog, _ ->
-                    neutralCallback.invoke()
-                    dialog.dismiss()
-                }
-            return builder
-        }
-
         fun buildGridColumnsDialog(
             context: Context,
             checkedItemIdx: Int,
