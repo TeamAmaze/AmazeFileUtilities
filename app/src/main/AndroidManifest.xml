@@ -60,7 +60,7 @@
         <activity
             android:name=".image_viewer.ImageViewerDialogActivity"
             android:exported="true"
-            android:label="@string/intent_image_viewer"
+            android:label="@string/image_viewer"
             android:excludeFromRecents="true"
             android:theme="@style/Custom.Dialog.Dark.NoStretch">
             <intent-filter
@@ -76,7 +76,7 @@
         </activity>
         <activity
             android:name=".image_viewer.ImageViewerActivity"
-            android:label="@string/intent_image_viewer"
+            android:label="@string/image_viewer"
             android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark">
             <intent-filter
                 android:label="@string/intent_image_viewer_full_screen"
