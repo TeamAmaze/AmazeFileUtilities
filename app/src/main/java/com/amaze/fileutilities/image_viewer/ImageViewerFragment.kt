@@ -43,6 +43,7 @@ import com.drew.metadata.file.FileSystemDirectory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.lang.Exception
 import java.util.*
 
 class ImageViewerFragment : AbstractMediaFragment() {
@@ -157,41 +158,14 @@ class ImageViewerFragment : AbstractMediaFragment() {
             val file = it.uri.getFileFromUri()
             file?.let {
                 file ->
-                val metadata = ImageMetadataReader.readMetadata(file)
                 _binding?.run {
-                    val exifSubDirectory = metadata
-                        .getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
-                    val descriptor = ExifSubIFDDescriptor(exifSubDirectory)
-                    val fileSystemDirectory = metadata
-                        .getFirstDirectoryOfType(FileSystemDirectory::class.java)
-                    val gpsDirectory = metadata
-                        .getFirstDirectoryOfType(GpsDirectory::class.java)
-                    val gpsDescriptor = GpsDescriptor(gpsDirectory)
 
                     imageMetadataLayout.fileName.text =
                         "${resources.getString(R.string.file_name)}: \n${file.name}\n"
-                    var widthAndHeight = ""
-                    if (exifSubDirectory != null && descriptor != null) {
-                        descriptor.exifImageWidthDescription.let {
-                            width ->
-                            if (!width.isNullOrEmpty()) {
-                                descriptor.exifImageHeightDescription.let {
-                                    height ->
-                                    if (!height.isNullOrEmpty()) {
-                                        widthAndHeight =
-                                            "${width.replace(" pixels", "")}" +
-                                            "x${height.replace(
-                                                " pixels",
-                                                ""
-                                            )} | "
-                                    }
-                                }
-                            }
-                        }
-                    }
+
                     imageMetadataLayout.fileSize.text =
                         "${resources.getString(R.string.size)}: \n" +
-                        "$widthAndHeight${Formatter.formatFileSize(
+                        "${imageView.width}x${imageView.height} / ${Formatter.formatFileSize(
                             requireContext(),
                             file.length()
                         )}\n"
@@ -215,92 +189,125 @@ class ImageViewerFragment : AbstractMediaFragment() {
                                     }"
                     }*/
 
-                    val exifDirectory = metadata
-                        .getFirstDirectoryOfType(ExifIFD0Directory::class.java)
-                    if (exifDirectory != null) {
-                        exifDirectory.getString(ExifIFD0Directory.TAG_MODEL).let {
-                            property ->
-                            if (!property.isNullOrEmpty()) {
-                                imageMetadataLayout.model.visibility = View.VISIBLE
-                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                                imageMetadataLayout.model.text =
-                                    "${resources.getString(R.string.model)}: $property"
-                            } else {
-                                imageMetadataLayout.model.visibility = View.GONE
-                            }
-                        }
-                        exifDirectory.getString(ExifIFD0Directory.TAG_MAKE).let {
-                            property ->
-                            if (!property.isNullOrEmpty()) {
-                                imageMetadataLayout.make.visibility = View.VISIBLE
-                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                                imageMetadataLayout.make.text =
-                                    "${resources.getString(R.string.make)}: $property"
-                            } else {
-                                imageMetadataLayout.make.visibility = View.GONE
-                            }
-                        }
-                    }
-                    if (exifSubDirectory != null && descriptor != null) {
-                        descriptor.apertureValueDescription.let {
-                            property ->
-                            if (!property.isNullOrEmpty()) {
-                                imageMetadataLayout.aperture.visibility = View.VISIBLE
-                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                                imageMetadataLayout.aperture.text =
-                                    "${resources.getString(R.string.aperture)}: $property"
-                            } else {
-                                imageMetadataLayout.aperture.visibility = View.GONE
-                            }
-                        }
-                        descriptor.shutterSpeedDescription.let {
-                            property ->
-                            if (!property.isNullOrEmpty()) {
-                                imageMetadataLayout.shutterTime.visibility = View.VISIBLE
-                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                                imageMetadataLayout.shutterTime.text =
-                                    "${resources.getString(R.string.shutter_time)}: $property"
-                            } else {
-                                imageMetadataLayout.shutterTime.visibility = View.GONE
-                            }
-                        }
-                        descriptor.isoEquivalentDescription.let {
-                            property ->
-                            if (!property.isNullOrEmpty()) {
-                                imageMetadataLayout.iso.visibility = View.VISIBLE
-                                imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
-                                imageMetadataLayout.iso.text =
-                                    "${resources.getString(R.string.iso)}: $property"
-                            } else {
-                                imageMetadataLayout.iso.visibility = View.GONE
-                            }
-                        }
-                    }
-                    if (gpsDirectory != null && gpsDescriptor != null) {
-                        gpsDescriptor.gpsLatitudeDescription.let {
-                            latitude ->
-                            gpsDescriptor.gpsLongitudeDescription.let {
-                                longitude ->
-                                if (!longitude.isNullOrEmpty() && !latitude.isNullOrEmpty()) {
-                                    imageMetadataLayout.longitude.visibility = View.VISIBLE
-                                    imageMetadataLayout.gpsInfoParent.visibility = View.VISIBLE
-                                    imageMetadataLayout.longitude.text =
-                                        "${resources.getString(R.string.longitude)}: $longitude"
-                                    imageMetadataLayout.lat.visibility = View.VISIBLE
-                                    imageMetadataLayout.lat.text =
-                                        "${resources.getString(R.string.latitude)}: $latitude"
-                                    imageMetadataLayout.openInMapsImage.setOnClickListener {
-                                        Utils.openInMaps(requireContext(), latitude, longitude)
+                    try {
+                        val metadata = ImageMetadataReader.readMetadata(file)
+
+                        val exifSubDirectory = metadata
+                            .getFirstDirectoryOfType(ExifSubIFDDirectory::class.java)
+                        val descriptor = ExifSubIFDDescriptor(exifSubDirectory)
+                        val fileSystemDirectory = metadata
+                            .getFirstDirectoryOfType(FileSystemDirectory::class.java)
+                        val gpsDirectory = metadata
+                            .getFirstDirectoryOfType(GpsDirectory::class.java)
+                        val gpsDescriptor = GpsDescriptor(gpsDirectory)
+
+                        var widthAndHeight = ""
+                        if (exifSubDirectory != null && descriptor != null) {
+                            descriptor.exifImageWidthDescription.let {
+                                width ->
+                                if (!width.isNullOrEmpty()) {
+                                    descriptor.exifImageHeightDescription.let {
+                                        height ->
+                                        if (!height.isNullOrEmpty()) {
+                                            widthAndHeight =
+                                                "${width.replace(" pixels", "")}" +
+                                                "x${height.replace(
+                                                    " pixels",
+                                                    ""
+                                                )} | "
+                                        }
                                     }
-                                    imageMetadataLayout.openInMapsText.setOnClickListener {
-                                        Utils.openInMaps(requireContext(), latitude, longitude)
-                                    }
-                                } else {
-                                    imageMetadataLayout.longitude.visibility = View.GONE
-                                    imageMetadataLayout.lat.visibility = View.GONE
                                 }
                             }
                         }
+
+                        val exifDirectory = metadata
+                            .getFirstDirectoryOfType(ExifIFD0Directory::class.java)
+                        if (exifDirectory != null) {
+                            exifDirectory.getString(ExifIFD0Directory.TAG_MODEL).let {
+                                property ->
+                                if (!property.isNullOrEmpty()) {
+                                    imageMetadataLayout.model.visibility = View.VISIBLE
+                                    imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                                    imageMetadataLayout.model.text =
+                                        "${resources.getString(R.string.model)}: $property"
+                                } else {
+                                    imageMetadataLayout.model.visibility = View.GONE
+                                }
+                            }
+                            exifDirectory.getString(ExifIFD0Directory.TAG_MAKE).let {
+                                property ->
+                                if (!property.isNullOrEmpty()) {
+                                    imageMetadataLayout.make.visibility = View.VISIBLE
+                                    imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                                    imageMetadataLayout.make.text =
+                                        "${resources.getString(R.string.make)}: $property"
+                                } else {
+                                    imageMetadataLayout.make.visibility = View.GONE
+                                }
+                            }
+                        }
+                        if (exifSubDirectory != null && descriptor != null) {
+                            descriptor.apertureValueDescription.let {
+                                property ->
+                                if (!property.isNullOrEmpty()) {
+                                    imageMetadataLayout.aperture.visibility = View.VISIBLE
+                                    imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                                    imageMetadataLayout.aperture.text =
+                                        "${resources.getString(R.string.aperture)}: $property"
+                                } else {
+                                    imageMetadataLayout.aperture.visibility = View.GONE
+                                }
+                            }
+                            descriptor.shutterSpeedDescription.let {
+                                property ->
+                                if (!property.isNullOrEmpty()) {
+                                    imageMetadataLayout.shutterTime.visibility = View.VISIBLE
+                                    imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                                    imageMetadataLayout.shutterTime.text =
+                                        "${resources.getString(R.string.shutter_time)}: $property"
+                                } else {
+                                    imageMetadataLayout.shutterTime.visibility = View.GONE
+                                }
+                            }
+                            descriptor.isoEquivalentDescription.let {
+                                property ->
+                                if (!property.isNullOrEmpty()) {
+                                    imageMetadataLayout.iso.visibility = View.VISIBLE
+                                    imageMetadataLayout.lensInfoParent.visibility = View.VISIBLE
+                                    imageMetadataLayout.iso.text =
+                                        "${resources.getString(R.string.iso)}: $property"
+                                } else {
+                                    imageMetadataLayout.iso.visibility = View.GONE
+                                }
+                            }
+                        }
+                        if (gpsDirectory != null && gpsDescriptor != null) {
+                            gpsDescriptor.gpsLatitudeDescription.let { latitude ->
+                                gpsDescriptor.gpsLongitudeDescription.let { longitude ->
+                                    if (!longitude.isNullOrEmpty() && !latitude.isNullOrEmpty()) {
+                                        imageMetadataLayout.longitude.visibility = View.VISIBLE
+                                        imageMetadataLayout.gpsInfoParent.visibility = View.VISIBLE
+                                        imageMetadataLayout.longitude.text =
+                                            "${resources.getString(R.string.longitude)}: $longitude"
+                                        imageMetadataLayout.lat.visibility = View.VISIBLE
+                                        imageMetadataLayout.lat.text =
+                                            "${resources.getString(R.string.latitude)}: $latitude"
+                                        imageMetadataLayout.openInMapsImage.setOnClickListener {
+                                            Utils.openInMaps(requireContext(), latitude, longitude)
+                                        }
+                                        imageMetadataLayout.openInMapsText.setOnClickListener {
+                                            Utils.openInMaps(requireContext(), latitude, longitude)
+                                        }
+                                    } else {
+                                        imageMetadataLayout.longitude.visibility = View.GONE
+                                        imageMetadataLayout.lat.visibility = View.GONE
+                                    }
+                                }
+                            }
+                        }
+                    } catch (e: Exception) {
+                        log.warn("failed to parse image metadata", e)
                     }
                 }
             }
