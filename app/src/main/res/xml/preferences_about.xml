@@ -36,6 +36,11 @@
         app:title="@string/contact_us"
         />
     <Preference
+        app:key="translate"
+        app:title="@string/translate_title"
+        android:summary="@string/translate_summary"
+        />
+    <Preference
         app:key="open_source"
         app:title="@string/open_source_licenses"
         />

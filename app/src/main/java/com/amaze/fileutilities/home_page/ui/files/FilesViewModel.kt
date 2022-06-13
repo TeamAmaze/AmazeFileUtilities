@@ -14,6 +14,7 @@ import android.app.Application
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.provider.Settings
+import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.*
 import com.amaze.fileutilities.R
@@ -78,7 +79,11 @@ class FilesViewModel(val applicationContext: Application) :
                 val file = File(data.path)
                 try {
                     val items = CursorUtils.getMediaFilesCount(applicationContext)
-                    FileUtils.scanFile(Uri.fromFile(file), applicationContext)
+                    val uri = FileProvider.getUriForFile(
+                        applicationContext,
+                        applicationContext.packageName, file
+                    )
+                    FileUtils.scanFile(uri, applicationContext)
                     val usedSpace = file.totalSpace - file.usableSpace
 
                     val progress = if (file.totalSpace != 0L) {
@@ -595,9 +600,13 @@ class FilesViewModel(val applicationContext: Application) :
             if (outputPath != null) {
                 log.info("Sharing logs file at path $outputPath")
                 val logsFile = File(outputPath)
+                val uri = FileProvider.getUriForFile(
+                    applicationContext,
+                    applicationContext.packageName, logsFile
+                )
                 emit(
                     getShareIntents(
-                        Collections.singletonList(Uri.fromFile(logsFile)),
+                        Collections.singletonList(uri),
                         applicationContext
                     )
                 )
