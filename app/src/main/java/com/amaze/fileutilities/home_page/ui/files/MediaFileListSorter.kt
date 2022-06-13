@@ -158,7 +158,7 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
                     }
                     GROUP_ARTIST -> {
                         it.listHeader = it.extraInfo?.audioMetaData?.artistName ?: context
-                            .getString(R.string.unknown_album)
+                            .getString(R.string.unknown_artist)
                     }
                 }
             }
