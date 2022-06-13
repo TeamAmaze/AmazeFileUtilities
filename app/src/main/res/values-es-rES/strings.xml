@@ -1,124 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Amaze File Utilities</string>
+    <string name="app_name">Utilidades de Archivos Amaze</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">Amaze Utilities</string>
+    <string name="app_name_launcher">Utilidades Amaze</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
-    <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.48</string>
+    <string name="about_app">Aplicación de utilidades de archivos con reproductores multimedia incorporados para todas sus necesidades.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Amaze Image Viewer</string>
+    <string name="image_viewer">Visor de Imágenes Amaze</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">Image Viewer</string>
+    <string name="image_viewer_normal">Visor de Imágenes</string>
     <!-- Video player activity label -->
-    <string name="video_player">Amaze Video Player</string>
+    <string name="video_player">Reproductor de Video Amaze</string>
     <!-- Video player dialog intent filter label -->
-    <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
+    <string name="video_player_dialog">Reproductor de Video Amaze (Diálogo)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
+    <string name="video_player_full_screen">Reproductor de Video Amaze (Pantalla Completa)</string>
     <!-- Music player activity label -->
-    <string name="amaze_audio_player">Amaze Music Player</string>
+    <string name="amaze_audio_player">Reproductor de Música Amaze</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Amaze Pdf Viewer</string>
+    <string name="pdf_viewer">Visor de Pdf Amaze</string>
     <!-- Epub activity label -->
-    <string name="epub_viewer">Amaze Epub Viewer</string>
+    <string name="epub_viewer">Visor de Epub Amaze</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">Amaze Doc Viewer</string>
+    <string name="docx_viewer">Visor de Doc Amaze</string>
     <!-- Image viewer dialog intent filter label -->
-    <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
+    <string name="intent_image_viewer_dialog">Visor de Imágenes Amaze (Diálogo)</string>
     <!-- Image viewer full screen intent label -->
-    <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
+    <string name="intent_image_viewer_full_screen">Visor de Imágenes Amaze (Pantalla Completa)</string>
     <!-- User didn't accept all storage permissions -->
-    <string name="grantfailed">Storage permission not granted</string>
+    <string name="grantfailed">Permiso de almacenamiento no otorgado</string>
     <!-- User didn't accept location permission for transfer files tab -->
-    <string name="grant_location_failed">Location permission not granted</string>
+    <string name="grant_location_failed">Permiso de ubicación no otorgado</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
+    <string name="grant_storage_read_permission">La aplicación necesita permisos de lectura de almacenamiento para un rendimiento óptimo.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_permission">Grant permission</string>
+    <string name="grant_permission">Otorgar permiso</string>
     <!-- Grant permission button for welcome screen -->
-    <string name="grant">Grant</string>
+    <string name="grant">Otorgar</string>
     <!-- Cancel button in dialogs mainly to cancel any operation -->
-    <string name="cancel">Cancel</string>
+    <string name="cancel">Cancelar</string>
     <!-- Play button label in music player notification -->
-    <string name="play">Play</string>
+    <string name="play">Reproducir</string>
     <!-- Shuffle button label in music player notification -->
-    <string name="shuffle">Shuffle</string>
+    <string name="shuffle">Aleatorio</string>
     <!-- Repeat button label in music player notification -->
-    <string name="repeat">Repeat</string>
+    <string name="repeat">Repetir</string>
     <!-- Previous button label in music player notification -->
-    <string name="previous">Previous</string>
+    <string name="previous">Anterior</string>
     <!-- Next button label in music player notification -->
-    <string name="next">Next</string>
+    <string name="next">Siguiente</string>
     <!-- Not allowed to perform any operation -->
-    <string name="not_allowed">Not allowed</string>
+    <string name="not_allowed">No permitido</string>
     <!-- Audio player notification channel description -->
-    <string name="audio_player_service_description">Plays audio for Amaze File Utilities</string>
+    <string name="audio_player_service_description">Reproducción de audios para las Utilidades de Archivos Amaze</string>
     <!-- Invert colors in document / pdf viewer -->
-    <string name="invert_colors">Invert colors</string>
+    <string name="invert_colors">Invertir colores</string>
     <!-- Location any list eg. images or videos list -->
-    <string name="loading">Loading…</string>
+    <string name="loading">Cargando…</string>
     <!-- Analyse tab on app main screen bottom tab -->
-    <string name="title_analyse">Analyse</string>
+    <string name="title_analyse">Analizar</string>
     <!-- Utilities tab on app main screen bottom tab -->
-    <string name="title_utilities">Utilities</string>
+    <string name="title_utilities">Utilidades</string>
     <!-- Transfer files tab on app main screen bottom tab -->
-    <string name="title_transfer">Transfer</string>
+    <string name="title_transfer">Transferir</string>
     <!-- Scan nearby connections button in transfer tab -->
-    <string name="title_scan">Scan</string>
+    <string name="title_scan">Examinar</string>
     <!-- Stop scan nearby devices in transfer tab -->
-    <string name="title_stop_scan">Stop</string>
+    <string name="title_stop_scan">Detener</string>
     <!-- Internal storage on app main screen -->
-    <string name="internal_storage">Internal Storage</string>
+    <string name="internal_storage">Almacenamiento Interno</string>
     <!-- Images title in images list screen in utilities tab -->
-    <string name="images">Images</string>
+    <string name="images">Imágenes</string>
     <!-- Audios title in audios list screen in utilities tab -->
     <string name="audios">Audios</string>
     <!-- Videos title in videos list screen in utilities tab -->
     <string name="videos">Videos</string>
     <!-- Documents title in documents list screen in utilities tab -->
-    <string name="documents">Documents</string>
+    <string name="documents">Documentos</string>
     <!-- Number of files in utilities tab individual list screens eg in images / number of images -->
-    <string name="num_of_files">%s Files</string>
+    <string name="num_of_files">%s Archivos</string>
     <!-- Number of total media files on main screen -->
-    <string name="num_of_media_files">%s Media Files</string>
+    <string name="num_of_media_files">%s Archivos Multimedia</string>
     <!-- Used space in utilties tab in individual lists screen eg in images - Used: 300 MB / 1 GB -->
-    <string name="used_space">Used: %s</string>
-    <string name="used_total_space" translatable="false">/ %s</string>
+    <string name="used_space">En uso: %s</string>
     <!-- Send file in transfer tab -->
-    <string name="send">Send</string>
+    <string name="send">Enviar</string>
     <!-- Receive file in transfer tab -->
-    <string name="receive">Receive</string>
+    <string name="receive">Recibir</string>
     <!-- Stop receiving file in transfer tab -->
-    <string name="stop_receiving">Stop Receiving</string>
-    <string name="undetermined" translatable="false">--</string>
+    <string name="stop_receiving">Detener recepción</string>
     <!-- Calculating number of media files in utilities tab on app startup -->
-    <string name="calculating">Calculating…</string>
+    <string name="calculating">Calculando…</string>
     <!-- Recent files on utilities tab main screen -->
-    <string name="recent_files">Recent Files</string>
+    <string name="recent_files">Archivos Recientes</string>
     <!-- No files found after searching media files -->
-    <string name="no_files">No files</string>
+    <string name="no_files">Sin archivos</string>
     <!-- Number of media files in utilities tab in individual list screen eg in images / number of total files -->
-    <string name="media_files_subs">Media Files: %s</string>
+    <string name="media_files_subs">Archivos Multimedia: %s</string>
     <!-- Search screen title bar hint -->
-    <string name="action_bar_search_hint">Search for files…</string>
+    <string name="action_bar_search_hint">Buscar archivos…</string>
     <!-- Generic message shown when loading results of list or operation -->
-    <string name="please_wait">Please wait…</string>
+    <string name="please_wait">Espere…</string>
     <!-- No search results found -->
-    <string name="its_quiet_here">It\'s quiet in here…</string>
+    <string name="its_quiet_here">Está silencioso aquí…</string>
     <!-- Settings screen title -->
-    <string name="settings">Settings</string>
+    <string name="settings">Ajustes</string>
     <!-- About screen title -->
-    <string name="about">About</string>
+    <string name="about">Acerca de</string>
     <!-- Copyright dialog content in about section -->
-    <string name="rights_reserved">Copyright © 2021–2022 Team Amaze\nAll Rights Reserved</string>
+    <string name="rights_reserved">Copyright © 2021–2022 Team Amaze\nTodos los derechos reservados</string>
     <!-- Open source licenses in about section -->
-    <string name="open_source_licenses">Open-source licenses</string>
+    <string name="open_source_licenses">Licencias de código abierto</string>
     <!-- Privacy policy label in about section -->
-    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy">Politica de Privacidad</string>
     <!-- Licenses label in about section -->
-    <string name="licenses">Licenses</string>
+    <string name="licenses">Licencias</string>
     <!-- Information about a pdf / doc file -->
     <string name="information">Information</string>
     <!-- Unable to open pdf / doc / video / image file -->
@@ -141,10 +138,8 @@
     <string name="artist">Artist</string>
     <!-- Sort audio / video utilities list by duration -->
     <string name="duration">Duration</string>
-
     <!-- Crash fallback screen title -->
     <string name="sorry_string">Sorry, that should not have happened.</string>
-    <string name="guru_meditation" translatable="false">Guru Meditation.</string>
     <!-- Crash fallback screen report by email -->
     <string name="error_report_button_text">Report this error via e-mail</string>
     <!-- Crash fallback screen report by telegram -->
@@ -177,7 +172,6 @@
     <string name="crash_report_copied">Crash report copied to clipboard</string>
     <!-- Crash fallback screen report copied to clipboard -->
     <string name="clipboard_path_copy">Path copied to clipboard</string>
-
     <!-- Pdf activity password prompt -->
     <string name="pdf_password_title">Password required</string>
     <!-- Pdf activity password required info -->
@@ -191,7 +185,7 @@
     <!-- Grant storage permission more info -->
     <string name="grant_all_files_permission"><html><body>Since Android 11, Google requests File Managers to request user permission for managing all files on the device. Details <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">here</a>.
         \n\nAmaze File Utilities needs this permission too. After pressing &quot;Grant&quot;here, please select <b>Allow access to manage all files</b> option on the next screen.
-        \n\n<font color='#ff6347'><i>Canceling this dialog will exit the app.</i></font></body></html></string>
+        \n\n<font color="#ff6347"><i>Canceling this dialog will exit the app.</i></font></body></html></string>
     <!-- Pdf activity copy page content title -->
     <string name="copy_page">Copy page</string>
     <!-- Pdf activity view bookmarks -->
@@ -223,55 +217,55 @@
     <!-- Blurred images label in analysis -->
     <string name="blurred_pics">Blurred</string>
     <!-- Low light label in analysis -->
-    <string name="low_light">Low-Light</string>
+    <string name="low_light">Luz Baja</string>
     <!-- Memes label in analysis -->
     <string name="memes">Memes</string>
     <!-- Sad images label in analysis -->
-    <string name="frown">Frown</string>
+    <string name="frown">Entrecejo</string>
     <!-- Sad images analysis hint -->
-    <string name="frown_hint">Images that doesn\'t have smiling faces</string>
+    <string name="frown_hint">Imágenes que no tienen caras sonrientes</string>
     <!-- Closed eyes analysis label -->
-    <string name="closed_eyes">Closed Eyes</string>
+    <string name="closed_eyes">Ojos Cerrados</string>
     <!-- Closed eyes analysis hint -->
-    <string name="closed_eyes_hint">Images that have people with closed eyes</string>
+    <string name="closed_eyes_hint">Imágenes que tienen personas con ojos cerrados</string>
     <!-- Distracted images analysis label -->
-    <string name="distracted">Distracted</string>
+    <string name="distracted">Distraído</string>
     <!-- Distracted images analysis hint -->
-    <string name="distracted_hint">Images that have people looking elsewhere</string>
+    <string name="distracted_hint">Imágenes que tienen gente mirando a otro lugar</string>
     <!-- Selfie images analysis label -->
     <string name="selfie">Selfies</string>
     <!-- Group images analysis label -->
-    <string name="group_pics">Group Pics</string>
+    <string name="group_pics">Fotos de Grupo</string>
     <!-- Memes analysis hint -->
-    <string name="memes_hint">Memes are images that have something prominent written over them</string>
+    <string name="memes_hint">Las memes son imágenes que tienen algo prominente escrito sobre ellas</string>
     <!-- Duplicate files analysis label -->
-    <string name="duplicates">Duplicate files</string>
+    <string name="duplicates">Archivos duplicados</string>
     <!-- App caches analysis labels -->
-    <string name="cache">App Cache</string>
+    <string name="cache">Caché de App</string>
     <!-- Large videos analysis label -->
-    <string name="large_videos">Large videos</string>
+    <string name="large_videos">Videos grandes</string>
     <!-- Large downloads analysis label -->
-    <string name="large_downloads">Large downloads</string>
+    <string name="large_downloads">Descargas grandes</string>
     <!-- Old screenshots analysis label -->
-    <string name="old_screenshots">Old Screenshots</string>
+    <string name="old_screenshots">Capturas de pantalla antiguas</string>
     <!-- Old downloads analysis label -->
-    <string name="old_downloads">Old downloads</string>
+    <string name="old_downloads">Descargas antiguas</string>
     <!-- Old recordings analysis label -->
-    <string name="old_recordings">Old recordings</string>
+    <string name="old_recordings">Grabaciones antiguas</string>
     <!-- Empty files analysis label -->
-    <string name="empty_files">Empty files / folders</string>
+    <string name="empty_files">Archivos / carpetas vacíos</string>
     <!-- Junk files analysis label -->
-    <string name="junk_files">Junk files</string>
+    <string name="junk_files">Archivos basura</string>
     <!-- Junk files analysis hint -->
-    <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
+    <string name="junk_files_hint">Los archivos basura son archivos que quedan de las aplicaciones desinstaladas</string>
     <!-- Telegram analysis label -->
     <string name="telegram_files">Telegram</string>
     <!-- More optimisations coming at analysis tab bottom -->
-    <string name="more_to_come">More optimizations to come!</string>
+    <string name="more_to_come">¡Más optimizaciones por venir!</string>
     <!-- View all analysed content analysis tab -->
-    <string name="view_all">View all</string>
+    <string name="view_all">Ver todo</string>
     <!-- Analysis settings title -->
-    <string name="analysis">Analysis</string>
+    <string name="analysis">Análisis</string>
     <!-- Analysis settings hint -->
     <string name="analysis_hint">Control analysis tab settings such as paths to include analysis from, show / hide various analysis</string>
     <!-- Exclude paths from scan for music player -->
@@ -360,7 +354,6 @@
     <string name="cast_ended">Cast session ended</string>
     <!-- Open image/ videos/ audios with either cast on tv or open in mobile -->
     <string name="open_with">Open with…</string>
-    <string name="chromecast" translatable="false">Chromecast</string>
     <!-- Open images / videos/ audios using inbuilt player -->
     <string name="inbuilt_player">In-built player</string>
     <!-- Tv Cast notification title server running -->
@@ -471,7 +464,7 @@
     <!-- Download subtitles in video player -->
     <string name="download_subtitles">Download subtitles</string>
     <!-- Download subtitles info in video player -->
-    <string name="download_subtitles_info">Enter keywords and select your language to search subtitles from <html><body><font color='#FF4287f5'>opensubtitles.org</font></body></html></string>
+    <string name="download_subtitles_info">Enter keywords and select your language to search subtitles from <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
     <string name="amaze_fm_redirect">You\'re being redirected to Amaze File Manager. It\'s our open source offering that has all features a modern file manager has completely free of cost with over 2M downloads and 4.3 rating on Play Store.</string>
     <!-- Download button in dialog prompt -->
@@ -520,7 +513,7 @@
     <!-- Failed to share pdf/ video/audio files  -->
     <string name="failed_to_share">Failed to share files</string>
     <!-- Transfer tab connected hint -->
-    <string name="connected_send_receive_hint">Connected… before you start sending, 
+    <string name="connected_send_receive_hint">Connected… before you start sending,
         make sure to enable receiver on the other device</string>
     <!-- Transfer tab receiving files -->
     <string name="receiving">Receiving…</string>

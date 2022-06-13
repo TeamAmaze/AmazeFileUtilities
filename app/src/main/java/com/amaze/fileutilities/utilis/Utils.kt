@@ -38,17 +38,13 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewAnalysisAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
-import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.google.android.material.slider.Slider
-import com.google.common.io.ByteStreams
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.math.BigInteger
 import java.net.InetAddress
 import java.net.UnknownHostException
@@ -75,6 +71,7 @@ class Utils {
         private const val EMAIL_RAYMOND = "airwave209gt@gmail.com"
         private const val EMAIL_VISHAL = "vishalmeham2@gmail.com"
         private const val URL_TELEGRAM = "https://t.me/AmazeFileManager"
+        private const val URL_TRANSLATE = "https://crwd.in/amaze-file-utilities"
 
         const val EMAIL_NOREPLY_REPORTS = "no-reply@teamamaze.xyz"
         const val EMAIL_SUPPORT = "support@teamamaze.xyz"
@@ -220,9 +217,10 @@ class Utils {
                 internalStoragePath ->
                 val inputFile = File("/data/data/${context.packageName}/cache/logs.txt")
                 if (!inputFile.exists()) {
+                    log.warn("Log file not found at path ${inputFile.path}")
                     return null
                 }
-                FileInputStream(inputFile).use {
+                /*FileInputStream(inputFile).use {
                     inputStream ->
                     val file = File(
                         internalStoragePath.path +
@@ -235,7 +233,8 @@ class Utils {
                         ByteStreams.copy(inputStream, outputStream)
                     }
                     return logFile.path
-                }
+                }*/
+                return inputFile.path
             }
             return null
         }
@@ -244,6 +243,14 @@ class Utils {
         fun openTelegramURL(context: Context) {
             openURL(
                 URL_TELEGRAM,
+                context
+            )
+        }
+
+        /** Open crowdin in browser  */
+        fun openTranslateURL(context: Context) {
+            openURL(
+                URL_TRANSLATE,
                 context
             )
         }
@@ -526,35 +533,6 @@ class Utils {
                 .followRedirects(true)
                 .followSslRedirects(true)
                 .build()
-        }
-
-        fun buildRateNowDialog(
-            context: Context,
-            positiveCallback: () -> Unit,
-            neutralCallback: () -> Unit
-        ): AlertDialog.Builder {
-            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
-            builder
-                .setTitle(R.string.rate_now_title)
-                .setMessage(R.string.rate_now_message)
-                .setPositiveButton(
-                    context.resources.getString(R.string.take_me)
-                ) { dialog, _ ->
-                    positiveCallback.invoke()
-                    dialog.dismiss()
-                }
-                .setNegativeButton(
-                    context.resources.getString(R.string.later)
-                ) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .setNeutralButton(
-                    context.resources.getString(R.string.dont_show_again)
-                ) { dialog, _ ->
-                    neutralCallback.invoke()
-                    dialog.dismiss()
-                }
-            return builder
         }
 
         fun buildGridColumnsDialog(
