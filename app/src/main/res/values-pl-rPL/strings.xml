@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Amaze File Utilities</string>
+    <string name="app_name">Narzędzia plików Amaze</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">Amaze Utilities</string>
+    <string name="app_name_launcher">Narzędzia plików Amaze</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
+    <string name="about_app">Aplikacja narzędziowa do plików z wbudowanym odtwarzaczem mediów, czyli wszystko czego potrzebujesz. ;)</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Amaze Image Viewer</string>
+    <string name="image_viewer">Przeglądarka obrazów</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">Image Viewer</string>
+    <string name="image_viewer_normal">Przeglądarka obrazów</string>
     <!-- Video player activity label -->
-    <string name="video_player">Amaze Video Player</string>
+    <string name="video_player">Amaze odtwarzacz wideo</string>
     <!-- Video player dialog intent filter label -->
     <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
     <!-- Video player fill screen intent label -->
@@ -312,8 +312,7 @@
     <!-- Cluttered videos in analysis tab -->
     <string name="cluttered_videos">Cluttered Videos</string>
     <!-- Cluttered videos hint in analysis tab -->
-    <string name="cluttered_videos_hint">A group of videos that have similar running time.
-        Most likely to be un-useful videos.</string>
+    <string name="cluttered_videos_hint">A group of videos that have similar running time.</string>
     <!-- Re-analyse button in analysis settings -->
     <string name="reanalyse">Re-analyse</string>
     <!-- Re-analyse hint in analysis settings -->
