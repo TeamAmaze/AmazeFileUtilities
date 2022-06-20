@@ -88,15 +88,16 @@
                 android:layout_alignBottom="@+id/sheet_down_arrow"
                 />
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:gravity="center_vertical"
                 android:layout_marginStart="@dimen/material_generic"
+                android:layout_marginEnd="@dimen/eight_dp"
                 android:layout_toRightOf="@id/album_image_small"
                 android:layout_toEndOf="@id/album_image_small"
-                android:layout_toLeftOf="@id/play_button_small_parent"
-                android:layout_toStartOf="@id/play_button_small_parent"
+                android:layout_toLeftOf="@id/time_summary_small"
+                android:layout_toStartOf="@id/time_summary_small"
                 android:layout_alignBottom="@+id/sheet_down_arrow"
                 >
                 <TextView
@@ -106,9 +107,14 @@
                     android:textStyle="bold"
                     android:textSize="@dimen/sixteen_sp"
                     android:textColor="@color/white"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:fadingEdge="horizontal"
+                    android:singleLine="true"
                     android:marqueeRepeatLimit="marquee_forever"
-                    android:ellipsize="middle"
-                    android:singleLine="true" />
+                    android:scrollHorizontally="true"
+                    />
                 <TextView
                     android:id="@+id/summary_small"
                     android:layout_width="wrap_content"
@@ -116,17 +122,22 @@
                     android:layout_marginTop="@dimen/six_dp"
                     android:textSize="@dimen/twelve_sp"
                     android:textColor="@color/white"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:fadingEdge="horizontal"
+                    android:singleLine="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
                     />
             </LinearLayout>
             <TextView
                 android:id="@+id/time_summary_small"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/fastscroller_track_height"
                 android:layout_height="match_parent"
                 android:textColor="@color/white"
                 android:textSize="@dimen/twelve_sp"
-                android:layout_marginRight="@dimen/material_generic"
-                android:layout_marginEnd="@dimen/material_generic"
-                android:gravity="center_vertical"
+                android:gravity="center_vertical|center_horizontal"
                 android:layout_toLeftOf="@id/play_button_small_parent"
                 android:layout_toStartOf="@id/play_button_small_parent"
                 />
@@ -136,6 +147,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:layout_marginStart="@dimen/eight_dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true">
                 <me.tankery.lib.circularseekbar.CircularSeekBar

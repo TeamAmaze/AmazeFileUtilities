@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Amaze File Utilities</string>
+    <string name="app_name">أدوات ملف Amaze</string>
     <!-- App name in launcher -->
     <string name="app_name_launcher">Amaze Utilities</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
+    <string name="about_app">تطبيق File Utility مع مشغلات وسائط مدمجة لجميع احتياجاتك.</string>
     <!-- Image viewer activity label -->
     <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">Image Viewer</string>
+    <string name="image_viewer_normal">\"بالطبع\" </string>
     <!-- Video player activity label -->
     <string name="video_player">Amaze Video Player</string>
     <!-- Video player dialog intent filter label -->
@@ -29,29 +29,29 @@
     <!-- Image viewer full screen intent label -->
     <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
     <!-- User didn't accept all storage permissions -->
-    <string name="grantfailed">Storage permission not granted</string>
+    <string name="grantfailed">لا يوجد إذن للوصول إلى ذاكرة التخزين</string>
     <!-- User didn't accept location permission for transfer files tab -->
-    <string name="grant_location_failed">Location permission not granted</string>
+    <string name="grant_location_failed">لم يتم منح أذونات الموقع.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
+    <string name="grant_storage_read_permission">يحتاج التطبيق إلى أذونات قراءة التخزين لتحقيق الأداء الأمثل.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_permission">Grant permission</string>
+    <string name="grant_permission">منح إذن</string>
     <!-- Grant permission button for welcome screen -->
-    <string name="grant">Grant</string>
+    <string name="grant">ما </string>
     <!-- Cancel button in dialogs mainly to cancel any operation -->
-    <string name="cancel">Cancel</string>
+    <string name="cancel">إلغاء</string>
     <!-- Play button label in music player notification -->
-    <string name="play">Play</string>
+    <string name="play">تشغيل.</string>
     <!-- Shuffle button label in music player notification -->
     <string name="shuffle">Shuffle</string>
     <!-- Repeat button label in music player notification -->
-    <string name="repeat">Repeat</string>
+    <string name="repeat">التكرار</string>
     <!-- Previous button label in music player notification -->
-    <string name="previous">Previous</string>
+    <string name="previous">سابق</string>
     <!-- Next button label in music player notification -->
-    <string name="next">Next</string>
+    <string name="next">التالي.</string>
     <!-- Not allowed to perform any operation -->
-    <string name="not_allowed">Not allowed</string>
+    <string name="not_allowed">غير مسموح به</string>
     <!-- Audio player notification channel description -->
     <string name="audio_player_service_description">Plays audio for Amaze File Utilities</string>
     <!-- Invert colors in document / pdf viewer -->
@@ -69,19 +69,19 @@
     <!-- Stop scan nearby devices in transfer tab -->
     <string name="title_stop_scan">Stop</string>
     <!-- Internal storage on app main screen -->
-    <string name="internal_storage">Internal Storage</string>
+    <string name="internal_storage">وحدة التخزين الداخلية</string>
     <!-- Images title in images list screen in utilities tab -->
-    <string name="images">Images</string>
+    <string name="images">\". في\" </string>
     <!-- Audios title in audios list screen in utilities tab -->
-    <string name="audios">Audios</string>
+    <string name="audios">\"مواد\" </string>
     <!-- Videos title in videos list screen in utilities tab -->
-    <string name="videos">Videos</string>
+    <string name="videos">مقاطع الفيديو</string>
     <!-- Documents title in documents list screen in utilities tab -->
-    <string name="documents">Documents</string>
+    <string name="documents">المستندات</string>
     <!-- Number of files in utilities tab individual list screens eg in images / number of images -->
-    <string name="num_of_files">%s Files</string>
+    <string name="num_of_files">ملفات %s </string>
     <!-- Number of total media files on main screen -->
-    <string name="num_of_media_files">%s Media Files</string>
+    <string name="num_of_media_files">%s ملفات وسط التخزين </string>
     <!-- Used space in utilties tab in individual lists screen eg in images - Used: 300 MB / 1 GB -->
     <string name="used_space">Used: %s</string>
     <!-- Send file in transfer tab -->
@@ -312,14 +312,13 @@
     <!-- Cluttered videos in analysis tab -->
     <string name="cluttered_videos">Cluttered Videos</string>
     <!-- Cluttered videos hint in analysis tab -->
-    <string name="cluttered_videos_hint">A group of videos that have similar running time.
-        Most likely to be un-useful videos.</string>
+    <string name="cluttered_videos_hint">A group of videos that have similar running time.</string>
     <!-- Re-analyse button in analysis settings -->
     <string name="reanalyse">Re-analyse</string>
     <!-- Re-analyse hint in analysis settings -->
     <string name="reanalyse_hint">Clears existing analysis data and starts again</string>
     <!-- Unknown artist / album for music player -->
-    <string name="unknown_artist">&lt;UNKNOWN&gt;</string>
+    <string name="unknown_artist">&lt;UNKNOWN&gt; </string>
     <!-- Search for nearby connections in transfer tab -->
     <string name="searching">Searching…</string>
     <!-- Searching for nearby connections with timer in transfer tab -->
@@ -436,7 +435,7 @@
     <!-- Video info dialog in video player -->
     <string name="release_date">Release month/year</string>
     <!-- Video info dialog in video player -->
-    <string name="bitrate">Bitrate</string>
+    <string name="bitrate">Bitrate </string>
     <!-- Video info dialog in video player -->
     <string name="channel">Channel</string>
     <!-- Video info dialog in video player -->
@@ -448,7 +447,7 @@
     <!-- Video info dialog in video player -->
     <string name="height">Height</string>
     <!-- Video info dialog in video player -->
-    <string name="codecs">Codecs</string>
+    <string name="codecs">Codecs </string>
     <!-- Video info dialog in video player -->
     <string name="sample_rate">Sample Rate</string>
     <!-- Failed to gain audio focus in music player -->
@@ -560,7 +559,7 @@
     <!-- Image viewer image location -->
     <string name="location">Location</string>
     <!-- Image viewer gps -->
-    <string name="gps">GPS</string>
+    <string name="gps">GPS </string>
     <!-- Image viewer image latitude -->
     <string name="latitude">Latitude</string>
     <!-- Image viewer image longitude -->

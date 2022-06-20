@@ -165,7 +165,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
 
                     imageMetadataLayout.fileSize.text =
                         "${resources.getString(R.string.size)}: \n" +
-                        "${imageView.width}x${imageView.height} / ${Formatter.formatFileSize(
+                        "${Formatter.formatFileSize(
                             requireContext(),
                             file.length()
                         )}\n"
@@ -220,6 +220,12 @@ class ImageViewerFragment : AbstractMediaFragment() {
                                 }
                             }
                         }
+                        imageMetadataLayout.fileSize.text =
+                            "${resources.getString(R.string.size)}: \n" +
+                            "$widthAndHeight${Formatter.formatFileSize(
+                                requireContext(),
+                                file.length()
+                            )}\n"
 
                         val exifDirectory = metadata
                             .getFirstDirectoryOfType(ExifIFD0Directory::class.java)
