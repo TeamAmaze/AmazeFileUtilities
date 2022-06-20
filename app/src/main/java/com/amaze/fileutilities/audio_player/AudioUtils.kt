@@ -58,7 +58,7 @@ class AudioUtils {
                     bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
                 }
             } catch (e: Exception) {
-                log.warn("failed to extract album art", e)
+                log.info("failed to extract album art", e)
             }
             return bitmap
         }

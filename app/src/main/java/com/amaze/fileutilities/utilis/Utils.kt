@@ -19,6 +19,7 @@ import android.graphics.Color
 import android.graphics.Point
 import android.net.Uri
 import android.net.wifi.WifiManager
+import android.os.Handler
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
@@ -680,6 +681,21 @@ class Utils {
                 return Pair(fallback1, fallback2)
             }
             return Pair(light, dark)
+        }
+
+        /**
+         * Animates filenames textview to marquee after a delay. Make sure to set [ ][TextView.setSelected] to false in order to stop the marquee later
+         */
+        @JvmStatic
+        fun marqueeAfterDelay(delayInMillis: Int, marqueeView: TextView) {
+            Handler()
+                .postDelayed(
+                    {
+                        // marquee works only when text view has focus
+                        marqueeView.isSelected = true
+                    },
+                    delayInMillis.toLong()
+                )
         }
 
         private fun getPaletteColor(palette: Palette?, fallback: Int): Int {

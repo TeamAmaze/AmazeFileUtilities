@@ -6,7 +6,7 @@
     <!-- App info shown in about screen -->
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.48</string>
+    <string name="app_version" translatable="false">v1.50</string>
     <!-- Image viewer activity label -->
     <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
@@ -318,8 +318,7 @@
     <!-- Cluttered videos in analysis tab -->
     <string name="cluttered_videos">Cluttered Videos</string>
     <!-- Cluttered videos hint in analysis tab -->
-    <string name="cluttered_videos_hint">A group of videos that have similar running time.
-        Most likely to be un-useful videos.</string>
+    <string name="cluttered_videos_hint">A group of videos that have similar running time.</string>
     <!-- Re-analyse button in analysis settings -->
     <string name="reanalyse">Re-analyse</string>
     <!-- Re-analyse hint in analysis settings -->

@@ -72,7 +72,7 @@ abstract class AbstractMediaFilesAdapter(
         removeItemsIdx.forEach {
             notifyItemChanged(it)
         }
-        toggleCheckCallback?.invoke(checkItemsList.size, itemCount, checkedItemBytes())
+        toggleCheckCallback?.invoke(checkItemsList.size, itemCount - 1, checkedItemBytes())
     }
 
     open fun removeChecked(): Boolean {
@@ -248,7 +248,7 @@ abstract class AbstractMediaFilesAdapter(
     }
 
     fun invalidateCheckedTitle() {
-        toggleCheckCallback?.invoke(checkItemsList.size, itemCount, checkedItemBytes())
+        toggleCheckCallback?.invoke(checkItemsList.size, itemCount - 1, checkedItemBytes())
     }
 
     private val mInflater: LayoutInflater

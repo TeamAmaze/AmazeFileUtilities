@@ -7,9 +7,9 @@
     <!-- App info shown in about screen -->
     <string name="about_app">內置媒體播放器的檔案工具程式，有你一切所需。</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Amaze 圖片檢視器</string>
+    <string name="image_viewer">Amaze 影像檢視器</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">圖片檢視器</string>
+    <string name="image_viewer_normal">影像檢視器</string>
     <!-- Video player activity label -->
     <string name="video_player">Amaze 影片播放器</string>
     <!-- Video player dialog intent filter label -->
@@ -25,9 +25,9 @@
     <!-- Docx viewer activity label -->
     <string name="docx_viewer">Amaze 文件檢視器</string>
     <!-- Image viewer dialog intent filter label -->
-    <string name="intent_image_viewer_dialog">Amaze 圖片檢視器（對話框）</string>
+    <string name="intent_image_viewer_dialog">Amaze 影像檢視器（對話框）</string>
     <!-- Image viewer full screen intent label -->
-    <string name="intent_image_viewer_full_screen">Amaze 圖片檢視器（全屏幕）</string>
+    <string name="intent_image_viewer_full_screen">Amaze 影像檢視器（全屏幕）</string>
     <!-- User didn't accept all storage permissions -->
     <string name="grantfailed">儲存空間存取權限被拒</string>
     <!-- User didn't accept location permission for transfer files tab -->
@@ -71,7 +71,7 @@
     <!-- Internal storage on app main screen -->
     <string name="internal_storage">內部儲存空間</string>
     <!-- Images title in images list screen in utilities tab -->
-    <string name="images">圖片</string>
+    <string name="images">影像</string>
     <!-- Audios title in audios list screen in utilities tab -->
     <string name="audios">音訊</string>
     <!-- Videos title in videos list screen in utilities tab -->
@@ -267,7 +267,7 @@
     <!-- Analysis settings title -->
     <string name="analysis">分析</string>
     <!-- Analysis settings hint -->
-    <string name="analysis_hint">Control analysis tab settings such as paths to include analysis from, show / hide various analysis</string>
+    <string name="analysis_hint">控制分析分頁的設定，例如需要加入分析的路徑、顯示/隱藏某些分析</string>
     <!-- Exclude paths from scan for music player -->
     <string name="exclusions">例外</string>
     <!-- Exclude paths from scan for music player summary -->
@@ -275,9 +275,9 @@
     <!-- Audio player settings title -->
     <string name="audio_player">音樂播放器</string>
     <!-- Audio player settings summary -->
-    <string name="audio_player_hint">Control audio player settings such as paths to exclude</string>
+    <string name="audio_player_hint">和音樂播放器有關的設定，例如要排除在外的路徑</string>
     <!-- Image viewer settings title -->
-    <string name="image_viewer_hint">控制圖片檢視器的設定</string>
+    <string name="image_viewer_hint">控制影像檢視器的設定</string>
     <!-- Analysis in settings page -->
     <string name="search_duplicates">在以下位置搜尋重複的檔案…</string>
     <!-- Analysis duplicate search method in settings -->
@@ -289,7 +289,7 @@
     <!-- Show/hide analysis checkbox in settings -->
     <string name="show_analysis">顯示分析</string>
     <!-- Add new path to analyse or new path to exclude from scan in settings -->
-    <string name="add_item">新增項目</string>
+    <string name="add_item">新增路徑</string>
     <!-- Paths included for analysis in settings -->
     <string name="paths_included">包含路徑</string>
     <!-- Paths excluded from music player scan in settings -->
@@ -302,7 +302,7 @@
     <!-- Generic message to confirm -->
     <string name="confirm">確認</string>
     <!-- Images features group name in analysis settings -->
-    <string name="image_features">Image Features</string>
+    <string name="image_features">圖片分析設定</string>
     <!-- Images features group hint in analysis settings -->
     <string name="features_paths_hint">包括閤眼、分神、不開心、自拍、合照等分類途徑</string>
     <!-- Downloads label in analysis settings -->
@@ -310,10 +310,9 @@
     <!-- Downloads hint in analysis settings -->
     <string name="download_paths_hint">包括老舊、大型的下載</string>
     <!-- Cluttered videos in analysis tab -->
-    <string name="cluttered_videos">Cluttered Videos</string>
+    <string name="cluttered_videos">雜亂無章的影片</string>
     <!-- Cluttered videos hint in analysis tab -->
-    <string name="cluttered_videos_hint">一組長度相近的影片。
-        很有可能是沒用的影片。</string>
+    <string name="cluttered_videos_hint">A group of videos that have similar running time.</string>
     <!-- Re-analyse button in analysis settings -->
     <string name="reanalyse">再分析</string>
     <!-- Re-analyse hint in analysis settings -->
@@ -678,9 +677,9 @@
     <!-- Welcome screen title -->
     <string name="welcome_media_title">管理媒體檔案</string>
     <!-- Welcome screen summary -->
-    <string name="welcome_media_summary">以列表或格狀檢視圖片、影片、音樂和文件\n以內置播放器開啟檔案\n方便的手勢操作\n隨時跳到任何指定日期\n以分組或排序列表\n把內容投影到電視機上</string>
+    <string name="welcome_media_summary">以列表或格狀檢視影像、影片、音樂和文件\n以內置播放器開啟檔案\n方便的手勢操作\n隨時跳到任何指定日期\n以分組或排序列表\n把內容投影到電視機上</string>
     <!-- Welcome screen analysis summary -->
-    <string name="welcome_analyse_summary">分析儲存空間，尋找可以刪掉的垃圾檔案\n把圖片以迷因圖、低光度、矇矓、自拍照、團體照分類\n分類大型檔案\n分類舊的下載、錄音、擷圖\n</string>
+    <string name="welcome_analyse_summary">分析儲存空間，尋找可以刪掉的垃圾檔案\n把影像以迷因圖、低光度、矇矓、自拍照、團體照分類\n分類大型檔案\n分類舊的下載、錄音、擷圖\n</string>
     <!-- Welcome screen transfer summary -->
     <string name="welcome_transfer_summary">在裝置之間以 wifi傳送資料\n利用 Android wifi direct的高速傳輸</string>
     <!-- Welcome screen permission required -->
@@ -742,7 +741,7 @@
     <!-- Settings page extract music player background color from album info -->
     <string name="audio_player_enable_palette_summary">設定音樂播放器的背景顏色</string>
     <!-- Settings page extract image viewer background color from image -->
-    <string name="image_viewer_enable_palette">從圖片抽取調色板顏色</string>
+    <string name="image_viewer_enable_palette">從影像抽取調色板顏色</string>
     <!-- Settings page extract image viewer background color from image summary -->
-    <string name="image_viewer_enable_palette_summary">設定圖片檢視器的背景顏色</string>
+    <string name="image_viewer_enable_palette_summary">設定影像檢視器的背景顏色</string>
 </resources>

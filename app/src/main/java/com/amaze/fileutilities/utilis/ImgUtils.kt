@@ -10,9 +10,7 @@
 
 package com.amaze.fileutilities.utilis
 
-import android.content.Context
 import android.graphics.Bitmap
-import android.net.Uri
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.face.FaceDetector
 import com.google.mlkit.vision.text.Text
@@ -78,13 +76,12 @@ class ImgUtils {
         }*/
 
         fun isImageMeme(
-            context: Context,
             textRecognizer: TextRecognizer,
-            uri: Uri,
+            path: String,
             callback: (isMeme: Boolean) -> Unit
         ) {
             TimeUnit.SECONDS.sleep(1L)
-            extractTextFromImg(context, textRecognizer, uri) { isSuccess, extractedText ->
+            extractTextFromImg(textRecognizer, path) { isSuccess, extractedText ->
                 if (isSuccess) {
                     extractedText?.run {
                         for (block in textBlocks) {
@@ -110,62 +107,67 @@ class ImgUtils {
         }
 
         fun getImageFeatures(
-            context: Context,
             faceDetector: FaceDetector,
-            uri: Uri,
+            path: String,
             callback: ((isSuccess: Boolean, imageFeatures: ImageFeatures?) -> Unit)
         ) {
             TimeUnit.SECONDS.sleep(1L)
 //            val image = InputImage.fromBitmap(bitmap, 0)
             try {
 
-                val image = InputImage.fromFilePath(context, uri)
-                faceDetector.process(image)
-                    .addOnSuccessListener { faces ->
-                        // Task completed successfully
-                        // ...
-                        var isSad = false
-                        var isDistracted = false
-                        var leftEyeOpen = false
-                        var rightEyeOpen = false
-                        faces.forEach {
-                            face ->
-                            face.smilingProbability?.let {
-                                if (it < 0.7) {
-                                    isSad = true
+//                val image = InputImage.fromFilePath(context, uri)
+                val mat = Imgcodecs.imread(path)
+                val resizeimage = resize(mat, getGenericWidth(mat), getGenericHeight(mat))
+                val bitmap = convertMatToBitmap(resizeimage)
+                bitmap?.let {
+                    val image = InputImage.fromBitmap(bitmap, 0)
+                    faceDetector.process(image)
+                        .addOnSuccessListener { faces ->
+                            // Task completed successfully
+                            // ...
+                            var isSad = false
+                            var isDistracted = false
+                            var leftEyeOpen = false
+                            var rightEyeOpen = false
+                            faces.forEach {
+                                face ->
+                                face.smilingProbability?.let {
+                                    if (it < 0.7) {
+                                        isSad = true
+                                    }
+                                }
+                                if (face.headEulerAngleX > 36 || face.headEulerAngleX < -36 ||
+                                    face.headEulerAngleY > 36 || face.headEulerAngleY < -36 ||
+                                    face.headEulerAngleZ > 36 || face.headEulerAngleZ < -36
+                                ) {
+                                    isDistracted = true
+                                }
+                                face.leftEyeOpenProbability?.let {
+                                    if (it < 0.7) {
+                                        leftEyeOpen = true
+                                    }
+                                }
+                                face.rightEyeOpenProbability?.let {
+                                    if (it < 0.7) {
+                                        rightEyeOpen = true
+                                    }
                                 }
                             }
-                            if (face.headEulerAngleX > 36 || face.headEulerAngleX < -36 ||
-                                face.headEulerAngleY > 36 || face.headEulerAngleY < -36 ||
-                                face.headEulerAngleZ > 36 || face.headEulerAngleZ < -36
-                            ) {
-                                isDistracted = true
-                            }
-                            face.leftEyeOpenProbability?.let {
-                                if (it < 0.7) {
-                                    leftEyeOpen = true
-                                }
-                            }
-                            face.rightEyeOpenProbability?.let {
-                                if (it < 0.7) {
-                                    rightEyeOpen = true
-                                }
-                            }
-                        }
-                        callback.invoke(
-                            true,
-                            ImageFeatures(
-                                isSad, leftEyeOpen && rightEyeOpen,
-                                isDistracted, faces.count()
+                            callback.invoke(
+                                true,
+                                ImageFeatures(
+                                    isSad, leftEyeOpen && rightEyeOpen,
+                                    isDistracted, faces.count()
+                                )
                             )
-                        )
-                    }
-                    .addOnFailureListener { e ->
-                        // Task failed with an exception
-                        // ...
-                        log.warn("get image features failure", e)
-                        callback.invoke(false, null)
-                    }
+                        }
+                        .addOnFailureListener { e ->
+                            // Task failed with an exception
+                            // ...
+                            log.warn("get image features failure", e)
+                            callback.invoke(false, null)
+                        }
+                }
             } catch (e: Exception) {
                 log.warn("Failed to check for image features due to exception", e)
                 callback.invoke(false, null)
@@ -176,29 +178,33 @@ class ImgUtils {
         }
 
         private fun extractTextFromImg(
-            context: Context,
             textRecognizer: TextRecognizer,
-            uri: Uri,
+            path: String,
             callback: ((isSuccess: Boolean, extractedText: Text?) -> Unit)?
         ) {
             try {
-                val image = InputImage.fromFilePath(context, uri)
-                if (image.width < 32 || image.height < 32) {
-                    callback?.invoke(true, null)
-                    return
+//                val image = InputImage.fromFilePath(context, uri)
+                val mat = Imgcodecs.imread(path)
+                val resizeimage = resize(mat, getGenericWidth(mat), getGenericHeight(mat))
+                val bitmap = convertMatToBitmap(resizeimage)
+                bitmap?.let {
+                    if (bitmap.width < 32 || bitmap.height < 32) {
+                        callback?.invoke(true, null)
+                        return
+                    }
+                    val result = textRecognizer.process(bitmap, 0)
+                        .addOnSuccessListener { visionText ->
+                            // Task completed successfully
+                            log.debug(visionText.text)
+                            callback?.invoke(true, visionText)
+                        }
+                        .addOnFailureListener { e ->
+                            // Task failed with an exception
+                            // ...
+                            log.warn("extract text from img failure", e)
+                            callback?.invoke(false, null)
+                        }
                 }
-                val result = textRecognizer.process(image)
-                    .addOnSuccessListener { visionText ->
-                        // Task completed successfully
-                        log.debug(visionText.text)
-                        callback?.invoke(true, visionText)
-                    }
-                    .addOnFailureListener { e ->
-                        // Task failed with an exception
-                        // ...
-                        log.warn("extract text from img failure", e)
-                        callback?.invoke(false, null)
-                    }
             } catch (e: IOException) {
                 log.warn("extract text from img ioexception", e)
                 callback?.invoke(true, null)
