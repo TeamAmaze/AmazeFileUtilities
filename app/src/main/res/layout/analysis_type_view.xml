@@ -38,14 +38,14 @@
         </HorizontalScrollView>
         <View
             android:id="@+id/fading_start"
-            android:layout_width="@dimen/material_generic_large"
+            android:layout_width="@dimen/material_generic"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="@drawable/fading_gradient"
             />
         <View
             android:id="@+id/fading_end"
-            android:layout_width="@dimen/material_generic_large"
+            android:layout_width="@dimen/material_generic"
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:background="@drawable/fading_gradient_reverse"

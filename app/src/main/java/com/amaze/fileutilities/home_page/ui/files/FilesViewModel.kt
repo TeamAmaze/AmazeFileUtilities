@@ -330,6 +330,14 @@ class FilesViewModel(val applicationContext: Application) :
         mediaFileInfoList: List<MediaFileInfo>,
         pathPreferencesList: List<PathPreferences>
     ) {
+        if (!PathPreferences.isEnabled(
+                applicationContext.getAppCommonSharedPreferences(),
+                PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
+            )
+        ) {
+            log.info("analyse facial features for images not enabled")
+            return
+        }
         viewModelScope.launch(Dispatchers.Default) {
             val dao = AppDatabase.getInstance(applicationContext).analysisDao()
             isImageFeaturesAnalysing = true
@@ -339,11 +347,7 @@ class FilesViewModel(val applicationContext: Application) :
                     pref.feature == PathPreferences
                         .FEATURE_ANALYSIS_IMAGE_FEATURES
                 }
-                Utils.containsInPreferences(it.path, pathPrefsList, true) &&
-                    PathPreferences.isEnabled(
-                        applicationContext.getAppCommonSharedPreferences(),
-                        PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
-                    )
+                Utils.containsInPreferences(it.path, pathPrefsList, true)
             }.forEach {
                 if (dao.findByPath(it.path) == null) {
                     if (featuresProcessed++ > 10000) {
@@ -351,27 +355,23 @@ class FilesViewModel(val applicationContext: Application) :
                         return@forEach
                     }
                     var features = ImgUtils.ImageFeatures()
-                    it.getContentUri(applicationContext)?.let {
-                        uri ->
-                        ImgUtils.getImageFeatures(
-                            applicationContext,
-                            faceDetector,
-                            uri
-                        ) { isSuccess, imageFeatures ->
-                            if (isSuccess) {
-                                imageFeatures?.run {
-                                    features = this
-                                }
-                                dao.insert(
-                                    ImageAnalysis(
-                                        it.path,
-                                        features.isSad,
-                                        features.isDistracted,
-                                        features.isSleeping,
-                                        features.facesCount
-                                    )
-                                )
+                    ImgUtils.getImageFeatures(
+                        faceDetector,
+                        it.path
+                    ) { isSuccess, imageFeatures ->
+                        if (isSuccess) {
+                            imageFeatures?.run {
+                                features = this
                             }
+                            dao.insert(
+                                ImageAnalysis(
+                                    it.path,
+                                    features.isSad,
+                                    features.isDistracted,
+                                    features.isSleeping,
+                                    features.facesCount
+                                )
+                            )
                         }
                     }
                 }
@@ -384,6 +384,14 @@ class FilesViewModel(val applicationContext: Application) :
         mediaFileInfoList: List<MediaFileInfo>,
         pathPreferencesList: List<PathPreferences>
     ) {
+        if (!PathPreferences.isEnabled(
+                applicationContext.getAppCommonSharedPreferences(),
+                PathPreferences.FEATURE_ANALYSIS_BLUR
+            )
+        ) {
+            log.info("analyse blur not enabled")
+            return
+        }
         viewModelScope.launch(Dispatchers.Default) {
             val dao = AppDatabase.getInstance(applicationContext).blurAnalysisDao()
             isImageBlurAnalysing = true
@@ -392,11 +400,7 @@ class FilesViewModel(val applicationContext: Application) :
                     pref.feature == PathPreferences
                         .FEATURE_ANALYSIS_BLUR
                 }
-                Utils.containsInPreferences(it.path, pathPrefsList, true) &&
-                    PathPreferences.isEnabled(
-                        applicationContext.getAppCommonSharedPreferences(),
-                        PathPreferences.FEATURE_ANALYSIS_BLUR
-                    )
+                Utils.containsInPreferences(it.path, pathPrefsList, true)
             }.forEach {
                 if (dao.findByPath(it.path) == null) {
                     val isBlur = ImgUtils.isImageBlur(it.path)
@@ -418,6 +422,14 @@ class FilesViewModel(val applicationContext: Application) :
         mediaFileInfoList: List<MediaFileInfo>,
         pathPreferencesList: List<PathPreferences>
     ) {
+        if (!PathPreferences.isEnabled(
+                applicationContext.getAppCommonSharedPreferences(),
+                PathPreferences.FEATURE_ANALYSIS_MEME
+            )
+        ) {
+            log.info("analyse memes not enabled")
+            return
+        }
         viewModelScope.launch(Dispatchers.Default) {
             val dao = AppDatabase.getInstance(applicationContext).memesAnalysisDao()
             isImageMemesAnalysing = true
@@ -426,30 +438,22 @@ class FilesViewModel(val applicationContext: Application) :
                 val pathPrefsList = pathPreferencesList.filter { pref ->
                     pref.feature == PathPreferences.FEATURE_ANALYSIS_MEME
                 }
-                Utils.containsInPreferences(it.path, pathPrefsList, true) &&
-                    PathPreferences.isEnabled(
-                        applicationContext.getAppCommonSharedPreferences(),
-                        PathPreferences.FEATURE_ANALYSIS_MEME
-                    )
+                Utils.containsInPreferences(it.path, pathPrefsList, true)
             }.forEach {
                 if (dao.findByPath(it.path) == null) {
                     if (memesProcessed++ > 10000) {
                         // hard limit in a single run
                         return@forEach
                     }
-                    it.getContentUri(applicationContext)?.let {
-                        uri ->
-                        ImgUtils.isImageMeme(
-                            applicationContext,
-                            textRecognizer,
-                            uri,
-                        ) { isMeme ->
-                            dao.insert(
-                                MemeAnalysis(
-                                    it.path, isMeme
-                                )
+                    ImgUtils.isImageMeme(
+                        textRecognizer,
+                        it.path,
+                    ) { isMeme ->
+                        dao.insert(
+                            MemeAnalysis(
+                                it.path, isMeme
                             )
-                        }
+                        )
                     }
                 }
             }
@@ -461,6 +465,14 @@ class FilesViewModel(val applicationContext: Application) :
         mediaFileInfoList: List<MediaFileInfo>,
         pathPreferencesList: List<PathPreferences>
     ) {
+        if (!PathPreferences.isEnabled(
+                applicationContext.getAppCommonSharedPreferences(),
+                PathPreferences.FEATURE_ANALYSIS_LOW_LIGHT
+            )
+        ) {
+            log.info("analyse low light not enabled")
+            return
+        }
         viewModelScope.launch(Dispatchers.Default) {
             val dao = AppDatabase.getInstance(applicationContext).lowLightAnalysisDao()
             isImageLowLightAnalysing = true
@@ -469,11 +481,7 @@ class FilesViewModel(val applicationContext: Application) :
                     pref.feature == PathPreferences
                         .FEATURE_ANALYSIS_LOW_LIGHT
                 }
-                Utils.containsInPreferences(it.path, pathPrefsList, true) &&
-                    PathPreferences.isEnabled(
-                        applicationContext.getAppCommonSharedPreferences(),
-                        PathPreferences.FEATURE_ANALYSIS_LOW_LIGHT
-                    )
+                Utils.containsInPreferences(it.path, pathPrefsList, true)
             }.forEach {
                 if (dao.findByPath(it.path) == null) {
                     val isLowLight = ImgUtils.isImageLowLight(

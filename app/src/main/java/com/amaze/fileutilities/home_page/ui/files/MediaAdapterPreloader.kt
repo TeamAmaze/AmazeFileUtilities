@@ -26,7 +26,7 @@ import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 
-class MediaAdapterPreloader(private val context: Context, private val loadingDrawable: Int) :
+class MediaAdapterPreloader(context: Context, private val loadingDrawable: Int) :
     PreloadModelProvider<String> {
     private var request: RequestBuilder<Drawable> = Glide.with(context).asDrawable().fitCenter()
     private var items: MutableList<String>? = null

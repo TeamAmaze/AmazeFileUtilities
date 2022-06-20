@@ -37,7 +37,6 @@ import me.tankery.lib.circularseekbar.CircularSeekBar
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.lang.IllegalStateException
 import java.lang.ref.WeakReference
 
 class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfaceHandler {
@@ -167,6 +166,8 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
             val audioService = audioServiceRef.get()
             titleSmall.text = audioService?.getAudioPlaybackInfo()?.title
             summarySmall.text = "${album.text} | ${artist.text}"
+            Utils.marqueeAfterDelay(2000, titleSmall)
+            Utils.marqueeAfterDelay(2000, summarySmall)
 
             audioService?.let {
                 playButtonSmallParent.setOnClickListener {
@@ -309,8 +310,14 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
                 } else {
                     binding.playButtonSmall.setImageResource(R.drawable.ic_round_pause_32)
                 }
-                it.titleSmall.text = info.title
-                it.summarySmall.text = "${it.album.text} | ${it.artist.text}"
+                if (info.title != it.titleSmall.text) {
+                    // needed to not invalidate view for marquee effect
+                    it.titleSmall.text = info.title
+                }
+                val newAlbumAndArtist = "${it.album.text} | ${it.artist.text}"
+                if (newAlbumAndArtist != it.summarySmall.text) {
+                    it.summarySmall.text = "${it.album.text} | ${it.artist.text}"
+                }
             }
         }
     }
