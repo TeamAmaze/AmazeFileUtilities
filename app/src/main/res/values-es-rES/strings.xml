@@ -117,103 +117,104 @@
     <!-- Licenses label in about section -->
     <string name="licenses">Licencias</string>
     <!-- Information about a pdf / doc file -->
-    <string name="information">Information</string>
+    <string name="information">Información</string>
     <!-- Unable to open pdf / doc / video / image file -->
-    <string name="unsupported_content">Unsupported content</string>
+    <string name="unsupported_content">Contenido incompatible</string>
     <!-- Group utilities list eg images / videos by parent folder -->
-    <string name="parent">Parent</string>
+    <string name="parent">Principal</string>
     <!-- Group utilities list eg images / videos by date -->
-    <string name="date">Date</string>
+    <string name="date">Fecha</string>
     <!-- Group utilities list eg iamges / videos by name -->
-    <string name="name">Name</string>
+    <string name="name">Nombre</string>
     <!-- Show utilities list by list view -->
-    <string name="list_view">List View</string>
+    <string name="list_view">Ver lista</string>
     <!-- Show utilities list by grid view -->
-    <string name="grid_view">Grid View</string>
+    <string name="grid_view">Ver cuadrícula</string>
     <!-- Sort utilities by size -->
-    <string name="size">Size</string>
+    <string name="size">Tamaño</string>
     <!-- Group audio utilities list by album names  -->
-    <string name="album">Album</string>
+    <string name="album">Álbum</string>
     <!-- Group audio utilities list by artist name -->
-    <string name="artist">Artist</string>
+    <string name="artist">Artista</string>
     <!-- Sort audio / video utilities list by duration -->
-    <string name="duration">Duration</string>
+    <string name="duration">Duración</string>
     <!-- Crash fallback screen title -->
-    <string name="sorry_string">Sorry, that should not have happened.</string>
+    <string name="sorry_string">Lo sentimos, no debería haber pasado.</string>
     <!-- Crash fallback screen report by email -->
-    <string name="error_report_button_text">Report this error via e-mail</string>
+    <string name="error_report_button_text">Reporta este error por correo</string>
     <!-- Crash fallback screen report by telegram -->
-    <string name="error_report_button_telegram">Report this error via telegram</string>
+    <string name="error_report_button_telegram">Reporta este error por Telegram</string>
     <!-- Crash fallback screen copy report -->
-    <string name="copy_for_github">Copy formatted report</string>
+    <string name="copy_for_github">Copiar formado de informe</string>
     <!-- Crash fallback screen report on github -->
-    <string name="error_report_open_issue_button_text">Report on GitHub</string>
+    <string name="error_report_open_issue_button_text">Reportar en GitHub</string>
     <!-- Crash fallback screen info -->
-    <string name="error_report_open_github_notice">Please check whether an issue discussing your crash already exists.</string>
+    <string name="error_report_open_github_notice">Por favor, verifique si ya existe una pregunta relacionada con su error.</string>
     <!-- Toast shown when we failed to display crash fallback screen -->
-    <string name="error_snackbar_message">Sorry, something went wrong.</string>
+    <string name="error_snackbar_message">Lo sentimos, algo salió mal.</string>
     <!-- Crash fallback screen report -->
-    <string name="error_snackbar_action">Report</string>
+    <string name="error_snackbar_action">Reportar</string>
     <!-- Crash fallback screen info about device -->
-    <string name="what_device_headline">Info:</string>
+    <string name="what_device_headline">Información:</string>
     <!-- Crash fallback screen info about crash -->
-    <string name="what_happened_headline">What happened:</string>
+    <string name="what_happened_headline">¿Qué pasó?:</string>
     <!-- Crash fallback screen info about device -->
-    <string name="info_labels">What:\\nRequest:\\nGMT Time:\\nPackage:\\nVersion:\\nOS version:\\nDevice:\\nModel:\\nProduct:\\nDevice ID:</string>
+    <string name="info_labels">Que:\\nRequisito:\\nHora GMT :\\nPaquete:\\nVersión:\\nVersión OS:\\nDispositivo:\\nModelo:\\nProducto:\\nID del dispositivo:</string>
     <!-- Crash fallback screen ask user input -->
-    <string name="your_comment">Your comment (in English):</string>
+    <string name="your_comment">Tú comentario (En inglés):</string>
     <!-- Crash fallback screen show more details -->
-    <string name="error_details_headline">Details:</string>
+    <string name="error_details_headline">Detalles:</string>
     <!-- Crash fallback screen info -->
-    <string name="app_ui_crash">App/UI crashed</string>
+    <string name="app_ui_crash">La aplicación ha fallado</string>
     <!-- Crash fallback screen title -->
-    <string name="error_report_title">Error report</string>
+    <string name="error_report_title">Informe de error</string>
     <!-- Crash fallback screen crash report copied -->
-    <string name="crash_report_copied">Crash report copied to clipboard</string>
+    <string name="crash_report_copied">Informe copiado al portapapeles</string>
     <!-- Crash fallback screen report copied to clipboard -->
-    <string name="clipboard_path_copy">Path copied to clipboard</string>
+    <string name="clipboard_path_copy">Copiado al portapapeles</string>
     <!-- Pdf activity password prompt -->
-    <string name="pdf_password_title">Password required</string>
+    <string name="pdf_password_title">Contraseña necesaria</string>
     <!-- Pdf activity password required info -->
-    <string name="pdf_password_required">Please enter the password to open this document</string>
+    <string name="pdf_password_required">Por favor introduzca la contraseña para abrir este archivo</string>
     <!-- Generic ok button in dialogs -->
-    <string name="ok">OK</string>
+    <string name="ok">Aceptar</string>
     <!-- Pdf activity wrong password entered -->
-    <string name="wrong_password">Wrong password</string>
+    <string name="wrong_password">Contraseña incorrecta</string>
     <!-- Generic message for any operation not supported -->
-    <string name="unsupported_operation">Unsupported Operation</string>
+    <string name="unsupported_operation">Acción incompatible</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>Since Android 11, Google requests File Managers to request user permission for managing all files on the device. Details <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">here</a>.
-        \n\nAmaze File Utilities needs this permission too. After pressing &quot;Grant&quot;here, please select <b>Allow access to manage all files</b> option on the next screen.
-        \n\n<font color="#ff6347"><i>Canceling this dialog will exit the app.</i></font></body></html></string>
+    <string name="grant_all_files_permission"><html><body>Para Android 11, Google solicita a los administradores pedir permiso para tratar todos los archivos del dispositivo. Más detalles <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">aquí</a>.
+        \n\nAmaze File Utilities también necesita estos permisos. Despues de prulsar 
+ &quot;Grant&quot;aquí, por favor selecciones<b>Permitir el acceso a todos los archivos </b>Opción disponible en la siguien pantalla.
+        \n\n<font color="#ff6347"><i>Si cancela este dialogo saldrá de la aplicación.</i></font></body></html></string>
     <!-- Pdf activity copy page content title -->
-    <string name="copy_page">Copy page</string>
+    <string name="copy_page">Copiar página</string>
     <!-- Pdf activity view bookmarks -->
-    <string name="bookmarks">Bookmarks</string>
+    <string name="bookmarks">Favoritos</string>
     <!-- Pdf activity pdf title -->
-    <string name="title">Title</string>
+    <string name="title">Título</string>
     <!-- Pdf activity pdf author -->
-    <string name="author">Author</string>
+    <string name="author">Autor</string>
     <!-- Pdf activity pdf creator -->
-    <string name="creator">Creator</string>
+    <string name="creator">Creado por</string>
     <!-- Pdf activity pdf creation date -->
-    <string name="creation_date">Creation date</string>
+    <string name="creation_date">Fecha de creación</string>
     <!-- Pdf activity pdf modification date -->
-    <string name="modification_date">Modification Date</string>
+    <string name="modification_date">Fecha de modificación</string>
     <!-- Pdf activity pdf subject -->
-    <string name="subject">Subject</string>
+    <string name="subject">Asunto</string>
     <!-- Pdf activity pdf keywords -->
-    <string name="keywords">Keywords</string>
+    <string name="keywords">Palabras clave</string>
     <!-- Pdf activity pdf producer -->
-    <string name="producer">Producer</string>
+    <string name="producer">Productor</string>
     <!-- Generic dialog close button -->
-    <string name="close">Close</string>
+    <string name="close">Cerrar</string>
     <!-- Analysing internal storage shown in analysis tab -->
-    <string name="analysing">Analysing…</string>
+    <string name="analysing">Analizando…</string>
     <!-- Pdf activity page content copied -->
-    <string name="page_copied_to_clipboard">Page content copied to clipboard</string>
+    <string name="page_copied_to_clipboard">Contenido copiado al portapapeles</string>
     <!-- Clean button in analysis tab to clean junk files -->
-    <string name="clean">Clean</string>
+    <string name="clean">Limpiar</string>
     <!-- Blurred images label in analysis -->
     <string name="blurred_pics">Blurred</string>
     <!-- Low light label in analysis -->
@@ -360,106 +361,106 @@
     <!-- tv casting content notification content -->
     <string name="cast_notification_summary">Casting content on TV</string>
     <!-- stop tv cast server notification button -->
-    <string name="stop">Stop</string>
+    <string name="stop">Pausa</string>
     <!-- Service description to cast media files to tv -->
-    <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
+    <string name="cloud_streamer_service_description">Reproducir desde Amaze File Utilities</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
-    <string name="failed_to_handshake">Failed to establish connection with remote device</string>
+    <string name="failed_to_handshake">No se pudo establecer conexión con el dispositivo remoto</string>
     <!-- Connection successful to transfer files in tranfer tab -->
-    <string name="connection_successful">Connection successful</string>
+    <string name="connection_successful">Conexión exitosa</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send">Failed to send, please ensure remote is set to receive file</string>
+    <string name="failed_filename_send">Fallo al enviar, por favor revise que el dispositivo esté listo para recibir el archivo</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send_reconnecct">Failed to send, please reconnect</string>
+    <string name="failed_filename_send_reconnecct">Fallo al enviar, por favor vuelve a conectar</string>
     <!-- Failed to receive files in transfer tab -->
-    <string name="failed_filename_receive">Failed to receive</string>
+    <string name="failed_filename_receive">Error al recibir</string>
     <!-- Failed to receive files in transfer tab -->
-    <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
+    <string name="failed_filename_receive_reconnecct">Error al recibir, por favor vuelve a conectar</string>
     <!-- Transfer complete in transfer tab -->
-    <string name="transfer_complete">Transfer complete</string>
+    <string name="transfer_complete">Transferencia completa</string>
     <!-- Need extra permissions for transfer tab -->
-    <string name="grant_location_permission">App needs location permission to connect with nearby devices.</string>
+    <string name="grant_location_permission">La aplicación necesita permiso de ubicación para conectar con dispositivos cercanos.</string>
     <!-- Need extra permissions for transfer tab -->
-    <string name="location_permission_not_granted">Please grant storage permission to connect with nearby devices.</string>
+    <string name="location_permission_not_granted">Por favor otorga permiso de almacenamiento para conectar con dispositivos cercanos.</string>
     <!-- Waiting for permissions in transfer tab -->
-    <string name="waiting_for_permissions">Waiting for permissions…</string>
+    <string name="waiting_for_permissions">Esperando por permisos…</string>
     <!-- Enable gps for transfer tab -->
-    <string name="gps_disabled">Your GPS seems to be disabled, please enable to proceed</string>
+    <string name="gps_disabled">Tu GPS está desactivado, por favor habilítalo para continuar</string>
     <!-- Enable location to scan nearby devices in transfer tab -->
-    <string name="enable_location">Please enable location to scan.</string>
+    <string name="enable_location">Por favor, habilita la localización.</string>
     <!-- generic yes -->
-    <string name="yes">Yes</string>
+    <string name="yes">Si</string>
     <!-- generic no -->
     <string name="no">No</string>
     <!-- Enable location / wifi in transfer tab -->
-    <string name="enable">Enable</string>
+    <string name="enable">Habilitar</string>
     <!-- No nearby devices found in transfer tab -->
-    <string name="no_devices_found">No devices found nearby,
-        please make sure your device is connected to same network and have WiFi-Direct enabled in settings</string>
+    <string name="no_devices_found">No se han encontrado dispositivos cercanos,
+        Por favor asegúrate que tu dispositivo esté conectado a la misma red y tengas habilitada la opción Wi-Fi-Direct activado en la configuración</string>
     <!-- Failed to stop discovery in transfer tab -->
-    <string name="failed_to_stop_peer_discovery">Failed to stop peer discovery</string>
+    <string name="failed_to_stop_peer_discovery">Fallo al detener el emparejamiento</string>
     <!-- Resetting network discovery in transfer tab -->
-    <string name="resetting_network_discovery">Resetting network discovery</string>
+    <string name="resetting_network_discovery">Restableciendo la exploración de red</string>
     <!-- Disconnected in transfer tab -->
-    <string name="disconnected">Disconnected</string>
+    <string name="disconnected">Desconectado</string>
     <!-- Disconnect from connection in transfer tab -->
-    <string name="disconnect">Disconnect</string>
+    <string name="disconnect">Desconectar</string>
     <!-- Already connected to a device in transfer tab -->
-    <string name="existing_connection">Existing connection exists, please disconnect first!</string>
+    <string name="existing_connection">Hay una conexión existente ¡Por favor desconecta primero!</string>
     <!-- Connecting to nearby device in transfer tab -->
-    <string name="connecting">Connecting…</string>
+    <string name="connecting">Conectando…</string>
     <!-- Aspect ratio of video in video player -->
-    <string name="aspect_ratio">Aspect ratio</string>
+    <string name="aspect_ratio">Formato de video</string>
     <!-- Playback speed dialog for video / audio player -->
-    <string name="playback_speed">Playback Speed</string>
+    <string name="playback_speed">Velocidad de reproducción</string>
     <!-- Playback pitch in video / audio player -->
-    <string name="pitch_speed">Pitch (semitones)</string>
+    <string name="pitch_speed">Pitch (Semitonos)</string>
     <!-- Add subtitles in video player -->
-    <string name="subtitles">Subtitles</string>
+    <string name="subtitles">Subtítulos</string>
     <!-- Video info dialog in video player -->
-    <string name="file">File</string>
+    <string name="file">Archivo</string>
     <!-- Video info dialog in video player -->
-    <string name="media">Media</string>
+    <string name="media">Multimedia</string>
     <!-- Video info dialog in video player -->
     <string name="audio">Audio</string>
     <!-- Video info dialog in video player -->
     <string name="video">Video</string>
     <!-- Video info dialog in video player -->
-    <string name="file_path">Path</string>
+    <string name="file_path">Ruta</string>
     <!-- Video info dialog in video player -->
-    <string name="last_modified">Last Modified</string>
+    <string name="last_modified">Última modificación</string>
     <!-- Video info dialog in video player -->
-    <string name="description">Description</string>
+    <string name="description">Descripción</string>
     <!-- Video info dialog in video player -->
-    <string name="recording_date">Recording month/year</string>
+    <string name="recording_date">Grabación mes/año</string>
     <!-- Video info dialog in video player -->
-    <string name="release_date">Release month/year</string>
+    <string name="release_date">Publicación mess/año</string>
     <!-- Video info dialog in video player -->
-    <string name="bitrate">Bitrate</string>
+    <string name="bitrate">Frecuencia</string>
     <!-- Video info dialog in video player -->
-    <string name="channel">Channel</string>
+    <string name="channel">Canal</string>
     <!-- Video info dialog in video player -->
-    <string name="frame_rate">Frame Rate</string>
+    <string name="frame_rate">Fotogramas Por Segundo</string>
     <!-- Video info dialog in video player -->
-    <string name="mime_type">Container Type</string>
+    <string name="mime_type">Tipo de archivo</string>
     <!-- Video info dialog in video player -->
-    <string name="width">Width</string>
+    <string name="width">Ancho</string>
     <!-- Video info dialog in video player -->
-    <string name="height">Height</string>
+    <string name="height">Altura</string>
     <!-- Video info dialog in video player -->
     <string name="codecs">Codecs</string>
     <!-- Video info dialog in video player -->
-    <string name="sample_rate">Sample Rate</string>
+    <string name="sample_rate">Frecuencia de muestreo</string>
     <!-- Failed to gain audio focus in music player -->
-    <string name="failed_to_gain_focus">Failed to gain audio focus</string>
+    <string name="failed_to_gain_focus">Error al obtener el foco de audio</string>
     <!-- Open existing subtitles file in video player -->
-    <string name="open">Open</string>
+    <string name="open">Abrir</string>
     <!-- Search for subtitles file online dialog button in video player -->
-    <string name="search">Search</string>
+    <string name="search">Buscar</string>
     <!-- Search for subtitles file online dialog title in video player -->
-    <string name="search_online">Search online</string>
+    <string name="search_online">Buscar en línea</string>
     <!-- Synchronize subtitles list item in video player -->
-    <string name="synchronize">Synchronize</string>
+    <string name="synchronize">Sincronizar</string>
     <!-- Download subtitles in video player -->
     <string name="download_subtitles">Download subtitles</string>
     <!-- Download subtitles info in video player -->
@@ -569,32 +570,32 @@
     <!-- Image viewer image path -->
     <string name="path">Path</string>
     <!-- Image viewer open image location in map -->
-    <string name="open_in_maps">Open in Map</string>
+    <string name="open_in_maps">Abrir en el mapa</string>
     <!-- Share image / video -->
-    <string name="share">Share</string>
+    <string name="share">Compartir</string>
     <!-- Share / document no app found to open -->
-    <string name="no_app_found">No App found to open this file</string>
+    <string name="no_app_found">No se encontró una aplicación par abrir este archivo</string>
     <!-- File not found while opening -->
-    <string name="file_not_found">File not found</string>
+    <string name="file_not_found">Archivo no encontrado</string>
     <!-- Delete file -->
-    <string name="delete_files_title">Delete</string>
+    <string name="delete_files_title">Eliminar</string>
     <!-- Delete file summary -->
-    <string name="delete_files_message">You\'re about to permanently delete these files.
-        Are you sure you want to proceed?\n\n%s Files, %s Size</string>
+    <string name="delete_files_message">Estas a punto de eliminar este archivo.
+        ¿Quieres continuar?\n\n%s Files, %s Size</string>
     <!-- Delete file progress -->
-    <string name="deleted_progress">Deleted %s of %s</string>
+    <string name="deleted_progress">Eliminado %s de %s</string>
     <!-- Delete file successful -->
-    <string name="successfully_deleted">Successfully deleted</string>
+    <string name="successfully_deleted">Eliminado con éxito</string>
     <!-- Delete file failure -->
-    <string name="failed_to_update_list_reopen">Failed to update list, please restart the app</string>
+    <string name="failed_to_update_list_reopen">Fallo al actualizar la lista, por favor reinicia la aplicación</string>
     <!-- Device id in about section -->
-    <string name="device_id">Device ID</string>
+    <string name="device_id">ID del dispositivo</string>
     <!-- Subscription status in about section -->
-    <string name="subscription_status">Subscription status</string>
+    <string name="subscription_status">Estado de suscripción</string>
     <!-- Device id copied in about section -->
-    <string name="device_id_copied">Device ID copied to clipboard</string>
+    <string name="device_id_copied">ID del dispositivo copiada al portapapeles</string>
     <!-- App version in about section -->
-    <string name="version_title">Version</string>
+    <string name="version_title">Versión</string>
     <!-- License title in about section -->
     <string name="license">License</string>
     <!-- Submit issue in about section -->

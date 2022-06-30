@@ -211,7 +211,7 @@
     <!-- Analysing internal storage shown in analysis tab -->
     <string name="analysing">分析中…</string>
     <!-- Pdf activity page content copied -->
-    <string name="page_copied_to_clipboard">路此頁內容已複製到剪貼簿</string>
+    <string name="page_copied_to_clipboard">此頁內容已複製到剪貼簿</string>
     <!-- Clean button in analysis tab to clean junk files -->
     <string name="clean">乾淨</string>
     <!-- Blurred images label in analysis -->
@@ -312,7 +312,7 @@
     <!-- Cluttered videos in analysis tab -->
     <string name="cluttered_videos">雜亂無章的影片</string>
     <!-- Cluttered videos hint in analysis tab -->
-    <string name="cluttered_videos_hint">A group of videos that have similar running time.</string>
+    <string name="cluttered_videos_hint">一組長度相若的影片。</string>
     <!-- Re-analyse button in analysis settings -->
     <string name="reanalyse">再分析</string>
     <!-- Re-analyse hint in analysis settings -->

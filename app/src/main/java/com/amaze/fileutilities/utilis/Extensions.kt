@@ -390,3 +390,7 @@ fun Context.isNetworkAvailable(): Boolean {
     val activeNetworkInfo = connectivityManager.activeNetworkInfo
     return activeNetworkInfo != null && activeNetworkInfo.isConnected
 }
+
+fun String.doesFileExist(): Boolean {
+    return File(this).exists()
+}
