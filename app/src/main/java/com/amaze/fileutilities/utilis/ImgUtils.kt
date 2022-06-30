@@ -38,14 +38,27 @@ class ImgUtils {
         fun convertMatToBitmap(input: Mat): Bitmap? {
             var bmp: Bitmap? = null
             val rgb = Mat()
-            Imgproc.cvtColor(input, rgb, Imgproc.COLOR_BGR2RGB)
             try {
+                Imgproc.cvtColor(input, rgb, Imgproc.COLOR_BGR2RGB)
                 bmp = Bitmap.createBitmap(rgb.cols(), rgb.rows(), Bitmap.Config.ARGB_8888)
                 Utils.matToBitmap(rgb, bmp)
             } catch (e: Exception) {
                 log.warn("failed to convert mat to bitmap", e)
             }
             return bmp
+        }
+
+        private fun readImage(path: String): Mat? {
+            if (!path.doesFileExist()) {
+                log.warn("failed to read matrix from path as file not found")
+                return null
+            }
+            val mat = Imgcodecs.imread(path)
+            if (mat.empty() || mat.height() == 0 || mat.width() == 0) {
+                log.warn("failed to read matrix from path as image parameters empty")
+                return null
+            }
+            return mat
         }
 
         fun convertBitmapToMat(input: Bitmap): Mat? {
@@ -111,15 +124,19 @@ class ImgUtils {
             path: String,
             callback: ((isSuccess: Boolean, imageFeatures: ImageFeatures?) -> Unit)
         ) {
-            TimeUnit.SECONDS.sleep(1L)
 //            val image = InputImage.fromBitmap(bitmap, 0)
             try {
-
+                TimeUnit.SECONDS.sleep(1L)
 //                val image = InputImage.fromFilePath(context, uri)
-                val mat = Imgcodecs.imread(path)
+                val mat = readImage(path)
+                if (mat == null) {
+                    log.warn("failure to find image analysis")
+                    callback.invoke(false, null)
+                    return
+                }
                 val resizeimage = resize(mat, getGenericWidth(mat), getGenericHeight(mat))
                 val bitmap = convertMatToBitmap(resizeimage)
-                bitmap?.let {
+                if (bitmap != null) {
                     val image = InputImage.fromBitmap(bitmap, 0)
                     faceDetector.process(image)
                         .addOnSuccessListener { faces ->
@@ -167,6 +184,9 @@ class ImgUtils {
                             log.warn("get image features failure", e)
                             callback.invoke(false, null)
                         }
+                } else {
+                    log.warn("failed to find features of empty bitmap")
+                    callback.invoke(false, null)
                 }
             } catch (e: Exception) {
                 log.warn("Failed to check for image features due to exception", e)
@@ -184,11 +204,17 @@ class ImgUtils {
         ) {
             try {
 //                val image = InputImage.fromFilePath(context, uri)
-                val mat = Imgcodecs.imread(path)
+                val mat = readImage(path)
+                if (mat == null) {
+                    log.warn("Failure to extract text from input image")
+                    callback?.invoke(false, null)
+                    return
+                }
                 val resizeimage = resize(mat, getGenericWidth(mat), getGenericHeight(mat))
                 val bitmap = convertMatToBitmap(resizeimage)
-                bitmap?.let {
+                if (bitmap != null) {
                     if (bitmap.width < 32 || bitmap.height < 32) {
+                        log.info("skip extract text due to small image size")
                         callback?.invoke(true, null)
                         return
                     }
@@ -204,6 +230,9 @@ class ImgUtils {
                             log.warn("extract text from img failure", e)
                             callback?.invoke(false, null)
                         }
+                } else {
+                    log.warn("Failed to extract text from empty bitmap")
+                    callback?.invoke(false, null)
                 }
             } catch (e: IOException) {
                 log.warn("extract text from img ioexception", e)
@@ -256,7 +285,11 @@ class ImgUtils {
             path: String
         ): Boolean? {
             return try {
-                val matrix = Imgcodecs.imread(path)
+                val matrix = readImage(path)
+                if (matrix == null) {
+                    log.warn("failure to find blur for input")
+                    return false
+                }
                 val factor = laplace(matrix)
                 if (factor == Double.MAX_VALUE) {
                     return null
@@ -278,7 +311,11 @@ class ImgUtils {
             path: String
         ): Boolean? {
             return try {
-                val matrix = Imgcodecs.imread(path)
+                val matrix = readImage(path)
+                if (matrix == null) {
+                    log.warn("failure to find low light for input")
+                    return false
+                }
                 processForLowLight(matrix)
             } catch (e: Exception) {
                 log.warn("Failed to check for low light image", e)
@@ -300,30 +337,38 @@ class ImgUtils {
             }
         }
 
-        fun processPdfImg(matrix: Mat): Mat {
+        fun processPdfImg(matrix: Mat): Mat? {
             val resizeimage = resize(matrix, 4961.0, 7016.0)
-            val matGray = gray(resizeimage)
-            val sharpen = sharpenBitmap(matGray)
-            return sharpen
+            resizeimage?.let {
+                val matGray = gray(resizeimage)
+                val sharpen = sharpenBitmap(matGray)
+                return sharpen
+            }
+            return null
         }
 
-        fun laplace(image: Mat): Double {
+        private fun laplace(image: Mat): Double {
             val destination = Mat()
             val matGray = Mat()
             return try {
                 val resizeimage = resize(image, getGenericWidth(image), getGenericHeight(image))
-                Imgproc.cvtColor(resizeimage, matGray, Imgproc.COLOR_BGR2GRAY)
-                Imgproc.Laplacian(matGray, destination, 3)
-                val median = MatOfDouble()
-                val std = MatOfDouble()
-                Core.meanStdDev(destination, median, std)
+                if (resizeimage != null) {
+                    Imgproc.cvtColor(resizeimage, matGray, Imgproc.COLOR_BGR2GRAY)
+                    Imgproc.Laplacian(matGray, destination, 3)
+                    val median = MatOfDouble()
+                    val std = MatOfDouble()
+                    Core.meanStdDev(destination, median, std)
 
-                resizeimage.release()
-                matGray.release()
-                destination.release()
-                image.release()
+                    resizeimage.release()
+                    matGray.release()
+                    destination.release()
+                    image.release()
 
-                std[0, 0][0].pow(2.0)
+                    std[0, 0][0].pow(2.0)
+                } else {
+                    log.warn("Failed to check for blurry image due to empty image")
+                    Double.MAX_VALUE
+                }
             } catch (e: Exception) {
                 log.warn("Failed to check for blurry image", e)
                 Double.MAX_VALUE
@@ -389,7 +434,7 @@ class ImgUtils {
             return threshold
         }
 
-        fun getTotalAndZeros(matrix: Mat): Pair<Int, Int> {
+        private fun getTotalAndZeros(matrix: Mat): Pair<Int, Int> {
             try {
                 val resizeimage = resize(
                     matrix, getGenericWidth(matrix),
@@ -473,7 +518,7 @@ class ImgUtils {
             return result
         }
 
-        fun blur(matrix: Mat): Mat {
+        private fun blur(matrix: Mat): Mat {
             val result = Mat()
             Imgproc.blur(matrix, result, Size(9.0, 9.0))
             return result

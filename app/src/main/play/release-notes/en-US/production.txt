@@ -1,4 +1,5 @@
 Changelog:
+- Add translations
 - Add support for svg graphics
 - Implement palette for audio player and image viewer
 - Implement playback options for audio / video player (playback speed / pitch)
