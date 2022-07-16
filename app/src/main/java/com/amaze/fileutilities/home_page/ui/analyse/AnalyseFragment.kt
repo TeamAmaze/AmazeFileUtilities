@@ -11,13 +11,11 @@
 package com.amaze.fileutilities.home_page.ui.analyse
 
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
-import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
@@ -28,9 +26,8 @@ import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.*
-import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 
-class AnalyseFragment : Fragment() {
+class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
 
     private lateinit var analyseViewModel: AnalyseViewModel
     private val filesViewModel: FilesViewModel by activityViewModels()
@@ -40,6 +37,10 @@ class AnalyseFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    override fun getFilesViewModelObj(): FilesViewModel {
+        return filesViewModel
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -278,6 +279,33 @@ class AnalyseFragment : Fragment() {
                     }
                 }
             }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                filesViewModel.getUnusedApps().observe(viewLifecycleOwner) {
+                    mediaFileInfoList ->
+                    unusedAppsPreview.visibility = View.VISIBLE
+                    unusedAppsPreview.invalidateProgress(true)
+                    mediaFileInfoList?.let {
+                        unusedAppsPreview.invalidateProgress(false)
+                        unusedAppsPreview.loadPreviews(mediaFileInfoList) {
+                            cleanButtonClick(it) {
+                                filesViewModel.unusedAppsLiveData = null
+                            }
+                        }
+                    }
+                }
+            }
+            filesViewModel.getLargeApps().observe(viewLifecycleOwner) {
+                mediaFileInfoList ->
+                largeAppsPreview.invalidateProgress(true)
+                mediaFileInfoList?.let {
+                    largeAppsPreview.invalidateProgress(false)
+                    largeAppsPreview.loadPreviews(mediaFileInfoList) {
+                        cleanButtonClick(it) {
+                            filesViewModel.largeAppsLiveData = null
+                        }
+                    }
+                }
+            }
         }
         return root
     }
@@ -288,43 +316,21 @@ class AnalyseFragment : Fragment() {
     }
 
     private fun cleanButtonClick(toDelete: List<MediaFileInfo>, deletedCallback: () -> Unit) {
-        val progressDialogBuilder = requireContext()
-            .showProcessingDialog(layoutInflater, "")
-        val progressDialog = progressDialogBuilder.create()
-        val summaryDialogBuilder = Utils.buildDeleteSummaryDialog(requireContext()) {
-            progressDialog.show()
-            filesViewModel.deleteMediaFiles(toDelete).observe(viewLifecycleOwner) {
-                progressDialog.findViewById<TextView>(R.id.please_wait_text)?.text =
-                    resources.getString(R.string.deleted_progress)
-                        .format(it.first, toDelete.size)
-                if (it.second == toDelete.size) {
-                    // reset interal storage stats so that we recalculate storage remaining
-                    filesViewModel.internalStorageStatsLiveData = null
-                    deletedCallback.invoke()
+        setupDeleteButton(toDelete) {
+            // reset interal storage stats so that we recalculate storage remaining
+            filesViewModel.internalStorageStatsLiveData = null
+            deletedCallback.invoke()
 
-                    // deletion complete, no need to check analysis data to remove
-                    // as it will get deleted lazily while loading analysis lists
-                    requireContext().showToastOnBottom(
-                        resources
-                            .getString(R.string.successfully_deleted)
-                    )
-
-                    val navController = NavHostFragment.findNavController(this)
-                    navController.popBackStack()
-                    navController.navigate(R.id.navigation_analyse)
-                    progressDialog.dismiss()
-                }
-            }
-        }
-        val summaryDialog = summaryDialogBuilder.create()
-        summaryDialog.show()
-        filesViewModel.getMediaFileListSize(toDelete).observe(viewLifecycleOwner) {
-            sizeRaw ->
-            val size = Formatter.formatFileSize(requireContext(), sizeRaw)
-            summaryDialog.setMessage(
+            // deletion complete, no need to check analysis data to remove
+            // as it will get deleted lazily while loading analysis lists
+            requireContext().showToastOnBottom(
                 resources
-                    .getString(R.string.delete_files_message).format(toDelete.size, size)
+                    .getString(R.string.successfully_deleted)
             )
+
+            val navController = NavHostFragment.findNavController(this)
+            navController.popBackStack()
+            navController.navigate(R.id.navigation_analyse)
         }
     }
 
@@ -506,6 +512,18 @@ class AnalyseFragment : Fragment() {
             largeVideoPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_LARGE_VIDEOS,
+                    this@AnalyseFragment
+                )
+            }
+            unusedAppsPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_UNUSED_APPS,
+                    this@AnalyseFragment
+                )
+            }
+            largeAppsPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_LARGE_APPS,
                     this@AnalyseFragment
                 )
             }

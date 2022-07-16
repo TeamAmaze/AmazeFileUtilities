@@ -11,14 +11,19 @@
 package com.amaze.fileutilities.utilis
 
 import android.app.Activity
+import android.app.usage.UsageStats
+import android.app.usage.UsageStatsManager
 import android.content.*
 import android.content.pm.ActivityInfo
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Point
 import android.net.Uri
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.os.Handler
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -26,8 +31,10 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -696,6 +703,63 @@ class Utils {
                     },
                     delayInMillis.toLong()
                 )
+        }
+
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+        fun getAppsUsageStats(context: Context): List<UsageStats> {
+            val usm: UsageStatsManager = (
+                context.getSystemService(Context.USAGE_STATS_SERVICE)
+                    as UsageStatsManager
+                )
+            val calendar = Calendar.getInstance()
+            val endTime = calendar.timeInMillis
+            calendar.add(Calendar.MONTH, -1)
+            val startTime = calendar.timeInMillis
+            return usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, startTime, endTime)
+        }
+
+        fun uninstallPackage(pkg: String, activity: Activity): Boolean {
+            try {
+                val intent = Intent(Intent.ACTION_DELETE)
+                intent.data = Uri.parse("package:$pkg")
+                activity.startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(activity, "" + e, Toast.LENGTH_SHORT).show()
+                log.warn("failed to uninstall apk", e)
+                return false
+            }
+            return true
+        }
+
+        /**
+         * Check if an App is under /system or has been installed as an update to a built-in system
+         * application.
+         */
+        fun isAppInSystemPartition(applicationInfo: ApplicationInfo): Boolean {
+            return (
+                (
+                    applicationInfo.flags
+                        and (ApplicationInfo.FLAG_SYSTEM or ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)
+                    )
+                    != 0
+                )
+        }
+
+        /** Check if an App is signed by system or not.  */
+        fun isSignedBySystem(piApp: PackageInfo?, piSys: PackageInfo?): Boolean {
+            return piApp != null && piSys != null && piApp.signatures != null &&
+                piSys.signatures[0] == piApp.signatures[0]
+        }
+
+        fun openExternalApp(context: Context, packageName: String): Boolean {
+            try {
+                val it = context.packageManager.getLaunchIntentForPackage(packageName)
+                if (null != it) context.startActivity(it)
+            } catch (e: ActivityNotFoundException) {
+                com.amaze.fileutilities.utilis.log.warn("app not found to open", e)
+                return false
+            }
+            return true
         }
 
         private fun getPaletteColor(palette: Palette?, fallback: Int): Int {
