@@ -751,4 +751,8 @@
     <string name="image_viewer_enable_palette">Extract palette color from image</string>
     <!-- Settings page extract image viewer background color from image summary -->
     <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
+    <!-- Unused apps in analysis tab -->
+    <string name="unused_apps">Unused apps</string>
+    <!-- Large apps in analysis tab -->
+    <string name="large_apps">Large apps</string>
 </resources>

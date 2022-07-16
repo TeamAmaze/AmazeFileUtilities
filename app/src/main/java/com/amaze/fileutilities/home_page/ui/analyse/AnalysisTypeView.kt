@@ -18,11 +18,11 @@ import android.view.View
 import android.widget.*
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
+import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo.Companion.getGlideRequest
 import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.px
 import com.amaze.fileutilities.utilis.showToastInCenter
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.lang.ref.WeakReference
@@ -110,7 +110,7 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         }
         imageView.layoutParams = getParams()
         imageView.scaleType = ImageView.ScaleType.CENTER
-        Glide.with(context).load(mediaFileInfo.path)
+        mediaFileInfo.getGlideRequest(context)
             .centerCrop()
             .transform(CenterCrop(), RoundedCorners(106.px.toInt()))
             .fallback(R.drawable.ic_outline_broken_image_24)

@@ -15,6 +15,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.fragment.app.Fragment
 
+/**
+ * General purpose fragment that supports show / hide system bars on top
+ */
 abstract class AbstractMediaFragment : Fragment() {
 
     companion object {
