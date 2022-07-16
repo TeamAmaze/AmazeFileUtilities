@@ -55,8 +55,9 @@ class MediaAdapterPreloader(context: Context, private val loadingDrawable: Int) 
     fun loadImage(item: MediaFileInfo, view: ImageView, isGrid: Boolean) {
         val toLoadPath: String = item.path
         val toLoadBitmap: Bitmap? = item.extraInfo?.audioMetaData?.albumArt
+        val toLoadDrawable = item.extraInfo?.apkMetaData?.drawable
         var transformedRequest = request.fallback(R.drawable.ic_outline_broken_image_24)
-            .placeholder(loadingDrawable).load(toLoadBitmap ?: toLoadPath)
+            .placeholder(loadingDrawable).load(toLoadDrawable ?: toLoadBitmap ?: toLoadPath)
         transformedRequest = if (isGrid) {
             transformedRequest.centerCrop()
                 .transform(CenterCrop(), GranularRoundedCorners(24.px, 24.px, 0f, 0f))

@@ -11,9 +11,14 @@
 package com.amaze.fileutilities.home_page.ui.files
 
 import android.app.Application
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
+import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.*
@@ -52,6 +57,11 @@ class FilesViewModel(val applicationContext: Application) :
     var castSetupSuccess = true
     var wifiIpAddress: String? = null
     val uniqueIdSalt = "#%36zkpCE2"
+
+    var unusedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+
+    private var allApps: List<ApplicationInfo>? = null
 
     private val highAccuracyOpts = FaceDetectorOptions.Builder()
         .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
@@ -649,7 +659,7 @@ class FilesViewModel(val applicationContext: Application) :
 
     fun deleteMediaFiles(mediaFileInfoList: List<MediaFileInfo>): LiveData<Pair<Int, Int>> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            log.info("Sharing media files $mediaFileInfoList")
+            log.info("Deleting media files $mediaFileInfoList")
             var successProcessedPair = Pair(0, 0)
             mediaFileInfoList.forEachIndexed { index, mediaFileInfo ->
                 successProcessedPair = if (mediaFileInfo.delete()) {
@@ -867,6 +877,103 @@ class FilesViewModel(val applicationContext: Application) :
                 applicationContext.resources.getColor(R.color.navy_blue_alt)
             )
             emit(color)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    fun getUnusedApps(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (unusedAppsLiveData == null) {
+            unusedAppsLiveData = MutableLiveData()
+            unusedAppsLiveData?.value = null
+            processUnusedApps(applicationContext.packageManager)
+        }
+        return unusedAppsLiveData!!
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    private fun processUnusedApps(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+
+            val usageStats = Utils.getAppsUsageStats(applicationContext)
+            val usageStatsPackages = usageStats.map {
+                it.packageName
+            }
+            val unusedAppsList =
+                allApps?.filter { !usageStatsPackages.contains(it.packageName) }?.mapNotNull {
+                    MediaFileInfo.fromApplicationInfo(packageManager, it)
+                }
+            unusedAppsLiveData?.postValue(ArrayList(unusedAppsList))
+        }
+    }
+
+    fun getLargeApps(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (largeAppsLiveData == null) {
+            largeAppsLiveData = MutableLiveData()
+            largeAppsLiveData?.value = null
+            processLargeApps(applicationContext.packageManager)
+        }
+        return largeAppsLiveData!!
+    }
+
+    private fun processLargeApps(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+
+            val priorityQueue = PriorityQueue<MediaFileInfo>(
+                50
+            ) { o1, o2 -> -1 * o1.longSize.compareTo(o2.longSize) }
+
+            allApps?.forEachIndexed { index, applicationInfo ->
+                if (index > 49) {
+                    priorityQueue.remove()
+                }
+                MediaFileInfo.fromApplicationInfo(packageManager, applicationInfo)?.let {
+                    priorityQueue.add(it)
+                }
+            }
+
+            val result = ArrayList<MediaFileInfo>()
+            while (!priorityQueue.isEmpty()) {
+                priorityQueue.remove()?.let {
+                    result.add(it)
+                }
+            }
+            largeAppsLiveData?.postValue(ArrayList(result.reversed()))
+        }
+    }
+
+    private fun loadAllInstalledApps(packageManager: PackageManager) {
+        if (allApps == null) {
+            allApps = packageManager.getInstalledApplications(
+                PackageManager.MATCH_UNINSTALLED_PACKAGES
+                    or PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
+            ).filter {
+                var info: PackageInfo?
+                var androidInfo: PackageInfo? = null
+                try {
+                    info = packageManager.getPackageInfo(
+                        it.packageName,
+                        PackageManager.GET_SIGNATURES
+                    )
+                    androidInfo =
+                        packageManager.getPackageInfo(
+                            "android",
+                            PackageManager.GET_SIGNATURES
+                        )
+                } catch (e: PackageManager.NameNotFoundException) {
+                    log.warn(
+                        "failed to find package name {} while loading apps list",
+                        it.packageName,
+                        e
+                    )
+                    info = null
+                }
+                !Utils.isAppInSystemPartition(it) && (
+                    info == null ||
+                        !Utils.isSignedBySystem(info, androidInfo)
+                    )
+            }
         }
     }
 

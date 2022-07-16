@@ -78,6 +78,8 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         const val TYPE_LARGE_DOWNLOADS = 16
         const val TYPE_LOW_LIGHT = 17
         const val TYPE_CLUTTERED_VIDEOS = 18
+        const val TYPE_UNUSED_APPS = 19
+        const val TYPE_LARGE_APPS = 20
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -148,6 +150,9 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
             }
             TYPE_OLD_RECORDINGS -> {
                 MediaFileAdapter.MEDIA_TYPE_AUDIO
+            }
+            TYPE_LARGE_APPS, TYPE_UNUSED_APPS -> {
+                MediaFileAdapter.MEDIA_TYPE_APKS
             }
             else -> {
                 MediaFileAdapter.MEDIA_TYPE_UNKNOWN
@@ -434,6 +439,30 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                         setMediaInfoList(it, false)
                         invalidateProcessing(false, false)
                     }
+                }
+            }
+            TYPE_UNUSED_APPS -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    filesViewModel.getUnusedApps()
+                        .observe(viewLifecycleOwner) { unusedApps ->
+                            invalidateProcessing(true, false)
+                            unusedApps?.let {
+                                setMediaInfoList(it, false)
+                                invalidateProcessing(false, false)
+                            }
+                        }
+                }
+            }
+            TYPE_LARGE_APPS -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    filesViewModel.getLargeApps()
+                        .observe(viewLifecycleOwner) { largeApps ->
+                            invalidateProcessing(true, false)
+                            largeApps?.let {
+                                setMediaInfoList(it, false)
+                                invalidateProcessing(false, false)
+                            }
+                        }
                 }
             }
         }
