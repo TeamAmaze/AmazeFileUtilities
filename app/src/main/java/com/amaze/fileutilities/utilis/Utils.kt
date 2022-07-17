@@ -11,13 +11,11 @@
 package com.amaze.fileutilities.utilis
 
 import android.app.Activity
+import android.app.usage.StorageStatsManager
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
 import android.content.*
-import android.content.pm.ActivityInfo
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
+import android.content.pm.*
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -26,6 +24,7 @@ import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
+import android.os.RemoteException
 import android.provider.MediaStore
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -39,7 +38,6 @@ import androidx.annotation.FloatRange
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.palette.graphics.Palette
@@ -50,12 +48,14 @@ import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewAnalysisAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.google.android.material.slider.Slider
+import com.mikepenz.aboutlibraries.util.Util.getApplicationInfo
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.lang.reflect.Method
 import java.math.BigInteger
 import java.net.InetAddress
 import java.net.UnknownHostException
@@ -777,13 +777,82 @@ class Utils {
             return true
         }
 
-        fun findApplicationInfoSize(applicationInfo: ApplicationInfo): Long {
-            var cacheSize = 0L
-            File(applicationInfo.sourceDir).parentFile?.let {
-                cacheSize += findSize(it)
+        /**
+         * Finds application size
+         * Ref - https://stackoverflow.com/questions/1806286/getting-installed-app-size
+         * https://stackoverflow.com/questions/49667101/android-method-invoke-crashes-in-sdk-26-oreo/56616172#56616172
+         */
+        fun findApplicationInfoSize(
+            context: Context,
+            applicationInfo: ApplicationInfo
+        ): Long {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val storageStatsManager =
+                    context.getSystemService(Context.STORAGE_STATS_SERVICE) as StorageStatsManager
+                /*val storageManager =
+                    context.getSystemService(Context.STORAGE_SERVICE) as StorageManager*/
+                try {
+                    val ai = context.packageManager.getApplicationInfo(
+                        applicationInfo.packageName,
+                        0
+                    )
+                    val storageStats = storageStatsManager.queryStatsForUid(
+                        ai.storageUuid,
+                        ai.uid
+                    )
+                    val cacheSize = storageStats.cacheBytes
+                    val dataSize = storageStats.dataBytes
+                    val apkSize = storageStats.appBytes
+                    val externalSize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        storageStats.externalCacheBytes
+                    } else {
+                        0L
+                    }
+                    log.info(
+                        "found size for package ${applicationInfo.packageName}" +
+                            " cacheSize $cacheSize , dataSize $dataSize" +
+                            " , apkSize $apkSize , externalCacheSize $externalSize"
+                    )
+                    return cacheSize + dataSize + apkSize + externalSize
+                } catch (e: Exception) {
+                    log.warn("failed to extract app size for {}", applicationInfo.packageName, e)
+                    return findApplicationInfoSizeFallback(applicationInfo)
+                }
+            } else {
+                val getPackageSizeInfo: Method
+                try {
+                    getPackageSizeInfo = context.packageManager.javaClass
+                        .getMethod(
+                            "getPackageSizeInfo",
+                            String::class.java,
+                            Class.forName("android.content.pm.IPackageStatsObserver")
+                        )
+                    var size = findApplicationInfoSizeFallback(applicationInfo)
+                    getPackageSizeInfo.invoke(
+                        context.packageManager, applicationInfo.packageName,
+                        object : IPackageStatsObserver.Stub() {
+                            // error
+                            @Throws(RemoteException::class)
+                            override fun onGetStatsCompleted(
+                                pStats: PackageStats,
+                                succeeded: Boolean
+                            ) {
+                                log.info(
+                                    "found size for package ${applicationInfo.packageName} $pStats"
+                                )
+                                size = pStats.codeSize + pStats.dataSize +
+                                    pStats.cacheSize + pStats.externalDataSize +
+                                    pStats.externalCacheSize +
+                                    pStats.externalObbSize + pStats.externalMediaSize
+                            }
+                        }
+                    )
+                    return size
+                } catch (e: Exception) {
+                    log.warn("failed to extract app size for {}", applicationInfo.packageName, e)
+                    return findApplicationInfoSizeFallback(applicationInfo)
+                }
             }
-            val dataSize = findSize(File(applicationInfo.dataDir))
-            return cacheSize + dataSize
         }
 
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -801,15 +870,24 @@ class Utils {
             }
         }
 
+        private fun findApplicationInfoSizeFallback(applicationInfo: ApplicationInfo): Long {
+            var cacheSize = 0L
+            File(applicationInfo.sourceDir).parentFile?.let {
+                cacheSize += findSize(it)
+            }
+            val dataSize = findSize(File(applicationInfo.dataDir))
+            return cacheSize + dataSize
+        }
+
         private fun findSize(file: File): Long {
-            if (file.isDirectory) {
+            return if (file.isDirectory) {
                 var size = 0L
                 file.listFiles()?.forEach {
                     size += findSize(it)
                 }
-                return size
+                size
             } else {
-                return file.length()
+                file.length()
             }
         }
 

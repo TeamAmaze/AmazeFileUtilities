@@ -43,6 +43,7 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import java.nio.charset.Charset
 import java.util.*
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.collections.ArrayList
 
 class FilesViewModel(val applicationContext: Application) :
@@ -63,7 +64,7 @@ class FilesViewModel(val applicationContext: Application) :
     var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var gamesInstalledLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
 
-    private var allApps: List<ApplicationInfo>? = null
+    private var allApps: AtomicReference<List<ApplicationInfo>?> = AtomicReference()
 
     private val highAccuracyOpts = FaceDetectorOptions.Builder()
         .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
@@ -904,8 +905,8 @@ class FilesViewModel(val applicationContext: Application) :
                 it.packageName
             }.toSet()
             val unusedAppsList =
-                allApps?.filter { !usageStatsPackages.contains(it.packageName) }?.mapNotNull {
-                    MediaFileInfo.fromApplicationInfo(packageManager, it)
+                allApps.get()?.filter { !usageStatsPackages.contains(it.packageName) }?.mapNotNull {
+                    MediaFileInfo.fromApplicationInfo(applicationContext, it)
                 }
             unusedAppsLiveData?.postValue(ArrayList(unusedAppsList))
         }
@@ -928,11 +929,11 @@ class FilesViewModel(val applicationContext: Application) :
                 50
             ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
 
-            allApps?.forEachIndexed { index, applicationInfo ->
+            allApps.get()?.forEachIndexed { index, applicationInfo ->
                 if (index > 49) {
                     priorityQueue.remove()
                 }
-                MediaFileInfo.fromApplicationInfo(packageManager, applicationInfo)?.let {
+                MediaFileInfo.fromApplicationInfo(applicationContext, applicationInfo)?.let {
                     priorityQueue.add(it)
                 }
             }
@@ -962,46 +963,48 @@ class FilesViewModel(val applicationContext: Application) :
         viewModelScope.launch(Dispatchers.IO) {
             loadAllInstalledApps(packageManager)
 
-            val games = allApps?.filter {
+            val games = allApps.get()?.filter {
                 Utils.applicationIsGame(it)
             }?.mapNotNull {
-                MediaFileInfo.fromApplicationInfo(packageManager, it)
+                MediaFileInfo.fromApplicationInfo(applicationContext, it)
             }
             gamesInstalledLiveData?.postValue(ArrayList(games))
         }
     }
 
     private fun loadAllInstalledApps(packageManager: PackageManager) {
-        if (allApps == null) {
-            allApps = packageManager.getInstalledApplications(
-                PackageManager.MATCH_UNINSTALLED_PACKAGES
-                    or PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
-            ).filter {
-                var info: PackageInfo?
-                var androidInfo: PackageInfo? = null
-                try {
-                    info = packageManager.getPackageInfo(
-                        it.packageName,
-                        PackageManager.GET_SIGNATURES
-                    )
-                    androidInfo =
-                        packageManager.getPackageInfo(
-                            "android",
+        if (allApps.get() == null) {
+            allApps.set(
+                packageManager.getInstalledApplications(
+                    PackageManager.MATCH_UNINSTALLED_PACKAGES
+                        or PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
+                ).filter {
+                    var info: PackageInfo?
+                    var androidInfo: PackageInfo? = null
+                    try {
+                        info = packageManager.getPackageInfo(
+                            it.packageName,
                             PackageManager.GET_SIGNATURES
                         )
-                } catch (e: PackageManager.NameNotFoundException) {
-                    log.warn(
-                        "failed to find package name {} while loading apps list",
-                        it.packageName,
-                        e
-                    )
-                    info = null
+                        androidInfo =
+                            packageManager.getPackageInfo(
+                                "android",
+                                PackageManager.GET_SIGNATURES
+                            )
+                    } catch (e: PackageManager.NameNotFoundException) {
+                        log.warn(
+                            "failed to find package name {} while loading apps list",
+                            it.packageName,
+                            e
+                        )
+                        info = null
+                    }
+                    !Utils.isAppInSystemPartition(it) && (
+                        info == null ||
+                            !Utils.isSignedBySystem(info, androidInfo)
+                        )
                 }
-                !Utils.isAppInSystemPartition(it) && (
-                    info == null ||
-                        !Utils.isSignedBySystem(info, androidInfo)
-                    )
-            }
+            )
         }
     }
 

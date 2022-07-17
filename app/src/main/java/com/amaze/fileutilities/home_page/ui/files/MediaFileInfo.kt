@@ -14,7 +14,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -62,17 +61,20 @@ data class MediaFileInfo(
         }
 
         fun fromApplicationInfo(
-            packageManager: PackageManager,
+            context: Context,
             applicationInfo: ApplicationInfo
         ): MediaFileInfo? {
             if (applicationInfo.sourceDir == null) {
                 return null
             }
             val apkFile = File(applicationInfo.sourceDir)
+            val packageManager = context.packageManager
+
             val mediaFileInfo = MediaFileInfo(
                 applicationInfo.loadLabel(packageManager) as String,
                 applicationInfo.sourceDir,
-                apkFile.lastModified(), Utils.findApplicationInfoSize(applicationInfo), false
+                apkFile.lastModified(),
+                Utils.findApplicationInfoSize(context, applicationInfo), false
             )
             val extraInfo = ExtraInfo(
                 MEDIA_TYPE_APK,

@@ -33,6 +33,10 @@ import com.afollestad.materialdialogs.files.folderChooser
 import com.amaze.fileutilities.home_page.database.*
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -393,4 +397,20 @@ fun Context.isNetworkAvailable(): Boolean {
 
 fun String.doesFileExist(): Boolean {
     return File(this).exists()
+}
+
+fun <P, R> CoroutineScope.executeAsyncTask(
+    onPreExecute: () -> Unit,
+    doInBackground: suspend (suspend (P) -> Unit) -> R,
+    onPostExecute: (R) -> Unit,
+    onProgressUpdate: (P) -> Unit
+) = launch {
+    onPreExecute()
+
+    val result = withContext(Dispatchers.IO) {
+        doInBackground {
+            withContext(Dispatchers.Main) { onProgressUpdate(it) }
+        }
+    }
+    onPostExecute(result)
 }
