@@ -10,9 +10,11 @@
 
 package com.amaze.fileutilities.home_page.ui.analyse
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -280,15 +282,24 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                filesViewModel.getUnusedApps().observe(viewLifecycleOwner) {
-                    mediaFileInfoList ->
-                    unusedAppsPreview.visibility = View.VISIBLE
-                    unusedAppsPreview.invalidateProgress(true)
-                    mediaFileInfoList?.let {
-                        unusedAppsPreview.invalidateProgress(false)
-                        unusedAppsPreview.loadPreviews(mediaFileInfoList) {
-                            cleanButtonClick(it) {
-                                filesViewModel.unusedAppsLiveData = null
+                unusedAppsPreview.visibility = View.VISIBLE
+                if (Utils.getAppsUsageStats(requireContext()).isEmpty()) {
+                    unusedAppsPreview.loadRequireElevatedPermission({
+                        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                        startActivity(intent)
+                    }, {
+                        reloadFragment()
+                    })
+                } else {
+                    filesViewModel.getUnusedApps().observe(viewLifecycleOwner) {
+                        mediaFileInfoList ->
+                        unusedAppsPreview.invalidateProgress(true)
+                        mediaFileInfoList?.let {
+                            unusedAppsPreview.invalidateProgress(false)
+                            unusedAppsPreview.loadPreviews(mediaFileInfoList) {
+                                cleanButtonClick(it) {
+                                    filesViewModel.unusedAppsLiveData = null
+                                }
                             }
                         }
                     }
@@ -327,11 +338,14 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 resources
                     .getString(R.string.successfully_deleted)
             )
-
-            val navController = NavHostFragment.findNavController(this)
-            navController.popBackStack()
-            navController.navigate(R.id.navigation_analyse)
+            reloadFragment()
         }
+    }
+
+    private fun reloadFragment() {
+        val navController = NavHostFragment.findNavController(this)
+        navController.popBackStack()
+        navController.navigate(R.id.navigation_analyse)
     }
 
     private fun setVisibility(sharedPrefs: SharedPreferences) {
@@ -515,11 +529,15 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     this@AnalyseFragment
                 )
             }
-            unusedAppsPreview.setOnClickListener {
-                ReviewImagesFragment.newInstance(
-                    ReviewImagesFragment.TYPE_UNUSED_APPS,
-                    this@AnalyseFragment
-                )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 &&
+                Utils.getAppsUsageStats(requireContext()).isNotEmpty()
+            ) {
+                unusedAppsPreview.setOnClickListener {
+                    ReviewImagesFragment.newInstance(
+                        ReviewImagesFragment.TYPE_UNUSED_APPS,
+                        this@AnalyseFragment
+                    )
+                }
             }
             largeAppsPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(

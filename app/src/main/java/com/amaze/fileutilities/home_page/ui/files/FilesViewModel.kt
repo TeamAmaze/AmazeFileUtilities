@@ -896,9 +896,11 @@ class FilesViewModel(val applicationContext: Application) :
             loadAllInstalledApps(packageManager)
 
             val usageStats = Utils.getAppsUsageStats(applicationContext)
-            val usageStatsPackages = usageStats.map {
+            val usageStatsPackages = usageStats.filter {
+                it.lastTimeUsed != 0L
+            }.map {
                 it.packageName
-            }
+            }.toSet()
             val unusedAppsList =
                 allApps?.filter { !usageStatsPackages.contains(it.packageName) }?.mapNotNull {
                     MediaFileInfo.fromApplicationInfo(packageManager, it)

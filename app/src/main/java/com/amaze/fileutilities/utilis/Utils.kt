@@ -715,7 +715,7 @@ class Utils {
             val endTime = calendar.timeInMillis
             calendar.add(Calendar.MONTH, -1)
             val startTime = calendar.timeInMillis
-            return usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, startTime, endTime)
+            return usm.queryUsageStats(UsageStatsManager.INTERVAL_BEST, startTime, endTime)
         }
 
         fun uninstallPackage(pkg: String, activity: Activity): Boolean {

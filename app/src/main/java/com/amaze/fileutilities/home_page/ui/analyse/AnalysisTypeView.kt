@@ -18,7 +18,6 @@ import android.view.View
 import android.widget.*
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
-import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo.Companion.getGlideRequest
 import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.px
@@ -38,6 +37,10 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     private val cleanButton: Button
     private val loadingProgress: ProgressBar
     private val loadingHorizontalScroll: ProgressBar
+    private val requirePermissionsParent: LinearLayout
+    private val refreshParent: LinearLayout
+    private val grantPermissionButton: Button
+    private val refreshButton: Button
 
     companion object {
         private const val PREVIEW_COUNT = 5
@@ -56,6 +59,10 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         cleanButton = cleanButtonParent.findViewById(R.id.clean_button)
         loadingProgress = cleanButtonParent.findViewById(R.id.loading_progress)
         loadingHorizontalScroll = imagesListScroll.findViewById(R.id.scroll_progress)
+        requirePermissionsParent = imagesListParent.findViewById(R.id.require_permission_parent)
+        refreshParent = imagesListParent.findViewById(R.id.refresh_parent)
+        grantPermissionButton = requirePermissionsParent.findViewById(R.id.grant_button)
+        refreshButton = refreshParent.findViewById(R.id.refresh_button)
 
         val a = context.obtainStyledAttributes(
             attrs,
@@ -100,6 +107,21 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         imagesListParent.addView(getSummaryView(mediaFileInfoList.size))
         cleanButton.setOnClickListener {
             cleanButtonClick.invoke()
+        }
+    }
+
+    fun loadRequireElevatedPermission(
+        grantPermissionCallback: () -> Unit,
+        refreshCallback: () -> Unit
+    ) {
+        loadingHorizontalScroll.visibility = View.GONE
+        requirePermissionsParent.visibility = View.VISIBLE
+        refreshParent.visibility = View.VISIBLE
+        grantPermissionButton.setOnClickListener {
+            grantPermissionCallback.invoke()
+        }
+        refreshButton.setOnClickListener {
+            refreshCallback.invoke()
         }
     }
 
