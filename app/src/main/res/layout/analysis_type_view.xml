@@ -34,6 +34,67 @@
                 android:orientation="horizontal"
                 >
                 <!-- placeholder for dynamic elements -->
+
+                <!-- require permissions view -->
+                <LinearLayout
+                    android:id="@+id/require_permission_parent"
+                    android:layout_width="@dimen/one_sixty_dp"
+                    android:layout_height="@dimen/grid_view"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    android:layout_marginStart="@dimen/material_generic_medium"
+                    >
+                    <TextView
+                        android:id="@+id/require_permission_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/require_permission"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/twelve_sp"
+                        android:layout_gravity="center_horizontal"
+                        />
+                    <Button
+                        android:id="@+id/grant_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/grant"
+                        app:cornerRadius="@dimen/material_generic"
+                        app:rippleColor="@color/highlight_yellow"
+                        android:textColor="@color/navy_blue"
+                        app:backgroundTint="@color/white"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/refresh_parent"
+                    android:layout_width="@dimen/one_sixty_dp"
+                    android:layout_height="@dimen/grid_view"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+                    <TextView
+                        android:id="@+id/permission_granted_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/granted_permission_refresh"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/twelve_sp"
+                        android:layout_gravity="center_horizontal"
+                        />
+                    <Button
+                        android:id="@+id/refresh_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/refresh"
+                        app:cornerRadius="@dimen/material_generic"
+                        app:rippleColor="@color/highlight_yellow"
+                        android:textColor="@color/navy_blue"
+                        app:backgroundTint="@color/white"
+                        />
+                </LinearLayout>
             </LinearLayout>
         </HorizontalScrollView>
         <View
@@ -92,15 +153,31 @@
             android:layout_centerHorizontal="true"
             app:backgroundTint="@color/highlight_yellow"
             app:cornerRadius="@dimen/material_generic" />
-        <ProgressBar
-            android:id="@+id/loading_progress"
+        <RelativeLayout
+            android:id="@+id/loading_progress_parent"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:layout_gravity="end"
-            android:layout_alignParentRight="true"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal|center_vertical"
             android:layout_alignParentEnd="true"
-            android:visibility="gone"
-            />
+            android:layout_alignParentRight="true"
+            android:visibility="gone">
+            <ProgressBar
+                android:id="@+id/loading_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                />
+            <ImageView
+                android:id="@+id/cancel_loading_button"
+                app:srcCompat="@drawable/ic_round_close_32"
+                android:layout_width="@dimen/twenty_four_dp"
+                android:layout_height="@dimen/twenty_four_dp"
+                android:layout_marginLeft="@dimen/twelve_dp"
+                android:layout_marginStart="@dimen/twelve_dp"
+                android:layout_marginTop="@dimen/twelve_dp"
+                android:layout_marginBottom="@dimen/eight_dp"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
     </RelativeLayout>
 </merge>

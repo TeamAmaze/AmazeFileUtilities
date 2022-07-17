@@ -260,7 +260,7 @@ abstract class AbstractMediaFilesAdapter(
     ) {
         holder.infoSummary.text =
             "${mediaFileInfo.extraInfo!!.imageMetaData?.width}" +
-            "x${mediaFileInfo.extraInfo.imageMetaData?.height}"
+            "x${mediaFileInfo.extraInfo!!.imageMetaData?.height}"
         holder.extraInfo.text = ""
     }
 
@@ -270,8 +270,8 @@ abstract class AbstractMediaFilesAdapter(
     ) {
         holder.infoSummary.text =
             "${mediaFileInfo.extraInfo!!.audioMetaData?.albumName} " +
-            "| ${mediaFileInfo.extraInfo.audioMetaData?.artistName}"
-        mediaFileInfo.extraInfo.audioMetaData?.duration?.let {
+            "| ${mediaFileInfo.extraInfo!!.audioMetaData?.artistName}"
+        mediaFileInfo.extraInfo!!.audioMetaData?.duration?.let {
             holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
         }
     }
@@ -282,8 +282,8 @@ abstract class AbstractMediaFilesAdapter(
     ) {
         holder.infoSummary.text =
             "${mediaFileInfo.extraInfo!!.videoMetaData?.width}" +
-            "x${mediaFileInfo.extraInfo.videoMetaData?.height}"
-        mediaFileInfo.extraInfo.videoMetaData?.duration?.let {
+            "x${mediaFileInfo.extraInfo!!.videoMetaData?.height}"
+        mediaFileInfo.extraInfo!!.videoMetaData?.duration?.let {
             holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
         }
     }
