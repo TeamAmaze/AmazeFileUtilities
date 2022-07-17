@@ -128,6 +128,12 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         return root
     }
 
+    override fun onDestroyView() {
+        preloader?.clear()
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun hideActionBarOnClick(): Boolean {
         return false
     }

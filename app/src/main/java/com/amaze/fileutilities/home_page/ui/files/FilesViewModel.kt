@@ -362,7 +362,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
                 Utils.containsInPreferences(it.path, pathPrefsList, true)
             }.forEach {
-                if (dao.findByPath(it.path) == null) {
+                if (isImageFeaturesAnalysing && dao.findByPath(it.path) == null) {
                     if (featuresProcessed++ > 10000) {
                         // hard limit in a single run
                         return@forEach
@@ -415,7 +415,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
                 Utils.containsInPreferences(it.path, pathPrefsList, true)
             }.forEach {
-                if (dao.findByPath(it.path) == null) {
+                if (isImageBlurAnalysing && dao.findByPath(it.path) == null) {
                     val isBlur = ImgUtils.isImageBlur(it.path)
                     isBlur?.let {
                         isBlur ->
@@ -453,7 +453,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
                 Utils.containsInPreferences(it.path, pathPrefsList, true)
             }.forEach {
-                if (dao.findByPath(it.path) == null) {
+                if (isImageMemesAnalysing && dao.findByPath(it.path) == null) {
                     if (memesProcessed++ > 10000) {
                         // hard limit in a single run
                         return@forEach
@@ -496,7 +496,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
                 Utils.containsInPreferences(it.path, pathPrefsList, true)
             }.forEach {
-                if (dao.findByPath(it.path) == null) {
+                if (isImageLowLightAnalysing && dao.findByPath(it.path) == null) {
                     val isLowLight = ImgUtils.isImageLowLight(
                         it.path
                     )
@@ -538,28 +538,36 @@ class FilesViewModel(val applicationContext: Application) :
                 val imagesList = ArrayList(it)
                 imagesList.forEach {
                     image ->
-                    getMediaFileChecksumAndWriteToDatabase(dao, File(image.path + ""))
+                    if (isMediaStoreAnalysing) {
+                        getMediaFileChecksumAndWriteToDatabase(dao, File(image.path + ""))
+                    }
                 }
             }
             aggregatedMediaFiles.audiosMediaFilesList?.let {
                 val audiosList = ArrayList(it)
                 audiosList.forEach {
                     audio ->
-                    getMediaFileChecksumAndWriteToDatabase(dao, File(audio.path + ""))
+                    if (isMediaStoreAnalysing) {
+                        getMediaFileChecksumAndWriteToDatabase(dao, File(audio.path + ""))
+                    }
                 }
             }
             aggregatedMediaFiles.videosMediaFilesList?.let {
                 val videosList = ArrayList(it)
                 videosList.forEach {
                     video ->
-                    getMediaFileChecksumAndWriteToDatabase(dao, File(video.path + ""))
+                    if (isMediaStoreAnalysing) {
+                        getMediaFileChecksumAndWriteToDatabase(dao, File(video.path + ""))
+                    }
                 }
             }
             aggregatedMediaFiles.docsMediaFilesList?.let {
                 val docsList = ArrayList(it)
                 docsList.forEach {
                     docs ->
-                    getMediaFileChecksumAndWriteToDatabase(dao, File(docs.path + ""))
+                    if (isMediaStoreAnalysing) {
+                        getMediaFileChecksumAndWriteToDatabase(dao, File(docs.path + ""))
+                    }
                 }
             }
             isMediaStoreAnalysing = false
@@ -1158,8 +1166,10 @@ class FilesViewModel(val applicationContext: Application) :
         deepSearch: Boolean,
         currentDepth: Int
     ) {
-        if (!deepSearch && currentDepth
-        > PreferencesConstants.DEFAULT_DUPLICATE_SEARCH_DEPTH_INCL
+        if (!isInternalStorageAnalysing || (
+            !deepSearch && currentDepth
+            > PreferencesConstants.DEFAULT_DUPLICATE_SEARCH_DEPTH_INCL
+            )
         ) {
             return
         }

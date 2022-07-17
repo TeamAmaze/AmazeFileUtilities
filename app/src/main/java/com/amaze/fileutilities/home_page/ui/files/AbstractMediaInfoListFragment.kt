@@ -32,6 +32,11 @@ abstract class AbstractMediaInfoListFragment :
     private var gridLayoutManager: GridLayoutManager? = GridLayoutManager(context, 3)
     private val MAX_PRELOAD = 100
 
+    override fun onDestroyView() {
+        getMediaAdapterPreloader().clear()
+        super.onDestroyView()
+    }
+
     override fun sortBy(sortingPreference: MediaFileListSorter.SortingPreference) {
         mediaFileAdapter?.invalidateData(sortingPreference)
     }
