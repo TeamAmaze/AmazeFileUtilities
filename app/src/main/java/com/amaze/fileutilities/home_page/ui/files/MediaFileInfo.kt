@@ -71,8 +71,8 @@ data class MediaFileInfo(
             val apkFile = File(applicationInfo.sourceDir)
             val mediaFileInfo = MediaFileInfo(
                 applicationInfo.loadLabel(packageManager) as String,
-                applicationInfo.sourceDir, apkFile.length(),
-                apkFile.lastModified(), false
+                applicationInfo.sourceDir,
+                apkFile.lastModified(), apkFile.length(), false
             )
             val extraInfo = ExtraInfo(
                 MEDIA_TYPE_APK,
