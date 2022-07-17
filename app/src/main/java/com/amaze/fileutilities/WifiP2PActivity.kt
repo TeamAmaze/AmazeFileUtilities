@@ -60,6 +60,7 @@ abstract class WifiP2PActivity : CastActivity(), WifiP2pManager.ChannelListener 
             disconnectP2PGroup()
             fragment.monitorDiscoveryTime.cancel()
             fragment.initConnectionTimer.cancel()
+            channel?.close()
         }
         super.onDestroy()
     }

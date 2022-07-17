@@ -753,8 +753,6 @@
     <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
     <!-- Unused apps in analysis tab -->
     <string name="unused_apps">Unused apps</string>
-    <!-- Unused apps hint in analysis tab -->
-    <string name="unused_apps_hint">Apps that haven\'t been opened in last one month</string>
     <!-- Large apps in analysis tab -->
     <string name="large_apps">Large apps</string>
     <!-- Games installed in analysis tab -->
@@ -767,4 +765,8 @@
     <string name="granted_permission_refresh">Already granted?</string>
     <!-- Refresh button in analysis after permission granted -->
     <string name="refresh">Refresh</string>
+    <!-- Unused apps preference dialog message -->
+    <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
+    <!-- Stopping analysis by pressing on (X) button in analysis tab -->
+    <string name="stopping_analysis">Stopping analysis</string>
 </resources>

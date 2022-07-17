@@ -20,6 +20,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 
 class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener {
@@ -34,9 +35,10 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
         private const val KEY_RECORDING = "recording_paths"
         private const val KEY_SCREENSHOT = "screenshot_paths"
         private const val KEY_TELEGRAM = "telegram_paths"
+        private const val KEY_UNUSED_APPS = "unused_apps"
         private val KEYS = listOf(
             KEY_DUPLICATES, KEY_MEMES, KEY_BLUR, KEY_LOW_LIGHT, KEY_FEATURES, KEY_DOWNLOAD,
-            KEY_RECORDING, KEY_SCREENSHOT
+            KEY_RECORDING, KEY_SCREENSHOT, KEY_UNUSED_APPS
         )
     }
 
@@ -135,6 +137,15 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                         .newInstance(PathPreferences.FEATURE_ANALYSIS_TELEGRAM),
                     R.string.telegram_files
                 )
+            }
+            KEY_UNUSED_APPS -> {
+                val days = prefs.getInt(
+                    PreferencesConstants.KEY_UNUSED_APPS_DAYS,
+                    PreferencesConstants.DEFAULT_UNUSED_APPS_DAYS
+                )
+                Utils.buildUnusedAppsDaysPrefDialog(requireContext(), days) {
+                    prefs.edit().putInt(PreferencesConstants.KEY_UNUSED_APPS_DAYS, it).apply()
+                }
             }
         }
         return true
