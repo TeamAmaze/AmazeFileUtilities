@@ -11,9 +11,14 @@
 package com.amaze.fileutilities.home_page.ui.files
 
 import android.app.Application
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
+import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.*
@@ -38,6 +43,8 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import java.nio.charset.Charset
 import java.util.*
+import java.util.concurrent.atomic.AtomicReference
+import kotlin.collections.ArrayList
 
 class FilesViewModel(val applicationContext: Application) :
     AndroidViewModel(applicationContext) {
@@ -52,6 +59,12 @@ class FilesViewModel(val applicationContext: Application) :
     var castSetupSuccess = true
     var wifiIpAddress: String? = null
     val uniqueIdSalt = "#%36zkpCE2"
+
+    var unusedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var gamesInstalledLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+
+    private var allApps: AtomicReference<List<ApplicationInfo>?> = AtomicReference()
 
     private val highAccuracyOpts = FaceDetectorOptions.Builder()
         .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
@@ -349,7 +362,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
                 Utils.containsInPreferences(it.path, pathPrefsList, true)
             }.forEach {
-                if (dao.findByPath(it.path) == null) {
+                if (isImageFeaturesAnalysing && dao.findByPath(it.path) == null) {
                     if (featuresProcessed++ > 10000) {
                         // hard limit in a single run
                         return@forEach
@@ -402,7 +415,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
                 Utils.containsInPreferences(it.path, pathPrefsList, true)
             }.forEach {
-                if (dao.findByPath(it.path) == null) {
+                if (isImageBlurAnalysing && dao.findByPath(it.path) == null) {
                     val isBlur = ImgUtils.isImageBlur(it.path)
                     isBlur?.let {
                         isBlur ->
@@ -440,7 +453,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
                 Utils.containsInPreferences(it.path, pathPrefsList, true)
             }.forEach {
-                if (dao.findByPath(it.path) == null) {
+                if (isImageMemesAnalysing && dao.findByPath(it.path) == null) {
                     if (memesProcessed++ > 10000) {
                         // hard limit in a single run
                         return@forEach
@@ -483,7 +496,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
                 Utils.containsInPreferences(it.path, pathPrefsList, true)
             }.forEach {
-                if (dao.findByPath(it.path) == null) {
+                if (isImageLowLightAnalysing && dao.findByPath(it.path) == null) {
                     val isLowLight = ImgUtils.isImageLowLight(
                         it.path
                     )
@@ -525,28 +538,36 @@ class FilesViewModel(val applicationContext: Application) :
                 val imagesList = ArrayList(it)
                 imagesList.forEach {
                     image ->
-                    getMediaFileChecksumAndWriteToDatabase(dao, File(image.path + ""))
+                    if (isMediaStoreAnalysing) {
+                        getMediaFileChecksumAndWriteToDatabase(dao, File(image.path + ""))
+                    }
                 }
             }
             aggregatedMediaFiles.audiosMediaFilesList?.let {
                 val audiosList = ArrayList(it)
                 audiosList.forEach {
                     audio ->
-                    getMediaFileChecksumAndWriteToDatabase(dao, File(audio.path + ""))
+                    if (isMediaStoreAnalysing) {
+                        getMediaFileChecksumAndWriteToDatabase(dao, File(audio.path + ""))
+                    }
                 }
             }
             aggregatedMediaFiles.videosMediaFilesList?.let {
                 val videosList = ArrayList(it)
                 videosList.forEach {
                     video ->
-                    getMediaFileChecksumAndWriteToDatabase(dao, File(video.path + ""))
+                    if (isMediaStoreAnalysing) {
+                        getMediaFileChecksumAndWriteToDatabase(dao, File(video.path + ""))
+                    }
                 }
             }
             aggregatedMediaFiles.docsMediaFilesList?.let {
                 val docsList = ArrayList(it)
                 docsList.forEach {
                     docs ->
-                    getMediaFileChecksumAndWriteToDatabase(dao, File(docs.path + ""))
+                    if (isMediaStoreAnalysing) {
+                        getMediaFileChecksumAndWriteToDatabase(dao, File(docs.path + ""))
+                    }
                 }
             }
             isMediaStoreAnalysing = false
@@ -649,7 +670,7 @@ class FilesViewModel(val applicationContext: Application) :
 
     fun deleteMediaFiles(mediaFileInfoList: List<MediaFileInfo>): LiveData<Pair<Int, Int>> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
-            log.info("Sharing media files $mediaFileInfoList")
+            log.info("Deleting media files $mediaFileInfoList")
             var successProcessedPair = Pair(0, 0)
             mediaFileInfoList.forEachIndexed { index, mediaFileInfo ->
                 successProcessedPair = if (mediaFileInfo.delete()) {
@@ -870,6 +891,131 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    fun getUnusedApps(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (unusedAppsLiveData == null) {
+            unusedAppsLiveData = MutableLiveData()
+            unusedAppsLiveData?.value = null
+            processUnusedApps(applicationContext.packageManager)
+        }
+        return unusedAppsLiveData!!
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    private fun processUnusedApps(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+
+            val usageStats = Utils.getAppsUsageStats(applicationContext)
+            val usageStatsPackages = usageStats.filter {
+                it.lastTimeUsed != 0L
+            }.map {
+                it.packageName
+            }.toSet()
+            val unusedAppsList =
+                allApps.get()?.filter { !usageStatsPackages.contains(it.packageName) }?.mapNotNull {
+                    MediaFileInfo.fromApplicationInfo(applicationContext, it)
+                }
+            unusedAppsLiveData?.postValue(ArrayList(unusedAppsList))
+        }
+    }
+
+    fun getLargeApps(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (largeAppsLiveData == null) {
+            largeAppsLiveData = MutableLiveData()
+            largeAppsLiveData?.value = null
+            processLargeApps(applicationContext.packageManager)
+        }
+        return largeAppsLiveData!!
+    }
+
+    private fun processLargeApps(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+
+            val priorityQueue = PriorityQueue<MediaFileInfo>(
+                50
+            ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
+
+            allApps.get()?.forEachIndexed { index, applicationInfo ->
+                if (index > 49) {
+                    priorityQueue.remove()
+                }
+                MediaFileInfo.fromApplicationInfo(applicationContext, applicationInfo)?.let {
+                    priorityQueue.add(it)
+                }
+            }
+
+            val result = ArrayList<MediaFileInfo>()
+            while (!priorityQueue.isEmpty()) {
+                priorityQueue.remove()?.let {
+                    result.add(it)
+                }
+            }
+            largeAppsLiveData?.postValue(ArrayList(result.reversed()))
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    fun getGamesInstalled(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (gamesInstalledLiveData == null) {
+            gamesInstalledLiveData = MutableLiveData()
+            gamesInstalledLiveData?.value = null
+            processGamesInstalled(applicationContext.packageManager)
+        }
+        return gamesInstalledLiveData!!
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun processGamesInstalled(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+
+            val games = allApps.get()?.filter {
+                Utils.applicationIsGame(it)
+            }?.mapNotNull {
+                MediaFileInfo.fromApplicationInfo(applicationContext, it)
+            }
+            gamesInstalledLiveData?.postValue(ArrayList(games))
+        }
+    }
+
+    private fun loadAllInstalledApps(packageManager: PackageManager) {
+        if (allApps.get() == null) {
+            allApps.set(
+                packageManager.getInstalledApplications(
+                    PackageManager.MATCH_UNINSTALLED_PACKAGES
+                        or PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
+                ).filter {
+                    var info: PackageInfo?
+                    var androidInfo: PackageInfo? = null
+                    try {
+                        info = packageManager.getPackageInfo(
+                            it.packageName,
+                            PackageManager.GET_SIGNATURES
+                        )
+                        androidInfo =
+                            packageManager.getPackageInfo(
+                                "android",
+                                PackageManager.GET_SIGNATURES
+                            )
+                    } catch (e: PackageManager.NameNotFoundException) {
+                        log.warn(
+                            "failed to find package name {} while loading apps list",
+                            it.packageName,
+                            e
+                        )
+                        info = null
+                    }
+                    !Utils.isAppInSystemPartition(it) && (
+                        info == null ||
+                            !Utils.isSignedBySystem(info, androidInfo)
+                        )
+                }
+            )
+        }
+    }
+
     /**
      * If trial not null then save it's billing state in remote
      * Remote is never the source of truth for billing state, sending just for audit
@@ -1020,8 +1166,10 @@ class FilesViewModel(val applicationContext: Application) :
         deepSearch: Boolean,
         currentDepth: Int
     ) {
-        if (!deepSearch && currentDepth
-        > PreferencesConstants.DEFAULT_DUPLICATE_SEARCH_DEPTH_INCL
+        if (!isInternalStorageAnalysing || (
+            !deepSearch && currentDepth
+            > PreferencesConstants.DEFAULT_DUPLICATE_SEARCH_DEPTH_INCL
+            )
         ) {
             return
         }

@@ -321,6 +321,7 @@ class FilesFragment : ItemsActionBarFragment() {
     }
 
     override fun onDestroyView() {
+        preloader?.clear()
         super.onDestroyView()
         _binding = null
     }

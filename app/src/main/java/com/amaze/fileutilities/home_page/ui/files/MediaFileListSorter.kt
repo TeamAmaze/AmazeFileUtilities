@@ -60,22 +60,21 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
                     }
                     SORT_LENGTH -> {
                         if (f1.extraInfo != null && f2.extraInfo != null) {
-                            if (f1.extraInfo.videoMetaData != null &&
-                                f2.extraInfo.videoMetaData != null &&
-                                f1.extraInfo.videoMetaData.duration != null &&
-                                f2.extraInfo.videoMetaData.duration != null
+                            if (f1.extraInfo?.videoMetaData != null &&
+                                f2.extraInfo?.videoMetaData != null &&
+                                f1.extraInfo?.videoMetaData?.duration != null &&
+                                f2.extraInfo?.videoMetaData?.duration != null
                             ) {
-                                sortByAsc * f1.extraInfo.videoMetaData.duration.compareTo(
-                                    f2.extraInfo.videoMetaData.duration
+                                sortByAsc * f1.extraInfo?.videoMetaData?.duration!!.compareTo(
+                                    f2.extraInfo?.videoMetaData?.duration ?: 0
                                 )
-                            } else if (f1.extraInfo.audioMetaData != null &&
-                                f2.extraInfo.audioMetaData != null &&
-                                f1.extraInfo.audioMetaData.duration != null &&
-                                f2.extraInfo.audioMetaData.duration != null
+                            } else if (f1.extraInfo?.audioMetaData != null &&
+                                f2.extraInfo?.audioMetaData != null &&
+                                f1.extraInfo?.audioMetaData?.duration != null &&
+                                f2.extraInfo?.audioMetaData?.duration != null
                             ) {
-                                sortByAsc * f1.extraInfo.audioMetaData.duration.compareTo(
-                                    f2
-                                        .extraInfo.audioMetaData.duration
+                                sortByAsc * f1.extraInfo?.audioMetaData?.duration!!.compareTo(
+                                    f2.extraInfo?.audioMetaData?.duration ?: 0
                                 )
                             } else {
                                 0

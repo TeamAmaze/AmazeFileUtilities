@@ -170,6 +170,8 @@ class ImgUtils {
                                     }
                                 }
                             }
+                            mat.release()
+                            resizeimage.release()
                             callback.invoke(
                                 true,
                                 ImageFeatures(
@@ -182,10 +184,14 @@ class ImgUtils {
                             // Task failed with an exception
                             // ...
                             log.warn("get image features failure", e)
+                            mat.release()
+                            resizeimage.release()
                             callback.invoke(false, null)
                         }
                 } else {
                     log.warn("failed to find features of empty bitmap")
+                    mat.release()
+                    resizeimage.release()
                     callback.invoke(false, null)
                 }
             } catch (e: Exception) {
@@ -222,12 +228,16 @@ class ImgUtils {
                         .addOnSuccessListener { visionText ->
                             // Task completed successfully
                             log.debug(visionText.text)
+                            mat.release()
+                            resizeimage.release()
                             callback?.invoke(true, visionText)
                         }
                         .addOnFailureListener { e ->
                             // Task failed with an exception
                             // ...
                             log.warn("extract text from img failure", e)
+                            mat.release()
+                            resizeimage.release()
                             callback?.invoke(false, null)
                         }
                 } else {
@@ -330,6 +340,7 @@ class ImgUtils {
             return try {
                 val zerosPair = getTotalAndZeros(matrix)
                 val ratio = (zerosPair.second.toDouble() / zerosPair.first.toDouble())
+                matrix.release()
                 return ratio >= 0.8
             } catch (e: Exception) {
                 log.warn("Failed to check for low light image", e)

@@ -22,7 +22,6 @@ import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.px
 import com.amaze.fileutilities.utilis.showToastInCenter
-import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import java.lang.ref.WeakReference
@@ -36,8 +35,14 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     private val cleanButtonParent: RelativeLayout
     private val imagesListParent: LinearLayout
     private val cleanButton: Button
+    private val loadingProgressParent: RelativeLayout
     private val loadingProgress: ProgressBar
     private val loadingHorizontalScroll: ProgressBar
+    private val cancelLoadingView: ImageView
+    private val requirePermissionsParent: LinearLayout
+    private val refreshParent: LinearLayout
+    private val grantPermissionButton: Button
+    private val refreshButton: Button
 
     companion object {
         private const val PREVIEW_COUNT = 5
@@ -54,8 +59,14 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         cleanButtonParent = getChildAt(2) as RelativeLayout
         imagesListParent = imagesListScroll.findViewById(R.id.images_list_parent)
         cleanButton = cleanButtonParent.findViewById(R.id.clean_button)
-        loadingProgress = cleanButtonParent.findViewById(R.id.loading_progress)
+        loadingProgressParent = cleanButtonParent.findViewById(R.id.loading_progress_parent)
+        loadingProgress = loadingProgressParent.findViewById(R.id.loading_progress)
+        cancelLoadingView = loadingProgressParent.findViewById(R.id.cancel_loading_button)
         loadingHorizontalScroll = imagesListScroll.findViewById(R.id.scroll_progress)
+        requirePermissionsParent = imagesListParent.findViewById(R.id.require_permission_parent)
+        refreshParent = imagesListParent.findViewById(R.id.refresh_parent)
+        grantPermissionButton = requirePermissionsParent.findViewById(R.id.grant_button)
+        refreshButton = refreshParent.findViewById(R.id.refresh_button)
 
         val a = context.obtainStyledAttributes(
             attrs,
@@ -81,8 +92,29 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         background = resources.getDrawable(R.drawable.background_curved)
     }
 
-    fun invalidateProgress(doShow: Boolean) {
-        loadingProgress.visibility = if (doShow) View.VISIBLE else View.GONE
+    /**
+     * Shows a progress bar with option to cancel at the analysis corner,
+     * if cancelCallback is present, the cross button will be shown to cancel the ongoing task (X)
+     */
+    fun invalidateProgress(doShow: Boolean, cancelCallback: (() -> Unit)?) {
+        loadingProgressParent.visibility = if (doShow) {
+            if (cancelCallback != null) {
+                cancelLoadingView.visibility = View.VISIBLE
+                cancelLoadingView.setOnClickListener {
+                    context.showToastInCenter(context.getString(R.string.stopping_analysis))
+                    loadingProgressParent.visibility = View.GONE
+                    cancelCallback.invoke()
+                }
+            } else {
+                cancelLoadingView.visibility = View.GONE
+                cancelLoadingView.setOnClickListener(null)
+            }
+            View.VISIBLE
+        } else {
+            cancelLoadingView.visibility = View.GONE
+            cancelLoadingView.setOnClickListener(null)
+            View.GONE
+        }
     }
 
     fun loadPreviews(mediaFileInfoList: List<MediaFileInfo>, cleanButtonClick: () -> Unit) {
@@ -103,6 +135,21 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         }
     }
 
+    fun loadRequireElevatedPermission(
+        grantPermissionCallback: () -> Unit,
+        refreshCallback: () -> Unit
+    ) {
+        loadingHorizontalScroll.visibility = View.GONE
+        requirePermissionsParent.visibility = View.VISIBLE
+        refreshParent.visibility = View.VISIBLE
+        grantPermissionButton.setOnClickListener {
+            grantPermissionCallback.invoke()
+        }
+        refreshButton.setOnClickListener {
+            refreshCallback.invoke()
+        }
+    }
+
     private fun getImageView(mediaFileInfo: MediaFileInfo): ImageView {
         val imageView = ImageView(context)
         imageView.setOnClickListener {
@@ -110,7 +157,7 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         }
         imageView.layoutParams = getParams()
         imageView.scaleType = ImageView.ScaleType.CENTER
-        Glide.with(context).load(mediaFileInfo.path)
+        mediaFileInfo.getGlideRequest(context)
             .centerCrop()
             .transform(CenterCrop(), RoundedCorners(106.px.toInt()))
             .fallback(R.drawable.ic_outline_broken_image_24)

@@ -11,23 +11,35 @@
 package com.amaze.fileutilities.utilis
 
 import android.app.Activity
+import android.app.AppOpsManager
+import android.app.usage.StorageStatsManager
+import android.app.usage.UsageStats
+import android.app.usage.UsageStatsManager
 import android.content.*
-import android.content.pm.ActivityInfo
+import android.content.pm.*
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Point
 import android.net.Uri
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.os.Handler
+import android.os.Process
+import android.os.RemoteException
 import android.provider.MediaStore
+import android.provider.Settings
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -46,12 +58,15 @@ import okhttp3.Protocol
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.lang.reflect.Method
 import java.math.BigInteger
 import java.net.InetAddress
 import java.net.UnknownHostException
 import java.nio.ByteOrder
 import java.text.DecimalFormat
-import java.util.*
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.Collections
 import java.util.concurrent.TimeUnit
 import kotlin.math.ln
 import kotlin.math.pow
@@ -696,6 +711,243 @@ class Utils {
                     },
                     delayInMillis.toLong()
                 )
+        }
+
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+        fun getAppsUsageStats(context: Context): List<UsageStats> {
+            val usm: UsageStatsManager = (
+                context.getSystemService(Context.USAGE_STATS_SERVICE)
+                    as UsageStatsManager
+                )
+            val endTime = LocalDateTime.now()
+            val sharedPrefs = context.getAppCommonSharedPreferences()
+            val days = sharedPrefs.getInt(
+                PreferencesConstants.KEY_UNUSED_APPS_DAYS,
+                PreferencesConstants.DEFAULT_UNUSED_APPS_DAYS
+            )
+            val startTime = LocalDateTime.now().minusDays(days.toLong())
+            return usm.queryUsageStats(
+                UsageStatsManager.INTERVAL_DAILY,
+                startTime
+                    .atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                endTime
+                    .atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            )
+        }
+
+        /**
+         * https://stackoverflow.com/questions/28921136/how-to-check-if-android-permission-package-usage-stats-permission-is-given
+         */
+        @RequiresApi(Build.VERSION_CODES.M)
+        fun checkUsageStatsPermission(context: Context): Boolean {
+            val appOps = context
+                .getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+            val mode = appOps.checkOpNoThrow(
+                "android:get_usage_stats",
+                Process.myUid(), context.packageName
+            )
+            return if (mode != AppOpsManager.MODE_ALLOWED) {
+                getAppsUsageStats(context).isNotEmpty()
+            } else {
+                true
+            }
+        }
+
+        fun uninstallPackage(pkg: String, activity: Activity): Boolean {
+            try {
+                val intent = Intent(Intent.ACTION_DELETE)
+                intent.data = Uri.parse("package:$pkg")
+                activity.startActivity(intent)
+            } catch (e: Exception) {
+                Toast.makeText(activity, "" + e, Toast.LENGTH_SHORT).show()
+                log.warn("failed to uninstall apk", e)
+                return false
+            }
+            return true
+        }
+
+        /**
+         * Check if an App is under /system or has been installed as an update to a built-in system
+         * application.
+         */
+        fun isAppInSystemPartition(applicationInfo: ApplicationInfo): Boolean {
+            return (
+                (
+                    applicationInfo.flags
+                        and (ApplicationInfo.FLAG_SYSTEM or ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)
+                    )
+                    != 0
+                )
+        }
+
+        /** Check if an App is signed by system or not.  */
+        fun isSignedBySystem(piApp: PackageInfo?, piSys: PackageInfo?): Boolean {
+            return piApp != null && piSys != null && piApp.signatures != null &&
+                piSys.signatures[0] == piApp.signatures[0]
+        }
+
+        fun openExternalApp(context: Context, packageName: String): Boolean {
+            try {
+                val it = context.packageManager.getLaunchIntentForPackage(packageName)
+                if (null != it) context.startActivity(it)
+            } catch (e: ActivityNotFoundException) {
+                com.amaze.fileutilities.utilis.log.warn("app not found to open", e)
+                return false
+            }
+            return true
+        }
+
+        fun openExternalAppInfoScreen(context: Context, packageName: String): Boolean {
+            try {
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.parse("package:$packageName")
+                context.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                log.warn("app not found to open", e)
+                return false
+            }
+            return true
+        }
+
+        /**
+         * Finds application size
+         * Ref - https://stackoverflow.com/questions/1806286/getting-installed-app-size
+         * https://stackoverflow.com/questions/49667101/android-method-invoke-crashes-in-sdk-26-oreo/56616172#56616172
+         */
+        fun findApplicationInfoSize(
+            context: Context,
+            applicationInfo: ApplicationInfo
+        ): Long {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val storageStatsManager =
+                    context.getSystemService(Context.STORAGE_STATS_SERVICE) as StorageStatsManager
+                /*val storageManager =
+                    context.getSystemService(Context.STORAGE_SERVICE) as StorageManager*/
+                try {
+                    val ai = context.packageManager.getApplicationInfo(
+                        applicationInfo.packageName,
+                        0
+                    )
+                    val storageStats = storageStatsManager.queryStatsForUid(
+                        ai.storageUuid,
+                        ai.uid
+                    )
+                    val cacheSize = storageStats.cacheBytes
+                    val dataSize = storageStats.dataBytes
+                    val apkSize = storageStats.appBytes
+                    val externalSize = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                        storageStats.externalCacheBytes
+                    } else {
+                        0L
+                    }
+                    log.info(
+                        "found size for package ${applicationInfo.packageName}" +
+                            " cacheSize $cacheSize , dataSize $dataSize" +
+                            " , apkSize $apkSize , externalCacheSize $externalSize"
+                    )
+                    return cacheSize + dataSize + apkSize + externalSize
+                } catch (e: Exception) {
+                    log.warn("failed to extract app size for {}", applicationInfo.packageName, e)
+                    return findApplicationInfoSizeFallback(applicationInfo)
+                }
+            } else {
+                val getPackageSizeInfo: Method
+                try {
+                    getPackageSizeInfo = context.packageManager.javaClass
+                        .getMethod(
+                            "getPackageSizeInfo",
+                            String::class.java,
+                            Class.forName("android.content.pm.IPackageStatsObserver")
+                        )
+                    var size = findApplicationInfoSizeFallback(applicationInfo)
+                    getPackageSizeInfo.invoke(
+                        context.packageManager, applicationInfo.packageName,
+                        object : IPackageStatsObserver.Stub() {
+                            // error
+                            @Throws(RemoteException::class)
+                            override fun onGetStatsCompleted(
+                                pStats: PackageStats,
+                                succeeded: Boolean
+                            ) {
+                                log.info(
+                                    "found size for package ${applicationInfo.packageName} $pStats"
+                                )
+                                size = pStats.codeSize + pStats.dataSize +
+                                    pStats.cacheSize + pStats.externalDataSize +
+                                    pStats.externalCacheSize +
+                                    pStats.externalObbSize + pStats.externalMediaSize
+                            }
+                        }
+                    )
+                    return size
+                } catch (e: Exception) {
+                    log.warn("failed to extract app size for {}", applicationInfo.packageName, e)
+                    return findApplicationInfoSizeFallback(applicationInfo)
+                }
+            }
+        }
+
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+        fun applicationIsGame(info: ApplicationInfo): Boolean {
+            return try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    info.category == ApplicationInfo.CATEGORY_GAME
+                } else {
+                    // We are suppressing deprecation since there are no other options in this API Level
+                    (info.flags and ApplicationInfo.FLAG_IS_GAME) == ApplicationInfo.FLAG_IS_GAME
+                }
+            } catch (e: PackageManager.NameNotFoundException) {
+                log.warn("Package info not found for name: " + info.packageName, e)
+                false
+            }
+        }
+
+        fun buildUnusedAppsDaysPrefDialog(
+            context: Context,
+            days: Int,
+            callback: (Int) -> Unit
+        ) {
+            val inputEditTextField = EditText(context)
+            inputEditTextField.inputType = InputType.TYPE_CLASS_NUMBER
+            inputEditTextField.setText("$days")
+            val dialog = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+                .setTitle(R.string.unused_apps)
+                .setMessage(R.string.unused_apps_pref_message)
+                .setView(inputEditTextField)
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok) { dialog, _ ->
+                    val salt = inputEditTextField.text.toString()
+                    callback.invoke(salt.toInt())
+                    dialog.dismiss()
+                }
+                .setNegativeButton(
+                    R.string.cancel
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+            dialog.show()
+        }
+
+        private fun findApplicationInfoSizeFallback(applicationInfo: ApplicationInfo): Long {
+            var cacheSize = 0L
+            File(applicationInfo.sourceDir).parentFile?.let {
+                cacheSize += findSize(it)
+            }
+            val dataSize = findSize(File(applicationInfo.dataDir))
+            return cacheSize + dataSize
+        }
+
+        private fun findSize(file: File): Long {
+            return if (file.isDirectory) {
+                var size = 0L
+                file.listFiles()?.forEach {
+                    size += findSize(it)
+                }
+                size
+            } else {
+                file.length()
+            }
         }
 
         private fun getPaletteColor(palette: Palette?, fallback: Int): Int {
