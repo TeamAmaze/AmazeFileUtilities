@@ -1,7 +1,7 @@
 Changelog:
+- Add unused apps analysis in analysis tab
+- Add large apps analysis in analysis tab
+- Add games installed analysis in analysis tab
+- Improved performance
 - Add translations
-- Add support for svg graphics
-- Implement palette for audio player and image viewer
-- Implement playback options for audio / video player (playback speed / pitch)
-- Fix audio player next / prev issues
 - Other bugfixes

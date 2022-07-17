@@ -49,3 +49,8 @@
 
 # Uncomment for DexGuard only
 #-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+
+# https://github.com/mikepenz/AboutLibraries/issues/331
+-keepclasseswithmembers class **.R$* {
+    public static final int define_*;
+}

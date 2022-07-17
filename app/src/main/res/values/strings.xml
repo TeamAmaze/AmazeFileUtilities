@@ -6,7 +6,7 @@
     <!-- App info shown in about screen -->
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.52</string>
+    <string name="app_version" translatable="false">v1.53</string>
     <!-- Image viewer activity label -->
     <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
@@ -751,4 +751,22 @@
     <string name="image_viewer_enable_palette">Extract palette color from image</string>
     <!-- Settings page extract image viewer background color from image summary -->
     <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
+    <!-- Unused apps in analysis tab -->
+    <string name="unused_apps">Unused apps</string>
+    <!-- Large apps in analysis tab -->
+    <string name="large_apps">Large apps</string>
+    <!-- Games installed in analysis tab -->
+    <string name="games_installed">Games</string>
+    <!-- Games installed hint in analysis tab -->
+    <string name="games_installed_hint">Games currently installed on this device</string>
+    <!-- Required elevated permission for analysis in analysis tab -->
+    <string name="require_permission">Required elevated permissions for this analysis</string>
+    <!-- Already granted analysis permission, ask user to refresh -->
+    <string name="granted_permission_refresh">Already granted?</string>
+    <!-- Refresh button in analysis after permission granted -->
+    <string name="refresh">Refresh</string>
+    <!-- Unused apps preference dialog message -->
+    <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
+    <!-- Stopping analysis by pressing on (X) button in analysis tab -->
+    <string name="stopping_analysis">Stopping analysis</string>
 </resources>

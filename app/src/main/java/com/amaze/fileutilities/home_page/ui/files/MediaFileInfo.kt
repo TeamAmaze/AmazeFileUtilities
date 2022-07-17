@@ -13,7 +13,9 @@ package com.amaze.fileutilities.home_page.ui.files
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.format.DateUtils
 import androidx.core.content.FileProvider
@@ -22,8 +24,12 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
 import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.utilis.FileUtils
+import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.showToastOnBottom
 import com.amaze.fileutilities.video_player.VideoPlayerDialogActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import kotlinx.coroutines.*
 import java.io.File
 import java.lang.ref.WeakReference
 
@@ -34,7 +40,7 @@ data class MediaFileInfo(
     val longSize: Long = 0,
     var isDirectory: Boolean = false,
     var listHeader: String = "",
-    val extraInfo: ExtraInfo? = null
+    var extraInfo: ExtraInfo? = null
 ) {
 
     companion object {
@@ -45,12 +51,61 @@ data class MediaFileInfo(
         const val MEDIA_TYPE_AUDIO = 1002
         const val MEDIA_TYPE_VIDEO = 1003
         const val MEDIA_TYPE_DOCUMENT = 1004
+        const val MEDIA_TYPE_APK = 1005
 
         fun fromFile(file: File, extraInfo: ExtraInfo): MediaFileInfo {
             return MediaFileInfo(
                 file.name, file.path, file.lastModified(), file.length(),
                 extraInfo = extraInfo
             )
+        }
+
+        fun fromApplicationInfo(
+            context: Context,
+            applicationInfo: ApplicationInfo
+        ): MediaFileInfo? {
+            if (applicationInfo.sourceDir == null) {
+                return null
+            }
+            val apkFile = File(applicationInfo.sourceDir)
+            val packageManager = context.packageManager
+
+            val mediaFileInfo = MediaFileInfo(
+                applicationInfo.loadLabel(packageManager) as String,
+                applicationInfo.sourceDir,
+                apkFile.lastModified(),
+                Utils.findApplicationInfoSize(context, applicationInfo), false
+            )
+            val extraInfo = ExtraInfo(
+                MEDIA_TYPE_APK,
+                null, null, null,
+                ApkMetaData(
+                    applicationInfo.packageName,
+                    packageManager.getApplicationIcon(applicationInfo.packageName)
+                )
+            )
+            mediaFileInfo.extraInfo = extraInfo
+            return mediaFileInfo
+        }
+    }
+
+    fun getGlideRequest(context: Context): RequestBuilder<Drawable> {
+        if (this.extraInfo == null) {
+            return Glide.with(context).load(this.path)
+        } else {
+            return when (this.extraInfo!!.mediaType) {
+                MEDIA_TYPE_AUDIO -> {
+                    val toLoadBitmap: Bitmap? = this.extraInfo?.audioMetaData?.albumArt
+                    Glide.with(context).load(toLoadBitmap)
+                }
+                MEDIA_TYPE_APK -> {
+                    val drawable = this.extraInfo?.apkMetaData?.drawable
+                    Glide.with(context).load(drawable)
+                }
+                else -> {
+                    Glide.with(context).load(this.path)
+                }
+            }
         }
     }
 
@@ -137,6 +192,17 @@ data class MediaFileInfo(
                         startExternalViewAction(this, context)
                     }
                 }
+                MEDIA_TYPE_APK -> {
+                    extraInfo?.apkMetaData?.packageName?.let {
+                        packageName ->
+                        if (!Utils.openExternalAppInfoScreen(context, packageName)) {
+                            context.showToastOnBottom(
+                                context.resources
+                                    .getString(R.string.operation_failed)
+                            )
+                        }
+                    }
+                }
                 else -> {
                     startExternalViewAction(this, context)
                 }
@@ -208,7 +274,8 @@ data class MediaFileInfo(
         val mediaType: Int,
         val audioMetaData: AudioMetaData?,
         val videoMetaData: VideoMetaData?,
-        val imageMetaData: ImageMetaData?
+        val imageMetaData: ImageMetaData?,
+        val apkMetaData: ApkMetaData? = null
     )
 
     data class AudioMetaData(
@@ -220,4 +287,5 @@ data class MediaFileInfo(
     )
     data class VideoMetaData(val duration: Long?, val width: Int?, val height: Int?)
     data class ImageMetaData(val width: Int?, val height: Int?)
+    data class ApkMetaData(val packageName: String, val drawable: Drawable?)
 }

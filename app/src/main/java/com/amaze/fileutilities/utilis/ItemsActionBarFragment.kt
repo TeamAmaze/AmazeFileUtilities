@@ -10,30 +10,30 @@
 
 package com.amaze.fileutilities.utilis
 
-import android.text.format.Formatter
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewImagesFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
-import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-abstract class ItemsActionBarFragment : Fragment() {
+abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment() {
 
     private var log: Logger = LoggerFactory.getLogger(ItemsActionBarFragment::class.java)
 
     abstract fun hideActionBarOnClick(): Boolean
     abstract fun getMediaFileAdapter(): AbstractMediaFilesAdapter?
     abstract fun getMediaListType(): Int
+
+    override fun getFilesViewModelObj(): FilesViewModel {
+        return filesViewModel
+    }
 
     private val filesViewModel: FilesViewModel by activityViewModels()
 
@@ -109,6 +109,9 @@ abstract class ItemsActionBarFragment : Fragment() {
         val docsToDelete = toDelete.filter {
             it.extraInfo?.mediaType == MediaFileInfo.MEDIA_TYPE_DOCUMENT
         }
+        val apksToDelete = toDelete.filter {
+            it.extraInfo?.mediaType == MediaFileInfo.MEDIA_TYPE_APK
+        }
         if (!imagesToDelete.isNullOrEmpty()) {
             filesViewModel.usedImagesSummaryTransformations.observe(viewLifecycleOwner) {
                 if (it != null) {
@@ -136,6 +139,12 @@ abstract class ItemsActionBarFragment : Fragment() {
                     filesViewModel.deleteMediaFilesFromList(it.second, docsToDelete)
                 }
             }
+        }
+        if (!apksToDelete.isNullOrEmpty()) {
+            // currently no way to distinguish whether user is deleting large apps or unused apps
+            // so we clear both
+            filesViewModel.unusedAppsLiveData = null
+            filesViewModel.largeAppsLiveData = null
         }
     }
 
@@ -176,61 +185,34 @@ abstract class ItemsActionBarFragment : Fragment() {
             }
         }
         getTrashButton()?.setOnClickListener {
-            getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }?.let {
-                toDelete ->
-                if (toDelete.isNullOrEmpty()) {
-                    requireContext().showToastOnBottom(getString(R.string.no_item_selected))
-                    return@let
-                }
-                val progressDialogBuilder = requireContext()
-                    .showProcessingDialog(layoutInflater, "")
-                val progressDialog = progressDialogBuilder.create()
-                val summaryDialogBuilder = Utils.buildDeleteSummaryDialog(requireContext()) {
-                    progressDialog.show()
-                    filesViewModel.deleteMediaFiles(toDelete).observe(viewLifecycleOwner) {
-                        progressDialog.findViewById<TextView>(R.id.please_wait_text)?.text =
-                            resources.getString(R.string.deleted_progress)
-                                .format(it.first, toDelete.size)
-                        if (it.second == toDelete.size) {
-                            if (getMediaFileAdapter()?.removeChecked() != true) {
-                                log.warn("Failed to update list after deletion")
-                                requireContext().showToastOnBottom(
-                                    getString(
-                                        R.string
-                                            .failed_to_update_list_reopen
-                                    )
-                                )
-                            }
-                            // delete deleted data from observables in fileviewmodel
-                            // for fileviewmodels, underlying list isn't passed in adapters beacause of size
-                            // and because that list is continuously iterated by dupe analysis
-                            deleteFromFileViewmodelLists(toDelete)
-
-                            // reset interal storage stats so that we recalculate storage remaining
-                            filesViewModel.internalStorageStatsLiveData = null
-
-                            // deletion complete, no need to check analysis data to remove
-                            // as it will get deleted lazily while loading analysis lists
-                            requireContext().showToastOnBottom(
-                                resources
-                                    .getString(R.string.successfully_deleted)
+            getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }?.let { toDelete ->
+                setupDeleteButton(toDelete) {
+                    if (getMediaFileAdapter()?.removeChecked() != true) {
+                        log.warn("Failed to update list after deletion")
+                        requireContext().showToastOnBottom(
+                            getString(
+                                R.string
+                                    .failed_to_update_list_reopen
                             )
-                            if (hideActionBarOnClick()) {
-                                hideActionBar()
-                            }
-                            progressDialog.dismiss()
-                        }
+                        )
                     }
-                }
-                val summaryDialog = summaryDialogBuilder.create()
-                summaryDialog.show()
-                filesViewModel.getMediaFileListSize(toDelete).observe(viewLifecycleOwner) {
-                    sizeRaw ->
-                    val size = Formatter.formatFileSize(requireContext(), sizeRaw)
-                    summaryDialog.setMessage(
-                        resources.getString(R.string.delete_files_message)
-                            .format(toDelete.size, size)
+                    // delete deleted data from observables in fileviewmodel
+                    // for fileviewmodels, underlying list isn't passed in adapters beacause of size
+                    // and because that list is continuously iterated by dupe analysis
+                    deleteFromFileViewmodelLists(toDelete)
+
+                    // reset interal storage stats so that we recalculate storage remaining
+                    filesViewModel.internalStorageStatsLiveData = null
+
+                    // deletion complete, no need to check analysis data to remove
+                    // as it will get deleted lazily while loading analysis lists
+                    requireContext().showToastOnBottom(
+                        resources
+                            .getString(R.string.successfully_deleted)
                     )
+                    if (hideActionBarOnClick()) {
+                        hideActionBar()
+                    }
                 }
             }
         }

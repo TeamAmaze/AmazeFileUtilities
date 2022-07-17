@@ -187,6 +187,46 @@
                 android:visibility="gone"
                 />
 
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/unused_apps_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/unused_apps"
+                app:showPreview="true"
+                android:layout_marginTop="@dimen/material_generic"
+                android:visibility="gone"
+                />
+
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/large_apps_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/large_apps"
+                app:showPreview="true"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/games_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/games_installed"
+                app:hint="@string/games_installed_hint"
+                app:showPreview="true"
+                android:layout_marginTop="@dimen/material_generic"
+                android:visibility="gone"
+                />
+
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/all_apks_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/old_recordings"
+                app:showPreview="true"
+                android:layout_marginTop="@dimen/material_generic"
+                android:visibility="gone"
+                />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/analysis_footnote"

@@ -41,5 +41,10 @@
             app:key="telegram_paths"
             app:title="@string/telegram_files"
             />-->
+        <Preference
+            app:key="unused_apps"
+            app:title="@string/unused_apps"
+            android:summary="@string/unused_apps_pref_message"
+            />
     </PreferenceCategory>
 </PreferenceScreen>
