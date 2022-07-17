@@ -43,6 +43,7 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import java.nio.charset.Charset
 import java.util.*
+import kotlin.collections.ArrayList
 
 class FilesViewModel(val applicationContext: Application) :
     AndroidViewModel(applicationContext) {
@@ -60,6 +61,7 @@ class FilesViewModel(val applicationContext: Application) :
 
     var unusedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var gamesInstalledLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
 
     private var allApps: List<ApplicationInfo>? = null
 
@@ -924,7 +926,7 @@ class FilesViewModel(val applicationContext: Application) :
 
             val priorityQueue = PriorityQueue<MediaFileInfo>(
                 50
-            ) { o1, o2 -> -1 * o1.longSize.compareTo(o2.longSize) }
+            ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
 
             allApps?.forEachIndexed { index, applicationInfo ->
                 if (index > 49) {
@@ -942,6 +944,30 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
             largeAppsLiveData?.postValue(ArrayList(result.reversed()))
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    fun getGamesInstalled(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (gamesInstalledLiveData == null) {
+            gamesInstalledLiveData = MutableLiveData()
+            gamesInstalledLiveData?.value = null
+            processGamesInstalled(applicationContext.packageManager)
+        }
+        return gamesInstalledLiveData!!
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun processGamesInstalled(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+
+            val games = allApps?.filter {
+                Utils.applicationIsGame(it)
+            }?.mapNotNull {
+                MediaFileInfo.fromApplicationInfo(packageManager, it)
+            }
+            gamesInstalledLiveData?.postValue(ArrayList(games))
         }
     }
 
