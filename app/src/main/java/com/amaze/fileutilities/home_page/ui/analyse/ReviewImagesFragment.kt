@@ -80,6 +80,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         const val TYPE_CLUTTERED_VIDEOS = 18
         const val TYPE_UNUSED_APPS = 19
         const val TYPE_LARGE_APPS = 20
+        const val TYPE_GAMES_INSTALLED = 21
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -151,7 +152,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
             TYPE_OLD_RECORDINGS -> {
                 MediaFileAdapter.MEDIA_TYPE_AUDIO
             }
-            TYPE_LARGE_APPS, TYPE_UNUSED_APPS -> {
+            TYPE_LARGE_APPS, TYPE_UNUSED_APPS, TYPE_GAMES_INSTALLED -> {
                 MediaFileAdapter.MEDIA_TYPE_APKS
             }
             else -> {
@@ -459,6 +460,18 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                         .observe(viewLifecycleOwner) { largeApps ->
                             invalidateProcessing(true, false)
                             largeApps?.let {
+                                setMediaInfoList(it, false)
+                                invalidateProcessing(false, false)
+                            }
+                        }
+                }
+            }
+            TYPE_GAMES_INSTALLED -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    filesViewModel.getGamesInstalled()
+                        .observe(viewLifecycleOwner) { games ->
+                            invalidateProcessing(true, false)
+                            games?.let {
                                 setMediaInfoList(it, false)
                                 invalidateProcessing(false, false)
                             }

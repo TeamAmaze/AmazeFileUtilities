@@ -753,8 +753,14 @@
     <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
     <!-- Unused apps in analysis tab -->
     <string name="unused_apps">Unused apps</string>
+    <!-- Unused apps hint in analysis tab -->
+    <string name="unused_apps_hint">Apps that haven\'t been opened in last one month</string>
     <!-- Large apps in analysis tab -->
     <string name="large_apps">Large apps</string>
+    <!-- Games installed in analysis tab -->
+    <string name="games_installed">Games</string>
+    <!-- Games installed hint in analysis tab -->
+    <string name="games_installed_hint">Games currently installed on this device</string>
     <!-- Required elevated permission for analysis in analysis tab -->
     <string name="require_permission">Required elevated permissions for this analysis</string>
     <!-- Already granted analysis permission, ask user to refresh -->

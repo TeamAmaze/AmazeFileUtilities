@@ -72,7 +72,7 @@ data class MediaFileInfo(
             val mediaFileInfo = MediaFileInfo(
                 applicationInfo.loadLabel(packageManager) as String,
                 applicationInfo.sourceDir,
-                apkFile.lastModified(), apkFile.length(), false
+                apkFile.lastModified(), Utils.findApplicationInfoSize(applicationInfo), false
             )
             val extraInfo = ExtraInfo(
                 MEDIA_TYPE_APK,
@@ -193,7 +193,7 @@ data class MediaFileInfo(
                 MEDIA_TYPE_APK -> {
                     extraInfo?.apkMetaData?.packageName?.let {
                         packageName ->
-                        if (!Utils.openExternalApp(context, packageName)) {
+                        if (!Utils.openExternalAppInfoScreen(context, packageName)) {
                             context.showToastOnBottom(
                                 context.resources
                                     .getString(R.string.operation_failed)
