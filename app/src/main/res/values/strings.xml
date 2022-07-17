@@ -755,4 +755,10 @@
     <string name="unused_apps">Unused apps</string>
     <!-- Large apps in analysis tab -->
     <string name="large_apps">Large apps</string>
+    <!-- Required elevated permission for analysis in analysis tab -->
+    <string name="require_permission">Required elevated permissions for this analysis</string>
+    <!-- Already granted analysis permission, ask user to refresh -->
+    <string name="granted_permission_refresh">Already granted?</string>
+    <!-- Refresh button in analysis after permission granted -->
+    <string name="refresh">Refresh</string>
 </resources>
