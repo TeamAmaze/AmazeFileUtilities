@@ -17,6 +17,7 @@ import android.content.*
 import android.content.pm.ActivityInfo
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -26,6 +27,7 @@ import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
 import android.provider.MediaStore
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
@@ -37,6 +39,7 @@ import androidx.annotation.FloatRange
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.palette.graphics.Palette
@@ -760,6 +763,54 @@ class Utils {
                 return false
             }
             return true
+        }
+
+        fun openExternalAppInfoScreen(context: Context, packageName: String): Boolean {
+            try {
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.parse("package:$packageName")
+                context.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                log.warn("app not found to open", e)
+                return false
+            }
+            return true
+        }
+
+        fun findApplicationInfoSize(applicationInfo: ApplicationInfo): Long {
+            var cacheSize = 0L
+            File(applicationInfo.sourceDir).parentFile?.let {
+                cacheSize += findSize(it)
+            }
+            val dataSize = findSize(File(applicationInfo.dataDir))
+            return cacheSize + dataSize
+        }
+
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+        fun applicationIsGame(info: ApplicationInfo): Boolean {
+            return try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    info.category == ApplicationInfo.CATEGORY_GAME
+                } else {
+                    // We are suppressing deprecation since there are no other options in this API Level
+                    (info.flags and ApplicationInfo.FLAG_IS_GAME) == ApplicationInfo.FLAG_IS_GAME
+                }
+            } catch (e: PackageManager.NameNotFoundException) {
+                log.warn("Package info not found for name: " + info.packageName, e)
+                false
+            }
+        }
+
+        private fun findSize(file: File): Long {
+            if (file.isDirectory) {
+                var size = 0L
+                file.listFiles()?.forEach {
+                    size += findSize(it)
+                }
+                return size
+            } else {
+                return file.length()
+            }
         }
 
         private fun getPaletteColor(palette: Palette?, fallback: Int): Int {

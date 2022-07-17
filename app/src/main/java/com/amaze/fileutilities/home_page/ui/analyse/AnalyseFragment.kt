@@ -317,6 +317,22 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     }
                 }
             }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                gamesPreview.visibility = View.VISIBLE
+                filesViewModel.getGamesInstalled().observe(viewLifecycleOwner) {
+                    mediaFileInfoList ->
+                    gamesPreview.invalidateProgress(true)
+                    mediaFileInfoList?.let {
+                        gamesPreview.invalidateProgress(false)
+                        gamesPreview.loadPreviews(mediaFileInfoList) {
+                            cleanButtonClick(it) {
+                                filesViewModel.gamesInstalledLiveData = null
+                            }
+                        }
+                    }
+                }
+            }
         }
         return root
     }
@@ -544,6 +560,14 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     ReviewImagesFragment.TYPE_LARGE_APPS,
                     this@AnalyseFragment
                 )
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                gamesPreview.setOnClickListener {
+                    ReviewImagesFragment.newInstance(
+                        ReviewImagesFragment.TYPE_GAMES_INSTALLED,
+                        this@AnalyseFragment
+                    )
+                }
             }
         }
     }
