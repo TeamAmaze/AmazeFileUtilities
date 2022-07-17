@@ -89,6 +89,13 @@ android {
         pickFirst 'META-INF/LICENSE.txt'
         pickFirst 'META-INF/INDEX.LIST'
     }
+    sourceSets {
+        main {
+            aidl {
+                srcDirs 'src/main/aidl'
+            }
+        }
+    }
 }
 
 play {
