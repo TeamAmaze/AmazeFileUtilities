@@ -153,15 +153,31 @@
             android:layout_centerHorizontal="true"
             app:backgroundTint="@color/highlight_yellow"
             app:cornerRadius="@dimen/material_generic" />
-        <ProgressBar
-            android:id="@+id/loading_progress"
+        <RelativeLayout
+            android:id="@+id/loading_progress_parent"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:layout_gravity="end"
-            android:layout_alignParentRight="true"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal|center_vertical"
             android:layout_alignParentEnd="true"
-            android:visibility="gone"
-            />
+            android:layout_alignParentRight="true"
+            android:visibility="gone">
+            <ProgressBar
+                android:id="@+id/loading_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                />
+            <ImageView
+                android:id="@+id/cancel_loading_button"
+                app:srcCompat="@drawable/ic_round_close_32"
+                android:layout_width="@dimen/twenty_four_dp"
+                android:layout_height="@dimen/twenty_four_dp"
+                android:layout_marginLeft="@dimen/twelve_dp"
+                android:layout_marginStart="@dimen/twelve_dp"
+                android:layout_marginTop="@dimen/twelve_dp"
+                android:layout_marginBottom="@dimen/eight_dp"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
     </RelativeLayout>
 </merge>

@@ -11,6 +11,7 @@
 package com.amaze.fileutilities.utilis
 
 import android.app.Activity
+import android.app.AppOpsManager
 import android.app.usage.StorageStatsManager
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
@@ -24,12 +25,15 @@ import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
+import android.os.Process
 import android.os.RemoteException
 import android.provider.MediaStore
 import android.provider.Settings
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -48,7 +52,6 @@ import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewAnalysisAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.google.android.material.slider.Slider
-import com.mikepenz.aboutlibraries.util.Util.getApplicationInfo
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
@@ -61,7 +64,9 @@ import java.net.InetAddress
 import java.net.UnknownHostException
 import java.nio.ByteOrder
 import java.text.DecimalFormat
-import java.util.*
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.Collections
 import java.util.concurrent.TimeUnit
 import kotlin.math.ln
 import kotlin.math.pow
@@ -714,11 +719,38 @@ class Utils {
                 context.getSystemService(Context.USAGE_STATS_SERVICE)
                     as UsageStatsManager
                 )
-            val calendar = Calendar.getInstance()
-            val endTime = calendar.timeInMillis
-            calendar.add(Calendar.MONTH, -1)
-            val startTime = calendar.timeInMillis
-            return usm.queryUsageStats(UsageStatsManager.INTERVAL_BEST, startTime, endTime)
+            val endTime = LocalDateTime.now()
+            val sharedPrefs = context.getAppCommonSharedPreferences()
+            val days = sharedPrefs.getInt(
+                PreferencesConstants.KEY_UNUSED_APPS_DAYS,
+                PreferencesConstants.DEFAULT_UNUSED_APPS_DAYS
+            )
+            val startTime = LocalDateTime.now().minusDays(days.toLong())
+            return usm.queryUsageStats(
+                UsageStatsManager.INTERVAL_DAILY,
+                startTime
+                    .atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                endTime
+                    .atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+            )
+        }
+
+        /**
+         * https://stackoverflow.com/questions/28921136/how-to-check-if-android-permission-package-usage-stats-permission-is-given
+         */
+        @RequiresApi(Build.VERSION_CODES.M)
+        fun checkUsageStatsPermission(context: Context): Boolean {
+            val appOps = context
+                .getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+            val mode = appOps.checkOpNoThrow(
+                "android:get_usage_stats",
+                Process.myUid(), context.packageName
+            )
+            return if (mode != AppOpsManager.MODE_ALLOWED) {
+                getAppsUsageStats(context).isNotEmpty()
+            } else {
+                true
+            }
         }
 
         fun uninstallPackage(pkg: String, activity: Activity): Boolean {
@@ -868,6 +900,33 @@ class Utils {
                 log.warn("Package info not found for name: " + info.packageName, e)
                 false
             }
+        }
+
+        fun buildUnusedAppsDaysPrefDialog(
+            context: Context,
+            days: Int,
+            callback: (Int) -> Unit
+        ) {
+            val inputEditTextField = EditText(context)
+            inputEditTextField.inputType = InputType.TYPE_CLASS_NUMBER
+            inputEditTextField.setText("$days")
+            val dialog = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+                .setTitle(R.string.unused_apps)
+                .setMessage(R.string.unused_apps_pref_message)
+                .setView(inputEditTextField)
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok) { dialog, _ ->
+                    val salt = inputEditTextField.text.toString()
+                    callback.invoke(salt.toInt())
+                    dialog.dismiss()
+                }
+                .setNegativeButton(
+                    R.string.cancel
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+            dialog.show()
         }
 
         private fun findApplicationInfoSizeFallback(applicationInfo: ApplicationInfo): Long {
