@@ -24,8 +24,13 @@ import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
 import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
-import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
+import com.amaze.fileutilities.utilis.log
 import com.amaze.fileutilities.utilis.share.showShareDialog
+import com.amaze.fileutilities.utilis.showToastInCenter
+import com.amaze.fileutilities.utilis.showToastOnBottom
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 import com.mikepenz.aboutlibraries.util.Colors

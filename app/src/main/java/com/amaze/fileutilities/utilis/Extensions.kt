@@ -30,7 +30,16 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.FileFilter
 import com.afollestad.materialdialogs.files.fileChooser
 import com.afollestad.materialdialogs.files.folderChooser
-import com.amaze.fileutilities.home_page.database.*
+import com.amaze.fileutilities.home_page.database.BlurAnalysis
+import com.amaze.fileutilities.home_page.database.BlurAnalysisDao
+import com.amaze.fileutilities.home_page.database.ImageAnalysis
+import com.amaze.fileutilities.home_page.database.ImageAnalysisDao
+import com.amaze.fileutilities.home_page.database.InternalStorageAnalysis
+import com.amaze.fileutilities.home_page.database.InternalStorageAnalysisDao
+import com.amaze.fileutilities.home_page.database.LowLightAnalysis
+import com.amaze.fileutilities.home_page.database.LowLightAnalysisDao
+import com.amaze.fileutilities.home_page.database.MemeAnalysis
+import com.amaze.fileutilities.home_page.database.MemeAnalysisDao
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import kotlinx.coroutines.CoroutineScope

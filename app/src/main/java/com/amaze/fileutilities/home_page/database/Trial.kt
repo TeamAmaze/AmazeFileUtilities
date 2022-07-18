@@ -16,7 +16,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
-import java.util.*
+import java.util.Date
 
 @Keep
 @Entity(indices = [Index(value = ["device_id"], unique = true)])

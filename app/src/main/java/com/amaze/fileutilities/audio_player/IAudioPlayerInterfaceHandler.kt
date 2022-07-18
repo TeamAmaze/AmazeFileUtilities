@@ -16,14 +16,22 @@ import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.amaze.fileutilities.R
-import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.utilis.executeAsyncTask
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
+import com.amaze.fileutilities.utilis.getFileFromUri
+import com.amaze.fileutilities.utilis.hideFade
+import com.amaze.fileutilities.utilis.log
+import com.amaze.fileutilities.utilis.px
+import com.amaze.fileutilities.utilis.showFade
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -34,6 +42,7 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.slider.Slider
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
+import kotlinx.coroutines.launch
 import linc.com.amplituda.exceptions.io.FileNotFoundException
 import me.tankery.lib.circularseekbar.CircularSeekBar
 import org.slf4j.Logger
@@ -378,24 +387,30 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
             !getAudioPlayerHandlerViewModel().forceShowSeekbar
         ) {
-            scheduleWaveformSeekbarVisibility()
             getContextWeakRef().get()?.let {
                 context ->
                 val file = progressHandler.audioPlaybackInfo
                     .audioModel.getUri().getFileFromUri()
                 if (file != null) {
-                    try {
-                        // TODO: hack to get valid wavebar path
-                        /*if (!file.path.startsWith("/storage")) {
-                            file = File("storage/" + file.path)
-                        }*/
-                        getWaveformSeekbar()?.setSampleFrom(file)
-                    } catch (fe: FileNotFoundException) {
-                        getLogger().warn("file not found for waveform, force seekbar", fe)
-                        getAudioPlayerHandlerViewModel().forceShowSeekbar = true
-                    } catch (e: Exception) {
-                        getLogger().warn("waveform seekbar exception, force seekbar", e)
-                        getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                    lifecycleScope.launch {
+                        try {
+                            // TODO: hack to get valid wavebar path
+                            /*if (!file.path.startsWith("/storage")) {
+                                file = File("storage/" + file.path)
+                            }*/
+                            this.executeAsyncTask<Void, IntArray>({}, {
+                                CustomWaveformOptions.getSampleFrom(context, file.path)
+                            }, {
+                                sample ->
+                                setSampleAndShowWaveformSeekbar(sample)
+                            }, {})
+                        } catch (fe: FileNotFoundException) {
+                            getLogger().warn("file not found for waveform, force seekbar", fe)
+                            getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                        } catch (e: Exception) {
+                            getLogger().warn("waveform seekbar exception, force seekbar", e)
+                            getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                        }
                     }
                 } else {
                     getAudioPlayerHandlerViewModel().forceShowSeekbar = true
@@ -413,25 +428,32 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
             !getAudioPlayerHandlerViewModel().forceShowSeekbar
         ) {
-            scheduleWaveformSeekbarVisibility()
             getContextWeakRef().get().let {
                 context ->
                 if (context != null) {
                     val file = audioService?.getAudioProgressHandlerCallback()?.audioPlaybackInfo
                         ?.audioModel?.getUri()?.getFileFromUri()
                     if (file != null) {
-                        try {
-                            getWaveformSeekbar()?.setSampleFrom(file)
-                        } catch (fe: FileNotFoundException) {
-                            getLogger().warn("file not found for waveform, setup seekbar", fe)
-                            getAudioPlayerHandlerViewModel().forceShowSeekbar = true
-                            setupSeekBars(audioService)
-                            return
-                        } catch (e: Exception) {
-                            getLogger().warn("waveform seekbar exception, force seekbar", e)
-                            getAudioPlayerHandlerViewModel().forceShowSeekbar = true
-                            setupSeekBars(audioService)
-                            return
+                        lifecycleScope.launch {
+                            try {
+                                // TODO: hack to get valid wavebar path
+                                /*if (!file.path.startsWith("/storage")) {
+                                    file = File("storage/" + file.path)
+                                }*/
+                                this.executeAsyncTask<Void, IntArray>({}, {
+                                    CustomWaveformOptions.getSampleFrom(context, file.path)
+                                }, { sample ->
+                                    setSampleAndShowWaveformSeekbar(sample)
+                                }, {})
+                            } catch (fe: FileNotFoundException) {
+                                getLogger().warn("file not found for waveform, setup seekbar", fe)
+                                getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                                setupSeekBars(audioService)
+                            } catch (e: Exception) {
+                                getLogger().warn("waveform seekbar exception, force seekbar", e)
+                                getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                                setupSeekBars(audioService)
+                            }
                         }
                     } else {
                         getAudioPlayerHandlerViewModel().forceShowSeekbar = true
@@ -488,20 +510,12 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         )
     }
 
-    private fun scheduleWaveformSeekbarVisibility() {
-        getWaveformSeekbar()?.hideFade(300)
-        getSeekbar()?.showFade(200)
-        object : CountDownTimer(5000, 5000) {
-            override fun onTick(millisUntilFinished: Long) {
-            }
-
-            override fun onFinish() {
-                if (!getAudioPlayerHandlerViewModel().forceShowSeekbar) {
-                    getSeekbar()?.cancelPendingInputEvents()
-                    getWaveformSeekbar()?.showFade(300)
-                    getSeekbar()?.hideFade(200)
-                }
-            }
-        }.start()
+    private fun setSampleAndShowWaveformSeekbar(sample: IntArray) {
+        getWaveformSeekbar()?.sample = sample
+        if (!getAudioPlayerHandlerViewModel().forceShowSeekbar) {
+            getSeekbar()?.cancelPendingInputEvents()
+            getWaveformSeekbar()?.showFade(300)
+            getSeekbar()?.hideFade(200)
+        }
     }
 }

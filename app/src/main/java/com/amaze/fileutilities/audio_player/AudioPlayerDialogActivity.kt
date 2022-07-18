@@ -23,8 +23,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.AudioPlayerDialogActivityBinding
-import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
+import com.amaze.fileutilities.utilis.getFileFromUri
+import com.amaze.fileutilities.utilis.showToastInCenter
 import com.google.android.material.slider.Slider
 import com.masoudss.lib.WaveformSeekBar
 import me.tankery.lib.circularseekbar.CircularSeekBar

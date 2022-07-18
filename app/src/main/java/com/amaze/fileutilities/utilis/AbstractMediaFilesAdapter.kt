@@ -27,7 +27,7 @@ import com.amaze.fileutilities.home_page.ui.files.MediaInfoRecyclerViewHolder
 import com.bumptech.glide.Glide
 import me.zhanghai.android.fastscroll.PopupTextProvider
 import java.lang.ref.WeakReference
-import java.util.*
+import java.util.Collections
 
 abstract class AbstractMediaFilesAdapter(
     private val superContext: Context,

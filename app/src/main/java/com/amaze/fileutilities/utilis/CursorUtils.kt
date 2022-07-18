@@ -26,8 +26,8 @@ import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Calendar
+import java.util.Date
 
 class CursorUtils {
 

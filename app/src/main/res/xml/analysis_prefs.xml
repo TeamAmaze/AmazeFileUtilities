@@ -5,6 +5,11 @@
         app:key="search_duplicates"
         app:title="@string/search_duplicates"
         />
+    <Preference
+        app:key="unused_apps"
+        app:title="@string/unused_apps"
+        android:summary="@string/unused_apps_pref_message"
+        />
     <PreferenceCategory
         app:title="@string/paths_included">
         <Preference
@@ -41,10 +46,5 @@
             app:key="telegram_paths"
             app:title="@string/telegram_files"
             />-->
-        <Preference
-            app:key="unused_apps"
-            app:title="@string/unused_apps"
-            android:summary="@string/unused_apps_pref_message"
-            />
     </PreferenceCategory>
 </PreferenceScreen>

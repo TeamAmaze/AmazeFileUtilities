@@ -15,8 +15,18 @@ import android.app.AppOpsManager
 import android.app.usage.StorageStatsManager
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
-import android.content.*
-import android.content.pm.*
+import android.content.ActivityNotFoundException
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Context.POWER_SERVICE
+import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.pm.ApplicationInfo
+import android.content.pm.IPackageStatsObserver
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import android.content.pm.PackageStats
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -25,6 +35,7 @@ import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Handler
+import android.os.PowerManager
 import android.os.Process
 import android.os.RemoteException
 import android.provider.MediaStore
@@ -927,6 +938,28 @@ class Utils {
                 }
                 .create()
             dialog.show()
+        }
+
+        /**
+         * return true if in App's Battery settings "Not optimized" and false if "Optimizing battery use"
+         */
+        @RequiresApi(Build.VERSION_CODES.M)
+        fun isIgnoringBatteryOptimizations(context: Context): Boolean {
+            val pwrm = context.applicationContext.getSystemService(POWER_SERVICE) as PowerManager
+            val name = context.applicationContext.packageName
+            return pwrm.isIgnoringBatteryOptimizations(name)
+        }
+
+        @RequiresApi(Build.VERSION_CODES.M)
+        fun invokeNotOptimizeBatteryScreen(context: Context) {
+            val intent = Intent()
+            val pwrm = context.applicationContext.getSystemService(POWER_SERVICE) as PowerManager
+            val name = context.applicationContext.packageName
+            if (!pwrm.isIgnoringBatteryOptimizations(name)) {
+                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                intent.data = Uri.parse("package:$name")
+                context.startActivity(intent)
+            }
         }
 
         private fun findApplicationInfoSizeFallback(applicationInfo: ApplicationInfo): Long {

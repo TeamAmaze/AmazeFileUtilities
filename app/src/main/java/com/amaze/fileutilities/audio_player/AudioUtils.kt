@@ -25,7 +25,8 @@ import androidx.palette.graphics.Palette
 import androidx.palette.graphics.Palette.Swatch
 import com.amaze.fileutilities.utilis.log
 import java.io.FileDescriptor
-import java.util.*
+import java.util.Collections
+import java.util.Locale
 
 class AudioUtils {
 

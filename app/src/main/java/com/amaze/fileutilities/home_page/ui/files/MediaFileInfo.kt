@@ -29,7 +29,6 @@ import com.amaze.fileutilities.utilis.showToastOnBottom
 import com.amaze.fileutilities.video_player.VideoPlayerDialogActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
-import kotlinx.coroutines.*
 import java.io.File
 import java.lang.ref.WeakReference
 
