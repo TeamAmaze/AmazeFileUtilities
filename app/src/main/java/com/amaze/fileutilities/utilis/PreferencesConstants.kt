@@ -11,7 +11,6 @@
 package com.amaze.fileutilities.utilis
 
 import com.amaze.fileutilities.audio_player.AudioPlayerService
-import java.util.*
 
 class PreferencesConstants {
 

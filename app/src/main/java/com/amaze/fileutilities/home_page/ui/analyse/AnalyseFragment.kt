@@ -28,7 +28,11 @@ import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
-import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.AbstractMediaFileInfoOperationsFragment
+import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
+import com.amaze.fileutilities.utilis.showToastOnBottom
 
 class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
 

@@ -14,7 +14,10 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.preference.*
+import androidx.preference.CheckBoxPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceCategory
+import androidx.preference.PreferenceFragmentCompat
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.PathPreferences
@@ -25,8 +28,15 @@ import com.amaze.fileutilities.utilis.showFolderChooserDialog
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.lang.IllegalStateException
 import java.lang.ref.WeakReference
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.collections.MutableMap
+import kotlin.collections.arrayListOf
+import kotlin.collections.containsKey
+import kotlin.collections.forEach
+import kotlin.collections.iterator
+import kotlin.collections.set
 
 class PathPreferencesFragment : PreferenceFragmentCompat() {
 

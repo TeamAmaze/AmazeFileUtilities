@@ -16,4 +16,9 @@
         app:summary="@string/audio_player_enable_palette_summary"
         app:defaultValue="true"
         />
+    <Preference
+        app:key="remove_battery_optimizations"
+        app:title="@string/remove_battery_optimizations"
+        app:summary="@string/remove_battery_optimizations_hint"
+        />
 </PreferenceScreen>

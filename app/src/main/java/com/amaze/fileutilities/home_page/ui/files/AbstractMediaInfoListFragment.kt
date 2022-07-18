@@ -17,7 +17,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.CastActivity
 import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
-import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
+import com.amaze.fileutilities.utilis.FileUtils
+import com.amaze.fileutilities.utilis.ItemsActionBarFragment
+import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider

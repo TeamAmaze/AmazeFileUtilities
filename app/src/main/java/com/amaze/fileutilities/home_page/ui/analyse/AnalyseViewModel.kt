@@ -10,8 +10,23 @@
 
 package com.amaze.fileutilities.home_page.ui.analyse
 
-import androidx.lifecycle.*
-import com.amaze.fileutilities.home_page.database.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
+import com.amaze.fileutilities.home_page.database.BlurAnalysis
+import com.amaze.fileutilities.home_page.database.BlurAnalysisDao
+import com.amaze.fileutilities.home_page.database.ImageAnalysis
+import com.amaze.fileutilities.home_page.database.ImageAnalysisDao
+import com.amaze.fileutilities.home_page.database.InternalStorageAnalysis
+import com.amaze.fileutilities.home_page.database.InternalStorageAnalysisDao
+import com.amaze.fileutilities.home_page.database.LowLightAnalysis
+import com.amaze.fileutilities.home_page.database.LowLightAnalysisDao
+import com.amaze.fileutilities.home_page.database.MemeAnalysis
+import com.amaze.fileutilities.home_page.database.MemeAnalysisDao
+import com.amaze.fileutilities.home_page.database.PathPreferences
+import com.amaze.fileutilities.home_page.database.PathPreferencesDao
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.PreferencesConstants
@@ -19,7 +34,7 @@ import com.amaze.fileutilities.utilis.invalidate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
-import java.util.*
+import java.util.PriorityQueue
 
 class AnalyseViewModel : ViewModel() {
 

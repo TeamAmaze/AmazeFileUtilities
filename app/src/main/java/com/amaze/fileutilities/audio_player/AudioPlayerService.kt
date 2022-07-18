@@ -12,7 +12,12 @@ package com.amaze.fileutilities.audio_player
 
 import android.app.PendingIntent
 import android.app.Service
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.media.AudioManager
 import android.media.audiofx.AudioEffect
 import android.net.Uri
@@ -28,7 +33,10 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotification
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotificationImpl
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotificationImpl24
-import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.ObtainableServiceBinder
+import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem

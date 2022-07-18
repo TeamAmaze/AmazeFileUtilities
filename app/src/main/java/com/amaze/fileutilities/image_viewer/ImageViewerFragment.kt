@@ -15,7 +15,9 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.format.Formatter
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
@@ -43,8 +45,8 @@ import com.drew.metadata.file.FileSystemDirectory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.lang.Exception
-import java.util.*
+import java.util.Collections
+import java.util.Date
 
 class ImageViewerFragment : AbstractMediaFragment() {
 

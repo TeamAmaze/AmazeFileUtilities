@@ -17,8 +17,13 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.*
+import android.widget.Button
+import android.widget.FrameLayout
+import android.widget.HorizontalScrollView
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.core.content.edit
 import androidx.core.graphics.ColorUtils
 import androidx.mediarouter.app.MediaRouteButton
@@ -27,7 +32,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileListSorter
-import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
+import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
+import com.amaze.fileutilities.utilis.hideFade
+import com.amaze.fileutilities.utilis.px
+import com.amaze.fileutilities.utilis.showFade
 import com.google.android.material.progressindicator.LinearProgressIndicator
 
 class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(context, attrs) {
