@@ -2,6 +2,7 @@ Changelog:
 - Add unused apps analysis in analysis tab
 - Add large apps analysis in analysis tab
 - Add games installed analysis in analysis tab
+- Allow to remove battery optimizations (for music player)
 - Improved performance
 - Add translations
 - Other bugfixes
