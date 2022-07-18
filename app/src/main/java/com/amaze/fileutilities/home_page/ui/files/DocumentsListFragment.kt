@@ -31,6 +31,7 @@ class DocumentsListFragment : AbstractMediaInfoListFragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private var preloader: MediaAdapterPreloader? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,10 +90,13 @@ class DocumentsListFragment : AbstractMediaInfoListFragment() {
     }
 
     override fun getMediaAdapterPreloader(): MediaAdapterPreloader {
-        return MediaAdapterPreloader(
-            requireContext(),
-            R.drawable.ic_outline_insert_drive_file_32
-        )
+        if (preloader == null) {
+            preloader = MediaAdapterPreloader(
+                requireContext(),
+                R.drawable.ic_outline_insert_drive_file_32
+            )
+        }
+        return preloader!!
     }
 
     override fun getRecyclerView(): RecyclerView {

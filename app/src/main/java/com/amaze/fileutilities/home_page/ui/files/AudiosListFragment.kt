@@ -51,6 +51,7 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         Pair<FilesViewModel.StorageSummary, List<MediaFileInfo>?>
 
     private lateinit var audioPlaybackServiceConnection: ServiceConnection
+    private var preloader: MediaAdapterPreloader? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -190,10 +191,13 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
     }
 
     override fun getMediaAdapterPreloader(): MediaAdapterPreloader {
-        return MediaAdapterPreloader(
-            requireContext(),
-            R.drawable.ic_outline_audio_file_32
-        )
+        if (preloader == null) {
+            preloader = MediaAdapterPreloader(
+                requireContext(),
+                R.drawable.ic_outline_audio_file_32
+            )
+        }
+        return preloader!!
     }
 
     override fun getRecyclerView(): RecyclerView {
