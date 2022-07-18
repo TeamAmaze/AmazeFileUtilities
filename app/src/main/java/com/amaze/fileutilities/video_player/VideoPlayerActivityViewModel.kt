@@ -24,8 +24,13 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.io.*
-import java.util.*
+import java.io.BufferedOutputStream
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
+import java.util.Collections
 
 class VideoPlayerActivityViewModel : ViewModel() {
 

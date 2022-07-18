@@ -27,8 +27,12 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.PdfViewerActivityBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
-import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.dp
+import com.amaze.fileutilities.utilis.getFileFromUri
+import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.share.showShareDialog
+import com.amaze.fileutilities.utilis.showFade
+import com.amaze.fileutilities.utilis.showToastInCenter
 import com.github.barteksc.pdfviewer.listener.OnLoadCompleteListener
 import com.github.barteksc.pdfviewer.listener.OnPageChangeListener
 import com.github.barteksc.pdfviewer.listener.OnTapListener
@@ -38,7 +42,6 @@ import com.shockwave.pdfium.PdfDocument.Bookmark
 import com.shockwave.pdfium.PdfPasswordException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.util.*
 
 class PdfViewerActivity :
     PermissionsActivity(),

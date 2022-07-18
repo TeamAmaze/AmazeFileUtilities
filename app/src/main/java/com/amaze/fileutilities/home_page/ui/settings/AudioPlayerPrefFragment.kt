@@ -11,6 +11,7 @@
 package com.amaze.fileutilities.home_page.ui.settings
 
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import androidx.preference.PreferenceFragmentCompat
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 
 class AudioPlayerPrefFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener {
@@ -31,7 +33,8 @@ class AudioPlayerPrefFragment : PreferenceFragmentCompat(), Preference.OnPrefere
         private const val KEY_EXCLUSIONS = "exclusion_audio_player"
         private const val KEY_ENABLE_WAVEFORM = "pref_enable_waveform"
         private const val KEY_ENABLE_PALETTE = "pref_audio_enable_palette"
-        private val KEYS = listOf(KEY_EXCLUSIONS)
+        private const val KEY_REMOVE_BATTERY_OPTIMIZATIONS = "remove_battery_optimizations"
+        private val KEYS = listOf(KEY_EXCLUSIONS, KEY_REMOVE_BATTERY_OPTIMIZATIONS)
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -69,6 +72,11 @@ class AudioPlayerPrefFragment : PreferenceFragmentCompat(), Preference.OnPrefere
         )
         waveformCheckbox?.onPreferenceChangeListener = enableWaveformChange
         paletteCheckbox?.onPreferenceChangeListener = enablePaletteChange
+        val removeOptimizationsPref = findPreference<Preference>(
+            KEY_REMOVE_BATTERY_OPTIMIZATIONS
+        )
+        removeOptimizationsPref?.isVisible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            !Utils.isIgnoringBatteryOptimizations(requireContext())
     }
 
     override fun onCreateView(
@@ -88,6 +96,11 @@ class AudioPlayerPrefFragment : PreferenceFragmentCompat(), Preference.OnPrefere
                     PathPreferencesFragment.newInstance(PathPreferences.FEATURE_AUDIO_PLAYER),
                     R.string.audio_player
                 )
+            }
+            KEY_REMOVE_BATTERY_OPTIMIZATIONS -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    Utils.invokeNotOptimizeBatteryScreen(requireContext())
+                }
             }
         }
         return true

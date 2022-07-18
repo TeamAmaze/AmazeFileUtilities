@@ -65,6 +65,54 @@
                 android:text="@string/grant"
                 />
 
+            <!-- remove battery optimization -->
+            <LinearLayout
+                android:id="@+id/removeOptimizationsParent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/material_generic_large"
+                android:visibility="gone"
+                >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                    <ImageView
+                        android:layout_width="@dimen/material_generic_medium"
+                        android:layout_height="@dimen/material_generic_medium"
+                        android:src="@drawable/ic_round_battery_full_24"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/material_generic"
+                        android:text="@string/remove_battery_optimizations"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/eighteen_sp"
+                        />
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/remove_battery_optimizations_hint"
+                    android:layout_marginTop="@dimen/material_generic"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/fourteen_sp"
+                    />
+                <Button
+                    android:id="@+id/removeOptimizationsButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cornerRadius="@dimen/material_generic"
+                    app:backgroundTint="@color/white"
+                    android:textColor="@color/navy_blue"
+                    android:layout_marginTop="@dimen/material_generic"
+                    android:text="@string/open"
+                    />
+            </LinearLayout>
+
             <!-- privacy -->
             <LinearLayout
                 android:layout_width="wrap_content"

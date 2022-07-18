@@ -16,7 +16,7 @@ import android.content.res.Resources
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.safeLet
-import java.util.*
+import java.util.Collections
 
 class MediaFileListSorter(private val sortingPreference: SortingPreference) :
     Comparator<MediaFileInfo?> {

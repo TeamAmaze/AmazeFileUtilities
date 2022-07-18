@@ -81,6 +81,15 @@ class PermissionFragmentWelcome : Fragment() {
         binding.licenseAgreementText.text = Html.fromHtml(getString(R.string.license_agreement))
         Linkify.addLinks(binding.licenseAgreementText, Linkify.WEB_URLS)
         binding.licenseAgreementText.movementMethod = LinkMovementMethod.getInstance()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+            !Utils.isIgnoringBatteryOptimizations(requireContext())
+        ) {
+            binding.removeOptimizationsParent.visibility = View.VISIBLE
+            binding.removeOptimizationsButton.setOnClickListener {
+                Utils.invokeNotOptimizeBatteryScreen(requireContext())
+            }
+        }
         return root
     }
 

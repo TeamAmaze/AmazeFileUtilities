@@ -25,7 +25,7 @@ import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
 import com.amaze.fileutilities.home_page.ui.options.AboutFragment
 import com.amaze.fileutilities.home_page.ui.options.Billing
 import com.amaze.fileutilities.utilis.Utils
-import java.util.*
+import java.util.Stack
 
 class PreferenceActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPreferencesBinding

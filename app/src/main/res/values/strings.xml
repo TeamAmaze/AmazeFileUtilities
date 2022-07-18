@@ -6,7 +6,7 @@
     <!-- App info shown in about screen -->
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.54</string>
+    <string name="app_version" translatable="false">v1.55</string>
     <!-- Image viewer activity label -->
     <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
@@ -769,4 +769,8 @@
     <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
     <!-- Stopping analysis by pressing on (X) button in analysis tab -->
     <string name="stopping_analysis">Stopping analysis</string>
+    <!-- Remove battery optimizations on welcome screen and settings page -->
+    <string name="remove_battery_optimizations">Remove battery optimizations</string>
+    <!-- Remove battery optimizations hint on welcome screen and settings page -->
+    <string name="remove_battery_optimizations_hint">Please remove battery optimizations for music player to function properly in background</string>
 </resources>

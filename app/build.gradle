@@ -33,8 +33,8 @@ android {
         applicationId "com.amaze.fileutilities"
         minSdk 19
         targetSdk 30
-        versionCode 55
-        versionName "1.54"
+        versionCode 56
+        versionName "1.55"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -150,7 +150,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.16.0'
     implementation 'com.google.android.exoplayer:extension-mediasession:2.16.0'
     implementation 'com.ramijemli.percentagechartview:percentagechartview:0.3.1'
-    implementation 'com.github.massoudss:waveformSeekBar:4.1.0'
+    implementation 'com.github.massoudss:waveformSeekBar:5.0.1'
     implementation 'com.github.lincollincol:amplituda:2.1.2'
     //Simple library show
     implementation('com.mikepenz:aboutlibraries:6.1.1@aar') {

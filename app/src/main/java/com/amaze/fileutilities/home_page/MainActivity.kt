@@ -40,7 +40,16 @@ import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
 import com.amaze.fileutilities.home_page.ui.options.Billing
 import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
-import com.amaze.fileutilities.utilis.*
+import com.amaze.fileutilities.utilis.ItemsActionBarFragment
+import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
+import com.amaze.fileutilities.utilis.hideFade
+import com.amaze.fileutilities.utilis.hideTranslateY
+import com.amaze.fileutilities.utilis.showFade
+import com.amaze.fileutilities.utilis.showToastInCenter
+import com.amaze.fileutilities.utilis.showToastOnBottom
+import com.amaze.fileutilities.utilis.showTranslateY
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -54,7 +63,10 @@ import com.google.android.play.core.review.ReviewManagerFactory
 import com.stephentuso.welcome.WelcomeHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.GregorianCalendar
+import java.util.Random
 
 class MainActivity :
     WifiP2PActivity(),
