@@ -29,7 +29,10 @@ import com.amaze.fileutilities.utilis.showToastOnBottom
 import com.amaze.fileutilities.video_player.VideoPlayerDialogActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.File
+import java.lang.Exception
 import java.lang.ref.WeakReference
 
 data class MediaFileInfo(
@@ -43,6 +46,8 @@ data class MediaFileInfo(
 ) {
 
     companion object {
+        var log: Logger = LoggerFactory.getLogger(MediaFileInfo::class.java)
+
 //        private const val DATE_TIME_FORMAT = "%s %s, %s"
         private const val UNKNOWN = "UNKNOWN"
         const val MEDIA_TYPE_UNKNOWN = 1000
@@ -66,25 +71,30 @@ data class MediaFileInfo(
             if (applicationInfo.sourceDir == null) {
                 return null
             }
-            val apkFile = File(applicationInfo.sourceDir)
-            val packageManager = context.packageManager
+            try {
+                val apkFile = File(applicationInfo.sourceDir)
+                val packageManager = context.packageManager
 
-            val mediaFileInfo = MediaFileInfo(
-                applicationInfo.loadLabel(packageManager) as String,
-                applicationInfo.sourceDir,
-                apkFile.lastModified(),
-                Utils.findApplicationInfoSize(context, applicationInfo), false
-            )
-            val extraInfo = ExtraInfo(
-                MEDIA_TYPE_APK,
-                null, null, null,
-                ApkMetaData(
-                    applicationInfo.packageName,
-                    packageManager.getApplicationIcon(applicationInfo.packageName)
+                val mediaFileInfo = MediaFileInfo(
+                    applicationInfo.loadLabel(packageManager) as String,
+                    applicationInfo.sourceDir,
+                    apkFile.lastModified(),
+                    Utils.findApplicationInfoSize(context, applicationInfo), false
                 )
-            )
-            mediaFileInfo.extraInfo = extraInfo
-            return mediaFileInfo
+                val extraInfo = ExtraInfo(
+                    MEDIA_TYPE_APK,
+                    null, null, null,
+                    ApkMetaData(
+                        applicationInfo.packageName,
+                        packageManager.getApplicationIcon(applicationInfo.packageName)
+                    )
+                )
+                mediaFileInfo.extraInfo = extraInfo
+                return mediaFileInfo
+            } catch (e: Exception) {
+                log.warn("failed to form mediafileinfo from application info", e)
+                return null
+            }
         }
     }
 
