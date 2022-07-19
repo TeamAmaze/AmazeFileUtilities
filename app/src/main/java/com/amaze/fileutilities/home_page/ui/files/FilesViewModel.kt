@@ -1012,10 +1012,7 @@ class FilesViewModel(val applicationContext: Application) :
     private fun loadAllInstalledApps(packageManager: PackageManager) {
         if (allApps.get() == null) {
             allApps.set(
-                packageManager.getInstalledApplications(
-                    PackageManager.MATCH_UNINSTALLED_PACKAGES
-                        or PackageManager.MATCH_DISABLED_UNTIL_USED_COMPONENTS
-                ).filter {
+                packageManager.getInstalledApplications(PackageManager.GET_META_DATA).filter {
                     var info: PackageInfo?
                     var androidInfo: PackageInfo? = null
                     try {
