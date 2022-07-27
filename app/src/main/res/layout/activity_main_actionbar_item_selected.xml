@@ -25,6 +25,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:textColor="@color/white"
+        android:maxLines="1"
         android:layout_toRightOf="@+id/backActionBar"
         android:layout_toEndOf="@+id/backActionBar"
         android:layout_toLeftOf="@+id/thumbsDown"

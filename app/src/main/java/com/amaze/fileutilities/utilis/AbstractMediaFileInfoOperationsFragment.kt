@@ -10,6 +10,11 @@
 
 package com.amaze.fileutilities.utilis
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.Uri
 import android.text.format.Formatter
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -21,6 +26,45 @@ import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 abstract class AbstractMediaFileInfoOperationsFragment : Fragment() {
 
     abstract fun getFilesViewModelObj(): FilesViewModel
+    abstract fun uninstallAppCallback(mediaFileInfo: MediaFileInfo)
+
+    private val uninstallAppFilter = IntentFilter().apply {
+        addAction(Intent.ACTION_PACKAGE_REMOVED)
+//        addAction(Intent.ACTION_PACKAGE_REPLACED)
+//        addAction(Intent.ACTION_PACKAGE_CHANGED)
+        addDataScheme("package")
+    }
+
+    private val uninstallAppReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val actionStr = intent.action
+            if (Intent.ACTION_PACKAGE_REMOVED == actionStr) {
+                val data: Uri? = intent.data
+                val pkgName = data?.encodedSchemeSpecificPart ?: ""
+                // dummy object as we're just refreshing the whole list instead of removing an element from apps list
+                uninstallAppCallback(
+                    MediaFileInfo(
+                        pkgName, pkgName, 0, 0,
+                        false, "",
+                        MediaFileInfo.ExtraInfo(
+                            MediaFileInfo.MEDIA_TYPE_APK, null,
+                            null, null, null
+                        )
+                    )
+                )
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().registerReceiver(uninstallAppReceiver, uninstallAppFilter)
+    }
+
+    override fun onPause() {
+        requireActivity().unregisterReceiver(uninstallAppReceiver)
+        super.onPause()
+    }
 
     /**
      * setup delete click

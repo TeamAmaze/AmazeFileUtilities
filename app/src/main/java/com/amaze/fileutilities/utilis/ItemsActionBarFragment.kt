@@ -35,6 +35,10 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
         return filesViewModel
     }
 
+    override fun uninstallAppCallback(mediaFileInfo: MediaFileInfo) {
+        refreshListAfterTrashCallback(listOf(mediaFileInfo))
+    }
+
     private val filesViewModel: FilesViewModel by activityViewModels()
 
     private var optionsActionBar: View? = null
@@ -187,32 +191,7 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
         getTrashButton()?.setOnClickListener {
             getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }?.let { toDelete ->
                 setupDeleteButton(toDelete) {
-                    if (getMediaFileAdapter()?.removeChecked() != true) {
-                        log.warn("Failed to update list after deletion")
-                        requireContext().showToastOnBottom(
-                            getString(
-                                R.string
-                                    .failed_to_update_list_reopen
-                            )
-                        )
-                    }
-                    // delete deleted data from observables in fileviewmodel
-                    // for fileviewmodels, underlying list isn't passed in adapters beacause of size
-                    // and because that list is continuously iterated by dupe analysis
-                    deleteFromFileViewmodelLists(toDelete)
-
-                    // reset interal storage stats so that we recalculate storage remaining
-                    filesViewModel.internalStorageStatsLiveData = null
-
-                    // deletion complete, no need to check analysis data to remove
-                    // as it will get deleted lazily while loading analysis lists
-                    requireContext().showToastOnBottom(
-                        resources
-                            .getString(R.string.successfully_deleted)
-                    )
-                    if (hideActionBarOnClick()) {
-                        hideActionBar()
-                    }
+                    refreshListAfterTrashCallback(toDelete)
                 }
             }
         }
@@ -224,6 +203,35 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
                     getMediaFileAdapter()?.uncheckChecked()
                 }
             }
+        }
+    }
+
+    private fun refreshListAfterTrashCallback(toDelete: List<MediaFileInfo>) {
+        if (getMediaFileAdapter()?.removeChecked() != true) {
+            log.warn("Failed to update list after deletion")
+            requireContext().showToastOnBottom(
+                getString(
+                    R.string
+                        .failed_to_update_list_reopen
+                )
+            )
+        }
+        // delete deleted data from observables in fileviewmodel
+        // for fileviewmodels, underlying list isn't passed in adapters beacause of size
+        // and because that list is continuously iterated by dupe analysis
+        deleteFromFileViewmodelLists(toDelete)
+
+        // reset interal storage stats so that we recalculate storage remaining
+        filesViewModel.internalStorageStatsLiveData = null
+
+        // deletion complete, no need to check analysis data to remove
+        // as it will get deleted lazily while loading analysis lists
+        requireContext().showToastOnBottom(
+            resources
+                .getString(R.string.successfully_deleted)
+        )
+        if (hideActionBarOnClick()) {
+            hideActionBar()
         }
     }
 }
