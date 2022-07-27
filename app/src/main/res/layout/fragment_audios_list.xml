@@ -137,6 +137,7 @@
                 android:layout_height="match_parent"
                 android:textColor="@color/white"
                 android:textSize="@dimen/twelve_sp"
+                android:maxLines="1"
                 android:gravity="center_vertical|center_horizontal"
                 android:layout_toLeftOf="@id/play_button_small_parent"
                 android:layout_toStartOf="@id/play_button_small_parent"
