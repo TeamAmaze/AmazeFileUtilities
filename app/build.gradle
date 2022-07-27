@@ -43,8 +43,8 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"5CZlDmqIhLoRcalZHXItm5Thwq57MDE2\""
