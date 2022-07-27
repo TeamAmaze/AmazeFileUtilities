@@ -44,6 +44,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private var shouldCallbackAppUninstall = true
 
     override fun getFilesViewModelObj(): FilesViewModel {
         return filesViewModel
@@ -375,6 +376,29 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
         super.onDestroyView()
     }
 
+    override fun uninstallAppCallback(mediaFileInfo: MediaFileInfo) {
+        if (shouldCallbackAppUninstall) {
+            // callback only if this fragment is visible
+
+            // reset interal storage stats so that we recalculate storage remaining
+            filesViewModel.internalStorageStatsLiveData = null
+
+            // below code is same in ItemsActionBarFragment, make sure to change there as well if any
+            // currently no way to distinguish whether user is deleting large apps or unused apps
+            // so we clear both
+            filesViewModel.unusedAppsLiveData = null
+            filesViewModel.largeAppsLiveData = null
+
+            // deletion complete, no need to check analysis data to remove
+            // as it will get deleted lazily while loading analysis lists
+            requireContext().showToastOnBottom(
+                resources
+                    .getString(R.string.successfully_deleted)
+            )
+            reloadFragment()
+        }
+    }
+
     private fun cleanButtonClick(toDelete: List<MediaFileInfo>, deletedCallback: () -> Unit) {
         setupDeleteButton(toDelete) {
             // reset interal storage stats so that we recalculate storage remaining
@@ -591,6 +615,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 isUsageStatsPermissionGranted()
             ) {
                 unusedAppsPreview.setOnClickListener {
+                    shouldCallbackAppUninstall = false
                     ReviewImagesFragment.newInstance(
                         ReviewImagesFragment.TYPE_UNUSED_APPS,
                         this@AnalyseFragment
@@ -598,6 +623,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 }
             }
             largeAppsPreview.setOnClickListener {
+                shouldCallbackAppUninstall = false
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_LARGE_APPS,
                     this@AnalyseFragment
@@ -605,6 +631,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 gamesPreview.setOnClickListener {
+                    shouldCallbackAppUninstall = false
                     ReviewImagesFragment.newInstance(
                         ReviewImagesFragment.TYPE_GAMES_INSTALLED,
                         this@AnalyseFragment

@@ -314,7 +314,7 @@ class Utils {
                     return when (adapter.getItemViewType(position)) {
                         AbstractMediaFilesAdapter.TYPE_ITEM ->
                             1
-                        else -> 3
+                        else -> gridLayoutManager.spanCount
                     }
                 }
             }
@@ -402,8 +402,8 @@ class Utils {
                 .setPositiveButton(
                     context.resources.getString(R.string.yes)
                 ) { dialog, _ ->
-                    positiveCallback.invoke()
                     dialog.dismiss()
+                    positiveCallback.invoke()
                 }
                 .setNegativeButton(
                     context.resources.getString(R.string.no)
