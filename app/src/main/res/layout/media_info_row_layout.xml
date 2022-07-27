@@ -29,7 +29,8 @@
     <LinearLayout
         android:id="@+id/info_parent"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/minimal_icon_size"
         android:orientation="vertical"
         android:layout_toRightOf="@id/icon_view"
         android:layout_toEndOf="@id/icon_view"
@@ -45,6 +46,7 @@
             android:textColor="@color/white"
             android:marqueeRepeatLimit="marquee_forever"
             android:ellipsize="middle"
+            android:layout_gravity="center_vertical"
             android:textSize="@dimen/eighteen_sp"
             android:singleLine="true" />
         <TextView
@@ -52,6 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/twelve_sp"
+            android:layout_gravity="center_vertical"
             android:textColor="@color/gray_text"
             />
     </LinearLayout>
