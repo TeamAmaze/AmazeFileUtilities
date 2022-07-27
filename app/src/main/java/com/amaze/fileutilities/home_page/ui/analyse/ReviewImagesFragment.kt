@@ -194,7 +194,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                         if (it == null) {
                             invalidateProcessing(
                                 true,
-                                filesViewModel.isImageFeaturesAnalysing
+                                filesViewModel.isImageBlurAnalysing
                             )
                         } else {
                             setMediaInfoList(it, true) {
@@ -203,7 +203,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                             }
                             invalidateProcessing(
                                 false,
-                                filesViewModel.isImageFeaturesAnalysing
+                                filesViewModel.isImageBlurAnalysing
                             )
                         }
                     }
@@ -214,7 +214,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                         if (it == null) {
                             invalidateProcessing(
                                 true,
-                                filesViewModel.isImageFeaturesAnalysing
+                                filesViewModel.isImageLowLightAnalysing
                             )
                         } else {
                             setMediaInfoList(it, true) {
@@ -226,7 +226,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                             }
                             invalidateProcessing(
                                 false,
-                                filesViewModel.isImageFeaturesAnalysing
+                                filesViewModel.isImageLowLightAnalysing
                             )
                         }
                     }
@@ -236,7 +236,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                     if (it == null) {
                         invalidateProcessing(
                             true,
-                            filesViewModel.isImageFeaturesAnalysing
+                            filesViewModel.isImageMemesAnalysing
                         )
                     } else {
                         setMediaInfoList(it, true) {
@@ -245,7 +245,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                         }
                         invalidateProcessing(
                             false,
-                            filesViewModel.isImageFeaturesAnalysing
+                            filesViewModel.isImageMemesAnalysing
                         )
                     }
                 }
@@ -524,6 +524,15 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         setupActionBarButtons(cleanData)
         binding.listView
             .addOnScrollListener(recyclerViewPreloader!!)
+        gridLayoutManager = GridLayoutManager(
+            context,
+            requireContext()
+                .getAppCommonSharedPreferences()
+                .getInt(
+                    PreferencesConstants.KEY_GRID_VIEW_COLUMN_COUNT,
+                    PreferencesConstants.DEFAULT_GRID_VIEW_COLUMN_COUNT
+                )
+        )
         Utils.setGridLayoutManagerSpan(gridLayoutManager!!, mediaFileAdapter!!)
         binding.listView.layoutManager = gridLayoutManager
         binding.listView.adapter = mediaFileAdapter
