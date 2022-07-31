@@ -1035,7 +1035,10 @@ class FilesViewModel(val applicationContext: Application) :
                     }
                     !Utils.isAppInSystemPartition(it) && (
                         info == null ||
-                            !Utils.isSignedBySystem(info, androidInfo)
+                            (
+                                !Utils.isSignedBySystem(info, androidInfo) && !info.packageName
+                                    .equals(applicationContext.packageName)
+                                )
                         )
                 }
             )
