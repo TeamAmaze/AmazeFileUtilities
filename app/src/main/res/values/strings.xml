@@ -6,7 +6,7 @@
     <!-- App info shown in about screen -->
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.57</string>
+    <string name="app_version" translatable="false">v1.58</string>
     <!-- Image viewer activity label -->
     <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
@@ -621,28 +621,25 @@
     <!-- Trial dialog trial started content -->
     <string name="trial_started_message">Thank you for choosing Amaze File Utilities.\n
         We are a team of open source developers working hard to provide an ad-free experience,
-        and your subscription will really help us in development.\n
+        and your purchase will really help to keep us afloat.\n
         At any point if you need any help feel free to contact us in About section.
         You\'ll be able to contact directly to our team on Telegram.\n
         Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
     <!-- Trial dialog trial ending last day title -->
     <string name="trial_last_day_title">Trial about to expire</string>
     <!-- Trial dialog trial ending last day summary -->
-    <string name="trial_last_day_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your trial is going to expire tomorrow,
-        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to us to keep us afloat.\n
-        You can write to us if you want to extend the trial period a bit more.
+    <string name="trial_last_day_message">Hey There! Thank you for choosing Amaze File Utilities.
+        \nYour trial is going to expire tomorrow, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.
+        \nWe are a team of open source developers working hard to provide an ad-free experience,
+        and we need funds to keep us afloat.\nYou can write to us if you want to extend the trial period a bit more.
     </string>
     <!-- Trial expired title -->
     <string name="trial_expired_title">Trial expired</string>
     <!-- Trial expired summary -->
     <string name="trial_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your trial has expired,
-        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        Your trial has expired, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
         We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to us to keep us afloat.\n
+        and we need funds to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.
     </string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
@@ -650,9 +647,9 @@
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
     <string name="trial_inactive_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         Your trial is inactive and you\'re not longer an exclusive member,
-        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
         We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to us to keep us afloat.\n
+        and we need funds to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.</string>
     <!-- Subscription dialog subscription purchased title -->
     <string name="subscription_purchased_title">Subscribed</string>
@@ -668,9 +665,9 @@
     <!-- Subscription dialog yearly subscription expired summary -->
     <string name="subscription_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         Your subscription has expired,
-        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
         We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to us to keep us afloat.\n
+        and we need funds to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.</string>
     <!-- Trial validation dialog failed to validate -->
     <string name="not_connected_trial_title">Failed to validate</string>
