@@ -179,6 +179,7 @@ dependencies {
     implementation 'me.tankery.lib:circularSeekBar:1.4.0'
     implementation 'com.github.qoqa:glide-svg:2.0.4'
     api "com.caverock:androidsvg:1.4"
+    implementation 'com.burhanrashid52:photoeditor:2.0.0'
 
     //Detect memory leaks
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'

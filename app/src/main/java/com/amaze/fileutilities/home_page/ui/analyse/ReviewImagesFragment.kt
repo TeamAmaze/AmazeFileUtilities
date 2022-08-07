@@ -86,6 +86,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         const val TYPE_UNUSED_APPS = 19
         const val TYPE_LARGE_APPS = 20
         const val TYPE_GAMES_INSTALLED = 21
+        const val TYPE_APK_FILES = 22
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -163,7 +164,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
             TYPE_OLD_RECORDINGS -> {
                 MediaFileAdapter.MEDIA_TYPE_AUDIO
             }
-            TYPE_LARGE_APPS, TYPE_UNUSED_APPS, TYPE_GAMES_INSTALLED -> {
+            TYPE_LARGE_APPS, TYPE_UNUSED_APPS, TYPE_GAMES_INSTALLED, TYPE_APK_FILES -> {
                 MediaFileAdapter.MEDIA_TYPE_APKS
             }
             else -> {
@@ -466,16 +467,14 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                 }
             }
             TYPE_LARGE_APPS -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                    filesViewModel.getLargeApps()
-                        .observe(viewLifecycleOwner) { largeApps ->
-                            invalidateProcessing(true, false)
-                            largeApps?.let {
-                                setMediaInfoList(it, false)
-                                invalidateProcessing(false, false)
-                            }
+                filesViewModel.getLargeApps()
+                    .observe(viewLifecycleOwner) { largeApps ->
+                        invalidateProcessing(true, false)
+                        largeApps?.let {
+                            setMediaInfoList(it, false)
+                            invalidateProcessing(false, false)
                         }
-                }
+                    }
             }
             TYPE_GAMES_INSTALLED -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -488,6 +487,16 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                             }
                         }
                 }
+            }
+            TYPE_APK_FILES -> {
+                filesViewModel.getApksLiveData()
+                    .observe(viewLifecycleOwner) { apkFiles ->
+                        invalidateProcessing(true, false)
+                        apkFiles?.let {
+                            setMediaInfoList(it, false)
+                            invalidateProcessing(false, false)
+                        }
+                    }
             }
         }
     }

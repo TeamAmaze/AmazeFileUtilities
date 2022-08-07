@@ -91,6 +91,7 @@ class FilesViewModel(val applicationContext: Application) :
 
     var unusedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var apksLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var gamesInstalledLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
 
     private var allApps: AtomicReference<List<ApplicationInfo>?> = AtomicReference()
@@ -983,6 +984,18 @@ class FilesViewModel(val applicationContext: Application) :
             }
             largeAppsLiveData?.postValue(ArrayList(result.reversed()))
         }
+    }
+
+    fun getApksLiveData(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (apksLiveData == null) {
+            apksLiveData = MutableLiveData()
+            apksLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                val apksInstalled = CursorUtils.listApks(applicationContext)
+                apksLiveData?.postValue(apksInstalled.second)
+            }
+        }
+        return apksLiveData!!
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
