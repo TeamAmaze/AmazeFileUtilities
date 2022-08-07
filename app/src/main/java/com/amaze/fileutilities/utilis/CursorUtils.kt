@@ -117,50 +117,12 @@ class CursorUtils {
 
         fun listDocs(context: Context): Pair<FilesViewModel.StorageSummary,
             ArrayList<MediaFileInfo>> {
-            val docs: ArrayList<MediaFileInfo> = ArrayList()
-            val projection = arrayOf(MediaStore.Files.FileColumns.DATA)
-            val cursor = context
-                .contentResolver
-                .query(
-                    MediaStore.Files.getContentUri("external"),
-                    projection, null, null, null
-                )
-            var longSize = 0L
-            if (cursor == null) {
-                return Pair(FilesViewModel.StorageSummary(0, 0), docs)
-            } else if (cursor.count > 0 && cursor.moveToFirst()) {
-                do {
-                    if (cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA) >= 0) {
-                        val path =
-                            cursor.getString(
-                                cursor
-                                    .getColumnIndex(MediaStore.Files.FileColumns.DATA)
-                            )
-                        if (path != null &&
-                            (
-                                path.endsWith(".pdf") ||
-                                    path.endsWith(".epub") ||
-                                    path.endsWith(".docx")
-                                )
-                        ) {
-                            val mediaFileInfo = MediaFileInfo.fromFile(
-                                File(path),
-                                MediaFileInfo.ExtraInfo(
-                                    MediaFileInfo.MEDIA_TYPE_DOCUMENT,
-                                    null, null, null
-                                )
-                            )
-                            docs.add(mediaFileInfo)
-                            longSize += mediaFileInfo.longSize
-                        }
-                    }
-                } while (cursor.moveToNext())
-            }
-            cursor.close()
-            /*docs.sortWith { lhs: MediaFileInfo, rhs: MediaFileInfo ->
-                -1 * java.lang.Long.valueOf(lhs.date).compareTo(rhs.date)
-            }*/
-            return Pair(FilesViewModel.StorageSummary(docs.size, 0, longSize), docs)
+            return listFilesWithExtension(context, arrayListOf(".pdf", ".epub", ".docx"))
+        }
+
+        fun listApks(context: Context): Pair<FilesViewModel.StorageSummary,
+            ArrayList<MediaFileInfo>> {
+            return listFilesWithExtension(context, arrayListOf(".apk"))
         }
 
         fun listRecentFiles(context: Context): ArrayList<MediaFileInfo> {
@@ -242,6 +204,49 @@ class CursorUtils {
             }
             cursor.close()
             return recentFiles
+        }
+
+        private fun listFilesWithExtension(context: Context, endsWith: List<String>):
+            Pair<FilesViewModel.StorageSummary,
+                ArrayList<MediaFileInfo>> {
+            val docs: ArrayList<MediaFileInfo> = ArrayList()
+            val projection = arrayOf(MediaStore.Files.FileColumns.DATA)
+            val cursor = context
+                .contentResolver
+                .query(
+                    MediaStore.Files.getContentUri("external"),
+                    projection, null, null, null
+                )
+            var longSize = 0L
+            if (cursor == null) {
+                return Pair(FilesViewModel.StorageSummary(0, 0), docs)
+            } else if (cursor.count > 0 && cursor.moveToFirst()) {
+                do {
+                    if (cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA) >= 0) {
+                        val path =
+                            cursor.getString(
+                                cursor
+                                    .getColumnIndex(MediaStore.Files.FileColumns.DATA)
+                            )
+                        if (path != null && endsWith.stream().anyMatch { path.endsWith(it) }) {
+                            val mediaFileInfo = MediaFileInfo.fromFile(
+                                File(path),
+                                MediaFileInfo.ExtraInfo(
+                                    MediaFileInfo.MEDIA_TYPE_DOCUMENT,
+                                    null, null, null
+                                )
+                            )
+                            docs.add(mediaFileInfo)
+                            longSize += mediaFileInfo.longSize
+                        }
+                    }
+                } while (cursor.moveToNext())
+            }
+            cursor.close()
+            /*docs.sortWith { lhs: MediaFileInfo, rhs: MediaFileInfo ->
+                -1 * java.lang.Long.valueOf(lhs.date).compareTo(rhs.date)
+            }*/
+            return Pair(FilesViewModel.StorageSummary(docs.size, 0, longSize), docs)
         }
 
         private fun listMediaCommon(

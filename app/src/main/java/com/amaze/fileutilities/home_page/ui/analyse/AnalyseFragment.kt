@@ -367,6 +367,19 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     }
                 }
             }
+
+            filesViewModel.getApksLiveData().observe(viewLifecycleOwner) {
+                mediaFileInfoList ->
+                allApksPreview.invalidateProgress(true, null)
+                mediaFileInfoList?.let {
+                    allApksPreview.invalidateProgress(false, null)
+                    allApksPreview.loadPreviews(mediaFileInfoList) {
+                        cleanButtonClick(it) {
+                            filesViewModel.apksLiveData = null
+                        }
+                    }
+                }
+            }
         }
         return root
     }
@@ -626,6 +639,13 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 shouldCallbackAppUninstall = false
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_LARGE_APPS,
+                    this@AnalyseFragment
+                )
+            }
+            allApksPreview.setOnClickListener {
+                shouldCallbackAppUninstall = false
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_APK_FILES,
                     this@AnalyseFragment
                 )
             }
