@@ -43,6 +43,7 @@
         android:theme="@style/Theme.AmazeFileUtilities"
         android:networkSecurityConfig="@xml/network_security_config"
         android:extractNativeLibs="false"
+        tools:replace="android:label"
         >
         <activity
             android:name=".home_page.MainActivity"
@@ -86,6 +87,21 @@
             android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark">
             <intent-filter
                 android:label="@string/intent_image_viewer_full_screen"
+                tools:ignore="AppLinkUrlError">
+                <action android:name="android.intent.action.VIEW" />
+
+                <data android:mimeType="image/*" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.OPENABLE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".image_viewer.ImageEditorActivity"
+            android:label="@string/image_viewer"
+            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark">
+            <intent-filter
+                android:label="@string/image_viewer"
                 tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
 

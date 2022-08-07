@@ -770,4 +770,6 @@
     <string name="remove_battery_optimizations">Remove battery optimizations</string>
     <!-- Remove battery optimizations hint on welcome screen and settings page -->
     <string name="remove_battery_optimizations_hint">Please remove battery optimizations for music player to function properly in background</string>
+    <!-- Apk listing in analysis -->
+    <string name="apk_files">APK files</string>
 </resources>

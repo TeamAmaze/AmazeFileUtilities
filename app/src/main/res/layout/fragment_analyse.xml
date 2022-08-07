@@ -221,10 +221,9 @@
                 android:id="@+id/all_apks_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:analysisTitle="@string/old_recordings"
+                app:analysisTitle="@string/apk_files"
                 app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
-                android:visibility="gone"
                 />
 
             <TextView

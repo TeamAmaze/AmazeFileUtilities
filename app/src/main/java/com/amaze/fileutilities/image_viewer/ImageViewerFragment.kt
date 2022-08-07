@@ -30,7 +30,6 @@ import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.*
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
-import com.amaze.fileutilities.utilis.share.showEditImageDialog
 import com.amaze.fileutilities.utilis.share.showSetAsDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.bumptech.glide.Glide
@@ -374,10 +373,21 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 resources.getString(R.string.edit)
             ) {
                 localImageModel?.let {
-                    showEditImageDialog(
+                    val intent = Intent(requireContext(), ImageEditorActivity::class.java)
+                    intent.setDataAndType(it.uri, it.mimeType)
+                    if (!it.uri.authority.equals(
+                            requireContext()
+                                .packageName,
+                            true
+                        )
+                    ) {
+                        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                    startActivity(intent)
+                    /*showEditImageDialog(
                         localImageModel.uri,
                         this@ImageViewerFragment.requireContext()
-                    )
+                    )*/
                 }
             }
             customBottomBar.addButton(
