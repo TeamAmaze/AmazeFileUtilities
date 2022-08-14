@@ -772,4 +772,49 @@
     <string name="remove_battery_optimizations_hint">Please remove battery optimizations for music player to function properly in background</string>
     <!-- Apk listing in analysis -->
     <string name="apk_files">APK files</string>
+
+    <!-- Image editor tools -->
+    <string name="shape">Shape</string>
+    <!-- Apk listing in analysis -->
+    <string name="text">Text</string>
+    <!-- Apk listing in analysis -->
+    <string name="eraser">Eraser</string>
+    <!-- Apk listing in analysis -->
+    <string name="filter">Filter</string>
+    <!-- Apk listing in analysis -->
+    <string name="emoji">Emoji</string>
+    <!-- Apk listing in analysis -->
+    <string name="sticker">Sticker</string>
+    <!-- Apk listing in analysis -->
+    <string name="rotate">Rotate</string>
+    <!-- Apk listing in analysis -->
+    <string name="flip_horizontal">Flip-H</string>
+    <!-- Apk listing in analysis -->
+    <string name="flip_vertical">Flip-V</string>
+    <!-- Apk listing in analysis -->
+    <string name="resize">Resize</string>
+
+    <string name="label_brush">Brush</string>
+    <string name="label_shape">Shape</string>
+    <string name="label_oval">Oval</string>
+    <string name="label_rectangle">Rectangle</string>
+    <string name="label_line">Line</string>
+    <string name="label_emoji">Emoji</string>
+    <string name="label_sticker">Sticker</string>
+    <string name="label_eraser">Eraser</string>
+    <string name="label_eraser_mode">Eraser Mode</string>
+    <string name="label_text">Text</string>
+    <string name="label_filter">Filter</string>
+    <string name="label_adjust">Adjust</string>
+    <string name="msg_save_image">Are you want to exit without saving image ?</string>
+    <string name="msg_share_image">Share Image</string>
+    <string name="select_picture">Select Picture</string>
+    <string name="saving">Saving…</string>
+    <string name="image_saved">Image saved successfully</string>
+    <string name="failed_image_save">Failed to save image</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
+
+    <!-- Image editor activity label -->
+    <string name="image_editor">Amaze Image Editor</string>
 </resources>

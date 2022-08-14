@@ -11,10 +11,13 @@
 package com.amaze.fileutilities.image_viewer
 
 import android.os.Bundle
+import androidx.core.content.res.ResourcesCompat
+import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ActivityImageEditorBinding
+import com.amaze.fileutilities.utilis.getFileFromUri
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.bumptech.glide.Glide
 import ja.burhanrashid52.photoeditor.PhotoEditor
@@ -49,6 +52,34 @@ class ImageEditorActivity : PermissionsActivity() {
         )
 
         val imageModel = LocalImageModel(uri = imageUri, mimeType = mimeType)
+
+        viewBinding.run {
+            customToolbar.setBackButtonClickListener {
+                onBackPressed()
+            }
+            customToolbar.setTitle(
+                DocumentFile.fromSingleUri(
+                    this@ImageEditorActivity,
+                    imageModel.uri
+                )?.name ?: imageModel.uri.getFileFromUri()?.name ?: getString(R.string.edit)
+            )
+            customToolbar.setBackButtonClickListener {
+                this@ImageEditorActivity.onBackPressed()
+            }
+            customToolbar.addActionButton(resources.getDrawable(R.drawable.ic_round_undo_32)) {
+            }
+            customToolbar.addActionButton(resources.getDrawable(R.drawable.ic_round_redo_32)) {
+            }
+            customBottomBar.addButton(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_round_edit_32, theme
+                )!!,
+                resources.getString(R.string.edit)
+            ) {
+            }
+        }
+
         photoEditor = PhotoEditor.Builder(this, viewBinding.photoEditorView)
             .setPinchTextScalable(true)
             .setClipSourceImage(true)

@@ -28,6 +28,7 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.QuickViewFragmentBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
+import com.amaze.fileutilities.image_viewer.editor.EditImageActivity
 import com.amaze.fileutilities.utilis.*
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.amaze.fileutilities.utilis.share.showSetAsDialog
@@ -373,7 +374,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 resources.getString(R.string.edit)
             ) {
                 localImageModel?.let {
-                    val intent = Intent(requireContext(), ImageEditorActivity::class.java)
+                    val intent = Intent(requireContext(), EditImageActivity::class.java)
                     intent.setDataAndType(it.uri, it.mimeType)
                     if (!it.uri.authority.equals(
                             requireContext()
