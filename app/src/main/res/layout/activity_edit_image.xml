@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <com.amaze.fileutilities.home_page.CustomToolbar
+        android:id="@+id/custom_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <ja.burhanrashid52.photoeditor.PhotoEditorView
+        android:id="@+id/photoEditorView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/custom_toolbar"
+        app:layout_constraintBottom_toTopOf="@id/layoutBottomSheet"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginEnd="@dimen/eight_dp"
+        android:layout_marginBottom="@dimen/eight_dp"
+        app:layout_constraintBottom_toTopOf="@+id/layoutBottomSheet"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+        <ImageView
+            android:id="@+id/imgUndo"
+            android:layout_width="@dimen/fifty_six_dp"
+            android:layout_height="@dimen/fifty_six_dp"
+            android:src="@drawable/ic_img_editor_undo"
+            android:layout_marginBottom="@dimen/eight_dp"
+            android:layout_marginTop="@dimen/eight_dp" />
+
+        <ImageView
+            android:id="@+id/imgRedo"
+            android:layout_width="@dimen/fifty_six_dp"
+            android:layout_height="@dimen/fifty_six_dp"
+            android:src="@drawable/ic_img_editor_redo"
+            android:layout_marginBottom="@dimen/eight_dp"
+            android:layout_marginTop="@dimen/eight_dp" />
+
+        <ImageView
+            android:id="@+id/imgShare"
+            android:layout_width="@dimen/fifty_six_dp"
+            android:layout_height="@dimen/fifty_six_dp"
+            android:src="@drawable/ic_img_editor_share"
+            android:layout_marginBottom="@dimen/eight_dp"
+            android:layout_marginTop="@dimen/eight_dp" />
+
+        <ImageView
+            android:id="@+id/imgSave"
+            android:layout_width="@dimen/fifty_six_dp"
+            android:layout_height="@dimen/fifty_six_dp"
+            android:src="@drawable/ic_img_editor_save"
+            android:layout_marginBottom="@dimen/eight_dp"
+            android:layout_marginTop="@dimen/eight_dp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/image_viewer_peek_height"
+        android:background="@drawable/background_curved_audio_sheet"
+        android:clipToPadding="false"
+        android:paddingLeft="@dimen/eight_dp"
+        android:paddingRight="@dimen/eight_dp"
+        android:paddingBottom="@dimen/eight_dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvConstraintTools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/four_dp"
+            android:paddingBottom="@dimen/four_dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/row_editing_tools"
+            android:visibility="visible"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvFilterView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/four_dp"
+            android:paddingBottom="@dimen/four_dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/row_filter_view"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+
+    <!--<TextView
+        android:id="@+id/txtCurrentTool"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:singleLine="true"
+        android:text="@string/app_name"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline" />-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

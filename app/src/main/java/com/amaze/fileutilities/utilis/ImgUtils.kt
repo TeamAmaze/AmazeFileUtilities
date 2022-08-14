@@ -208,6 +208,16 @@ class ImgUtils {
             }
         }
 
+        fun resizeImage(bitmap: Bitmap): Bitmap? {
+            val mat = convertBitmapToMat(bitmap)
+            if (mat == null) {
+                log.warn("failure to find image for resize")
+                return null
+            }
+            val resizeimage = resize(mat, getGenericWidth(mat), getGenericHeight(mat))
+            return convertMatToBitmap(resizeimage)
+        }
+
         private fun extractTextFromImg(
             textRecognizer: TextRecognizer,
             path: String,
