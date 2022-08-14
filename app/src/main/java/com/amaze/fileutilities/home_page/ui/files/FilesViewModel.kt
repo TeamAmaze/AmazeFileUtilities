@@ -94,6 +94,15 @@ class FilesViewModel(val applicationContext: Application) :
     var apksLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var gamesInstalledLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
 
+    private var usedVideosSummaryTransformations: LiveData<Pair<StorageSummary,
+            ArrayList<MediaFileInfo>>?>? = null
+    private var usedAudiosSummaryTransformations: LiveData<Pair<StorageSummary,
+            ArrayList<MediaFileInfo>>?>? = null
+    private var usedImagesSummaryTransformations: LiveData<Pair<StorageSummary,
+            ArrayList<MediaFileInfo>>?>? = null
+    private var usedDocsSummaryTransformations: LiveData<Pair<StorageSummary,
+            ArrayList<MediaFileInfo>>?>? = null
+
     private var allApps: AtomicReference<List<ApplicationInfo>?> = AtomicReference()
 
     private val highAccuracyOpts = FaceDetectorOptions.Builder()
@@ -208,33 +217,49 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
-    var usedImagesSummaryTransformations:
-        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
-            Transformations.switchMap(internalStorageStats()) {
+    fun usedImagesSummaryTransformations():
+        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
+        if (usedImagesSummaryTransformations == null) {
+            usedImagesSummaryTransformations = Transformations.switchMap(internalStorageStats()) {
                 input ->
                 getImagesSummaryLiveData(input)
             }
+        }
+        return usedImagesSummaryTransformations!!
+    }
 
-    val usedAudiosSummaryTransformations:
-        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
-            Transformations.switchMap(internalStorageStats()) {
+    fun usedAudiosSummaryTransformations():
+        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
+        if (usedAudiosSummaryTransformations == null) {
+            usedAudiosSummaryTransformations = Transformations.switchMap(internalStorageStats()) {
                 input ->
                 getAudiosSummaryLiveData(input)
             }
+        }
+        return usedAudiosSummaryTransformations!!
+    }
 
-    val usedVideosSummaryTransformations:
-        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
-            Transformations.switchMap(internalStorageStats()) {
+    fun usedVideosSummaryTransformations():
+        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
+        if (usedVideosSummaryTransformations == null) {
+            usedVideosSummaryTransformations = Transformations.switchMap(internalStorageStats()) {
                 input ->
                 getVideosSummaryLiveData(input)
             }
+        }
+        return usedVideosSummaryTransformations!!
+    }
 
-    var usedDocsSummaryTransformations:
-        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> =
-            Transformations.switchMap(internalStorageStats()) {
+    fun usedDocsSummaryTransformations():
+        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
+        if (usedDocsSummaryTransformations == null) {
+            usedDocsSummaryTransformations = Transformations.switchMap(internalStorageStats()) {
                 input ->
                 getDocumentsSummaryLiveData(input)
             }
+        }
+        return usedDocsSummaryTransformations!!
+    }
 
     fun queryOnAggregatedMediaFiles(
         query: String,

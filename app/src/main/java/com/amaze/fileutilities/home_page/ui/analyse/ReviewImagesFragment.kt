@@ -385,7 +385,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                 }
             }
             TYPE_CLUTTERED_VIDEOS -> {
-                filesViewModel.usedVideosSummaryTransformations
+                filesViewModel.usedVideosSummaryTransformations()
                     .observe(viewLifecycleOwner) { mediaFilePair ->
                         invalidateProcessing(true, false)
                         mediaFilePair?.let {
@@ -400,7 +400,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                     }
             }
             TYPE_LARGE_VIDEOS -> {
-                filesViewModel.usedVideosSummaryTransformations
+                filesViewModel.usedVideosSummaryTransformations()
                     .observe(viewLifecycleOwner) { mediaFilePair ->
                         invalidateProcessing(true, false)
                         mediaFilePair?.let {

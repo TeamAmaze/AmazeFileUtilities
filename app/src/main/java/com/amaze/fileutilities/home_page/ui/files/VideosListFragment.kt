@@ -45,7 +45,7 @@ class VideosListFragment : AbstractMediaInfoListFragment() {
         val root: View = binding.root
         (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.videos))
         (activity as MainActivity).invalidateBottomBar(false)
-        filesViewModel.usedVideosSummaryTransformations.observe(
+        filesViewModel.usedVideosSummaryTransformations().observe(
             viewLifecycleOwner
         ) { metaInfoAndSummaryPair ->
             binding.videosListInfoText.text = resources.getString(R.string.loading)
