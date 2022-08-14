@@ -473,7 +473,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
                                                 .format(it.first, toDelete.size)
                                         if (it.second == toDelete.size) {
                                             // delete deleted data from observables in fileviewmodel
-                                            filesViewModel.usedImagesSummaryTransformations
+                                            filesViewModel.usedImagesSummaryTransformations()
                                                 .observe(viewLifecycleOwner) {
                                                     pair ->
                                                     if (pair != null) {

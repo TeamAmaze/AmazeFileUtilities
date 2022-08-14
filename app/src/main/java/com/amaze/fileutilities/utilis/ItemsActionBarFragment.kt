@@ -117,28 +117,28 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
             it.extraInfo?.mediaType == MediaFileInfo.MEDIA_TYPE_APK
         }
         if (!imagesToDelete.isNullOrEmpty()) {
-            filesViewModel.usedImagesSummaryTransformations.observe(viewLifecycleOwner) {
+            filesViewModel.usedImagesSummaryTransformations().observe(viewLifecycleOwner) {
                 if (it != null) {
                     filesViewModel.deleteMediaFilesFromList(it.second, imagesToDelete)
                 }
             }
         }
         if (!videosToDelete.isNullOrEmpty()) {
-            filesViewModel.usedVideosSummaryTransformations.observe(viewLifecycleOwner) {
+            filesViewModel.usedVideosSummaryTransformations().observe(viewLifecycleOwner) {
                 if (it != null) {
                     filesViewModel.deleteMediaFilesFromList(it.second, videosToDelete)
                 }
             }
         }
         if (!audioToDelete.isNullOrEmpty()) {
-            filesViewModel.usedAudiosSummaryTransformations.observe(viewLifecycleOwner) {
+            filesViewModel.usedAudiosSummaryTransformations().observe(viewLifecycleOwner) {
                 if (it != null) {
                     filesViewModel.deleteMediaFilesFromList(it.second, audioToDelete)
                 }
             }
         }
         if (!docsToDelete.isNullOrEmpty()) {
-            filesViewModel.usedDocsSummaryTransformations.observe(viewLifecycleOwner) {
+            filesViewModel.usedDocsSummaryTransformations().observe(viewLifecycleOwner) {
                 if (it != null) {
                     filesViewModel.deleteMediaFilesFromList(it.second, docsToDelete)
                 }

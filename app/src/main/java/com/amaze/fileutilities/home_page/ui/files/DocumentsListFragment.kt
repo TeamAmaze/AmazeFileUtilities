@@ -45,7 +45,7 @@ class DocumentsListFragment : AbstractMediaInfoListFragment() {
         val root: View = binding.root
         (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.documents))
         (activity as MainActivity).invalidateBottomBar(false)
-        filesViewModel.usedDocsSummaryTransformations.observe(
+        filesViewModel.usedDocsSummaryTransformations().observe(
             viewLifecycleOwner
         ) { metaInfoAndSummaryPair ->
             binding.documentsListInfoText.text = resources.getString(R.string.loading)

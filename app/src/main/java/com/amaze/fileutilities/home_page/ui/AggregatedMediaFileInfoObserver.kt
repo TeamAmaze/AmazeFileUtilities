@@ -26,7 +26,7 @@ interface AggregatedMediaFileInfoObserver {
             aggregatedFiles: AggregatedMediaFiles?
         ) -> Unit
     ) {
-        getFilesModel().usedImagesSummaryTransformations
+        getFilesModel().usedImagesSummaryTransformations()
             .observe(
                 lifeCycleOwner()
             ) { imagesPair ->
@@ -45,7 +45,7 @@ interface AggregatedMediaFileInfoObserver {
     ) {
         if (imagesPair?.second != null) {
 //            showLoadingViews(false)
-            getFilesModel().usedVideosSummaryTransformations
+            getFilesModel().usedVideosSummaryTransformations()
                 .observe(
                     lifeCycleOwner()
                 ) { videosPair ->
@@ -70,7 +70,7 @@ interface AggregatedMediaFileInfoObserver {
     ) {
         if (videosPair?.second != null) {
 //            showLoadingViews(false)
-            getFilesModel().usedAudiosSummaryTransformations
+            getFilesModel().usedAudiosSummaryTransformations()
                 .observe(
                     lifeCycleOwner()
                 ) { audiosPair ->
@@ -101,7 +101,7 @@ interface AggregatedMediaFileInfoObserver {
     ) {
         if (audiosPair?.second != null) {
 //            showLoadingViews(false)
-            getFilesModel().usedDocsSummaryTransformations
+            getFilesModel().usedDocsSummaryTransformations()
                 .observe(
                     lifeCycleOwner()
                 ) { docsPair ->

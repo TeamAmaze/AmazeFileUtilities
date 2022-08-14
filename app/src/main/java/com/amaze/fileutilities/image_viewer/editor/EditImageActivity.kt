@@ -27,10 +27,12 @@ import androidx.annotation.RequiresPermission
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.CustomToolbar
+import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.image_viewer.editor.EmojiBSFragment.EmojiListener
 import com.amaze.fileutilities.image_viewer.editor.StickerBSFragment.StickerListener
 import com.amaze.fileutilities.image_viewer.editor.base.BaseActivity
@@ -46,8 +48,10 @@ import com.amaze.fileutilities.utilis.share.showEditImageDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.amaze.fileutilities.utilis.showFade
 import com.bumptech.glide.Glide
+import com.canhub.cropper.CropImageView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener
+import ja.burhanrashid52.photoeditor.OnSaveBitmap
 import ja.burhanrashid52.photoeditor.PhotoEditor
 import ja.burhanrashid52.photoeditor.PhotoEditor.OnSaveListener
 import ja.burhanrashid52.photoeditor.PhotoEditorView
@@ -83,11 +87,18 @@ class EditImageActivity :
     private var mStickerBSFragment: StickerBSFragment? = null
 //    private var mTxtCurrentTool: TextView? = null
     private var customToolbar: CustomToolbar? = null
+    private var cropImageView: CropImageView? = null
     private var mWonderFont: Typeface? = null
     private var mRvTools: RecyclerView? = null
     private var mRvFilters: RecyclerView? = null
     private val mFilterViewAdapter = FilterViewAdapter(this)
     private var mIsFilterVisible = false
+    private var isRotateApplied = false
+    private var isFlipHApplied = false
+    private var isFlipVApplied = false
+    private var isCropVisible = false
+    // need this to restart activity so that we can load latest image saved
+    private var isSaved = false
     private var intentUri: Uri? = null
 
     @VisibleForTesting
@@ -174,6 +185,7 @@ class EditImageActivity :
 
     private fun initViews() {
         mPhotoEditorView = findViewById(R.id.photoEditorView)
+        cropImageView = findViewById(R.id.cropImageView)
         customToolbar = findViewById(R.id.custom_toolbar)
         mRvTools = findViewById(R.id.rvConstraintTools)
         mRvFilters = findViewById(R.id.rvFilterView)
@@ -318,7 +330,11 @@ class EditImageActivity :
                                 .setClearViewsEnabled(true)
                                 .setTransparencyEnabled(true)
                                 .build()
-
+                            if (isCropVisible) {
+                                mPhotoEditorView?.source
+                                    ?.setImageBitmap(cropImageView?.croppedImage)
+                                removeCropView()
+                            }
                             mPhotoEditor?.saveAsFile(
                                 filePath,
                                 saveSettings,
@@ -332,7 +348,8 @@ class EditImageActivity :
                                         mSaveImageUri = uri
 //                                    Glide.with(this@EditImageActivity).load(uri)
 //                                        .into(mPhotoEditorView!!.source)
-//                                    mPhotoEditorView?.source?.setImageURI(mSaveImageUri)
+                                        mPhotoEditorView?.source?.setImageURI(mSaveImageUri)
+                                        isSaved = true
                                         successCallback.invoke(uri)
                                     }
 
@@ -437,16 +454,45 @@ class EditImageActivity :
         builder.create().show()
     }
 
+    private fun showResizeView() {
+        mPhotoEditor?.saveAsBitmap(
+            SaveSettings.Builder().build(),
+            object : OnSaveBitmap {
+                override fun onBitmapReady(saveBitmap: Bitmap?) {
+                    if (saveBitmap != null) {
+                        cropImageView?.setImageBitmap(saveBitmap)
+                        mPhotoEditorView?.source?.setImageBitmap(saveBitmap)
+                    } else {
+                        isCropVisible = false
+                        log.warn("failed to save bitmap")
+                        getString(R.string.operation_failed)
+                    }
+                }
+
+                override fun onFailure(e: Exception?) {
+                    isCropVisible = false
+                    log.warn("failed to save bitmap", e)
+                    getString(R.string.operation_failed)
+                }
+            }
+        )
+        mPhotoEditorView?.visibility = View.GONE
+        cropImageView?.visibility = View.VISIBLE
+    }
+
+    private fun hideResizeView() {
+        mPhotoEditorView?.visibility = View.VISIBLE
+        cropImageView?.visibility = View.GONE
+    }
+
     override fun onFilterSelected(photoFilter: PhotoFilter?) {
         mPhotoEditor?.setFilterEffect(photoFilter)
     }
 
-    var isRotateApplied = false
-    var isFlipHApplied = false
-    var isFlipVApplied = false
     override fun onToolSelected(toolType: ToolType?) {
         when (toolType) {
             ToolType.SHAPE -> {
+                removeCropView()
                 mPhotoEditor?.setBrushDrawingMode(true)
                 mShapeBuilder = ShapeBuilder()
                 mPhotoEditor?.setShape(mShapeBuilder)
@@ -454,6 +500,7 @@ class EditImageActivity :
                 showBottomSheetDialogFragment(mShapeBSFragment)
             }
             ToolType.TEXT -> {
+                removeCropView()
                 val textEditorDialogFragment = TextEditorDialogFragment.show(this)
                 textEditorDialogFragment.setOnTextEditorListener(object :
                         TextEditorDialogFragment.TextEditorListener {
@@ -466,14 +513,17 @@ class EditImageActivity :
                     })
             }
             ToolType.ERASER -> {
+                removeCropView()
                 mPhotoEditor?.brushEraser()
                 customToolbar?.setTitle(getString(R.string.label_eraser_mode))
             }
             ToolType.FILTER -> {
+                removeCropView()
                 customToolbar?.setTitle(getString(R.string.label_filter))
                 showFilter(true)
             }
             ToolType.ROTATE -> {
+                removeCropView()
                 isRotateApplied = !isRotateApplied
                 mPhotoEditor?.setFilterEffect(
                     if (isRotateApplied) {
@@ -485,8 +535,12 @@ class EditImageActivity :
 //                applyBitmapOperation { rotate(it) }
             }
             ToolType.RESIZE -> {
+                customToolbar?.setTitle(getString(R.string.image_editor))
+                showResizeView()
+                isCropVisible = true
             }
             ToolType.FLIP_HORIZONTAL -> {
+                removeCropView()
                 isFlipHApplied = !isFlipHApplied
                 mPhotoEditor?.setFilterEffect(
                     if (isFlipHApplied) {
@@ -498,6 +552,7 @@ class EditImageActivity :
 //                applyBitmapOperation { flipHorizontal(it) }
             }
             ToolType.FLIP_VERTICAL -> {
+                removeCropView()
                 isFlipVApplied = !isFlipVApplied
                 mPhotoEditor?.setFilterEffect(
                     if (isFlipVApplied) {
@@ -508,9 +563,22 @@ class EditImageActivity :
                 )
 //                applyBitmapOperation { flipVertical(it) }
             }
-            ToolType.EMOJI -> showBottomSheetDialogFragment(mEmojiBSFragment)
-            ToolType.STICKER -> showBottomSheetDialogFragment(mStickerBSFragment)
+            ToolType.EMOJI -> {
+                removeCropView()
+                showBottomSheetDialogFragment(mEmojiBSFragment)
+            }
+            ToolType.STICKER -> {
+                removeCropView()
+                showBottomSheetDialogFragment(mStickerBSFragment)
+            }
         }
+    }
+
+    private fun removeCropView() {
+        if (isCropVisible) {
+            hideResizeView()
+        }
+        isCropVisible = false
     }
 
     private fun showBottomSheetDialogFragment(fragment: BottomSheetDialogFragment?) {
@@ -599,16 +667,28 @@ class EditImageActivity :
     }
 
     override fun onBackPressed() {
-        val isCacheEmpty = mPhotoEditor?.isCacheEmpty
-            ?: throw IllegalArgumentException("isCacheEmpty Expected")
+        val isCacheEmpty = (
+            mPhotoEditor?.isCacheEmpty ?: false ||
+                cropImageView?.isVisible ?: false
+            )
 
         if (mIsFilterVisible) {
             showFilter(false)
             customToolbar?.setTitle(getString(R.string.image_editor))
+        } else if (isCropVisible) {
+            isCropVisible = false
+            hideResizeView()
         } else if (!isCacheEmpty) {
             showSaveDialog()
         } else {
-            super.onBackPressed()
+            if (isSaved) {
+                val intent = Intent(this, MainActivity::class.java)
+                intent.action = Intent.CATEGORY_LAUNCHER
+                startActivity(intent)
+                finish()
+            } else {
+                super.onBackPressed()
+            }
         }
     }
 

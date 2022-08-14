@@ -45,7 +45,7 @@ class ImagesListFragment : AbstractMediaInfoListFragment() {
         val root: View = binding.root
         (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.images))
         (activity as MainActivity).invalidateBottomBar(false)
-        filesViewModel.usedImagesSummaryTransformations.observe(
+        filesViewModel.usedImagesSummaryTransformations().observe(
             viewLifecycleOwner
         ) { metaInfoAndSummaryPair ->
             binding.imagesListInfoText.text = resources.getString(R.string.loading)

@@ -87,7 +87,7 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
             PreferencesConstants.KEY_ENABLE_WAVEFORM,
             PreferencesConstants.DEFAULT_AUDIO_PLAYER_WAVEFORM
         )
-        filesViewModel.usedAudiosSummaryTransformations.observe(
+        filesViewModel.usedAudiosSummaryTransformations().observe(
             viewLifecycleOwner
         ) { metaInfoAndSummaryPair ->
             binding.audiosListInfoText.text = resources.getString(R.string.loading)

@@ -27,6 +27,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.zwobble.mammoth.DocumentConverter
 import org.zwobble.mammoth.Result
+import java.lang.Exception
 
 class DocxViewerActivity : PermissionsActivity() {
     var log: Logger = LoggerFactory.getLogger(DocxViewerActivity::class.java)
@@ -51,25 +52,30 @@ class DocxViewerActivity : PermissionsActivity() {
             "Loading docx from path ${docxModel.getUri().path} " +
                 "and mimetype ${docxModel.mimeType}"
         )
-        val converter = DocumentConverter()
-        val result: Result<String>? = converter.convertToHtml(docxModel.getInputStream(this))
-        title = docxModel.getName(this)
-        result?.let {
-            val html: String = result.value // The generated HTML
-            val warnings: Set<String> = result.warnings // Any warnings during conversion
-            val base64 = Base64.encodeToString(html.toByteArray(), Base64.NO_PADDING)
-            viewBinding.webview.also {
-                it.loadData(base64, "text/html", "base64")
-                it.settings.setSupportZoom(true)
-                it.settings.builtInZoomControls = true
-                it.settings.displayZoomControls = false
-                it.setVerticalScrollBarEnabled(true)
-                it.setHorizontalScrollBarEnabled(true)
+        try {
+            val converter = DocumentConverter()
+            val result: Result<String>? = converter.convertToHtml(docxModel.getInputStream(this))
+            title = docxModel.getName(this)
+            result?.let {
+                val html: String = result.value // The generated HTML
+                val warnings: Set<String> = result.warnings // Any warnings during conversion
+                val base64 = Base64.encodeToString(html.toByteArray(), Base64.NO_PADDING)
+                viewBinding.webview.also {
+                    it.loadData(base64, "text/html", "base64")
+                    it.settings.setSupportZoom(true)
+                    it.settings.builtInZoomControls = true
+                    it.settings.displayZoomControls = false
+                    it.setVerticalScrollBarEnabled(true)
+                    it.setHorizontalScrollBarEnabled(true)
+                }
             }
+        } catch (e: Exception) {
+            log.error("Failed to load document", e)
+            showToastInCenter(getString(R.string.failed_to_load_document))
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.docx_activity, menu)
         return super.onCreateOptionsMenu(menu)
     }

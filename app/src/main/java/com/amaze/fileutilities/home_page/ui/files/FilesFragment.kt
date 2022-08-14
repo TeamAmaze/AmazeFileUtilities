@@ -106,7 +106,7 @@ class FilesFragment : ItemsActionBarFragment() {
                     }
                 }
             }
-            usedImagesSummaryTransformations.observe(
+            usedImagesSummaryTransformations().observe(
                 viewLifecycleOwner
             ) { metaInfoAndSummaryPair ->
                 binding.imagesTab.setOnClickListener {
@@ -146,7 +146,7 @@ class FilesFragment : ItemsActionBarFragment() {
                     )
                 }
             }
-            usedAudiosSummaryTransformations.observe(
+            usedAudiosSummaryTransformations().observe(
                 viewLifecycleOwner
             ) { metaInfoAndSummaryPair ->
                 binding.audiosTab.setOnClickListener {
@@ -186,7 +186,7 @@ class FilesFragment : ItemsActionBarFragment() {
                     )
                 }
             }
-            usedVideosSummaryTransformations.observe(
+            usedVideosSummaryTransformations().observe(
                 viewLifecycleOwner
             ) { metaInfoAndSummaryPair ->
                 binding.videosTab.setOnClickListener {
@@ -228,7 +228,7 @@ class FilesFragment : ItemsActionBarFragment() {
                     )
                 }
             }
-            usedDocsSummaryTransformations.observe(
+            usedDocsSummaryTransformations().observe(
                 viewLifecycleOwner
             ) { metaInfoAndSummaryPair ->
                 binding.documentsTab.setOnClickListener {
