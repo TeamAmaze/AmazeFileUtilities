@@ -21,10 +21,14 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat.startActivity
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.image_viewer.editor.EditImageActivity.Companion.FILE_PROVIDER_AUTHORITY
+import com.amaze.fileutilities.image_viewer.editor.FileSaveHelper
 import com.amaze.fileutilities.utilis.MimeTypes
+import java.io.File
 
 fun getShareIntents(sharingUris: List<Uri>, context: Context): ShareAdapter? {
 
@@ -89,7 +93,7 @@ fun getShareIntents(sharingUris: List<Uri>, context: Context): ShareAdapter? {
             intent.action = getShareIntentAction(sharingUris)
             intent.type = mime
             if (sharingUris.size == 1) {
-                intent.putExtra(Intent.EXTRA_STREAM, sharingUris.get(0))
+                intent.putExtra(Intent.EXTRA_STREAM, sharingUris[0])
             } else {
                 intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, ArrayList(sharingUris))
             }
@@ -148,14 +152,29 @@ fun showSetAsDialog(uri: Uri, context: Context) {
 
 fun showEditImageDialog(uri: Uri, context: Context) {
     val editIntent = Intent(Intent.ACTION_EDIT)
-    editIntent.setDataAndType(uri, "image/*")
-    editIntent.putExtra(Intent.EXTRA_STREAM, uri)
+    val editUri = buildFileProviderUri(uri, context)
+    editIntent.setDataAndType(editUri, "image/*")
+    editIntent.putExtra(Intent.EXTRA_STREAM, editUri)
     editIntent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+    editIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
     context.startActivity(
         Intent.createChooser(
             editIntent,
             context.resources.getString(R.string.edit)
         )
+    )
+}
+
+private fun buildFileProviderUri(uri: Uri, context: Context): Uri {
+    if (FileSaveHelper.isSdkHigherThan28()) {
+        return uri
+    }
+    val path: String = uri.path ?: throw IllegalArgumentException("URI Path Expected")
+
+    return FileProvider.getUriForFile(
+        context,
+        FILE_PROVIDER_AUTHORITY,
+        File(path)
     )
 }
 

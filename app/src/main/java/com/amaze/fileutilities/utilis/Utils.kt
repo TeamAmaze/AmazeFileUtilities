@@ -31,6 +31,7 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Point
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Build
@@ -54,6 +55,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.GridLayoutManager
@@ -960,6 +962,10 @@ class Utils {
                 intent.data = Uri.parse("package:$name")
                 context.startActivity(intent)
             }
+        }
+
+        fun convertDrawableToBitmap(drawable: Drawable): Bitmap {
+            return drawable.toBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, null)
         }
 
         private fun findApplicationInfoSizeFallback(applicationInfo: ApplicationInfo): Long {
