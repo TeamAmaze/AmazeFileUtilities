@@ -6,7 +6,7 @@
         </shape>
     </item>
     <item
-        android:drawable="@drawable/ic_save"
+        android:drawable="@drawable/ic_round_save_24"
         android:bottom="@dimen/eight_dp"
         android:left="@dimen/eight_dp"
         android:right="@dimen/eight_dp"

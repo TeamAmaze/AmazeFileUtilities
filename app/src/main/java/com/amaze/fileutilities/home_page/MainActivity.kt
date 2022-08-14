@@ -163,7 +163,7 @@ class MainActivity :
         }
 
         viewModel.initAndFetchPathPreferences().observe(this) { pathPreferences ->
-            viewModel.usedImagesSummaryTransformations.observe(
+            viewModel.usedImagesSummaryTransformations().observe(
                 this
             ) {
                 mediaInfoStorageSummaryPair ->

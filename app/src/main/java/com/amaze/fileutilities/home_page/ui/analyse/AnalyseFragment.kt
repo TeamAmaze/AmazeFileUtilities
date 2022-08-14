@@ -228,7 +228,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 }
             }
 
-            filesViewModel.usedVideosSummaryTransformations
+            filesViewModel.usedVideosSummaryTransformations()
                 .observe(viewLifecycleOwner) { mediaFilePair ->
                     clutteredVideoPreview.invalidateProgress(true, null)
                     largeVideoPreview.invalidateProgress(true, null)
