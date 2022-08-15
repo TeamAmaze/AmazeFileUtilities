@@ -614,28 +614,25 @@
     <!-- Trial dialog trial started content -->
     <string name="trial_started_message">Thank you for choosing Amaze File Utilities.\n
         We are a team of open source developers working hard to provide an ad-free experience,
-        and your subscription will really help us in development.\n
+        and your purchase will really help to keep us afloat.\n
         At any point if you need any help feel free to contact us in About section.
         You\'ll be able to contact directly to our team on Telegram.\n
         Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
     <!-- Trial dialog trial ending last day title -->
     <string name="trial_last_day_title">Trial about to expire</string>
     <!-- Trial dialog trial ending last day summary -->
-    <string name="trial_last_day_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your trial is going to expire tomorrow,
-        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to us to keep us afloat.\n
-        You can write to us if you want to extend the trial period a bit more.
+    <string name="trial_last_day_message">Hey There! Thank you for choosing Amaze File Utilities.
+        \nYour trial is going to expire tomorrow, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.
+        \nWe are a team of open source developers working hard to provide an ad-free experience,
+        and we need funds to keep us afloat.\nYou can write to us if you want to extend the trial period a bit more.
     </string>
     <!-- Trial expired title -->
     <string name="trial_expired_title">Trial expired</string>
     <!-- Trial expired summary -->
     <string name="trial_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your trial has expired,
-        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        Your trial has expired, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
         We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to us to keep us afloat.\n
+        and we need funds to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.
     </string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
@@ -643,9 +640,9 @@
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
     <string name="trial_inactive_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         Your trial is inactive and you\'re not longer an exclusive member,
-        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
         We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to us to keep us afloat.\n
+        and we need funds to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.</string>
     <!-- Subscription dialog subscription purchased title -->
     <string name="subscription_purchased_title">Subscribed</string>
@@ -661,9 +658,9 @@
     <!-- Subscription dialog yearly subscription expired summary -->
     <string name="subscription_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         Your subscription has expired,
-        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
         We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to us to keep us afloat.\n
+        and we need funds to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.</string>
     <!-- Trial validation dialog failed to validate -->
     <string name="not_connected_trial_title">Failed to validate</string>
@@ -744,4 +741,73 @@
     <string name="image_viewer_enable_palette">Extract palette color from image</string>
     <!-- Settings page extract image viewer background color from image summary -->
     <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
+    <!-- Unused apps in analysis tab -->
+    <string name="unused_apps">Unused apps</string>
+    <!-- Large apps in analysis tab -->
+    <string name="large_apps">Large apps</string>
+    <!-- Games installed in analysis tab -->
+    <string name="games_installed">Games</string>
+    <!-- Games installed hint in analysis tab -->
+    <string name="games_installed_hint">Games currently installed on this device</string>
+    <!-- Required elevated permission for analysis in analysis tab -->
+    <string name="require_permission">Required elevated permissions for this analysis</string>
+    <!-- Already granted analysis permission, ask user to refresh -->
+    <string name="granted_permission_refresh">Already granted?</string>
+    <!-- Refresh button in analysis after permission granted -->
+    <string name="refresh">Refresh</string>
+    <!-- Unused apps preference dialog message -->
+    <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
+    <!-- Stopping analysis by pressing on (X) button in analysis tab -->
+    <string name="stopping_analysis">Stopping analysis</string>
+    <!-- Remove battery optimizations on welcome screen and settings page -->
+    <string name="remove_battery_optimizations">Remove battery optimizations</string>
+    <!-- Remove battery optimizations hint on welcome screen and settings page -->
+    <string name="remove_battery_optimizations_hint">Please remove battery optimizations for music player to function properly in background</string>
+    <!-- Apk listing in analysis -->
+    <string name="apk_files">APK files</string>
+    <!-- Image editor tools -->
+    <string name="shape">Shape</string>
+    <!-- Apk listing in analysis -->
+    <string name="text">Text</string>
+    <!-- Apk listing in analysis -->
+    <string name="eraser">Eraser</string>
+    <!-- Apk listing in analysis -->
+    <string name="filter">Filter</string>
+    <!-- Apk listing in analysis -->
+    <string name="emoji">Emoji</string>
+    <!-- Apk listing in analysis -->
+    <string name="sticker">Sticker</string>
+    <!-- Apk listing in analysis -->
+    <string name="rotate">Rotate</string>
+    <!-- Apk listing in analysis -->
+    <string name="flip_horizontal">Flip-H</string>
+    <!-- Apk listing in analysis -->
+    <string name="flip_vertical">Flip-V</string>
+    <!-- Apk listing in analysis -->
+    <string name="resize">Resize</string>
+    <string name="label_brush">Brush</string>
+    <string name="label_shape">Shape</string>
+    <string name="label_oval">Oval</string>
+    <string name="label_rectangle">Rectangle</string>
+    <string name="label_line">Line</string>
+    <string name="label_emoji">Emoji</string>
+    <string name="label_sticker">Sticker</string>
+    <string name="label_eraser">Eraser</string>
+    <string name="label_eraser_mode">Eraser Mode</string>
+    <string name="label_text">Text</string>
+    <string name="label_filter">Filter</string>
+    <string name="label_adjust">Adjust</string>
+    <string name="msg_save_image">Are you want to exit without saving image ?</string>
+    <string name="msg_share_image">Share Image</string>
+    <string name="select_picture">Select Picture</string>
+    <string name="saving">Saving…</string>
+    <string name="image_saved">Image saved successfully</string>
+    <string name="failed_image_save">Failed to save image</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
+    <!-- Image editor activity label -->
+    <string name="image_editor">Amaze Image Editor</string>
+    <!-- Failed while loading docx file -->
+    <string name="failed_to_load_document">Failed to load document</string>
+    <string name="processing">Processing…</string>
 </resources>

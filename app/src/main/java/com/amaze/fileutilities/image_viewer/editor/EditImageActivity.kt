@@ -28,12 +28,14 @@ import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.CustomToolbar
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.image_viewer.editor.EmojiBSFragment.EmojiListener
+import com.amaze.fileutilities.image_viewer.editor.StickerBSFragment.Companion.ARG_STICKERS_LIST
 import com.amaze.fileutilities.image_viewer.editor.StickerBSFragment.StickerListener
 import com.amaze.fileutilities.image_viewer.editor.base.BaseActivity
 import com.amaze.fileutilities.image_viewer.editor.filters.FilterListener
@@ -41,6 +43,7 @@ import com.amaze.fileutilities.image_viewer.editor.filters.FilterViewAdapter
 import com.amaze.fileutilities.image_viewer.editor.tools.EditingToolsAdapter
 import com.amaze.fileutilities.image_viewer.editor.tools.EditingToolsAdapter.OnItemSelected
 import com.amaze.fileutilities.image_viewer.editor.tools.ToolType
+import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.share.ShareAdapter
 import com.amaze.fileutilities.utilis.share.getShareIntents
@@ -61,8 +64,12 @@ import ja.burhanrashid52.photoeditor.TextStyleBuilder
 import ja.burhanrashid52.photoeditor.ViewType
 import ja.burhanrashid52.photoeditor.shape.ShapeBuilder
 import ja.burhanrashid52.photoeditor.shape.ShapeType
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 
 class EditImageActivity :
@@ -100,6 +107,7 @@ class EditImageActivity :
     // need this to restart activity so that we can load latest image saved
     private var isSaved = false
     private var intentUri: Uri? = null
+    private var stickersUrlList: ArrayList<String>? = null
 
     @VisibleForTesting
     var mSaveImageUri: Uri? = null
@@ -109,6 +117,7 @@ class EditImageActivity :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_image)
         initViews()
+        loadStickersUrls()
         handleIntentImage(mPhotoEditorView?.source)
 //        mWonderFont = Typeface.createFromAsset(assets, "beyond_wonderland.ttf")
         mPropertiesBSFragment = PropertiesBSFragment()
@@ -302,6 +311,32 @@ class EditImageActivity :
             }, {
                 showSnackbar(getString(R.string.failed_to_share))
             })
+        }
+    }
+
+    private fun loadStickersUrls() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(StickersApi.API_STICKERS_BASE)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(Utils.getOkHttpClient())
+            .build()
+        lifecycleScope.launch(Dispatchers.IO) {
+            val service = retrofit.create(StickersApi::class.java)
+            try {
+                service.getStickerList()?.execute()?.let { response ->
+                    if (response.isSuccessful && response.body() != null) {
+                        log.info("get stickers response ${response.body()}")
+                        stickersUrlList = response.body()
+                    } else {
+                        log.warn(
+                            "failed to get stickers response code: ${response.code()} " +
+                                "error: ${response.message()}"
+                        )
+                    }
+                }
+            } catch (e: Exception) {
+                log.warn("failed to load stickers list", e)
+            }
         }
     }
 
@@ -569,6 +604,9 @@ class EditImageActivity :
             }
             ToolType.STICKER -> {
                 removeCropView()
+                val arguments = Bundle()
+                arguments.putStringArrayList(ARG_STICKERS_LIST, stickersUrlList)
+                mStickerBSFragment?.arguments = arguments
                 showBottomSheetDialogFragment(mStickerBSFragment)
             }
         }

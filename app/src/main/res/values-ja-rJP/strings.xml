@@ -3,7 +3,7 @@
     <!-- App name -->
     <string name="app_name">Amazeファイルユーティリティ</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">Amaze Utilities</string>
+    <string name="app_name_launcher">Amazeファイルユーティリティ</string>
     <!-- App info shown in about screen -->
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <!-- Image viewer activity label -->
@@ -23,7 +23,7 @@
     <!-- Epub activity label -->
     <string name="epub_viewer">Amaze Epub ビューアー</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">Amaze Doc Viewer</string>
+    <string name="docx_viewer">Amaze Doc ビューアー</string>
     <!-- Image viewer dialog intent filter label -->
     <string name="intent_image_viewer_dialog">Amaze Image Viewer (ダイアログ)</string>
     <!-- Image viewer full screen intent label -->
@@ -103,13 +103,13 @@
     <!-- Generic message shown when loading results of list or operation -->
     <string name="please_wait">お待ちください…</string>
     <!-- No search results found -->
-    <string name="its_quiet_here">It\'s quiet in here…</string>
+    <string name="its_quiet_here">ここは静かです…</string>
     <!-- Settings screen title -->
     <string name="settings">設定</string>
     <!-- About screen title -->
     <string name="about">情報</string>
     <!-- Copyright dialog content in about section -->
-    <string name="rights_reserved">Copyright © 2021–2022 Team Amaze\nAll Rights Reserved</string>
+    <string name="rights_reserved">著作権 © 2021–2022 Team Amaze\n無断複写・転載を禁じます。</string>
     <!-- Open source licenses in about section -->
     <string name="open_source_licenses">オープンソースライセンス</string>
     <!-- Privacy policy label in about section -->
@@ -141,13 +141,13 @@
     <!-- Crash fallback screen title -->
     <string name="sorry_string">Sorry, that should not have happened.</string>
     <!-- Crash fallback screen report by email -->
-    <string name="error_report_button_text">Report this error via e-mail</string>
+    <string name="error_report_button_text">Eメールでエラーを報告する</string>
     <!-- Crash fallback screen report by telegram -->
-    <string name="error_report_button_telegram">Report this error via telegram</string>
+    <string name="error_report_button_telegram">Telegramでエラーを報告する</string>
     <!-- Crash fallback screen copy report -->
-    <string name="copy_for_github">Copy formatted report</string>
+    <string name="copy_for_github">書式付きレポートをコピー</string>
     <!-- Crash fallback screen report on github -->
-    <string name="error_report_open_issue_button_text">Report on GitHub</string>
+    <string name="error_report_open_issue_button_text">GitHub でバグを報告</string>
     <!-- Crash fallback screen info -->
     <string name="error_report_open_github_notice">Please check whether an issue discussing your crash already exists.</string>
     <!-- Toast shown when we failed to display crash fallback screen -->
@@ -215,9 +215,9 @@
     <!-- Clean button in analysis tab to clean junk files -->
     <string name="clean">クリーン</string>
     <!-- Blurred images label in analysis -->
-    <string name="blurred_pics">Blurred</string>
+    <string name="blurred_pics">不鮮明</string>
     <!-- Low light label in analysis -->
-    <string name="low_light">Low-Light</string>
+    <string name="low_light">低照度</string>
     <!-- Memes label in analysis -->
     <string name="memes">ミーム</string>
     <!-- Sad images label in analysis -->
@@ -235,11 +235,11 @@
     <!-- Selfie images analysis label -->
     <string name="selfie">自撮り</string>
     <!-- Group images analysis label -->
-    <string name="group_pics">Group Pics</string>
+    <string name="group_pics">集合写真</string>
     <!-- Memes analysis hint -->
     <string name="memes_hint">Memes are images that have something prominent written over them</string>
     <!-- Duplicate files analysis label -->
-    <string name="duplicates">Duplicate files</string>
+    <string name="duplicates">重複したファイル</string>
     <!-- App caches analysis labels -->
     <string name="cache">アプリのキャッシュ</string>
     <!-- Large videos analysis label -->
@@ -253,7 +253,7 @@
     <!-- Old recordings analysis label -->
     <string name="old_recordings">古い録音</string>
     <!-- Empty files analysis label -->
-    <string name="empty_files">Empty files / folders</string>
+    <string name="empty_files">空のファイル/フォルダ</string>
     <!-- Junk files analysis label -->
     <string name="junk_files">不要ファイル</string>
     <!-- Junk files analysis hint -->
@@ -322,7 +322,7 @@
     <!-- Search for nearby connections in transfer tab -->
     <string name="searching">検索中…</string>
     <!-- Searching for nearby connections with timer in transfer tab -->
-    <string name="searching_timer">Searching… (%s secs)</string>
+    <string name="searching_timer">検索中… (%s 秒)</string>
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
     <string name="enable_wifi">Wi-Fiを有効にしてください</string>
     <!-- Failed to discover nearby devices in transfer tab -->
@@ -338,15 +338,15 @@
     <!-- Ready to cast images / videos to tv -->
     <string name="ready_to_cast">Ready to cast, select any media</string>
     <!-- Creating new cast to tv connection -->
-    <string name="establishing_cast">Establishing cast connection</string>
+    <string name="establishing_cast">キャスト接続を確立中</string>
     <!-- Cast session suspended for tv -->
-    <string name="cast_suspended">Cast session suspended</string>
+    <string name="cast_suspended">キャストセッションが一時停止されました</string>
     <!-- Resuming tv cast session -->
-    <string name="resuming_cast">Resuming cast session</string>
+    <string name="resuming_cast">キャストセッション再開中</string>
     <!-- Failed to resume tv cast session -->
-    <string name="failed_resume_cast">Failed to resume cast session</string>
+    <string name="failed_resume_cast">キャストセッションを再開できませんでした</string>
     <!-- Tv cast session resumed -->
-    <string name="cast_resumed">Cast session resumed</string>
+    <string name="cast_resumed">キャストセッションが再開しました</string>
     <!-- Tv cast session ending -->
     <string name="cast_ending">Ending cast session</string>
     <!-- Tv cast session ended -->
@@ -356,21 +356,21 @@
     <!-- Open images / videos/ audios using inbuilt player -->
     <string name="inbuilt_player">内蔵プレイヤー</string>
     <!-- Tv Cast notification title server running -->
-    <string name="cast_notification_title">Server running…</string>
+    <string name="cast_notification_title">サーバー実行中…</string>
     <!-- tv casting content notification content -->
-    <string name="cast_notification_summary">Casting content on TV</string>
+    <string name="cast_notification_summary">テレビでコンテンツをキャスト中</string>
     <!-- stop tv cast server notification button -->
     <string name="stop">停止</string>
     <!-- Service description to cast media files to tv -->
     <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
-    <string name="failed_to_handshake">Failed to establish connection with remote device</string>
+    <string name="failed_to_handshake">リモートデバイスとの接続を確立できませんでした</string>
     <!-- Connection successful to transfer files in tranfer tab -->
-    <string name="connection_successful">Connection successful</string>
+    <string name="connection_successful">接続成功</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send">Failed to send, please ensure remote is set to receive file</string>
+    <string name="failed_filename_send">送信に失敗しました。リモートがファイルの受信に設定されていることを確認してください。</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send_reconnecct">Failed to send, please reconnect</string>
+    <string name="failed_filename_send_reconnecct">送信できませんでした。再接続してください。</string>
     <!-- Failed to receive files in transfer tab -->
     <string name="failed_filename_receive">受信に失敗しました</string>
     <!-- Failed to receive files in transfer tab -->
@@ -508,7 +508,7 @@
     <!-- No item selected to delete in analysis tab -->
     <string name="no_item_selected">No item selected</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
-    <string name="analysis_updated">Updated analysis</string>
+    <string name="analysis_updated">解析を更新しました</string>
     <!-- Failed to share pdf/ video/audio files  -->
     <string name="failed_to_share">Failed to share files</string>
     <!-- Transfer tab connected hint -->
@@ -521,13 +521,13 @@
     <!-- Transfer tab hint for connection -->
     <string name="start_scan_both_devices">Make sure to start scan on both the devices</string>
     <!-- Transfer tab connecting countdown -->
-    <string name="connecting_please_wait">Connecting… (%s secs)</string>
+    <string name="connecting_please_wait">接続中…（%s 秒）</string>
     <!-- Transfer tab enable wifi to continue -->
     <string name="enable_wifi_to_continue">Please enable Wifi to continue</string>
     <!-- Transfer tab my device info -->
     <string name="my_device">私のデバイス：%s</string>
     <!-- Transfer tab my device status -->
-    <string name="device_status">Status: %s</string>
+    <string name="device_status">ステータス: %s</string>
     <!-- Transfer tab progress -->
     <string name="transfer_in_progress_title">転送中</string>
     <!-- Transfer tab transfer in progress but user trying to leave the screen -->
@@ -582,7 +582,7 @@
     <string name="delete_files_message">You\'re about to permanently delete these files.
         Are you sure you want to proceed?\n\n%s Files, %s Size</string>
     <!-- Delete file progress -->
-    <string name="deleted_progress">Deleted %s of %s</string>
+    <string name="deleted_progress">%s 中 %sを削除しました</string>
     <!-- Delete file successful -->
     <string name="successfully_deleted">Successfully deleted</string>
     <!-- Delete file failure -->
@@ -602,40 +602,37 @@
     <!-- Contact us in about section -->
     <string name="contact_us">お問い合わせ</string>
     <!-- Translate in about section -->
-    <string name="translate_title">Translate</string>
+    <string name="translate_title">翻訳</string>
     <!-- Translate summary in about section -->
-    <string name="translate_summary">Translate Amaze in your language</string>
+    <string name="translate_summary">Amaze をお使いの言語に翻訳します</string>
     <!-- About app screen title -->
     <string name="about_app_title">アプリについて</string>
     <!-- Made in india about section -->
     <string name="made_in_india">Made with ❤ in India</string>
     <!-- Trail dialog trial started -->
-    <string name="trial_started_title">Trial started (%s days)</string>
+    <string name="trial_started_title">試用開始（%s 日）</string>
     <!-- Trial dialog trial started content -->
     <string name="trial_started_message">Thank you for choosing Amaze File Utilities.\n
         We are a team of open source developers working hard to provide an ad-free experience,
-        and your subscription will really help us in development.\n
+        and your purchase will really help to keep us afloat.\n
         At any point if you need any help feel free to contact us in About section.
         You\'ll be able to contact directly to our team on Telegram.\n
         Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
     <!-- Trial dialog trial ending last day title -->
-    <string name="trial_last_day_title">Trial about to expire</string>
+    <string name="trial_last_day_title">試用期間がまもなく終了します。</string>
     <!-- Trial dialog trial ending last day summary -->
-    <string name="trial_last_day_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your trial is going to expire tomorrow,
-        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to us to keep us afloat.\n
-        You can write to us if you want to extend the trial period a bit more.
+    <string name="trial_last_day_message">Hey There! Thank you for choosing Amaze File Utilities.
+        \nYour trial is going to expire tomorrow, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.
+        \nWe are a team of open source developers working hard to provide an ad-free experience,
+        and we need funds to keep us afloat.\nYou can write to us if you want to extend the trial period a bit more.
     </string>
     <!-- Trial expired title -->
-    <string name="trial_expired_title">Trial expired</string>
+    <string name="trial_expired_title">試用期間が終了しました</string>
     <!-- Trial expired summary -->
     <string name="trial_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your trial has expired,
-        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        Your trial has expired, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
         We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to us to keep us afloat.\n
+        and we need funds to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.
     </string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
@@ -643,9 +640,9 @@
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
     <string name="trial_inactive_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         Your trial is inactive and you\'re not longer an exclusive member,
-        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
         We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to us to keep us afloat.\n
+        and we need funds to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.</string>
     <!-- Subscription dialog subscription purchased title -->
     <string name="subscription_purchased_title">購読済み</string>
@@ -657,13 +654,13 @@
         You\'ll be able to contact directly to our team on Telegram.\n
         Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
     <!-- Subscription dialog yearly subscription expired title -->
-    <string name="subscription_expired_title">Subscription expired</string>
+    <string name="subscription_expired_title">サブスクリプションの有効期限が切れました</string>
     <!-- Subscription dialog yearly subscription expired summary -->
     <string name="subscription_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         Your subscription has expired,
-        we hope you\'ve enjoyed our software, and we look forward for you subscribe to our yearly plan at a very nominal fee.\n
+        we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
         We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to us to keep us afloat.\n
+        and we need funds to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.</string>
     <!-- Trial validation dialog failed to validate -->
     <string name="not_connected_trial_title">Failed to validate</string>
@@ -675,7 +672,7 @@
     <!-- Generic don't show dialog again -->
     <string name="dont_show_again">再表示しない</string>
     <!-- Welcome screen title -->
-    <string name="welcome_media_title">Manage media files</string>
+    <string name="welcome_media_title">メディアファイルを管理</string>
     <!-- Welcome screen summary -->
     <string name="welcome_media_summary">View images, videos, audios, documents in list or grid\nOpen using inbuilt players\nGesture support for easy navigation\nJump to any date instantly\nGroup or sort list\nCast on TV</string>
     <!-- Welcome screen analysis summary -->
@@ -687,7 +684,7 @@
     <!-- Welcome screen license agreement page -->
     <string name="before_we_start">始める前に…</string>
     <!-- Welcome screen license agreement page -->
-    <string name="privacy_title">We care for your privacy!</string>
+    <string name="privacy_title">あなたの個人情報とプライバシーは大切です。</string>
     <!-- Welcome screen license agreement page -->
     <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.\n
         We assure you that we do not collect any of your private information.\nWe don\'t say this, our track record does.\nWe\'re a group of open source developers and are managing Amaze File Manager for around 8 years now.\n\nWe look forward to your subscription.
@@ -715,7 +712,7 @@
     <!-- Subscription dialog renewal cycle info -->
     <string name="renewal_cycle">更新のサイクル - %s</string>
     <!-- Subscription dialog lifetime membership -->
-    <string name="lifetime_membership">Lifetime Membership</string>
+    <string name="lifetime_membership">永久会員</string>
     <!-- Subscription dialog one year membership -->
     <string name="one_year">1年</string>
     <!-- Generic operation failed -->
@@ -739,9 +736,78 @@
     <!-- Settings page extract music player background color from album -->
     <string name="audio_player_enable_palette">アルバムからパレットの色を抽出する</string>
     <!-- Settings page extract music player background color from album info -->
-    <string name="audio_player_enable_palette_summary">Sets background color for audio player</string>
+    <string name="audio_player_enable_palette_summary">オーディオプレーヤーの背景色を設定します</string>
     <!-- Settings page extract image viewer background color from image -->
     <string name="image_viewer_enable_palette">画像からパレットの色を抽出する</string>
     <!-- Settings page extract image viewer background color from image summary -->
-    <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
+    <string name="image_viewer_enable_palette_summary">画像ビューアーの背景色を設定します</string>
+    <!-- Unused apps in analysis tab -->
+    <string name="unused_apps">Unused apps</string>
+    <!-- Large apps in analysis tab -->
+    <string name="large_apps">Large apps</string>
+    <!-- Games installed in analysis tab -->
+    <string name="games_installed">Games</string>
+    <!-- Games installed hint in analysis tab -->
+    <string name="games_installed_hint">Games currently installed on this device</string>
+    <!-- Required elevated permission for analysis in analysis tab -->
+    <string name="require_permission">Required elevated permissions for this analysis</string>
+    <!-- Already granted analysis permission, ask user to refresh -->
+    <string name="granted_permission_refresh">Already granted?</string>
+    <!-- Refresh button in analysis after permission granted -->
+    <string name="refresh">Refresh</string>
+    <!-- Unused apps preference dialog message -->
+    <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
+    <!-- Stopping analysis by pressing on (X) button in analysis tab -->
+    <string name="stopping_analysis">Stopping analysis</string>
+    <!-- Remove battery optimizations on welcome screen and settings page -->
+    <string name="remove_battery_optimizations">Remove battery optimizations</string>
+    <!-- Remove battery optimizations hint on welcome screen and settings page -->
+    <string name="remove_battery_optimizations_hint">Please remove battery optimizations for music player to function properly in background</string>
+    <!-- Apk listing in analysis -->
+    <string name="apk_files">APK files</string>
+    <!-- Image editor tools -->
+    <string name="shape">Shape</string>
+    <!-- Apk listing in analysis -->
+    <string name="text">Text</string>
+    <!-- Apk listing in analysis -->
+    <string name="eraser">Eraser</string>
+    <!-- Apk listing in analysis -->
+    <string name="filter">Filter</string>
+    <!-- Apk listing in analysis -->
+    <string name="emoji">Emoji</string>
+    <!-- Apk listing in analysis -->
+    <string name="sticker">Sticker</string>
+    <!-- Apk listing in analysis -->
+    <string name="rotate">Rotate</string>
+    <!-- Apk listing in analysis -->
+    <string name="flip_horizontal">Flip-H</string>
+    <!-- Apk listing in analysis -->
+    <string name="flip_vertical">Flip-V</string>
+    <!-- Apk listing in analysis -->
+    <string name="resize">Resize</string>
+    <string name="label_brush">Brush</string>
+    <string name="label_shape">Shape</string>
+    <string name="label_oval">Oval</string>
+    <string name="label_rectangle">Rectangle</string>
+    <string name="label_line">Line</string>
+    <string name="label_emoji">Emoji</string>
+    <string name="label_sticker">Sticker</string>
+    <string name="label_eraser">Eraser</string>
+    <string name="label_eraser_mode">Eraser Mode</string>
+    <string name="label_text">Text</string>
+    <string name="label_filter">Filter</string>
+    <string name="label_adjust">Adjust</string>
+    <string name="msg_save_image">Are you want to exit without saving image ?</string>
+    <string name="msg_share_image">Share Image</string>
+    <string name="select_picture">Select Picture</string>
+    <string name="saving">Saving…</string>
+    <string name="image_saved">Image saved successfully</string>
+    <string name="failed_image_save">Failed to save image</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
+    <!-- Image editor activity label -->
+    <string name="image_editor">Amaze Image Editor</string>
+    <!-- Failed while loading docx file -->
+    <string name="failed_to_load_document">Failed to load document</string>
+    <string name="processing">Processing…</string>
 </resources>
