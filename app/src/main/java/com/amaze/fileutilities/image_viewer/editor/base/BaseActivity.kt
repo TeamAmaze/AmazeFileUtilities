@@ -10,23 +10,24 @@
 
 package com.amaze.fileutilities.image_viewer.editor.base
 
-import android.R
-import android.app.ProgressDialog
 import android.content.pm.PackageManager
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.amaze.fileutilities.R
+import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.google.android.material.snackbar.Snackbar
 
 /**
  * Created by Burhanuddin Rashid on 1/17/2018.
  */
 open class BaseActivity : AppCompatActivity() {
-    private var mProgressDialog: ProgressDialog? = null
+    private var mProgressDialog: AlertDialog? = null
     private var mPermission: String? = null
 
     private val permissionLauncher =
@@ -57,13 +58,11 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     protected fun showLoading(message: String) {
-        mProgressDialog = ProgressDialog(this)
-        mProgressDialog?.run {
-            setMessage(message)
-            setProgressStyle(ProgressDialog.STYLE_SPINNER)
-            setCancelable(false)
-            show()
-        }
+        mProgressDialog = showProcessingDialog(
+            layoutInflater,
+            message
+        ).create()
+        mProgressDialog?.show()
     }
 
     protected fun hideLoading() {

@@ -18,8 +18,8 @@
 
     <ja.burhanrashid52.photoeditor.PhotoEditorView
         android:id="@+id/photoEditorView"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/zero_dp"
         app:layout_constraintTop_toBottomOf="@id/custom_toolbar"
         app:layout_constraintBottom_toTopOf="@id/layoutBottomSheet"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -28,8 +28,8 @@
 
     <com.canhub.cropper.CropImageView
         android:id="@+id/cropImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/zero_dp"
+        android:layout_height="@dimen/zero_dp"
         app:layout_constraintTop_toBottomOf="@id/custom_toolbar"
         app:layout_constraintBottom_toTopOf="@id/layoutBottomSheet"
         app:layout_constraintLeft_toLeftOf="parent"
