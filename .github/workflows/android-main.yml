@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'main'
+      - 'feature'
       - 'release/*'
 
 concurrency:
@@ -45,7 +46,9 @@ jobs:
       - name: Publish on Telegram
         run: |
           COMMIT_COUNT=$(git rev-list --count ${GITHUB_REF})
-          cp app/build/outputs/apk/debug/app-arm64-v8a-debug.apk app/build/outputs/apk/debug/amaze-utils-arm64-v8a-v0.1-$(echo $COMMIT_COUNT).apk
-          cp app/build/outputs/apk/debug/app-armeabi-v7a-debug.apk app/build/outputs/apk/debug/amaze-utils-armeabi-v7a-v0.1-$(echo $COMMIT_COUNT).apk
+          7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on app/build/outputs/apk/debug/app-arm64-v8a-debug.7z app/build/outputs/apk/debug/app-arm64-v8a-debug.apk
+          7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on app/build/outputs/apk/debug/app-armeabi-v7a-debug.7z app/build/outputs/apk/debug/app-armeabi-v7a-debug.apk
+          cp app/build/outputs/apk/debug/app-arm64-v8a-debug.7z app/build/outputs/apk/debug/amaze-utils-arm64-v8a-v0.1-$(echo $COMMIT_COUNT).7z
+          cp app/build/outputs/apk/debug/app-armeabi-v7a-debug.7z app/build/outputs/apk/debug/amaze-utils-armeabi-v7a-v0.1-$(echo $COMMIT_COUNT).7z
           echo $(curl -v -F "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" --header "Content-Type: multipart/form-data" -F document=@app/build/outputs/apk/debug/amaze-utils-arm64-v8a-v0.1-$(echo $COMMIT_COUNT).apk https://api.telegram.org/${{ secrets.AMAZE_BOT_ID }}:${{ secrets.TELEGRAM_INTEGRATION_KEY }}/sendDocument)
           echo $(curl -v -F "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" --header "Content-Type: multipart/form-data" -F document=@app/build/outputs/apk/debug/amaze-utils-armeabi-v7a-v0.1-$(echo $COMMIT_COUNT).apk https://api.telegram.org/${{ secrets.AMAZE_BOT_ID }}:${{ secrets.TELEGRAM_INTEGRATION_KEY }}/sendDocument)
