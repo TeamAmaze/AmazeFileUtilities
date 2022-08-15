@@ -70,13 +70,18 @@ class StickerBSFragment : BottomSheetDialogFragment() {
         val rvEmoji: RecyclerView = contentView.findViewById(R.id.rvEmoji)
         val gridLayoutManager = GridLayoutManager(activity, 3)
         rvEmoji.layoutManager = gridLayoutManager
-        val stickerAdapter = StickerAdapter()
+        var stickerList = arguments?.getStringArrayList(ARG_STICKERS_LIST)
+        if (stickerList == null) {
+            stickerList = stickerPathListFallback
+        }
+        val stickerAdapter = StickerAdapter(stickerList)
         rvEmoji.adapter = stickerAdapter
         rvEmoji.setHasFixedSize(true)
-        rvEmoji.setItemViewCacheSize(stickerPathList.size)
+        rvEmoji.setItemViewCacheSize(stickerList.size)
     }
 
-    inner class StickerAdapter : RecyclerView.Adapter<StickerAdapter.ViewHolder>() {
+    inner class StickerAdapter(private val stickerList: ArrayList<String>) :
+        RecyclerView.Adapter<StickerAdapter.ViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(
                 R.layout.row_sticker,
@@ -89,12 +94,12 @@ class StickerBSFragment : BottomSheetDialogFragment() {
             // Load sticker image from remote url
             Glide.with(requireContext())
                 .asBitmap()
-                .load(stickerPathList[position])
+                .load(stickerList[position])
                 .into(holder.imgSticker)
         }
 
         override fun getItemCount(): Int {
-            return stickerPathList.size
+            return stickerList.size
         }
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -105,7 +110,7 @@ class StickerBSFragment : BottomSheetDialogFragment() {
                     if (mStickerListener != null) {
                         Glide.with(requireContext())
                             .asBitmap()
-                            .load(stickerPathList[layoutPosition])
+                            .load(stickerList[layoutPosition])
                             .into(object : CustomTarget<Bitmap?>(256, 256) {
                                 override fun onResourceReady(
                                     resource: Bitmap,
@@ -125,8 +130,10 @@ class StickerBSFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
+        const val ARG_STICKERS_LIST = "sticker_list"
+
         // Image Urls from flaticon(https://www.flaticon.com/stickers-pack/food-289)
-        private val stickerPathList = arrayOf(
+        private val stickerPathListFallback = arrayListOf(
             "https://cdn-icons-png.flaticon.com/256/4392/4392452.png",
             "https://cdn-icons-png.flaticon.com/256/4392/4392455.png",
             "https://cdn-icons-png.flaticon.com/256/4392/4392459.png",
