@@ -103,6 +103,7 @@ class SearchListFragment :
             searchEditText?.threshold = 0
             searchEditText?.setAdapter(adapter)
         }
+        searchEditText?.requestFocus()
         preloader = MediaAdapterPreloader(
             requireContext(),
             R.drawable.ic_outline_insert_drive_file_32
