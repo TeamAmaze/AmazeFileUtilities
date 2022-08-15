@@ -25,6 +25,7 @@ class ImageViewerViewModel : ViewModel() {
             /*withContext(Dispatchers.Main) {
                 siblingImagesLiveData.value = null
             }*/
+            siblingImagesLiveData.postValue(null)
             if (siblingImagesLiveData.value.isNullOrEmpty()) {
                 imageModel.uri.getSiblingUriFiles().run {
                     val imageModelList = ArrayList<LocalImageModel>()

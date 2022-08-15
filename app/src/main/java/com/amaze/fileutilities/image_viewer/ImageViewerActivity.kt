@@ -50,11 +50,13 @@ class ImageViewerActivity : PermissionsActivity() {
 
         val imageModel = LocalImageModel(uri = imageUri, mimeType = mimeType)
         viewModel.processSiblingImageModels(imageModel)
+
+        val dialog = showProcessingDialog(
+            layoutInflater,
+            getString(R.string.please_wait)
+        ).create()
+
         viewModel.siblingImagesLiveData.observe(this) {
-            val dialog = showProcessingDialog(
-                layoutInflater,
-                getString(R.string.please_wait)
-            ).create()
             if (it == null) {
                 dialog.show()
             } else {
