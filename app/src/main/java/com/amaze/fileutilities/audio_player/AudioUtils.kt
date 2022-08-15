@@ -21,6 +21,7 @@ import android.os.ParcelFileDescriptor
 import android.provider.MediaStore
 import android.provider.MediaStore.Audio.AudioColumns
 import androidx.annotation.ColorInt
+import androidx.core.graphics.scale
 import androidx.palette.graphics.Palette
 import androidx.palette.graphics.Palette.Swatch
 import com.amaze.fileutilities.utilis.log
@@ -57,6 +58,7 @@ class AudioUtils {
                 if (parcelFileDescriptor != null) {
                     val fileDescriptor: FileDescriptor = parcelFileDescriptor.fileDescriptor
                     bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+                        .scale(100, 100, true)
                 }
             } catch (e: Exception) {
                 log.info("failed to extract album art", e)

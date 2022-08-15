@@ -819,4 +819,5 @@
     <string name="image_editor">Amaze Image Editor</string>
     <!-- Failed while loading docx file -->
     <string name="failed_to_load_document">Failed to load document</string>
+    <string name="processing">Processing…</string>
 </resources>
