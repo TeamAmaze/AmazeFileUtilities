@@ -24,9 +24,10 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners
 import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 
-class MediaAdapterPreloader(context: Context, private val loadingDrawable: Int) :
+class MediaAdapterPreloader(private val context: Context, private val loadingDrawable: Int) :
     PreloadModelProvider<String> {
     private var request: RequestBuilder<Drawable> = Glide.with(context).asDrawable().fitCenter()
     private var items: MutableList<String>? = null
@@ -58,6 +59,11 @@ class MediaAdapterPreloader(context: Context, private val loadingDrawable: Int) 
         val toLoadDrawable = item.extraInfo?.apkMetaData?.drawable
         var transformedRequest = request.fallback(R.drawable.ic_outline_broken_image_24)
             .placeholder(loadingDrawable).load(toLoadDrawable ?: toLoadBitmap ?: toLoadPath)
+        if (toLoadBitmap == null) {
+            // apply size constraint when we don't have bitmap, as bitmap already is resized see CursorUtils
+            transformedRequest = transformedRequest
+                .apply(RequestOptions().override(500, 500))
+        }
         transformedRequest = if (isGrid) {
             transformedRequest.centerCrop()
                 .transform(CenterCrop(), GranularRoundedCorners(24.px, 24.px, 0f, 0f))
