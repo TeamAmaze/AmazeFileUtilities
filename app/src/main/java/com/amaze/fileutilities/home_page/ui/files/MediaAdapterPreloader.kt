@@ -62,7 +62,12 @@ class MediaAdapterPreloader(private val context: Context, private val loadingDra
         if (toLoadBitmap == null) {
             // apply size constraint when we don't have bitmap, as bitmap already is resized see CursorUtils
             transformedRequest = transformedRequest
-                .apply(RequestOptions().override(500, 500))
+                .apply(
+                    RequestOptions().override(
+                        if (isGrid) 500 else 100,
+                        if (isGrid) 500 else 100
+                    )
+                )
         }
         transformedRequest = if (isGrid) {
             transformedRequest.centerCrop()
