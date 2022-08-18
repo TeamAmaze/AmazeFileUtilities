@@ -52,6 +52,7 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
 
     private lateinit var audioPlaybackServiceConnection: ServiceConnection
     private var preloader: MediaAdapterPreloader? = null
+    private var isWaveformProcessing = false
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -303,6 +304,14 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
 
     override fun getLogger(): Logger {
         return log
+    }
+
+    override fun getIsWaveformProcessing(): Boolean {
+        return isWaveformProcessing
+    }
+
+    override fun setIsWaveformProcessing(bool: Boolean) {
+        this.isWaveformProcessing = bool
     }
 
     private fun invalidateActionButtons(progressHandler: AudioProgressHandler?) {
