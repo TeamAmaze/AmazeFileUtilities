@@ -151,7 +151,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:extension-mediasession:2.16.0'
     implementation 'com.ramijemli.percentagechartview:percentagechartview:0.3.1'
     implementation 'com.github.massoudss:waveformSeekBar:5.0.1'
-    implementation 'com.github.lincollincol:amplituda:2.1.2'
+    implementation 'com.github.lincollincol:amplituda:2.1.6'
     //Simple library show
     implementation('com.mikepenz:aboutlibraries:6.1.1@aar') {
         transitive = true

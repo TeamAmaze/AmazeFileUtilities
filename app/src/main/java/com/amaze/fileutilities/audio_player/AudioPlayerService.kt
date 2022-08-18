@@ -703,12 +703,17 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                         }
                     }
                     REPEAT_NONE -> {
-                        // do nothing
+                        serviceBinderPlaybackUpdate?.onPositionUpdate(audioProgressHandler)
+                        updateMediaSessionPlaybackState()
+                        playingNotification?.update()
                     }
                 }
             }
+        } else {
+            serviceBinderPlaybackUpdate?.onPositionUpdate(audioProgressHandler)
+            updateMediaSessionPlaybackState()
+            playingNotification?.update()
         }
-        serviceBinderPlaybackUpdate?.onPositionUpdate(audioProgressHandler)
         if (audioProgressHandler.isCancelled) {
             stopSelf()
         }
@@ -721,8 +726,6 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                 mBuilder?.build()
             )
         }*/
-        updateMediaSessionPlaybackState()
-        playingNotification?.update()
     }
 
     override fun getPlayerPosition(): Long {
