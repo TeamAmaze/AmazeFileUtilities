@@ -71,9 +71,10 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     fun getAudioPlayerHandlerViewModel(): AudioPlayerInterfaceHandlerViewModel
     fun layoutInflater(): LayoutInflater
     fun getLogger(): Logger
+    fun getIsWaveformProcessing(): Boolean
+    fun setIsWaveformProcessing(bool: Boolean): Unit
 
     override fun onPositionUpdate(progressHandler: AudioProgressHandler) {
-        progressHandler.audioPlaybackInfo.duration.toFloat()
         getSeekbar()?.let {
             seekbar ->
             seekbar.valueTo = progressHandler.audioPlaybackInfo.duration.toFloat()
@@ -88,7 +89,9 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             seekbar.progress = progressHandler.audioPlaybackInfo.currentPosition.toFloat()
                 .coerceAtMost(seekbar.max)
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
+            !getAudioPlayerHandlerViewModel().forceShowSeekbar
+        ) {
             getWaveformSeekbar()?.let {
                 waveformSeekBar ->
                 waveformSeekBar.maxProgress = progressHandler.audioPlaybackInfo.duration
@@ -98,14 +101,6 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                     .coerceAtMost(waveformSeekBar.maxProgress)
             }
         }
-        getTimeElapsedTextView()?.text = AudioUtils.getReadableDurationString(
-            progressHandler
-                .audioPlaybackInfo.currentPosition
-        ) ?: ""
-        getTrackLengthTextView()?.text = AudioUtils.getReadableDurationString(
-            progressHandler
-                .audioPlaybackInfo.duration
-        ) ?: ""
         invalidateActionButtons(progressHandler)
     }
 
@@ -352,6 +347,15 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             getTitleTextView()?.text = info.title
             getAlbumTextView()?.text = info.albumName
             getArtistTextView()?.text = info.artistName
+
+            getTimeElapsedTextView()?.text = AudioUtils.getReadableDurationString(
+                progressHandler
+                    .audioPlaybackInfo.currentPosition
+            ) ?: ""
+            getTrackLengthTextView()?.text = AudioUtils.getReadableDurationString(
+                progressHandler
+                    .audioPlaybackInfo.duration
+            ) ?: ""
         }
     }
 
@@ -362,7 +366,9 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         getSeekbarSmall()?.progress = progress.toFloat().coerceAtMost(
             getSeekbarSmall()?.max ?: 0f
         )
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
+            !getAudioPlayerHandlerViewModel().forceShowSeekbar
+        ) {
             getWaveformSeekbar()?.visibility = View.VISIBLE
             getSeekbar()?.visibility = View.GONE
             getWaveformSeekbar()?.progress = progress.toFloat()
@@ -398,11 +404,22 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                             /*if (!file.path.startsWith("/storage")) {
                                 file = File("storage/" + file.path)
                             }*/
-                            this.executeAsyncTask<Void, IntArray>({}, {
-                                CustomWaveformOptions.getSampleFrom(context, file.path)
+                            this.executeAsyncTask<Void, IntArray?>({}, {
+                                if (!getIsWaveformProcessing()) {
+                                    setIsWaveformProcessing(true)
+                                    CustomWaveformOptions.getSampleFrom(context, file.path)
+                                } else {
+                                    null
+                                }
                             }, {
                                 sample ->
-                                setSampleAndShowWaveformSeekbar(sample)
+                                setIsWaveformProcessing(false)
+                                if (sample != null) {
+                                    setSampleAndShowWaveformSeekbar(sample)
+                                } else {
+                                    getLogger().warn("failed to fetch sample waves for audio")
+                                    getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                                }
                             }, {})
                         } catch (fe: FileNotFoundException) {
                             getLogger().warn("file not found for waveform, force seekbar", fe)
@@ -440,10 +457,22 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                                 /*if (!file.path.startsWith("/storage")) {
                                     file = File("storage/" + file.path)
                                 }*/
-                                this.executeAsyncTask<Void, IntArray>({}, {
-                                    CustomWaveformOptions.getSampleFrom(context, file.path)
+                                this.executeAsyncTask<Void, IntArray?>({}, {
+                                    if (!getIsWaveformProcessing()) {
+                                        setIsWaveformProcessing(true)
+                                        CustomWaveformOptions.getSampleFrom(context, file.path)
+                                    } else {
+                                        null
+                                    }
                                 }, { sample ->
-                                    setSampleAndShowWaveformSeekbar(sample)
+                                    setIsWaveformProcessing(false)
+                                    if (sample != null) {
+                                        setSampleAndShowWaveformSeekbar(sample)
+                                    } else {
+                                        getLogger().warn("failed to fetch sample waves for audio")
+                                        getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                                        setupSeekBars(audioService)
+                                    }
                                 }, {})
                             } catch (fe: FileNotFoundException) {
                                 getLogger().warn("file not found for waveform, setup seekbar", fe)

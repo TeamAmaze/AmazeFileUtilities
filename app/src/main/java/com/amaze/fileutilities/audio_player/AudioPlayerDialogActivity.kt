@@ -44,6 +44,7 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
     }
     private lateinit var viewModel: AudioPlayerInterfaceHandlerViewModel
     private lateinit var audioPlaybackServiceConnection: ServiceConnection
+    private var isWaveformProcessing = false
 
     override fun onResume() {
         super.onResume()
@@ -196,5 +197,13 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
 
     override fun serviceDisconnected() {
         // do nothing
+    }
+
+    override fun getIsWaveformProcessing(): Boolean {
+        return isWaveformProcessing
+    }
+
+    override fun setIsWaveformProcessing(bool: Boolean) {
+        isWaveformProcessing = bool
     }
 }

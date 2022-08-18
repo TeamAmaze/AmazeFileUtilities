@@ -59,6 +59,7 @@ class AudioUtils {
                     val fileDescriptor: FileDescriptor = parcelFileDescriptor.fileDescriptor
                     bitmap = BitmapFactory.decodeFileDescriptor(fileDescriptor)
                         .scale(100, 100, true)
+                    parcelFileDescriptor.close()
                 }
             } catch (e: Exception) {
                 log.info("failed to extract album art", e)

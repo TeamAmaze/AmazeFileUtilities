@@ -96,6 +96,9 @@ data class AudioProgressHandler(
     }
 }
 
+/**
+ * Callback interface shared between service and fragment (different objects for each)
+ */
 interface OnPlaybackInfoUpdate {
 
     /**
