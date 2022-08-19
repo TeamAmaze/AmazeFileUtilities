@@ -46,6 +46,10 @@ class RecentMediaFilesAdapter(
         return mediaFileListItems.size
     }
 
+    override fun getOnlyItemsCount(): Int {
+        return mediaFileListItems.size
+    }
+
     override fun getItemViewType(position: Int): Int {
         return mediaFileListItems[position].listItemType
     }

@@ -52,7 +52,9 @@
             android:theme="@style/Theme.AmazeFileUtilities.Dark"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysVisible"
-            tools:ignore="LockedOrientationActivity">
+            tools:ignore="LockedOrientationActivity"
+            android:launchMode="singleInstance"
+            >
             <nav-graph android:value="@navigation/mobile_navigation" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -70,7 +72,9 @@
             android:exported="true"
             android:label="@string/image_viewer"
             android:excludeFromRecents="true"
-            android:theme="@style/Custom.Dialog.Dark.NoStretch">
+            android:theme="@style/Custom.Dialog.Dark.NoStretch"
+            android:launchMode="singleInstance"
+            >
             <intent-filter
                 android:label="@string/intent_image_viewer_dialog"
                 tools:ignore="AppLinkUrlError">
@@ -85,7 +89,9 @@
         <activity
             android:name=".image_viewer.ImageViewerActivity"
             android:label="@string/image_viewer"
-            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark">
+            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark"
+            android:launchMode="singleInstance"
+            >
             <intent-filter
                 android:label="@string/intent_image_viewer_full_screen"
                 tools:ignore="AppLinkUrlError">
@@ -101,7 +107,9 @@
             android:name=".image_viewer.editor.EditImageActivity"
             android:label="@string/image_editor"
             android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark"
-            android:windowSoftInputMode="stateAlwaysVisible">
+            android:windowSoftInputMode="stateAlwaysVisible"
+            android:launchMode="singleInstance"
+            >
             <intent-filter
                 android:label="@string/image_editor"
                 tools:ignore="AppLinkUrlError">
@@ -126,9 +134,10 @@
             android:exported="true"
             android:label="@string/video_player"
             android:supportsPictureInPicture="true"
-            android:launchMode="singleTask"
+            android:launchMode="singleInstance"
             android:excludeFromRecents="true"
-            android:theme="@style/Custom.Dialog.Dark.NoStretch">
+            android:theme="@style/Custom.Dialog.Dark.NoStretch"
+            >
             <intent-filter
                 android:label="@string/video_player_dialog"
                 tools:ignore="AppLinkUrlError">
@@ -145,7 +154,7 @@
             android:label="@string/video_player"
             android:supportsPictureInPicture="true"
             android:resizeableActivity="true"
-            android:launchMode="singleTask"
+            android:launchMode="singleInstance"
             android:taskAffinity="com.amaze.fileutilitiespip"
             android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark">
             <intent-filter
@@ -163,7 +172,8 @@
             android:name=".audio_player.AudioPlayerDialogActivity"
             android:exported="true"
             android:excludeFromRecents="true"
-            android:theme="@style/Custom.Dialog.Dark">
+            android:theme="@style/Custom.Dialog.Dark"
+            android:launchMode="singleInstance">
             <intent-filter
                 android:label="@string/amaze_audio_player"
                 tools:ignore="AppLinkUrlError">
@@ -179,7 +189,8 @@
             android:name=".pdf_viewer.PdfViewerActivity"
             android:exported="true"
             android:label="@string/pdf_viewer"
-            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark">
+            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark"
+            android:launchMode="singleInstance">
             <intent-filter
                 android:label="@string/pdf_viewer"
                 tools:ignore="AppLinkUrlError">
@@ -195,7 +206,8 @@
             android:name=".epub_viewer.EpubViewerActivity"
             android:exported="true"
             android:label="@string/epub_viewer"
-            android:theme="@style/Theme.AmazeFileUtilities">
+            android:theme="@style/Theme.AmazeFileUtilities"
+            android:launchMode="singleInstance">
             <intent-filter
                 android:label="@string/epub_viewer"
                 tools:ignore="AppLinkUrlError">
@@ -211,7 +223,8 @@
             android:name=".docx_viewer.DocxViewerActivity"
             android:exported="true"
             android:label="@string/docx_viewer"
-            android:theme="@style/Theme.AmazeFileUtilities">
+            android:theme="@style/Theme.AmazeFileUtilities"
+            android:launchMode="singleInstance">
             <intent-filter
                 android:label="@string/docx_viewer"
                 tools:ignore="AppLinkUrlError">
@@ -226,19 +239,22 @@
         <activity
             android:name=".home_page.ui.options.AboutActivity"
             android:exported="true"
-            android:theme="@style/Custom.Dialog.Dark">
+            android:theme="@style/Custom.Dialog.Dark"
+            android:launchMode="singleInstance">
         </activity>
 
         <activity android:name="com.amaze.fileutilities.crash_report.ErrorActivity"
             android:theme="@style/Theme.AmazeFileUtilities"
             android:configChanges=""
             android:label="Error"
+            android:launchMode="singleInstance"
             />
 
         <activity android:name=".home_page.ui.settings.PreferenceActivity"
             android:theme="@style/Theme.AmazeFileUtilities.Dark"
             android:configChanges=""
             android:label="@string/settings"
+            android:launchMode="singleInstance"
             />
 
         <service
