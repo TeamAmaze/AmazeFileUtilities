@@ -23,6 +23,8 @@ class AudioPlayerRepeatingRunnable(
         startImmediately
     ) {
 
+    private var lastPosition = 0L
+
     override fun run() {
         if (serviceRef.get() == null) {
             cancel()
@@ -41,7 +43,10 @@ class AudioPlayerRepeatingRunnable(
                 audioPlaybackInfo.currentPosition = it.getPlayerPosition()
                 audioPlaybackInfo.duration = it.getPlayerDuration()
                 audioPlaybackInfo.isPlaying = it.isPlaying()
-                it.onProgressUpdate(audioProgressHandler)
+                if (lastPosition != audioPlaybackInfo.currentPosition) {
+                    it.onProgressUpdate(audioProgressHandler)
+                }
+                lastPosition = it.getPlayerPosition()
             }
         }
     }
