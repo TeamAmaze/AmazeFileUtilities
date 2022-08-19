@@ -206,4 +206,12 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
     override fun setIsWaveformProcessing(bool: Boolean) {
         isWaveformProcessing = bool
     }
+
+    override fun getLastColor(): Int {
+        return 0
+    }
+
+    override fun setLastColor(lastColor: Int) {
+        // do nothing as there is no color set to transition
+    }
 }

@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.home_page
 
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -67,11 +68,12 @@ class PermissionFragmentWelcome : Fragment() {
                 } else if (!binding.licenseAgreementCheckbox.isChecked) {
                     showToastInCenter(getString(R.string.license_agreement_not_accepted))
                 } else {
-                    WelcomeFinisher(this@PermissionFragmentWelcome).finish()
-                    val action = Intent(this, MainActivity::class.java)
+                    val component = ComponentName(this, MainActivity::class.java)
+                    val action = Intent.makeRestartActivityTask(component)
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     action.addCategory(Intent.CATEGORY_LAUNCHER)
                     startActivity(action)
+                    WelcomeFinisher(this@PermissionFragmentWelcome).finish()
                 }
             }
         }

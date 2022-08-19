@@ -12,6 +12,7 @@ package com.amaze.fileutilities.image_viewer.editor
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -33,6 +34,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.CustomToolbar
+import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.image_viewer.editor.EmojiBSFragment.EmojiListener
 import com.amaze.fileutilities.image_viewer.editor.StickerBSFragment.Companion.ARG_STICKERS_LIST
 import com.amaze.fileutilities.image_viewer.editor.StickerBSFragment.StickerListener
@@ -49,7 +51,6 @@ import com.amaze.fileutilities.utilis.share.getShareIntents
 import com.amaze.fileutilities.utilis.share.showEditImageDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.amaze.fileutilities.utilis.showFade
-import com.amaze.fileutilities.utilis.showToastInCenter
 import com.bumptech.glide.Glide
 import com.canhub.cropper.CropImageView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -720,9 +721,15 @@ class EditImageActivity :
             showSaveDialog()
         } else {
             if (isSaved) {
-                showToastInCenter(getString(R.string.restart_amaze_saved_data))
+                val component = ComponentName(this, MainActivity::class.java)
+                val action = Intent.makeRestartActivityTask(component)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                action.addCategory(Intent.CATEGORY_LAUNCHER)
+                startActivity(action)
+                finish()
+            } else {
+                super.onBackPressed()
             }
-            super.onBackPressed()
         }
     }
 
