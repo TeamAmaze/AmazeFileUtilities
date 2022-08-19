@@ -64,12 +64,12 @@ class ReviewAnalysisAdapter(
                     holder.infoSummary.text =
                         this.mediaFileInfo?.getFormattedSize(context)
                     holder.expand.visibility = View.VISIBLE
-                    invalidateCheckedTitle()
+                    invalidateCheckedTitle(getOnlyItemsCount())
                     holder.root.setOnClickListener {
                         toggleChecked(this)
                         holder.checkIconGrid.visibility =
                             if (isChecked) View.VISIBLE else View.INVISIBLE
-                        invalidateCheckedTitle()
+                        invalidateCheckedTitle(getOnlyItemsCount())
                     }
                     holder.expand.setOnClickListener {
                         mediaFileInfo.triggerMediaFileInfoAction(WeakReference(context))
@@ -85,6 +85,10 @@ class ReviewAnalysisAdapter(
     }
 
     override fun getItemCount(): Int {
+        return mediaFileListItems.size
+    }
+
+    override fun getOnlyItemsCount(): Int {
         return mediaFileListItems.size
     }
 

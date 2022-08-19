@@ -33,8 +33,8 @@ abstract class AbstractMediaInfoListFragment :
 
     private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
     private var mediaFileAdapter: MediaFileAdapter? = null
-    private var linearLayoutManager: LinearLayoutManager = LinearLayoutManager(context)
-    private var gridLayoutManager: GridLayoutManager? = GridLayoutManager(context, 3)
+    private var linearLayoutManager: LinearLayoutManager? = null
+    private var gridLayoutManager: GridLayoutManager? = null
     private val MAX_PRELOAD = 100
 
     override fun onDestroyView() {
@@ -94,9 +94,6 @@ abstract class AbstractMediaInfoListFragment :
                     requireContext(),
                     storageSummary.totalUsedSpace!!
                 )
-                val totalSpace = FileUtils.formatStorageLength(
-                    requireContext(), storageSummary.totalSpace!!
-                )
                 // set list adapter
                 val sizeProvider = ViewPreloadSizeProvider<String>()
                 recyclerViewPreloader = RecyclerViewPreloader(
@@ -153,6 +150,7 @@ abstract class AbstractMediaInfoListFragment :
                 }
                 )
                 getRecyclerView().addOnScrollListener(recyclerViewPreloader!!)
+                linearLayoutManager = LinearLayoutManager(context)
                 gridLayoutManager = GridLayoutManager(
                     context,
                     requireContext()
