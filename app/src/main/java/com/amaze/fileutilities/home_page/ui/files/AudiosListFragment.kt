@@ -53,6 +53,7 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
     private lateinit var audioPlaybackServiceConnection: ServiceConnection
     private var preloader: MediaAdapterPreloader? = null
     private var isWaveformProcessing = false
+    private var lastPaletteColor: Int = 0
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -312,6 +313,14 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
 
     override fun setIsWaveformProcessing(bool: Boolean) {
         this.isWaveformProcessing = bool
+    }
+
+    override fun getLastColor(): Int {
+        return lastPaletteColor
+    }
+
+    override fun setLastColor(lastColor: Int) {
+        lastPaletteColor = lastColor
     }
 
     private fun invalidateActionButtons(progressHandler: AudioProgressHandler?) {

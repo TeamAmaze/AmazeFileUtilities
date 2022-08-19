@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.amaze.fileutilities.R
@@ -39,6 +40,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.animation.ArgbEvaluatorCompat
 import com.google.android.material.slider.Slider
 import com.masoudss.lib.SeekBarOnProgressChanged
 import com.masoudss.lib.WaveformSeekBar
@@ -73,6 +75,10 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     fun getLogger(): Logger
     fun getIsWaveformProcessing(): Boolean
     fun setIsWaveformProcessing(bool: Boolean): Unit
+    // used to transition between 2 colors
+    fun getLastColor(): Int
+    // used to transition between 2 colors
+    fun setLastColor(lastColor: Int)
 
     override fun onPositionUpdate(progressHandler: AudioProgressHandler) {
         getSeekbar()?.let {
@@ -90,7 +96,8 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                 .coerceAtMost(seekbar.max)
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
-            !getAudioPlayerHandlerViewModel().forceShowSeekbar
+            !getAudioPlayerHandlerViewModel().forceShowSeekbar &&
+            getWaveformSeekbar()?.isVisible == true
         ) {
             getWaveformSeekbar()?.let {
                 waveformSeekBar ->
@@ -111,7 +118,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         invalidateActionButtons(progressHandler)
         // invalidate wavebar
         if (renderWaveform) {
-            loadWaveFormSeekbar(progressHandler)
+            loadWaveFormSeekbar(progressHandler, false)
             getContextWeakRef().get()?.let {
                 getAlbumImage()?.let {
                     imageView ->
@@ -225,7 +232,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                 setRepeatButton(audioService.cycleRepeat())
             }
         }
-        setupSeekBars(audioService)
+        setupSeekBars(audioService, false)
     }
 
     private val paletteListener: RequestListener<Drawable>
@@ -240,10 +247,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                 log.warn("failed to load album", e)
                 getContextWeakRef().get()?.resources?.getColor(R.color.navy_blue_alt_3)?.let {
                     color ->
-                    getParentView()?.background?.setColorFilter(
-                        color,
-                        PorterDuff.Mode.SRC_ATOP
-                    )
+                    setParentBackground(color)
                 }
                 return false
             }
@@ -265,10 +269,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                             .observe(this@IAudioPlayerInterfaceHandler) {
                                 color ->
                                 if (color != null) {
-                                    getParentView()?.background?.setColorFilter(
-                                        color,
-                                        PorterDuff.Mode.SRC_ATOP
-                                    )
+                                    setParentBackground(color)
                                 }
                             }
                     }
@@ -291,6 +292,27 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                 getShuffleButton()?.setColorFilter(null)
             }
         }
+    }
+
+    private fun setParentBackground(color: Int) {
+        val evaluator = ArgbEvaluatorCompat.getInstance()
+        if (getLastColor() != 0 && getLastColor() != color) {
+            var i = 0f
+            while (i <= 1.0f) {
+                val finalColor = evaluator.evaluate(i, getLastColor(), color)
+                getParentView()?.background?.setColorFilter(
+                    finalColor,
+                    PorterDuff.Mode.SRC_ATOP
+                )
+                i += 0.0005f
+            }
+        } else {
+            getParentView()?.background?.setColorFilter(
+                color,
+                PorterDuff.Mode.SRC_ATOP
+            )
+        }
+        setLastColor(color)
     }
 
     private fun setRepeatButton(repeatMode: Int) {
@@ -367,14 +389,14 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             getSeekbarSmall()?.max ?: 0f
         )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
-            !getAudioPlayerHandlerViewModel().forceShowSeekbar
+            !getAudioPlayerHandlerViewModel().forceShowSeekbar &&
+            getWaveformSeekbar()?.isVisible == true
         ) {
             getWaveformSeekbar()?.visibility = View.VISIBLE
             getSeekbar()?.visibility = View.GONE
             getWaveformSeekbar()?.progress = progress.toFloat()
         } else {
             getSeekbar()?.visibility = View.VISIBLE
-            getSeekbarSmall()?.visibility = View.VISIBLE
             getWaveformSeekbar()?.visibility = View.GONE
         }
     }
@@ -389,9 +411,12 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         return null
     }
 
-    private fun loadWaveFormSeekbar(progressHandler: AudioProgressHandler) {
+    private fun loadWaveFormSeekbar(
+        progressHandler: AudioProgressHandler,
+        forceShowSeekbar: Boolean
+    ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
-            !getAudioPlayerHandlerViewModel().forceShowSeekbar
+            !getAudioPlayerHandlerViewModel().forceShowSeekbar && !forceShowSeekbar
         ) {
             getContextWeakRef().get()?.let {
                 context ->
@@ -418,32 +443,39 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                                     setSampleAndShowWaveformSeekbar(sample)
                                 } else {
                                     getLogger().warn("failed to fetch sample waves for audio")
-                                    getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+//                                    getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                                    loadWaveFormSeekbar(progressHandler, true)
                                 }
                             }, {})
                         } catch (fe: FileNotFoundException) {
                             getLogger().warn("file not found for waveform, force seekbar", fe)
-                            getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+//                            getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                            loadWaveFormSeekbar(progressHandler, true)
                         } catch (e: Exception) {
                             getLogger().warn("waveform seekbar exception, force seekbar", e)
                             getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                            loadWaveFormSeekbar(progressHandler, true)
                         }
                     }
                 } else {
-                    getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+//                    getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                    loadWaveFormSeekbar(progressHandler, true)
                 }
             }
+        } else {
+            getSeekbar()?.showFade(300)
+            getWaveformSeekbar()?.hideFade(300)
         }
     }
 
-    private fun setupSeekBars(audioService: ServiceOperationCallback?) {
+    private fun setupSeekBars(audioService: ServiceOperationCallback?, forceShowSeekbar: Boolean) {
         val valueTo = audioService?.getAudioPlaybackInfo()?.duration?.toFloat()
         getSeekbar()?.valueTo = valueTo?.coerceAtLeast(0.1f) ?: 0f
         getSeekbarSmall()?.max = valueTo?.coerceAtLeast(0.1f) ?: 0f
         getWaveformSeekbar()?.maxProgress = audioService
             ?.getAudioPlaybackInfo()?.duration?.toFloat() ?: 0f
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
-            !getAudioPlayerHandlerViewModel().forceShowSeekbar
+            !getAudioPlayerHandlerViewModel().forceShowSeekbar && !forceShowSeekbar
         ) {
             getContextWeakRef().get().let {
                 context ->
@@ -470,28 +502,28 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                                         setSampleAndShowWaveformSeekbar(sample)
                                     } else {
                                         getLogger().warn("failed to fetch sample waves for audio")
-                                        getAudioPlayerHandlerViewModel().forceShowSeekbar = true
-                                        setupSeekBars(audioService)
+//                                        getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                                        setupSeekBars(audioService, true)
                                     }
                                 }, {})
                             } catch (fe: FileNotFoundException) {
                                 getLogger().warn("file not found for waveform, setup seekbar", fe)
-                                getAudioPlayerHandlerViewModel().forceShowSeekbar = true
-                                setupSeekBars(audioService)
+//                                getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                                setupSeekBars(audioService, true)
                             } catch (e: Exception) {
                                 getLogger().warn("waveform seekbar exception, force seekbar", e)
                                 getAudioPlayerHandlerViewModel().forceShowSeekbar = true
-                                setupSeekBars(audioService)
+                                setupSeekBars(audioService, true)
                             }
                         }
                     } else {
-                        getAudioPlayerHandlerViewModel().forceShowSeekbar = true
-                        setupSeekBars(audioService)
+//                        getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                        setupSeekBars(audioService, true)
                         return
                     }
                 } else {
-                    getAudioPlayerHandlerViewModel().forceShowSeekbar = true
-                    setupSeekBars(audioService)
+//                    getAudioPlayerHandlerViewModel().forceShowSeekbar = true
+                    setupSeekBars(audioService, true)
                     return
                 }
             }
@@ -517,9 +549,8 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                 }
             }
         } else {
-            getSeekbar()?.visibility = View.VISIBLE
-            getSeekbarSmall()?.visibility = View.VISIBLE
-            getWaveformSeekbar()?.visibility = View.GONE
+            getSeekbar()?.showFade(300)
+            getWaveformSeekbar()?.hideFade(300)
         }
         getSeekbar()?.addOnChangeListener(
             Slider.OnChangeListener { slider, value, fromUser ->
