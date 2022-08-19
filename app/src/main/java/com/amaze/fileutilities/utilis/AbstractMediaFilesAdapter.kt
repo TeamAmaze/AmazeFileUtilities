@@ -109,6 +109,11 @@ abstract class AbstractMediaFilesAdapter(
 
     abstract fun getMediaFilesListItems(): MutableList<ListItem>
 
+    /**
+     * Only items count refers to items that aren't headers or banners
+     */
+    abstract fun getOnlyItemsCount(): Int
+
     companion object {
         const val TYPE_ITEM = 0
         const val TYPE_HEADER = 1
@@ -184,7 +189,7 @@ abstract class AbstractMediaFilesAdapter(
                     }
                     holder.root.setOnLongClickListener {
                         toggleChecked(this, position)
-                        invalidateCheckedTitle()
+                        invalidateCheckedTitle(getOnlyItemsCount())
                         true
                     }
                     val formattedDate = mediaFileInfo.getModificationDate(superContext)
@@ -231,7 +236,7 @@ abstract class AbstractMediaFilesAdapter(
                     holder.root.setOnClickListener {
                         if (checkItemsList.size > 0) {
                             toggleChecked(this, position)
-                            invalidateCheckedTitle()
+                            invalidateCheckedTitle(getOnlyItemsCount())
                         } else {
                             listItemPressedCallback?.invoke(mediaFileInfo)
                             mediaFileInfo
@@ -247,8 +252,8 @@ abstract class AbstractMediaFilesAdapter(
         return getMediaFilesListItems()[position].header ?: ""
     }
 
-    fun invalidateCheckedTitle() {
-        toggleCheckCallback?.invoke(checkItemsList.size, itemCount - 1, checkedItemBytes())
+    fun invalidateCheckedTitle(itemsCount: Int) {
+        toggleCheckCallback?.invoke(checkItemsList.size, itemsCount, checkedItemBytes())
     }
 
     private val mInflater: LayoutInflater

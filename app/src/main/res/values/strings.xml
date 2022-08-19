@@ -6,7 +6,7 @@
     <!-- App info shown in about screen -->
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.60</string>
+    <string name="app_version" translatable="false">v1.61</string>
     <!-- Image viewer activity label -->
     <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
@@ -820,4 +820,5 @@
     <!-- Failed while loading docx file -->
     <string name="failed_to_load_document">Failed to load document</string>
     <string name="processing">Processing…</string>
+    <string name="restart_amaze_saved_data">Please restart Amaze to see saved data</string>
 </resources>

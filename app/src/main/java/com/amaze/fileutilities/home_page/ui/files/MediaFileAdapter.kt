@@ -51,11 +51,13 @@ class MediaFileAdapter(
         const val MEDIA_TYPE_APKS = 5
     }
 
+    private var onlyItemsCounts: Int = 0
     private var headerListItems: MutableList<ListItem> = mutableListOf()
     private var mediaFileListItems: MutableList<ListItem> = mutableListOf()
         set(value) {
             value.clear()
             preloader.clear()
+            onlyItemsCounts = 0
             headerListItems.clear()
             MediaFileListSorter.generateMediaFileListHeadersAndSort(
                 context,
@@ -84,6 +86,7 @@ class MediaFileAdapter(
                     )
                 )
                 preloader.addItem(mediaFileInfoList[i].path)
+                onlyItemsCounts++
             }
             preloader.addItem("")
             value.add(ListItem(EMPTY_LAST_ITEM))
@@ -113,7 +116,7 @@ class MediaFileAdapter(
                         val listItem = mediaFileListItems[position]
                         if (checkItemsList.size > 0) {
                             toggleChecked(listItem, position)
-                            invalidateCheckedTitle()
+                            invalidateCheckedTitle(getOnlyItemsCount())
                         } else {
                             listItem.mediaFileInfo?.getContentUri(context)?.let {
                                 uri ->
@@ -142,6 +145,10 @@ class MediaFileAdapter(
 
     override fun getItemCount(): Int {
         return mediaFileListItems.size
+    }
+
+    override fun getOnlyItemsCount(): Int {
+        return onlyItemsCounts
     }
 
     override fun getItemViewType(position: Int): Int {
