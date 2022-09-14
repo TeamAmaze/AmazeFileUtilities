@@ -463,7 +463,7 @@
     <!-- Download subtitles in video player -->
     <string name="download_subtitles">הורדת כתוביות</string>
     <!-- Download subtitles info in video player -->
-    <string name="download_subtitles_info">Enter keywords and select your language to search subtitles from <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
+    <string name="download_subtitles_info">נא למלא מילות מפתח ולבחור את השפה שלך כדי לחפש כתוביות ב־<html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
     <string name="amaze_fm_redirect">You\'re being redirected to Amaze File Manager. It\'s our open source offering that has all features a modern file manager has completely free of cost with over 2M downloads and 4.3 rating on Play Store.</string>
     <!-- Download button in dialog prompt -->
@@ -602,9 +602,9 @@
     <!-- Contact us in about section -->
     <string name="contact_us">יצירת קשר</string>
     <!-- Translate in about section -->
-    <string name="translate_title">תרגום</string>
+    <string name="translate_title">Translate</string>
     <!-- Translate summary in about section -->
-    <string name="translate_summary">תרגום Amaze לשפה שלך</string>
+    <string name="translate_summary">Help us translate Amaze in your language</string>
     <!-- About app screen title -->
     <string name="about_app_title">על היישומון</string>
     <!-- Made in india about section -->
@@ -742,72 +742,91 @@
     <!-- Settings page extract image viewer background color from image summary -->
     <string name="image_viewer_enable_palette_summary">מגדיר את צבע רקע מציג התמונות</string>
     <!-- Unused apps in analysis tab -->
-    <string name="unused_apps">Unused apps</string>
+    <string name="unused_apps">יישומונים שאינם בשימוש</string>
     <!-- Large apps in analysis tab -->
-    <string name="large_apps">Large apps</string>
+    <string name="large_apps">יישומונים גדולים</string>
     <!-- Games installed in analysis tab -->
     <string name="games_installed">משחקים</string>
     <!-- Games installed hint in analysis tab -->
-    <string name="games_installed_hint">Games currently installed on this device</string>
+    <string name="games_installed_hint">מותקנים משחקים על המכשיר הזה</string>
     <!-- Required elevated permission for analysis in analysis tab -->
-    <string name="require_permission">Required elevated permissions for this analysis</string>
+    <string name="require_permission">נדרשות הרשאות מורחבות לניתוח הזה</string>
     <!-- Already granted analysis permission, ask user to refresh -->
-    <string name="granted_permission_refresh">Already granted?</string>
+    <string name="granted_permission_refresh">כבר הוענקו?</string>
     <!-- Refresh button in analysis after permission granted -->
-    <string name="refresh">Refresh</string>
+    <string name="refresh">לרענן</string>
     <!-- Unused apps preference dialog message -->
-    <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
+    <string name="unused_apps_pref_message">מספר הימים בהם לא נפתח היישומון</string>
     <!-- Stopping analysis by pressing on (X) button in analysis tab -->
-    <string name="stopping_analysis">Stopping analysis</string>
+    <string name="stopping_analysis">הניתוח נעצר</string>
     <!-- Remove battery optimizations on welcome screen and settings page -->
-    <string name="remove_battery_optimizations">Remove battery optimizations</string>
+    <string name="remove_battery_optimizations">הסרת מיטובי סוללה</string>
     <!-- Remove battery optimizations hint on welcome screen and settings page -->
-    <string name="remove_battery_optimizations_hint">Please remove battery optimizations for music player to function properly in background</string>
+    <string name="remove_battery_optimizations_hint">נא להסיר את מיטובי הסוללה כדי שנגן המוזיקה יוכל לתפקד ברקע כראוי</string>
     <!-- Apk listing in analysis -->
     <string name="apk_files">קובצי APK</string>
     <!-- Image editor tools -->
-    <string name="shape">Shape</string>
+    <string name="shape">צורה</string>
     <!-- Apk listing in analysis -->
-    <string name="text">Text</string>
+    <string name="text">טקסט</string>
     <!-- Apk listing in analysis -->
-    <string name="eraser">Eraser</string>
+    <string name="eraser">מוחק</string>
     <!-- Apk listing in analysis -->
-    <string name="filter">Filter</string>
+    <string name="filter">מסנן</string>
     <!-- Apk listing in analysis -->
-    <string name="emoji">Emoji</string>
+    <string name="emoji">אמוג׳י</string>
     <!-- Apk listing in analysis -->
-    <string name="sticker">Sticker</string>
+    <string name="sticker">מדבקה</string>
     <!-- Apk listing in analysis -->
-    <string name="rotate">Rotate</string>
+    <string name="rotate">סיבוב</string>
     <!-- Apk listing in analysis -->
-    <string name="flip_horizontal">Flip-H</string>
+    <string name="flip_horizontal">היפוך אופקי</string>
     <!-- Apk listing in analysis -->
-    <string name="flip_vertical">Flip-V</string>
+    <string name="flip_vertical">היפוך אנכי</string>
     <!-- Apk listing in analysis -->
-    <string name="resize">Resize</string>
-    <string name="label_brush">Brush</string>
-    <string name="label_shape">Shape</string>
-    <string name="label_oval">Oval</string>
-    <string name="label_rectangle">Rectangle</string>
-    <string name="label_line">Line</string>
-    <string name="label_emoji">Emoji</string>
-    <string name="label_sticker">Sticker</string>
-    <string name="label_eraser">Eraser</string>
-    <string name="label_eraser_mode">Eraser Mode</string>
-    <string name="label_text">Text</string>
-    <string name="label_filter">Filter</string>
-    <string name="label_adjust">Adjust</string>
-    <string name="msg_save_image">Are you want to exit without saving image ?</string>
-    <string name="msg_share_image">Share Image</string>
-    <string name="select_picture">Select Picture</string>
-    <string name="saving">Saving…</string>
-    <string name="image_saved">Image saved successfully</string>
-    <string name="failed_image_save">Failed to save image</string>
-    <string name="save">Save</string>
-    <string name="discard">Discard</string>
+    <string name="resize">שינוי גודל</string>
+    <!-- In Image editor -->
+    <string name="label_brush">מכחול</string>
+    <!-- In Image editor -->
+    <string name="label_shape">צורה</string>
+    <!-- In Image editor -->
+    <string name="label_oval">עגול</string>
+    <!-- In Image editor -->
+    <string name="label_rectangle">מלבן</string>
+    <!-- In Image editor -->
+    <string name="label_line">קו</string>
+    <!-- In Image editor -->
+    <string name="label_emoji">אמוג׳י</string>
+    <!-- In Image editor -->
+    <string name="label_sticker">מדבקה</string>
+    <!-- In Image editor -->
+    <string name="label_eraser">מוחק</string>
+    <!-- In Image editor -->
+    <string name="label_eraser_mode">מצב מחיקה</string>
+    <!-- In Image editor to write text over image -->
+    <string name="label_text">טקסט</string>
+    <!-- In Image editor -->
+    <string name="label_filter">מסנן</string>
+    <!-- In Image editor to crop or adjust image -->
+    <string name="label_adjust">התאמה</string>
+    <!-- In Image editor -->
+    <string name="msg_save_image">Are you want to exit without saving image?</string>
+    <!-- In Image editor -->
+    <string name="msg_share_image">שיתוף תמונה</string>
+    <!-- In Image editor to add picture to edit -->
+    <string name="select_picture">בחירת תמונה</string>
+    <!-- In Image editor saving modified image -->
+    <string name="saving">מתבצעת שמירה…</string>
+    <!-- In Image editor -->
+    <string name="image_saved">התמונה נשמרה בהצלחה</string>
+    <!-- In Image editor -->
+    <string name="failed_image_save">שמירת התמונה נכשלה</string>
+    <!-- In Image editor to save edited image -->
+    <string name="save">שמירה</string>
+    <!-- In Image editor to discard saving image -->
+    <string name="discard">התעלמות</string>
     <!-- Image editor activity label -->
-    <string name="image_editor">Amaze Image Editor</string>
+    <string name="image_editor">עורך התמונות Amaze</string>
     <!-- Failed while loading docx file -->
-    <string name="failed_to_load_document">Failed to load document</string>
-    <string name="processing">Processing…</string>
+    <string name="failed_to_load_document">טעינת המסמך נכשלה</string>
 </resources>

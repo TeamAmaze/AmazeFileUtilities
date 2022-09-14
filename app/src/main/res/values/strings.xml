@@ -611,7 +611,7 @@
     <!-- Translate in about section -->
     <string name="translate_title">Translate</string>
     <!-- Translate summary in about section -->
-    <string name="translate_summary">Translate Amaze in your language</string>
+    <string name="translate_summary">Help us translate Amaze in your language</string>
     <!-- About app screen title -->
     <string name="about_app_title">About app</string>
     <!-- Made in india about section -->
