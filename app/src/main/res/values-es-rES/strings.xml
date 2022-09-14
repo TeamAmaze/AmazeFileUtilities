@@ -605,7 +605,7 @@
     <!-- Translate in about section -->
     <string name="translate_title">Translate</string>
     <!-- Translate summary in about section -->
-    <string name="translate_summary">Translate Amaze in your language</string>
+    <string name="translate_summary">Help us translate Amaze in your language</string>
     <!-- About app screen title -->
     <string name="about_app_title">About app</string>
     <!-- Made in india about section -->
@@ -786,29 +786,48 @@
     <string name="flip_vertical">Flip-V</string>
     <!-- Apk listing in analysis -->
     <string name="resize">Resize</string>
+    <!-- In Image editor -->
     <string name="label_brush">Brush</string>
+    <!-- In Image editor -->
     <string name="label_shape">Shape</string>
+    <!-- In Image editor -->
     <string name="label_oval">Oval</string>
+    <!-- In Image editor -->
     <string name="label_rectangle">Rectangle</string>
+    <!-- In Image editor -->
     <string name="label_line">Line</string>
+    <!-- In Image editor -->
     <string name="label_emoji">Emoji</string>
+    <!-- In Image editor -->
     <string name="label_sticker">Sticker</string>
+    <!-- In Image editor -->
     <string name="label_eraser">Eraser</string>
+    <!-- In Image editor -->
     <string name="label_eraser_mode">Eraser Mode</string>
+    <!-- In Image editor to write text over image -->
     <string name="label_text">Text</string>
+    <!-- In Image editor -->
     <string name="label_filter">Filter</string>
+    <!-- In Image editor to crop or adjust image -->
     <string name="label_adjust">Adjust</string>
-    <string name="msg_save_image">Are you want to exit without saving image ?</string>
+    <!-- In Image editor -->
+    <string name="msg_save_image">Are you want to exit without saving image?</string>
+    <!-- In Image editor -->
     <string name="msg_share_image">Share Image</string>
+    <!-- In Image editor to add picture to edit -->
     <string name="select_picture">Select Picture</string>
+    <!-- In Image editor saving modified image -->
     <string name="saving">Saving…</string>
+    <!-- In Image editor -->
     <string name="image_saved">Image saved successfully</string>
+    <!-- In Image editor -->
     <string name="failed_image_save">Failed to save image</string>
+    <!-- In Image editor to save edited image -->
     <string name="save">Save</string>
+    <!-- In Image editor to discard saving image -->
     <string name="discard">Discard</string>
     <!-- Image editor activity label -->
     <string name="image_editor">Amaze Image Editor</string>
     <!-- Failed while loading docx file -->
     <string name="failed_to_load_document">Failed to load document</string>
-    <string name="processing">Processing…</string>
 </resources>
