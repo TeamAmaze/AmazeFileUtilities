@@ -10,11 +10,15 @@
 
 package com.amaze.fileutilities.utilis
 
+import android.content.Context
+import android.net.Uri
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.audio_player.AudioPlayerService
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewImagesFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
@@ -154,34 +158,11 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
 
     fun setupCommonButtons() {
         getShareButton()?.setOnClickListener {
-            var processed = false
             getMediaFileAdapter()?.checkItemsList?.let {
                 checkedItems ->
                 val checkedMediaFiles = checkedItems.map { it.mediaFileInfo!! }
                 if (!checkedMediaFiles.isNullOrEmpty()) {
-                    filesViewModel.getShareMediaFilesAdapter(checkedMediaFiles)
-                        .observe(viewLifecycleOwner) {
-                            shareAdapter ->
-                            if (shareAdapter == null) {
-                                if (processed) {
-                                    requireActivity().showToastInCenter(
-                                        this.resources.getString(R.string.failed_to_share)
-                                    )
-                                } else {
-                                    requireActivity()
-                                        .showToastInCenter(
-                                            resources
-                                                .getString(R.string.please_wait)
-                                        )
-                                    processed = true
-                                }
-                            } else {
-                                showShareDialog(
-                                    requireActivity(), this.layoutInflater,
-                                    shareAdapter
-                                )
-                            }
-                        }
+                    performShareAction(checkedMediaFiles)
                     getMediaFileAdapter()?.uncheckChecked()
                 } else {
                     requireContext().showToastOnBottom(getString(R.string.no_item_selected))
@@ -190,9 +171,7 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
         }
         getTrashButton()?.setOnClickListener {
             getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }?.let { toDelete ->
-                setupDeleteButton(toDelete) {
-                    refreshListAfterTrashCallback(toDelete)
-                }
+                performDeleteAction(toDelete)
             }
         }
         getLocateFileButton()?.setOnClickListener {
@@ -202,6 +181,58 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
                     openFile[0].startLocateFileAction(requireContext())
                     getMediaFileAdapter()?.uncheckChecked()
                 }
+            }
+        }
+    }
+
+    fun performDeleteAction(toDelete: List<MediaFileInfo>) {
+        setupDeleteButton(toDelete) {
+            refreshListAfterTrashCallback(toDelete)
+        }
+    }
+
+    fun performShareAction(toShare: List<MediaFileInfo>) {
+        var processed = false
+        filesViewModel.getShareMediaFilesAdapter(toShare)
+            .observe(viewLifecycleOwner) {
+                shareAdapter ->
+                if (shareAdapter == null) {
+                    if (processed) {
+                        requireActivity().showToastInCenter(
+                            this.resources.getString(R.string.failed_to_share)
+                        )
+                    } else {
+                        requireActivity()
+                            .showToastInCenter(
+                                resources
+                                    .getString(R.string.please_wait)
+                            )
+                        processed = true
+                    }
+                } else {
+                    showShareDialog(
+                        requireActivity(), this.layoutInflater,
+                        shareAdapter
+                    )
+                }
+            }
+    }
+
+    fun performShuffleAction(context: Context, toShuffle: List<MediaFileInfo>) {
+        if (toShuffle.isNotEmpty()) {
+            toShuffle[0].getContentUri(context)?.let {
+                uri ->
+                lifecycleScope.executeAsyncTask<Unit, List<Uri>>({}, {
+                    toShuffle.mapNotNull {
+                        it.getContentUri(context)
+                    }
+                }, {
+                    AudioPlayerService.runService(
+                        uri,
+                        it,
+                        context
+                    )
+                }, {})
             }
         }
     }
