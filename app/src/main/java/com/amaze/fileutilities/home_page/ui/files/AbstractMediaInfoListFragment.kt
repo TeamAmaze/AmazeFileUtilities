@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.CastActivity
+import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.FileUtils
@@ -147,6 +148,22 @@ abstract class AbstractMediaInfoListFragment :
 
                     val countView = getCountView()
                     countView?.text = title
+                }, {
+                    item, actionItems ->
+                    when (item.itemId) {
+                        R.id.share -> {
+                            performShareAction(actionItems)
+                        }
+                        R.id.delete -> {
+                            performDeleteAction(actionItems)
+                        }
+                        R.id.shuffle -> {
+                            context?.let {
+                                context ->
+                                performShuffleAction(context, actionItems)
+                            }
+                        }
+                    }
                 }
                 )
                 getRecyclerView().addOnScrollListener(recyclerViewPreloader!!)
