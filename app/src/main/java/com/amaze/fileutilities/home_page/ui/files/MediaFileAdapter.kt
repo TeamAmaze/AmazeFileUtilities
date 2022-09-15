@@ -11,7 +11,10 @@
 package com.amaze.fileutilities.home_page.ui.files
 
 import android.content.Context
+import android.net.Uri
+import android.view.MenuItem
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.CastActivity
 import com.amaze.fileutilities.R
@@ -20,6 +23,7 @@ import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeHeaderView
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.HeaderViewHolder
 import com.amaze.fileutilities.utilis.ListBannerViewHolder
+import com.amaze.fileutilities.utilis.executeAsyncTask
 
 class MediaFileAdapter(
     val context: Context,
@@ -31,16 +35,13 @@ class MediaFileAdapter(
     private val mediaListType: Int,
     private val drawBannerCallback: (mediaTypeHeader: MediaTypeHeaderView) -> Unit,
     listItemPressedCallback: (mediaFileInfo: MediaFileInfo) -> Unit,
-    toggleCheckCallback: (
-        checkedSize: Int,
-        itemsCount: Int,
-        bytesFormatted: String
-    ) -> Unit,
-) :
-    AbstractMediaFilesAdapter(
-        context, preloader, isGrid, listItemPressedCallback,
-        toggleCheckCallback
-    ) {
+    toggleCheckCallback: (checkedSize: Int, itemsCount: Int, bytesFormatted: String) -> Unit,
+    private val titleOverflowPopupClick:
+        ((item: MenuItem, actionItems: List<MediaFileInfo>) -> Unit)?
+) : AbstractMediaFilesAdapter(
+    context,
+    preloader, isGrid, listItemPressedCallback, toggleCheckCallback
+) {
 
     companion object {
         const val MEDIA_TYPE_AUDIO = 0
@@ -105,6 +106,20 @@ class MediaFileAdapter(
                     mediaFileListItems[position].header
                         ?: context.resources.getString(R.string.undetermined)
                 )
+
+                holder.setOverflowButtons(
+                    context,
+                    if (mediaListType == MEDIA_TYPE_AUDIO)
+                        R.menu.audio_list_overflow else R.menu.generic_list_overflow
+                ) {
+                    item ->
+                    titleOverflowPopupClick?.invoke(
+                        item,
+                        mediaFileInfoList
+                            .filter { it.listHeader == mediaFileListItems[position].header }
+                    )
+                    true
+                }
             }
             is ListBannerViewHolder -> {
                 setBannerResources(holder)
@@ -125,15 +140,18 @@ class MediaFileAdapter(
                                         mediaFileListItems[position].mediaFileInfo!!,
                                         MEDIA_TYPE_AUDIO
                                     ) {
-                                        AudioPlayerService.runService(
-                                            uri,
-                                            mediaFileInfoList
-                                                .filter { it.getContentUri(context) != null }
-                                                .map {
-                                                    it.getContentUri(context)!!
-                                                },
-                                            context
-                                        )
+                                        context.lifecycleScope
+                                            .executeAsyncTask<Void, List<Uri>>({}, {
+                                                mediaFileInfoList.mapNotNull {
+                                                    it.getContentUri(context)
+                                                }
+                                            }, {
+                                                AudioPlayerService.runService(
+                                                    uri,
+                                                    it,
+                                                    context
+                                                )
+                                            }, {})
                                     }
                             }
                         }

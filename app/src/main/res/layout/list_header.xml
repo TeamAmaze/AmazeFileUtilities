@@ -1,23 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/second"
     android:layout_height="@dimen/list_header_height"
     android:layout_width="match_parent"
-    android:paddingLeft="@dimen/material_generic"
     android:paddingStart="@dimen/material_generic"
+    android:paddingEnd="@dimen/material_generic"
     android:background="@color/navy_blue"
+    android:layout_gravity="center_vertical"
+    android:layout_marginTop="@dimen/material_generic"
+    android:layout_marginBottom="@dimen/eight_dp"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
     >
     <TextView
         android:id="@+id/header_title"
         android:gravity="center_vertical"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:minHeight="?android:attr/listPreferredItemHeightSmall"
-        android:textSize="@dimen/eighteen_sp"
+        android:layout_width="wrap_content"
+        android:minWidth="@dimen/material_generic_medium"
+        android:textSize="@dimen/fourteen_sp"
         android:textStyle="bold"
-        android:textColor="@color/highlight_yellow"
+        android:textColor="@color/navy_blue"
+        android:maxEms="20"
+        android:maxLines="1"
+        android:background="@drawable/background_curved_list_titles"
+        android:paddingStart="@dimen/material_generic"
+        android:paddingEnd="@dimen/material_generic"
+        android:layout_alignParentStart="true"
         >
     </TextView>
-
+    <!--<ImageView
+        android:id="@+id/trash_button"
+        app:srcCompat="@drawable/ic_round_delete_outline_yellow_32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/material_generic"
+        android:layout_marginEnd="@dimen/material_generic"
+        android:layout_toStartOf="@id/overflow_button"
+        android:padding="@dimen/four_dp"
+        />-->
+    <ImageView
+        android:id="@+id/overflow_button"
+        app:srcCompat="@drawable/ic_baseline_more_vert_yellow_32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/four_dp"
+        />
 </RelativeLayout>

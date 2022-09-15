@@ -77,10 +77,15 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
             PreferencesConstants.DEFAULT_AUDIO_PLAYER_WAVEFORM
         )
         if (savedInstanceState == null) {
+            if (intent == null) {
+                showToastInCenter(resources.getString(R.string.unsupported_content))
+                return
+            }
             val mimeType = intent.type
             val audioUri = intent.data
             if (audioUri == null) {
                 showToastInCenter(resources.getString(R.string.unsupported_content))
+                return
             }
             log.info(
                 "Loading audio from path ${audioUri?.path} " +

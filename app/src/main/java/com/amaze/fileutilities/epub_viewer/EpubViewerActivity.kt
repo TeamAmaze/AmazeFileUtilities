@@ -34,10 +34,15 @@ class EpubViewerActivity : PermissionsActivity() {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
         if (savedInstanceState == null) {
+            if (intent == null) {
+                showToastInCenter(resources.getString(R.string.unsupported_content))
+                return
+            }
             val mimeType = intent.type
             val epubUri = intent.data
             if (epubUri == null) {
                 showToastInCenter(resources.getString(R.string.unsupported_content))
+                return
             }
             log.info(
                 "Loading epub from path ${epubUri?.path} " +
