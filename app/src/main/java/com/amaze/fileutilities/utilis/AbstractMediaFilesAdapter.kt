@@ -72,7 +72,40 @@ abstract class AbstractMediaFilesAdapter(
         removeItemsIdx.forEach {
             notifyItemChanged(it)
         }
-        toggleCheckCallback?.invoke(checkItemsList.size, itemCount - 1, checkedItemBytes())
+        toggleCheckCallback?.invoke(
+            checkItemsList.size,
+            itemCount - 1, checkedItemBytes()
+        )
+    }
+
+    fun invalidateList(mediaFileInfo: List<MediaFileInfo>) {
+        val syncList = Collections.synchronizedList(getMediaFilesListItems())
+//        val removeItemsIdx = arrayListOf<Int>()
+        val toRemove = arrayListOf<ListItem>()
+        val toRemoveIdx = arrayListOf<Int>()
+//        val removeItemsIdx = checkItemsList.map { it.position }
+        synchronized(syncList) {
+            syncList.forEachIndexed { index, listItem ->
+                if (listItem.mediaFileInfo != null &&
+                    mediaFileInfo.contains(listItem.mediaFileInfo)
+                ) {
+//                    removeItemsIdx.add(index)
+                    toRemove.add(listItem)
+                    toRemoveIdx.add(index)
+                }
+            }
+
+            syncList.removeAll(toRemove)
+            if (toRemoveIdx.size > 0) {
+                toRemoveIdx.forEach {
+                    notifyItemRemoved(it)
+                }
+//                notifyDataSetChanged()
+            }
+            /*removeItemsIdx.forEach {
+                notifyItemRemoved(it)
+            }*/
+        }
     }
 
     open fun removeChecked(): Boolean {
@@ -80,17 +113,24 @@ abstract class AbstractMediaFilesAdapter(
 //        val removeItemsIdx = arrayListOf<Int>()
         val toRemove = arrayListOf<ListItem>()
 //        val removeItemsIdx = checkItemsList.map { it.position }
+        val toRemoveIdx = arrayListOf<Int>()
         synchronized(syncList) {
             syncList.forEachIndexed { index, listItem ->
                 if (listItem.isChecked) {
 //                    removeItemsIdx.add(index)
                     toRemove.add(listItem)
                     listItem.toggleChecked()
+                    toRemoveIdx.add(index)
                 }
             }
 
             syncList.removeAll(toRemove)
-            notifyDataSetChanged()
+            if (toRemove.size > 0) {
+                toRemoveIdx.forEach {
+                    notifyItemRemoved(it)
+                }
+//                notifyDataSetChanged()
+            }
             /*removeItemsIdx.forEach {
                 notifyItemRemoved(it)
             }*/

@@ -188,6 +188,7 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
     fun performDeleteAction(toDelete: List<MediaFileInfo>) {
         setupDeleteButton(toDelete) {
             refreshListAfterTrashCallback(toDelete)
+            getMediaFileAdapter()?.invalidateList(toDelete)
         }
     }
 
