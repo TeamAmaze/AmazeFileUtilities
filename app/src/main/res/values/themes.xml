@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.AmazeFileUtilities" parent="Theme.MaterialComponents.Light">
+    <style name="Theme.AmazeFileUtilities" parent="Theme.Material3.Dark.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/navy_blue</item>
         <item name="colorPrimaryVariant">@color/navy_blue</item>
@@ -17,7 +17,7 @@
         <item name="colorAccent">@color/highlight_yellow</item>
     </style>
 
-    <style name="Theme.AmazeFileUtilities.Dark" parent="Theme.MaterialComponents">
+    <style name="Theme.AmazeFileUtilities.Dark" parent="Theme.Material3.Dark">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/navy_blue</item>
         <item name="colorPrimaryVariant">@color/navy_blue</item>
@@ -80,9 +80,10 @@
         <item name="colorOnPrimary">@color/navy_blue</item>
     </style>
 
-    <style name="custom_action_mode_dark" parent="Widget.AppCompat.ActionMode">
-        <item name="android:background">@color/navy_blue_alt</item>
+    <style name="custom_action_mode_dark" parent="Widget.Material3.ActionMode">
         <item name="android:textColor">@color/white</item>
+        <item name="popupMenuBackground">@drawable/popup_background</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="Custom.Dialog.Dark" parent="Theme.AppCompat.Dialog.Alert">
