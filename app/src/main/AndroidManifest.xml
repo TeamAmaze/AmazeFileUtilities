@@ -66,7 +66,9 @@
                 android:resource="@xml/shortcuts" />
         </activity>
         <activity android:name=".home_page.WelcomeScreen"
-            android:theme="@style/CustomWelcomeScreenTheme"/>
+            android:theme="@style/CustomWelcomeScreenTheme"
+            android:exported="true"
+            />
         <activity
             android:name=".image_viewer.ImageViewerDialogActivity"
             android:exported="true"
@@ -91,6 +93,7 @@
             android:label="@string/image_viewer"
             android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark"
             android:launchMode="singleInstance"
+            android:exported="true"
             >
             <intent-filter
                 android:label="@string/intent_image_viewer_full_screen"
@@ -109,6 +112,7 @@
             android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark"
             android:windowSoftInputMode="stateAlwaysVisible"
             android:launchMode="singleInstance"
+            android:exported="true"
             >
             <intent-filter
                 android:label="@string/image_editor"
@@ -156,7 +160,8 @@
             android:resizeableActivity="true"
             android:launchMode="singleInstance"
             android:taskAffinity="com.amaze.fileutilitiespip"
-            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark">
+            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark"
+            android:exported="true">
             <intent-filter
                 android:label="@string/video_player_full_screen"
                 tools:ignore="AppLinkUrlError">
@@ -248,6 +253,7 @@
             android:configChanges=""
             android:label="Error"
             android:launchMode="singleInstance"
+            android:exported="true"
             />
 
         <activity android:name=".home_page.ui.settings.PreferenceActivity"
@@ -255,6 +261,7 @@
             android:configChanges=""
             android:label="@string/settings"
             android:launchMode="singleInstance"
+            android:exported="true"
             />
 
         <service
@@ -277,7 +284,8 @@
             android:enabled="true"
             android:exported="true" />
 
-        <receiver android:name=".audio_player.MediaButtonIntentReceiver">
+        <receiver android:name=".audio_player.MediaButtonIntentReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>

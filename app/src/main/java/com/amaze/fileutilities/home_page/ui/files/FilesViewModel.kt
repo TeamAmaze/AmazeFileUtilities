@@ -728,7 +728,7 @@ class FilesViewModel(val applicationContext: Application) :
             log.info("Deleting media files $mediaFileInfoList")
             var successProcessedPair = Pair(0, 0)
             mediaFileInfoList.forEachIndexed { index, mediaFileInfo ->
-                successProcessedPair = if (true) {
+                successProcessedPair = if (mediaFileInfo.delete()) {
                     successProcessedPair.copy(
                         successProcessedPair.first + 1,
                         successProcessedPair.second + 1
@@ -741,7 +741,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
 
                 try {
-//                    Utils.deleteFromMediaDatabase(applicationContext, mediaFileInfo.path)
+                    Utils.deleteFromMediaDatabase(applicationContext, mediaFileInfo.path)
                 } catch (e: Exception) {
                     log.warn("failed to delete media from system database", e)
                     mediaFileInfo.getContentUri(applicationContext)?.let {
