@@ -32,10 +32,8 @@
         android:layout_height="wrap_content"
         android:minHeight="@dimen/minimal_icon_size"
         android:orientation="vertical"
-        android:layout_toRightOf="@id/icon_view"
         android:layout_toEndOf="@id/icon_view"
-        android:layout_toLeftOf="@id/extra_info"
-        android:layout_toStartOf="@id/extra_info"
+        android:layout_toStartOf="@id/currentPlayingAnimation"
         android:gravity="center_vertical"
         android:clickable="false"
         >
@@ -45,10 +43,12 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:marqueeRepeatLimit="marquee_forever"
-            android:ellipsize="middle"
+            android:ellipsize="marquee"
             android:layout_gravity="center_vertical"
             android:textSize="@dimen/eighteen_sp"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:fadingEdge="horizontal"
+            />
         <TextView
             android:id="@+id/info_summary"
             android:layout_width="wrap_content"
@@ -56,19 +56,34 @@
             android:textSize="@dimen/twelve_sp"
             android:layout_gravity="center_vertical"
             android:textColor="@color/gray_text"
+            android:singleLine="true"
+            android:fadingEdge="horizontal"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
             />
     </LinearLayout>
     <TextView
         android:id="@+id/extra_info"
         android:layout_width="@dimen/minimal_icon_size"
         android:layout_height="@dimen/minimal_icon_size"
-        android:gravity="center_vertical"
-        android:layout_alignParentRight="true"
+        android:gravity="center_vertical|center_horizontal"
         android:layout_alignParentEnd="true"
         android:clickable="false"
         android:textSize="@dimen/twelve_sp"
         android:textColor="@color/gray_text"
         />
+
+    <ImageView
+        android:id="@+id/currentPlayingAnimation"
+        android:layout_width="@dimen/material_generic_medium"
+        android:layout_height="@dimen/material_generic_medium"
+        app:srcCompat="@drawable/avd_music_note"
+        android:layout_toStartOf="@id/extra_info"
+        android:layout_toRightOf="@id/info_parent"
+        android:layout_marginStart="@dimen/material_generic"
+        android:layout_marginEnd="@dimen/material_generic"
+        android:gravity="center_vertical"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/check_icon_grid"

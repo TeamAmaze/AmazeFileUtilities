@@ -42,7 +42,8 @@ data class MediaFileInfo(
     val longSize: Long = 0,
     var isDirectory: Boolean = false,
     var listHeader: String = "",
-    var extraInfo: ExtraInfo? = null
+    var extraInfo: ExtraInfo? = null,
+    var contentUri: Uri? = null
 ) {
 
     companion object {
@@ -61,6 +62,14 @@ data class MediaFileInfo(
             return MediaFileInfo(
                 file.name, file.path, file.lastModified(), file.length(),
                 extraInfo = extraInfo
+            )
+        }
+
+        fun fromFile(file: File, context: Context, extraInfo: ExtraInfo): MediaFileInfo {
+            return MediaFileInfo(
+                file.name, file.path, file.lastModified(), file.length(),
+                extraInfo = extraInfo,
+                contentUri = FileProvider.getUriForFile(context, context.packageName, file)
             )
         }
 
@@ -150,10 +159,12 @@ data class MediaFileInfo(
     }
 
     fun getContentUri(context: Context): Uri? {
-        return if (exists()) {
-            FileProvider.getUriForFile(context, context.packageName, File(path))
+        return if (exists() && contentUri == null) {
+            val uri = FileProvider.getUriForFile(context, context.packageName, File(path))
+            contentUri = uri
+            uri
         } else {
-            null
+            contentUri
         }
     }
 

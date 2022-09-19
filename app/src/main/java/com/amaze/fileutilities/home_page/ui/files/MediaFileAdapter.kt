@@ -11,8 +11,11 @@
 package com.amaze.fileutilities.home_page.ui.files
 
 import android.content.Context
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.net.Uri
+import android.os.Build
 import android.view.MenuItem
+import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +26,7 @@ import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeHeaderView
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.HeaderViewHolder
 import com.amaze.fileutilities.utilis.ListBannerViewHolder
+import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.executeAsyncTask
 
 class MediaFileAdapter(
@@ -53,6 +57,8 @@ class MediaFileAdapter(
     }
 
     private var onlyItemsCounts: Int = 0
+    private var lastCurrentPlayingPositionAnimation: Int = -1
+    private var currentPlayingPositionAnimation: Int = -1
     private var headerListItems: MutableList<ListItem> = mutableListOf()
     private var mediaFileListItems: MutableList<ListItem> = mutableListOf()
         set(value) {
@@ -126,6 +132,26 @@ class MediaFileAdapter(
             }
             is MediaInfoRecyclerViewHolder -> {
                 if (mediaListType == MEDIA_TYPE_AUDIO) {
+                    if (lastCurrentPlayingPositionAnimation != -1 &&
+                        position == lastCurrentPlayingPositionAnimation
+                    ) {
+                        holder.currentPlayingImageView.visibility = View.GONE
+                    }
+                    if (currentPlayingPositionAnimation != -1 &&
+                        position == currentPlayingPositionAnimation
+                    ) {
+                        val drawable = holder.currentPlayingImageView.drawable
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
+                            drawable is AnimatedVectorDrawable
+                        ) {
+                            holder.currentPlayingImageView.visibility = View.VISIBLE
+                            drawable.start()
+                        }
+                    } else {
+                        holder.currentPlayingImageView.visibility = View.GONE
+                    }
+                    Utils.marqueeAfterDelay(2000, holder.infoTitle)
+                    Utils.marqueeAfterDelay(2000, holder.infoSummary)
                     holder.root.setOnClickListener {
                         // for audio list fragment we want to just show bottom sheet
                         val listItem = mediaFileListItems[position]
@@ -195,6 +221,29 @@ class MediaFileAdapter(
             mediaFileListItems = mutableListOf()
             notifyDataSetChanged()
         }
+    }
+
+    fun invalidateCurrentPlayingAnimation(uri: Uri) {
+        (context as CastActivity).lifecycleScope
+            .executeAsyncTask<Void, Int?>({}, {
+                getMediaFilesListItems().forEachIndexed { index, listItem ->
+                    if (listItem.mediaFileInfo != null &&
+                        listItem.mediaFileInfo!!.getContentUri(context) == uri
+                    ) {
+                        return@executeAsyncTask index
+                    }
+                }
+                null
+            }, {
+                if (it != null) {
+                    if (currentPlayingPositionAnimation != -1) {
+                        lastCurrentPlayingPositionAnimation = currentPlayingPositionAnimation
+                        notifyItemChanged(lastCurrentPlayingPositionAnimation)
+                    }
+                    currentPlayingPositionAnimation = it
+                    notifyItemChanged(currentPlayingPositionAnimation)
+                }
+            }, {})
     }
 
     private fun setBannerResources(holder: ListBannerViewHolder) {

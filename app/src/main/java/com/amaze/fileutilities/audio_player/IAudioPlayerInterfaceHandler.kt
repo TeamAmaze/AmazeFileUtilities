@@ -15,6 +15,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -80,6 +81,8 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
     // used to transition between 2 colors
     fun setLastColor(lastColor: Int)
 
+    fun animateCurrentPlayingItem(playingUri: Uri)
+
     override fun onPositionUpdate(progressHandler: AudioProgressHandler) {
         getSeekbar()?.let {
             seekbar ->
@@ -119,6 +122,10 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
         // invalidate wavebar
         if (renderWaveform) {
             loadWaveFormSeekbar(progressHandler, false)
+            progressHandler.audioPlaybackInfo.audioModel.getUri().let {
+                animateCurrentPlayingItem(it)
+            }
+            progressHandler.audioPlaybackInfo.currentPosition
             getContextWeakRef().get()?.let {
                 getAlbumImage()?.let {
                     imageView ->
@@ -231,6 +238,11 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             getRepeatButton()?.setOnClickListener {
                 setRepeatButton(audioService.cycleRepeat())
             }
+            audioService.getAudioProgressHandlerCallback()
+                ?.audioPlaybackInfo?.audioModel?.getUri()?.let {
+                    uri ->
+                    animateCurrentPlayingItem(uri)
+                }
         }
         setupSeekBars(audioService, false)
     }

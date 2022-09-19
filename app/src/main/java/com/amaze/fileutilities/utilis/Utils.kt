@@ -716,6 +716,7 @@ class Utils {
          */
         @JvmStatic
         fun marqueeAfterDelay(delayInMillis: Int, marqueeView: TextView) {
+            marqueeView.isSelected = false
             Handler()
                 .postDelayed(
                     {
