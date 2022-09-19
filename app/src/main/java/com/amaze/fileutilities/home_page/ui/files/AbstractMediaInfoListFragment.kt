@@ -77,7 +77,7 @@ abstract class AbstractMediaInfoListFragment :
         return true
     }
 
-    override fun getMediaFileAdapter(): AbstractMediaFilesAdapter? {
+    override fun getMediaFileAdapter(): MediaFileAdapter? {
         return mediaFileAdapter
     }
 

@@ -14,6 +14,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import com.amaze.fileutilities.R
@@ -66,7 +67,9 @@ class CloudStreamerNotification {
             val stopPendingIntent =
                 PendingIntent.getBroadcast(
                     context, 0, stopIntent,
-                    PendingIntent.FLAG_ONE_SHOT
+                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S)
+                        PendingIntent.FLAG_ONE_SHOT and PendingIntent.FLAG_IMMUTABLE
+                    else PendingIntent.FLAG_ONE_SHOT
                 )
 
             builder.addAction(stopIcon, stopText, stopPendingIntent)

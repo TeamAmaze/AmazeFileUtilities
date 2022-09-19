@@ -38,6 +38,21 @@
                     app:srcCompat="@drawable/ic_twotone_check_circle_32"
                     android:visibility="invisible" />
             </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="@dimen/check_icon_size_grid"
+                android:layout_height="@dimen/check_icon_size_grid"
+                android:gravity="bottom|right"
+                android:layout_margin="@dimen/eight_dp"
+                >
+
+                <ImageView
+                    android:id="@+id/currentPlayingAnimation"
+                    android:layout_width="@dimen/check_icon_size_grid"
+                    android:layout_height="@dimen/check_icon_size_grid"
+                    app:srcCompat="@drawable/avd_music_note"
+                    android:layout_toStartOf="@id/extra_info"
+                    android:visibility="gone" />
+            </RelativeLayout>
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"

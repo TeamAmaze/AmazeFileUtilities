@@ -191,6 +191,7 @@ class CursorUtils {
                         if (d.compareTo(Date(f.lastModified())) != 1 && !f.isDirectory) {
                             val mediaFileInfo = MediaFileInfo.fromFile(
                                 f,
+                                context,
                                 queryMetaInfo(
                                     context,
                                     cursor,
@@ -231,6 +232,7 @@ class CursorUtils {
                         if (path != null && endsWith.stream().anyMatch { path.endsWith(it) }) {
                             val mediaFileInfo = MediaFileInfo.fromFile(
                                 File(path),
+                                context,
                                 MediaFileInfo.ExtraInfo(
                                     MediaFileInfo.MEDIA_TYPE_DOCUMENT,
                                     null, null, null
@@ -303,6 +305,7 @@ class CursorUtils {
 
                         val mediaFileInfo = MediaFileInfo.fromFile(
                             File(path),
+                            context,
                             queryMetaInfo(context, cursor, mediaType)
                         )
                         mediaFileInfoFile.add(mediaFileInfo)

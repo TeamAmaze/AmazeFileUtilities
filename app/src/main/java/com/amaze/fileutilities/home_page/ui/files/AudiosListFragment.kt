@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.media.AudioManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -321,6 +322,10 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
 
     override fun setLastColor(lastColor: Int) {
         lastPaletteColor = lastColor
+    }
+
+    override fun animateCurrentPlayingItem(playingUri: Uri) {
+        getMediaFileAdapter()?.invalidateCurrentPlayingAnimation(playingUri)
     }
 
     private fun invalidateActionButtons(progressHandler: AudioProgressHandler?) {

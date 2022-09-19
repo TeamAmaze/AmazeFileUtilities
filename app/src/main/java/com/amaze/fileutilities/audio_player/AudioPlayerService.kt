@@ -331,7 +331,9 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         val stopIntent = Intent(TAG_BROADCAST_AUDIO_SERVICE_CANCEL)
         return PendingIntent.getBroadcast(
             this, 1234, stopIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S)
+                PendingIntent.FLAG_UPDATE_CURRENT and PendingIntent.FLAG_IMMUTABLE
+            else PendingIntent.FLAG_ONE_SHOT
         )
     }
 
@@ -339,7 +341,9 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         val intent = Intent(TAG_BROADCAST_AUDIO_SERVICE_PLAY)
         return PendingIntent.getBroadcast(
             this, 1235, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S)
+                PendingIntent.FLAG_UPDATE_CURRENT and PendingIntent.FLAG_IMMUTABLE
+            else PendingIntent.FLAG_ONE_SHOT
         )
     }
 
@@ -424,7 +428,8 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         val mediaButtonIntent = Intent(Intent.ACTION_MEDIA_BUTTON)
         mediaButtonIntent.component = mediaButtonReceiverComponentName
         val mediaButtonReceiverPendingIntent = PendingIntent.getBroadcast(
-            applicationContext, 0, mediaButtonIntent, 0
+            applicationContext, 0, mediaButtonIntent,
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S) PendingIntent.FLAG_IMMUTABLE else 0
         )
         mediaSession = MediaSessionCompat(
             this,
