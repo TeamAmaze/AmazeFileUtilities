@@ -38,4 +38,7 @@ class MediaInfoRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     @JvmField
     val root: RelativeLayout = view.findViewById(R.id.row_layout_parent)
+
+    @JvmField
+    val currentPlayingImageView: ImageView = view.findViewById(R.id.currentPlayingAnimation)
 }

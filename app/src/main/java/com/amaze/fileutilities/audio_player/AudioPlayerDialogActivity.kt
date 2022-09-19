@@ -14,6 +14,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.media.AudioManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -218,5 +219,9 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
 
     override fun setLastColor(lastColor: Int) {
         // do nothing as there is no color set to transition
+    }
+
+    override fun animateCurrentPlayingItem(playingUri: Uri) {
+        // do nothing as there's nothing to animate in dialog
     }
 }

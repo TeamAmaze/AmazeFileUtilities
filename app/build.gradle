@@ -32,7 +32,7 @@ android {
     defaultConfig {
         applicationId "com.amaze.fileutilities"
         minSdk 19
-        targetSdk 32
+        targetSdk 30
         versionCode 63
         versionName "1.62"
         multiDexEnabled true
