@@ -15,15 +15,17 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.amaze.fileutilities.utilis.DbConverters
 
 @Database(
     entities = [
         ImageAnalysis::class, InternalStorageAnalysis::class, PathPreferences::class,
         BlurAnalysis::class, LowLightAnalysis::class, MemeAnalysis::class, VideoPlayerState::class,
-        Trial::class
+        Trial::class, Lyrics::class
     ],
-    version = 1
+    version = 2
 )
 @TypeConverters(DbConverters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -35,6 +37,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun pathPreferencesDao(): PathPreferencesDao
     abstract fun videoPlayerStateDao(): VideoPlayerStateDao
     abstract fun trialValidatorDao(): TrialValidatorDao
+    abstract fun lyricsDao(): LyricsDao
 
     companion object {
         private var appDatabase: AppDatabase? = null
@@ -44,9 +47,25 @@ abstract class AppDatabase : RoomDatabase() {
                 appDatabase = Room.databaseBuilder(
                     applicationContext,
                     AppDatabase::class.java, "amaze-utils"
-                ).allowMainThreadQueries().build()
+                ).allowMainThreadQueries()
+                    .addMigrations(MIGRATION_1_2)
+                    .build()
             }
             return appDatabase!!
+        }
+
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `Lyrics` (`_id` INTEGER " +
+                        "PRIMARY KEY AUTOINCREMENT NOT NULL, `file_path` TEXT NOT NULL, " +
+                        "`lyrics_text` TEXT NOT NULL, `is_synced` INTEGER NOT NULL)"
+                )
+                database.execSQL(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS `index_Lyrics_file_path`" +
+                        " ON `Lyrics` (`file_path`)"
+                )
+            }
         }
     }
 }

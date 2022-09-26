@@ -45,6 +45,8 @@ interface ServiceOperationCallback {
     fun getAudioProgressHandlerCallback(): AudioProgressHandler?
     fun getAudioPlaybackInfo(): AudioPlaybackInfo?
     fun invokePlayPausePlayer()
+    fun initLyrics(lyricsText: String, isSynced: Boolean, filePath: String)
+    fun clearLyrics()
     fun invokeSeekPlayer(position: Long)
     fun cycleShuffle(): Boolean
     fun cycleRepeat(): Int
