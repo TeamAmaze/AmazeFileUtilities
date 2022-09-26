@@ -33,6 +33,7 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotification
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotificationImpl
 import com.amaze.fileutilities.audio_player.notification.AudioPlayerNotificationImpl24
+import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.utilis.ObtainableServiceBinder
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.Utils
@@ -45,6 +46,7 @@ import com.google.android.exoplayer2.audio.AudioAttributes
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.lang.ref.WeakReference
+import java.util.concurrent.atomic.AtomicReference
 
 class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatingCallback {
 
@@ -99,6 +101,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
     private var pausedByTransientLossOfFocus = false
     var mediaSession: MediaSessionCompat? = null
     private lateinit var sharedPreferences: SharedPreferences
+    private var lyricsParser: AtomicReference<LyricsParser?> = AtomicReference(null)
 
     override fun onCreate() {
         super.onCreate()
@@ -278,6 +281,8 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
             audioProgressHandler?.doShuffle = doShuffle
             audioProgressHandler?.repeatMode = repeatMode
         }
+        val lyricsDao = AppDatabase.getInstance(applicationContext).lyricsDao()
+        lyricsParser.set(LyricsParser(uri.toString(), lyricsDao))
         audioProgressHandler!!.getPlayingIndex(true)
     }
 
@@ -617,6 +622,18 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         playMediaItem()
     }
 
+    override fun initLyrics(lyricsText: String, isSynced: Boolean, filePath: String) {
+        val lyricsDao = AppDatabase.getInstance(applicationContext).lyricsDao()
+        lyricsParser.set(LyricsParser(filePath, lyricsText, isSynced, lyricsDao))
+    }
+
+    override fun clearLyrics() {
+        val lyricsDao = AppDatabase.getInstance(applicationContext).lyricsDao()
+        // clears existing lyrics
+        lyricsParser.get()?.clearLyrics(lyricsDao)
+        audioProgressHandler?.audioPlaybackInfo?.currentLyrics = null
+    }
+
     override fun invokePlaybackProperties(playbackSpeed: Float, pitch: Float) {
         val param = PlaybackParameters(playbackSpeed, pitch)
         exoPlayer?.playbackParameters = param
@@ -715,6 +732,10 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                 }
             }
         } else {
+            audioProgressHandler.audioPlaybackInfo.currentLyrics =
+                lyricsParser.get()?.getLyrics(exoPlayer!!.currentPosition / 1000)
+            audioProgressHandler.audioPlaybackInfo.isLyricsSynced =
+                lyricsParser.get()?.lyricsRaw?.isSynced == true
             serviceBinderPlaybackUpdate?.onPositionUpdate(audioProgressHandler)
             updateMediaSessionPlaybackState()
             playingNotification?.update()

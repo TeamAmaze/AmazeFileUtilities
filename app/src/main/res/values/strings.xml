@@ -838,4 +838,12 @@
     <string name="image_editor">Amaze Image Editor</string>
     <!-- Failed while loading docx file -->
     <string name="failed_to_load_document">Failed to load document</string>
+    <!-- load music lyrics -->
+    <string name="load">Load</string>
+    <!-- paste lyrics dialog -->
+    <string name="paste_lyrics">Paste lyrics</string>
+    <!-- lyrics type dialog -->
+    <string name="lyrics_type">Lyrics type</string>
+    <!-- lyrics type dialog -->
+    <string name="clear_lyrics">Clearing lyrics</string>
 </resources>

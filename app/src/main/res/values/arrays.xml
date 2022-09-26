@@ -30,6 +30,11 @@
         <item>6</item>
     </string-array>
 
+    <string-array name="lyrics_type">
+        <item>Normal</item>
+        <item>Synced</item>
+    </string-array>
+
     <string-array name="photo_editor_emoji">
 
         <!-- Smiles -->
