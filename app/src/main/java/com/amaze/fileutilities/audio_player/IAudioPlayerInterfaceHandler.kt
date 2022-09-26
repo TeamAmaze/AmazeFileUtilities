@@ -125,7 +125,6 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             progressHandler.audioPlaybackInfo.audioModel.getUri().let {
                 animateCurrentPlayingItem(it)
             }
-            progressHandler.audioPlaybackInfo.currentPosition
             getContextWeakRef().get()?.let {
                 getAlbumImage()?.let {
                     imageView ->

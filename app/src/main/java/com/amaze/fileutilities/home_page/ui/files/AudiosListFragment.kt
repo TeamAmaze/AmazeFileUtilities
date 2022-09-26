@@ -17,12 +17,14 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +41,8 @@ import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.lang.ref.WeakReference
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfaceHandler {
 
@@ -55,10 +59,16 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
     private var preloader: MediaAdapterPreloader? = null
     private var isWaveformProcessing = false
     private var lastPaletteColor: Int = 0
+    private var lastLyrics: String? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    companion object {
+        const val SEARCH_LYRICS_NORMAL = "https://www.google.com/search?q="
+        const val SEARCH_LYRICS_SYNCED = "https://www.lyricsify.com/search?q="
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,6 +147,35 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         super.onPositionUpdate(progressHandler)
         _binding?.run {
             timeSummarySmall.text = "${timeElapsed.text} / ${trackLength.text}"
+            if (lastLyrics == null ||
+                progressHandler.audioPlaybackInfo.currentLyrics != lastLyrics
+            ) {
+                showLyricsTextCurrent.setTextAnimation(
+                    progressHandler.audioPlaybackInfo
+                        .currentLyrics ?: "",
+                    150
+                )
+                lastLyrics = progressHandler.audioPlaybackInfo.currentLyrics
+            }
+
+            /*showLyricsButton.setOnClickListener {
+                if (albumInfoParent.isVisible) {
+                    if (progressHandler.audioPlaybackInfo.currentLyrics == null) {
+                        loadLyricsParent.visibility = View.VISIBLE
+                        showLyricsParent.visibility = View.GONE
+                    } else {
+                        showLyricsParent.visibility = View.VISIBLE
+                        loadLyricsParent.visibility = View.GONE
+                    }
+                    albumInfoParent.visibility = View.GONE
+                    showLyricsButton.setImageResource(R.drawable.ic_baseline_closed_caption_24)
+                } else {
+                    albumInfoParent.visibility = View.VISIBLE
+                    loadLyricsParent.visibility = View.GONE
+                    showLyricsParent.visibility = View.GONE
+                    showLyricsButton.setImageResource(R.drawable.ic_baseline_closed_caption_off_24)
+                }
+            }*/
         }
         invalidateActionButtons(progressHandler)
     }
@@ -147,6 +186,10 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
     ) {
         super.onPlaybackStateChanged(progressHandler, renderWaveform)
         invalidateActionButtons(progressHandler)
+        if (renderWaveform) {
+            // reset lyrics view if shown
+            hideLyricsView()
+        }
     }
 
     override fun setupActionButtons(audioServiceRef: WeakReference<ServiceOperationCallback>) {
@@ -177,6 +220,63 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
                 playButtonSmallParent.setOnClickListener {
                     audioService.invokePlayPausePlayer()
                     invalidateActionButtons(audioService.getAudioProgressHandlerCallback())
+                }
+                val handler = audioService.getAudioProgressHandlerCallback()
+                showLyricsButton.setOnClickListener {
+                    if (albumInfoParent.isVisible) {
+                        if (handler?.audioPlaybackInfo?.currentLyrics == null) {
+                            loadLyricsParent.visibility = View.VISIBLE
+                            showLyricsParent.visibility = View.GONE
+                        } else {
+                            showLyricsParent.visibility = View.VISIBLE
+                            loadLyricsParent.visibility = View.GONE
+                            setupShowLyricsView(handler.audioPlaybackInfo.isLyricsSynced)
+                        }
+                        albumInfoParent.visibility = View.GONE
+                        showLyricsButton.setImageResource(R.drawable.ic_baseline_closed_caption_24)
+                    } else {
+                        hideLyricsView()
+                    }
+                }
+                hideLyricsView()
+                clearLyricsButton.setOnClickListener {
+                    requireContext().showToastInCenter(getString(R.string.clear_lyrics))
+                    audioService.clearLyrics()
+                    hideLyricsView()
+                }
+                searchLyricsButton.setOnClickListener {
+                    val handler = audioService.getAudioProgressHandlerCallback()
+                    val songName = handler?.audioPlaybackInfo?.title
+                    Utils.buildPickLyricsTypeDialog(requireContext()) {
+                        which ->
+                        songName?.let {
+                            val encodedSongName = URLEncoder
+                                .encode(songName, StandardCharsets.UTF_8.displayName())
+                            Utils.openURL(
+                                if (which == 0) SEARCH_LYRICS_NORMAL
+                                else SEARCH_LYRICS_SYNCED +
+                                    encodedSongName,
+                                requireContext()
+                            )
+                        }
+                    }
+                }
+                loadLyricsButton.setOnClickListener {
+                    Utils.buildPickLyricsTypeDialog(requireContext()) { which ->
+                        Utils.buildPasteLyricsDialog(requireContext()) {
+                            pastedLyrics ->
+                            val audioInfo =
+                                audioService.getAudioProgressHandlerCallback()?.audioPlaybackInfo
+                            val uri = audioInfo?.audioModel?.getUri()
+                            uri?.let {
+                                audioService.initLyrics(
+                                    pastedLyrics, which == 1,
+                                    uri.toString()
+                                )
+                                hideLyricsView()
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -328,6 +428,15 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         getMediaFileAdapter()?.invalidateCurrentPlayingAnimation(playingUri)
     }
 
+    private fun hideLyricsView() {
+        _binding?.run {
+            albumInfoParent.visibility = View.VISIBLE
+            loadLyricsParent.visibility = View.GONE
+            showLyricsParent.visibility = View.GONE
+            showLyricsButton.setImageResource(R.drawable.ic_baseline_closed_caption_off_24)
+        }
+    }
+
     private fun invalidateActionButtons(progressHandler: AudioProgressHandler?) {
         progressHandler?.audioPlaybackInfo?.let {
             info ->
@@ -359,6 +468,23 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
             binding.bottomSheetSmall.alpha = 1 - slideOffset
             binding.bottomSheetBig.alpha = slideOffset
+        }
+    }
+
+    private fun setupShowLyricsView(isSynced: Boolean) {
+        _binding?.run {
+            if (isSynced) {
+                showLyricsTextCurrent.setTextSize(
+                    TypedValue.COMPLEX_UNIT_PX,
+                    resources.getDimension(R.dimen.twenty_four_sp)
+                )
+            } else {
+                showLyricsTextCurrent.setTextSize(
+                    TypedValue.COMPLEX_UNIT_PX,
+                    resources.getDimension(R.dimen.fourteen_sp)
+                )
+            }
+            showLyricsTextCurrent.setTextColor(resources.getColor(R.color.white))
         }
     }
 }

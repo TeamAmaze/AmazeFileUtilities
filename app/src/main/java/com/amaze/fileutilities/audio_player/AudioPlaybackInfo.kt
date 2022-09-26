@@ -35,7 +35,9 @@ data class AudioPlaybackInfo(
     var artistName: String = "",
     var albumArt: Bitmap?,
     var currentPosition: Long = -1,
-    var isPlaying: Boolean = false
+    var isPlaying: Boolean = false,
+    var currentLyrics: String? = null,
+    var isLyricsSynced: Boolean = false
 ) : Parcelable {
     companion object {
         const val BASE_SELECTION =
