@@ -37,7 +37,8 @@ data class AudioPlaybackInfo(
     var currentPosition: Long = -1,
     var isPlaying: Boolean = false,
     var currentLyrics: String? = null,
-    var isLyricsSynced: Boolean = false
+    var isLyricsSynced: Boolean = false,
+    var lyricsStrings: LyricsParser.LyricsStrings? = null
 ) : Parcelable {
     companion object {
         const val BASE_SELECTION =

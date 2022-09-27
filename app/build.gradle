@@ -137,7 +137,7 @@ dependencies {
     implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
     implementation 'com.github.VishalNehra:FolioReader-Android:0.5.8'
     implementation 'org.zwobble.mammoth:mammoth:1.4.2'
-    implementation 'me.zhanghai.android.fastscroll:library:1.1.7'
+    implementation 'me.zhanghai.android.fastscroll:library:1.1.8'
     implementation "ch.acra:acra-core:5.7.0"
 
     // https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor

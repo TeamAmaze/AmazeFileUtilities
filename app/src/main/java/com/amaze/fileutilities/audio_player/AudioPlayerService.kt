@@ -632,6 +632,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         // clears existing lyrics
         lyricsParser.get()?.clearLyrics(lyricsDao)
         audioProgressHandler?.audioPlaybackInfo?.currentLyrics = null
+        audioProgressHandler?.audioPlaybackInfo?.lyricsStrings = null
     }
 
     override fun invokePlaybackProperties(playbackSpeed: Float, pitch: Float) {
@@ -736,6 +737,8 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                 lyricsParser.get()?.getLyrics(exoPlayer!!.currentPosition / 1000)
             audioProgressHandler.audioPlaybackInfo.isLyricsSynced =
                 lyricsParser.get()?.lyricsRaw?.isSynced == true
+            audioProgressHandler.audioPlaybackInfo.lyricsStrings = lyricsParser
+                .get()?.getLyricsNew(exoPlayer!!.currentPosition / 1000)
             serviceBinderPlaybackUpdate?.onPositionUpdate(audioProgressHandler)
             updateMediaSessionPlaybackState()
             playingNotification?.update()
