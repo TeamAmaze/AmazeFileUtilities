@@ -13,6 +13,7 @@ package com.amaze.fileutilities.home_page.ui.files
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.graphics.Color
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
@@ -24,6 +25,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.util.Consumer
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -38,6 +40,7 @@ import com.google.android.material.slider.Slider
 import com.masoudss.lib.WaveformSeekBar
 import me.tankery.lib.circularseekbar.CircularSeekBar
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
+import me.zhanghai.android.fastscroll.PopupStyles
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.lang.ref.WeakReference
@@ -120,7 +123,16 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         binding.fastscroll.visibility = View.GONE
-                        FastScrollerBuilder(binding.audiosListView).useMd2Style().build()
+                        val popupStyle = Consumer<TextView> { popupView ->
+                            PopupStyles.MD2.accept(popupView)
+                            popupView.setTextColor(Color.BLACK)
+                            popupView.setTextSize(
+                                TypedValue.COMPLEX_UNIT_PX,
+                                resources.getDimension(R.dimen.twenty_four_sp)
+                            )
+                        }
+                        FastScrollerBuilder(binding.audiosListView).useMd2Style()
+                            .setPopupStyle(popupStyle).build()
                     } else {
                         binding.fastscroll.visibility = View.VISIBLE
                         binding.fastscroll.setRecyclerView(binding.audiosListView, 1)
@@ -147,35 +159,52 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         super.onPositionUpdate(progressHandler)
         _binding?.run {
             timeSummarySmall.text = "${timeElapsed.text} / ${trackLength.text}"
-            if (lastLyrics == null ||
+            /*if (lastLyrics == null ||
                 progressHandler.audioPlaybackInfo.currentLyrics != lastLyrics
             ) {
-                showLyricsTextCurrent.setTextAnimation(
-                    progressHandler.audioPlaybackInfo
-                        .currentLyrics ?: "",
-                    150
-                )
-                lastLyrics = progressHandler.audioPlaybackInfo.currentLyrics
-            }
-
-            /*showLyricsButton.setOnClickListener {
-                if (albumInfoParent.isVisible) {
-                    if (progressHandler.audioPlaybackInfo.currentLyrics == null) {
-                        loadLyricsParent.visibility = View.VISIBLE
-                        showLyricsParent.visibility = View.GONE
-                    } else {
-                        showLyricsParent.visibility = View.VISIBLE
-                        loadLyricsParent.visibility = View.GONE
-                    }
-                    albumInfoParent.visibility = View.GONE
-                    showLyricsButton.setImageResource(R.drawable.ic_baseline_closed_caption_24)
+                if (progressHandler.audioPlaybackInfo.isLyricsSynced) {
+                    showLyricsTextCurrentSynced.setTextAnimation(
+                        progressHandler.audioPlaybackInfo
+                            .currentLyrics ?: "",
+                        150
+                    )
                 } else {
-                    albumInfoParent.visibility = View.VISIBLE
-                    loadLyricsParent.visibility = View.GONE
-                    showLyricsParent.visibility = View.GONE
-                    showLyricsButton.setImageResource(R.drawable.ic_baseline_closed_caption_off_24)
+                    showLyricsTextCurrent.setTextAnimation(
+                        progressHandler.audioPlaybackInfo
+                            .currentLyrics ?: "",
+                        150
+                    )
                 }
+                lastLyrics = progressHandler.audioPlaybackInfo.currentLyrics
             }*/
+            if (showLyricsTextCurrent.text == null ||
+                progressHandler.audioPlaybackInfo
+                    .lyricsStrings?.currentLyrics != showLyricsTextCurrent.text
+            ) {
+                if (progressHandler.audioPlaybackInfo.lyricsStrings?.isSynced == true) {
+                    showLyricsTextLast.setTextAnimation(
+                        progressHandler
+                            .audioPlaybackInfo.lyricsStrings?.lastLyrics ?: "",
+                        50
+                    )
+                    showLyricsTextCurrent.setTextAnimation(
+                        progressHandler
+                            .audioPlaybackInfo.lyricsStrings?.currentLyrics ?: "",
+                        50
+                    )
+                    showLyricsTextNext.setTextAnimation(
+                        progressHandler
+                            .audioPlaybackInfo.lyricsStrings?.nextLyrics ?: "",
+                        50
+                    )
+                } else {
+                    showLyricsTextCurrent.text = progressHandler.audioPlaybackInfo
+                        .currentLyrics ?: ""
+                    showLyricsTextLast.visibility = View.GONE
+                    showLyricsTextNext.visibility = View.GONE
+                }
+                lastLyrics = progressHandler.audioPlaybackInfo.lyricsStrings?.currentLyrics
+            }
         }
         invalidateActionButtons(progressHandler)
     }
@@ -225,14 +254,14 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
                 showLyricsButton.setOnClickListener {
                     if (albumInfoParent.isVisible) {
                         if (handler?.audioPlaybackInfo?.currentLyrics == null) {
-                            loadLyricsParent.visibility = View.VISIBLE
-                            showLyricsParent.visibility = View.GONE
+                            loadLyricsParent.showFade(150)
+                            showLyricsParent.hideFade(150)
                         } else {
-                            showLyricsParent.visibility = View.VISIBLE
-                            loadLyricsParent.visibility = View.GONE
+                            showLyricsParent.showFade(150)
+                            loadLyricsParent.hideFade(150)
                             setupShowLyricsView(handler.audioPlaybackInfo.isLyricsSynced)
                         }
-                        albumInfoParent.visibility = View.GONE
+                        albumInfoParent.hideFade(150)
                         showLyricsButton.setImageResource(R.drawable.ic_baseline_closed_caption_24)
                     } else {
                         hideLyricsView()
@@ -247,15 +276,21 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
                 searchLyricsButton.setOnClickListener {
                     val handler = audioService.getAudioProgressHandlerCallback()
                     val songName = handler?.audioPlaybackInfo?.title
+                    val artist = handler?.audioPlaybackInfo?.artistName
                     Utils.buildPickLyricsTypeDialog(requireContext()) {
                         which ->
                         songName?.let {
                             val encodedSongName = URLEncoder
-                                .encode(songName, StandardCharsets.UTF_8.displayName())
+                                .encode(
+                                    if (artist != null) "$artist $songName" else songName,
+                                    StandardCharsets.UTF_8.displayName()
+                                )
                             Utils.openURL(
-                                if (which == 0) SEARCH_LYRICS_NORMAL
-                                else SEARCH_LYRICS_SYNCED +
-                                    encodedSongName,
+                                if (which == 0) {
+                                    "$SEARCH_LYRICS_NORMAL$encodedSongName lyrics"
+                                } else {
+                                    "$SEARCH_LYRICS_SYNCED$encodedSongName"
+                                },
                                 requireContext()
                             )
                         }
@@ -274,6 +309,7 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
                                     uri.toString()
                                 )
                                 hideLyricsView()
+                                requireContext().showToastInCenter(getString(R.string.added_lyrics))
                             }
                         }
                     }
@@ -430,9 +466,9 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
 
     private fun hideLyricsView() {
         _binding?.run {
-            albumInfoParent.visibility = View.VISIBLE
-            loadLyricsParent.visibility = View.GONE
-            showLyricsParent.visibility = View.GONE
+            albumInfoParent.showFade(150)
+            loadLyricsParent.hideFade(150)
+            showLyricsParent.hideFade(150)
             showLyricsButton.setImageResource(R.drawable.ic_baseline_closed_caption_off_24)
         }
     }
@@ -474,17 +510,12 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
     private fun setupShowLyricsView(isSynced: Boolean) {
         _binding?.run {
             if (isSynced) {
-                showLyricsTextCurrent.setTextSize(
-                    TypedValue.COMPLEX_UNIT_PX,
-                    resources.getDimension(R.dimen.twenty_four_sp)
-                )
+                showLyricsTextLast.visibility = View.VISIBLE
+                showLyricsTextNext.visibility = View.VISIBLE
             } else {
-                showLyricsTextCurrent.setTextSize(
-                    TypedValue.COMPLEX_UNIT_PX,
-                    resources.getDimension(R.dimen.fourteen_sp)
-                )
+                showLyricsTextLast.visibility = View.GONE
+                showLyricsTextNext.visibility = View.GONE
             }
-            showLyricsTextCurrent.setTextColor(resources.getColor(R.color.white))
         }
     }
 }

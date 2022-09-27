@@ -44,11 +44,9 @@ import android.provider.Settings
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
@@ -970,13 +968,10 @@ class Utils {
             val inputEditTextField = EditText(context)
             inputEditTextField.inputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE
             inputEditTextField.isSingleLine = false
-            val params = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-//            params.height = 150
+            inputEditTextField.minimumHeight = 500
+            inputEditTextField.setTextColor(Color.WHITE)
             val dialog = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
-                .setTitle(R.string.lyrics_type)
+                .setTitle(R.string.paste_lyrics)
                 .setView(inputEditTextField)
                 .setCancelable(false)
                 .setPositiveButton(R.string.ok) { dialog, _ ->

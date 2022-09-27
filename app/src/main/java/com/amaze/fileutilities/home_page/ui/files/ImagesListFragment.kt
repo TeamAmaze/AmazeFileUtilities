@@ -10,17 +10,22 @@
 
 package com.amaze.fileutilities.home_page.ui.files
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.util.Consumer
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentImagesListBinding
 import com.amaze.fileutilities.home_page.MainActivity
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
+import me.zhanghai.android.fastscroll.PopupStyles
 
 class ImagesListFragment : AbstractMediaInfoListFragment() {
     private val filesViewModel: FilesViewModel by activityViewModels()
@@ -64,7 +69,16 @@ class ImagesListFragment : AbstractMediaInfoListFragment() {
                     resetAdapter()
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         binding.fastscroll.visibility = View.GONE
-                        FastScrollerBuilder(binding.imagesListView).useMd2Style().build()
+                        val popupStyle = Consumer<TextView> { popupView ->
+                            PopupStyles.MD2.accept(popupView)
+                            popupView.setTextColor(Color.BLACK)
+                            popupView.setTextSize(
+                                TypedValue.COMPLEX_UNIT_PX,
+                                resources.getDimension(R.dimen.twenty_four_sp)
+                            )
+                        }
+                        FastScrollerBuilder(binding.imagesListView).useMd2Style()
+                            .setPopupStyle(popupStyle).build()
                     } else {
                         binding.fastscroll.visibility = View.VISIBLE
                         binding.fastscroll.setRecyclerView(binding.imagesListView, 1)
