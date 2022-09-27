@@ -276,6 +276,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
                     android:clickable="false"
+                    android:fillViewport="true"
                     android:gravity="center_horizontal|center_vertical"
                     >
                     <LinearLayout
@@ -287,7 +288,7 @@
                         <TextView
                             android:id="@+id/show_lyrics_text_last"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:textColor="@color/white_text_translucent"
                             android:textSize="@dimen/eighteen_sp"
                             android:clickable="false"
@@ -297,16 +298,16 @@
                         <TextView
                             android:id="@+id/show_lyrics_text_current"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/fourteen_sp"
+                            android:textSize="@dimen/twenty_four_sp"
                             android:clickable="false"
                             android:gravity="center_horizontal|center_vertical"
                             />
                         <TextView
                             android:id="@+id/show_lyrics_text_next"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:textColor="@color/white_text_translucent"
                             android:textSize="@dimen/eighteen_sp"
                             android:clickable="false"
@@ -320,8 +321,8 @@
                     android:src="@drawable/ic_close"
                     android:layout_width="@dimen/material_generic_medium"
                     android:layout_height="@dimen/material_generic_medium"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentBottom="true"
                     />
             </RelativeLayout>
             <LinearLayout

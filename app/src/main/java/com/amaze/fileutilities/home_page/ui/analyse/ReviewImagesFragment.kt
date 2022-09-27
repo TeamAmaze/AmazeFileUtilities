@@ -10,11 +10,15 @@
 
 package com.amaze.fileutilities.home_page.ui.analyse
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.util.Consumer
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.LiveData
@@ -39,6 +43,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
+import me.zhanghai.android.fastscroll.PopupStyles
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -547,7 +552,15 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         binding.listView.adapter = mediaFileAdapter
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             binding.fastscroll.visibility = View.GONE
-            FastScrollerBuilder(binding.listView).useMd2Style().build()
+            val popupStyle = Consumer<TextView> { popupView ->
+                PopupStyles.MD2.accept(popupView)
+                popupView.setTextColor(Color.BLACK)
+                popupView.setTextSize(
+                    TypedValue.COMPLEX_UNIT_PX,
+                    resources.getDimension(R.dimen.twenty_four_sp)
+                )
+            }
+            FastScrollerBuilder(binding.listView).useMd2Style().setPopupStyle(popupStyle).build()
         } else {
             binding.fastscroll.visibility = View.VISIBLE
             binding.fastscroll.setRecyclerView(binding.listView, 1)

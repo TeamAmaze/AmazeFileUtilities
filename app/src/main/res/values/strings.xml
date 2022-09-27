@@ -846,4 +846,6 @@
     <string name="lyrics_type">Lyrics type</string>
     <!-- lyrics type dialog -->
     <string name="clear_lyrics">Clearing lyrics</string>
+    <!-- lyrics type dialog -->
+    <string name="added_lyrics">Added lyrics</string>
 </resources>

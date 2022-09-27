@@ -10,9 +10,11 @@
 
 package com.amaze.fileutilities.audio_player
 
+import android.os.Parcelable
 import com.amaze.fileutilities.home_page.database.Lyrics
 import com.amaze.fileutilities.home_page.database.LyricsDao
 import com.amaze.fileutilities.home_page.ui.files.AudiosListFragment
+import kotlinx.parcelize.Parcelize
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.regex.Matcher
@@ -20,16 +22,18 @@ import java.util.regex.Pattern
 
 class LyricsParser {
 
-    var lyricsMap: HashMap<Long, String>? = null
+    var lyricsMap: LinkedHashMap<Long, String>? = null
     var lyricsRaw: Lyrics? = null
     var lastLyrics: String? = null
-    var nextLyrics: String? = null
+    var lyricsStrings: LyricsStrings? = null
 
+    @Parcelize
     data class LyricsStrings(
-        var lastLyrics: String,
+        var lastLyrics: String?,
         var currentLyrics: String,
-        var nextLyrics: String
-    )
+        var nextLyrics: String?,
+        var isSynced: Boolean
+    ) : Parcelable
 
     constructor(filePath: String, lyricsDao: LyricsDao) {
         this.lyricsRaw = lyricsDao.findByPath(filePath)
@@ -73,6 +77,56 @@ class LyricsParser {
         }
     }
 
+    fun getLyricsNew(timestamp: Long): LyricsStrings? {
+        var lyricsObj: LyricsStrings?
+        if (lyricsMap != null) {
+            var found = false
+            var lastFound: String? = "♪"
+            var currFound = "♪"
+            var nextFound: String? = "♪"
+            for ((timeStampMapped, lyricsMapped) in lyricsMap!!) {
+                if (timestamp == timeStampMapped && !found) {
+                    found = true
+                    currFound = lyricsMapped
+                } else if (!found) {
+                    lastFound = lyricsMapped
+                } else if (found) {
+                    nextFound = lyricsMapped
+                    break
+                }
+            }
+            if (!found) {
+                // if not found, check previous values
+                if (lyricsStrings != null) {
+                    lastFound = lyricsStrings!!.lastLyrics
+                    nextFound = lyricsStrings!!.nextLyrics
+                    currFound = lyricsStrings!!.currentLyrics
+                } else {
+                    // no previous values so set default values
+                    lastFound = null
+                    nextFound = null
+                }
+            }
+            lyricsObj = LyricsStrings(
+                lastFound, currFound, nextFound,
+                lyricsRaw?.isSynced == true
+            )
+        } else if (lyricsRaw != null) {
+            lyricsObj = if (lyricsStrings == null) {
+                LyricsStrings(
+                    null, lyricsRaw?.lyricsText ?: "♪", null,
+                    lyricsRaw?.isSynced == true
+                )
+            } else {
+                lyricsStrings
+            }
+        } else {
+            lyricsObj = null
+        }
+        lyricsStrings = lyricsObj
+        return lyricsStrings
+    }
+
     fun clearLyrics(lyricsDao: LyricsDao) {
         lyricsRaw?.let {
             lyricsDao.delete(it)
@@ -86,9 +140,8 @@ class LyricsParser {
 
     private fun parseAndStore() {
         if (lyricsRaw != null && lyricsRaw!!.isSynced) {
-            lyricsMap = HashMap()
+            lyricsMap = LinkedHashMap()
             val lyricsLines = lyricsRaw!!.lyricsText.split("\n")
-            var lastTime = 0
             lyricsLines.forEach {
                 lyricsLineRaw ->
                 var matcher: Matcher = timerPattern.matcher(lyricsLineRaw)
@@ -111,7 +164,11 @@ class LyricsParser {
                     if (!lyricsLine.isNullOrBlank()) {
                         output.forEach {
                             timeStamp ->
-                            lyricsMap?.put(timeStamp, lyricsLine)
+                            if (!lyricsLine.isNullOrBlank()) {
+                                lyricsMap?.put(timeStamp, lyricsLine)
+                            } else {
+                                lyricsMap?.put(timeStamp, "♪")
+                            }
                         }
                     }
                 } catch (e: Exception) {
