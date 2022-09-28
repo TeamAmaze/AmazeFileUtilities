@@ -44,8 +44,9 @@
         android:id="@+id/overflow_button"
         app:srcCompat="@drawable/ic_baseline_more_vert_yellow_32"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:padding="@dimen/four_dp"
+        android:clickable="true"
         />
 </RelativeLayout>

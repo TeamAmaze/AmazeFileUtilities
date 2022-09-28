@@ -326,7 +326,7 @@
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
     <string name="enable_wifi">請啟用 Wi-Fi</string>
     <!-- Failed to discover nearby devices in transfer tab -->
-    <string name="discovery_failure">無法找到鄰近的裝置</string>
+    <string name="discovery_failure">Failed to discover peers. Please try reconnecting to Wifi network</string>
     <!-- Receiving files in transfer tab -->
     <string name="receiving_files">正在接收檔案中...</string>
     <!-- Search for nearby devices in transfer tab -->
@@ -364,7 +364,7 @@
     <!-- Service description to cast media files to tv -->
     <string name="cloud_streamer_service_description">以 Amaze檔案工具程式把媒體檔案投影到電視機上</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
-    <string name="failed_to_handshake">無法和遠端裝置建立連線。</string>
+    <string name="failed_to_handshake">Failed to establish connection with remote device. Please try reconnecting to Wifi network</string>
     <!-- Connection successful to transfer files in tranfer tab -->
     <string name="connection_successful">連線成功</string>
     <!-- Failed to send files in transfer tab -->
@@ -376,7 +376,7 @@
     <!-- Failed to receive files in transfer tab -->
     <string name="failed_filename_receive_reconnecct">接收失敗，請重新連線</string>
     <!-- Transfer complete in transfer tab -->
-    <string name="transfer_complete">傳輸已完成</string>
+    <string name="transfer_complete">File transferred</string>
     <!-- Need extra permissions for transfer tab -->
     <string name="grant_location_permission">請授予位置存取權限以與附近的裝置連線。</string>
     <!-- Need extra permissions for transfer tab -->
@@ -829,4 +829,14 @@
     <string name="image_editor">Amaze Image Editor</string>
     <!-- Failed while loading docx file -->
     <string name="failed_to_load_document">Failed to load document</string>
+    <!-- load music lyrics -->
+    <string name="load">Load</string>
+    <!-- paste lyrics dialog -->
+    <string name="paste_lyrics">Paste lyrics</string>
+    <!-- lyrics type dialog -->
+    <string name="lyrics_type">Lyrics type</string>
+    <!-- lyrics type dialog -->
+    <string name="clear_lyrics">Clearing lyrics</string>
+    <!-- lyrics type dialog -->
+    <string name="added_lyrics">Added lyrics</string>
 </resources>
