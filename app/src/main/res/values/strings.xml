@@ -6,7 +6,7 @@
     <!-- App info shown in about screen -->
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.62</string>
+    <string name="app_version" translatable="false">v1.64</string>
     <!-- Image viewer activity label -->
     <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
@@ -332,7 +332,7 @@
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
     <string name="enable_wifi">Please enable your Wi-Fi</string>
     <!-- Failed to discover nearby devices in transfer tab -->
-    <string name="discovery_failure">Failed to discover peers</string>
+    <string name="discovery_failure">Failed to discover peers. Please try reconnecting to Wifi network</string>
     <!-- Receiving files in transfer tab -->
     <string name="receiving_files">Receiving files</string>
     <!-- Search for nearby devices in transfer tab -->
@@ -371,7 +371,7 @@
     <!-- Service description to cast media files to tv -->
     <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
-    <string name="failed_to_handshake">Failed to establish connection with remote device</string>
+    <string name="failed_to_handshake">Failed to establish connection with remote device. Please try reconnecting to Wifi network</string>
     <!-- Connection successful to transfer files in tranfer tab -->
     <string name="connection_successful">Connection successful</string>
     <!-- Failed to send files in transfer tab -->
@@ -383,7 +383,7 @@
     <!-- Failed to receive files in transfer tab -->
     <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
     <!-- Transfer complete in transfer tab -->
-    <string name="transfer_complete">Transfer complete</string>
+    <string name="transfer_complete">File transferred</string>
     <!-- Need extra permissions for transfer tab -->
     <string name="grant_location_permission">App needs location permission to connect with nearby devices.</string>
     <!-- Need extra permissions for transfer tab -->

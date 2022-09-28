@@ -143,7 +143,7 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
             mediaFileList.forEach {
                 when (sortingPreference.groupBy) {
                     GROUP_PARENT -> {
-                        it.listHeader = it.getParentName()
+                        it.listHeader = it.getParentName().uppercase()
                     }
                     GROUP_DATE -> {
                         it.listHeader = it.getModificationDate(context)
@@ -152,12 +152,13 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
                         it.listHeader = it.title[0].toString().uppercase()
                     }
                     GROUP_ALBUM -> {
-                        it.listHeader = it.extraInfo?.audioMetaData?.albumName ?: context
-                            .getString(R.string.unknown_artist)
+                        it.listHeader = it.extraInfo?.audioMetaData?.albumName?.uppercase()
+                            ?: context
+                                .getString(R.string.unknown_artist)
                     }
                     GROUP_ARTIST -> {
-                        it.listHeader = it.extraInfo?.audioMetaData?.artistName ?: context
-                            .getString(R.string.unknown_artist)
+                        it.listHeader = it.extraInfo?.audioMetaData?.artistName?.uppercase()
+                            ?: context.getString(R.string.unknown_artist)
                     }
                 }
             }
