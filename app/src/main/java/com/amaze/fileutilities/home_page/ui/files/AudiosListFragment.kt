@@ -274,7 +274,6 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
                     hideLyricsView()
                 }
                 searchLyricsButton.setOnClickListener {
-                    val handler = audioService.getAudioProgressHandlerCallback()
                     val songName = handler?.audioPlaybackInfo?.title
                     val artist = handler?.audioPlaybackInfo?.artistName
                     Utils.buildPickLyricsTypeDialog(requireContext()) {
@@ -282,7 +281,14 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
                         songName?.let {
                             val encodedSongName = URLEncoder
                                 .encode(
-                                    if (artist != null) "$artist $songName" else songName,
+                                    if (artist != null &&
+                                        !artist.equals(
+                                                getString(R.string.unknown_artist),
+                                                true
+                                            )
+                                    ) {
+                                        "$artist $songName"
+                                    } else songName,
                                     StandardCharsets.UTF_8.displayName()
                                 )
                             Utils.openURL(
@@ -512,9 +518,17 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
             if (isSynced) {
                 showLyricsTextLast.visibility = View.VISIBLE
                 showLyricsTextNext.visibility = View.VISIBLE
+                showLyricsTextCurrent.setTextSize(
+                    TypedValue.COMPLEX_UNIT_PX,
+                    resources.getDimension(R.dimen.twenty_four_sp)
+                )
             } else {
                 showLyricsTextLast.visibility = View.GONE
                 showLyricsTextNext.visibility = View.GONE
+                showLyricsTextCurrent.setTextSize(
+                    TypedValue.COMPLEX_UNIT_PX,
+                    resources.getDimension(R.dimen.eighteen_sp)
+                )
             }
         }
     }

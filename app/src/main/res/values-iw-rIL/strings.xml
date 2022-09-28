@@ -183,9 +183,9 @@
     <!-- Generic message for any operation not supported -->
     <string name="unsupported_operation">פעולה לא נתמכת</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>Since Android 11, Google requests File Managers to request user permission for managing all files on the device. Details <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">here</a>.
-        \n\nAmaze File Utilities needs this permission too. After pressing &quot;Grant&quot;here, please select <b>Allow access to manage all files</b> option on the next screen.
-        \n\n<font color="#ff6347"><i>Canceling this dialog will exit the app.</i></font></body></html></string>
+    <string name="grant_all_files_permission"><html><body>מאז Android 11, Google מבקשת ממנהלי הקבצים לבקש הרשאת משתמש לניהול כל הקבצים במכשיר.  פרטים <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">כאן</a>.
+         \n\nAmaze File Utilities זקוקה גם להרשאה זו.  לאחר הקשה על &quot;הענקה&quot;כאן, אנא בחר באפשרות <b>אפשר גישה לניהול כל הקבצים</b> במסך הבא.
+         \n\n<font color="#ff6347"><i>ביטול דו-שיח זה יגרום ליציאה מהאפליקציה.</i></font></body></html></string>
     <!-- Pdf activity copy page content title -->
     <string name="copy_page">העתקת דף</string>
     <!-- Pdf activity view bookmarks -->
@@ -326,13 +326,13 @@
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
     <string name="enable_wifi">נא להפעיל את הרשת האלחוטית שלך</string>
     <!-- Failed to discover nearby devices in transfer tab -->
-    <string name="discovery_failure">גילוי עמיתים נכשל</string>
+    <string name="discovery_failure">Failed to discover peers. Please try reconnecting to Wifi network</string>
     <!-- Receiving files in transfer tab -->
     <string name="receiving_files">מתקבלים קבצים</string>
     <!-- Search for nearby devices in transfer tab -->
     <string name="search_devices">חיפוש מכשירים…</string>
     <!-- Enable waveform bar for music player in settings -->
-    <string name="enable_waveform">Enable waveform seekbar</string>
+    <string name="enable_waveform">אפשר סרגל חיפוש של צורות גל</string>
     <!-- Failed to start cast session when trying to cast images / videos from their list pages -->
     <string name="failed_to_start_cast">הפעלת השידור נכשלה</string>
     <!-- Ready to cast images / videos to tv -->
@@ -364,7 +364,7 @@
     <!-- Service description to cast media files to tv -->
     <string name="cloud_streamer_service_description">משדר מדיה לכלי עזר לקבצים מבית Amaze</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
-    <string name="failed_to_handshake">הקמת החיבור למכשיר המרוחק נכשלה</string>
+    <string name="failed_to_handshake">Failed to establish connection with remote device. Please try reconnecting to Wifi network</string>
     <!-- Connection successful to transfer files in tranfer tab -->
     <string name="connection_successful">החיבור הצליח</string>
     <!-- Failed to send files in transfer tab -->
@@ -376,7 +376,7 @@
     <!-- Failed to receive files in transfer tab -->
     <string name="failed_filename_receive_reconnecct">הקבלה נכשלה, נא להתחבר מחדש</string>
     <!-- Transfer complete in transfer tab -->
-    <string name="transfer_complete">ההעברה הושלמה</string>
+    <string name="transfer_complete">File transferred</string>
     <!-- Need extra permissions for transfer tab -->
     <string name="grant_location_permission">ליישום נדרשת הרשאת מיקום כדי להתחבר למכשירים סמוכים.</string>
     <!-- Need extra permissions for transfer tab -->
@@ -465,7 +465,7 @@
     <!-- Download subtitles info in video player -->
     <string name="download_subtitles_info">נא למלא מילות מפתח ולבחור את השפה שלך כדי לחפש כתוביות ב־<html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
-    <string name="amaze_fm_redirect">You\'re being redirected to Amaze File Manager. It\'s our open source offering that has all features a modern file manager has completely free of cost with over 2M downloads and 4.3 rating on Play Store.</string>
+    <string name="amaze_fm_redirect">אתה מופנה מחדש למנהל הקבצים של Amaze. זוהי הצעת הקוד הפתוח שלנו הכוללת את כל התכונות שיש למנהל קבצים מודרני ללא עלות לחלוטין עם למעלה מ-2 מיליון הורדות ודירוג 4.3 בחנות Play.</string>
     <!-- Download button in dialog prompt -->
     <string name="download">הורדה</string>
     <string name="amaze_file_manager">Amaze File Manager</string>
@@ -478,7 +478,7 @@
     <!-- Search subtitles dialog in video player -->
     <string name="cd">CD</string>
     <!-- Uploader info in search subtitles dialog in video player -->
-    <string name="uploader">Uploader</string>
+    <string name="uploader">מעלה</string>
     <!-- Downloads info in search subtitles dialog in video player -->
     <string name="downloads">הורדות</string>
     <!-- Language info in search subtitles dialog in video player -->
@@ -512,8 +512,8 @@
     <!-- Failed to share pdf/ video/audio files  -->
     <string name="failed_to_share">שיתוף הקבצים נכשל</string>
     <!-- Transfer tab connected hint -->
-    <string name="connected_send_receive_hint">Connected… before you start sending, 
-        make sure to enable receiver on the other device</string>
+    <string name="connected_send_receive_hint">מחובר... לפני שתתחיל לשלוח,
+         הקפד להפעיל את המקלט במכשיר השני</string>
     <!-- Transfer tab receiving files -->
     <string name="receiving">מתקבל…</string>
     <!-- Transfer tab hint for connection -->
@@ -531,9 +531,9 @@
     <!-- Transfer tab progress -->
     <string name="transfer_in_progress_title">מתבצעת העברה</string>
     <!-- Transfer tab transfer in progress but user trying to leave the screen -->
-    <string name="transfer_in_progress_summary">There is a P2P transfer currently in progress,
-        it is recommended that you don\'t leave this screen,
-        otherwise you\'ll not be able to track the transfer</string>
+    <string name="transfer_in_progress_summary">כרגע מתבצעת העברה P2P,
+         מומלץ לא לעזוב את המסך הזה,
+         אחרת לא תוכל לעקוב אחר ההעברה</string>
     <!-- Transfer tab leave in progress -->
     <string name="leave">לעזוב</string>
     <!-- Transfer app stay in progress -->
@@ -579,8 +579,8 @@
     <!-- Delete file -->
     <string name="delete_files_title">מחיקה</string>
     <!-- Delete file summary -->
-    <string name="delete_files_message">You\'re about to permanently delete these files.
-        Are you sure you want to proceed?\n\n%s Files, %s Size</string>
+    <string name="delete_files_message">אתה עומד למחוק לצמיתות את הקבצים האלה.
+         האם אתה בטוח שברצונך להמשיך?\n\n%s קבצים, %s גודל</string>
     <!-- Delete file progress -->
     <string name="deleted_progress">נמחקו %s מתוך %s</string>
     <!-- Delete file successful -->
@@ -602,9 +602,9 @@
     <!-- Contact us in about section -->
     <string name="contact_us">יצירת קשר</string>
     <!-- Translate in about section -->
-    <string name="translate_title">Translate</string>
+    <string name="translate_title">תרגום</string>
     <!-- Translate summary in about section -->
-    <string name="translate_summary">Help us translate Amaze in your language</string>
+    <string name="translate_summary">עזור לנו לתרגם את Amaze לשפה שלך</string>
     <!-- About app screen title -->
     <string name="about_app_title">על היישומון</string>
     <!-- Made in india about section -->
@@ -612,20 +612,19 @@
     <!-- Trail dialog trial started -->
     <string name="trial_started_title">תקופת ההתנסות החלה (%s ימים)</string>
     <!-- Trial dialog trial started content -->
-    <string name="trial_started_message">Thank you for choosing Amaze File Utilities.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and your purchase will really help to keep us afloat.\n
-        At any point if you need any help feel free to contact us in About section.
-        You\'ll be able to contact directly to our team on Telegram.\n
-        Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
+    <string name="trial_started_message">תודה שבחרת ב-Amaze File Utilities.\n
+         אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
+         והרכישה שלך באמת תעזור לנו לשמור על זה ככה.\n
+         בכל שלב אם אתה זקוק לעזרה כלשהי, אל תהסס לפנות אלינו בקטע אודות.
+         תוכל ליצור קשר ישירות עם הצוות שלנו בטלגרם.\n
+         אנא נסה גם את אפליקציית מנהל הקבצים בקוד פתוח שלנו \'Amaze File Manager\' לחוויית ניהול קבצים חלקה.</string>
     <!-- Trial dialog trial ending last day title -->
     <string name="trial_last_day_title">תקופת ההתנסות עומדת לפוג</string>
     <!-- Trial dialog trial ending last day summary -->
-    <string name="trial_last_day_message">Hey There! Thank you for choosing Amaze File Utilities.
-        \nYour trial is going to expire tomorrow, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.
-        \nWe are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to keep us afloat.\nYou can write to us if you want to extend the trial period a bit more.
-    </string>
+    <string name="trial_last_day_message">שלום!  תודה שבחרת ב-Amaze File Utilities.
+         \nתקופת הניסיון שלך עומדת להסתיים מחר, אנו מקווים שנהנית מהתוכנה שלנו, ואנו מצפים שתשלם תשלום סמלי.
+         \nאנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
+         ואנחנו זקוקים לכספים כדי לשמור עלינו.\nתוכל לכתוב לנו אם אתה רוצה להאריך עוד קצת את תקופת הניסיון.    </string>
     <!-- Trial expired title -->
     <string name="trial_expired_title">תקופת הנסיון הסתיימה</string>
     <!-- Trial expired summary -->
@@ -829,4 +828,14 @@
     <string name="image_editor">עורך התמונות Amaze</string>
     <!-- Failed while loading docx file -->
     <string name="failed_to_load_document">טעינת המסמך נכשלה</string>
+    <!-- load music lyrics -->
+    <string name="load">Load</string>
+    <!-- paste lyrics dialog -->
+    <string name="paste_lyrics">Paste lyrics</string>
+    <!-- lyrics type dialog -->
+    <string name="lyrics_type">Lyrics type</string>
+    <!-- lyrics type dialog -->
+    <string name="clear_lyrics">Clearing lyrics</string>
+    <!-- lyrics type dialog -->
+    <string name="added_lyrics">Added lyrics</string>
 </resources>

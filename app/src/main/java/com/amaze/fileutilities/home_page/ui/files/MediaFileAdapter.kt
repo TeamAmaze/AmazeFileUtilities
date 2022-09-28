@@ -71,7 +71,6 @@ class MediaFileAdapter(
                 mediaFileInfoList, sortingPreference
             )
             var lastHeader: String? = null
-            var position = 0
             value.add(ListItem(TYPE_BANNER))
             preloader.addItem("")
             for (i in 0 until mediaFileInfoList.size) {
@@ -80,7 +79,7 @@ class MediaFileAdapter(
                     preloader.addItem("")
                     headerListItems.add(
                         ListItem(
-                            TYPE_HEADER, mediaFileInfoList[i].listHeader
+                            TYPE_HEADER, mediaFileInfoList[i].listHeader.trim()
                         )
                     )
                     lastHeader = mediaFileInfoList[i].listHeader
