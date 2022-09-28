@@ -30,6 +30,7 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.amaze.fileutilities.PermissionsActivity
@@ -45,6 +46,8 @@ import com.amaze.fileutilities.utilis.showFade
 import com.amaze.fileutilities.utilis.showFileChooserDialog
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.amaze.fileutilities.utilis.showToastOnBottom
+import java.io.File
+import java.util.concurrent.TimeUnit
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.math.abs
@@ -216,6 +219,8 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
         }
     }
 
+    val sendFilesList: MutableList<File> = ArrayList()
+
     private fun setupButtonClicks() {
         _binding?.run {
             scanButton.setOnClickListener {
@@ -294,48 +299,21 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
             }
 
             sendButton.setOnClickListener {
-                requireContext().showFileChooserDialog {
-                    if (viewModel.peerIP == null) {
-                        resetViewsOnDisconnect()
-                        resetNetworkGroup()
-                        requireContext().showToastInCenter(
-                            resources
-                                .getString(R.string.failed_filename_send_reconnecct)
-                        )
-                    } else if (viewModel.isTransferInProgress) {
-                        requireContext().showToastInCenter(
-                            resources
-                                .getString(R.string.transfer_in_progress_title)
-                        )
-                    } else {
-                        sendReceiveParent.hideFade(400)
-                        initConnectionTimer.start()
-                        viewModel
-                            .sendMessage("${it.name}$SEND_FILE_META_SPLITTER${it.length()}")
-                            .observe(viewLifecycleOwner) {
-                                didSendFileName ->
-                                if (!didSendFileName) {
-                                    requireContext().showToastInCenter(
-                                        resources
-                                            .getString(R.string.failed_filename_send)
-                                    )
-                                    resetViewsOnDisconnect()
-                                    initConnectionTimer.cancel()
-                                } else {
-                                    var lastProgress = 0L
-                                    viewModel.initClientTransfer(it)
-                                        .observe(viewLifecycleOwner) {
-                                            progress ->
-                                            initConnectionTimer.cancel()
-                                            invalidateTransferProgressBar(
-                                                progress, lastProgress,
-                                                it.name
-                                            )
-                                            lastProgress = progress.split("/")[0].toLong()
-                                        }
-                                }
-                            }
+                if (sendFilesList.isEmpty()) {
+                    requireContext().showFileChooserDialog {
+                        sendFilesList.add(it)
+                        initFileTransfer(0)
                     }
+                } else {
+                    initFileTransfer(0)
+                }
+            }
+            addFilesButton.setOnClickListener {
+                requireContext().showFileChooserDialog {
+                    sendFilesList.add(it)
+                    val filesToSendText = filesToSendTextView.text
+                    filesToSendTextView.visibility = View.VISIBLE
+                    filesToSendTextView.text =  "$filesToSendText\n${it.name}"
                 }
             }
 
@@ -349,6 +327,8 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
             receiveStopButton.setOnClickListener {
                 viewModel.serverHandshakeSocket?.close()
                 sendButton.visibility = View.VISIBLE
+                addFilesButton.visibility = View.VISIBLE
+                filesToSendTextView.visibility = View.GONE
                 receiveButton.visibility = View.VISIBLE
                 receiveStopButton.visibility = View.GONE
                 searchingText.text = resources.getString(R.string.connected_send_receive_hint)
@@ -373,36 +353,117 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
                         receiveButton.visibility = View.GONE
                         receiveStopButton.visibility = View.VISIBLE
                         sendButton.visibility = View.GONE
+                        addFilesButton.visibility = View.GONE
+                        filesToSendTextView.visibility = View.GONE
                         searchingText.visibility = View.VISIBLE
                         searchingText.text = resources.getString(R.string.receiving_files)
-                        viewModel.receiveMessage().observe(viewLifecycleOwner) {
-                            receivedFileNameAndBytes ->
-                            if (receivedFileNameAndBytes != null) {
-                                val array = receivedFileNameAndBytes.split(SEND_FILE_META_SPLITTER)
-                                val filePath = "$it/$RECEIVER_BASE_PATH/${array[0]}"
-                                val fileLength = array[1].toLong()
-                                searchingText.visibility = View.VISIBLE
-                                searchingText.text = getString(R.string.receiving_files)
-                                var lastProgress = 0L
-                                viewModel.initServerConnection(filePath, fileLength)
-                                    .observe(viewLifecycleOwner) {
-                                        progress ->
-                                        invalidateTransferProgressBar(
-                                            progress, lastProgress,
-                                            array[0]
-                                        )
-                                        lastProgress = progress.split("/")[0].toLong()
-                                    }
-                            } else {
-                                requireContext().showToastInCenter(
-                                    resources
-                                        .getString(R.string.failed_filename_receive)
-                                )
-                            }
-                        }
+                        receiveFile(1, 0, it)
                     }
                 }
             }
+        }
+    }
+
+    private fun receiveFile(numOfFiles: Int, currentFiles: Int, it: String) {
+        if (currentFiles >= numOfFiles) {
+            log.info("finished receiving all files")
+            initTransferFinishViews()
+            return
+        }
+        viewModel.receiveMessage().observe(viewLifecycleOwner) {
+                receivedFileNameAndBytes ->
+            if (receivedFileNameAndBytes != null) {
+                val array = receivedFileNameAndBytes.split(SEND_FILE_META_SPLITTER)
+                val filePath = "$it/$RECEIVER_BASE_PATH/${array[0]}"
+                val fileLength = array[1].toLong()
+                val numOfFilesNew = array[2].toInt()
+                _binding?.searchingText?.visibility = View.VISIBLE
+                _binding?.searchingText?.text = getString(R.string.receiving_files)
+                var lastProgress = 0L
+                viewModel.initServerConnection(filePath, fileLength)
+                    .observe(viewLifecycleOwner) {
+                            progress ->
+                        invalidateTransferProgressBar(
+                            progress, lastProgress,
+                            array[0]
+                        ) {
+
+                            if (currentFiles >= numOfFiles) {
+                                log.info("transferred all files, finishing")
+                                initTransferFinishViews()
+                            } else {
+                                log.info("transferred {} files in receiver",
+                                    currentFiles)
+                                receiveFile(numOfFilesNew, currentFiles+1, it)
+                            }
+                        }
+                        if (progress != "-1L" && progress != "1" && progress != "done") {
+                            lastProgress = progress.split("/")[0].toLong()
+                        }
+                    }
+            } else {
+                requireContext().showToastInCenter(
+                    resources
+                        .getString(R.string.failed_filename_receive)
+                )
+            }
+        }
+    }
+
+    private fun initFileTransfer(idx: Int)  {
+        if (idx >= sendFilesList.size) {
+            log.info("finished sending all files")
+            initTransferFinishViews()
+            return
+        }
+        val it = sendFilesList[idx]
+        if (viewModel.peerIP == null) {
+            resetViewsOnDisconnect()
+            resetNetworkGroup()
+            requireContext().showToastInCenter(
+                resources
+                    .getString(R.string.failed_filename_send_reconnecct)
+            )
+        } else if (viewModel.isTransferInProgress) {
+            requireContext().showToastInCenter(
+                resources
+                    .getString(R.string.transfer_in_progress_title)
+            )
+        } else {
+            _binding?.sendReceiveParent?.hideFade(400)
+            initConnectionTimer.start()
+            viewModel
+                .sendMessage("${it.name}$SEND_FILE_META_SPLITTER${it.length()}$SEND_FILE_META_SPLITTER${sendFilesList.size}")
+                .observe(viewLifecycleOwner) {
+                        didSendFileName ->
+                    if (!didSendFileName) {
+                        requireContext().showToastInCenter(
+                            resources
+                                .getString(R.string.failed_filename_send)
+                        )
+                        resetViewsOnDisconnect()
+                        initConnectionTimer.cancel()
+                    } else {
+                        var lastProgress = 0L
+                        viewModel.initClientTransfer(it)
+                            .observe(viewLifecycleOwner) {
+                                    progress ->
+                                initConnectionTimer.cancel()
+                                invalidateTransferProgressBar(
+                                    progress, lastProgress,
+                                    it.name
+                                ) {
+                                    log.info("finished sending file at {}", idx)
+                                    requireContext().showToastInCenter(getString(R.string.please_wait))
+                                    TimeUnit.SECONDS.sleep(25L)
+                                    initFileTransfer(idx+1)
+                                }
+                                if (progress != "-1L" && progress != "1" && progress != "done") {
+                                    lastProgress = progress.split("/")[0].toLong()
+                                }
+                            }
+                    }
+                }
         }
     }
 
@@ -441,6 +502,10 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
             searchingProgress.visibility = View.GONE
             receiveStopButton.visibility = View.GONE
             sendButton.visibility = View.VISIBLE
+            addFilesButton.visibility = View.VISIBLE
+            filesToSendTextView.text = ""
+            sendFilesList.clear()
+            filesToSendTextView.visibility = View.GONE
             receiveButton.visibility = View.VISIBLE
             sendReceiveParent.showFade(300)
         }
@@ -449,12 +514,12 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
     private fun invalidateTransferProgressBar(
         progress: String,
         lastProgress: Long,
-        fileName: String
+        fileName: String, finishCallback: () -> Unit
     ) {
         if (progress == "-1L" || progress == "1" || progress == "done") {
             // finish sending
-            initTransferFinishViews()
             requireContext().showToastInCenter(resources.getString(R.string.transfer_complete))
+            finishCallback.invoke()
         } else {
             _binding?.run {
                 searchingProgress.visibility = View.GONE
@@ -464,20 +529,22 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
                 transferFileText.text = fileName
                 transferProgress.visibility = View.VISIBLE
                 progress.let {
-                    val progressArr = progress.split("/")
-                    val done = FileUtils.formatStorageLength(
-                        requireContext(), progressArr[0].toLong()
-                    )
-                    val total = FileUtils.formatStorageLength(
-                        requireContext(), progressArr[1].toLong()
-                    )
-                    val bytesPerSec = (progressArr[0].toLong() - lastProgress) / 4
-                    val speed = FileUtils.formatStorageLength(
-                        requireContext(), bytesPerSec
-                    )
-                    transferBytesText.text = "$done / $total ($speed/s)"
-                    transferProgress.max = progressArr[1].toInt()
-                    transferProgress.progress = progressArr[0].toInt()
+                    if (progress != "-1L" && progress != "1" && progress != "done") {
+                        val progressArr = progress.split("/")
+                        val done = FileUtils.formatStorageLength(
+                            requireContext(), progressArr[0].toLong()
+                        )
+                        val total = FileUtils.formatStorageLength(
+                            requireContext(), progressArr[1].toLong()
+                        )
+                        val bytesPerSec = (progressArr[0].toLong() - lastProgress) / 4
+                        val speed = FileUtils.formatStorageLength(
+                            requireContext(), bytesPerSec
+                        )
+                        transferBytesText.text = "$done / $total ($speed/s)"
+                        transferProgress.max = progressArr[1].toInt()
+                        transferProgress.progress = progressArr[0].toInt()
+                    }
                 }
             }
         }
@@ -592,8 +659,7 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
 
                     override fun onFailure(p0: Int) {
                         requireContext().showToastInCenter(
-                            "Connection " +
-                                "failed with $p0"
+                            getString(R.string.filed_to_connect_device).format(p0)
                         )
                     }
                 }

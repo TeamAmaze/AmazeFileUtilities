@@ -46,6 +46,17 @@
         android:visibility="gone"
         />
 
+    <TextView
+        android:id="@+id/files_to_send_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/files_to_send"
+        android:textColor="@color/white"
+        android:textSize="@dimen/eighteen_sp"
+        android:visibility="gone"
+        android:layout_margin="@dimen/material_generic"
+        />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/enable_location_button"
         android:layout_width="wrap_content"
@@ -100,6 +111,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/send"
+                app:cornerRadius="@dimen/material_generic"
+                app:rippleColor="@color/highlight_yellow"
+                style="@style/MaterialButton.White"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/add_files_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_files"
+                android:layout_marginStart="@dimen/material_generic"
                 app:cornerRadius="@dimen/material_generic"
                 app:rippleColor="@color/highlight_yellow"
                 style="@style/MaterialButton.White"

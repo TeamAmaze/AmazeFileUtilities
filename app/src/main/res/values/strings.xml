@@ -332,7 +332,7 @@
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
     <string name="enable_wifi">Please enable your Wi-Fi</string>
     <!-- Failed to discover nearby devices in transfer tab -->
-    <string name="discovery_failure">Failed to discover peers</string>
+    <string name="discovery_failure">Failed to discover peers. Please try reconnecting to Wifi network</string>
     <!-- Receiving files in transfer tab -->
     <string name="receiving_files">Receiving files</string>
     <!-- Search for nearby devices in transfer tab -->
@@ -371,7 +371,7 @@
     <!-- Service description to cast media files to tv -->
     <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
-    <string name="failed_to_handshake">Failed to establish connection with remote device</string>
+    <string name="failed_to_handshake">Failed to establish connection with remote device. Please try to reconnect the Wifi.</string>
     <!-- Connection successful to transfer files in tranfer tab -->
     <string name="connection_successful">Connection successful</string>
     <!-- Failed to send files in transfer tab -->
@@ -383,7 +383,7 @@
     <!-- Failed to receive files in transfer tab -->
     <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
     <!-- Transfer complete in transfer tab -->
-    <string name="transfer_complete">Transfer complete</string>
+    <string name="transfer_complete">File transferred</string>
     <!-- Need extra permissions for transfer tab -->
     <string name="grant_location_permission">App needs location permission to connect with nearby devices.</string>
     <!-- Need extra permissions for transfer tab -->
@@ -848,4 +848,12 @@
     <string name="clear_lyrics">Clearing lyrics</string>
     <!-- lyrics type dialog -->
     <string name="added_lyrics">Added lyrics</string>
+    <!-- add files in transfer fragment -->
+    <string name="add_files">Add Files</string>
+    <!-- warning while adding files to transfer -->
+    <string name="add_files_warning">Please add files before sending</string>
+    <!-- files to send in transfer fragment -->
+    <string name="files_to_send">Files to send</string>
+    <!-- failed to connect to device in transfer fragment -->
+    <string name="filed_to_connect_device">Connection failed with code %s. Please try reconnecting to Wifi network.</string>
 </resources>
