@@ -39,6 +39,7 @@ import com.google.android.material.snackbar.Snackbar;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -158,6 +159,8 @@ public class ErrorActivity extends AppCompatActivity {
       actionBar.setDisplayHomeAsUpEnabled(true);
       actionBar.setTitle(R.string.error_report_title);
       actionBar.setDisplayShowTitleEnabled(true);
+      actionBar.setBackgroundDrawable(
+          new ColorDrawable(getResources().getColor(R.color.navy_blue)));
     }
 
     final Button reportEmailButton = findViewById(R.id.errorReportEmailButton);

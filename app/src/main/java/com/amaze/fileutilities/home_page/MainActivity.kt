@@ -12,6 +12,7 @@ package com.amaze.fileutilities.home_page
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.MotionEvent
@@ -122,6 +123,12 @@ class MainActivity :
         )
 //        setupActionBarWithNavController(navController, appBarConfiguration)
         supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar?.setBackgroundDrawable(
+            ColorDrawable(
+                resources
+                    .getColor(R.color.navy_blue)
+            )
+        )
         supportActionBar?.customView = actionBarBinding.root
         supportActionBar?.elevation = 0f
         navController.addOnDestinationChangedListener { controller, destination, arguments ->

@@ -11,6 +11,7 @@
 package com.amaze.fileutilities.home_page.ui.settings
 
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -66,6 +67,12 @@ class PreferenceActivity : AppCompatActivity() {
             }
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setBackgroundDrawable(
+            ColorDrawable(
+                resources
+                    .getColor(R.color.navy_blue)
+            )
+        )
     }
 
     override fun onBackPressed() {

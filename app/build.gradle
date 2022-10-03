@@ -16,6 +16,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
     id("com.github.triplet.play") version "3.7.0"
+    id 'com.starter.easylauncher'
 }
 
 android {
@@ -48,6 +49,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"5CZlDmqIhLoRcalZHXItm5Thwq57MDE2\""
+            debuggable true //For "debug" banner on icon
         }
 
         release {
