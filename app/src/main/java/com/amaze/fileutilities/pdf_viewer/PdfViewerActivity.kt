@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.pdf_viewer
 
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.text.Html
@@ -68,6 +69,12 @@ class PdfViewerActivity :
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setBackgroundDrawable(
+            ColorDrawable(
+                resources
+                    .getColor(R.color.navy_blue)
+            )
+        )
         viewModel = ViewModelProvider(this).get(PdfViewerActivityViewModel::class.java)
         filesViewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
         if (viewModel.getPdfModel(intent) == null) {

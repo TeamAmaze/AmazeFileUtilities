@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.home_page.ui.options
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -37,6 +38,12 @@ class AboutActivity : AppCompatActivity() {
         binding.homeScreenDesign.text = Html.fromHtml(getString(R.string.home_screen_design))
         Linkify.addLinks(binding.homeScreenDesign, Linkify.WEB_URLS)
         binding.homeScreenDesign.movementMethod = LinkMovementMethod.getInstance()
+        supportActionBar?.setBackgroundDrawable(
+            ColorDrawable(
+                resources
+                    .getColor(R.color.navy_blue)
+            )
+        )
     }
 
     override fun onDestroy() {

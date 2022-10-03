@@ -10,6 +10,7 @@
 
 package com.amaze.fileutilities.docx_viewer
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Base64
 import android.view.Menu
@@ -42,6 +43,12 @@ class DocxViewerActivity : PermissionsActivity() {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setBackgroundDrawable(
+            ColorDrawable(
+                resources
+                    .getColor(R.color.navy_blue)
+            )
+        )
         viewModel = ViewModelProvider(this).get(DocxViewerActivityViewModel::class.java)
         if (viewModel.getDocxModel(intent) == null) {
             showToastInCenter(resources.getString(R.string.unsupported_content))

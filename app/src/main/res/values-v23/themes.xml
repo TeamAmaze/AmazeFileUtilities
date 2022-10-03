@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.AmazeFileUtilities" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.AmazeFileUtilities" parent="Theme.MaterialComponents.Light">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/navy_blue</item>
         <item name="colorPrimaryVariant">@color/navy_blue</item>
@@ -18,5 +18,6 @@
 
         <item name="colorAccent">@color/highlight_yellow</item>
         <item name="android:colorEdgeEffect">@color/highlight_yellow</item>
+        <item name="android:windowBackground">@color/navy_blue</item>
     </style>
 </resources>
