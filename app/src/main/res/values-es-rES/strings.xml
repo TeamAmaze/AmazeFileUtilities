@@ -327,7 +327,7 @@
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
     <string name="enable_wifi">Please enable your Wi-Fi</string>
     <!-- Failed to discover nearby devices in transfer tab -->
-    <string name="discovery_failure">Failed to discover peers</string>
+    <string name="discovery_failure">Failed to discover peers. Please try reconnecting to Wifi network</string>
     <!-- Receiving files in transfer tab -->
     <string name="receiving_files">Receiving files</string>
     <!-- Search for nearby devices in transfer tab -->
@@ -365,7 +365,7 @@
     <!-- Service description to cast media files to tv -->
     <string name="cloud_streamer_service_description">Reproducir desde Amaze File Utilities</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
-    <string name="failed_to_handshake">No se pudo establecer conexión con el dispositivo remoto</string>
+    <string name="failed_to_handshake">Failed to establish connection with remote device. Please try reconnecting to Wifi network</string>
     <!-- Connection successful to transfer files in tranfer tab -->
     <string name="connection_successful">Conexión exitosa</string>
     <!-- Failed to send files in transfer tab -->
@@ -377,7 +377,7 @@
     <!-- Failed to receive files in transfer tab -->
     <string name="failed_filename_receive_reconnecct">Error al recibir, por favor vuelve a conectar</string>
     <!-- Transfer complete in transfer tab -->
-    <string name="transfer_complete">Transferencia completa</string>
+    <string name="transfer_complete">File transferred</string>
     <!-- Need extra permissions for transfer tab -->
     <string name="grant_location_permission">La aplicación necesita permiso de ubicación para conectar con dispositivos cercanos.</string>
     <!-- Need extra permissions for transfer tab -->
@@ -830,4 +830,14 @@
     <string name="image_editor">Amaze Image Editor</string>
     <!-- Failed while loading docx file -->
     <string name="failed_to_load_document">Failed to load document</string>
+    <!-- load music lyrics -->
+    <string name="load">Load</string>
+    <!-- paste lyrics dialog -->
+    <string name="paste_lyrics">Paste lyrics</string>
+    <!-- lyrics type dialog -->
+    <string name="lyrics_type">Lyrics type</string>
+    <!-- lyrics type dialog -->
+    <string name="clear_lyrics">Clearing lyrics</string>
+    <!-- lyrics type dialog -->
+    <string name="added_lyrics">Added lyrics</string>
 </resources>

@@ -35,18 +35,16 @@ class HeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         menuRes: Int,
         onMenuItemClickListener: PopupMenu.OnMenuItemClickListener
     ) {
+        val overflowContext = ContextThemeWrapper(context, R.style.custom_action_mode_dark)
+        val popupMenu = androidx.appcompat.widget.PopupMenu(
+            overflowContext, overflowButton, Gravity.END
+        )
+        popupMenu.setOnMenuItemClickListener { item: MenuItem ->
+            onMenuItemClickListener.onMenuItemClick(item)
+        }
+        popupMenu.menuInflater.inflate(menuRes, popupMenu.menu)
         overflowButton.setOnClickListener {
-            val overflowContext = ContextThemeWrapper(context, R.style.custom_action_mode_dark)
-            val popupMenu = androidx.appcompat.widget.PopupMenu(
-                overflowContext, overflowButton, Gravity.END
-            )
-            popupMenu.setOnMenuItemClickListener { item: MenuItem ->
-                onMenuItemClickListener.onMenuItemClick(item)
-            }
-            popupMenu.menuInflater.inflate(menuRes, popupMenu.menu)
-            overflowButton.setOnClickListener {
-                popupMenu.show()
-            }
+            popupMenu.show()
         }
     }
 }

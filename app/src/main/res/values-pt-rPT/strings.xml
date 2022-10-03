@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Amaze File Utilities</string>
+    <string name="app_name">Utilitários de Ficheiros Amaze</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">Amaze Utilities</string>
+    <string name="app_name_launcher">Utilitários Amaze</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
+    <string name="about_app">Aplicativo de utilitários de ficheiros com reprodutores de media para todas as tuas necessidades.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Amaze Image Viewer</string>
+    <string name="image_viewer">Visualizador de Imagens Amaze</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">Image Viewer</string>
+    <string name="image_viewer_normal">Visualizador de Imagens</string>
     <!-- Video player activity label -->
-    <string name="video_player">Amaze Video Player</string>
+    <string name="video_player">Reprodutor de Vídeo Amaze</string>
     <!-- Video player dialog intent filter label -->
-    <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
+    <string name="video_player_dialog">Reprodutor de Vídeo Amaze (Diálogo)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
+    <string name="video_player_full_screen">Reprodutor de Vídeo Amaze (Ecrã completo)</string>
     <!-- Music player activity label -->
-    <string name="amaze_audio_player">Amaze Music Player</string>
+    <string name="amaze_audio_player">Reprodutor de Áudio Amaze</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Amaze Pdf Viewer</string>
+    <string name="pdf_viewer">Visualizador de PDF Amaze</string>
     <!-- Epub activity label -->
-    <string name="epub_viewer">Amaze Epub Viewer</string>
+    <string name="epub_viewer">Visualizador de Epub Amaze</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">Amaze Doc Viewer</string>
+    <string name="docx_viewer">Visualizador de Documentos Amaze</string>
     <!-- Image viewer dialog intent filter label -->
-    <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
+    <string name="intent_image_viewer_dialog">Visualizador de Imagens Amaze (Diálogo)</string>
     <!-- Image viewer full screen intent label -->
-    <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
+    <string name="intent_image_viewer_full_screen">Visualizador de Imagens Amaze (Ecrã completo)</string>
     <!-- User didn't accept all storage permissions -->
-    <string name="grantfailed">Storage permission not granted</string>
+    <string name="grantfailed">Permissão de armazenamento não concedida</string>
     <!-- User didn't accept location permission for transfer files tab -->
-    <string name="grant_location_failed">Location permission not granted</string>
+    <string name="grant_location_failed">Permissão de localização não concedida</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
+    <string name="grant_storage_read_permission">O aplicativo precisa de permissão de leitura do armazenamento para um desempenho ideal.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_permission">Grant permission</string>
+    <string name="grant_permission">Conceder permissão</string>
     <!-- Grant permission button for welcome screen -->
-    <string name="grant">Grant</string>
+    <string name="grant">Conceder</string>
     <!-- Cancel button in dialogs mainly to cancel any operation -->
-    <string name="cancel">Cancel</string>
+    <string name="cancel">Cancelar</string>
     <!-- Play button label in music player notification -->
-    <string name="play">Play</string>
+    <string name="play">Reproduzir</string>
     <!-- Shuffle button label in music player notification -->
-    <string name="shuffle">Shuffle</string>
+    <string name="shuffle">Reproduzir aleatoriamente</string>
     <!-- Repeat button label in music player notification -->
-    <string name="repeat">Repeat</string>
+    <string name="repeat">Repetir</string>
     <!-- Previous button label in music player notification -->
-    <string name="previous">Previous</string>
+    <string name="previous">Anterior</string>
     <!-- Next button label in music player notification -->
-    <string name="next">Next</string>
+    <string name="next">Seguinte</string>
     <!-- Not allowed to perform any operation -->
-    <string name="not_allowed">Not allowed</string>
+    <string name="not_allowed">Não permitido</string>
     <!-- Audio player notification channel description -->
-    <string name="audio_player_service_description">Plays audio for Amaze File Utilities</string>
+    <string name="audio_player_service_description">Reproduz áudio no Utilitários de Ficheiros Amaze</string>
     <!-- Invert colors in document / pdf viewer -->
-    <string name="invert_colors">Invert colors</string>
+    <string name="invert_colors">Inverter cores</string>
     <!-- Location any list eg. images or videos list -->
-    <string name="loading">Loading…</string>
+    <string name="loading">A carregar…</string>
     <!-- Analyse tab on app main screen bottom tab -->
-    <string name="title_analyse">Analyse</string>
+    <string name="title_analyse">Analisar</string>
     <!-- Utilities tab on app main screen bottom tab -->
-    <string name="title_utilities">Utilities</string>
+    <string name="title_utilities">Utilitários</string>
     <!-- Transfer files tab on app main screen bottom tab -->
     <string name="title_transfer">Transfer</string>
     <!-- Scan nearby connections button in transfer tab -->
@@ -326,7 +326,7 @@
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
     <string name="enable_wifi">Please enable your Wi-Fi</string>
     <!-- Failed to discover nearby devices in transfer tab -->
-    <string name="discovery_failure">Failed to discover peers</string>
+    <string name="discovery_failure">Failed to discover peers. Please try reconnecting to Wifi network</string>
     <!-- Receiving files in transfer tab -->
     <string name="receiving_files">Receiving files</string>
     <!-- Search for nearby devices in transfer tab -->
@@ -364,7 +364,7 @@
     <!-- Service description to cast media files to tv -->
     <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
-    <string name="failed_to_handshake">Failed to establish connection with remote device</string>
+    <string name="failed_to_handshake">Failed to establish connection with remote device. Please try reconnecting to Wifi network</string>
     <!-- Connection successful to transfer files in tranfer tab -->
     <string name="connection_successful">Connection successful</string>
     <!-- Failed to send files in transfer tab -->
@@ -376,7 +376,7 @@
     <!-- Failed to receive files in transfer tab -->
     <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
     <!-- Transfer complete in transfer tab -->
-    <string name="transfer_complete">Transfer complete</string>
+    <string name="transfer_complete">File transferred</string>
     <!-- Need extra permissions for transfer tab -->
     <string name="grant_location_permission">App needs location permission to connect with nearby devices.</string>
     <!-- Need extra permissions for transfer tab -->
@@ -829,4 +829,14 @@
     <string name="image_editor">Amaze Image Editor</string>
     <!-- Failed while loading docx file -->
     <string name="failed_to_load_document">Failed to load document</string>
+    <!-- load music lyrics -->
+    <string name="load">Load</string>
+    <!-- paste lyrics dialog -->
+    <string name="paste_lyrics">Paste lyrics</string>
+    <!-- lyrics type dialog -->
+    <string name="lyrics_type">Lyrics type</string>
+    <!-- lyrics type dialog -->
+    <string name="clear_lyrics">Clearing lyrics</string>
+    <!-- lyrics type dialog -->
+    <string name="added_lyrics">Added lyrics</string>
 </resources>
