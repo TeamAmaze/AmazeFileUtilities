@@ -1,5 +1,5 @@
 Changelog:
-- Allows to add lyrics to music player
+- Improved performance
 - Media player list titles now support actions such as delete, share or shuffle
 - Music player performance fixes
 - Other bugfixes
