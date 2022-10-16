@@ -78,7 +78,6 @@ class CursorUtils {
                 context,
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                 projection, null, null, BASE_SELECTION_VIDEOS,
-
                 null,
                 MediaFileInfo.MEDIA_TYPE_VIDEO
             )
@@ -181,12 +180,14 @@ class CursorUtils {
 
             val cursor = queryCursor ?: return recentFiles
             if (cursor.count > 0 && cursor.moveToFirst()) {
+                var dataColumnIdx = -1
+                val mediaColumnIdxValues = MediaColumnIdxValues()
                 do {
-                    if (cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA) >= 0) {
-                        val path =
-                            cursor.getString(
-                                cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)
-                            )
+                    if (dataColumnIdx == -1) {
+                        dataColumnIdx = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA)
+                    }
+                    if (dataColumnIdx >= 0) {
+                        val path = cursor.getString(dataColumnIdx)
                         val f = File(path)
                         if (d.compareTo(Date(f.lastModified())) != 1 && !f.isDirectory) {
                             val mediaFileInfo = MediaFileInfo.fromFile(
@@ -194,7 +195,8 @@ class CursorUtils {
                                 queryMetaInfo(
                                     context,
                                     cursor,
-                                    MediaFileInfo.MEDIA_TYPE_UNKNOWN
+                                    MediaFileInfo.MEDIA_TYPE_UNKNOWN,
+                                    mediaColumnIdxValues
                                 )
                             )
                             recentFiles.add(mediaFileInfo)
@@ -221,13 +223,14 @@ class CursorUtils {
             if (cursor == null) {
                 return Pair(FilesViewModel.StorageSummary(0, 0), docs)
             } else if (cursor.count > 0 && cursor.moveToFirst()) {
+                var dataColumnIdx = -1
                 do {
-                    if (cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA) >= 0) {
-                        val path =
-                            cursor.getString(
-                                cursor
-                                    .getColumnIndex(MediaStore.Files.FileColumns.DATA)
-                            )
+                    if (dataColumnIdx == -1) {
+                        dataColumnIdx = cursor
+                            .getColumnIndex(MediaStore.Files.FileColumns.DATA)
+                    }
+                    if (dataColumnIdx >= 0) {
+                        val path = cursor.getString(dataColumnIdx)
                         if (path != null && endsWith.stream().anyMatch { path.endsWith(it) }) {
                             val mediaFileInfo = MediaFileInfo.fromFile(
                                 File(path),
@@ -293,25 +296,28 @@ class CursorUtils {
             ) else if (cursor.count > 0 && cursor.moveToFirst()) {
 //                storageSummaryCallback.getStorageSummary(cursor.count, 0)
 //                cursorCount = cursor.count
+                var dataColumnIdx = -1
+                val mediaColumnIdxValues = MediaColumnIdxValues()
                 do {
-                    if (cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA) >= 0) {
-                        val path =
-                            cursor.getString(
-                                cursor
-                                    .getColumnIndex(MediaStore.Files.FileColumns.DATA)
-                            )
-
+                    if (dataColumnIdx == -1) {
+                        dataColumnIdx =
+                            cursor
+                                .getColumnIndex(MediaStore.Files.FileColumns.DATA)
+                    }
+                    if (dataColumnIdx >= 0) {
+                        val path = cursor.getString(dataColumnIdx)
+                        loadMediaColumnIdx(cursor, mediaType, mediaColumnIdxValues)
                         val mediaFileInfo = if (mediaType == MediaFileInfo.MEDIA_TYPE_AUDIO) {
                             // we want to load uri only for audio files for finding current playing item
                             MediaFileInfo.fromFile(
                                 File(path),
                                 context,
-                                queryMetaInfo(context, cursor, mediaType)
+                                queryMetaInfo(context, cursor, mediaType, mediaColumnIdxValues)
                             )
                         } else {
                             MediaFileInfo.fromFile(
                                 File(path),
-                                queryMetaInfo(context, cursor, mediaType)
+                                queryMetaInfo(context, cursor, mediaType, mediaColumnIdxValues)
                             )
                         }
                         mediaFileInfoFile.add(mediaFileInfo)
@@ -326,10 +332,62 @@ class CursorUtils {
             )
         }
 
+        private fun loadMediaColumnIdx(
+            cursor: Cursor,
+            mediaType: Int,
+            mediaColumnIdxValues: MediaColumnIdxValues
+        ) {
+            when (mediaType) {
+                MediaFileInfo.MEDIA_TYPE_AUDIO -> {
+                    if (mediaColumnIdxValues.audioDurationIdx == -1) {
+                        mediaColumnIdxValues.audioDurationIdx = cursor
+                            .getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)
+                    }
+                    if (mediaColumnIdxValues.audioAlbumIdx == -1) {
+                        mediaColumnIdxValues.audioAlbumIdx = cursor
+                            .getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM)
+                    }
+                    if (mediaColumnIdxValues.audioArtistIdx == -1) {
+                        mediaColumnIdxValues.audioArtistIdx = cursor
+                            .getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST)
+                    }
+                    if (mediaColumnIdxValues.audioAlbumIdIdx == -1) {
+                        mediaColumnIdxValues.audioAlbumIdIdx = cursor
+                            .getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID)
+                    }
+                }
+                MediaFileInfo.MEDIA_TYPE_VIDEO -> {
+                    if (mediaColumnIdxValues.videoWidthIdx == -1) {
+                        mediaColumnIdxValues.videoWidthIdx = cursor
+                            .getColumnIndex(MediaStore.Video.VideoColumns.WIDTH)
+                    }
+                    if (mediaColumnIdxValues.videoHeightIdx == -1) {
+                        mediaColumnIdxValues.videoHeightIdx = cursor
+                            .getColumnIndex(MediaStore.Video.VideoColumns.HEIGHT)
+                    }
+                    if (mediaColumnIdxValues.videoDurationIdx == -1) {
+                        mediaColumnIdxValues.videoDurationIdx = cursor
+                            .getColumnIndex(MediaStore.Video.VideoColumns.DURATION)
+                    }
+                }
+                MediaFileInfo.MEDIA_TYPE_IMAGE -> {
+                    if (mediaColumnIdxValues.imgWidthIdx == -1) {
+                        mediaColumnIdxValues.imgWidthIdx = cursor
+                            .getColumnIndex(MediaStore.Images.ImageColumns.WIDTH)
+                    }
+                    if (mediaColumnIdxValues.imgHeightIdx == -1) {
+                        mediaColumnIdxValues.imgHeightIdx = cursor
+                            .getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT)
+                    }
+                }
+            }
+        }
+
         private fun queryMetaInfo(
             context: Context,
             cursor: Cursor,
-            mediaType: Int
+            mediaType: Int,
+            mediaColumnIdxValues: MediaColumnIdxValues
         ): MediaFileInfo.ExtraInfo {
             var audioMetaData: MediaFileInfo.AudioMetaData? = null
             var imageMetaData: MediaFileInfo.ImageMetaData? = null
@@ -343,29 +401,17 @@ class CursorUtils {
                         var audioArtist: String? = null
                         var albumId: Long? = null
                         var albumBitmap: Bitmap? = null
-                        if (cursor.getColumnIndex(MediaStore.Audio.AudioColumns.DURATION) >= 0) {
-                            audioDuration = cursor.getLong(
-                                cursor
-                                    .getColumnIndex(MediaStore.Audio.AudioColumns.DURATION)
-                            )
+                        if (mediaColumnIdxValues.audioDurationIdx >= 0) {
+                            audioDuration = cursor.getLong(mediaColumnIdxValues.audioDurationIdx)
                         }
-                        if (cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM) >= 0) {
-                            audioAlbum = cursor.getString(
-                                cursor
-                                    .getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM)
-                            )
+                        if (mediaColumnIdxValues.audioAlbumIdx >= 0) {
+                            audioAlbum = cursor.getString(mediaColumnIdxValues.audioAlbumIdx)
                         }
-                        if (cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST) >= 0) {
-                            audioArtist = cursor.getString(
-                                cursor
-                                    .getColumnIndex(MediaStore.Audio.AudioColumns.ARTIST)
-                            )
+                        if (mediaColumnIdxValues.audioArtistIdx >= 0) {
+                            audioArtist = cursor.getString(mediaColumnIdxValues.audioArtistIdx)
                         }
-                        if (cursor.getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID) >= 0) {
-                            albumId = cursor.getLong(
-                                cursor
-                                    .getColumnIndex(MediaStore.Audio.AudioColumns.ALBUM_ID)
-                            )
+                        if (mediaColumnIdxValues.audioAlbumIdIdx >= 0) {
+                            albumId = cursor.getLong(mediaColumnIdxValues.audioAlbumIdIdx)
                             val albumUri = AudioUtils.getMediaStoreAlbumCoverUri(albumId)
                             albumBitmap = AudioUtils.getAlbumBitmap(context, albumUri)
                         }
@@ -380,23 +426,14 @@ class CursorUtils {
                         var videoWidth: Int? = null
                         var videoHeight: Int? = null
                         var videoDuration: Long? = null
-                        if (cursor.getColumnIndex(MediaStore.Video.VideoColumns.WIDTH) >= 0) {
-                            videoWidth = cursor.getInt(
-                                cursor
-                                    .getColumnIndex(MediaStore.Video.VideoColumns.WIDTH)
-                            )
+                        if (mediaColumnIdxValues.videoWidthIdx >= 0) {
+                            videoWidth = cursor.getInt(mediaColumnIdxValues.videoWidthIdx)
                         }
-                        if (cursor.getColumnIndex(MediaStore.Video.VideoColumns.HEIGHT) >= 0) {
-                            videoHeight = cursor.getInt(
-                                cursor
-                                    .getColumnIndex(MediaStore.Video.VideoColumns.HEIGHT)
-                            )
+                        if (mediaColumnIdxValues.videoHeightIdx >= 0) {
+                            videoHeight = cursor.getInt(mediaColumnIdxValues.videoHeightIdx)
                         }
-                        if (cursor.getColumnIndex(MediaStore.Video.VideoColumns.DURATION) >= 0) {
-                            videoDuration = cursor.getLong(
-                                cursor
-                                    .getColumnIndex(MediaStore.Video.VideoColumns.DURATION)
-                            )
+                        if (mediaColumnIdxValues.videoDurationIdx >= 0) {
+                            videoDuration = cursor.getLong(mediaColumnIdxValues.videoDurationIdx)
                         }
                         videoMetaData = MediaFileInfo.VideoMetaData(
                             videoDuration,
@@ -406,17 +443,11 @@ class CursorUtils {
                     MediaFileInfo.MEDIA_TYPE_IMAGE -> {
                         var imageWidth: Int? = null
                         var imageHeight: Int? = null
-                        if (cursor.getColumnIndex(MediaStore.Images.ImageColumns.WIDTH) >= 0) {
-                            imageWidth = cursor.getInt(
-                                cursor
-                                    .getColumnIndex(MediaStore.Images.ImageColumns.WIDTH)
-                            )
+                        if (mediaColumnIdxValues.imgWidthIdx >= 0) {
+                            imageWidth = cursor.getInt(mediaColumnIdxValues.imgWidthIdx)
                         }
-                        if (cursor.getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT) >= 0) {
-                            imageHeight = cursor.getInt(
-                                cursor
-                                    .getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT)
-                            )
+                        if (mediaColumnIdxValues.imgHeightIdx >= 0) {
+                            imageHeight = cursor.getInt(mediaColumnIdxValues.imgHeightIdx)
                         }
                         imageMetaData = MediaFileInfo.ImageMetaData(imageWidth, imageHeight)
                     }
@@ -468,5 +499,17 @@ class CursorUtils {
             }
             return newSelectionValues
         }
+
+        data class MediaColumnIdxValues(
+            var audioDurationIdx: Int = -1,
+            var audioAlbumIdx: Int = -1,
+            var audioArtistIdx: Int = -1,
+            var audioAlbumIdIdx: Int = -1,
+            var videoWidthIdx: Int = -1,
+            var videoHeightIdx: Int = -1,
+            var videoDurationIdx: Int = -1,
+            var imgWidthIdx: Int = -1,
+            var imgHeightIdx: Int = -1
+        )
     }
 }
