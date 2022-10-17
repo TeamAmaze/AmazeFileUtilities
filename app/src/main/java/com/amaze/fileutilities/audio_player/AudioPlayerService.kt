@@ -129,7 +129,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                 currentUri = intentUri
             }
             val intentUriList: List<Uri>? = it.getParcelableArrayListExtra(ARG_URI_LIST)
-            if (uriList == null && intentUriList != null) {
+            if (intentUriList != null) {
                 uriList = intentUriList
             }
             if (currentUri == null) {
@@ -195,7 +195,12 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                         }
                         ACTION_SHUFFLE -> {
                             log.info("cycling shuffle")
-                            cycleShuffle()
+                            initCurrentUriAndPlayer(intentUri!!, true)
+                            if (!audioProgressHandler!!.doShuffle) {
+                                cycleShuffle()
+                            } else {
+                                // do nothing
+                            }
                         }
                         ACTION_REPEAT -> {
                             log.info("cycling repeat")
