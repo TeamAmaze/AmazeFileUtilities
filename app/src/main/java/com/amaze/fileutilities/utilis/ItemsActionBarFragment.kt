@@ -221,7 +221,8 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
 
     fun performShuffleAction(context: Context, toShuffle: List<MediaFileInfo>) {
         if (toShuffle.isNotEmpty()) {
-            toShuffle[0].getContentUri(context)?.let {
+            val randomId = (toShuffle.indices).random()
+            toShuffle[randomId].getContentUri(context)?.let {
                 uri ->
                 lifecycleScope.executeAsyncTask<Unit, List<Uri>>({}, {
                     toShuffle.mapNotNull {
@@ -231,7 +232,8 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
                     AudioPlayerService.runService(
                         uri,
                         it,
-                        context
+                        context,
+                        AudioPlayerService.ACTION_SHUFFLE
                     )
                 }, {})
             }
