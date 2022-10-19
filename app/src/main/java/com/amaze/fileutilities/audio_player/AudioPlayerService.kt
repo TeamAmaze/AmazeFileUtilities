@@ -744,7 +744,9 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                 lyricsParser.get()?.lyricsRaw?.isSynced == true
             audioProgressHandler.audioPlaybackInfo.lyricsStrings = lyricsParser
                 .get()?.getLyricsNew(exoPlayer!!.currentPosition / 1000)
-            serviceBinderPlaybackUpdate?.onPositionUpdate(audioProgressHandler)
+            if (serviceBinderPlaybackUpdate?.shouldListenToUpdates() == true) {
+                serviceBinderPlaybackUpdate?.onPositionUpdate(audioProgressHandler)
+            }
             updateMediaSessionPlaybackState()
             playingNotification?.update()
         }
