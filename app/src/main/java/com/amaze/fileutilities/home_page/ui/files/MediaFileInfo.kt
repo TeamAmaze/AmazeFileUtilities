@@ -11,12 +11,14 @@
 package com.amaze.fileutilities.home_page.ui.files
 
 import android.content.ActivityNotFoundException
+import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.provider.MediaStore
 import android.text.format.DateUtils
 import androidx.core.content.FileProvider
 import com.amaze.fileutilities.CastActivity
@@ -65,11 +67,51 @@ data class MediaFileInfo(
             )
         }
 
+        fun fromFile(
+            name: String,
+            path: String,
+            modified: Long,
+            size: Long,
+            extraInfo: ExtraInfo
+        ): MediaFileInfo {
+            return MediaFileInfo(
+                name, path, modified, size,
+                extraInfo = extraInfo
+            )
+        }
+
         fun fromFile(file: File, context: Context, extraInfo: ExtraInfo): MediaFileInfo {
             return MediaFileInfo(
                 file.name, file.path, file.lastModified(), file.length(),
                 extraInfo = extraInfo,
                 contentUri = FileProvider.getUriForFile(context, context.packageName, file)
+            )
+        }
+
+        fun fromFile(
+            mediaType: Int,
+            id: Long,
+            name: String,
+            path: String,
+            modified: Long,
+            size: Long,
+            context: Context,
+            extraInfo: ExtraInfo
+        ): MediaFileInfo {
+            return MediaFileInfo(
+                name, path, modified, size,
+                extraInfo = extraInfo,
+                contentUri = /*if (id != -1L && mediaType == MEDIA_TYPE_AUDIO) {
+                    ContentUris.withAppendedId(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        id
+                    )
+                } else*/ if (mediaType == MEDIA_TYPE_AUDIO) {
+                    // we want to load uri only for audio files for finding current playing item
+                    FileProvider.getUriForFile(context, context.packageName, File(path))
+                } else {
+                    null
+                }
             )
         }
 
@@ -159,7 +201,7 @@ data class MediaFileInfo(
     }
 
     fun getContentUri(context: Context): Uri? {
-        return if (exists() && contentUri == null) {
+        return if (contentUri == null && exists()) {
             val uri = FileProvider.getUriForFile(context, context.packageName, File(path))
             contentUri = uri
             uri
@@ -303,7 +345,7 @@ data class MediaFileInfo(
         val artistName: String?,
         val duration: Long?,
         val albumId: Long?,
-        val albumArt: Bitmap?
+        var albumArt: Bitmap?
     )
     data class VideoMetaData(val duration: Long?, val width: Int?, val height: Int?)
     data class ImageMetaData(val width: Int?, val height: Int?)

@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
@@ -203,6 +204,10 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
 
     override fun serviceDisconnected() {
         // do nothing
+    }
+
+    override fun shouldListenToUpdates(): Boolean {
+        return lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
     }
 
     override fun getIsWaveformProcessing(): Boolean {

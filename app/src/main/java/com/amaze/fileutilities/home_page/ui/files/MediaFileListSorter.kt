@@ -149,7 +149,8 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
                         it.listHeader = it.getModificationDate(context)
                     }
                     GROUP_NAME -> {
-                        it.listHeader = it.title[0].toString().uppercase()
+                        it.listHeader = if (it.title.isNotBlank())
+                            it.title[0].toString().uppercase() else "-"
                     }
                     GROUP_ALBUM -> {
                         it.listHeader = it.extraInfo?.audioMetaData?.albumName?.uppercase()

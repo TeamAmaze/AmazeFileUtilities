@@ -28,6 +28,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.audio_player.AudioUtils
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.BlurAnalysis
 import com.amaze.fileutilities.home_page.database.ImageAnalysis
@@ -1403,6 +1404,17 @@ class FilesViewModel(val applicationContext: Application) :
                 )
             setMediaInfoSummary(metaInfoAndSummaryPair.first, storageSummary)
             emit(metaInfoAndSummaryPair)
+            metaInfoAndSummaryPair.second.forEach {
+                mediaFileInfo ->
+                // load album arts lazily
+                mediaFileInfo.extraInfo?.audioMetaData?.albumId?.let {
+                    albumId ->
+                    val albumUri = AudioUtils.getMediaStoreAlbumCoverUri(albumId)
+                    val albumBitmap = AudioUtils
+                        .getAlbumBitmap(applicationContext.applicationContext, albumUri)
+                    mediaFileInfo.extraInfo?.audioMetaData?.albumArt = albumBitmap
+                }
+            }
         }
     }
 
