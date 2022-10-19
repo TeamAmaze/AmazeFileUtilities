@@ -329,6 +329,10 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         isBottomFragmentVisible = false
     }
 
+    override fun shouldListenToUpdates(): Boolean {
+        return isVisible
+    }
+
     override fun getFileStorageSummaryAndMediaFileInfoPair(): Pair<FilesViewModel.StorageSummary,
         List<MediaFileInfo>?>? {
         return if (::fileStorageSummaryAndMediaFileInfo.isInitialized)

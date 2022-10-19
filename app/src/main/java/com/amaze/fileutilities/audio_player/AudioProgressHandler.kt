@@ -119,4 +119,9 @@ interface OnPlaybackInfoUpdate {
     fun setupActionButtons(audioServiceRef: WeakReference<ServiceOperationCallback>)
 
     fun serviceDisconnected()
+
+    /**
+     * Is the UI fragment visible and should we listen to updates
+     */
+    fun shouldListenToUpdates(): Boolean
 }
