@@ -110,30 +110,17 @@ abstract class AbstractMediaFilesAdapter(
 
     open fun removeChecked(): Boolean {
         val syncList = Collections.synchronizedList(getMediaFilesListItems())
-//        val removeItemsIdx = arrayListOf<Int>()
-        val toRemove = arrayListOf<ListItem>()
-//        val removeItemsIdx = checkItemsList.map { it.position }
-        val toRemoveIdx = arrayListOf<Int>()
         synchronized(syncList) {
-            syncList.forEachIndexed { index, listItem ->
-                if (listItem.isChecked) {
-//                    removeItemsIdx.add(index)
-                    toRemove.add(listItem)
-                    listItem.toggleChecked()
-                    toRemoveIdx.add(index)
+            checkItemsList.forEach {
+                syncList.forEachIndexed { index, listItem ->
+                    if (it == listItem) {
+                        it.toggleChecked()
+                        syncList.remove(it)
+                        notifyItemRemoved(index)
+                        return@forEach
+                    }
                 }
             }
-
-            syncList.removeAll(toRemove)
-            if (toRemove.size > 0) {
-                toRemoveIdx.forEach {
-                    notifyItemRemoved(it)
-                }
-//                notifyDataSetChanged()
-            }
-            /*removeItemsIdx.forEach {
-                notifyItemRemoved(it)
-            }*/
         }
         checkItemsList.clear()
         return true
