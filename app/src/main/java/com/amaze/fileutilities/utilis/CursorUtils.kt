@@ -13,14 +13,12 @@ package com.amaze.fileutilities.utilis
 import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import com.amaze.fileutilities.audio_player.AudioUtils
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import org.slf4j.Logger
@@ -55,6 +53,7 @@ class CursorUtils {
             ArrayList<MediaFileInfo>> {
             val projection = arrayOf(
                 MediaStore.MediaColumns._ID,
+                MediaStore.MediaColumns.TITLE,
                 MediaStore.MediaColumns.DISPLAY_NAME,
                 MediaStore.MediaColumns.DATE_MODIFIED,
                 MediaStore.MediaColumns.SIZE,
@@ -74,6 +73,7 @@ class CursorUtils {
             ArrayList<MediaFileInfo>> {
             val projection = arrayOf(
                 MediaStore.MediaColumns._ID,
+                MediaStore.MediaColumns.TITLE,
                 MediaStore.MediaColumns.DISPLAY_NAME,
                 MediaStore.MediaColumns.DATE_MODIFIED,
                 MediaStore.MediaColumns.SIZE,
@@ -96,6 +96,7 @@ class CursorUtils {
                 ArrayList<MediaFileInfo>> {
             val projection = arrayOf(
                 MediaStore.MediaColumns._ID,
+                MediaStore.MediaColumns.TITLE,
                 MediaStore.MediaColumns.DISPLAY_NAME,
                 MediaStore.MediaColumns.DATE_MODIFIED,
                 MediaStore.MediaColumns.SIZE,
@@ -205,7 +206,6 @@ class CursorUtils {
                             val mediaFileInfo = MediaFileInfo.fromFile(
                                 f,
                                 queryMetaInfo(
-                                    context,
                                     cursor,
                                     MediaFileInfo.MEDIA_TYPE_UNKNOWN,
                                     mediaColumnIdxValues
@@ -226,6 +226,7 @@ class CursorUtils {
             val docs: ArrayList<MediaFileInfo> = ArrayList()
             val projection = arrayOf(
                 MediaStore.MediaColumns._ID,
+                MediaStore.MediaColumns.TITLE,
                 MediaStore.MediaColumns.DISPLAY_NAME,
                 MediaStore.MediaColumns.DATE_MODIFIED,
                 MediaStore.MediaColumns.SIZE,
@@ -394,6 +395,10 @@ class CursorUtils {
                 mediaColumnIdxValues.commonNameIdx =
                     cursor.getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME)
             }
+            if (mediaColumnIdxValues.commonTitleIdx == -1) {
+                mediaColumnIdxValues.commonTitleIdx =
+                    cursor.getColumnIndex(MediaStore.MediaColumns.TITLE)
+            }
             if (mediaColumnIdxValues.commonLastModifiedIdx == -1) {
                 mediaColumnIdxValues.commonLastModifiedIdx =
                     cursor.getColumnIndex(MediaStore.MediaColumns.DATE_MODIFIED)
@@ -413,16 +418,25 @@ class CursorUtils {
         ): MediaFileInfo {
             val path = cursor.getString(dataColumnIdx)
             loadMediaColumnIdx(cursor, mediaType, mediaColumnIdxValues)
-            var id: Long = -1L
-            val title: String
-            val lastModified: Long
-            val size: Long
+            var id: Long? = -1L
+            var title: String?
+            var lastModified: Long?
+            var size: Long?
             var file: File? = null
             if (mediaColumnIdxValues.commonIdIdx >= 0) {
                 id = cursor.getLong(mediaColumnIdxValues.commonIdIdx)
             }
             if (mediaColumnIdxValues.commonNameIdx >= 0) {
                 title = cursor.getString(mediaColumnIdxValues.commonNameIdx)
+                if (title == null && mediaColumnIdxValues.commonTitleIdx >= 0) {
+                    title = cursor.getString(mediaColumnIdxValues.commonTitleIdx)
+                }
+                if (title == null) {
+                    if (file == null) {
+                        file = File(path)
+                    }
+                    title = file.name
+                }
             } else {
                 if (file == null) {
                     file = File(path)
@@ -430,8 +444,7 @@ class CursorUtils {
                 title = file.name
             }
             if (mediaColumnIdxValues.commonLastModifiedIdx >= 0) {
-                lastModified =
-                    cursor.getLong(mediaColumnIdxValues.commonLastModifiedIdx) * 1000
+                lastModified = cursor.getLong(mediaColumnIdxValues.commonLastModifiedIdx) * 1000
             } else {
                 if (file == null) {
                     file = File(path)
@@ -448,15 +461,14 @@ class CursorUtils {
             }
             return MediaFileInfo.fromFile(
                 mediaType,
-                id,
+                id ?: -1L,
                 title, path, lastModified, size,
                 context,
-                queryMetaInfo(context, cursor, mediaType, mediaColumnIdxValues)
+                queryMetaInfo(cursor, mediaType, mediaColumnIdxValues)
             )
         }
 
         private fun queryMetaInfo(
-            context: Context,
             cursor: Cursor,
             mediaType: Int,
             mediaColumnIdxValues: MediaColumnIdxValues
@@ -581,6 +593,7 @@ class CursorUtils {
             var imgHeightIdx: Int = -1,
             var commonIdIdx: Int = -1,
             var commonNameIdx: Int = -1,
+            var commonTitleIdx: Int = -1,
             var commonLastModifiedIdx: Int = -1,
             var commonSizeIdx: Int = -1
         )

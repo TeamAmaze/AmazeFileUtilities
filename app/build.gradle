@@ -34,8 +34,8 @@ android {
         applicationId "com.amaze.fileutilities"
         minSdk 19
         targetSdk 30
-        versionCode 68
-        versionName "1.68"
+        versionCode 69
+        versionName "1.69"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -109,7 +109,7 @@ play {
 //    track.set("internal")
     track.set("production")
     userFraction.set(1.0d)
-    updatePriority.set(5)
+    updatePriority.set(1)
     releaseStatus.set(com.github.triplet.gradle.androidpublisher.ReleaseStatus.COMPLETED)
 }
 
