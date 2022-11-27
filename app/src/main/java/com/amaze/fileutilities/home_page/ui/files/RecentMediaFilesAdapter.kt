@@ -11,6 +11,9 @@
 package com.amaze.fileutilities.home_page.ui.files
 
 import android.content.Context
+import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
+import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 
 class RecentMediaFilesAdapter(
@@ -56,6 +59,29 @@ class RecentMediaFilesAdapter(
 
     override fun getMediaFilesListItems(): MutableList<ListItem> {
         return mediaFileListItems
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        super.onBindViewHolder(holder, position)
+        if (holder is MediaInfoRecyclerViewHolder) {
+            getMediaFilesListItems()[position].run {
+                if (isChecked) {
+                    holder.root.background = ResourcesCompat
+                        .getDrawable(
+                            context.resources,
+                            R.drawable.background_curved_recents_selected,
+                            context.theme
+                        )
+                } else {
+                    holder.root.background = ResourcesCompat
+                        .getDrawable(
+                            context.resources,
+                            R.drawable.background_curved_recents,
+                            context.theme
+                        )
+                }
+            }
+        }
     }
 
     /**

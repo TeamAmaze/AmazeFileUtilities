@@ -92,6 +92,8 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         const val TYPE_LARGE_APPS = 20
         const val TYPE_GAMES_INSTALLED = 21
         const val TYPE_APK_FILES = 22
+        const val TYPE_WHATSAPP = 23
+        const val TYPE_LARGE_FILES = 24
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -278,6 +280,17 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                         }
                     }
             }
+            TYPE_LARGE_FILES -> {
+                filesViewModel.getLargeFilesLiveData()
+                    .observe(viewLifecycleOwner) {
+                        if (it == null) {
+                            invalidateProcessing(true, false)
+                        } else {
+                            setMediaInfoList(it, false)
+                            invalidateProcessing(false, false)
+                        }
+                    }
+            }
             TYPE_EMPTY_FILES -> {
                 viewModel.getEmptyFiles(internalStorageDao).observe(viewLifecycleOwner) {
                     if (it == null) {
@@ -420,7 +433,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                     }
             }
             TYPE_LARGE_DOWNLOADS -> {
-                viewModel.getLargeDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
+                filesViewModel.getLargeDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
                     largeDownloads ->
                     invalidateProcessing(true, false)
                     largeDownloads?.let {
@@ -430,7 +443,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                 }
             }
             TYPE_OLD_DOWNLOADS -> {
-                viewModel.getOldDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
+                filesViewModel.getOldDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
                     oldDownloads ->
                     invalidateProcessing(true, false)
                     oldDownloads?.let {
@@ -440,7 +453,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                 }
             }
             TYPE_OLD_SCREENSHOTS -> {
-                viewModel.getOldScreenshots(pathPreferencesDao).observe(viewLifecycleOwner) {
+                filesViewModel.getOldScreenshots(pathPreferencesDao).observe(viewLifecycleOwner) {
                     oldScreenshots ->
                     invalidateProcessing(true, false)
                     oldScreenshots?.let {
@@ -450,7 +463,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                 }
             }
             TYPE_OLD_RECORDINGS -> {
-                viewModel.getOldRecordings(pathPreferencesDao).observe(viewLifecycleOwner) {
+                filesViewModel.getOldRecordings(pathPreferencesDao).observe(viewLifecycleOwner) {
                     oldRecordings ->
                     invalidateProcessing(true, false)
                     oldRecordings?.let {
@@ -458,6 +471,28 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                         invalidateProcessing(false, false)
                     }
                 }
+            }
+            TYPE_WHATSAPP -> {
+                filesViewModel.getWhatsappMediaLiveData(pathPreferencesDao)
+                    .observe(viewLifecycleOwner) {
+                        whatsappMedia ->
+                        invalidateProcessing(true, false)
+                        whatsappMedia?.let {
+                            setMediaInfoList(it, false)
+                            invalidateProcessing(false, false)
+                        }
+                    }
+            }
+            TYPE_TELEGRAM -> {
+                filesViewModel.getTelegramMediaFiles(pathPreferencesDao)
+                    .observe(viewLifecycleOwner) {
+                        telegramMedia ->
+                        invalidateProcessing(true, false)
+                        telegramMedia?.let {
+                            setMediaInfoList(it, false)
+                            invalidateProcessing(false, false)
+                        }
+                    }
             }
             TYPE_UNUSED_APPS -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {

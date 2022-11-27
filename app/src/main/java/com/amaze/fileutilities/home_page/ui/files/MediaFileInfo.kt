@@ -331,7 +331,7 @@ data class MediaFileInfo(
     }
 
     data class ExtraInfo(
-        val mediaType: Int,
+        var mediaType: Int,
         val audioMetaData: AudioMetaData?,
         val videoMetaData: VideoMetaData?,
         val imageMetaData: ImageMetaData?,

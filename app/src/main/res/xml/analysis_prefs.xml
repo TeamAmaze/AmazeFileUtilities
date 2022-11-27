@@ -42,9 +42,13 @@
             app:key="screenshot_paths"
             app:title="@string/old_screenshots"
             />
-        <!--<Preference
+        <Preference
+            app:key="whatsapp_media"
+            app:title="@string/whatsapp_media"
+            />
+        <Preference
             app:key="telegram_paths"
             app:title="@string/telegram_files"
-            />-->
+            />
     </PreferenceCategory>
 </PreferenceScreen>
