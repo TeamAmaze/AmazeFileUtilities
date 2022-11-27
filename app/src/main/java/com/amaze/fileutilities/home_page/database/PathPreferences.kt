@@ -46,6 +46,8 @@ data class PathPreferences(
         const val FEATURE_ANALYSIS_SCREENSHOTS = 6
         const val FEATURE_ANALYSIS_TELEGRAM = 7
         const val FEATURE_ANALYSIS_LOW_LIGHT = 8
+        const val FEATURE_ANALYSIS_WHATSAPP = 9
+        const val FEATURE_ANALYSIS_LARGE_FILES = 10
 
         val ANALYSE_FEATURES_LIST = arrayListOf(
             FEATURE_ANALYSIS_MEME, FEATURE_ANALYSIS_BLUR,

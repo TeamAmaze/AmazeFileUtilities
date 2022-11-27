@@ -37,6 +37,7 @@ import com.amaze.fileutilities.home_page.database.InternalStorageAnalysisDao
 import com.amaze.fileutilities.home_page.database.LowLightAnalysis
 import com.amaze.fileutilities.home_page.database.MemeAnalysis
 import com.amaze.fileutilities.home_page.database.PathPreferences
+import com.amaze.fileutilities.home_page.database.PathPreferencesDao
 import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.database.TrialValidatorDao
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
@@ -75,6 +76,7 @@ import java.util.Date
 import java.util.GregorianCalendar
 import java.util.PriorityQueue
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.streams.toList
 
 class FilesViewModel(val applicationContext: Application) :
     AndroidViewModel(applicationContext) {
@@ -94,6 +96,14 @@ class FilesViewModel(val applicationContext: Application) :
     var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var apksLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var gamesInstalledLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var largeFilesMutableLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var whatsappMediaMutableLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var telegramMediaMutableLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var largeDownloadsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var oldDownloadsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var oldRecordingsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var oldScreenshotsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var allMediaFilesPair: ArrayList<MediaFileInfo>? = null
 
     private var usedVideosSummaryTransformations: LiveData<Pair<StorageSummary,
             ArrayList<MediaFileInfo>>?>? = null
@@ -1017,11 +1027,181 @@ class FilesViewModel(val applicationContext: Application) :
             apksLiveData = MutableLiveData()
             apksLiveData?.value = null
             viewModelScope.launch(Dispatchers.IO) {
-                val apksInstalled = CursorUtils.listApks(applicationContext)
-                apksLiveData?.postValue(apksInstalled.second)
+                if (allMediaFilesPair == null) {
+                    allMediaFilesPair = CursorUtils.listAll(applicationContext)
+                }
+                allMediaFilesPair?.filter {
+                    it.path.endsWith(".apk")
+                }?.map {
+                    it.extraInfo?.mediaType = MediaFileInfo.MEDIA_TYPE_APK
+                    it
+                }?.let {
+                    apksLiveData?.postValue(ArrayList(it))
+                }
             }
         }
         return apksLiveData!!
+    }
+
+    fun getLargeFilesLiveData(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (largeFilesMutableLiveData == null) {
+            largeFilesMutableLiveData = MutableLiveData()
+            largeFilesMutableLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                val priorityQueue = PriorityQueue<MediaFileInfo>(
+                    100
+                ) { o1, o2 -> -1 * o1.longSize.compareTo(o2.longSize) }
+                if (allMediaFilesPair == null) {
+                    allMediaFilesPair = CursorUtils.listAll(applicationContext)
+                }
+                allMediaFilesPair?.forEach {
+                    if (priorityQueue.size > 99) {
+                        priorityQueue.remove()
+                    }
+                    priorityQueue.add(it)
+                }
+                val result = ArrayList<MediaFileInfo>()
+                while (!priorityQueue.isEmpty()) {
+                    priorityQueue.remove()?.let {
+                        result.add(it)
+                    }
+                }
+                largeFilesMutableLiveData?.postValue(result)
+            }
+        }
+        return largeFilesMutableLiveData!!
+    }
+
+    fun getWhatsappMediaLiveData(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
+        if (whatsappMediaMutableLiveData == null) {
+            whatsappMediaMutableLiveData = MutableLiveData()
+            whatsappMediaMutableLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_WHATSAPP)
+                whatsappMediaMutableLiveData?.postValue(
+                    getMediaFilesWithFilter(
+                        { o1, o2 -> o1.date.compareTo(o2.date) },
+                        prefPaths.stream().map { it.path }.toList(), 1000
+                    )
+                )
+            }
+        }
+        return whatsappMediaMutableLiveData!!
+    }
+
+    fun getTelegramMediaFiles(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
+        if (telegramMediaMutableLiveData == null) {
+            telegramMediaMutableLiveData = MutableLiveData()
+            telegramMediaMutableLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_TELEGRAM)
+                telegramMediaMutableLiveData?.postValue(
+                    getMediaFilesWithFilter(
+                        { o1, o2 -> o1.date.compareTo(o2.date) },
+                        prefPaths.stream().map { it.path }.toList(), 1000
+                    )
+                )
+            }
+        }
+        return telegramMediaMutableLiveData!!
+    }
+
+    fun getLargeDownloads(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
+        if (largeDownloadsLiveData == null) {
+            largeDownloadsLiveData = MutableLiveData()
+            largeDownloadsLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS)
+                largeDownloadsLiveData?.postValue(
+                    getMediaFilesWithFilter(
+                        { o1, o2 -> o1.longSize.compareTo(o2.longSize) },
+                        prefPaths.stream().map { it.path }.toList(), 100
+                    )
+                )
+            }
+        }
+        return largeDownloadsLiveData!!
+    }
+
+    fun getOldDownloads(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
+        if (oldDownloadsLiveData == null) {
+            oldDownloadsLiveData = MutableLiveData()
+            oldDownloadsLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS)
+                oldDownloadsLiveData?.postValue(
+                    getMediaFilesWithFilter(
+                        { o1, o2 -> -1 * o1.date.compareTo(o2.date) },
+                        prefPaths.stream().map { it.path }.toList(), 100
+                    )
+                )
+            }
+        }
+        return oldDownloadsLiveData!!
+    }
+
+    fun getOldScreenshots(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
+        if (oldScreenshotsLiveData == null) {
+            oldScreenshotsLiveData = MutableLiveData()
+            oldScreenshotsLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS)
+                oldScreenshotsLiveData?.postValue(
+                    getMediaFilesWithFilter(
+                        { o1, o2 -> -1 * o1.date.compareTo(o2.date) },
+                        prefPaths.stream().map { it.path }.toList(), 100
+                    )
+                )
+            }
+        }
+        return oldScreenshotsLiveData!!
+    }
+
+    fun getOldRecordings(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
+        if (oldRecordingsLiveData == null) {
+            oldRecordingsLiveData = MutableLiveData()
+            oldRecordingsLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_RECORDING)
+                oldRecordingsLiveData?.postValue(
+                    getMediaFilesWithFilter(
+                        { o1, o2 -> -1 * o1.date.compareTo(o2.date) },
+                        prefPaths.stream().map { it.path }.toList(), 100
+                    )
+                )
+            }
+        }
+        return oldRecordingsLiveData!!
+    }
+
+    private fun getMediaFilesWithFilter(
+        sortBy: Comparator<MediaFileInfo>,
+        paths: List<String>,
+        limit: Int
+    ): ArrayList<MediaFileInfo> {
+        val priorityQueue = PriorityQueue(limit, sortBy)
+        if (allMediaFilesPair == null) {
+            allMediaFilesPair = CursorUtils.listAll(applicationContext)
+        }
+        allMediaFilesPair?.filter {
+            paths.stream().anyMatch {
+                pathPref ->
+                it.path.contains(pathPref, true)
+            }
+        }?.forEach {
+            if (priorityQueue.size > limit - 1) {
+                priorityQueue.remove()
+            }
+            priorityQueue.add(it)
+        }
+
+        val result = ArrayList<MediaFileInfo>()
+        while (!priorityQueue.isEmpty()) {
+            priorityQueue.remove()?.let {
+                result.add(it)
+            }
+        }
+        return ArrayList(result.reversed())
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -1439,10 +1619,30 @@ class FilesViewModel(val applicationContext: Application) :
             if (storageSummary == null) {
                 return@liveData
             }
-            val metaInfoAndSummaryPair = CursorUtils
-                .listDocs(applicationContext.applicationContext)
-            setMediaInfoSummary(metaInfoAndSummaryPair.first, storageSummary)
-            emit(metaInfoAndSummaryPair)
+            /*val metaInfoAndSummaryPair = CursorUtils
+                .listDocs(applicationContext.applicationContext)*/
+            if (allMediaFilesPair == null) {
+                allMediaFilesPair = CursorUtils.listAll(applicationContext)
+            }
+            allMediaFilesPair?.let {
+                pair ->
+                var longSize = 0L
+                var size = 0
+                val mediaFiles = ArrayList<MediaFileInfo>()
+                pair.filter {
+                    mediaFileInfo ->
+                    arrayListOf(".pdf", ".epub", ".docx").stream()
+                        .anyMatch { mediaFileInfo.path.endsWith(it) }
+                }.forEach {
+                    mediaFileInfo ->
+                    longSize += mediaFileInfo.longSize
+                    size++
+                    mediaFiles.add(mediaFileInfo)
+                }
+                val docsSummary = StorageSummary(size, 0, longSize)
+                emit(Pair(docsSummary, mediaFiles))
+                setMediaInfoSummary(docsSummary, storageSummary)
+            }
         }
     }
 

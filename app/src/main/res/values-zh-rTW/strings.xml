@@ -1,616 +1,616 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Amaze 檔案工具程式</string>
+    <string name="app_name">Amaze File Utilities</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">Amaze 工具程式</string>
+    <string name="app_name_launcher">Amaze Utilities</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">內置媒體播放器的檔案工具程式，有你一切所需。</string>
+    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Amaze 影像檢視器</string>
+    <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">影像檢視器</string>
+    <string name="image_viewer_normal">Image Viewer</string>
     <!-- Video player activity label -->
-    <string name="video_player">Amaze 影片播放器</string>
+    <string name="video_player">Amaze Video Player</string>
     <!-- Video player dialog intent filter label -->
-    <string name="video_player_dialog">Amaze 影片播放器（對話框）</string>
+    <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">Amaze 影片播放器（全屏幕）</string>
+    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
     <!-- Music player activity label -->
-    <string name="amaze_audio_player">Amaze 音樂播放器</string>
+    <string name="amaze_audio_player">Amaze Music Player</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Amaze PDF閱讀器</string>
+    <string name="pdf_viewer">Amaze Pdf Viewer</string>
     <!-- Epub activity label -->
-    <string name="epub_viewer">Amaze Epub檢視器</string>
+    <string name="epub_viewer">Amaze Epub Viewer</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">Amaze 文件檢視器</string>
+    <string name="docx_viewer">Amaze Doc Viewer</string>
     <!-- Image viewer dialog intent filter label -->
-    <string name="intent_image_viewer_dialog">Amaze 影像檢視器（對話框）</string>
+    <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
     <!-- Image viewer full screen intent label -->
-    <string name="intent_image_viewer_full_screen">Amaze 影像檢視器（全屏幕）</string>
+    <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
     <!-- User didn't accept all storage permissions -->
-    <string name="grantfailed">儲存空間存取權限被拒</string>
+    <string name="grantfailed">Storage permission not granted</string>
     <!-- User didn't accept location permission for transfer files tab -->
-    <string name="grant_location_failed">位置存取權限被拒</string>
+    <string name="grant_location_failed">Location permission not granted</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_storage_read_permission">為提供最佳效能，App需要授予儲存空間存取權限。</string>
+    <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_permission">授予權限</string>
+    <string name="grant_permission">Grant permission</string>
     <!-- Grant permission button for welcome screen -->
-    <string name="grant">授權</string>
+    <string name="grant">Grant</string>
     <!-- Cancel button in dialogs mainly to cancel any operation -->
-    <string name="cancel">取消</string>
+    <string name="cancel">Cancel</string>
     <!-- Play button label in music player notification -->
-    <string name="play">播放</string>
+    <string name="play">Play</string>
     <!-- Shuffle button label in music player notification -->
-    <string name="shuffle">隨機播放</string>
+    <string name="shuffle">Shuffle</string>
     <!-- Repeat button label in music player notification -->
-    <string name="repeat">重複</string>
+    <string name="repeat">Repeat</string>
     <!-- Previous button label in music player notification -->
-    <string name="previous">上一個</string>
+    <string name="previous">Previous</string>
     <!-- Next button label in music player notification -->
-    <string name="next">下一個</string>
+    <string name="next">Next</string>
     <!-- Not allowed to perform any operation -->
-    <string name="not_allowed">不允許</string>
+    <string name="not_allowed">Not allowed</string>
     <!-- Audio player notification channel description -->
-    <string name="audio_player_service_description">以 Amaze檔案工具程式播放音樂</string>
+    <string name="audio_player_service_description">Plays audio for Amaze File Utilities</string>
     <!-- Invert colors in document / pdf viewer -->
-    <string name="invert_colors">反轉色彩</string>
+    <string name="invert_colors">Invert colors</string>
     <!-- Location any list eg. images or videos list -->
-    <string name="loading">載入中...</string>
+    <string name="loading">Loading…</string>
     <!-- Analyse tab on app main screen bottom tab -->
-    <string name="title_analyse">分析</string>
+    <string name="title_analyse">Analyse</string>
     <!-- Utilities tab on app main screen bottom tab -->
-    <string name="title_utilities">工具程式</string>
+    <string name="title_utilities">Utilities</string>
     <!-- Transfer files tab on app main screen bottom tab -->
-    <string name="title_transfer">傳輸</string>
+    <string name="title_transfer">Transfer</string>
     <!-- Scan nearby connections button in transfer tab -->
-    <string name="title_scan">掃描</string>
+    <string name="title_scan">Scan</string>
     <!-- Stop scan nearby devices in transfer tab -->
-    <string name="title_stop_scan">停止</string>
+    <string name="title_stop_scan">Stop</string>
     <!-- Internal storage on app main screen -->
-    <string name="internal_storage">內部儲存空間</string>
+    <string name="internal_storage">Internal Storage</string>
     <!-- Images title in images list screen in utilities tab -->
-    <string name="images">影像</string>
+    <string name="images">Images</string>
     <!-- Audios title in audios list screen in utilities tab -->
-    <string name="audios">音訊</string>
+    <string name="audios">Audios</string>
     <!-- Videos title in videos list screen in utilities tab -->
-    <string name="videos">影片</string>
+    <string name="videos">Videos</string>
     <!-- Documents title in documents list screen in utilities tab -->
-    <string name="documents">文件</string>
+    <string name="documents">Documents</string>
     <!-- Number of files in utilities tab individual list screens eg in images / number of images -->
-    <string name="num_of_files">%s 個檔案</string>
+    <string name="num_of_files">%s Files</string>
     <!-- Number of total media files on main screen -->
-    <string name="num_of_media_files">%s 個媒體檔案</string>
+    <string name="num_of_media_files">%s Media Files</string>
     <!-- Used space in utilties tab in individual lists screen eg in images - Used: 300 MB / 1 GB -->
-    <string name="used_space">已使用：%s</string>
+    <string name="used_space">Used: %s</string>
     <!-- Send file in transfer tab -->
-    <string name="send">送出</string>
+    <string name="send">Send</string>
     <!-- Receive file in transfer tab -->
-    <string name="receive">接收</string>
+    <string name="receive">Receive</string>
     <!-- Stop receiving file in transfer tab -->
-    <string name="stop_receiving">停止接收</string>
+    <string name="stop_receiving">Stop Receiving</string>
     <!-- Calculating number of media files in utilities tab on app startup -->
-    <string name="calculating">正在計算⋯</string>
+    <string name="calculating">Calculating…</string>
     <!-- Recent files on utilities tab main screen -->
-    <string name="recent_files">最近使用的檔案</string>
+    <string name="recent_files">Recent Files</string>
     <!-- No files found after searching media files -->
-    <string name="no_files">没有檔案</string>
+    <string name="no_files">No files</string>
     <!-- Number of media files in utilities tab in individual list screen eg in images / number of total files -->
-    <string name="media_files_subs">媒體檔案：%s</string>
+    <string name="media_files_subs">Media Files: %s</string>
     <!-- Search screen title bar hint -->
-    <string name="action_bar_search_hint">搜尋檔案…</string>
+    <string name="action_bar_search_hint">Search for files…</string>
     <!-- Generic message shown when loading results of list or operation -->
-    <string name="please_wait">請稍候...</string>
+    <string name="please_wait">Please wait…</string>
     <!-- No search results found -->
-    <string name="its_quiet_here">這裡靜悄悄的…</string>
+    <string name="its_quiet_here">It\'s quiet in here…</string>
     <!-- Settings screen title -->
-    <string name="settings">設定</string>
+    <string name="settings">Settings</string>
     <!-- About screen title -->
-    <string name="about">關於</string>
+    <string name="about">About</string>
     <!-- Copyright dialog content in about section -->
-    <string name="rights_reserved">Copyright © 2021–2022 Team Amaze\n保留一切權利</string>
+    <string name="rights_reserved">Copyright © 2021–2022 Team Amaze\nAll Rights Reserved</string>
     <!-- Open source licenses in about section -->
-    <string name="open_source_licenses">開放原始碼授權</string>
+    <string name="open_source_licenses">Open-source licenses</string>
     <!-- Privacy policy label in about section -->
-    <string name="privacy_policy">隱私權政策</string>
+    <string name="privacy_policy">Privacy Policy</string>
     <!-- Licenses label in about section -->
-    <string name="licenses">授權條款</string>
+    <string name="licenses">Licenses</string>
     <!-- Information about a pdf / doc file -->
-    <string name="information">資訊</string>
+    <string name="information">Information</string>
     <!-- Unable to open pdf / doc / video / image file -->
-    <string name="unsupported_content">不支援的內容</string>
+    <string name="unsupported_content">Unsupported content</string>
     <!-- Group utilities list eg images / videos by parent folder -->
-    <string name="parent">上層</string>
+    <string name="parent">Parent</string>
     <!-- Group utilities list eg images / videos by date -->
-    <string name="date">日期</string>
+    <string name="date">Date</string>
     <!-- Group utilities list eg iamges / videos by name -->
-    <string name="name">名稱</string>
+    <string name="name">Name</string>
     <!-- Show utilities list by list view -->
-    <string name="list_view">列表檢視</string>
+    <string name="list_view">List View</string>
     <!-- Show utilities list by grid view -->
-    <string name="grid_view">格狀檢視</string>
+    <string name="grid_view">Grid View</string>
     <!-- Sort utilities by size -->
-    <string name="size">大小</string>
+    <string name="size">Size</string>
     <!-- Group audio utilities list by album names  -->
-    <string name="album">專輯</string>
+    <string name="album">Album</string>
     <!-- Group audio utilities list by artist name -->
-    <string name="artist">演出者</string>
+    <string name="artist">Artist</string>
     <!-- Sort audio / video utilities list by duration -->
-    <string name="duration">時長</string>
+    <string name="duration">Duration</string>
     <!-- Crash fallback screen title -->
-    <string name="sorry_string">真對不起，不該發生這樣的事情的。</string>
+    <string name="sorry_string">Sorry, that should not have happened.</string>
     <!-- Crash fallback screen report by email -->
-    <string name="error_report_button_text">以電郵報告這個錯誤</string>
+    <string name="error_report_button_text">Report this error via e-mail</string>
     <!-- Crash fallback screen report by telegram -->
-    <string name="error_report_button_telegram">在 Telegram上報告這個錯誤</string>
+    <string name="error_report_button_telegram">Report this error via telegram</string>
     <!-- Crash fallback screen copy report -->
-    <string name="copy_for_github">複製已格式化的報告</string>
+    <string name="copy_for_github">Copy formatted report</string>
     <!-- Crash fallback screen report on github -->
-    <string name="error_report_open_issue_button_text">透過 GitHub 反饋</string>
+    <string name="error_report_open_issue_button_text">Report on GitHub</string>
     <!-- Crash fallback screen info -->
-    <string name="error_report_open_github_notice">請先檢查同樣的問題是否已經有別人上報、討論中。</string>
+    <string name="error_report_open_github_notice">Please check whether an issue discussing your crash already exists.</string>
     <!-- Toast shown when we failed to display crash fallback screen -->
-    <string name="error_snackbar_message">對不起，出了點問題。</string>
+    <string name="error_snackbar_message">Sorry, something went wrong.</string>
     <!-- Crash fallback screen report -->
-    <string name="error_snackbar_action">報告</string>
+    <string name="error_snackbar_action">Report</string>
     <!-- Crash fallback screen info about device -->
-    <string name="what_device_headline">資料：</string>
+    <string name="what_device_headline">Info:</string>
     <!-- Crash fallback screen info about crash -->
-    <string name="what_happened_headline">發生了什麼事？</string>
+    <string name="what_happened_headline">What happened:</string>
     <!-- Crash fallback screen info about device -->
-    <string name="info_labels">什麼事：\\n請求：\\nGMT 時間：\\n應用程序包：\\n版本：\\nOS 版本：\\n裝置:\\n型號:\\n代號：\\n裝置 ID：</string>
+    <string name="info_labels">What:\\nRequest:\\nGMT Time:\\nPackage:\\nVersion:\\nOS version:\\nDevice:\\nModel:\\nProduct:\\nDevice ID:</string>
     <!-- Crash fallback screen ask user input -->
-    <string name="your_comment">附加資料（請用英文填寫）：</string>
+    <string name="your_comment">Your comment (in English):</string>
     <!-- Crash fallback screen show more details -->
-    <string name="error_details_headline">詳情：</string>
+    <string name="error_details_headline">Details:</string>
     <!-- Crash fallback screen info -->
-    <string name="app_ui_crash">應用程式/UI崩潰</string>
+    <string name="app_ui_crash">App/UI crashed</string>
     <!-- Crash fallback screen title -->
-    <string name="error_report_title">故障報告</string>
+    <string name="error_report_title">Error report</string>
     <!-- Crash fallback screen crash report copied -->
-    <string name="crash_report_copied">事故報告已複製到剪貼簿</string>
+    <string name="crash_report_copied">Crash report copied to clipboard</string>
     <!-- Crash fallback screen report copied to clipboard -->
-    <string name="clipboard_path_copy">路徑已複製到剪貼簿</string>
+    <string name="clipboard_path_copy">Path copied to clipboard</string>
     <!-- Pdf activity password prompt -->
-    <string name="pdf_password_title">需要密碼</string>
+    <string name="pdf_password_title">Password required</string>
     <!-- Pdf activity password required info -->
-    <string name="pdf_password_required">請輸入密碼以開啟此文件</string>
+    <string name="pdf_password_required">Please enter the password to open this document</string>
     <!-- Generic ok button in dialogs -->
-    <string name="ok">確定</string>
+    <string name="ok">OK</string>
     <!-- Pdf activity wrong password entered -->
-    <string name="wrong_password">密碼錯誤</string>
+    <string name="wrong_password">Wrong password</string>
     <!-- Generic message for any operation not supported -->
-    <string name="unsupported_operation">不支持的操作</string>
+    <string name="unsupported_operation">Unsupported Operation</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>從 Android 11開始，Google要求檔案管理 app向用戶請求授予管理裝置上所有檔案的權限。詳情請參考<a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">這裡</a>。
-        \n\nAmaze 檔案工具程式同樣需要授予此權限。在這裡按&quot;授予&quot;之後，請在下一個畫面選擇<b>允許管理所有檔案</b>選項。
-        \n\n<font color="#ff6347"><i>關閉此對話框將會退出此程式。</i></font></body></html></string>
+    <string name="grant_all_files_permission"><html><body>Since Android 11, Google requests File Managers to request user permission for managing all files on the device. Details <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">here</a>.
+        \n\nAmaze File Utilities needs this permission too. After pressing &quot;Grant&quot;here, please select <b>Allow access to manage all files</b> option on the next screen.
+        \n\n<font color="#ff6347"><i>Canceling this dialog will exit the app.</i></font></body></html></string>
     <!-- Pdf activity copy page content title -->
-    <string name="copy_page">複製頁面</string>
+    <string name="copy_page">Copy page</string>
     <!-- Pdf activity view bookmarks -->
-    <string name="bookmarks">書籤</string>
+    <string name="bookmarks">Bookmarks</string>
     <!-- Pdf activity pdf title -->
-    <string name="title">標題</string>
+    <string name="title">Title</string>
     <!-- Pdf activity pdf author -->
-    <string name="author">作者</string>
+    <string name="author">Author</string>
     <!-- Pdf activity pdf creator -->
-    <string name="creator">建立者</string>
+    <string name="creator">Creator</string>
     <!-- Pdf activity pdf creation date -->
-    <string name="creation_date">建立日期</string>
+    <string name="creation_date">Creation date</string>
     <!-- Pdf activity pdf modification date -->
-    <string name="modification_date">最後修改時間</string>
+    <string name="modification_date">Modification Date</string>
     <!-- Pdf activity pdf subject -->
-    <string name="subject">主題</string>
+    <string name="subject">Subject</string>
     <!-- Pdf activity pdf keywords -->
-    <string name="keywords">關鍵詞</string>
+    <string name="keywords">Keywords</string>
     <!-- Pdf activity pdf producer -->
-    <string name="producer">製作人</string>
+    <string name="producer">Producer</string>
     <!-- Generic dialog close button -->
-    <string name="close">關閉</string>
+    <string name="close">Close</string>
     <!-- Analysing internal storage shown in analysis tab -->
-    <string name="analysing">分析中…</string>
+    <string name="analysing">Analysing…</string>
     <!-- Pdf activity page content copied -->
-    <string name="page_copied_to_clipboard">此頁內容已複製到剪貼簿</string>
+    <string name="page_copied_to_clipboard">Page content copied to clipboard</string>
     <!-- Clean button in analysis tab to clean junk files -->
-    <string name="clean">乾淨</string>
+    <string name="clean">Clean</string>
     <!-- Blurred images label in analysis -->
-    <string name="blurred_pics">模糊</string>
+    <string name="blurred_pics">Blurred</string>
     <!-- Low light label in analysis -->
-    <string name="low_light">低亮度</string>
+    <string name="low_light">Low-Light</string>
     <!-- Memes label in analysis -->
-    <string name="memes">梗圖</string>
+    <string name="memes">Memes</string>
     <!-- Sad images label in analysis -->
-    <string name="frown">皺眉</string>
+    <string name="frown">Frown</string>
     <!-- Sad images analysis hint -->
-    <string name="frown_hint">圖片內的人沒有笑容</string>
+    <string name="frown_hint">Images that doesn\'t have smiling faces</string>
     <!-- Closed eyes analysis label -->
-    <string name="closed_eyes">閉眼</string>
+    <string name="closed_eyes">Closed Eyes</string>
     <!-- Closed eyes analysis hint -->
-    <string name="closed_eyes_hint">圖片內的人（意外地）合上了眼</string>
+    <string name="closed_eyes_hint">Images that have people with closed eyes</string>
     <!-- Distracted images analysis label -->
-    <string name="distracted">分神</string>
+    <string name="distracted">Distracted</string>
     <!-- Distracted images analysis hint -->
-    <string name="distracted_hint">圖片內的人沒有望著鏡頭</string>
+    <string name="distracted_hint">Images that have people looking elsewhere</string>
     <!-- Selfie images analysis label -->
-    <string name="selfie">自拍照</string>
+    <string name="selfie">Selfies</string>
     <!-- Group images analysis label -->
-    <string name="group_pics">團體照</string>
+    <string name="group_pics">Group Pics</string>
     <!-- Memes analysis hint -->
-    <string name="memes_hint">迷因圖……就是有偉大字句寫在上面的圖片。</string>
+    <string name="memes_hint">Memes are images that have something prominent written over them</string>
     <!-- Duplicate files analysis label -->
-    <string name="duplicates">重複的檔案</string>
+    <string name="duplicates">Duplicate files</string>
     <!-- App caches analysis labels -->
-    <string name="cache">App緩存</string>
+    <string name="cache">App Cache</string>
     <!-- Large videos analysis label -->
-    <string name="large_videos">大體積影片</string>
+    <string name="large_videos">Large videos</string>
     <!-- Large downloads analysis label -->
-    <string name="large_downloads">大體積下載</string>
+    <string name="large_downloads">Large downloads</string>
     <!-- Old screenshots analysis label -->
-    <string name="old_screenshots">舊的螢幕截圖</string>
+    <string name="old_screenshots">Old Screenshots</string>
     <!-- Old downloads analysis label -->
-    <string name="old_downloads">舊的下載</string>
+    <string name="old_downloads">Old downloads</string>
     <!-- Old recordings analysis label -->
-    <string name="old_recordings">舊的錄音</string>
+    <string name="old_recordings">Old recordings</string>
     <!-- Empty files analysis label -->
-    <string name="empty_files">空白的檔案/檔案夾</string>
+    <string name="empty_files">Empty files / folders</string>
     <!-- Junk files analysis label -->
-    <string name="junk_files">垃圾檔案</string>
+    <string name="junk_files">Junk files</string>
     <!-- Junk files analysis hint -->
-    <string name="junk_files_hint">移取應用程式後留下的垃圾檔案</string>
+    <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
     <!-- Telegram analysis label -->
-    <string name="telegram_files">Telegram</string>
+    <string name="telegram_files">Telegram Media</string>
     <!-- More optimisations coming at analysis tab bottom -->
-    <string name="more_to_come">更多的優化陸續有來喔！</string>
+    <string name="more_to_come">More optimizations to come!</string>
     <!-- View all analysed content analysis tab -->
-    <string name="view_all">檢視全部</string>
+    <string name="view_all">View all</string>
     <!-- Analysis settings title -->
-    <string name="analysis">分析</string>
+    <string name="analysis">Analysis</string>
     <!-- Analysis settings hint -->
-    <string name="analysis_hint">控制分析分頁的設定，例如需要加入分析的路徑、顯示/隱藏某些分析</string>
+    <string name="analysis_hint">Control analysis tab settings such as paths to include analysis from, show / hide various analysis</string>
     <!-- Exclude paths from scan for music player -->
-    <string name="exclusions">例外</string>
+    <string name="exclusions">Exclusions</string>
     <!-- Exclude paths from scan for music player summary -->
-    <string name="exclusions_summary">掃描媒體檔案時，需排除在外的路徑</string>
+    <string name="exclusions_summary">Paths to exclude while scanning media</string>
     <!-- Audio player settings title -->
-    <string name="audio_player">音樂播放器</string>
+    <string name="audio_player">Audio Player</string>
     <!-- Audio player settings summary -->
-    <string name="audio_player_hint">和音樂播放器有關的設定，例如要排除在外的路徑</string>
+    <string name="audio_player_hint">Control audio player settings such as paths to exclude</string>
     <!-- Image viewer settings title -->
-    <string name="image_viewer_hint">控制影像檢視器的設定</string>
+    <string name="image_viewer_hint">Control image viewer settings</string>
     <!-- Analysis in settings page -->
-    <string name="search_duplicates">在以下位置搜尋重複的檔案…</string>
+    <string name="search_duplicates">Search duplicates in…</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="media_store">Android媒體儲存區（最快）</string>
+    <string name="media_store">Android media store (fastest)</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="internal_storage_shallow">內部儲存（淺層/稍慢）</string>
+    <string name="internal_storage_shallow">Internal Storage (Shallow / slow)</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="internal_storage_deep">內部儲存（深層/最慢）</string>
+    <string name="internal_storage_deep">Internal Storage (Deep / slowest)</string>
     <!-- Show/hide analysis checkbox in settings -->
-    <string name="show_analysis">顯示分析</string>
+    <string name="show_analysis">Show analysis</string>
     <!-- Add new path to analyse or new path to exclude from scan in settings -->
-    <string name="add_item">新增路徑</string>
+    <string name="add_item">Add Item</string>
     <!-- Paths included for analysis in settings -->
-    <string name="paths_included">包含路徑</string>
+    <string name="paths_included">Paths Included</string>
     <!-- Paths excluded from music player scan in settings -->
-    <string name="paths_excluded">排除在外的路徑</string>
+    <string name="paths_excluded">Paths Excluded</string>
     <!-- Delete path from analysis / exclusion dialog in settings -->
-    <string name="delete_preference">檔案刪除動作設定</string>
+    <string name="delete_preference">Delete Preference</string>
     <!-- Delete path from analysis / exclusions dialog message in settings -->
-    <string name="delete_pref_override_message">你正準備覆寫一個現有的路徑。
-        這樣做將會重置該路徑的分析資料。</string>
+    <string name="delete_pref_override_message">You\'re about to override an existing path.
+        This will reset the existing analysis data for that path.</string>
     <!-- Generic message to confirm -->
-    <string name="confirm">確認</string>
+    <string name="confirm">Confirm</string>
     <!-- Images features group name in analysis settings -->
-    <string name="image_features">圖片分析設定</string>
+    <string name="image_features">Image Features</string>
     <!-- Images features group hint in analysis settings -->
-    <string name="features_paths_hint">包括閤眼、分神、不開心、自拍、合照等分類途徑</string>
+    <string name="features_paths_hint">Includes closed eyes, distracted, sad, selfie, group paths</string>
     <!-- Downloads label in analysis settings -->
-    <string name="download_paths">下載</string>
+    <string name="download_paths">Downloads</string>
     <!-- Downloads hint in analysis settings -->
-    <string name="download_paths_hint">包括老舊、大型的下載</string>
+    <string name="download_paths_hint">Includes old, large downloads</string>
     <!-- Cluttered videos in analysis tab -->
-    <string name="cluttered_videos">雜亂無章的影片</string>
+    <string name="cluttered_videos">Cluttered Videos</string>
     <!-- Cluttered videos hint in analysis tab -->
-    <string name="cluttered_videos_hint">一組長度相若的影片。</string>
+    <string name="cluttered_videos_hint">A group of videos that have similar running time.</string>
     <!-- Re-analyse button in analysis settings -->
-    <string name="reanalyse">再分析</string>
+    <string name="reanalyse">Re-analyse</string>
     <!-- Re-analyse hint in analysis settings -->
-    <string name="reanalyse_hint">清除現有分析資料，從頭開始</string>
+    <string name="reanalyse_hint">Clears existing analysis data and starts again</string>
     <!-- Unknown artist / album for music player -->
-    <string name="unknown_artist">&lt;不明的演出者&gt;</string>
+    <string name="unknown_artist">&lt;UNKNOWN&gt;</string>
     <!-- Search for nearby connections in transfer tab -->
-    <string name="searching">搜尋中……</string>
+    <string name="searching">Searching…</string>
     <!-- Searching for nearby connections with timer in transfer tab -->
-    <string name="searching_timer">搜尋中…（%s秒）</string>
+    <string name="searching_timer">Searching… (%s secs)</string>
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
-    <string name="enable_wifi">請啟用 Wi-Fi</string>
+    <string name="enable_wifi">Please enable your Wi-Fi</string>
     <!-- Failed to discover nearby devices in transfer tab -->
     <string name="discovery_failure">Failed to discover peers. Please try reconnecting to Wifi network</string>
     <!-- Receiving files in transfer tab -->
-    <string name="receiving_files">正在接收檔案中...</string>
+    <string name="receiving_files">Receiving files</string>
     <!-- Search for nearby devices in transfer tab -->
-    <string name="search_devices">正在搜尋裝置…</string>
+    <string name="search_devices">Search for devices…</string>
     <!-- Enable waveform bar for music player in settings -->
-    <string name="enable_waveform">播放器使用音頻波形搜索欄</string>
+    <string name="enable_waveform">Enable waveform seekbar</string>
     <!-- Failed to start cast session when trying to cast images / videos from their list pages -->
-    <string name="failed_to_start_cast">不能開始投影</string>
+    <string name="failed_to_start_cast">Failed to start cast session</string>
     <!-- Ready to cast images / videos to tv -->
-    <string name="ready_to_cast">準備投影，請選擇媒體檔案</string>
+    <string name="ready_to_cast">Ready to cast, select any media</string>
     <!-- Creating new cast to tv connection -->
-    <string name="establishing_cast">建立投影連線中</string>
+    <string name="establishing_cast">Establishing cast connection</string>
     <!-- Cast session suspended for tv -->
-    <string name="cast_suspended">投影暫停</string>
+    <string name="cast_suspended">Cast session suspended</string>
     <!-- Resuming tv cast session -->
-    <string name="resuming_cast">恢復投影</string>
+    <string name="resuming_cast">Resuming cast session</string>
     <!-- Failed to resume tv cast session -->
-    <string name="failed_resume_cast">不能恢復投影</string>
+    <string name="failed_resume_cast">Failed to resume cast session</string>
     <!-- Tv cast session resumed -->
-    <string name="cast_resumed">投影已恢復</string>
+    <string name="cast_resumed">Cast session resumed</string>
     <!-- Tv cast session ending -->
-    <string name="cast_ending">中止投影</string>
+    <string name="cast_ending">Ending cast session</string>
     <!-- Tv cast session ended -->
-    <string name="cast_ended">投影已結束</string>
+    <string name="cast_ended">Cast session ended</string>
     <!-- Open image/ videos/ audios with either cast on tv or open in mobile -->
-    <string name="open_with">開啟方式…</string>
+    <string name="open_with">Open with…</string>
     <!-- Open images / videos/ audios using inbuilt player -->
-    <string name="inbuilt_player">內置播放器</string>
+    <string name="inbuilt_player">In-built player</string>
     <!-- Tv Cast notification title server running -->
-    <string name="cast_notification_title">伺服器運作中…</string>
+    <string name="cast_notification_title">Server running…</string>
     <!-- tv casting content notification content -->
-    <string name="cast_notification_summary">把內容投影到電視機上</string>
+    <string name="cast_notification_summary">Casting content on TV</string>
     <!-- stop tv cast server notification button -->
-    <string name="stop">停止</string>
+    <string name="stop">Stop</string>
     <!-- Service description to cast media files to tv -->
-    <string name="cloud_streamer_service_description">以 Amaze檔案工具程式把媒體檔案投影到電視機上</string>
+    <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
     <string name="failed_to_handshake">Failed to establish connection with remote device. Please try reconnecting to Wifi network</string>
     <!-- Connection successful to transfer files in tranfer tab -->
-    <string name="connection_successful">連線成功</string>
+    <string name="connection_successful">Connection successful</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send">發送失敗，請確認對方已設定為接收檔案模式</string>
+    <string name="failed_filename_send">Failed to send, please ensure remote is set to receive file</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send_reconnecct">發送失敗，請重新連線</string>
+    <string name="failed_filename_send_reconnecct">Failed to send, please reconnect</string>
     <!-- Failed to receive files in transfer tab -->
-    <string name="failed_filename_receive">接收失敗</string>
+    <string name="failed_filename_receive">Failed to receive</string>
     <!-- Failed to receive files in transfer tab -->
-    <string name="failed_filename_receive_reconnecct">接收失敗，請重新連線</string>
+    <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
     <!-- Transfer complete in transfer tab -->
     <string name="transfer_complete">File transferred</string>
     <!-- Need extra permissions for transfer tab -->
-    <string name="grant_location_permission">請授予位置存取權限以與附近的裝置連線。</string>
+    <string name="grant_location_permission">App needs location permission to connect with nearby devices.</string>
     <!-- Need extra permissions for transfer tab -->
-    <string name="location_permission_not_granted">請授予位置存取權限以與附近的裝置連線。</string>
+    <string name="location_permission_not_granted">Please grant storage permission to connect with nearby devices.</string>
     <!-- Waiting for permissions in transfer tab -->
-    <string name="waiting_for_permissions">等待授予權限…</string>
+    <string name="waiting_for_permissions">Waiting for permissions…</string>
     <!-- Enable gps for transfer tab -->
-    <string name="gps_disabled">你的 GPS功能好像關掉了，請啟用以繼續</string>
+    <string name="gps_disabled">Your GPS seems to be disabled, please enable to proceed</string>
     <!-- Enable location to scan nearby devices in transfer tab -->
-    <string name="enable_location">請啟用位置資訊以尋找附近的設備。</string>
+    <string name="enable_location">Please enable location to scan.</string>
     <!-- generic yes -->
-    <string name="yes">是</string>
+    <string name="yes">Yes</string>
     <!-- generic no -->
-    <string name="no">否</string>
+    <string name="no">No</string>
     <!-- Enable location / wifi in transfer tab -->
-    <string name="enable">啟用</string>
+    <string name="enable">Enable</string>
     <!-- No nearby devices found in transfer tab -->
-    <string name="no_devices_found">附近沒有可用的裝置。
-        請確保裝置已接上同一個網絡，並已在設定啟用 WiFi-Direct。</string>
+    <string name="no_devices_found">No devices found nearby,
+        please make sure your device is connected to same network and have WiFi-Direct enabled in settings</string>
     <!-- Failed to stop discovery in transfer tab -->
-    <string name="failed_to_stop_peer_discovery">無法停止網絡搜尋鄰近的裝置</string>
+    <string name="failed_to_stop_peer_discovery">Failed to stop peer discovery</string>
     <!-- Resetting network discovery in transfer tab -->
-    <string name="resetting_network_discovery">重新在網絡上尋找裝置</string>
+    <string name="resetting_network_discovery">Resetting network discovery</string>
     <!-- Disconnected in transfer tab -->
-    <string name="disconnected">連接已中斷</string>
+    <string name="disconnected">Disconnected</string>
     <!-- Disconnect from connection in transfer tab -->
-    <string name="disconnect">中斷連線</string>
+    <string name="disconnect">Disconnect</string>
     <!-- Already connected to a device in transfer tab -->
-    <string name="existing_connection">仍有連線。請先中斷連線。</string>
+    <string name="existing_connection">Existing connection exists, please disconnect first!</string>
     <!-- Connecting to nearby device in transfer tab -->
-    <string name="connecting">正在連接...</string>
+    <string name="connecting">Connecting…</string>
     <!-- Aspect ratio of video in video player -->
-    <string name="aspect_ratio">外觀比例</string>
+    <string name="aspect_ratio">Aspect ratio</string>
     <!-- Playback speed dialog for video / audio player -->
-    <string name="playback_speed">播放速度</string>
+    <string name="playback_speed">Playback Speed</string>
     <!-- Playback pitch in video / audio player -->
-    <string name="pitch_speed">音階（半音）</string>
+    <string name="pitch_speed">Pitch (semitones)</string>
     <!-- Add subtitles in video player -->
-    <string name="subtitles">字幕</string>
+    <string name="subtitles">Subtitles</string>
     <!-- Video info dialog in video player -->
-    <string name="file">檔案</string>
+    <string name="file">File</string>
     <!-- Video info dialog in video player -->
-    <string name="media">媒體</string>
+    <string name="media">Media</string>
     <!-- Video info dialog in video player -->
-    <string name="audio">音樂</string>
+    <string name="audio">Audio</string>
     <!-- Video info dialog in video player -->
-    <string name="video">影片</string>
+    <string name="video">Video</string>
     <!-- Video info dialog in video player -->
-    <string name="file_path">路徑</string>
+    <string name="file_path">Path</string>
     <!-- Video info dialog in video player -->
-    <string name="last_modified">最後修改時間</string>
+    <string name="last_modified">Last Modified</string>
     <!-- Video info dialog in video player -->
-    <string name="description">內容</string>
+    <string name="description">Description</string>
     <!-- Video info dialog in video player -->
-    <string name="recording_date">錄製日期（月/年）</string>
+    <string name="recording_date">Recording month/year</string>
     <!-- Video info dialog in video player -->
-    <string name="release_date">發行日期 (月/年)</string>
+    <string name="release_date">Release month/year</string>
     <!-- Video info dialog in video player -->
-    <string name="bitrate">位元率</string>
+    <string name="bitrate">Bitrate</string>
     <!-- Video info dialog in video player -->
-    <string name="channel">聲道</string>
+    <string name="channel">Channel</string>
     <!-- Video info dialog in video player -->
-    <string name="frame_rate">幀數</string>
+    <string name="frame_rate">Frame Rate</string>
     <!-- Video info dialog in video player -->
-    <string name="mime_type">容器類型</string>
+    <string name="mime_type">Container Type</string>
     <!-- Video info dialog in video player -->
-    <string name="width">寬度</string>
+    <string name="width">Width</string>
     <!-- Video info dialog in video player -->
-    <string name="height">高度</string>
+    <string name="height">Height</string>
     <!-- Video info dialog in video player -->
-    <string name="codecs">編碼格式</string>
+    <string name="codecs">Codecs</string>
     <!-- Video info dialog in video player -->
-    <string name="sample_rate">取樣頻率</string>
+    <string name="sample_rate">Sample Rate</string>
     <!-- Failed to gain audio focus in music player -->
-    <string name="failed_to_gain_focus">無法獲取聲道</string>
+    <string name="failed_to_gain_focus">Failed to gain audio focus</string>
     <!-- Open existing subtitles file in video player -->
-    <string name="open">開啟</string>
+    <string name="open">Open</string>
     <!-- Search for subtitles file online dialog button in video player -->
-    <string name="search">搜尋</string>
+    <string name="search">Search</string>
     <!-- Search for subtitles file online dialog title in video player -->
-    <string name="search_online">線上搜尋</string>
+    <string name="search_online">Search online</string>
     <!-- Synchronize subtitles list item in video player -->
-    <string name="synchronize">同步</string>
+    <string name="synchronize">Synchronize</string>
     <!-- Download subtitles in video player -->
-    <string name="download_subtitles">下載字幕</string>
+    <string name="download_subtitles">Download subtitles</string>
     <!-- Download subtitles info in video player -->
-    <string name="download_subtitles_info"><html><body>輸入關鍵詞和選擇語言，以在<font color="#FF4287f5">opensubtitles.org</font>尋找字幕</body></html></string>
+    <string name="download_subtitles_info">Enter keywords and select your language to search subtitles from <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
-    <string name="amaze_fm_redirect">你將被帶到 Amaze檔案管理器。這是我們的開源 app，擁有所有現今檔案管理 app的所有功能，而且完全免費。在 Play Store已經有超過 200萬次下載及 4.3的評分。</string>
+    <string name="amaze_fm_redirect">You\'re being redirected to Amaze File Manager. It\'s our open source offering that has all features a modern file manager has completely free of cost with over 2M downloads and 4.3 rating on Play Store.</string>
     <!-- Download button in dialog prompt -->
-    <string name="download">下載</string>
+    <string name="download">Download</string>
     <string name="amaze_file_manager">Amaze File Manager</string>
     <!-- Download subtitles video player device not connected to internet -->
-    <string name="not_connected_to_internet">裝置未連接到互聯網</string>
+    <string name="not_connected_to_internet">Device not connected to internet</string>
     <!-- Search subtitles dialog in video player -->
-    <string name="upload_date">上傳日期</string>
+    <string name="upload_date">Upload date</string>
     <!-- Search subtitles dialog in video player -->
-    <string name="rating">評分</string>
+    <string name="rating">Rating</string>
     <!-- Search subtitles dialog in video player -->
     <string name="cd">CD</string>
     <!-- Uploader info in search subtitles dialog in video player -->
-    <string name="uploader">上傳</string>
+    <string name="uploader">Uploader</string>
     <!-- Downloads info in search subtitles dialog in video player -->
-    <string name="downloads">下載</string>
+    <string name="downloads">Downloads</string>
     <!-- Language info in search subtitles dialog in video player -->
-    <string name="language">語言</string>
+    <string name="language">Language</string>
     <!-- No subtitles found in video player -->
-    <string name="no_results_subtitles">沒有結果。請換一下關鍵詞再試……</string>
+    <string name="no_results_subtitles">No results, please try with different keywords…</string>
     <!-- Download subtitles in video player -->
-    <string name="downloading">正在下載……</string>
+    <string name="downloading">Downloading…</string>
     <!-- Can't download subtitles in video player -->
-    <string name="choose_different_subtitle">不能下載，請選擇其他的字幕檔</string>
+    <string name="choose_different_subtitle">Can\'t download, choose some other subtitles</string>
     <!-- Subtitles applied in video player -->
-    <string name="subtitles_applied">已套用字幕</string>
+    <string name="subtitles_applied">Subtitles applied</string>
     <!-- Failed to download subtitles in video player -->
-    <string name="failed_to_download">下載失敗</string>
+    <string name="failed_to_download">Failed to download</string>
     <!-- Share file dialog -->
-    <string name="bluetooth">藍牙</string>
+    <string name="bluetooth">Bluetooth</string>
     <!-- Share logs in about section -->
-    <string name="share_logs">分享記錄檔</string>
+    <string name="share_logs">Share logs</string>
     <!-- No app found in share dialog -->
-    <string name="no_apps_found_to_share">沒有可用以共享的 app。</string>
+    <string name="no_apps_found_to_share">No apps found to share</string>
     <!-- Failed to extract logs to share in about section -->
-    <string name="failed_to_extract_logs">無法打開記錄檔。</string>
+    <string name="failed_to_extract_logs">Failed to extract logs file</string>
     <!-- Continue playing button in video player when video was previously played and we want to resume -->
-    <string name="continue_playing">繼續播放</string>
+    <string name="continue_playing">Continue playing</string>
     <!-- No language selected for subtitles download in video player -->
-    <string name="no_language_selected">沒有選取語言</string>
+    <string name="no_language_selected">No language selected</string>
     <!-- No item selected to delete in analysis tab -->
-    <string name="no_item_selected">未選擇任何項目</string>
+    <string name="no_item_selected">No item selected</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
-    <string name="analysis_updated">更新後的分析</string>
+    <string name="analysis_updated">Updated analysis</string>
     <!-- Failed to share pdf/ video/audio files  -->
-    <string name="failed_to_share">分享檔案失敗</string>
+    <string name="failed_to_share">Failed to share files</string>
     <!-- Transfer tab connected hint -->
-    <string name="connected_send_receive_hint">連線成功…但在你開始傳輸之前，
-        請確保另外的裝置已經啟用接收模式</string>
+    <string name="connected_send_receive_hint">Connected… before you start sending, 
+        make sure to enable receiver on the other device</string>
     <!-- Transfer tab receiving files -->
-    <string name="receiving">接收中…</string>
+    <string name="receiving">Receiving…</string>
     <!-- Transfer tab hint for connection -->
-    <string name="devices_present_select">請確保連線只從其中一方發出，而不是雙方。</string>
+    <string name="devices_present_select">Make sure to initiate connection only from one device not both.</string>
     <!-- Transfer tab hint for connection -->
-    <string name="start_scan_both_devices">請確保兩部裝置上都已啟用裝置搜尋</string>
+    <string name="start_scan_both_devices">Make sure to start scan on both the devices</string>
     <!-- Transfer tab connecting countdown -->
-    <string name="connecting_please_wait">連線中…（%s秒）</string>
+    <string name="connecting_please_wait">Connecting… (%s secs)</string>
     <!-- Transfer tab enable wifi to continue -->
-    <string name="enable_wifi_to_continue">請啟用 Wifi以繼續</string>
+    <string name="enable_wifi_to_continue">Please enable Wifi to continue</string>
     <!-- Transfer tab my device info -->
-    <string name="my_device">我的裝置：%s</string>
+    <string name="my_device">My device: %s</string>
     <!-- Transfer tab my device status -->
-    <string name="device_status">狀態: %s</string>
+    <string name="device_status">Status: %s</string>
     <!-- Transfer tab progress -->
-    <string name="transfer_in_progress_title">正在傳輸...</string>
+    <string name="transfer_in_progress_title">Transfer in progress</string>
     <!-- Transfer tab transfer in progress but user trying to leave the screen -->
-    <string name="transfer_in_progress_summary">目前有 P2P傳輸正在進行中。
-        請不要離開此畫面，
-        否則你將無法查看傳輸情況</string>
+    <string name="transfer_in_progress_summary">There is a P2P transfer currently in progress,
+        it is recommended that you don\'t leave this screen,
+        otherwise you\'ll not be able to track the transfer</string>
     <!-- Transfer tab leave in progress -->
-    <string name="leave">離開</string>
+    <string name="leave">Leave</string>
     <!-- Transfer app stay in progress -->
-    <string name="stay">留在這裏</string>
+    <string name="stay">Stay</string>
     <!-- Image viewer edit image -->
-    <string name="edit">修改</string>
+    <string name="edit">Edit</string>
     <!-- Image viewer set image as wallpaper -->
-    <string name="set_as">設為…</string>
+    <string name="set_as">Set as…</string>
     <!-- Image viewer delete image -->
-    <string name="delete">刪除</string>
+    <string name="delete">Delete</string>
     <!-- Image viewer details of image -->
-    <string name="details">詳細資料</string>
+    <string name="details">Details</string>
     <!-- Image viewer manufacturer of camera lens -->
-    <string name="make">生產商</string>
+    <string name="make">Make</string>
     <!-- Image viewer model of camera lens -->
-    <string name="model">型號</string>
+    <string name="model">Model</string>
     <!-- Image viewer camera aperture -->
-    <string name="aperture">光圈</string>
+    <string name="aperture">Aperture</string>
     <!-- Image viewer iso of image -->
     <string name="iso">ISO</string>
     <!-- Image viewer shutter time -->
-    <string name="shutter_time">快門</string>
+    <string name="shutter_time">Shutter time</string>
     <!-- Image viewer image location -->
-    <string name="location">位置</string>
+    <string name="location">Location</string>
     <!-- Image viewer gps -->
     <string name="gps">GPS</string>
     <!-- Image viewer image latitude -->
-    <string name="latitude">緯度</string>
+    <string name="latitude">Latitude</string>
     <!-- Image viewer image longitude -->
-    <string name="longitude">經度</string>
+    <string name="longitude">Longitude</string>
     <!-- Image viewer image file name -->
-    <string name="file_name">檔案名稱</string>
+    <string name="file_name">File Name</string>
     <!-- Image viewer image path -->
-    <string name="path">路徑</string>
+    <string name="path">Path</string>
     <!-- Image viewer open image location in map -->
-    <string name="open_in_maps">在地圖中打開</string>
+    <string name="open_in_maps">Open in Map</string>
     <!-- Share image / video -->
-    <string name="share">分享</string>
+    <string name="share">Share</string>
     <!-- Share / document no app found to open -->
-    <string name="no_app_found">沒有可以打開此檔案的應用程式</string>
+    <string name="no_app_found">No App found to open this file</string>
     <!-- File not found while opening -->
-    <string name="file_not_found">找不到檔案</string>
+    <string name="file_not_found">File not found</string>
     <!-- Delete file -->
-    <string name="delete_files_title">刪除</string>
+    <string name="delete_files_title">Delete</string>
     <!-- Delete file summary -->
-    <string name="delete_files_message">你將要永久刪除這些檔案。
-        確定要繼續嗎？\n\n%s 個檔案，合計大小 %s</string>
+    <string name="delete_files_message">You\'re about to permanently delete these files.
+        Are you sure you want to proceed?\n\n%s Files, %s Size</string>
     <!-- Delete file progress -->
-    <string name="deleted_progress">已刪除 %s個，共 %s個</string>
+    <string name="deleted_progress">Deleted %s of %s</string>
     <!-- Delete file successful -->
-    <string name="successfully_deleted">成功刪除</string>
+    <string name="successfully_deleted">Successfully deleted</string>
     <!-- Delete file failure -->
-    <string name="failed_to_update_list_reopen">更新清單失敗。請重新啟動程式。</string>
+    <string name="failed_to_update_list_reopen">Failed to update list, please restart the app</string>
     <!-- Device id in about section -->
-    <string name="device_id">裝置 ID</string>
+    <string name="device_id">Device ID</string>
     <!-- Subscription status in about section -->
-    <string name="subscription_status">訂閱狀態</string>
+    <string name="subscription_status">Subscription status</string>
     <!-- Device id copied in about section -->
-    <string name="device_id_copied">裝置 ID已複製至剪貼簿</string>
+    <string name="device_id_copied">Device ID copied to clipboard</string>
     <!-- App version in about section -->
-    <string name="version_title">版本</string>
+    <string name="version_title">Version</string>
     <!-- License title in about section -->
-    <string name="license">授權</string>
+    <string name="license">License</string>
     <!-- Submit issue in about section -->
-    <string name="submit_issue">提交問題</string>
+    <string name="submit_issue">Submit Issue</string>
     <!-- Contact us in about section -->
-    <string name="contact_us">聯絡我們</string>
+    <string name="contact_us">Contact Us</string>
     <!-- Translate in about section -->
     <string name="translate_title">Translate</string>
     <!-- Translate summary in about section -->
     <string name="translate_summary">Help us translate Amaze in your language</string>
     <!-- About app screen title -->
-    <string name="about_app_title">關於此程式</string>
+    <string name="about_app_title">About app</string>
     <!-- Made in india about section -->
-    <string name="made_in_india">來自印度，用❤️製造</string>
+    <string name="made_in_india">Made with ❤ in India</string>
     <!-- Trail dialog trial started -->
-    <string name="trial_started_title">試用期已開始（%s天）</string>
+    <string name="trial_started_title">Trial started (%s days)</string>
     <!-- Trial dialog trial started content -->
     <string name="trial_started_message">Thank you for choosing Amaze File Utilities.\n
         We are a team of open source developers working hard to provide an ad-free experience,
@@ -619,7 +619,7 @@
         You\'ll be able to contact directly to our team on Telegram.\n
         Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
     <!-- Trial dialog trial ending last day title -->
-    <string name="trial_last_day_title">試用快將到期</string>
+    <string name="trial_last_day_title">Trial about to expire</string>
     <!-- Trial dialog trial ending last day summary -->
     <string name="trial_last_day_message">Hey There! Thank you for choosing Amaze File Utilities.
         \nYour trial is going to expire tomorrow, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.
@@ -627,7 +627,7 @@
         and we need funds to keep us afloat.\nYou can write to us if you want to extend the trial period a bit more.
     </string>
     <!-- Trial expired title -->
-    <string name="trial_expired_title">試用已過期</string>
+    <string name="trial_expired_title">Trial expired</string>
     <!-- Trial expired summary -->
     <string name="trial_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         Your trial has expired, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
@@ -636,7 +636,7 @@
         You can write to us if you want to extend the trial period a bit more.
     </string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
-    <string name="trial_inactive_title">試用期未啟動</string>
+    <string name="trial_inactive_title">Trial inactive</string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
     <string name="trial_inactive_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         Your trial is inactive and you\'re not longer an exclusive member,
@@ -645,16 +645,16 @@
         and we need funds to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.</string>
     <!-- Subscription dialog subscription purchased title -->
-    <string name="subscription_purchased_title">訂閱中</string>
+    <string name="subscription_purchased_title">Subscribed</string>
     <!-- Subscription dialog subscription purchased summary -->
-    <string name="subscription_purchased_message">感謝你選擇 Amaze檔案工具程式。\n
-        我們是一群開源程式開發者，致力為用戶提供無廣告的使用體驗，
-        你的訂閱對我們繼續開發很有幫助。\n
-        任何時候如果需要幫忙，歡迎在“關於本程式”一欄處聯絡我們。
-        你亦可以經 Telegram直接和我們聯絡。\n
-        亦歡迎你使用我們的開源檔案管理器“Amaze檔案管理器”以獲得完美整合的檔案管理體驗。</string>
+    <string name="subscription_purchased_message">Thank you for choosing Amaze File Utilities.\n
+        We are a team of open source developers working hard to provide an ad-free experience,
+        and your subscription will really help us in development.\n
+        At any point if you need any help feel free to contact us in About section.
+        You\'ll be able to contact directly to our team on Telegram.\n
+        Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
     <!-- Subscription dialog yearly subscription expired title -->
-    <string name="subscription_expired_title">訂閱已過期</string>
+    <string name="subscription_expired_title">Subscription expired</string>
     <!-- Subscription dialog yearly subscription expired summary -->
     <string name="subscription_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         Your subscription has expired,
@@ -663,84 +663,84 @@
         and we need funds to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.</string>
     <!-- Trial validation dialog failed to validate -->
-    <string name="not_connected_trial_title">試用權驗證失敗</string>
+    <string name="not_connected_trial_title">Failed to validate</string>
     <!-- Trial validation dialog failed to validate summary -->
-    <string name="not_connected_trial_message">你好！感謝你選用 Amaze檔案工具程式。\n
-        我們無法認證你的使用授權，請先連線到互聯網然後再重新啟動程式。</string>
+    <string name="not_connected_trial_message">Hey There! Thank you for choosing Amaze File Utilities.\n
+        We\'re not able to validate your license, please connect to internet and restart the app.</string>
     <!-- Subscribe button in dialog -->
-    <string name="subscribe">訂閱</string>
+    <string name="subscribe">Subscribe</string>
     <!-- Generic don't show dialog again -->
-    <string name="dont_show_again">不再顯示</string>
+    <string name="dont_show_again">Don\'t show again</string>
     <!-- Welcome screen title -->
-    <string name="welcome_media_title">管理媒體檔案</string>
+    <string name="welcome_media_title">Manage media files</string>
     <!-- Welcome screen summary -->
-    <string name="welcome_media_summary">以列表或格狀檢視影像、影片、音樂和文件\n以內置播放器開啟檔案\n方便的手勢操作\n隨時跳到任何指定日期\n以分組或排序列表\n把內容投影到電視機上</string>
+    <string name="welcome_media_summary">View images, videos, audios, documents in list or grid\nOpen using inbuilt players\nGesture support for easy navigation\nJump to any date instantly\nGroup or sort list\nCast on TV</string>
     <!-- Welcome screen analysis summary -->
-    <string name="welcome_analyse_summary">分析儲存空間，尋找可以刪掉的垃圾檔案\n把影像以迷因圖、低光度、矇矓、自拍照、團體照分類\n分類大型檔案\n分類舊的下載、錄音、擷圖\n</string>
+    <string name="welcome_analyse_summary">Analyse storage for junk files to delete\nGroup images by memes, low-light, blurry, selfies or group\nGroup large files in storage\nGroup old downloads, recordings or screenshots\n</string>
     <!-- Welcome screen transfer summary -->
-    <string name="welcome_transfer_summary">在裝置之間以 wifi傳送資料\n利用 Android wifi direct的高速傳輸</string>
+    <string name="welcome_transfer_summary">Transfer data between devices through wifi\nHigh transfer speeds using android wifi direct</string>
     <!-- Welcome screen permission required -->
-    <string name="welcome_permission">我們需要授予儲存空間存取權限以讀取你的媒體檔案</string>
+    <string name="welcome_permission">We need storage permissions to access your media files</string>
     <!-- Welcome screen license agreement page -->
-    <string name="before_we_start">在開始之前…</string>
+    <string name="before_we_start">Before we start…</string>
     <!-- Welcome screen license agreement page -->
-    <string name="privacy_title">我們關心您的個人隱私！</string>
+    <string name="privacy_title">We care for your privacy!</string>
     <!-- Welcome screen license agreement page -->
-    <string name="privacy_summary">討厭廣告？我們也討厭。我們和你一樣重視你的個人資訊。\n
-        我們保證不會收集任何關於你的個人隱私。\n我們不說，但我們的記錄說明一切。\n我們是一群開源軟件開發者，開發和維護 Amaze檔案管理員已有8年時間。\n\n我們期待你的訂閱。
+    <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.\n
+        We assure you that we do not collect any of your private information.\nWe don\'t say this, our track record does.\nWe\'re a group of open source developers and are managing Amaze File Manager for around 8 years now.\n\nWe look forward to your subscription.
     </string>
     <!-- Subscription dialog failed to fetch subscriptions -->
-    <string name="error_fetching_google_play_product_list">無法從 Google Play擷取產品清單。</string>
+    <string name="error_fetching_google_play_product_list">Error fetching product list from Google Play.</string>
     <!-- Welcome screen done with the wizard -->
-    <string name="done">完成</string>
+    <string name="done">Done</string>
     <!-- Unable to find cast for tv framework -->
-    <string name="cast_framework_unavailable">無法設定投影框架，請更新 Google Play服務</string>
+    <string name="cast_framework_unavailable">Unable to initialize cast framework, please update Google Play services</string>
     <!-- Updating app from in app updater -->
-    <string name="updating_app">關閉 app以進行更新中…</string>
+    <string name="updating_app">Closing app during update…</string>
     <!-- App updated from in app updater -->
-    <string name="app_updated">App更新成功</string>
+    <string name="app_updated">App updated successfully</string>
     <!-- Update cancelled from in app updater -->
-    <string name="update_cancelled">更新已取消</string>
+    <string name="update_cancelled">Update cancelled</string>
     <!-- Failed to update from in app updater -->
-    <string name="failed_to_update_app">無法更新 app…</string>
+    <string name="failed_to_update_app">Failed to update the app…</string>
     <!-- Home screen design info in about section -->
-    <string name="home_screen_design"><![CDATA[主頁設計 - <a href="https://dribbble.com/topu-roy-antu">Topu Roy Antu</a>]]></string>
+    <string name="home_screen_design"><![CDATA[Home screen design - <a href="https://dribbble.com/topu-roy-antu">Topu Roy Antu</a>]]></string>
     <!-- Welcome screen accept license agreement -->
-    <string name="license_agreement"><![CDATA[我接受 <a href="https://teamamaze.xyz/license-agreement-utilities">授權協議</a>]]></string>
+    <string name="license_agreement"><![CDATA[I accept the <a href="https://teamamaze.xyz/license-agreement-utilities">License Agreement</a>]]></string>
     <!-- Welcome screen license not accepted -->
-    <string name="license_agreement_not_accepted">請同意授權條款。</string>
+    <string name="license_agreement_not_accepted">Please accept license agreement</string>
     <!-- Subscription dialog renewal cycle info -->
-    <string name="renewal_cycle">續訂週期 - %s</string>
+    <string name="renewal_cycle">Renewal cycle - %s</string>
     <!-- Subscription dialog lifetime membership -->
-    <string name="lifetime_membership">終身會員</string>
+    <string name="lifetime_membership">Lifetime Membership</string>
     <!-- Subscription dialog one year membership -->
-    <string name="one_year">1年</string>
+    <string name="one_year">1 Year</string>
     <!-- Generic operation failed -->
-    <string name="operation_failed">操作失敗</string>
+    <string name="operation_failed">Operation failed</string>
     <!-- Settings page number of columns for media lists grid view -->
-    <string name="columns_grid_title">以格狀模式檢視時的列數</string>
+    <string name="columns_grid_title">No. of columns in grid</string>
     <!-- Settings page appearance -->
-    <string name="appearance">外觀</string>
+    <string name="appearance">Appearance</string>
     <!-- Settings page appearance summary -->
-    <string name="appearance_summary">App外觀設定</string>
+    <string name="appearance_summary">App appearance settings</string>
     <!-- Settings page general settings -->
-    <string name="general">一般設定</string>
+    <string name="general">General</string>
     <!-- Playback properties in video player -->
-    <string name="playback_properties">播放內容</string>
+    <string name="playback_properties">Playback properties</string>
     <!-- Apply dialog button in apply playback settings -->
-    <string name="apply">套用</string>
+    <string name="apply">Apply</string>
     <!-- Playback settings dialog pitch settings info -->
-    <string name="pitch_hint_text">0 表示調子不變。\n一個全音階對應一個半音。\n-12 個半音代表歌曲正以低一個八度播放。</string>
+    <string name="pitch_hint_text">A value of zero means that the key is not changed.\nOne full step corresponds to one semitone.\nA change of -12 semitones means that the song is played one octave lower.</string>
     <!-- Playback settings dialog reset settings -->
-    <string name="reset">重置</string>
+    <string name="reset">Reset</string>
     <!-- Settings page extract music player background color from album -->
-    <string name="audio_player_enable_palette">從專輯圖抽取調色板顏色</string>
+    <string name="audio_player_enable_palette">Extract palette color from album</string>
     <!-- Settings page extract music player background color from album info -->
-    <string name="audio_player_enable_palette_summary">設定音樂播放器的背景顏色</string>
+    <string name="audio_player_enable_palette_summary">Sets background color for audio player</string>
     <!-- Settings page extract image viewer background color from image -->
-    <string name="image_viewer_enable_palette">從影像抽取調色板顏色</string>
+    <string name="image_viewer_enable_palette">Extract palette color from image</string>
     <!-- Settings page extract image viewer background color from image summary -->
-    <string name="image_viewer_enable_palette_summary">設定影像檢視器的背景顏色</string>
+    <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
     <!-- Unused apps in analysis tab -->
     <string name="unused_apps">Unused apps</string>
     <!-- Large apps in analysis tab -->
@@ -839,4 +839,12 @@
     <string name="clear_lyrics">Clearing lyrics</string>
     <!-- lyrics type dialog -->
     <string name="added_lyrics">Added lyrics</string>
+    <!-- whatsapp images in analysis section -->
+    <string name="whatsapp_images">Whatsapp Images</string>
+    <!-- whatsapp videos in analysis section -->
+    <string name="whatsapp_videos">Whatsapp Videos</string>
+    <!-- whatsapp analysis in settings -->
+    <string name="whatsapp_media">Whatsapp Media</string>
+    <!-- large files in analysis tab -->
+    <string name="large_files">Large Files</string>
 </resources>

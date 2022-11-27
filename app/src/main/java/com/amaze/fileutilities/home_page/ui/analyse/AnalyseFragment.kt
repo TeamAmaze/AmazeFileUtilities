@@ -216,6 +216,20 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     filesViewModel.isInternalStorageAnalysing = false
                 }
             }
+
+            filesViewModel.getLargeFilesLiveData().observe(viewLifecycleOwner) {
+                largeFiles ->
+                largeFilesPreview.invalidateProgress(true, null)
+                largeFiles?.let {
+                    largeFilesPreview.invalidateProgress(false, null)
+                    largeFilesPreview.loadPreviews(largeFiles) {
+                        cleanButtonClick(it) {
+                            filesViewModel.largeFilesMutableLiveData = null
+                        }
+                    }
+                }
+            }
+
             analyseViewModel.getDuplicateDirectories(
                 internalStorageDao, searchMediaFiles, deepSearch
             ).observe(viewLifecycleOwner) {
@@ -260,7 +274,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 }
 
             if (PathPreferences.isEnabled(prefs, PathPreferences.FEATURE_ANALYSIS_DOWNLOADS)) {
-                analyseViewModel.getLargeDownloads(pathPreferencesDao)
+                filesViewModel.getLargeDownloads(pathPreferencesDao)
                     .observe(viewLifecycleOwner) {
                         largeDownloads ->
                         largeDownloadPreview.invalidateProgress(true, null)
@@ -268,26 +282,26 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                             largeDownloadPreview.invalidateProgress(false, null)
                             largeDownloadPreview.loadPreviews(largeDownloads) {
                                 cleanButtonClick(it) {
-                                    analyseViewModel.largeDownloadsLiveData = null
+                                    filesViewModel.largeDownloadsLiveData = null
                                 }
                             }
                         }
                     }
-                analyseViewModel.getOldDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
+                filesViewModel.getOldDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
                     oldDownloads ->
                     oldDownloadPreview.invalidateProgress(true, null)
                     oldDownloads?.let {
                         oldDownloadPreview.invalidateProgress(false, null)
                         oldDownloadPreview.loadPreviews(oldDownloads) {
                             cleanButtonClick(it) {
-                                analyseViewModel.oldDownloadsLiveData = null
+                                filesViewModel.oldDownloadsLiveData = null
                             }
                         }
                     }
                 }
             }
             if (PathPreferences.isEnabled(prefs, PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS)) {
-                analyseViewModel.getOldScreenshots(pathPreferencesDao)
+                filesViewModel.getOldScreenshots(pathPreferencesDao)
                     .observe(viewLifecycleOwner) {
                         oldScreenshots ->
                         oldScreenshotsPreview.invalidateProgress(true, null)
@@ -295,25 +309,55 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                             oldScreenshotsPreview.invalidateProgress(false, null)
                             oldScreenshotsPreview.loadPreviews(oldScreenshots) {
                                 cleanButtonClick(it) {
-                                    analyseViewModel.oldScreenshotsLiveData = null
+                                    filesViewModel.oldScreenshotsLiveData = null
                                 }
                             }
                         }
                     }
             }
             if (PathPreferences.isEnabled(prefs, PathPreferences.FEATURE_ANALYSIS_RECORDING)) {
-                analyseViewModel.getOldRecordings(pathPreferencesDao).observe(viewLifecycleOwner) {
+                filesViewModel.getOldRecordings(pathPreferencesDao).observe(viewLifecycleOwner) {
                     oldRecordings ->
                     oldRecordingsPreview.invalidateProgress(true, null)
                     oldRecordings?.let {
                         oldRecordingsPreview.invalidateProgress(false, null)
                         oldRecordingsPreview.loadPreviews(oldRecordings) {
                             cleanButtonClick(it) {
-                                analyseViewModel.oldRecordingsLiveData = null
+                                filesViewModel.oldRecordingsLiveData = null
                             }
                         }
                     }
                 }
+            }
+            if (PathPreferences.isEnabled(prefs, PathPreferences.FEATURE_ANALYSIS_WHATSAPP)) {
+                filesViewModel.getWhatsappMediaLiveData(pathPreferencesDao)
+                    .observe(viewLifecycleOwner) {
+                        whatsappMedia ->
+                        whatsappPreview.invalidateProgress(true, null)
+                        whatsappMedia?.let {
+                            whatsappPreview.invalidateProgress(false, null)
+                            whatsappPreview.loadPreviews(whatsappMedia) {
+                                cleanButtonClick(it) {
+                                    filesViewModel.whatsappMediaMutableLiveData = null
+                                }
+                            }
+                        }
+                    }
+            }
+            if (PathPreferences.isEnabled(prefs, PathPreferences.FEATURE_ANALYSIS_TELEGRAM)) {
+                filesViewModel.getTelegramMediaFiles(pathPreferencesDao)
+                    .observe(viewLifecycleOwner) {
+                        telegramMedia ->
+                        telegramPreview.invalidateProgress(true, null)
+                        telegramMedia?.let {
+                            telegramPreview.invalidateProgress(false, null)
+                            telegramPreview.loadPreviews(telegramMedia) {
+                                cleanButtonClick(it) {
+                                    filesViewModel.telegramMediaMutableLiveData = null
+                                }
+                            }
+                        }
+                    }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                 unusedAppsPreview.visibility = View.VISIBLE
@@ -510,12 +554,16 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS
                 )
             ) View.VISIBLE else View.GONE
-            /*telegramPreview.visibility = if (sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_TELEGRAM),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+            whatsappPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_WHATSAPP
                 )
-            ) View.VISIBLE else View.GONE*/
+            ) View.VISIBLE else View.GONE
+            telegramPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_TELEGRAM
+                )
+            ) View.VISIBLE else View.GONE
         }
     }
 
@@ -581,6 +629,12 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     this@AnalyseFragment
                 )
             }
+            largeFilesPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_LARGE_FILES,
+                    this@AnalyseFragment
+                )
+            }
 
             largeDownloadPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
@@ -606,12 +660,24 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     this@AnalyseFragment
                 )
             }
-            /*telegramPreview.setOnClickListener {
+            largeFilesPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_LARGE_FILES,
+                    this@AnalyseFragment
+                )
+            }
+            whatsappPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_WHATSAPP,
+                    this@AnalyseFragment
+                )
+            }
+            telegramPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_TELEGRAM,
                     this@AnalyseFragment
                 )
-            }*/
+            }
             clutteredVideoPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_CLUTTERED_VIDEOS,
