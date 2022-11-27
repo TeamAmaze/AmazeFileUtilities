@@ -1,67 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Utilitários de Ficheiros Amaze</string>
+    <string name="app_name">Amaze File Utilities</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">Utilitários Amaze</string>
+    <string name="app_name_launcher">Amaze Utilities</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">Aplicativo de utilitários de ficheiros com reprodutores de media para todas as tuas necessidades.</string>
+    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Visualizador de Imagens Amaze</string>
+    <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">Visualizador de Imagens</string>
+    <string name="image_viewer_normal">Image Viewer</string>
     <!-- Video player activity label -->
-    <string name="video_player">Reprodutor de Vídeo Amaze</string>
+    <string name="video_player">Amaze Video Player</string>
     <!-- Video player dialog intent filter label -->
-    <string name="video_player_dialog">Reprodutor de Vídeo Amaze (Diálogo)</string>
+    <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">Reprodutor de Vídeo Amaze (Ecrã completo)</string>
+    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
     <!-- Music player activity label -->
-    <string name="amaze_audio_player">Reprodutor de Áudio Amaze</string>
+    <string name="amaze_audio_player">Amaze Music Player</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Visualizador de PDF Amaze</string>
+    <string name="pdf_viewer">Amaze Pdf Viewer</string>
     <!-- Epub activity label -->
-    <string name="epub_viewer">Visualizador de Epub Amaze</string>
+    <string name="epub_viewer">Amaze Epub Viewer</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">Visualizador de Documentos Amaze</string>
+    <string name="docx_viewer">Amaze Doc Viewer</string>
     <!-- Image viewer dialog intent filter label -->
-    <string name="intent_image_viewer_dialog">Visualizador de Imagens Amaze (Diálogo)</string>
+    <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
     <!-- Image viewer full screen intent label -->
-    <string name="intent_image_viewer_full_screen">Visualizador de Imagens Amaze (Ecrã completo)</string>
+    <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
     <!-- User didn't accept all storage permissions -->
-    <string name="grantfailed">Permissão de armazenamento não concedida</string>
+    <string name="grantfailed">Storage permission not granted</string>
     <!-- User didn't accept location permission for transfer files tab -->
-    <string name="grant_location_failed">Permissão de localização não concedida</string>
+    <string name="grant_location_failed">Location permission not granted</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_storage_read_permission">O aplicativo precisa de permissão de leitura do armazenamento para um desempenho ideal.</string>
+    <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_permission">Conceder permissão</string>
+    <string name="grant_permission">Grant permission</string>
     <!-- Grant permission button for welcome screen -->
-    <string name="grant">Conceder</string>
+    <string name="grant">Grant</string>
     <!-- Cancel button in dialogs mainly to cancel any operation -->
-    <string name="cancel">Cancelar</string>
+    <string name="cancel">Cancel</string>
     <!-- Play button label in music player notification -->
-    <string name="play">Reproduzir</string>
+    <string name="play">Play</string>
     <!-- Shuffle button label in music player notification -->
-    <string name="shuffle">Reproduzir aleatoriamente</string>
+    <string name="shuffle">Shuffle</string>
     <!-- Repeat button label in music player notification -->
-    <string name="repeat">Repetir</string>
+    <string name="repeat">Repeat</string>
     <!-- Previous button label in music player notification -->
-    <string name="previous">Anterior</string>
+    <string name="previous">Previous</string>
     <!-- Next button label in music player notification -->
-    <string name="next">Seguinte</string>
+    <string name="next">Next</string>
     <!-- Not allowed to perform any operation -->
-    <string name="not_allowed">Não permitido</string>
+    <string name="not_allowed">Not allowed</string>
     <!-- Audio player notification channel description -->
-    <string name="audio_player_service_description">Reproduz áudio no Utilitários de Ficheiros Amaze</string>
+    <string name="audio_player_service_description">Plays audio for Amaze File Utilities</string>
     <!-- Invert colors in document / pdf viewer -->
-    <string name="invert_colors">Inverter cores</string>
+    <string name="invert_colors">Invert colors</string>
     <!-- Location any list eg. images or videos list -->
-    <string name="loading">A carregar…</string>
+    <string name="loading">Loading…</string>
     <!-- Analyse tab on app main screen bottom tab -->
-    <string name="title_analyse">Analisar</string>
+    <string name="title_analyse">Analyse</string>
     <!-- Utilities tab on app main screen bottom tab -->
-    <string name="title_utilities">Utilitários</string>
+    <string name="title_utilities">Utilities</string>
     <!-- Transfer files tab on app main screen bottom tab -->
     <string name="title_transfer">Transfer</string>
     <!-- Scan nearby connections button in transfer tab -->
@@ -259,7 +259,7 @@
     <!-- Junk files analysis hint -->
     <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
     <!-- Telegram analysis label -->
-    <string name="telegram_files">Telegram</string>
+    <string name="telegram_files">Telegram Media</string>
     <!-- More optimisations coming at analysis tab bottom -->
     <string name="more_to_come">More optimizations to come!</string>
     <!-- View all analysed content analysis tab -->
@@ -839,4 +839,12 @@
     <string name="clear_lyrics">Clearing lyrics</string>
     <!-- lyrics type dialog -->
     <string name="added_lyrics">Added lyrics</string>
+    <!-- whatsapp images in analysis section -->
+    <string name="whatsapp_images">Whatsapp Images</string>
+    <!-- whatsapp videos in analysis section -->
+    <string name="whatsapp_videos">Whatsapp Videos</string>
+    <!-- whatsapp analysis in settings -->
+    <string name="whatsapp_media">Whatsapp Media</string>
+    <!-- large files in analysis tab -->
+    <string name="large_files">Large Files</string>
 </resources>

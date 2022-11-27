@@ -5,7 +5,7 @@
     <!-- App name in launcher -->
     <string name="app_name_launcher">Amaze Utilities</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">Приложение для работы с файлами с встроенными медиа плеерами для всех ваших потребностей.</string>
+    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <!-- Image viewer activity label -->
     <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
@@ -23,7 +23,7 @@
     <!-- Epub activity label -->
     <string name="epub_viewer">Amaze Epub Viewer</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">Умный просмотр Doc</string>
+    <string name="docx_viewer">Amaze Doc Viewer</string>
     <!-- Image viewer dialog intent filter label -->
     <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
     <!-- Image viewer full screen intent label -->
@@ -57,7 +57,7 @@
     <!-- Invert colors in document / pdf viewer -->
     <string name="invert_colors">Invert colors</string>
     <!-- Location any list eg. images or videos list -->
-    <string name="loading">Загрузка…</string>
+    <string name="loading">Loading…</string>
     <!-- Analyse tab on app main screen bottom tab -->
     <string name="title_analyse">Analyse</string>
     <!-- Utilities tab on app main screen bottom tab -->
@@ -259,7 +259,7 @@
     <!-- Junk files analysis hint -->
     <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
     <!-- Telegram analysis label -->
-    <string name="telegram_files">Telegram</string>
+    <string name="telegram_files">Telegram Media</string>
     <!-- More optimisations coming at analysis tab bottom -->
     <string name="more_to_come">More optimizations to come!</string>
     <!-- View all analysed content analysis tab -->
@@ -839,4 +839,12 @@
     <string name="clear_lyrics">Clearing lyrics</string>
     <!-- lyrics type dialog -->
     <string name="added_lyrics">Added lyrics</string>
+    <!-- whatsapp images in analysis section -->
+    <string name="whatsapp_images">Whatsapp Images</string>
+    <!-- whatsapp videos in analysis section -->
+    <string name="whatsapp_videos">Whatsapp Videos</string>
+    <!-- whatsapp analysis in settings -->
+    <string name="whatsapp_media">Whatsapp Media</string>
+    <!-- large files in analysis tab -->
+    <string name="large_files">Large Files</string>
 </resources>

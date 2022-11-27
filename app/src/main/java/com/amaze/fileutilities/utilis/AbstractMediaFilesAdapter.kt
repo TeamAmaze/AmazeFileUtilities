@@ -17,7 +17,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.IntDef
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioUtils
@@ -224,13 +223,22 @@ abstract class AbstractMediaFilesAdapter(
                     mediaFileInfo.extraInfo?.let { extraInfo ->
                         when (extraInfo.mediaType) {
                             MediaFileInfo.MEDIA_TYPE_IMAGE -> {
-                                processImageMediaInfo(holder, mediaFileInfo)
+                                processImageMediaInfo(
+                                    holder, mediaFileInfo, formattedDate,
+                                    formattedSize
+                                )
                             }
                             MediaFileInfo.MEDIA_TYPE_VIDEO -> {
-                                processVideoMediaInfo(holder, mediaFileInfo)
+                                processVideoMediaInfo(
+                                    holder, mediaFileInfo, formattedDate,
+                                    formattedSize
+                                )
                             }
                             MediaFileInfo.MEDIA_TYPE_AUDIO -> {
-                                processAudioMediaInfo(holder, mediaFileInfo)
+                                processAudioMediaInfo(
+                                    holder, mediaFileInfo, formattedDate,
+                                    formattedSize
+                                )
                             }
                             MediaFileInfo.MEDIA_TYPE_DOCUMENT -> {
                                 holder.infoSummary.text = "$formattedDate | $formattedSize"
@@ -239,21 +247,6 @@ abstract class AbstractMediaFilesAdapter(
                             MediaFileInfo.MEDIA_TYPE_UNKNOWN -> {
                                 holder.infoSummary.text = "$formattedDate | $formattedSize"
                                 holder.extraInfo.text = ""
-                                if (isChecked) {
-                                    holder.root.background = ResourcesCompat
-                                        .getDrawable(
-                                            superContext.resources,
-                                            R.drawable.background_curved_recents_selected,
-                                            superContext.theme
-                                        )
-                                } else {
-                                    holder.root.background = ResourcesCompat
-                                        .getDrawable(
-                                            superContext.resources,
-                                            R.drawable.background_curved_recents,
-                                            superContext.theme
-                                        )
-                                }
                             }
                         }
                     }
@@ -288,35 +281,53 @@ abstract class AbstractMediaFilesAdapter(
 
     private fun processImageMediaInfo(
         holder: MediaInfoRecyclerViewHolder,
-        mediaFileInfo: MediaFileInfo
+        mediaFileInfo: MediaFileInfo,
+        formattedDate: String,
+        formattedSize: String
     ) {
-        holder.infoSummary.text =
+        holder.infoSummary.text = if (mediaFileInfo.extraInfo?.imageMetaData?.width != null) {
             "${mediaFileInfo.extraInfo!!.imageMetaData?.width}" +
-            "x${mediaFileInfo.extraInfo!!.imageMetaData?.height}"
+                "x${mediaFileInfo.extraInfo!!.imageMetaData?.height}"
+        } else {
+            "$formattedDate | $formattedSize"
+        }
         holder.extraInfo.text = ""
     }
 
     private fun processAudioMediaInfo(
         holder: MediaInfoRecyclerViewHolder,
-        mediaFileInfo: MediaFileInfo
+        mediaFileInfo: MediaFileInfo,
+        formattedDate: String,
+        formattedSize: String
     ) {
-        holder.infoSummary.text =
-            "${mediaFileInfo.extraInfo!!.audioMetaData?.albumName} " +
-            "| ${mediaFileInfo.extraInfo!!.audioMetaData?.artistName}"
-        mediaFileInfo.extraInfo!!.audioMetaData?.duration?.let {
-            holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
+        if (mediaFileInfo.extraInfo?.audioMetaData?.duration != null) {
+            holder.infoSummary.text = "${mediaFileInfo.extraInfo!!.audioMetaData?.albumName} " +
+                "| ${mediaFileInfo.extraInfo!!.audioMetaData?.artistName}"
+            mediaFileInfo.extraInfo!!.audioMetaData?.duration?.let {
+                holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
+            }
+        } else {
+            holder.infoSummary.text = "$formattedDate | $formattedSize"
+            holder.extraInfo.text = ""
         }
     }
 
     private fun processVideoMediaInfo(
         holder: MediaInfoRecyclerViewHolder,
-        mediaFileInfo: MediaFileInfo
+        mediaFileInfo: MediaFileInfo,
+        formattedDate: String,
+        formattedSize: String
     ) {
-        holder.infoSummary.text =
-            "${mediaFileInfo.extraInfo!!.videoMetaData?.width}" +
-            "x${mediaFileInfo.extraInfo!!.videoMetaData?.height}"
-        mediaFileInfo.extraInfo!!.videoMetaData?.duration?.let {
-            holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
+        if (mediaFileInfo.extraInfo?.videoMetaData?.duration != null) {
+            holder.infoSummary.text =
+                "${mediaFileInfo.extraInfo!!.videoMetaData?.width}" +
+                "x${mediaFileInfo.extraInfo!!.videoMetaData?.height}"
+            mediaFileInfo.extraInfo!!.videoMetaData?.duration?.let {
+                holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
+            }
+        } else {
+            holder.infoSummary.text = "$formattedDate | $formattedSize"
+            holder.extraInfo.text = ""
         }
     }
 

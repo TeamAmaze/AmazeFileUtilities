@@ -47,12 +47,20 @@ class FileUtils {
         private const val WHATSAPP_BASE = "WhatsApp/Media"
         private const val WHATSAPP_IMAGES_BASE = "WhatsApp Images"
         private const val WHATSAPP_AUDIO_BASE = "WhatsApp Audio"
+        private const val WHATSAPP_DOCUMENTS_BASE = "WhatsApp Documents"
+        private const val WHATSAPP_VIDEO_BASE = "WhatsApp Video"
         private const val WHATSAPP_IMAGES =
             "$WHATSAPP_BASE_ANDROID/$WHATSAPP_BASE/$WHATSAPP_IMAGES_BASE"
         private const val WHATSAPP_IMAGES_2 = "$WHATSAPP_BASE/$WHATSAPP_IMAGES_BASE"
         private const val WHATSAPP_AUDIO =
             "$WHATSAPP_BASE_ANDROID/$WHATSAPP_BASE/$WHATSAPP_AUDIO_BASE"
         private const val WHATSAPP_AUDIO_2 = "$WHATSAPP_BASE/$WHATSAPP_AUDIO_BASE"
+        private const val WHATSAPP_DOCUMENTS =
+            "$WHATSAPP_BASE_ANDROID/$WHATSAPP_BASE/$WHATSAPP_DOCUMENTS_BASE"
+        private const val WHATSAPP_DOCUMENTS_2 = "$WHATSAPP_BASE/$WHATSAPP_DOCUMENTS_BASE"
+        private const val WHATSAPP_VIDEO =
+            "$WHATSAPP_BASE_ANDROID/$WHATSAPP_BASE/$WHATSAPP_VIDEO_BASE"
+        private const val WHATSAPP_VIDEO_2 = "$WHATSAPP_BASE/$WHATSAPP_VIDEO_BASE"
         private const val RECORDINGS = "Recordings"
         private const val SCREENSHOTS = "Screenshots"
         private const val RINGTONES_MUSIC = "Music/ringtone"
@@ -62,6 +70,8 @@ class FileUtils {
         private const val TELEGRAM = "Telegram"
         private const val TELEGRAM_IMAGES = "Telegram Images"
         private const val TELEGRAM_VIDEO = "Telegram Video"
+        private const val TELEGRAM_AUDIO = "Telegram Audio"
+        private const val TELEGRAM_DOCUMENTS = "Telegram Documents"
         private val CAMERA = "${Environment.DIRECTORY_DCIM}/$CAMERA_BASE"
 
         private val DEFAULT_MEMES = listOf(
@@ -109,12 +119,19 @@ class FileUtils {
             "${Environment.DIRECTORY_PICTURES}/$SCREENSHOTS"
         )
 
+        private val DEFAULT_WHATSAPP = listOf(
+            WHATSAPP_AUDIO, WHATSAPP_AUDIO_2, WHATSAPP_DOCUMENTS, WHATSAPP_DOCUMENTS_2,
+            WHATSAPP_VIDEO, WHATSAPP_VIDEO_2, WHATSAPP_IMAGES, WHATSAPP_IMAGES_2
+        )
+
         private val DEFAULT_TELEGRAM =
             listOf(
                 "${Environment.DIRECTORY_PICTURES}/$TELEGRAM/$TELEGRAM_IMAGES",
                 "${Environment.DIRECTORY_PICTURES}/$TELEGRAM/$TELEGRAM_VIDEO",
                 "$TELEGRAM/$TELEGRAM_IMAGES",
-                "$TELEGRAM/$TELEGRAM_VIDEO"
+                "$TELEGRAM/$TELEGRAM_VIDEO",
+                "$TELEGRAM/$TELEGRAM_AUDIO",
+                "$TELEGRAM/$TELEGRAM_DOCUMENTS"
             )
 
         /*val DEFAULT_PATH_PREFS_INCLUSIVE = listOf(DEFAULT_MEMES, DEFAULT_BLUR, DEFAULT_GROUP_PIC,
@@ -129,6 +146,7 @@ class FileUtils {
             Pair(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS, DEFAULT_DOWNLOADS),
             Pair(PathPreferences.FEATURE_ANALYSIS_RECORDING, DEFAULT_RECORDINGS),
             Pair(PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS, DEFAULT_SCREENSHOTS),
+            Pair(PathPreferences.FEATURE_ANALYSIS_WHATSAPP, DEFAULT_WHATSAPP),
             Pair(PathPreferences.FEATURE_ANALYSIS_TELEGRAM, DEFAULT_TELEGRAM)
         )
 

@@ -43,7 +43,7 @@ class PreferencesConstants {
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1
         const val VAL_SEARCH_DUPLICATES_INTERNAL_DEEP = 2
         // increment this if add new default paths for analysis
-        const val VAL_PATH_PREFS_MIGRATION = 1
+        const val VAL_PATH_PREFS_MIGRATION = 2
 
         const val VAL_MIGRATION_FEATURE_ANALYSIS_MEME = 1
         const val VAL_MIGRATION_FEATURE_ANALYSIS_BLUR = 1
