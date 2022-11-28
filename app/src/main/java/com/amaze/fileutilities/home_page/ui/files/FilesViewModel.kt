@@ -93,6 +93,7 @@ class FilesViewModel(val applicationContext: Application) :
     val uniqueIdSalt = "#%36zkpCE2"
 
     var unusedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var mostUsedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var apksLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var gamesInstalledLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
@@ -971,8 +972,12 @@ class FilesViewModel(val applicationContext: Application) :
     private fun processUnusedApps(packageManager: PackageManager) {
         viewModelScope.launch(Dispatchers.IO) {
             loadAllInstalledApps(packageManager)
-
-            val usageStats = Utils.getAppsUsageStats(applicationContext)
+            val sharedPrefs = applicationContext.getAppCommonSharedPreferences()
+            val days = sharedPrefs.getInt(
+                PreferencesConstants.KEY_UNUSED_APPS_DAYS,
+                PreferencesConstants.DEFAULT_UNUSED_APPS_DAYS
+            )
+            val usageStats = Utils.getAppsUsageStats(applicationContext, days)
             val usageStatsPackages = usageStats.filter {
                 it.lastTimeUsed != 0L
             }.map {
@@ -982,7 +987,62 @@ class FilesViewModel(val applicationContext: Application) :
                 allApps.get()?.filter { !usageStatsPackages.contains(it.packageName) }?.mapNotNull {
                     MediaFileInfo.fromApplicationInfo(applicationContext, it)
                 }
-            unusedAppsLiveData?.postValue(ArrayList(unusedAppsList))
+            unusedAppsLiveData?.postValue(unusedAppsList?.let { ArrayList(it) })
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    fun getMostUsedApps(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (mostUsedAppsLiveData == null) {
+            mostUsedAppsLiveData = MutableLiveData()
+            mostUsedAppsLiveData?.value = null
+            processMostUsedApps(applicationContext.packageManager)
+        }
+        return mostUsedAppsLiveData!!
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    private fun processMostUsedApps(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+            val sharedPrefs = applicationContext.getAppCommonSharedPreferences()
+            val days = sharedPrefs.getInt(
+                PreferencesConstants.KEY_MOST_USED_APPS_DAYS,
+                PreferencesConstants.DEFAULT_MOST_USED_APPS_DAYS
+            )
+            val usageStats = Utils.getAppsUsageStats(applicationContext, days)
+            val freqMap = linkedMapOf<String, Long>()
+            usageStats.filter {
+                it.lastTimeUsed != 0L
+            }.forEach {
+                if (!freqMap.contains(it.packageName)) {
+                    freqMap[it.packageName] = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                        it.totalTimeVisible else it.totalTimeInForeground
+                } else {
+                    freqMap[it.packageName] = freqMap[it.packageName]!! +
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                            it.totalTimeVisible else it.totalTimeInForeground
+                }
+            }
+            val mostUsedAppsListRaw = arrayListOf<String>()
+            freqMap.entries.stream()
+                .sorted { o1, o2 -> -1 * o1.value.compareTo(o2.value) }
+                .forEach {
+                    mostUsedAppsListRaw.add(it.key)
+                }
+            val mostUsedApps = arrayListOf<MediaFileInfo>()
+            mostUsedAppsListRaw.forEach {
+                appName ->
+                allApps.get()?.find {
+                    it.packageName.equals(appName, true)
+                }?.let {
+                    MediaFileInfo.fromApplicationInfo(applicationContext, it)?.let {
+                        mediaFileInfo ->
+                        mostUsedApps.add(mediaFileInfo)
+                    }
+                }
+            }
+            mostUsedAppsLiveData?.postValue(mostUsedApps)
         }
     }
 
@@ -1048,25 +1108,12 @@ class FilesViewModel(val applicationContext: Application) :
             largeFilesMutableLiveData = MutableLiveData()
             largeFilesMutableLiveData?.value = null
             viewModelScope.launch(Dispatchers.IO) {
-                val priorityQueue = PriorityQueue<MediaFileInfo>(
-                    100
-                ) { o1, o2 -> -1 * o1.longSize.compareTo(o2.longSize) }
-                if (allMediaFilesPair == null) {
-                    allMediaFilesPair = CursorUtils.listAll(applicationContext)
-                }
-                allMediaFilesPair?.forEach {
-                    if (priorityQueue.size > 99) {
-                        priorityQueue.remove()
-                    }
-                    priorityQueue.add(it)
-                }
-                val result = ArrayList<MediaFileInfo>()
-                while (!priorityQueue.isEmpty()) {
-                    priorityQueue.remove()?.let {
-                        result.add(it)
-                    }
-                }
-                largeFilesMutableLiveData?.postValue(result)
+                largeFilesMutableLiveData?.postValue(
+                    getMediaFilesWithFilter(
+                        { o1, o2 -> o1.longSize.compareTo(o2.longSize) },
+                        emptyList(), 1000
+                    )
+                )
             }
         }
         return largeFilesMutableLiveData!!
@@ -1184,7 +1231,7 @@ class FilesViewModel(val applicationContext: Application) :
             allMediaFilesPair = CursorUtils.listAll(applicationContext)
         }
         allMediaFilesPair?.filter {
-            paths.stream().anyMatch {
+            paths.isEmpty() || paths.stream().anyMatch {
                 pathPref ->
                 it.path.contains(pathPref, true)
             }

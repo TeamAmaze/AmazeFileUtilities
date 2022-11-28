@@ -10,6 +10,11 @@
         app:title="@string/unused_apps"
         android:summary="@string/unused_apps_pref_message"
         />
+    <Preference
+        app:key="most_used_apps"
+        app:title="@string/most_used_apps"
+        android:summary="@string/most_used_apps_pref_message"
+        />
     <PreferenceCategory
         app:title="@string/paths_included">
         <Preference
