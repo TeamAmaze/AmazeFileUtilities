@@ -750,6 +750,8 @@
     <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
     <!-- Unused apps in analysis tab -->
     <string name="unused_apps">Unused apps</string>
+    <!-- Most used apps in analysis tab -->
+    <string name="most_used_apps">Most used apps</string>
     <!-- Large apps in analysis tab -->
     <string name="large_apps">Large apps</string>
     <!-- Games installed in analysis tab -->
@@ -764,6 +766,8 @@
     <string name="refresh">Refresh</string>
     <!-- Unused apps preference dialog message -->
     <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
+    <!-- Most used apps preference dialog message -->
+    <string name="most_used_apps_pref_message">Apps most used in last number of days</string>
     <!-- Stopping analysis by pressing on (X) button in analysis tab -->
     <string name="stopping_analysis">Stopping analysis</string>
     <!-- Remove battery optimizations on welcome screen and settings page -->
