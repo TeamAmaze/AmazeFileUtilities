@@ -38,6 +38,7 @@ class PreferencesConstants {
         const val KEY_ENABLE_AUDIO_PALETTE = "pref_audio_enable_palette"
         const val KEY_ENABLE_IMAGE_PALETTE = "pref_image_enable_palette"
         const val KEY_UNUSED_APPS_DAYS = "unused_apps_days"
+        const val KEY_MOST_USED_APPS_DAYS = "most_used_apps_days"
 
         const val VAL_SEARCH_DUPLICATES_MEDIA_STORE = 0
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1
@@ -70,5 +71,6 @@ class PreferencesConstants {
         const val DEFAULT_PLAYBACK_SEMITONES = 0f
         const val DEFAULT_PALETTE_EXTRACT = true
         const val DEFAULT_UNUSED_APPS_DAYS = 30
+        const val DEFAULT_MOST_USED_APPS_DAYS = 7
     }
 }

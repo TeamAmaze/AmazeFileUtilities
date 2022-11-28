@@ -36,10 +36,12 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
         private const val KEY_SCREENSHOT = "screenshot_paths"
         private const val KEY_TELEGRAM = "telegram_paths"
         private const val KEY_UNUSED_APPS = "unused_apps"
+        private const val KEY_MOST_USED_APPS = "most_used_apps"
         private const val KEY_WHATSAPP_MEDIA = "whatsapp_media"
         private val KEYS = listOf(
             KEY_DUPLICATES, KEY_MEMES, KEY_BLUR, KEY_LOW_LIGHT, KEY_FEATURES, KEY_DOWNLOAD,
-            KEY_RECORDING, KEY_SCREENSHOT, KEY_UNUSED_APPS, KEY_WHATSAPP_MEDIA, KEY_TELEGRAM
+            KEY_RECORDING, KEY_SCREENSHOT, KEY_UNUSED_APPS, KEY_MOST_USED_APPS,
+            KEY_WHATSAPP_MEDIA, KEY_TELEGRAM
         )
     }
 
@@ -151,8 +153,17 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                     PreferencesConstants.KEY_UNUSED_APPS_DAYS,
                     PreferencesConstants.DEFAULT_UNUSED_APPS_DAYS
                 )
-                Utils.buildUnusedAppsDaysPrefDialog(requireContext(), days) {
+                Utils.buildDigitInputDialog(requireContext(), days) {
                     prefs.edit().putInt(PreferencesConstants.KEY_UNUSED_APPS_DAYS, it).apply()
+                }
+            }
+            KEY_MOST_USED_APPS -> {
+                val days = prefs.getInt(
+                    PreferencesConstants.KEY_MOST_USED_APPS_DAYS,
+                    PreferencesConstants.DEFAULT_MOST_USED_APPS_DAYS
+                )
+                Utils.buildDigitInputDialog(requireContext(), days) {
+                    prefs.edit().putInt(PreferencesConstants.KEY_MOST_USED_APPS_DAYS, it).apply()
                 }
             }
         }

@@ -728,17 +728,12 @@ class Utils {
         }
 
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
-        fun getAppsUsageStats(context: Context): List<UsageStats> {
+        fun getAppsUsageStats(context: Context, days: Int): List<UsageStats> {
             val usm: UsageStatsManager = (
                 context.getSystemService(Context.USAGE_STATS_SERVICE)
                     as UsageStatsManager
                 )
             val endTime = LocalDateTime.now()
-            val sharedPrefs = context.getAppCommonSharedPreferences()
-            val days = sharedPrefs.getInt(
-                PreferencesConstants.KEY_UNUSED_APPS_DAYS,
-                PreferencesConstants.DEFAULT_UNUSED_APPS_DAYS
-            )
             val startTime = LocalDateTime.now().minusDays(days.toLong())
             return usm.queryUsageStats(
                 UsageStatsManager.INTERVAL_DAILY,
@@ -761,7 +756,7 @@ class Utils {
                 Process.myUid(), context.packageName
             )
             return if (mode != AppOpsManager.MODE_ALLOWED) {
-                getAppsUsageStats(context).isNotEmpty()
+                getAppsUsageStats(context, 30).isNotEmpty()
             } else {
                 true
             }
@@ -916,7 +911,7 @@ class Utils {
             }
         }
 
-        fun buildUnusedAppsDaysPrefDialog(
+        fun buildDigitInputDialog(
             context: Context,
             days: Int,
             callback: (Int) -> Unit

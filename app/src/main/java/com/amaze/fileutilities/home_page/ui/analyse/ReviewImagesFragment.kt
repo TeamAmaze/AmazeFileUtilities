@@ -94,6 +94,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         const val TYPE_APK_FILES = 22
         const val TYPE_WHATSAPP = 23
         const val TYPE_LARGE_FILES = 24
+        const val TYPE_MOST_USED_APPS = 25
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -171,7 +172,8 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
             TYPE_OLD_RECORDINGS -> {
                 MediaFileAdapter.MEDIA_TYPE_AUDIO
             }
-            TYPE_LARGE_APPS, TYPE_UNUSED_APPS, TYPE_GAMES_INSTALLED, TYPE_APK_FILES -> {
+            TYPE_LARGE_APPS, TYPE_UNUSED_APPS, TYPE_MOST_USED_APPS, TYPE_GAMES_INSTALLED,
+            TYPE_APK_FILES -> {
                 MediaFileAdapter.MEDIA_TYPE_APKS
             }
             else -> {
@@ -500,6 +502,18 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                         .observe(viewLifecycleOwner) { unusedApps ->
                             invalidateProcessing(true, false)
                             unusedApps?.let {
+                                setMediaInfoList(it, false)
+                                invalidateProcessing(false, false)
+                            }
+                        }
+                }
+            }
+            TYPE_MOST_USED_APPS -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    filesViewModel.getMostUsedApps()
+                        .observe(viewLifecycleOwner) { mostUsedApps ->
+                            invalidateProcessing(true, false)
+                            mostUsedApps?.let {
                                 setMediaInfoList(it, false)
                                 invalidateProcessing(false, false)
                             }
