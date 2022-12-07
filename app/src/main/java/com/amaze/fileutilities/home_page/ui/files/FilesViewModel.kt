@@ -94,6 +94,7 @@ class FilesViewModel(val applicationContext: Application) :
 
     var unusedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var mostUsedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var leastUsedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var apksLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var gamesInstalledLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
@@ -1043,6 +1044,61 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
             mostUsedAppsLiveData?.postValue(mostUsedApps)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    fun getLeastUsedApps(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (leastUsedAppsLiveData == null) {
+            leastUsedAppsLiveData = MutableLiveData()
+            leastUsedAppsLiveData?.value = null
+            processLeastUsedApps(applicationContext.packageManager)
+        }
+        return leastUsedAppsLiveData!!
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    private fun processLeastUsedApps(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+            val sharedPrefs = applicationContext.getAppCommonSharedPreferences()
+            val days = sharedPrefs.getInt(
+                PreferencesConstants.KEY_LEAST_USED_APPS_DAYS,
+                PreferencesConstants.DEFAULT_LEAST_USED_APPS_DAYS
+            )
+            val usageStats = Utils.getAppsUsageStats(applicationContext, days)
+            val freqMap = linkedMapOf<String, Long>()
+            usageStats.filter {
+                it.lastTimeUsed != 0L
+            }.forEach {
+                if (!freqMap.contains(it.packageName)) {
+                    freqMap[it.packageName] = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                        it.totalTimeVisible else it.totalTimeInForeground
+                } else {
+                    freqMap[it.packageName] = freqMap[it.packageName]!! +
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                            it.totalTimeVisible else it.totalTimeInForeground
+                }
+            }
+            val leastUsedAppsListRaw = arrayListOf<String>()
+            freqMap.entries.stream()
+                .sorted { o1, o2 -> o1.value.compareTo(o2.value) }
+                .forEach {
+                    leastUsedAppsListRaw.add(it.key)
+                }
+            val leastUsedApps = arrayListOf<MediaFileInfo>()
+            leastUsedAppsListRaw.forEach {
+                appName ->
+                allApps.get()?.find {
+                    it.packageName.equals(appName, true)
+                }?.let {
+                    MediaFileInfo.fromApplicationInfo(applicationContext, it)?.let {
+                        mediaFileInfo ->
+                        leastUsedApps.add(mediaFileInfo)
+                    }
+                }
+            }
+            leastUsedAppsLiveData?.postValue(leastUsedApps)
         }
     }
 

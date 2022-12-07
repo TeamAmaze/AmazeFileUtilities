@@ -386,8 +386,15 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                 mostUsedAppsPreview.visibility = View.VISIBLE
+                leastUsedAppsPreview.visibility = View.VISIBLE
                 if (!isUsageStatsPermissionGranted()) {
                     mostUsedAppsPreview.loadRequireElevatedPermission({
+                        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                        startActivity(intent)
+                    }, {
+                        reloadFragment()
+                    })
+                    leastUsedAppsPreview.loadRequireElevatedPermission({
                         val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
                         startActivity(intent)
                     }, {
@@ -402,6 +409,18 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                             mostUsedAppsPreview.loadPreviews(mediaFileInfoList) {
                                 cleanButtonClick(it) {
                                     filesViewModel.mostUsedAppsLiveData = null
+                                }
+                            }
+                        }
+                    }
+                    filesViewModel.getLeastUsedApps().observe(viewLifecycleOwner) {
+                        mediaFileInfoList ->
+                        leastUsedAppsPreview.invalidateProgress(true, null)
+                        mediaFileInfoList?.let {
+                            leastUsedAppsPreview.invalidateProgress(false, null)
+                            leastUsedAppsPreview.loadPreviews(mediaFileInfoList) {
+                                cleanButtonClick(it) {
+                                    filesViewModel.leastUsedAppsLiveData = null
                                 }
                             }
                         }
@@ -729,6 +748,13 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     shouldCallbackAppUninstall = false
                     ReviewImagesFragment.newInstance(
                         ReviewImagesFragment.TYPE_MOST_USED_APPS,
+                        this@AnalyseFragment
+                    )
+                }
+                leastUsedAppsPreview.setOnClickListener {
+                    shouldCallbackAppUninstall = false
+                    ReviewImagesFragment.newInstance(
+                        ReviewImagesFragment.TYPE_LEAST_USED_APPS,
                         this@AnalyseFragment
                     )
                 }

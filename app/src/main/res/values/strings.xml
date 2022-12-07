@@ -310,7 +310,7 @@
     <!-- Images features group name in analysis settings -->
     <string name="image_features">Image Features</string>
     <!-- Images features group hint in analysis settings -->
-    <string name="features_paths_hint">Includes closed eyes, distracted, sad, selfie, group paths</string>
+    <string name="features_paths_hint">Includes closed eyes, selfie, group paths</string>
     <!-- Downloads label in analysis settings -->
     <string name="download_paths">Downloads</string>
     <!-- Downloads hint in analysis settings -->
@@ -752,6 +752,8 @@
     <string name="unused_apps">Unused apps</string>
     <!-- Most used apps in analysis tab -->
     <string name="most_used_apps">Most used apps</string>
+    <!-- Least used apps in analysis tab -->
+    <string name="least_used_apps">Least used apps</string>
     <!-- Large apps in analysis tab -->
     <string name="large_apps">Large apps</string>
     <!-- Games installed in analysis tab -->
@@ -768,6 +770,8 @@
     <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
     <!-- Most used apps preference dialog message -->
     <string name="most_used_apps_pref_message">Apps most used in last number of days</string>
+    <!-- Least used apps preference dialog message -->
+    <string name="least_used_apps_pref_message">Apps least used in last number of days</string>
     <!-- Stopping analysis by pressing on (X) button in analysis tab -->
     <string name="stopping_analysis">Stopping analysis</string>
     <!-- Remove battery optimizations on welcome screen and settings page -->
