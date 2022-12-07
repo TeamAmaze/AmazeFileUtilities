@@ -220,12 +220,21 @@
                 android:visibility="gone"
                 />
 
-
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
                 android:id="@+id/most_used_apps_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/most_used_apps"
+                app:showPreview="true"
+                android:layout_marginTop="@dimen/material_generic"
+                android:visibility="gone"
+                />
+
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/least_used_apps_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/least_used_apps"
                 app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 android:visibility="gone"
