@@ -22,6 +22,7 @@ import android.media.AudioManager
 import android.media.audiofx.AudioEffect
 import android.net.Uri
 import android.os.Build
+import android.os.CountDownTimer
 import android.os.IBinder
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
@@ -515,6 +516,62 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         }
         updatePlaybackState(true, renderWaveform)
         invalidateNotificationPlayButton()
+    }
+
+    var volume = 0f
+
+    private fun startFadeIn(exoPlayer: ExoPlayer, doNext: () -> Unit) {
+        val FADE_DURATION = 5000L // The duration of the fade
+        // The amount of time between volume changes. The smaller this is, the smoother the fade
+        val FADE_INTERVAL = 25L
+        val MAX_VOLUME = 1 // The volume will increase from 0 to 1
+        val numberOfSteps: Float = FADE_DURATION.toFloat() / FADE_INTERVAL.toFloat()
+        // Calculate by how much the volume changes each step
+        val deltaVolume = MAX_VOLUME / numberOfSteps.toFloat()
+
+        // Create a new Timer and Timer task to run the fading outside the main UI thread
+        object : CountDownTimer(FADE_DURATION, FADE_INTERVAL) {
+            override fun onTick(millisUntilFinished: Long) {
+                if (volume <= 1f) {
+                    fadeInStep(deltaVolume, exoPlayer) // Do a fade step
+                }
+            }
+
+            override fun onFinish() {
+                doNext.invoke()
+            }
+        }.start()
+    }
+
+    private fun startFadeOut(exoPlayer: ExoPlayer, doNext: () -> Unit) {
+        val FADE_DURATION = 5000L // The duration of the fade
+        // The amount of time between volume changes. The smaller this is, the smoother the fade
+        val FADE_INTERVAL = 25L
+        val MAX_VOLUME = 0 // The volume will increase from 0 to 1
+        val numberOfSteps: Float = FADE_DURATION.toFloat() / FADE_INTERVAL.toFloat()
+        // Calculate by how much the volume changes each step
+        val deltaVolume = MAX_VOLUME / numberOfSteps
+        object : CountDownTimer(FADE_DURATION, FADE_INTERVAL) {
+            override fun onTick(millisUntilFinished: Long) {
+                if (volume >= 0f) {
+                    fadeOutStep(deltaVolume, exoPlayer) // Do a fade step
+                }
+            }
+
+            override fun onFinish() {
+                doNext()
+            }
+        }.start()
+    }
+
+    private fun fadeInStep(deltaVolume: Float, exoPlayer: ExoPlayer) {
+        exoPlayer.volume = volume
+        volume += deltaVolume
+    }
+
+    private fun fadeOutStep(deltaVolume: Float, exoPlayer: ExoPlayer) {
+        exoPlayer.volume = volume
+        volume -= deltaVolume
     }
 
     private fun playMediaItem() {
