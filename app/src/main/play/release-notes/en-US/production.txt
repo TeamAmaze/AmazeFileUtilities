@@ -1,4 +1,5 @@
 Changelog:
+- Add new analysis capabilities
 - Improved performance
 - Media player list titles now support actions such as delete, share or shuffle
 - Music player performance fixes
