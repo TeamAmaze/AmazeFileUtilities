@@ -21,6 +21,7 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationManagerCompat
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.ObtainableServiceBinder
@@ -32,7 +33,7 @@ class CloudStreamerService : Service() {
     private var cloudStreamer: CloudStreamer? = null
     private var wakeLock: PowerManager.WakeLock? = null
 
-    private var notificationManager: NotificationManager? = null
+    private var notificationManager: NotificationManagerCompat? = null
     private val mBinder: IBinder = ObtainableServiceBinder(this)
 
     companion object {
@@ -94,8 +95,7 @@ class CloudStreamerService : Service() {
     }
 
     private fun initNotification() {
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE)
-            as NotificationManager?
+        notificationManager = NotificationManagerCompat.from(applicationContext)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()
         }

@@ -13,23 +13,22 @@ package com.amaze.fileutilities.audio_player.notification
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationManagerCompat
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerService
 
 abstract class AudioPlayerNotification {
     private var notifyMode = NOTIFY_MODE_BACKGROUND
-    private var notificationManager: NotificationManager? = null
+    private var notificationManager: NotificationManagerCompat? = null
     lateinit var service: AudioPlayerService
     var stopped = false
 
     @Synchronized
     fun init(service: AudioPlayerService) {
         this.service = service
-        notificationManager = service.getSystemService(Context.NOTIFICATION_SERVICE)
-            as NotificationManager?
+        notificationManager = NotificationManagerCompat.from(service.applicationContext)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()
         }
@@ -55,7 +54,7 @@ abstract class AudioPlayerNotification {
         }
         if (newNotifyMode == NOTIFY_MODE_FOREGROUND) {
             service.startForeground(NOTIFICATION_ID, notification)
-        } else if (newNotifyMode == NOTIFY_MODE_BACKGROUND) {
+        } else if (newNotifyMode == NOTIFY_MODE_BACKGROUND && notification != null) {
             notificationManager!!.notify(NOTIFICATION_ID, notification)
         }
         notifyMode = newNotifyMode
