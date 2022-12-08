@@ -12,6 +12,7 @@ package com.amaze.fileutilities.audio_player.notification
 
 import android.app.Notification
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -25,6 +26,7 @@ import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
 import com.amaze.fileutilities.audio_player.AudioPlayerService
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.utilis.Utils.Companion.getPendingIntentFlag
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 
 class AudioPlayerNotificationImpl : AudioPlayerNotification() {
@@ -75,7 +77,10 @@ class AudioPlayerNotificationImpl : AudioPlayerNotification() {
         linkButtons(notificationLayout, notificationLayoutBig)
         val action = Intent(service, AudioPlayerDialogActivity::class.java)
         action.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        val clickIntent = PendingIntent.getActivity(service, 0, action, 0)
+        val clickIntent = PendingIntent.getActivity(
+            service, 0, action,
+            getPendingIntentFlag(FLAG_IMMUTABLE)
+        )
         val deleteIntent = buildPendingIntent(service, AudioPlayerService.ACTION_CANCEL, null)
         val notification: Notification =
             NotificationCompat.Builder(service, NOTIFICATION_CHANNEL_ID)

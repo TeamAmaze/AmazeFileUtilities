@@ -17,6 +17,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.amaze.fileutilities.R
 import java.lang.IllegalArgumentException
 
@@ -64,8 +65,7 @@ class NotificationConstants {
          */
         @RequiresApi(api = Build.VERSION_CODES.O)
         private fun createNormalChannel(context: Context) {
-            val mNotificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val mNotificationManager = NotificationManagerCompat.from(context)
             if (mNotificationManager.getNotificationChannel(CHANNEL_NORMAL_ID) == null) {
                 val mChannel = NotificationChannel(
                     CHANNEL_NORMAL_ID,

@@ -12,6 +12,8 @@ package com.amaze.fileutilities.utilis
 
 import android.app.Activity
 import android.app.AppOpsManager
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.usage.StorageStatsManager
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
@@ -1006,6 +1008,23 @@ class Utils {
 
         fun convertDrawableToBitmap(drawable: Drawable): Bitmap {
             return drawable.toBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, null)
+        }
+
+        /**
+         * For compatibility purposes. Wraps the pending intent flag, return with FLAG_IMMUTABLE if device
+         * SDK >= 32.
+         *
+         * @see PendingIntent.FLAG_IMMUTABLE
+         *
+         * @param pendingIntentFlag proposed PendingIntent flag
+         * @return original PendingIntent flag if SDK < 32, otherwise adding FLAG_IMMUTABLE flag.
+         */
+        fun getPendingIntentFlag(pendingIntentFlag: Int): Int {
+            return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                pendingIntentFlag
+            } else {
+                pendingIntentFlag or FLAG_IMMUTABLE
+            }
         }
 
         private fun findApplicationInfoSizeFallback(applicationInfo: ApplicationInfo): Long {
