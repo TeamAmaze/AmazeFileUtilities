@@ -33,9 +33,9 @@ android {
     defaultConfig {
         applicationId "com.amaze.fileutilities"
         minSdk 19
-        targetSdk 30
-        versionCode 69
-        versionName "1.69"
+        targetSdk 31
+        versionCode 70
+        versionName "1.70"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -44,8 +44,8 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
             buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"5CZlDmqIhLoRcalZHXItm5Thwq57MDE2\""
@@ -109,7 +109,7 @@ play {
 //    track.set("internal")
     track.set("production")
     userFraction.set(1.0d)
-    updatePriority.set(1)
+    updatePriority.set(3)
     releaseStatus.set(com.github.triplet.gradle.androidpublisher.ReleaseStatus.COMPLETED)
 }
 

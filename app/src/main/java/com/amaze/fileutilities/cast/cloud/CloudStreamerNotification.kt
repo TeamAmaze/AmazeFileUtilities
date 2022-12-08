@@ -12,6 +12,7 @@ package com.amaze.fileutilities.cast.cloud
 
 import android.app.Notification
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -20,6 +21,7 @@ import androidx.core.app.NotificationCompat
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.utilis.NotificationConstants
+import com.amaze.fileutilities.utilis.Utils.Companion.getPendingIntentFlag
 
 class CloudStreamerNotification {
 
@@ -46,7 +48,7 @@ class CloudStreamerNotification {
                 Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             val contentIntent = PendingIntent.getActivity(
                 context, 0,
-                notificationIntent, 0
+                notificationIntent, getPendingIntentFlag(FLAG_IMMUTABLE)
             )
             val `when` = System.currentTimeMillis()
             val builder: NotificationCompat.Builder =
