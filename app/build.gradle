@@ -21,14 +21,25 @@ plugins {
 
 android {
     signingConfigs {
-        release {
-            storeFile file('/Users/vishal.nehra/Documents/amaze_keys/amazeutils')
-            keyAlias 'amaze-utils'
-            storePassword 'yWiJU7RA^^'
-            keyPassword 'yWiJU7RA^^'
-        }
+        release
     }
+
     compileSdk 31
+
+    Properties appProps = new Properties()
+    def appPropsFile = new File('application.properties')
+
+    if (appPropsFile.canRead()) {
+        appProps.load(new FileInputStream(appPropsFile))
+    } else {
+        println 'application.properties not found'
+        buildConfigField "String", "BASE_CLOUD_FUNC", "new String()"
+        buildConfigField "String", "BASE_API_STICKER_PACK", "new String()"
+        buildConfigField "String", "API_REQ_TRIAL_URI", "new String()"
+        buildConfigField "String", "API_REQ_TRIAL_AUTH_TOKEN", "new String()"
+        buildConfigField "String", "API_REQ_STICKER_PACK_TOKEN", "new String()"
+        buildConfigField "String", "OPENSUBTITLES_API_KEY", "new String()"
+    }
 
     defaultConfig {
         applicationId "com.amaze.fileutilities"
@@ -39,6 +50,26 @@ android {
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        if (appProps != null &&
+                appProps.containsKey('BASE_CLOUD_FUNC') &&
+                appProps.containsKey('API_REQ_TRIAL_URI') &&
+                appProps.containsKey('API_REQ_TRIAL_AUTH_TOKEN') &&
+                appProps.containsKey('BASE_API_STICKER_PACK') &&
+                appProps.containsKey('API_REQ_STICKER_PACK_TOKEN')) {
+            buildConfigField "String", "BASE_CLOUD_FUNC", appProps["BASE_CLOUD_FUNC"]
+            buildConfigField "String", "BASE_API_STICKER_PACK", appProps["BASE_API_STICKER_PACK"]
+            buildConfigField "String", "API_REQ_TRIAL_URI", appProps["API_REQ_TRIAL_URI"]
+            buildConfigField "String", "API_REQ_STICKER_PACK_TOKEN", appProps["API_REQ_STICKER_PACK_TOKEN"]
+            buildConfigField "String", "API_REQ_TRIAL_AUTH_TOKEN", appProps["API_REQ_TRIAL_AUTH_TOKEN"]
+        } else {
+            println 'application.properties found but some entries are missing'
+            buildConfigField "String", "BASE_CLOUD_FUNC", "new String()"
+            buildConfigField "String", "BASE_API_STICKER_PACK", "new String()"
+            buildConfigField "String", "API_REQ_TRIAL_URI", "new String()"
+            buildConfigField "String", "API_REQ_STICKER_PACK_TOKEN", "new String()"
+            buildConfigField "String", "API_REQ_TRIAL_AUTH_TOKEN", "new String()"
+        }
     }
 
     buildTypes {
@@ -47,8 +78,12 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"5CZlDmqIhLoRcalZHXItm5Thwq57MDE2\""
+            if (appProps != null &&
+                    appProps.containsKey('OPENSUBTITLES_API_KEY_DEBUG')) {
+                buildConfigField "String", "OPENSUBTITLES_API_KEY", appProps["OPENSUBTITLES_API_KEY_DEBUG"]
+            } else {
+                buildConfigField "String", "OPENSUBTITLES_API_KEY", "new String()"
+            }
             debuggable true //For "debug" banner on icon
         }
 
@@ -57,8 +92,12 @@ android {
             shrinkResources true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"qK9RpmABGZjtuxYv0Yf30exR2E39Ivsj\""
+            if (appProps != null &&
+                    appProps.containsKey('OPENSUBTITLES_API_KEY_RELEASE')) {
+                buildConfigField "String", "OPENSUBTITLES_API_KEY", appProps["OPENSUBTITLES_API_KEY_RELEASE"]
+            } else {
+                buildConfigField "String", "OPENSUBTITLES_API_KEY", "new String()"
+            }
         }
     }
     compileOptions {
@@ -103,11 +142,11 @@ android {
 }
 
 play {
-    serviceAccountCredentials.set(file("useful-cathode-91310-9986d18df1a5.json"))
+    serviceAccountCredentials.set(file("service_account_config.json"))
     defaultToAppBundles.set(true)
 
-//    track.set("internal")
-    track.set("production")
+    track.set("internal")
+//    track.set("production")
     userFraction.set(1.0d)
     updatePriority.set(3)
     releaseStatus.set(com.github.triplet.gradle.androidpublisher.ReleaseStatus.COMPLETED)
@@ -201,4 +240,28 @@ jacoco {
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
     jacoco.excludes = ['jdk.internal.*']
+}
+
+Properties props = new Properties()
+def propFile = new File('signing.properties')
+
+if (propFile.canRead()) {
+    props.load(new FileInputStream(propFile))
+
+    if (props != null &&
+            props.containsKey('STORE_FILE') &&
+            props.containsKey('STORE_PASSWORD') &&
+            props.containsKey('KEY_ALIAS') &&
+            props.containsKey('KEY_PASSWORD')) {
+        android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+        android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
+        android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
+        android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
+    } else {
+        println 'signing.properties found but some entries are missing'
+        android.buildTypes.release.signingConfig = null
+    }
+} else {
+    println 'signing.properties not found'
+    android.buildTypes.release.signingConfig = null
 }
