@@ -21,15 +21,15 @@
 package com.amaze.fileutilities.home_page.ui.files
 
 import androidx.annotation.Keep
+import com.amaze.fileutilities.BuildConfig
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface TrialValidationApi {
     companion object {
-        const val CLOUD_FUNCTION_BASE =
-            "https://us-central1-useful-cathode-91310.cloudfunctions.net"
-        const val AUTH_TOKEN = "anG*XojCjZQ44x"
+        const val CLOUD_FUNCTION_BASE = BuildConfig.BASE_CLOUD_FUNC
+        const val AUTH_TOKEN = BuildConfig.API_REQ_TRIAL_AUTH_TOKEN
     }
 
     @POST("/amaze-utils-trial-validator-1")

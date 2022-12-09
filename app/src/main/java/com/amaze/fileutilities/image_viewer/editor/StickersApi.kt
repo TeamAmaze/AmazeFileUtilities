@@ -20,6 +20,7 @@
 
 package com.amaze.fileutilities.image_viewer.editor
 
+import com.amaze.fileutilities.BuildConfig
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -28,8 +29,7 @@ import retrofit2.http.Query
 interface StickersApi {
 
     companion object {
-        const val API_STICKERS_BASE =
-            "https://us-central1-useful-cathode-91310.cloudfunctions.net/amaze-utils-sticker-pack/"
+        const val API_STICKERS_BASE = BuildConfig.BASE_API_STICKER_PACK
         const val API_QUERY_PARAM = "token"
         const val API_QUERY_PARAM_VALUE = "c2PxRdya"
     }
