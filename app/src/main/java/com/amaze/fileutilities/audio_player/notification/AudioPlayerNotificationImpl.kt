@@ -22,7 +22,6 @@ package com.amaze.fileutilities.audio_player.notification
 
 import android.app.Notification
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -89,7 +88,7 @@ class AudioPlayerNotificationImpl : AudioPlayerNotification() {
         action.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         val clickIntent = PendingIntent.getActivity(
             service, 0, action,
-            getPendingIntentFlag(FLAG_IMMUTABLE)
+            getPendingIntentFlag(0)
         )
         val deleteIntent = buildPendingIntent(service, AudioPlayerService.ACTION_CANCEL, null)
         val notification: Notification =
@@ -180,6 +179,6 @@ class AudioPlayerNotificationImpl : AudioPlayerNotification() {
     ): PendingIntent {
         val intent = Intent(action)
         intent.component = serviceName
-        return PendingIntent.getService(context, 0, intent, 0)
+        return PendingIntent.getService(context, 0, intent, getPendingIntentFlag(0))
     }
 }

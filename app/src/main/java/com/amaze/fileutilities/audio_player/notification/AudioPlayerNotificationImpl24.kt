@@ -21,7 +21,6 @@
 package com.amaze.fileutilities.audio_player.notification
 
 import android.app.PendingIntent
-import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.ComponentName
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -75,7 +74,7 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
         action.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         val clickIntent = PendingIntent.getActivity(
             service, 0, action,
-            getPendingIntentFlag(FLAG_IMMUTABLE)
+            getPendingIntentFlag(0)
         )
 
         val bitmap = BitmapFactory.decodeResource(
@@ -148,6 +147,6 @@ class AudioPlayerNotificationImpl24 : AudioPlayerNotification() {
         val serviceName = ComponentName(service, AudioPlayerService::class.java)
         val intent = Intent(action)
         intent.component = serviceName
-        return PendingIntent.getService(service, 0, intent, FLAG_IMMUTABLE)
+        return PendingIntent.getService(service, 0, intent, getPendingIntentFlag(0))
     }
 }
