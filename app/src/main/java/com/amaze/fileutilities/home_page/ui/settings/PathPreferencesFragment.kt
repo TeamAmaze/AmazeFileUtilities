@@ -28,6 +28,7 @@ import androidx.preference.CheckBoxPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceCategory
 import androidx.preference.PreferenceFragmentCompat
+import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.PathPreferences
@@ -127,6 +128,15 @@ class PathPreferencesFragment : PreferenceFragmentCompat() {
         }
         preference.onPreferenceChangeListener = onChange
         preference.order = 0
+        if ((
+            featureName!! == PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES ||
+                featureName!! == PathPreferences.FEATURE_ANALYSIS_MEME
+            ) &&
+            BuildConfig.IS_VERSION_FDROID
+        ) {
+            preference.isEnabled = false
+            preference.isChecked = false
+        }
         return preference
     }
 

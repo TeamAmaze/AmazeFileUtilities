@@ -32,6 +32,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentAnalyseBinding
 import com.amaze.fileutilities.home_page.database.AppDatabase
@@ -557,7 +558,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             memesPreview.visibility = if (PathPreferences.isEnabled(
                     sharedPrefs,
                     PathPreferences.FEATURE_ANALYSIS_MEME
-                )
+                ) && !BuildConfig.IS_VERSION_FDROID
             ) View.VISIBLE else View.GONE
 
             /*sadPreview.visibility = if (PathPreferences.isEnabled(
@@ -575,17 +576,17 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             sleepingPreview.visibility = if (PathPreferences.isEnabled(
                     sharedPrefs,
                     PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
-                )
+                ) && !BuildConfig.IS_VERSION_FDROID
             ) View.VISIBLE else View.GONE
             selfiePreview.visibility = if (PathPreferences.isEnabled(
                     sharedPrefs,
                     PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
-                )
+                ) && !BuildConfig.IS_VERSION_FDROID
             ) View.VISIBLE else View.GONE
             groupPicPreview.visibility = if (PathPreferences.isEnabled(
                     sharedPrefs,
                     PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
-                )
+                ) && !BuildConfig.IS_VERSION_FDROID
             ) View.VISIBLE else View.GONE
 
             largeDownloadPreview.visibility = if (PathPreferences.isEnabled(

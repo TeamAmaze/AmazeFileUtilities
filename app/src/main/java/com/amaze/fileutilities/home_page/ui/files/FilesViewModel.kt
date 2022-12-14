@@ -37,6 +37,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioUtils
 import com.amaze.fileutilities.home_page.database.AppDatabase
@@ -55,6 +56,7 @@ import com.amaze.fileutilities.home_page.ui.options.Billing
 import com.amaze.fileutilities.utilis.CursorUtils
 import com.amaze.fileutilities.utilis.FileUtils
 import com.amaze.fileutilities.utilis.ImgUtils
+import com.amaze.fileutilities.utilis.MLUtils
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
@@ -63,10 +65,6 @@ import com.amaze.fileutilities.utilis.isNetworkAvailable
 import com.amaze.fileutilities.utilis.log
 import com.amaze.fileutilities.utilis.share.ShareAdapter
 import com.amaze.fileutilities.utilis.share.getShareIntents
-import com.google.mlkit.vision.face.FaceDetection
-import com.google.mlkit.vision.face.FaceDetectorOptions
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
@@ -127,13 +125,6 @@ class FilesViewModel(val applicationContext: Application) :
             ArrayList<MediaFileInfo>>?>? = null
 
     private var allApps: AtomicReference<List<ApplicationInfo>?> = AtomicReference()
-
-    private val highAccuracyOpts = FaceDetectorOptions.Builder()
-        .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
-        .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
-        .build()
-    private val faceDetector = FaceDetection.getClient(highAccuracyOpts)
-    private val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
     var internalStorageStatsLiveData: MutableLiveData<StorageSummary?>? = null
 
@@ -445,25 +436,17 @@ class FilesViewModel(val applicationContext: Application) :
                         // hard limit in a single run
                         return@forEach
                     }
-                    var features = ImgUtils.ImageFeatures()
-                    ImgUtils.getImageFeatures(
-                        faceDetector,
-                        it.path
-                    ) { isSuccess, imageFeatures ->
-                        if (isSuccess) {
-                            imageFeatures?.run {
-                                features = this
-                            }
-                            dao.insert(
-                                ImageAnalysis(
-                                    it.path,
-                                    features.isSad,
-                                    features.isDistracted,
-                                    features.isSleeping,
-                                    features.facesCount
-                                )
+                    MLUtils.processImageFeatures(it.path) {
+                        features ->
+                        dao.insert(
+                            ImageAnalysis(
+                                it.path,
+                                features.isSad,
+                                features.isDistracted,
+                                features.isSleeping,
+                                features.facesCount
                             )
-                        }
+                        )
                     }
                 }
             }
@@ -536,8 +519,7 @@ class FilesViewModel(val applicationContext: Application) :
                         // hard limit in a single run
                         return@forEach
                     }
-                    ImgUtils.isImageMeme(
-                        textRecognizer,
+                    MLUtils.isImageMeme(
                         it.path,
                     ) { isMeme ->
                         dao.insert(
@@ -907,7 +889,8 @@ class FilesViewModel(val applicationContext: Application) :
             } else {
                 if ((
                     trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXPIRED ||
-                        trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_INACTIVE
+                        trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_INACTIVE ||
+                        trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_UNOFFICIAL
                     //     || trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE
                     // maybe done to force validate for exclusive refunded people, want to convert to custom exclusive
                     // but downside is this'll always check for valid license for customer exclusive people
@@ -1493,7 +1476,9 @@ class FilesViewModel(val applicationContext: Application) :
             service.postValidation(
                 TrialValidationApi.TrialRequest(
                     TrialValidationApi.AUTH_TOKEN, deviceId,
-                    subscriptionStatus, purchaseToken
+                    applicationContext.packageName + "_" + BuildConfig.API_REQ_TRIAL_APP_HASH,
+                    subscriptionStatus,
+                    purchaseToken
                 )
             )?.execute()?.let { response ->
                 return if (response.isSuccessful && response.body() != null) {

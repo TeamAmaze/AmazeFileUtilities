@@ -88,7 +88,9 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
             val trial = dao.findByDeviceId(deviceId)
             if (trial != null) {
                 subscriptionStatus?.summary =
-                    if (trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE) {
+                    if (trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE ||
+                        trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_UNOFFICIAL
+                    ) {
                         trial.getTrialStatusName()
                     } else if (trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_ACTIVE &&
                         trial.subscriptionStatus == Trial.SUBSCRIPTION_STATUS_DEFAULT

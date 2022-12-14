@@ -483,6 +483,35 @@ class Utils {
             return builder
         }
 
+        fun buildPurchaseFdroidDialog(
+            context: Context,
+            paypalCallback: () -> Unit,
+            liberaPayCallback: () -> Unit
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.purchase_fdroid_title)
+                .setMessage(R.string.purchase_fdroid_message)
+                .setPositiveButton(
+                    context.resources.getString(R.string.purchase_fdroid_paypal)
+                ) { dialog, _ ->
+                    paypalCallback.invoke()
+                    dialog.dismiss()
+                }
+                .setNeutralButton(
+                    context.resources.getString(R.string.purchase_fdroid_liberapay)
+                ) { dialog, _ ->
+                    liberaPayCallback.invoke()
+                    dialog.dismiss()
+                }
+                .setNegativeButton(
+                    context.resources.getString(R.string.close)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
         fun buildTrialExclusiveInactiveDialog(
             context: Context,
             positiveCallback: () -> Unit

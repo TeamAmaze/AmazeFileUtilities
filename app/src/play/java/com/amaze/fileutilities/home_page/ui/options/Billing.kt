@@ -129,6 +129,7 @@ class Billing(val context: Context, private var uniqueId: String) :
                             service.postValidation(
                                 TrialValidationApi.TrialRequest(
                                     TrialValidationApi.AUTH_TOKEN, uniqueId,
+                                    context.packageName + "_" + BuildConfig.API_REQ_TRIAL_APP_HASH,
                                     latestPurchase?.purchaseState
                                         ?: Trial.SUBSCRIPTION_STATUS_DEFAULT,
                                     latestPurchase?.purchaseToken + "@gplay", isPurchaseInApp

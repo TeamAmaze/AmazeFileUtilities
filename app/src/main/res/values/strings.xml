@@ -864,4 +864,15 @@
     <string name="whatsapp_media">Whatsapp Media</string>
     <!-- large files in analysis tab -->
     <string name="large_files">Large Files</string>
+    <!-- purchase fdroid subscription -->
+    <string name="purchase_fdroid_title">Purchase</string>
+    <!-- purchase fdroid subscription summary -->
+    <string name="purchase_fdroid_message">You\'re running an Fdroid build.
+        You can unlock a lifetime subscription by donating any amount of your choice.
+        Please donate using one of the options below.
+        Once done please contact us through telegram / email by sharing your device ID and we\'ll unlock the subscription for you.</string>
+    <!-- purchase fdroid subscription paypal -->
+    <string name="purchase_fdroid_paypal">Paypal</string>
+    <!-- purchase fdroid subscription liberapay -->
+    <string name="purchase_fdroid_liberapay">Liberapay</string>
 </resources>

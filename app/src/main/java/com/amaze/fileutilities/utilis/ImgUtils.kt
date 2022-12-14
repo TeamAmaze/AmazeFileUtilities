@@ -21,10 +21,6 @@
 package com.amaze.fileutilities.utilis
 
 import android.graphics.Bitmap
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.face.FaceDetector
-import com.google.mlkit.vision.text.Text
-import com.google.mlkit.vision.text.TextRecognizer
 import org.opencv.android.Utils
 import org.opencv.core.Core
 import org.opencv.core.Mat
@@ -37,8 +33,6 @@ import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.IOException
-import java.util.concurrent.TimeUnit
 import kotlin.math.pow
 
 class ImgUtils {
@@ -48,7 +42,7 @@ class ImgUtils {
         var log: Logger = LoggerFactory.getLogger(ImgUtils::class.java)
 
 //        private var tessBaseApi: TessBaseAPI? = null
-        private val wordRegex = "^[A-Za-z]*$".toRegex()
+        val wordRegex = "^[A-Za-z]*$".toRegex()
 
         fun convertMatToBitmap(input: Mat): Bitmap? {
             var bmp: Bitmap? = null
@@ -63,7 +57,7 @@ class ImgUtils {
             return bmp
         }
 
-        private fun readImage(path: String): Mat? {
+        fun readImage(path: String): Mat? {
             if (!path.doesFileExist()) {
                 log.warn("failed to read matrix from path as file not found")
                 return null
@@ -103,121 +97,6 @@ class ImgUtils {
             return tessBaseApi
         }*/
 
-        fun isImageMeme(
-            textRecognizer: TextRecognizer,
-            path: String,
-            callback: (isMeme: Boolean) -> Unit
-        ) {
-            TimeUnit.SECONDS.sleep(1L)
-            extractTextFromImg(textRecognizer, path) { isSuccess, extractedText ->
-                if (isSuccess) {
-                    extractedText?.run {
-                        for (block in textBlocks) {
-                            for (line in block.lines) {
-                                for (element in line.elements) {
-                                    val elementText = element.text
-                                    if (elementText.matches(wordRegex) &&
-                                        elementText.length > 10 &&
-                                        !elementText.contains("shot on", true)
-                                    ) {
-                                        callback.invoke(true)
-                                        return@extractTextFromImg
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    callback.invoke(false)
-                } else {
-                    callback.invoke(false)
-                }
-            }
-        }
-
-        fun getImageFeatures(
-            faceDetector: FaceDetector,
-            path: String,
-            callback: ((isSuccess: Boolean, imageFeatures: ImageFeatures?) -> Unit)
-        ) {
-//            val image = InputImage.fromBitmap(bitmap, 0)
-            try {
-                TimeUnit.SECONDS.sleep(1L)
-//                val image = InputImage.fromFilePath(context, uri)
-                val mat = readImage(path)
-                if (mat == null) {
-                    log.warn("failure to find image analysis")
-                    callback.invoke(false, null)
-                    return
-                }
-                val resizeimage = resize(mat, getGenericWidth(mat), getGenericHeight(mat))
-                val bitmap = convertMatToBitmap(resizeimage)
-                if (bitmap != null) {
-                    val image = InputImage.fromBitmap(bitmap, 0)
-                    faceDetector.process(image)
-                        .addOnSuccessListener { faces ->
-                            // Task completed successfully
-                            // ...
-                            var isSad = false
-                            var isDistracted = false
-                            var leftEyeOpen = false
-                            var rightEyeOpen = false
-                            faces.forEach {
-                                face ->
-                                face.smilingProbability?.let {
-                                    if (it < 0.7) {
-                                        isSad = true
-                                    }
-                                }
-                                if (face.headEulerAngleX > 36 || face.headEulerAngleX < -36 ||
-                                    face.headEulerAngleY > 36 || face.headEulerAngleY < -36 ||
-                                    face.headEulerAngleZ > 36 || face.headEulerAngleZ < -36
-                                ) {
-                                    isDistracted = true
-                                }
-                                face.leftEyeOpenProbability?.let {
-                                    if (it < 0.7) {
-                                        leftEyeOpen = true
-                                    }
-                                }
-                                face.rightEyeOpenProbability?.let {
-                                    if (it < 0.7) {
-                                        rightEyeOpen = true
-                                    }
-                                }
-                            }
-                            mat.release()
-                            resizeimage.release()
-                            callback.invoke(
-                                true,
-                                ImageFeatures(
-                                    isSad, leftEyeOpen && rightEyeOpen,
-                                    isDistracted, faces.count()
-                                )
-                            )
-                        }
-                        .addOnFailureListener { e ->
-                            // Task failed with an exception
-                            // ...
-                            log.warn("get image features failure", e)
-                            mat.release()
-                            resizeimage.release()
-                            callback.invoke(false, null)
-                        }
-                } else {
-                    log.warn("failed to find features of empty bitmap")
-                    mat.release()
-                    resizeimage.release()
-                    callback.invoke(false, null)
-                }
-            } catch (e: Exception) {
-                log.warn("Failed to check for image features due to exception", e)
-                callback.invoke(false, null)
-            } catch (oom: OutOfMemoryError) {
-                log.warn("Failed to check for image features due to oom", oom)
-                callback.invoke(false, null)
-            }
-        }
-
         fun resizeImage(bitmap: Bitmap): Bitmap? {
             val mat = convertBitmapToMat(bitmap)
             if (mat == null) {
@@ -226,54 +105,6 @@ class ImgUtils {
             }
             val resizeimage = resize(mat, getGenericWidth(mat), getGenericHeight(mat))
             return convertMatToBitmap(resizeimage)
-        }
-
-        private fun extractTextFromImg(
-            textRecognizer: TextRecognizer,
-            path: String,
-            callback: ((isSuccess: Boolean, extractedText: Text?) -> Unit)?
-        ) {
-            try {
-//                val image = InputImage.fromFilePath(context, uri)
-                val mat = readImage(path)
-                if (mat == null) {
-                    log.warn("Failure to extract text from input image")
-                    callback?.invoke(false, null)
-                    return
-                }
-                val resizeimage = resize(mat, getGenericWidth(mat), getGenericHeight(mat))
-                val bitmap = convertMatToBitmap(resizeimage)
-                if (bitmap != null) {
-                    if (bitmap.width < 32 || bitmap.height < 32) {
-                        log.info("skip extract text due to small image size")
-                        callback?.invoke(true, null)
-                        return
-                    }
-                    val result = textRecognizer.process(bitmap, 0)
-                        .addOnSuccessListener { visionText ->
-                            // Task completed successfully
-                            log.debug(visionText.text)
-                            mat.release()
-                            resizeimage.release()
-                            callback?.invoke(true, visionText)
-                        }
-                        .addOnFailureListener { e ->
-                            // Task failed with an exception
-                            // ...
-                            log.warn("extract text from img failure", e)
-                            mat.release()
-                            resizeimage.release()
-                            callback?.invoke(false, null)
-                        }
-                } else {
-                    log.warn("Failed to extract text from empty bitmap")
-                    callback?.invoke(false, null)
-                }
-            } catch (e: IOException) {
-                log.warn("extract text from img ioexception", e)
-                callback?.invoke(true, null)
-                return
-            }
         }
 
         /*fun isImageMeme(path: String, externalDirPath: String): Boolean {
@@ -515,11 +346,11 @@ class ImgUtils {
             return threshold
         }
 
-        private fun getGenericWidth(matrix: Mat): Double {
+        fun getGenericWidth(matrix: Mat): Double {
             return if (matrix.width() > matrix.height()) 620.0 else 480.0
         }
 
-        private fun getGenericHeight(matrix: Mat): Double {
+        fun getGenericHeight(matrix: Mat): Double {
             return if (matrix.height() > matrix.width()) 620.0 else 480.0
         }
 
@@ -567,7 +398,7 @@ class ImgUtils {
             return destination
         }
 
-        private fun resize(matrix: Mat, width: Double, height: Double): Mat {
+        fun resize(matrix: Mat, width: Double, height: Double): Mat {
             val resizeMat = Mat()
             val sz = Size(width, height)
             Imgproc.resize(
