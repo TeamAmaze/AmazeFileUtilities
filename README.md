@@ -5,7 +5,7 @@
 
 # <a href="https://teamamaze.xyz">Amaze File Utilities</a>
 
-An open source alternative to Google Files.
+<img src="graphic.png" align="right" width="100%" height="40%"></img>
 
 Overview
 ---
@@ -15,6 +15,7 @@ Overview
 <div style="display:flex;">
 
 From the developers of open source app Amaze File Utilities. An all in one app to view, manage and analyse internal storage media files with built-in media players and without any ads.
+An open source alternative to Google Files android app.
 
 Analyse
 - Analyse storage for junk files to delete
