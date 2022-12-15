@@ -29,9 +29,9 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.format.DateUtils
 import androidx.core.content.FileProvider
-import com.amaze.fileutilities.CastActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
+import com.amaze.fileutilities.home_page.ui.options.CastActivity
 import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.utilis.FileUtils
 import com.amaze.fileutilities.utilis.Utils

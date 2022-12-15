@@ -51,8 +51,6 @@ import com.amaze.fileutilities.home_page.database.LowLightAnalysis
 import com.amaze.fileutilities.home_page.database.LowLightAnalysisDao
 import com.amaze.fileutilities.home_page.database.MemeAnalysis
 import com.amaze.fileutilities.home_page.database.MemeAnalysisDao
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -400,11 +398,6 @@ fun Context.showFileChooserDialog(filter: FileFilter = null, chooserPath: (file:
 
 fun String.removeExtension(): String {
     return this.substring(0, this.lastIndexOf("."))
-}
-
-fun Context.isPlayServicesAvailable(): Boolean {
-    return GoogleApiAvailability.getInstance()
-        .isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS
 }
 
 fun Context.isNetworkAvailable(): Boolean {

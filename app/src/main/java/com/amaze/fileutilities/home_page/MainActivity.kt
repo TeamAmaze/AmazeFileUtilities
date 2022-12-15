@@ -319,6 +319,7 @@ class MainActivity :
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == VOICE_REQUEST_CODE && resultCode == RESULT_OK) {
             // Populate the wordsList with the String values the recognition engine thought it heard

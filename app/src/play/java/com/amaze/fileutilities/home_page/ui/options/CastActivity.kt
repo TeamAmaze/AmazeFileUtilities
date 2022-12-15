@@ -18,7 +18,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.amaze.fileutilities
+package com.amaze.fileutilities.home_page.ui.options
 
 import android.content.Intent
 import android.content.ServiceConnection
@@ -28,6 +28,8 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.mediarouter.app.MediaRouteButton
 import com.afollestad.materialdialogs.MaterialDialog
+import com.amaze.fileutilities.PermissionsActivity
+import com.amaze.fileutilities.R
 import com.amaze.fileutilities.cast.cloud.CloudStreamer
 import com.amaze.fileutilities.cast.cloud.CloudStreamerService
 import com.amaze.fileutilities.cast.cloud.CloudStreamerServiceConnection

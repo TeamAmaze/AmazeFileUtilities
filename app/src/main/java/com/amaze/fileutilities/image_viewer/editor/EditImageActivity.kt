@@ -420,6 +420,7 @@ class EditImageActivity :
 
     // TODO(lucianocheng): Replace onActivityResult with Result API from Google
     //                     See https://developer.android.com/training/basics/intents/result
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
@@ -619,6 +620,9 @@ class EditImageActivity :
                 arguments.putStringArrayList(ARG_STICKERS_LIST, stickersUrlList)
                 mStickerBSFragment?.arguments = arguments
                 showBottomSheetDialogFragment(mStickerBSFragment)
+            }
+            else -> {
+                // do nothing
             }
         }
     }

@@ -30,6 +30,7 @@ import android.net.wifi.p2p.WifiP2pManager
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.lifecycle.ViewModelProvider
+import com.amaze.fileutilities.home_page.ui.options.CastActivity
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.home_page.ui.transfer.TransferViewModel
 import com.amaze.fileutilities.utilis.showToastInCenter

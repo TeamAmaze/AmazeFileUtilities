@@ -23,7 +23,7 @@ package com.amaze.fileutilities.cast.cloud
 import android.content.ComponentName
 import android.content.ServiceConnection
 import android.os.IBinder
-import com.amaze.fileutilities.CastActivity
+import com.amaze.fileutilities.home_page.ui.options.CastActivity
 import com.amaze.fileutilities.utilis.ObtainableServiceBinder
 import java.lang.ref.WeakReference
 

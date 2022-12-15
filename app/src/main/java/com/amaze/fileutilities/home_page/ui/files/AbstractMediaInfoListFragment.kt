@@ -25,9 +25,9 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.amaze.fileutilities.CastActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
+import com.amaze.fileutilities.home_page.ui.options.CastActivity
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.FileUtils
 import com.amaze.fileutilities.utilis.ItemsActionBarFragment
