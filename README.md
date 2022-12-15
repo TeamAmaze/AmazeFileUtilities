@@ -7,6 +7,7 @@
 
 <img src="graphic.png" align="right" width="100%" height="40%"></img>
 
+  
 Overview
 ---
 
@@ -62,10 +63,7 @@ Note: This app is trial based and requires a nominal donation to unlock full ver
 Downloads
 ---
 
-[<img alt="Get it on Google Play" height="80" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">](https://play.google.com/store/apps/details?id=com.amaze.filemanager)
-[<img alt="Get it on F-Droid" height="80" src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png">](https://f-droid.org/packages/com.amaze.filemanager/)
-[<img alt="Get it on IzzyOnDroid" height="80" src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png">](https://apt.izzysoft.de/fdroid/index/apk/com.amaze.filemanager)
-[<img alt="Get it on AFH" height="50px" src="https://www.androidfilehost.com/images/afh.png">](https://www.androidfilehost.com/?w=files&flid=73967)
+[<img alt="Get it on Google Play" height="80" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png">](https://play.google.com/store/apps/details?id=com.amaze.fileutilities)
 
 Support
 ---
@@ -85,7 +83,7 @@ Translators
 ----
 Want to help translate Amaze to your language?  
 
-See [Transifex translation](https://www.transifex.com/amaze/amaze-file-manager/).
+See [Crowdin](https://crowdin.com/project/amaze-file-utilities).
 
 Vendors/Developers
 ----
