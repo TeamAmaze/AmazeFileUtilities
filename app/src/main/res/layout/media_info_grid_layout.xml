@@ -50,7 +50,6 @@
                     android:layout_width="@dimen/check_icon_size_grid"
                     android:layout_height="@dimen/check_icon_size_grid"
                     app:srcCompat="@drawable/avd_music_note"
-                    android:layout_toStartOf="@id/extra_info"
                     android:visibility="gone" />
             </RelativeLayout>
         </RelativeLayout>

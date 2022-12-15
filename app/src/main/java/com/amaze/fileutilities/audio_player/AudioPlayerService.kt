@@ -1,11 +1,21 @@
 /*
- * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2021 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.audio_player
@@ -22,6 +32,7 @@ import android.media.AudioManager
 import android.media.audiofx.AudioEffect
 import android.net.Uri
 import android.os.Build
+import android.os.CountDownTimer
 import android.os.IBinder
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
@@ -129,7 +140,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                 currentUri = intentUri
             }
             val intentUriList: List<Uri>? = it.getParcelableArrayListExtra(ARG_URI_LIST)
-            if (uriList == null && intentUriList != null) {
+            if (intentUriList != null) {
                 uriList = intentUriList
             }
             if (currentUri == null) {
@@ -195,7 +206,12 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                         }
                         ACTION_SHUFFLE -> {
                             log.info("cycling shuffle")
-                            cycleShuffle()
+                            initCurrentUriAndPlayer(intentUri!!, true)
+                            if (!audioProgressHandler!!.doShuffle) {
+                                cycleShuffle()
+                            } else {
+                                // do nothing
+                            }
                         }
                         ACTION_REPEAT -> {
                             log.info("cycling repeat")
@@ -336,9 +352,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         val stopIntent = Intent(TAG_BROADCAST_AUDIO_SERVICE_CANCEL)
         return PendingIntent.getBroadcast(
             this, 1234, stopIntent,
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S)
-                PendingIntent.FLAG_UPDATE_CURRENT and PendingIntent.FLAG_IMMUTABLE
-            else PendingIntent.FLAG_ONE_SHOT
+            Utils.getPendingIntentFlag(PendingIntent.FLAG_ONE_SHOT)
         )
     }
 
@@ -346,9 +360,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         val intent = Intent(TAG_BROADCAST_AUDIO_SERVICE_PLAY)
         return PendingIntent.getBroadcast(
             this, 1235, intent,
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S)
-                PendingIntent.FLAG_UPDATE_CURRENT and PendingIntent.FLAG_IMMUTABLE
-            else PendingIntent.FLAG_ONE_SHOT
+            Utils.getPendingIntentFlag(PendingIntent.FLAG_ONE_SHOT)
         )
     }
 
@@ -434,7 +446,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         mediaButtonIntent.component = mediaButtonReceiverComponentName
         val mediaButtonReceiverPendingIntent = PendingIntent.getBroadcast(
             applicationContext, 0, mediaButtonIntent,
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S) PendingIntent.FLAG_IMMUTABLE else 0
+            Utils.getPendingIntentFlag(0)
         )
         mediaSession = MediaSessionCompat(
             this,
@@ -510,6 +522,62 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         }
         updatePlaybackState(true, renderWaveform)
         invalidateNotificationPlayButton()
+    }
+
+    var volume = 0f
+
+    private fun startFadeIn(exoPlayer: ExoPlayer, doNext: () -> Unit) {
+        val FADE_DURATION = 5000L // The duration of the fade
+        // The amount of time between volume changes. The smaller this is, the smoother the fade
+        val FADE_INTERVAL = 25L
+        val MAX_VOLUME = 1 // The volume will increase from 0 to 1
+        val numberOfSteps: Float = FADE_DURATION.toFloat() / FADE_INTERVAL.toFloat()
+        // Calculate by how much the volume changes each step
+        val deltaVolume = MAX_VOLUME / numberOfSteps.toFloat()
+
+        // Create a new Timer and Timer task to run the fading outside the main UI thread
+        object : CountDownTimer(FADE_DURATION, FADE_INTERVAL) {
+            override fun onTick(millisUntilFinished: Long) {
+                if (volume <= 1f) {
+                    fadeInStep(deltaVolume, exoPlayer) // Do a fade step
+                }
+            }
+
+            override fun onFinish() {
+                doNext.invoke()
+            }
+        }.start()
+    }
+
+    private fun startFadeOut(exoPlayer: ExoPlayer, doNext: () -> Unit) {
+        val FADE_DURATION = 5000L // The duration of the fade
+        // The amount of time between volume changes. The smaller this is, the smoother the fade
+        val FADE_INTERVAL = 25L
+        val MAX_VOLUME = 0 // The volume will increase from 0 to 1
+        val numberOfSteps: Float = FADE_DURATION.toFloat() / FADE_INTERVAL.toFloat()
+        // Calculate by how much the volume changes each step
+        val deltaVolume = MAX_VOLUME / numberOfSteps
+        object : CountDownTimer(FADE_DURATION, FADE_INTERVAL) {
+            override fun onTick(millisUntilFinished: Long) {
+                if (volume >= 0f) {
+                    fadeOutStep(deltaVolume, exoPlayer) // Do a fade step
+                }
+            }
+
+            override fun onFinish() {
+                doNext()
+            }
+        }.start()
+    }
+
+    private fun fadeInStep(deltaVolume: Float, exoPlayer: ExoPlayer) {
+        exoPlayer.volume = volume
+        volume += deltaVolume
+    }
+
+    private fun fadeOutStep(deltaVolume: Float, exoPlayer: ExoPlayer) {
+        exoPlayer.volume = volume
+        volume -= deltaVolume
     }
 
     private fun playMediaItem() {
@@ -739,7 +807,9 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                 lyricsParser.get()?.lyricsRaw?.isSynced == true
             audioProgressHandler.audioPlaybackInfo.lyricsStrings = lyricsParser
                 .get()?.getLyricsNew(exoPlayer!!.currentPosition / 1000)
-            serviceBinderPlaybackUpdate?.onPositionUpdate(audioProgressHandler)
+            if (serviceBinderPlaybackUpdate?.shouldListenToUpdates() == true) {
+                serviceBinderPlaybackUpdate?.onPositionUpdate(audioProgressHandler)
+            }
             updateMediaSessionPlaybackState()
             playingNotification?.update()
         }

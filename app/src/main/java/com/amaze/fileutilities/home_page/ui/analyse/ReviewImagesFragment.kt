@@ -1,11 +1,21 @@
 /*
- * Copyright (C) 2021-2022 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2022 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.home_page.ui.analyse
@@ -92,6 +102,10 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         const val TYPE_LARGE_APPS = 20
         const val TYPE_GAMES_INSTALLED = 21
         const val TYPE_APK_FILES = 22
+        const val TYPE_WHATSAPP = 23
+        const val TYPE_LARGE_FILES = 24
+        const val TYPE_MOST_USED_APPS = 25
+        const val TYPE_LEAST_USED_APPS = 26
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -169,7 +183,8 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
             TYPE_OLD_RECORDINGS -> {
                 MediaFileAdapter.MEDIA_TYPE_AUDIO
             }
-            TYPE_LARGE_APPS, TYPE_UNUSED_APPS, TYPE_GAMES_INSTALLED, TYPE_APK_FILES -> {
+            TYPE_LARGE_APPS, TYPE_UNUSED_APPS, TYPE_MOST_USED_APPS, TYPE_LEAST_USED_APPS,
+            TYPE_GAMES_INSTALLED, TYPE_APK_FILES -> {
                 MediaFileAdapter.MEDIA_TYPE_APKS
             }
             else -> {
@@ -275,6 +290,17 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                         } else {
                             setMediaInfoList(it, false)
                             invalidateProcessing(false, invalidateProgress)
+                        }
+                    }
+            }
+            TYPE_LARGE_FILES -> {
+                filesViewModel.getLargeFilesLiveData()
+                    .observe(viewLifecycleOwner) {
+                        if (it == null) {
+                            invalidateProcessing(true, false)
+                        } else {
+                            setMediaInfoList(it, false)
+                            invalidateProcessing(false, false)
                         }
                     }
             }
@@ -420,7 +446,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                     }
             }
             TYPE_LARGE_DOWNLOADS -> {
-                viewModel.getLargeDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
+                filesViewModel.getLargeDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
                     largeDownloads ->
                     invalidateProcessing(true, false)
                     largeDownloads?.let {
@@ -430,7 +456,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                 }
             }
             TYPE_OLD_DOWNLOADS -> {
-                viewModel.getOldDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
+                filesViewModel.getOldDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
                     oldDownloads ->
                     invalidateProcessing(true, false)
                     oldDownloads?.let {
@@ -440,7 +466,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                 }
             }
             TYPE_OLD_SCREENSHOTS -> {
-                viewModel.getOldScreenshots(pathPreferencesDao).observe(viewLifecycleOwner) {
+                filesViewModel.getOldScreenshots(pathPreferencesDao).observe(viewLifecycleOwner) {
                     oldScreenshots ->
                     invalidateProcessing(true, false)
                     oldScreenshots?.let {
@@ -450,7 +476,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                 }
             }
             TYPE_OLD_RECORDINGS -> {
-                viewModel.getOldRecordings(pathPreferencesDao).observe(viewLifecycleOwner) {
+                filesViewModel.getOldRecordings(pathPreferencesDao).observe(viewLifecycleOwner) {
                     oldRecordings ->
                     invalidateProcessing(true, false)
                     oldRecordings?.let {
@@ -459,12 +485,58 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                     }
                 }
             }
+            TYPE_WHATSAPP -> {
+                filesViewModel.getWhatsappMediaLiveData(pathPreferencesDao)
+                    .observe(viewLifecycleOwner) {
+                        whatsappMedia ->
+                        invalidateProcessing(true, false)
+                        whatsappMedia?.let {
+                            setMediaInfoList(it, false)
+                            invalidateProcessing(false, false)
+                        }
+                    }
+            }
+            TYPE_TELEGRAM -> {
+                filesViewModel.getTelegramMediaFiles(pathPreferencesDao)
+                    .observe(viewLifecycleOwner) {
+                        telegramMedia ->
+                        invalidateProcessing(true, false)
+                        telegramMedia?.let {
+                            setMediaInfoList(it, false)
+                            invalidateProcessing(false, false)
+                        }
+                    }
+            }
             TYPE_UNUSED_APPS -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                     filesViewModel.getUnusedApps()
                         .observe(viewLifecycleOwner) { unusedApps ->
                             invalidateProcessing(true, false)
                             unusedApps?.let {
+                                setMediaInfoList(it, false)
+                                invalidateProcessing(false, false)
+                            }
+                        }
+                }
+            }
+            TYPE_MOST_USED_APPS -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    filesViewModel.getMostUsedApps()
+                        .observe(viewLifecycleOwner) { mostUsedApps ->
+                            invalidateProcessing(true, false)
+                            mostUsedApps?.let {
+                                setMediaInfoList(it, false)
+                                invalidateProcessing(false, false)
+                            }
+                        }
+                }
+            }
+            TYPE_LEAST_USED_APPS -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    filesViewModel.getLeastUsedApps()
+                        .observe(viewLifecycleOwner) { leastUsedApps ->
+                            invalidateProcessing(true, false)
+                            leastUsedApps?.let {
                                 setMediaInfoList(it, false)
                                 invalidateProcessing(false, false)
                             }

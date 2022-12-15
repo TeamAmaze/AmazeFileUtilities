@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Narzędzia plików Amaze</string>
+    <string name="app_name">Amaze File Utilities</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">Narzędzia plików Amaze</string>
+    <string name="app_name_launcher">Amaze Utilities</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">Aplikacja narzędziowa do plików z wbudowanym odtwarzaczem mediów, czyli wszystko czego potrzebujesz. ;)</string>
+    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Przeglądarka obrazów</string>
+    <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">Przeglądarka obrazów</string>
+    <string name="image_viewer_normal">Image Viewer</string>
     <!-- Video player activity label -->
-    <string name="video_player">Amaze odtwarzacz wideo</string>
+    <string name="video_player">Amaze Video Player</string>
     <!-- Video player dialog intent filter label -->
     <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
     <!-- Video player fill screen intent label -->
@@ -259,7 +259,7 @@
     <!-- Junk files analysis hint -->
     <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
     <!-- Telegram analysis label -->
-    <string name="telegram_files">Telegram</string>
+    <string name="telegram_files">Telegram Media</string>
     <!-- More optimisations coming at analysis tab bottom -->
     <string name="more_to_come">More optimizations to come!</string>
     <!-- View all analysed content analysis tab -->
@@ -304,7 +304,7 @@
     <!-- Images features group name in analysis settings -->
     <string name="image_features">Image Features</string>
     <!-- Images features group hint in analysis settings -->
-    <string name="features_paths_hint">Includes closed eyes, distracted, sad, selfie, group paths</string>
+    <string name="features_paths_hint">Includes closed eyes, selfie, group paths</string>
     <!-- Downloads label in analysis settings -->
     <string name="download_paths">Downloads</string>
     <!-- Downloads hint in analysis settings -->
@@ -743,6 +743,10 @@
     <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
     <!-- Unused apps in analysis tab -->
     <string name="unused_apps">Unused apps</string>
+    <!-- Most used apps in analysis tab -->
+    <string name="most_used_apps">Most used apps</string>
+    <!-- Least used apps in analysis tab -->
+    <string name="least_used_apps">Least used apps</string>
     <!-- Large apps in analysis tab -->
     <string name="large_apps">Large apps</string>
     <!-- Games installed in analysis tab -->
@@ -757,6 +761,10 @@
     <string name="refresh">Refresh</string>
     <!-- Unused apps preference dialog message -->
     <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
+    <!-- Most used apps preference dialog message -->
+    <string name="most_used_apps_pref_message">Apps most used in last number of days</string>
+    <!-- Least used apps preference dialog message -->
+    <string name="least_used_apps_pref_message">Apps least used in last number of days</string>
     <!-- Stopping analysis by pressing on (X) button in analysis tab -->
     <string name="stopping_analysis">Stopping analysis</string>
     <!-- Remove battery optimizations on welcome screen and settings page -->
@@ -839,4 +847,12 @@
     <string name="clear_lyrics">Clearing lyrics</string>
     <!-- lyrics type dialog -->
     <string name="added_lyrics">Added lyrics</string>
+    <!-- whatsapp images in analysis section -->
+    <string name="whatsapp_images">Whatsapp Images</string>
+    <!-- whatsapp videos in analysis section -->
+    <string name="whatsapp_videos">Whatsapp Videos</string>
+    <!-- whatsapp analysis in settings -->
+    <string name="whatsapp_media">Whatsapp Media</string>
+    <!-- large files in analysis tab -->
+    <string name="large_files">Large Files</string>
 </resources>

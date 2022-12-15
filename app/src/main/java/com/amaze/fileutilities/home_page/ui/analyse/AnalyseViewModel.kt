@@ -1,11 +1,21 @@
 /*
- * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2021 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.home_page.ui.analyse
@@ -25,8 +35,6 @@ import com.amaze.fileutilities.home_page.database.LowLightAnalysis
 import com.amaze.fileutilities.home_page.database.LowLightAnalysisDao
 import com.amaze.fileutilities.home_page.database.MemeAnalysis
 import com.amaze.fileutilities.home_page.database.MemeAnalysisDao
-import com.amaze.fileutilities.home_page.database.PathPreferences
-import com.amaze.fileutilities.home_page.database.PathPreferencesDao
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.PreferencesConstants
@@ -42,10 +50,6 @@ class AnalyseViewModel : ViewModel() {
 
     var duplicateFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var emptyFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    var oldRecordingsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    var oldScreenshotsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    var oldDownloadsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    var largeDownloadsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var largeVideosLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var clutteredVideosLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var blurImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
@@ -279,132 +283,6 @@ class AnalyseViewModel : ViewModel() {
         }
     }
 
-    fun getLargeDownloads(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
-        if (largeDownloadsLiveData == null) {
-            largeDownloadsLiveData = MutableLiveData()
-            largeDownloadsLiveData?.value = null
-            processLargeDownloads(dao)
-        }
-        return largeDownloadsLiveData!!
-    }
-
-    private fun processLargeDownloads(dao: PathPreferencesDao) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS)
-            val priorityQueue = PriorityQueue<MediaFileInfo>(
-                100
-            ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
-
-            prefPaths.forEach {
-                processFileRecursive(
-                    File(it.path), priorityQueue,
-                    MediaFileInfo.MEDIA_TYPE_UNKNOWN
-                )
-            }
-
-            val result = ArrayList<MediaFileInfo>()
-            while (!priorityQueue.isEmpty()) {
-                priorityQueue.remove()?.let {
-                    result.add(it)
-                }
-            }
-            largeDownloadsLiveData?.postValue(ArrayList(result.reversed()))
-        }
-    }
-
-    fun getOldDownloads(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
-        if (oldDownloadsLiveData == null) {
-            oldDownloadsLiveData = MutableLiveData()
-            oldDownloadsLiveData?.value = null
-            processOldDownloads(dao)
-        }
-        return oldDownloadsLiveData!!
-    }
-
-    private fun processOldDownloads(dao: PathPreferencesDao) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS)
-            val priorityQueue = PriorityQueue<MediaFileInfo>(
-                100
-            ) { o1, o2 -> -1 * o1.date.compareTo(o2.date) }
-
-            prefPaths.forEach {
-                processFileRecursive(
-                    File(it.path), priorityQueue,
-                    MediaFileInfo.MEDIA_TYPE_UNKNOWN
-                )
-            }
-
-            val result = ArrayList<MediaFileInfo>()
-            while (!priorityQueue.isEmpty()) {
-                priorityQueue.remove()?.let {
-                    result.add(it)
-                }
-            }
-            oldDownloadsLiveData?.postValue(ArrayList(result.reversed()))
-        }
-    }
-
-    fun getOldScreenshots(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
-        if (oldScreenshotsLiveData == null) {
-            oldScreenshotsLiveData = MutableLiveData()
-            oldScreenshotsLiveData?.value = null
-            processOldScreenshots(dao)
-        }
-        return oldScreenshotsLiveData!!
-    }
-
-    private fun processOldScreenshots(dao: PathPreferencesDao) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS)
-            val priorityQueue = PriorityQueue<MediaFileInfo>(
-                100
-            ) { o1, o2 -> -1 * o1.date.compareTo(o2.date) }
-
-            prefPaths.forEach {
-                processFileRecursive(File(it.path), priorityQueue, MediaFileInfo.MEDIA_TYPE_IMAGE)
-            }
-
-            val result = ArrayList<MediaFileInfo>()
-            while (!priorityQueue.isEmpty()) {
-                priorityQueue.remove()?.let {
-                    result.add(it)
-                }
-            }
-            oldScreenshotsLiveData?.postValue(ArrayList(result.reversed()))
-        }
-    }
-
-    fun getOldRecordings(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
-        if (oldRecordingsLiveData == null) {
-            oldRecordingsLiveData = MutableLiveData()
-            oldRecordingsLiveData?.value = null
-            processOldRecordings(dao)
-        }
-        return oldRecordingsLiveData!!
-    }
-
-    private fun processOldRecordings(dao: PathPreferencesDao) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_RECORDING)
-            val priorityQueue = PriorityQueue<MediaFileInfo>(
-                100
-            ) { o1, o2 -> -1 * o1.date.compareTo(o2.date) }
-
-            prefPaths.forEach {
-                processFileRecursive(File(it.path), priorityQueue, MediaFileInfo.MEDIA_TYPE_AUDIO)
-            }
-
-            val result = ArrayList<MediaFileInfo>()
-            while (!priorityQueue.isEmpty()) {
-                priorityQueue.remove()?.let {
-                    result.add(it)
-                }
-            }
-            oldRecordingsLiveData?.postValue(ArrayList(result.reversed()))
-        }
-    }
-
     fun getDuplicateDirectories(
         dao: InternalStorageAnalysisDao,
         searchMediaFiles: Boolean,
@@ -538,7 +416,8 @@ class AnalyseViewModel : ViewModel() {
     private fun processFileRecursive(
         file: File,
         priorityQueue: PriorityQueue<MediaFileInfo>,
-        mediaType: Int
+        mediaType: Int,
+        limit: Int = 99,
     ) {
         if (file.exists()) {
             if (file.isDirectory) {
@@ -551,7 +430,7 @@ class AnalyseViewModel : ViewModel() {
                     file,
                     MediaFileInfo.ExtraInfo(mediaType, null, null, null)
                 )
-                if (priorityQueue.size > 99) {
+                if (priorityQueue.size > limit) {
                     priorityQueue.remove()
                 }
                 priorityQueue.add(mediaFile)

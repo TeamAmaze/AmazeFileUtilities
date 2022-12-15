@@ -1,11 +1,21 @@
 /*
- * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2021 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.home_page.ui.files
@@ -27,7 +37,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.audio_player.AudioUtils
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.BlurAnalysis
 import com.amaze.fileutilities.home_page.database.ImageAnalysis
@@ -36,6 +48,7 @@ import com.amaze.fileutilities.home_page.database.InternalStorageAnalysisDao
 import com.amaze.fileutilities.home_page.database.LowLightAnalysis
 import com.amaze.fileutilities.home_page.database.MemeAnalysis
 import com.amaze.fileutilities.home_page.database.PathPreferences
+import com.amaze.fileutilities.home_page.database.PathPreferencesDao
 import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.database.TrialValidatorDao
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
@@ -43,6 +56,7 @@ import com.amaze.fileutilities.home_page.ui.options.Billing
 import com.amaze.fileutilities.utilis.CursorUtils
 import com.amaze.fileutilities.utilis.FileUtils
 import com.amaze.fileutilities.utilis.ImgUtils
+import com.amaze.fileutilities.utilis.MLUtils
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
@@ -51,10 +65,6 @@ import com.amaze.fileutilities.utilis.isNetworkAvailable
 import com.amaze.fileutilities.utilis.log
 import com.amaze.fileutilities.utilis.share.ShareAdapter
 import com.amaze.fileutilities.utilis.share.getShareIntents
-import com.google.mlkit.vision.face.FaceDetection
-import com.google.mlkit.vision.face.FaceDetectorOptions
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
@@ -74,6 +84,7 @@ import java.util.Date
 import java.util.GregorianCalendar
 import java.util.PriorityQueue
 import java.util.concurrent.atomic.AtomicReference
+import kotlin.streams.toList
 
 class FilesViewModel(val applicationContext: Application) :
     AndroidViewModel(applicationContext) {
@@ -90,9 +101,19 @@ class FilesViewModel(val applicationContext: Application) :
     val uniqueIdSalt = "#%36zkpCE2"
 
     var unusedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var mostUsedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var leastUsedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var apksLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var gamesInstalledLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var largeFilesMutableLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var whatsappMediaMutableLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var telegramMediaMutableLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var largeDownloadsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var oldDownloadsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var oldRecordingsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var oldScreenshotsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var allMediaFilesPair: ArrayList<MediaFileInfo>? = null
 
     private var usedVideosSummaryTransformations: LiveData<Pair<StorageSummary,
             ArrayList<MediaFileInfo>>?>? = null
@@ -104,13 +125,6 @@ class FilesViewModel(val applicationContext: Application) :
             ArrayList<MediaFileInfo>>?>? = null
 
     private var allApps: AtomicReference<List<ApplicationInfo>?> = AtomicReference()
-
-    private val highAccuracyOpts = FaceDetectorOptions.Builder()
-        .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_ACCURATE)
-        .setClassificationMode(FaceDetectorOptions.CLASSIFICATION_MODE_ALL)
-        .build()
-    private val faceDetector = FaceDetection.getClient(highAccuracyOpts)
-    private val textRecognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
     var internalStorageStatsLiveData: MutableLiveData<StorageSummary?>? = null
 
@@ -422,25 +436,17 @@ class FilesViewModel(val applicationContext: Application) :
                         // hard limit in a single run
                         return@forEach
                     }
-                    var features = ImgUtils.ImageFeatures()
-                    ImgUtils.getImageFeatures(
-                        faceDetector,
-                        it.path
-                    ) { isSuccess, imageFeatures ->
-                        if (isSuccess) {
-                            imageFeatures?.run {
-                                features = this
-                            }
-                            dao.insert(
-                                ImageAnalysis(
-                                    it.path,
-                                    features.isSad,
-                                    features.isDistracted,
-                                    features.isSleeping,
-                                    features.facesCount
-                                )
+                    MLUtils.processImageFeatures(it.path) {
+                        features ->
+                        dao.insert(
+                            ImageAnalysis(
+                                it.path,
+                                features.isSad,
+                                features.isDistracted,
+                                features.isSleeping,
+                                features.facesCount
                             )
-                        }
+                        )
                     }
                 }
             }
@@ -513,8 +519,7 @@ class FilesViewModel(val applicationContext: Application) :
                         // hard limit in a single run
                         return@forEach
                     }
-                    ImgUtils.isImageMeme(
-                        textRecognizer,
+                    MLUtils.isImageMeme(
                         it.path,
                     ) { isMeme ->
                         dao.insert(
@@ -884,7 +889,8 @@ class FilesViewModel(val applicationContext: Application) :
             } else {
                 if ((
                     trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXPIRED ||
-                        trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_INACTIVE
+                        trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_INACTIVE ||
+                        trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_UNOFFICIAL
                     //     || trial.trialStatus == TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE
                     // maybe done to force validate for exclusive refunded people, want to convert to custom exclusive
                     // but downside is this'll always check for valid license for customer exclusive people
@@ -960,8 +966,12 @@ class FilesViewModel(val applicationContext: Application) :
     private fun processUnusedApps(packageManager: PackageManager) {
         viewModelScope.launch(Dispatchers.IO) {
             loadAllInstalledApps(packageManager)
-
-            val usageStats = Utils.getAppsUsageStats(applicationContext)
+            val sharedPrefs = applicationContext.getAppCommonSharedPreferences()
+            val days = sharedPrefs.getInt(
+                PreferencesConstants.KEY_UNUSED_APPS_DAYS,
+                PreferencesConstants.DEFAULT_UNUSED_APPS_DAYS
+            )
+            val usageStats = Utils.getAppsUsageStats(applicationContext, days)
             val usageStatsPackages = usageStats.filter {
                 it.lastTimeUsed != 0L
             }.map {
@@ -971,7 +981,117 @@ class FilesViewModel(val applicationContext: Application) :
                 allApps.get()?.filter { !usageStatsPackages.contains(it.packageName) }?.mapNotNull {
                     MediaFileInfo.fromApplicationInfo(applicationContext, it)
                 }
-            unusedAppsLiveData?.postValue(ArrayList(unusedAppsList))
+            unusedAppsLiveData?.postValue(unusedAppsList?.let { ArrayList(it) })
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    fun getMostUsedApps(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (mostUsedAppsLiveData == null) {
+            mostUsedAppsLiveData = MutableLiveData()
+            mostUsedAppsLiveData?.value = null
+            processMostUsedApps(applicationContext.packageManager)
+        }
+        return mostUsedAppsLiveData!!
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    private fun processMostUsedApps(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+            val sharedPrefs = applicationContext.getAppCommonSharedPreferences()
+            val days = sharedPrefs.getInt(
+                PreferencesConstants.KEY_MOST_USED_APPS_DAYS,
+                PreferencesConstants.DEFAULT_MOST_USED_APPS_DAYS
+            )
+            val usageStats = Utils.getAppsUsageStats(applicationContext, days)
+            val freqMap = linkedMapOf<String, Long>()
+            usageStats.filter {
+                it.lastTimeUsed != 0L
+            }.forEach {
+                if (!freqMap.contains(it.packageName)) {
+                    freqMap[it.packageName] = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                        it.totalTimeVisible else it.totalTimeInForeground
+                } else {
+                    freqMap[it.packageName] = freqMap[it.packageName]!! +
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                            it.totalTimeVisible else it.totalTimeInForeground
+                }
+            }
+            val mostUsedAppsListRaw = arrayListOf<String>()
+            freqMap.entries.stream()
+                .sorted { o1, o2 -> -1 * o1.value.compareTo(o2.value) }
+                .forEach {
+                    mostUsedAppsListRaw.add(it.key)
+                }
+            val mostUsedApps = arrayListOf<MediaFileInfo>()
+            mostUsedAppsListRaw.forEach {
+                appName ->
+                allApps.get()?.find {
+                    it.packageName.equals(appName, true)
+                }?.let {
+                    MediaFileInfo.fromApplicationInfo(applicationContext, it)?.let {
+                        mediaFileInfo ->
+                        mostUsedApps.add(mediaFileInfo)
+                    }
+                }
+            }
+            mostUsedAppsLiveData?.postValue(mostUsedApps)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    fun getLeastUsedApps(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (leastUsedAppsLiveData == null) {
+            leastUsedAppsLiveData = MutableLiveData()
+            leastUsedAppsLiveData?.value = null
+            processLeastUsedApps(applicationContext.packageManager)
+        }
+        return leastUsedAppsLiveData!!
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    private fun processLeastUsedApps(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+            val sharedPrefs = applicationContext.getAppCommonSharedPreferences()
+            val days = sharedPrefs.getInt(
+                PreferencesConstants.KEY_LEAST_USED_APPS_DAYS,
+                PreferencesConstants.DEFAULT_LEAST_USED_APPS_DAYS
+            )
+            val usageStats = Utils.getAppsUsageStats(applicationContext, days)
+            val freqMap = linkedMapOf<String, Long>()
+            usageStats.filter {
+                it.lastTimeUsed != 0L
+            }.forEach {
+                if (!freqMap.contains(it.packageName)) {
+                    freqMap[it.packageName] = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                        it.totalTimeVisible else it.totalTimeInForeground
+                } else {
+                    freqMap[it.packageName] = freqMap[it.packageName]!! +
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                            it.totalTimeVisible else it.totalTimeInForeground
+                }
+            }
+            val leastUsedAppsListRaw = arrayListOf<String>()
+            freqMap.entries.stream()
+                .sorted { o1, o2 -> o1.value.compareTo(o2.value) }
+                .forEach {
+                    leastUsedAppsListRaw.add(it.key)
+                }
+            val leastUsedApps = arrayListOf<MediaFileInfo>()
+            leastUsedAppsListRaw.forEach {
+                appName ->
+                allApps.get()?.find {
+                    it.packageName.equals(appName, true)
+                }?.let {
+                    MediaFileInfo.fromApplicationInfo(applicationContext, it)?.let {
+                        mediaFileInfo ->
+                        leastUsedApps.add(mediaFileInfo)
+                    }
+                }
+            }
+            leastUsedAppsLiveData?.postValue(leastUsedApps)
         }
     }
 
@@ -1016,11 +1136,168 @@ class FilesViewModel(val applicationContext: Application) :
             apksLiveData = MutableLiveData()
             apksLiveData?.value = null
             viewModelScope.launch(Dispatchers.IO) {
-                val apksInstalled = CursorUtils.listApks(applicationContext)
-                apksLiveData?.postValue(apksInstalled.second)
+                if (allMediaFilesPair == null) {
+                    allMediaFilesPair = CursorUtils.listAll(applicationContext)
+                }
+                allMediaFilesPair?.filter {
+                    it.path.endsWith(".apk")
+                }?.map {
+                    it.extraInfo?.mediaType = MediaFileInfo.MEDIA_TYPE_APK
+                    it
+                }?.let {
+                    apksLiveData?.postValue(ArrayList(it))
+                }
             }
         }
         return apksLiveData!!
+    }
+
+    fun getLargeFilesLiveData(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (largeFilesMutableLiveData == null) {
+            largeFilesMutableLiveData = MutableLiveData()
+            largeFilesMutableLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                largeFilesMutableLiveData?.postValue(
+                    getMediaFilesWithFilter(
+                        { o1, o2 -> o1.longSize.compareTo(o2.longSize) },
+                        emptyList(), 1000
+                    )
+                )
+            }
+        }
+        return largeFilesMutableLiveData!!
+    }
+
+    fun getWhatsappMediaLiveData(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
+        if (whatsappMediaMutableLiveData == null) {
+            whatsappMediaMutableLiveData = MutableLiveData()
+            whatsappMediaMutableLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_WHATSAPP)
+                whatsappMediaMutableLiveData?.postValue(
+                    getMediaFilesWithFilter(
+                        { o1, o2 -> o1.date.compareTo(o2.date) },
+                        prefPaths.stream().map { it.path }.toList(), 1000
+                    )
+                )
+            }
+        }
+        return whatsappMediaMutableLiveData!!
+    }
+
+    fun getTelegramMediaFiles(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
+        if (telegramMediaMutableLiveData == null) {
+            telegramMediaMutableLiveData = MutableLiveData()
+            telegramMediaMutableLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_TELEGRAM)
+                telegramMediaMutableLiveData?.postValue(
+                    getMediaFilesWithFilter(
+                        { o1, o2 -> o1.date.compareTo(o2.date) },
+                        prefPaths.stream().map { it.path }.toList(), 1000
+                    )
+                )
+            }
+        }
+        return telegramMediaMutableLiveData!!
+    }
+
+    fun getLargeDownloads(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
+        if (largeDownloadsLiveData == null) {
+            largeDownloadsLiveData = MutableLiveData()
+            largeDownloadsLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS)
+                largeDownloadsLiveData?.postValue(
+                    getMediaFilesWithFilter(
+                        { o1, o2 -> o1.longSize.compareTo(o2.longSize) },
+                        prefPaths.stream().map { it.path }.toList(), 100
+                    )
+                )
+            }
+        }
+        return largeDownloadsLiveData!!
+    }
+
+    fun getOldDownloads(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
+        if (oldDownloadsLiveData == null) {
+            oldDownloadsLiveData = MutableLiveData()
+            oldDownloadsLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS)
+                oldDownloadsLiveData?.postValue(
+                    getMediaFilesWithFilter(
+                        { o1, o2 -> -1 * o1.date.compareTo(o2.date) },
+                        prefPaths.stream().map { it.path }.toList(), 100
+                    )
+                )
+            }
+        }
+        return oldDownloadsLiveData!!
+    }
+
+    fun getOldScreenshots(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
+        if (oldScreenshotsLiveData == null) {
+            oldScreenshotsLiveData = MutableLiveData()
+            oldScreenshotsLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS)
+                oldScreenshotsLiveData?.postValue(
+                    getMediaFilesWithFilter(
+                        { o1, o2 -> -1 * o1.date.compareTo(o2.date) },
+                        prefPaths.stream().map { it.path }.toList(), 100
+                    )
+                )
+            }
+        }
+        return oldScreenshotsLiveData!!
+    }
+
+    fun getOldRecordings(dao: PathPreferencesDao): LiveData<ArrayList<MediaFileInfo>?> {
+        if (oldRecordingsLiveData == null) {
+            oldRecordingsLiveData = MutableLiveData()
+            oldRecordingsLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                val prefPaths = dao.findByFeature(PathPreferences.FEATURE_ANALYSIS_RECORDING)
+                oldRecordingsLiveData?.postValue(
+                    getMediaFilesWithFilter(
+                        { o1, o2 -> -1 * o1.date.compareTo(o2.date) },
+                        prefPaths.stream().map { it.path }.toList(), 100
+                    )
+                )
+            }
+        }
+        return oldRecordingsLiveData!!
+    }
+
+    private fun getMediaFilesWithFilter(
+        sortBy: Comparator<MediaFileInfo>,
+        paths: List<String>,
+        limit: Int
+    ): ArrayList<MediaFileInfo> {
+        val priorityQueue = PriorityQueue(limit, sortBy)
+        if (allMediaFilesPair == null) {
+            allMediaFilesPair = CursorUtils.listAll(applicationContext)
+        }
+        allMediaFilesPair?.filter {
+            paths.isEmpty() || paths.stream().anyMatch {
+                pathPref ->
+                it.path.contains(pathPref, true)
+            }
+        }?.forEach {
+            if (priorityQueue.size > limit - 1) {
+                priorityQueue.remove()
+            }
+            priorityQueue.add(it)
+        }
+
+        val result = ArrayList<MediaFileInfo>()
+        while (!priorityQueue.isEmpty()) {
+            priorityQueue.remove()?.let {
+                result.add(it)
+            }
+        }
+        return ArrayList(result.reversed())
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -1199,7 +1476,9 @@ class FilesViewModel(val applicationContext: Application) :
             service.postValidation(
                 TrialValidationApi.TrialRequest(
                     TrialValidationApi.AUTH_TOKEN, deviceId,
-                    subscriptionStatus, purchaseToken
+                    applicationContext.packageName + "_" + BuildConfig.API_REQ_TRIAL_APP_HASH,
+                    subscriptionStatus,
+                    purchaseToken
                 )
             )?.execute()?.let { response ->
                 return if (response.isSuccessful && response.body() != null) {
@@ -1403,6 +1682,17 @@ class FilesViewModel(val applicationContext: Application) :
                 )
             setMediaInfoSummary(metaInfoAndSummaryPair.first, storageSummary)
             emit(metaInfoAndSummaryPair)
+            metaInfoAndSummaryPair.second.forEach {
+                mediaFileInfo ->
+                // load album arts lazily
+                mediaFileInfo.extraInfo?.audioMetaData?.albumId?.let {
+                    albumId ->
+                    val albumUri = AudioUtils.getMediaStoreAlbumCoverUri(albumId)
+                    val albumBitmap = AudioUtils
+                        .getAlbumBitmap(applicationContext.applicationContext, albumUri)
+                    mediaFileInfo.extraInfo?.audioMetaData?.albumArt = albumBitmap
+                }
+            }
         }
     }
 
@@ -1427,10 +1717,30 @@ class FilesViewModel(val applicationContext: Application) :
             if (storageSummary == null) {
                 return@liveData
             }
-            val metaInfoAndSummaryPair = CursorUtils
-                .listDocs(applicationContext.applicationContext)
-            setMediaInfoSummary(metaInfoAndSummaryPair.first, storageSummary)
-            emit(metaInfoAndSummaryPair)
+            /*val metaInfoAndSummaryPair = CursorUtils
+                .listDocs(applicationContext.applicationContext)*/
+            if (allMediaFilesPair == null) {
+                allMediaFilesPair = CursorUtils.listAll(applicationContext)
+            }
+            allMediaFilesPair?.let {
+                pair ->
+                var longSize = 0L
+                var size = 0
+                val mediaFiles = ArrayList<MediaFileInfo>()
+                pair.filter {
+                    mediaFileInfo ->
+                    arrayListOf(".pdf", ".epub", ".docx").stream()
+                        .anyMatch { mediaFileInfo.path.endsWith(it) }
+                }.forEach {
+                    mediaFileInfo ->
+                    longSize += mediaFileInfo.longSize
+                    size++
+                    mediaFiles.add(mediaFileInfo)
+                }
+                val docsSummary = StorageSummary(size, 0, longSize)
+                emit(Pair(docsSummary, mediaFiles))
+                setMediaInfoSummary(docsSummary, storageSummary)
+            }
         }
     }
 

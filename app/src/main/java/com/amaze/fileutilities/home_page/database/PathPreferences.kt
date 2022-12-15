@@ -1,11 +1,21 @@
 /*
- * Copyright (C) 2021-2022 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2022 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.home_page.database
@@ -15,6 +25,7 @@ import android.content.SharedPreferences
 import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.amaze.fileutilities.utilis.PreferencesConstants
@@ -33,6 +44,7 @@ data class PathPreferences(
     @ColumnInfo(name = "feature") val feature: Int,
     @ColumnInfo(name = "excludes") val excludes: Boolean,
 ) {
+    @Ignore
     constructor(path: String, feature: Int, excludes: Boolean = false) :
         this(0, path, feature, excludes)
 
@@ -46,6 +58,8 @@ data class PathPreferences(
         const val FEATURE_ANALYSIS_SCREENSHOTS = 6
         const val FEATURE_ANALYSIS_TELEGRAM = 7
         const val FEATURE_ANALYSIS_LOW_LIGHT = 8
+        const val FEATURE_ANALYSIS_WHATSAPP = 9
+        const val FEATURE_ANALYSIS_LARGE_FILES = 10
 
         val ANALYSE_FEATURES_LIST = arrayListOf(
             FEATURE_ANALYSIS_MEME, FEATURE_ANALYSIS_BLUR,

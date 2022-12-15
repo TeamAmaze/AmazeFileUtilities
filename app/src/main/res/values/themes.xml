@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.AmazeFileUtilities" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.AmazeFileUtilities" parent="Theme.MaterialComponents.Light">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/navy_blue</item>
         <item name="colorPrimaryVariant">@color/navy_blue</item>
@@ -15,9 +15,10 @@
         <!-- Customize your theme here. -->
         <item name="actionBarTheme">@style/ThemeOverlay.Actionbar</item>
         <item name="colorAccent">@color/highlight_yellow</item>
+        <item name="android:windowBackground">@color/navy_blue</item>
     </style>
 
-    <style name="Theme.AmazeFileUtilities.Dark" parent="Theme.Material3.Dark">
+    <style name="Theme.AmazeFileUtilities.Dark" parent="Theme.MaterialComponents">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/navy_blue</item>
         <item name="colorPrimaryVariant">@color/navy_blue</item>
@@ -32,6 +33,7 @@
         <!-- Customize your theme here. -->
         <item name="actionBarTheme">@style/ThemeOverlay.Actionbar</item>
         <item name="colorAccent">@color/highlight_yellow</item>
+        <item name="android:windowBackground">@color/navy_blue</item>
     </style>
 
     <style name="Theme.Transparent" parent="android:Theme">

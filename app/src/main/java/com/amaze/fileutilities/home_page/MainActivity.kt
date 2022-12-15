@@ -1,17 +1,28 @@
 /*
- * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2021 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.home_page
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.MotionEvent
@@ -26,6 +37,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.WifiP2PActivity
 import com.amaze.fileutilities.databinding.ActivityMainActionbarBinding
@@ -42,6 +54,7 @@ import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.ItemsActionBarFragment
 import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.UpdateChecker
 import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.amaze.fileutilities.utilis.hideFade
@@ -51,22 +64,10 @@ import com.amaze.fileutilities.utilis.showToastInCenter
 import com.amaze.fileutilities.utilis.showToastOnBottom
 import com.amaze.fileutilities.utilis.showTranslateY
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.play.core.appupdate.AppUpdateManager
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.google.android.play.core.appupdate.AppUpdateOptions
-import com.google.android.play.core.install.InstallStateUpdatedListener
-import com.google.android.play.core.install.model.ActivityResult.RESULT_IN_APP_UPDATE_FAILED
-import com.google.android.play.core.install.model.AppUpdateType
-import com.google.android.play.core.install.model.InstallStatus
-import com.google.android.play.core.install.model.UpdateAvailability
-import com.google.android.play.core.review.ReviewManagerFactory
 import com.stephentuso.welcome.WelcomeHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.util.Calendar
 import java.util.Date
-import java.util.GregorianCalendar
-import java.util.Random
 
 class MainActivity :
     WifiP2PActivity(),
@@ -83,13 +84,14 @@ class MainActivity :
     private var isOptionsVisible = false
     private var welcomeScreen: WelcomeHelper? = null
     private var didShowWelcomeScreen = true
-    private var appUpdateManager: AppUpdateManager? = null
+    // refers to com.google.android.play.core.install.model.ActivityResult.RESULT_IN_APP_UPDATE_FAILED
+    val RESULT_IN_APP_UPDATE_FAILED = 1
 
     companion object {
         private const val VOICE_REQUEST_CODE = 1000
         const val KEY_INTENT_AUDIO_PLAYER = "audio_player_intent"
         private const val DAYS_FOR_IMMEDIATE_UPDATE = Trial.TRIAL_DEFAULT_DAYS
-        private const val UPDATE_REQUEST_CODE = 123234
+        const val UPDATE_REQUEST_CODE = 123234
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,6 +124,12 @@ class MainActivity :
         )
 //        setupActionBarWithNavController(navController, appBarConfiguration)
         supportActionBar?.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar?.setBackgroundDrawable(
+            ColorDrawable(
+                resources
+                    .getColor(R.color.navy_blue)
+            )
+        )
         supportActionBar?.customView = actionBarBinding.root
         supportActionBar?.elevation = 0f
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
@@ -172,14 +180,16 @@ class MainActivity :
                         mediaInfoStorageSummaryPair?.second.let { list ->
                             list?.run {
                                 val mediaFileInfoList = ArrayList(this)
-                                viewModel.analyseImageFeatures(
-                                    mediaFileInfoList,
-                                    pathPreferences
-                                )
-                                viewModel.analyseMemeImages(
-                                    mediaFileInfoList,
-                                    pathPreferences
-                                )
+                                if (!BuildConfig.IS_VERSION_FDROID) {
+                                    viewModel.analyseImageFeatures(
+                                        mediaFileInfoList,
+                                        pathPreferences
+                                    )
+                                    viewModel.analyseMemeImages(
+                                        mediaFileInfoList,
+                                        pathPreferences
+                                    )
+                                }
                                 viewModel.analyseBlurImages(
                                     mediaFileInfoList,
                                     pathPreferences
@@ -215,7 +225,7 @@ class MainActivity :
         }
 
         if (!didShowWelcomeScreen) {
-            checkForAppUpdates()
+            UpdateChecker.checkForAppUpdates(this)
             viewModel.getUniqueId().observe(this) {
                 deviceId ->
                 if (deviceId != null) {
@@ -227,7 +237,7 @@ class MainActivity :
                     }
                 }
             }
-            shouldRateApp()
+            UpdateChecker.shouldRateApp(this)
         } else {
             // add install time in preferences
             getAppCommonSharedPreferences()
@@ -291,7 +301,7 @@ class MainActivity :
 
     override fun onPause() {
         super.onPause()
-        appUpdateManager?.unregisterListener(updateListener)
+        UpdateChecker.unregisterListener()
     }
 
     override fun getTransferFragment(): TransferFragment? {
@@ -309,6 +319,7 @@ class MainActivity :
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == VOICE_REQUEST_CODE && resultCode == RESULT_OK) {
             // Populate the wordsList with the String values the recognition engine thought it heard
@@ -413,52 +424,6 @@ class MainActivity :
         showToastInCenter("changes in documents")
     }*/
 
-    private fun shouldRateApp() {
-        val alreadyRated = getAppCommonSharedPreferences()
-            .getBoolean(PreferencesConstants.KEY_RATE_APP_AUTOMATED, false)
-        if (!alreadyRated) {
-            val random = Random()
-            val chance = random.nextInt(10) + 1
-            if (chance == 5) {
-                // check if user using app for over 7 days
-                val calWeek = GregorianCalendar.getInstance()
-                val calWeekDefault = GregorianCalendar.getInstance()
-                calWeekDefault.time = Date()
-                calWeekDefault.add(Calendar.DAY_OF_YEAR, 8)
-                val installDate = getAppCommonSharedPreferences()
-                    .getLong(PreferencesConstants.KEY_INSTALL_DATE, calWeekDefault.time.time)
-                calWeek.time = Date(installDate)
-                calWeek.add(Calendar.DAY_OF_YEAR, 7)
-                if (calWeek.time.before(Date())) {
-                    val manager = ReviewManagerFactory.create(this)
-                    val request = manager.requestReviewFlow()
-                    request.addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            // We got the ReviewInfo object
-                            val reviewInfo = task.result
-                            val flow = manager.launchReviewFlow(this, reviewInfo)
-                            flow.addOnCompleteListener { _ ->
-                                // The flow has finished. The API does not indicate whether the user
-                                // reviewed or not, or even whether the review dialog was shown. Thus, no
-                                // matter the result, we continue our app flow.
-                                // add install time in preferences
-                                getAppCommonSharedPreferences()
-                                    .edit()
-                                    .putBoolean(
-                                        PreferencesConstants.KEY_RATE_APP_AUTOMATED,
-                                        true
-                                    ).apply()
-                            }
-                        } else {
-                            // There was some problem, log or handle the error code.
-                            log.warn("failed to request review", task.exception)
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private fun handleValidateTrial(trialResponse: TrialValidationApi.TrialResponse) {
         this@MainActivity.runOnUiThread {
             if (trialResponse.subscriptionStatus
@@ -499,11 +464,11 @@ class MainActivity :
                                 }.create().show()
                             }
                         }
-                        TrialValidationApi.TrialResponse.TRIAL_EXPIRED -> {
+                        TrialValidationApi.TrialResponse.TRIAL_EXPIRED,
+                        TrialValidationApi.TrialResponse.TRIAL_UNOFFICIAL -> {
                             showAboutActivity(true, false, false)
                         }
-                        TrialValidationApi.TrialResponse.TRIAL_INACTIVE,
-                        TrialValidationApi.TrialResponse.TRIAL_EXCLUSIVE -> {
+                        TrialValidationApi.TrialResponse.TRIAL_INACTIVE -> {
                             showAboutActivity(false, true, false)
                         }
                     }
@@ -533,135 +498,6 @@ class MainActivity :
             }
         }
     }
-
-    private fun checkForAppUpdates() {
-
-        log.info("Checking for app update")
-        appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
-        // Returns an intent object that you use to check for an update.
-        val appUpdateInfoTask = appUpdateManager?.appUpdateInfo
-
-        // Checks that the platform will allow the specified type of update.
-        appUpdateInfoTask?.addOnSuccessListener { appUpdateInfo ->
-            if (appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                // This example applies an immediate update. To apply a flexible update
-                // instead, pass in AppUpdateType.FLEXIBLE
-            ) {
-                /**
-                 * check for app updates - flexible update dialog is showing till 7 days for any
-                 * app update which has priority less than 4 after which he is shown
-                 * immediate update dialog, for priority 4 and 5 user is asked to update
-                 * immediately
-                 */
-                log.info("App update available")
-                /*val immediateUpdate = (
-                    appUpdateInfo.clientVersionStalenessDays()
-                        ?: -1
-                    ) >= DAYS_FOR_IMMEDIATE_UPDATE || appUpdateInfo.updatePriority() >= 4
-                log.info("Immediate criteria $immediateUpdate")*/
-                if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) &&
-                    appUpdateInfo.updatePriority() >= 4
-                ) {
-                    log.info("Immediate update conditions met, triggering immediate update")
-                    appUpdateManager?.startUpdateFlowForResult(
-                        // Pass the intent that is returned by 'getAppUpdateInfo()'.
-                        appUpdateInfo,
-                        // The current activity making the update request.
-                        this,
-                        // Or pass 'AppUpdateType.FLEXIBLE' to newBuilder() for
-                        // flexible updates.
-                        AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE)
-                            .setAllowAssetPackDeletion(true)
-                            .build(),
-                        // Include a request code to later monitor this update request.
-                        UPDATE_REQUEST_CODE
-                    )
-                } else if (appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE) &&
-                    appUpdateInfo.updatePriority() >= 2
-                ) {
-                    log.info("flexible update conditions met, triggering flexible update")
-                    appUpdateManager?.startUpdateFlowForResult(
-                        // Pass the intent that is returned by 'getAppUpdateInfo()'.
-                        appUpdateInfo,
-                        // The current activity making the update request.
-                        this,
-                        // Or pass 'AppUpdateType.FLEXIBLE' to newBuilder() for
-                        // flexible updates.
-                        AppUpdateOptions.newBuilder(AppUpdateType.FLEXIBLE)
-                            .setAllowAssetPackDeletion(true)
-                            .build(),
-                        // Include a request code to later monitor this update request.
-                        UPDATE_REQUEST_CODE
-                    )
-                }
-            } else if (appUpdateInfo.updateAvailability()
-                == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-            ) {
-                // Checks that the update is not stalled during 'onResume()'.
-                // However, you should execute this check at all entry points into the app.
-                log.info("resuming update that was already in progress")
-                appUpdateManager?.startUpdateFlowForResult(
-                    // Pass the intent that is returned by 'getAppUpdateInfo()'.
-                    appUpdateInfo,
-                    // The current activity making the update request.
-                    this,
-                    // Or pass 'AppUpdateType.FLEXIBLE' to newBuilder() for
-                    // flexible updates.
-                    AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE)
-                        .setAllowAssetPackDeletion(true)
-                        .build(),
-                    // Include a request code to later monitor this update request.
-                    UPDATE_REQUEST_CODE
-                )
-            }
-
-            appUpdateManager?.registerListener(updateListener)
-
-        /*val cal1 = GregorianCalendar.getInstance()
-        cal1.time = Date()
-        cal1.add(Calendar.DAY_OF_YEAR, -2)
-        val fetchTime = applicationContext.getAppCommonSharedPreferences()
-            .getLong(PreferencesConstants.KEY_UPDATE_APP_LAST_SHOWN_DATE, cal1.timeInMillis)
-
-        // check for update only once a day
-        val cal = GregorianCalendar.getInstance()
-        cal.time = Date(fetchTime)
-        cal.add(Calendar.DAY_OF_YEAR, 1)
-        if (cal.time.before(Date()) || true) {
-
-
-                /*if (appUpdateInfo.updateAvailability()
-                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-                ) {
-                    // If an in-app update is already running, resume the update.
-                    appUpdateManager.startUpdateFlowForResult(
-                        appUpdateInfo,
-                        this,
-                        AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE)
-                            .setAllowAssetPackDeletion(true)
-                            .build(),
-                        UPDATE_REQUEST_CODE)
-                }*/
-
-            applicationContext.getAppCommonSharedPreferences()
-                .edit().putLong(
-                    PreferencesConstants.KEY_UPDATE_APP_LAST_SHOWN_DATE,
-                    Date().time
-                ).apply()
-        }*/
-        }
-    }
-
-    private val updateListener: InstallStateUpdatedListener =
-        InstallStateUpdatedListener { installState ->
-            if (installState.installStatus() == InstallStatus.DOWNLOADED) {
-                // After the update is downloaded, show a notification
-                // and request user confirmation to restart the app.
-                log.info("update has been downloaded")
-                showToastOnBottom(getString(R.string.updating_app))
-                appUpdateManager!!.completeUpdate()
-            }
-        }
 
     private fun getFragmentAtFrame(): Fragment? {
         return supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main)

@@ -16,28 +16,114 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
     id("com.github.triplet.play") version "3.7.0"
+    id 'com.starter.easylauncher'
 }
 
 android {
     signingConfigs {
-        release {
-            storeFile file('/Users/vishal.nehra/Documents/amaze_keys/amazeutils')
-            keyAlias 'amaze-utils'
-            storePassword 'yWiJU7RA^^'
-            keyPassword 'yWiJU7RA^^'
-        }
+        release
     }
+
     compileSdk 31
+
+    Properties appProps = new Properties()
+    def appPropsFile = new File('application.properties')
+
+    if (appPropsFile.canRead()) {
+        appProps.load(new FileInputStream(appPropsFile))
+    } else {
+        println 'application.properties not found'
+        buildConfigField "String", "BASE_CLOUD_FUNC", "new String()"
+        buildConfigField "String", "BASE_API_STICKER_PACK", "new String()"
+        buildConfigField "String", "API_REQ_TRIAL_URI", "new String()"
+        buildConfigField "String", "API_REQ_TRIAL_AUTH_TOKEN", "new String()"
+        buildConfigField "String", "API_REQ_TRIAL_APP_HASH", "new String()"
+        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_ACTIVE", "new Integer()"
+        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_EXPIRED", "new Integer()"
+        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_INACTIVE", "new Integer()"
+        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_EXCLUSIVE", "new Integer()"
+        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_UNOFFICIAL", "new Integer()"
+        buildConfigField "String", "API_REQ_TRIAL_TRIAL_ACTIVE", "new String()"
+        buildConfigField "String", "API_REQ_TRIAL_TRIAL_EXPIRED", "new String()"
+        buildConfigField "String", "API_REQ_TRIAL_TRIAL_INACTIVE", "new String()"
+        buildConfigField "String", "API_REQ_TRIAL_TRIAL_EXCLUSIVE", "new String()"
+        buildConfigField "String", "API_REQ_TRIAL_TRIAL_UNOFFICIAL", "new String()"
+        buildConfigField "String", "API_REQ_TRIAL_YEARLY", "new String()"
+        buildConfigField "String", "API_REQ_STICKER_PACK_TOKEN", "new String()"
+        buildConfigField "String", "OPENSUBTITLES_API_KEY", "new String()"
+    }
 
     defaultConfig {
         applicationId "com.amaze.fileutilities"
         minSdk 19
-        targetSdk 30
-        versionCode 64
-        versionName "1.64"
+        targetSdk 31
+        versionCode 71
+        versionName "1.71"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        if (appProps != null &&
+                appProps.containsKey('BASE_CLOUD_FUNC') &&
+                appProps.containsKey('API_REQ_TRIAL_URI') &&
+                appProps.containsKey('API_REQ_TRIAL_AUTH_TOKEN') &&
+                appProps.containsKey('BASE_API_STICKER_PACK') &&
+                appProps.containsKey('API_REQ_TRIAL_APP_HASH') &&
+                appProps.containsKey('API_REQ_TRIAL_CODE_TRIAL_ACTIVE') &&
+                appProps.containsKey('API_REQ_TRIAL_CODE_TRIAL_EXPIRED') &&
+                appProps.containsKey('API_REQ_TRIAL_CODE_TRIAL_INACTIVE') &&
+                appProps.containsKey('API_REQ_TRIAL_CODE_TRIAL_EXCLUSIVE') &&
+                appProps.containsKey('API_REQ_TRIAL_CODE_TRIAL_UNOFFICIAL') &&
+                appProps.containsKey('API_REQ_TRIAL_TRIAL_ACTIVE') &&
+                appProps.containsKey('API_REQ_TRIAL_TRIAL_EXPIRED') &&
+                appProps.containsKey('API_REQ_TRIAL_TRIAL_INACTIVE') &&
+                appProps.containsKey('API_REQ_TRIAL_TRIAL_EXCLUSIVE') &&
+                appProps.containsKey('API_REQ_TRIAL_TRIAL_UNOFFICIAL') &&
+                appProps.containsKey('API_REQ_TRIAL_YEARLY') &&
+                appProps.containsKey('API_REQ_STICKER_PACK_TOKEN')
+        ) {
+            buildConfigField "String", "BASE_CLOUD_FUNC", appProps["BASE_CLOUD_FUNC"]
+            buildConfigField "String", "BASE_API_STICKER_PACK", appProps["BASE_API_STICKER_PACK"]
+            buildConfigField "String", "API_REQ_TRIAL_URI", appProps["API_REQ_TRIAL_URI"]
+            buildConfigField "String", "API_REQ_TRIAL_APP_HASH", appProps["API_REQ_TRIAL_APP_HASH"]
+            buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_ACTIVE", appProps["API_REQ_TRIAL_CODE_TRIAL_ACTIVE"]
+            buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_EXPIRED", appProps["API_REQ_TRIAL_CODE_TRIAL_EXPIRED"]
+            buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_INACTIVE", appProps["API_REQ_TRIAL_CODE_TRIAL_INACTIVE"]
+            buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_EXCLUSIVE", appProps["API_REQ_TRIAL_CODE_TRIAL_EXCLUSIVE"]
+            buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_UNOFFICIAL", appProps["API_REQ_TRIAL_CODE_TRIAL_UNOFFICIAL"]
+            buildConfigField "String", "API_REQ_TRIAL_TRIAL_ACTIVE", appProps["API_REQ_TRIAL_TRIAL_ACTIVE"]
+            buildConfigField "String", "API_REQ_TRIAL_TRIAL_EXPIRED", appProps["API_REQ_TRIAL_TRIAL_EXPIRED"]
+            buildConfigField "String", "API_REQ_TRIAL_TRIAL_INACTIVE", appProps["API_REQ_TRIAL_TRIAL_INACTIVE"]
+            buildConfigField "String", "API_REQ_TRIAL_TRIAL_EXCLUSIVE", appProps["API_REQ_TRIAL_TRIAL_EXCLUSIVE"]
+            buildConfigField "String", "API_REQ_TRIAL_TRIAL_UNOFFICIAL", appProps["API_REQ_TRIAL_TRIAL_UNOFFICIAL"]
+            buildConfigField "String", "API_REQ_TRIAL_YEARLY", appProps["API_REQ_TRIAL_YEARLY"]
+            buildConfigField "String", "API_REQ_STICKER_PACK_TOKEN", appProps["API_REQ_STICKER_PACK_TOKEN"]
+            buildConfigField "String", "API_REQ_TRIAL_AUTH_TOKEN", appProps["API_REQ_TRIAL_AUTH_TOKEN"]
+        } else {
+            println 'application.properties found but some entries are missing'
+            buildConfigField "String", "BASE_CLOUD_FUNC", "new String()"
+            buildConfigField "String", "BASE_API_STICKER_PACK", "new String()"
+            buildConfigField "String", "API_REQ_TRIAL_URI", "new String()"
+            buildConfigField "String", "API_REQ_TRIAL_APP_HASH", "new String()"
+            buildConfigField "String", "API_REQ_TRIAL_CODE_TRIAL_ACTIVE", "new Integer()"
+            buildConfigField "String", "API_REQ_TRIAL_CODE_TRIAL_EXPIRED", "new Integer()"
+            buildConfigField "String", "API_REQ_TRIAL_CODE_TRIAL_INACTIVE", "new Integer()"
+            buildConfigField "String", "API_REQ_TRIAL_CODE_TRIAL_EXCLUSIVE", "new Integer()"
+            buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_UNOFFICIAL", "new Integer()"
+            buildConfigField "String", "API_REQ_TRIAL_TRIAL_ACTIVE", "new String()"
+            buildConfigField "String", "API_REQ_TRIAL_TRIAL_EXPIRED", "new String()"
+            buildConfigField "String", "API_REQ_TRIAL_TRIAL_INACTIVE", "new String()"
+            buildConfigField "String", "API_REQ_TRIAL_TRIAL_EXCLUSIVE", "new String()"
+            buildConfigField "String", "API_REQ_TRIAL_TRIAL_UNOFFICIAL", "new String()"
+            buildConfigField "String", "API_REQ_TRIAL_YEARLY", "new String()"
+            buildConfigField "String", "API_REQ_STICKER_PACK_TOKEN", "new String()"
+            buildConfigField "String", "API_REQ_TRIAL_AUTH_TOKEN", "new String()"
+        }
+    }
+
+    signingConfigs {
+        release
+        config
     }
 
     buildTypes {
@@ -46,8 +132,13 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"5CZlDmqIhLoRcalZHXItm5Thwq57MDE2\""
+            if (appProps != null &&
+                    appProps.containsKey('OPENSUBTITLES_API_KEY_DEBUG')) {
+                buildConfigField "String", "OPENSUBTITLES_API_KEY", appProps["OPENSUBTITLES_API_KEY_DEBUG"]
+            } else {
+                buildConfigField "String", "OPENSUBTITLES_API_KEY", "new String()"
+            }
+            debuggable true //For "debug" banner on icon
         }
 
         release {
@@ -55,8 +146,12 @@ android {
             shrinkResources true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
-            buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"qK9RpmABGZjtuxYv0Yf30exR2E39Ivsj\""
+            if (appProps != null &&
+                    appProps.containsKey('OPENSUBTITLES_API_KEY_RELEASE')) {
+                buildConfigField "String", "OPENSUBTITLES_API_KEY", appProps["OPENSUBTITLES_API_KEY_RELEASE"]
+            } else {
+                buildConfigField "String", "OPENSUBTITLES_API_KEY", "new String()"
+            }
         }
     }
     compileOptions {
@@ -71,6 +166,21 @@ android {
 
     buildFeatures {
         viewBinding true
+    }
+
+    flavorDimensions 'static'
+
+    productFlavors {
+        fdroid {
+            dimension 'static'
+            buildConfigField "boolean", "IS_VERSION_FDROID", "true"
+        }
+
+        play {
+            dimension 'static'
+            buildConfigField "boolean", "IS_VERSION_FDROID", "false"
+            signingConfig signingConfigs.config
+        }
     }
 
     splits {
@@ -101,23 +211,24 @@ android {
 }
 
 play {
-    serviceAccountCredentials.set(file("useful-cathode-91310-9986d18df1a5.json"))
+    serviceAccountCredentials.set(file("service_account_config.json"))
     defaultToAppBundles.set(true)
 
 //    track.set("internal")
     track.set("production")
     userFraction.set(1.0d)
-    updatePriority.set(3)
+    updatePriority.set(5)
     releaseStatus.set(com.github.triplet.gradle.androidpublisher.ReleaseStatus.COMPLETED)
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.6.1'
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$androidXLifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$androidXLifecycleVersion"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.multidex:multidex:2.0.1'//Multiple dex files
     implementation 'androidx.palette:palette:1.0.0'
     //Glide: loads icons seemlessly
     implementation "com.github.bumptech.glide:glide:$glideVersion"
@@ -125,7 +236,7 @@ dependencies {
         // Excludes the support library because it's already included by Glide.
         transitive = false
     }
-    implementation 'com.google.android.play:core-ktx:1.8.1'
+    playImplementation 'com.google.android.play:core-ktx:1.8.1'
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
     implementation 'androidx.webkit:webkit:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
@@ -163,19 +274,19 @@ dependencies {
     kapt "androidx.room:room-compiler:$roomVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
     implementation "androidx.preference:preference-ktx:1.2.0"
-    implementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.0'
-    implementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.1'
+    playImplementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.0'
+    playImplementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.1'
 //    implementation 'com.google.mlkit:face-detection:16.1.5'
 
     implementation 'com.afollestad.material-dialogs:files:3.3.0'
     implementation 'androidx.mediarouter:mediarouter:1.2.6'
-    implementation 'com.google.android.gms:play-services-cast-framework:21.0.1'
+    playImplementation 'com.google.android.gms:play-services-cast-framework:21.0.1'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'org.slf4j:slf4j-api:1.7.32'
     implementation 'com.github.tony19:logback-android:2.0.0'
     implementation 'com.stephentuso:welcome:1.4.1'
-    implementation("com.android.billingclient:billing:$billing_version")
+    playImplementation("com.android.billingclient:billing:$billing_version")
     implementation 'me.tankery.lib:circularSeekBar:1.4.0'
     implementation 'com.github.qoqa:glide-svg:2.0.4'
     api "com.caverock:androidsvg:1.4"
@@ -199,4 +310,28 @@ jacoco {
 tasks.withType(Test) {
     jacoco.includeNoLocationClasses = true
     jacoco.excludes = ['jdk.internal.*']
+}
+
+Properties props = new Properties()
+def propFile = new File('signing.properties')
+
+if (propFile.canRead()) {
+    props.load(new FileInputStream(propFile))
+
+    if (props != null &&
+            props.containsKey('STORE_FILE') &&
+            props.containsKey('STORE_PASSWORD') &&
+            props.containsKey('KEY_ALIAS') &&
+            props.containsKey('KEY_PASSWORD')) {
+        android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+        android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
+        android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
+        android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
+    } else {
+        println 'signing.properties found but some entries are missing'
+        android.buildTypes.release.signingConfig = null
+    }
+} else {
+    println 'signing.properties not found'
+    android.buildTypes.release.signingConfig = null
 }

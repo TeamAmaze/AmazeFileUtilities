@@ -1,11 +1,21 @@
 /*
- * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2021 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.utilis
@@ -17,7 +27,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.annotation.IntDef
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioUtils
@@ -110,30 +119,17 @@ abstract class AbstractMediaFilesAdapter(
 
     open fun removeChecked(): Boolean {
         val syncList = Collections.synchronizedList(getMediaFilesListItems())
-//        val removeItemsIdx = arrayListOf<Int>()
-        val toRemove = arrayListOf<ListItem>()
-//        val removeItemsIdx = checkItemsList.map { it.position }
-        val toRemoveIdx = arrayListOf<Int>()
         synchronized(syncList) {
-            syncList.forEachIndexed { index, listItem ->
-                if (listItem.isChecked) {
-//                    removeItemsIdx.add(index)
-                    toRemove.add(listItem)
-                    listItem.toggleChecked()
-                    toRemoveIdx.add(index)
+            checkItemsList.forEach {
+                syncList.forEachIndexed { index, listItem ->
+                    if (it == listItem) {
+                        it.toggleChecked()
+                        syncList.remove(it)
+                        notifyItemRemoved(index)
+                        return@forEach
+                    }
                 }
             }
-
-            syncList.removeAll(toRemove)
-            if (toRemove.size > 0) {
-                toRemoveIdx.forEach {
-                    notifyItemRemoved(it)
-                }
-//                notifyDataSetChanged()
-            }
-            /*removeItemsIdx.forEach {
-                notifyItemRemoved(it)
-            }*/
         }
         checkItemsList.clear()
         return true
@@ -237,13 +233,22 @@ abstract class AbstractMediaFilesAdapter(
                     mediaFileInfo.extraInfo?.let { extraInfo ->
                         when (extraInfo.mediaType) {
                             MediaFileInfo.MEDIA_TYPE_IMAGE -> {
-                                processImageMediaInfo(holder, mediaFileInfo)
+                                processImageMediaInfo(
+                                    holder, mediaFileInfo, formattedDate,
+                                    formattedSize
+                                )
                             }
                             MediaFileInfo.MEDIA_TYPE_VIDEO -> {
-                                processVideoMediaInfo(holder, mediaFileInfo)
+                                processVideoMediaInfo(
+                                    holder, mediaFileInfo, formattedDate,
+                                    formattedSize
+                                )
                             }
                             MediaFileInfo.MEDIA_TYPE_AUDIO -> {
-                                processAudioMediaInfo(holder, mediaFileInfo)
+                                processAudioMediaInfo(
+                                    holder, mediaFileInfo, formattedDate,
+                                    formattedSize
+                                )
                             }
                             MediaFileInfo.MEDIA_TYPE_DOCUMENT -> {
                                 holder.infoSummary.text = "$formattedDate | $formattedSize"
@@ -252,21 +257,6 @@ abstract class AbstractMediaFilesAdapter(
                             MediaFileInfo.MEDIA_TYPE_UNKNOWN -> {
                                 holder.infoSummary.text = "$formattedDate | $formattedSize"
                                 holder.extraInfo.text = ""
-                                if (isChecked) {
-                                    holder.root.background = ResourcesCompat
-                                        .getDrawable(
-                                            superContext.resources,
-                                            R.drawable.background_curved_recents_selected,
-                                            superContext.theme
-                                        )
-                                } else {
-                                    holder.root.background = ResourcesCompat
-                                        .getDrawable(
-                                            superContext.resources,
-                                            R.drawable.background_curved_recents,
-                                            superContext.theme
-                                        )
-                                }
                             }
                         }
                     }
@@ -301,35 +291,53 @@ abstract class AbstractMediaFilesAdapter(
 
     private fun processImageMediaInfo(
         holder: MediaInfoRecyclerViewHolder,
-        mediaFileInfo: MediaFileInfo
+        mediaFileInfo: MediaFileInfo,
+        formattedDate: String,
+        formattedSize: String
     ) {
-        holder.infoSummary.text =
+        holder.infoSummary.text = if (mediaFileInfo.extraInfo?.imageMetaData?.width != null) {
             "${mediaFileInfo.extraInfo!!.imageMetaData?.width}" +
-            "x${mediaFileInfo.extraInfo!!.imageMetaData?.height}"
+                "x${mediaFileInfo.extraInfo!!.imageMetaData?.height}"
+        } else {
+            "$formattedDate | $formattedSize"
+        }
         holder.extraInfo.text = ""
     }
 
     private fun processAudioMediaInfo(
         holder: MediaInfoRecyclerViewHolder,
-        mediaFileInfo: MediaFileInfo
+        mediaFileInfo: MediaFileInfo,
+        formattedDate: String,
+        formattedSize: String
     ) {
-        holder.infoSummary.text =
-            "${mediaFileInfo.extraInfo!!.audioMetaData?.albumName} " +
-            "| ${mediaFileInfo.extraInfo!!.audioMetaData?.artistName}"
-        mediaFileInfo.extraInfo!!.audioMetaData?.duration?.let {
-            holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
+        if (mediaFileInfo.extraInfo?.audioMetaData?.duration != null) {
+            holder.infoSummary.text = "${mediaFileInfo.extraInfo!!.audioMetaData?.albumName} " +
+                "| ${mediaFileInfo.extraInfo!!.audioMetaData?.artistName}"
+            mediaFileInfo.extraInfo!!.audioMetaData?.duration?.let {
+                holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
+            }
+        } else {
+            holder.infoSummary.text = "$formattedDate | $formattedSize"
+            holder.extraInfo.text = ""
         }
     }
 
     private fun processVideoMediaInfo(
         holder: MediaInfoRecyclerViewHolder,
-        mediaFileInfo: MediaFileInfo
+        mediaFileInfo: MediaFileInfo,
+        formattedDate: String,
+        formattedSize: String
     ) {
-        holder.infoSummary.text =
-            "${mediaFileInfo.extraInfo!!.videoMetaData?.width}" +
-            "x${mediaFileInfo.extraInfo!!.videoMetaData?.height}"
-        mediaFileInfo.extraInfo!!.videoMetaData?.duration?.let {
-            holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
+        if (mediaFileInfo.extraInfo?.videoMetaData?.duration != null) {
+            holder.infoSummary.text =
+                "${mediaFileInfo.extraInfo!!.videoMetaData?.width}" +
+                "x${mediaFileInfo.extraInfo!!.videoMetaData?.height}"
+            mediaFileInfo.extraInfo!!.videoMetaData?.duration?.let {
+                holder.extraInfo.text = AudioUtils.getReadableDurationString(it) ?: ""
+            }
+        } else {
+            holder.infoSummary.text = "$formattedDate | $formattedSize"
+            holder.extraInfo.text = ""
         }
     }
 

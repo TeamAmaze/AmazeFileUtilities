@@ -17,5 +17,6 @@
 
         <item name="colorAccent">@color/highlight_yellow</item>
         <item name="android:colorEdgeEffect" tools:targetApi="l">@color/highlight_yellow</item>
+        <item name="android:windowBackground">@color/navy_blue</item>
     </style>
 </resources>

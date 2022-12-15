@@ -1,11 +1,21 @@
 /*
- * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2021 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.audio_player.notification
@@ -13,23 +23,22 @@ package com.amaze.fileutilities.audio_player.notification
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationManagerCompat
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerService
 
 abstract class AudioPlayerNotification {
     private var notifyMode = NOTIFY_MODE_BACKGROUND
-    private var notificationManager: NotificationManager? = null
+    private var notificationManager: NotificationManagerCompat? = null
     lateinit var service: AudioPlayerService
     var stopped = false
 
     @Synchronized
     fun init(service: AudioPlayerService) {
         this.service = service
-        notificationManager = service.getSystemService(Context.NOTIFICATION_SERVICE)
-            as NotificationManager?
+        notificationManager = NotificationManagerCompat.from(service.applicationContext)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()
         }
@@ -55,7 +64,7 @@ abstract class AudioPlayerNotification {
         }
         if (newNotifyMode == NOTIFY_MODE_FOREGROUND) {
             service.startForeground(NOTIFICATION_ID, notification)
-        } else if (newNotifyMode == NOTIFY_MODE_BACKGROUND) {
+        } else if (newNotifyMode == NOTIFY_MODE_BACKGROUND && notification != null) {
             notificationManager!!.notify(NOTIFICATION_ID, notification)
         }
         notifyMode = newNotifyMode

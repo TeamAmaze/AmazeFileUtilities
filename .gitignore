@@ -325,9 +325,12 @@ local.properties
 projectFilesBackup
 captures
 *.iml
+/app/fdroid/release/output-metadata.json
 
 /app/src/main/res/values-in/strings.xml
 /app/src/main/res/values-iw/strings.xml
 
 # sign config
 signing.properties
+crowdin.properties
+application.properties

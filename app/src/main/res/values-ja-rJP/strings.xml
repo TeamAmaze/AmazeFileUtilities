@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Amazeファイルユーティリティ</string>
+    <string name="app_name">Amaze File Utilities</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">Amazeファイルユーティリティ</string>
+    <string name="app_name_launcher">Amaze Utilities</string>
     <!-- App info shown in about screen -->
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Amaze 画像ビューアー</string>
+    <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">画像ビューア</string>
+    <string name="image_viewer_normal">Image Viewer</string>
     <!-- Video player activity label -->
-    <string name="video_player">Amazeビデオプレーヤー</string>
+    <string name="video_player">Amaze Video Player</string>
     <!-- Video player dialog intent filter label -->
-    <string name="video_player_dialog">Amaze Video Player (ダイアログ)</string>
+    <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">Amaze Video Player (全画面)</string>
+    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
     <!-- Music player activity label -->
-    <string name="amaze_audio_player">Amaze音楽プレイヤー</string>
+    <string name="amaze_audio_player">Amaze Music Player</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Amaze PDF ビューアー</string>
+    <string name="pdf_viewer">Amaze Pdf Viewer</string>
     <!-- Epub activity label -->
-    <string name="epub_viewer">Amaze Epub ビューアー</string>
+    <string name="epub_viewer">Amaze Epub Viewer</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">Amaze Doc ビューアー</string>
+    <string name="docx_viewer">Amaze Doc Viewer</string>
     <!-- Image viewer dialog intent filter label -->
-    <string name="intent_image_viewer_dialog">Amaze Image Viewer (ダイアログ)</string>
+    <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
     <!-- Image viewer full screen intent label -->
-    <string name="intent_image_viewer_full_screen">Amaze Image Viewer (全画面)</string>
+    <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
     <!-- User didn't accept all storage permissions -->
     <string name="grantfailed">Storage permission not granted</string>
     <!-- User didn't accept location permission for transfer files tab -->
@@ -35,119 +35,119 @@
     <!-- Shown in welcome screen for first time -->
     <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_permission">アクセス許可を付与する</string>
+    <string name="grant_permission">Grant permission</string>
     <!-- Grant permission button for welcome screen -->
-    <string name="grant">付与</string>
+    <string name="grant">Grant</string>
     <!-- Cancel button in dialogs mainly to cancel any operation -->
-    <string name="cancel">キャンセル</string>
+    <string name="cancel">Cancel</string>
     <!-- Play button label in music player notification -->
-    <string name="play">再生</string>
+    <string name="play">Play</string>
     <!-- Shuffle button label in music player notification -->
-    <string name="shuffle">シャッフル</string>
+    <string name="shuffle">Shuffle</string>
     <!-- Repeat button label in music player notification -->
-    <string name="repeat">繰り返す</string>
+    <string name="repeat">Repeat</string>
     <!-- Previous button label in music player notification -->
-    <string name="previous">前へ</string>
+    <string name="previous">Previous</string>
     <!-- Next button label in music player notification -->
-    <string name="next">次へ</string>
+    <string name="next">Next</string>
     <!-- Not allowed to perform any operation -->
-    <string name="not_allowed">許可されていません</string>
+    <string name="not_allowed">Not allowed</string>
     <!-- Audio player notification channel description -->
     <string name="audio_player_service_description">Plays audio for Amaze File Utilities</string>
     <!-- Invert colors in document / pdf viewer -->
-    <string name="invert_colors">色を反転する</string>
+    <string name="invert_colors">Invert colors</string>
     <!-- Location any list eg. images or videos list -->
-    <string name="loading">読み込み中…</string>
+    <string name="loading">Loading…</string>
     <!-- Analyse tab on app main screen bottom tab -->
-    <string name="title_analyse">解析</string>
+    <string name="title_analyse">Analyse</string>
     <!-- Utilities tab on app main screen bottom tab -->
-    <string name="title_utilities">ユーティリティ</string>
+    <string name="title_utilities">Utilities</string>
     <!-- Transfer files tab on app main screen bottom tab -->
-    <string name="title_transfer">転送</string>
+    <string name="title_transfer">Transfer</string>
     <!-- Scan nearby connections button in transfer tab -->
-    <string name="title_scan">スキャン</string>
+    <string name="title_scan">Scan</string>
     <!-- Stop scan nearby devices in transfer tab -->
-    <string name="title_stop_scan">停止</string>
+    <string name="title_stop_scan">Stop</string>
     <!-- Internal storage on app main screen -->
-    <string name="internal_storage">内部ストレージ</string>
+    <string name="internal_storage">Internal Storage</string>
     <!-- Images title in images list screen in utilities tab -->
-    <string name="images">画像</string>
+    <string name="images">Images</string>
     <!-- Audios title in audios list screen in utilities tab -->
-    <string name="audios">オーディオ</string>
+    <string name="audios">Audios</string>
     <!-- Videos title in videos list screen in utilities tab -->
-    <string name="videos">ビデオ</string>
+    <string name="videos">Videos</string>
     <!-- Documents title in documents list screen in utilities tab -->
-    <string name="documents">ドキュメント</string>
+    <string name="documents">Documents</string>
     <!-- Number of files in utilities tab individual list screens eg in images / number of images -->
-    <string name="num_of_files">%s ファイル</string>
+    <string name="num_of_files">%s Files</string>
     <!-- Number of total media files on main screen -->
-    <string name="num_of_media_files">%s メディアファイル</string>
+    <string name="num_of_media_files">%s Media Files</string>
     <!-- Used space in utilties tab in individual lists screen eg in images - Used: 300 MB / 1 GB -->
     <string name="used_space">Used: %s</string>
     <!-- Send file in transfer tab -->
-    <string name="send">送信</string>
+    <string name="send">Send</string>
     <!-- Receive file in transfer tab -->
-    <string name="receive">受信</string>
+    <string name="receive">Receive</string>
     <!-- Stop receiving file in transfer tab -->
-    <string name="stop_receiving">受信停止</string>
+    <string name="stop_receiving">Stop Receiving</string>
     <!-- Calculating number of media files in utilities tab on app startup -->
-    <string name="calculating">計算中…</string>
+    <string name="calculating">Calculating…</string>
     <!-- Recent files on utilities tab main screen -->
-    <string name="recent_files">最近使用したファイル</string>
+    <string name="recent_files">Recent Files</string>
     <!-- No files found after searching media files -->
-    <string name="no_files">ファイルなし</string>
+    <string name="no_files">No files</string>
     <!-- Number of media files in utilities tab in individual list screen eg in images / number of total files -->
-    <string name="media_files_subs">メディアファイル：%s</string>
+    <string name="media_files_subs">Media Files: %s</string>
     <!-- Search screen title bar hint -->
-    <string name="action_bar_search_hint">ファイルを検索…</string>
+    <string name="action_bar_search_hint">Search for files…</string>
     <!-- Generic message shown when loading results of list or operation -->
-    <string name="please_wait">お待ちください…</string>
+    <string name="please_wait">Please wait…</string>
     <!-- No search results found -->
-    <string name="its_quiet_here">ここは静かです…</string>
+    <string name="its_quiet_here">It\'s quiet in here…</string>
     <!-- Settings screen title -->
-    <string name="settings">設定</string>
+    <string name="settings">Settings</string>
     <!-- About screen title -->
-    <string name="about">情報</string>
+    <string name="about">About</string>
     <!-- Copyright dialog content in about section -->
-    <string name="rights_reserved">著作権 © 2021–2022 Team Amaze\n無断複写・転載を禁じます。</string>
+    <string name="rights_reserved">Copyright © 2021–2022 Team Amaze\nAll Rights Reserved</string>
     <!-- Open source licenses in about section -->
-    <string name="open_source_licenses">オープンソースライセンス</string>
+    <string name="open_source_licenses">Open-source licenses</string>
     <!-- Privacy policy label in about section -->
-    <string name="privacy_policy">個人情報保護方針</string>
+    <string name="privacy_policy">Privacy Policy</string>
     <!-- Licenses label in about section -->
-    <string name="licenses">ライセンス</string>
+    <string name="licenses">Licenses</string>
     <!-- Information about a pdf / doc file -->
-    <string name="information">情報</string>
+    <string name="information">Information</string>
     <!-- Unable to open pdf / doc / video / image file -->
-    <string name="unsupported_content">対応していないコンテンツ</string>
+    <string name="unsupported_content">Unsupported content</string>
     <!-- Group utilities list eg images / videos by parent folder -->
     <string name="parent">Parent</string>
     <!-- Group utilities list eg images / videos by date -->
-    <string name="date">日付</string>
+    <string name="date">Date</string>
     <!-- Group utilities list eg iamges / videos by name -->
-    <string name="name">名前</string>
+    <string name="name">Name</string>
     <!-- Show utilities list by list view -->
-    <string name="list_view">リスト表示</string>
+    <string name="list_view">List View</string>
     <!-- Show utilities list by grid view -->
-    <string name="grid_view">グリッド表示</string>
+    <string name="grid_view">Grid View</string>
     <!-- Sort utilities by size -->
-    <string name="size">サイズ</string>
+    <string name="size">Size</string>
     <!-- Group audio utilities list by album names  -->
-    <string name="album">アルバム</string>
+    <string name="album">Album</string>
     <!-- Group audio utilities list by artist name -->
-    <string name="artist">アーティスト</string>
+    <string name="artist">Artist</string>
     <!-- Sort audio / video utilities list by duration -->
-    <string name="duration">長さ</string>
+    <string name="duration">Duration</string>
     <!-- Crash fallback screen title -->
     <string name="sorry_string">Sorry, that should not have happened.</string>
     <!-- Crash fallback screen report by email -->
-    <string name="error_report_button_text">Eメールでエラーを報告する</string>
+    <string name="error_report_button_text">Report this error via e-mail</string>
     <!-- Crash fallback screen report by telegram -->
-    <string name="error_report_button_telegram">Telegramでエラーを報告する</string>
+    <string name="error_report_button_telegram">Report this error via telegram</string>
     <!-- Crash fallback screen copy report -->
-    <string name="copy_for_github">書式付きレポートをコピー</string>
+    <string name="copy_for_github">Copy formatted report</string>
     <!-- Crash fallback screen report on github -->
-    <string name="error_report_open_issue_button_text">GitHub でバグを報告</string>
+    <string name="error_report_open_issue_button_text">Report on GitHub</string>
     <!-- Crash fallback screen info -->
     <string name="error_report_open_github_notice">Please check whether an issue discussing your crash already exists.</string>
     <!-- Toast shown when we failed to display crash fallback screen -->
@@ -173,59 +173,59 @@
     <!-- Crash fallback screen report copied to clipboard -->
     <string name="clipboard_path_copy">Path copied to clipboard</string>
     <!-- Pdf activity password prompt -->
-    <string name="pdf_password_title">パスワードが必要</string>
+    <string name="pdf_password_title">Password required</string>
     <!-- Pdf activity password required info -->
-    <string name="pdf_password_required">このドキュメントを開くにはパスワードを入力してください。</string>
+    <string name="pdf_password_required">Please enter the password to open this document</string>
     <!-- Generic ok button in dialogs -->
     <string name="ok">OK</string>
     <!-- Pdf activity wrong password entered -->
-    <string name="wrong_password">パスワードが間違っています。</string>
+    <string name="wrong_password">Wrong password</string>
     <!-- Generic message for any operation not supported -->
-    <string name="unsupported_operation">無効な操作です</string>
+    <string name="unsupported_operation">Unsupported Operation</string>
     <!-- Grant storage permission more info -->
     <string name="grant_all_files_permission"><html><body>Since Android 11, Google requests File Managers to request user permission for managing all files on the device. Details <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">here</a>.
         \n\nAmaze File Utilities needs this permission too. After pressing &quot;Grant&quot;here, please select <b>Allow access to manage all files</b> option on the next screen.
         \n\n<font color="#ff6347"><i>Canceling this dialog will exit the app.</i></font></body></html></string>
     <!-- Pdf activity copy page content title -->
-    <string name="copy_page">ページをコピーする</string>
+    <string name="copy_page">Copy page</string>
     <!-- Pdf activity view bookmarks -->
-    <string name="bookmarks">ブックマーク</string>
+    <string name="bookmarks">Bookmarks</string>
     <!-- Pdf activity pdf title -->
-    <string name="title">タイトル</string>
+    <string name="title">Title</string>
     <!-- Pdf activity pdf author -->
-    <string name="author">作成者</string>
+    <string name="author">Author</string>
     <!-- Pdf activity pdf creator -->
-    <string name="creator">製作者</string>
+    <string name="creator">Creator</string>
     <!-- Pdf activity pdf creation date -->
-    <string name="creation_date">作成日時</string>
+    <string name="creation_date">Creation date</string>
     <!-- Pdf activity pdf modification date -->
-    <string name="modification_date">更新日時</string>
+    <string name="modification_date">Modification Date</string>
     <!-- Pdf activity pdf subject -->
-    <string name="subject">件名</string>
+    <string name="subject">Subject</string>
     <!-- Pdf activity pdf keywords -->
-    <string name="keywords">キーワード</string>
+    <string name="keywords">Keywords</string>
     <!-- Pdf activity pdf producer -->
-    <string name="producer">編集者</string>
+    <string name="producer">Producer</string>
     <!-- Generic dialog close button -->
-    <string name="close">閉じる</string>
+    <string name="close">Close</string>
     <!-- Analysing internal storage shown in analysis tab -->
-    <string name="analysing">解析中…</string>
+    <string name="analysing">Analysing…</string>
     <!-- Pdf activity page content copied -->
     <string name="page_copied_to_clipboard">Page content copied to clipboard</string>
     <!-- Clean button in analysis tab to clean junk files -->
-    <string name="clean">クリーン</string>
+    <string name="clean">Clean</string>
     <!-- Blurred images label in analysis -->
-    <string name="blurred_pics">不鮮明</string>
+    <string name="blurred_pics">Blurred</string>
     <!-- Low light label in analysis -->
-    <string name="low_light">低照度</string>
+    <string name="low_light">Low-Light</string>
     <!-- Memes label in analysis -->
-    <string name="memes">ミーム</string>
+    <string name="memes">Memes</string>
     <!-- Sad images label in analysis -->
     <string name="frown">Frown</string>
     <!-- Sad images analysis hint -->
     <string name="frown_hint">Images that doesn\'t have smiling faces</string>
     <!-- Closed eyes analysis label -->
-    <string name="closed_eyes">閉じた目</string>
+    <string name="closed_eyes">Closed Eyes</string>
     <!-- Closed eyes analysis hint -->
     <string name="closed_eyes_hint">Images that have people with closed eyes</string>
     <!-- Distracted images analysis label -->
@@ -233,47 +233,47 @@
     <!-- Distracted images analysis hint -->
     <string name="distracted_hint">Images that have people looking elsewhere</string>
     <!-- Selfie images analysis label -->
-    <string name="selfie">自撮り</string>
+    <string name="selfie">Selfies</string>
     <!-- Group images analysis label -->
-    <string name="group_pics">集合写真</string>
+    <string name="group_pics">Group Pics</string>
     <!-- Memes analysis hint -->
     <string name="memes_hint">Memes are images that have something prominent written over them</string>
     <!-- Duplicate files analysis label -->
-    <string name="duplicates">重複したファイル</string>
+    <string name="duplicates">Duplicate files</string>
     <!-- App caches analysis labels -->
-    <string name="cache">アプリのキャッシュ</string>
+    <string name="cache">App Cache</string>
     <!-- Large videos analysis label -->
-    <string name="large_videos">大きな動画</string>
+    <string name="large_videos">Large videos</string>
     <!-- Large downloads analysis label -->
-    <string name="large_downloads">大きなダウンロード</string>
+    <string name="large_downloads">Large downloads</string>
     <!-- Old screenshots analysis label -->
-    <string name="old_screenshots">古いスクリーンショット</string>
+    <string name="old_screenshots">Old Screenshots</string>
     <!-- Old downloads analysis label -->
-    <string name="old_downloads">古いダウンロード</string>
+    <string name="old_downloads">Old downloads</string>
     <!-- Old recordings analysis label -->
-    <string name="old_recordings">古い録音</string>
+    <string name="old_recordings">Old recordings</string>
     <!-- Empty files analysis label -->
-    <string name="empty_files">空のファイル/フォルダ</string>
+    <string name="empty_files">Empty files / folders</string>
     <!-- Junk files analysis label -->
-    <string name="junk_files">不要ファイル</string>
+    <string name="junk_files">Junk files</string>
     <!-- Junk files analysis hint -->
     <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
     <!-- Telegram analysis label -->
-    <string name="telegram_files">Telegram</string>
+    <string name="telegram_files">Telegram Media</string>
     <!-- More optimisations coming at analysis tab bottom -->
     <string name="more_to_come">More optimizations to come!</string>
     <!-- View all analysed content analysis tab -->
-    <string name="view_all">すべて表示</string>
+    <string name="view_all">View all</string>
     <!-- Analysis settings title -->
-    <string name="analysis">解析</string>
+    <string name="analysis">Analysis</string>
     <!-- Analysis settings hint -->
     <string name="analysis_hint">Control analysis tab settings such as paths to include analysis from, show / hide various analysis</string>
     <!-- Exclude paths from scan for music player -->
-    <string name="exclusions">除外</string>
+    <string name="exclusions">Exclusions</string>
     <!-- Exclude paths from scan for music player summary -->
     <string name="exclusions_summary">Paths to exclude while scanning media</string>
     <!-- Audio player settings title -->
-    <string name="audio_player">音楽プレーヤー</string>
+    <string name="audio_player">Audio Player</string>
     <!-- Audio player settings summary -->
     <string name="audio_player_hint">Control audio player settings such as paths to exclude</string>
     <!-- Image viewer settings title -->
@@ -281,32 +281,32 @@
     <!-- Analysis in settings page -->
     <string name="search_duplicates">Search duplicates in…</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="media_store">Androidメディアストア（最速）</string>
+    <string name="media_store">Android media store (fastest)</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="internal_storage_shallow">内部ストレージ (浅い/遅い)</string>
+    <string name="internal_storage_shallow">Internal Storage (Shallow / slow)</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="internal_storage_deep">内部ストレージ (最も深い/最も遅い)</string>
+    <string name="internal_storage_deep">Internal Storage (Deep / slowest)</string>
     <!-- Show/hide analysis checkbox in settings -->
-    <string name="show_analysis">解析を表示</string>
+    <string name="show_analysis">Show analysis</string>
     <!-- Add new path to analyse or new path to exclude from scan in settings -->
-    <string name="add_item">項目を追加</string>
+    <string name="add_item">Add Item</string>
     <!-- Paths included for analysis in settings -->
-    <string name="paths_included">含まれるパス</string>
+    <string name="paths_included">Paths Included</string>
     <!-- Paths excluded from music player scan in settings -->
-    <string name="paths_excluded">除外するパス</string>
+    <string name="paths_excluded">Paths Excluded</string>
     <!-- Delete path from analysis / exclusion dialog in settings -->
-    <string name="delete_preference">削除の設定</string>
+    <string name="delete_preference">Delete Preference</string>
     <!-- Delete path from analysis / exclusions dialog message in settings -->
     <string name="delete_pref_override_message">You\'re about to override an existing path.
         This will reset the existing analysis data for that path.</string>
     <!-- Generic message to confirm -->
-    <string name="confirm">確認</string>
+    <string name="confirm">Confirm</string>
     <!-- Images features group name in analysis settings -->
     <string name="image_features">Image Features</string>
     <!-- Images features group hint in analysis settings -->
-    <string name="features_paths_hint">Includes closed eyes, distracted, sad, selfie, group paths</string>
+    <string name="features_paths_hint">Includes closed eyes, selfie, group paths</string>
     <!-- Downloads label in analysis settings -->
-    <string name="download_paths">ダウンロード</string>
+    <string name="download_paths">Downloads</string>
     <!-- Downloads hint in analysis settings -->
     <string name="download_paths_hint">Includes old, large downloads</string>
     <!-- Cluttered videos in analysis tab -->
@@ -314,67 +314,67 @@
     <!-- Cluttered videos hint in analysis tab -->
     <string name="cluttered_videos_hint">A group of videos that have similar running time.</string>
     <!-- Re-analyse button in analysis settings -->
-    <string name="reanalyse">再解析</string>
+    <string name="reanalyse">Re-analyse</string>
     <!-- Re-analyse hint in analysis settings -->
     <string name="reanalyse_hint">Clears existing analysis data and starts again</string>
     <!-- Unknown artist / album for music player -->
-    <string name="unknown_artist">&lt;不明アーティスト&gt;</string>
+    <string name="unknown_artist">&lt;UNKNOWN&gt;</string>
     <!-- Search for nearby connections in transfer tab -->
-    <string name="searching">検索中…</string>
+    <string name="searching">Searching…</string>
     <!-- Searching for nearby connections with timer in transfer tab -->
-    <string name="searching_timer">検索中… (%s 秒)</string>
+    <string name="searching_timer">Searching… (%s secs)</string>
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
-    <string name="enable_wifi">Wi-Fiを有効にしてください</string>
+    <string name="enable_wifi">Please enable your Wi-Fi</string>
     <!-- Failed to discover nearby devices in transfer tab -->
     <string name="discovery_failure">Failed to discover peers. Please try reconnecting to Wifi network</string>
     <!-- Receiving files in transfer tab -->
-    <string name="receiving_files">ファイルを受信中...</string>
+    <string name="receiving_files">Receiving files</string>
     <!-- Search for nearby devices in transfer tab -->
-    <string name="search_devices">デバイスを検索中…</string>
+    <string name="search_devices">Search for devices…</string>
     <!-- Enable waveform bar for music player in settings -->
-    <string name="enable_waveform">波形シークバーを有効化</string>
+    <string name="enable_waveform">Enable waveform seekbar</string>
     <!-- Failed to start cast session when trying to cast images / videos from their list pages -->
     <string name="failed_to_start_cast">Failed to start cast session</string>
     <!-- Ready to cast images / videos to tv -->
     <string name="ready_to_cast">Ready to cast, select any media</string>
     <!-- Creating new cast to tv connection -->
-    <string name="establishing_cast">キャスト接続を確立中</string>
+    <string name="establishing_cast">Establishing cast connection</string>
     <!-- Cast session suspended for tv -->
-    <string name="cast_suspended">キャストセッションが一時停止されました</string>
+    <string name="cast_suspended">Cast session suspended</string>
     <!-- Resuming tv cast session -->
-    <string name="resuming_cast">キャストセッション再開中</string>
+    <string name="resuming_cast">Resuming cast session</string>
     <!-- Failed to resume tv cast session -->
-    <string name="failed_resume_cast">キャストセッションを再開できませんでした</string>
+    <string name="failed_resume_cast">Failed to resume cast session</string>
     <!-- Tv cast session resumed -->
-    <string name="cast_resumed">キャストセッションが再開しました</string>
+    <string name="cast_resumed">Cast session resumed</string>
     <!-- Tv cast session ending -->
     <string name="cast_ending">Ending cast session</string>
     <!-- Tv cast session ended -->
     <string name="cast_ended">Cast session ended</string>
     <!-- Open image/ videos/ audios with either cast on tv or open in mobile -->
-    <string name="open_with">アプリで開く</string>
+    <string name="open_with">Open with…</string>
     <!-- Open images / videos/ audios using inbuilt player -->
-    <string name="inbuilt_player">内蔵プレイヤー</string>
+    <string name="inbuilt_player">In-built player</string>
     <!-- Tv Cast notification title server running -->
-    <string name="cast_notification_title">サーバー実行中…</string>
+    <string name="cast_notification_title">Server running…</string>
     <!-- tv casting content notification content -->
-    <string name="cast_notification_summary">テレビでコンテンツをキャスト中</string>
+    <string name="cast_notification_summary">Casting content on TV</string>
     <!-- stop tv cast server notification button -->
-    <string name="stop">停止</string>
+    <string name="stop">Stop</string>
     <!-- Service description to cast media files to tv -->
     <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
     <string name="failed_to_handshake">Failed to establish connection with remote device. Please try reconnecting to Wifi network</string>
     <!-- Connection successful to transfer files in tranfer tab -->
-    <string name="connection_successful">接続成功</string>
+    <string name="connection_successful">Connection successful</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send">送信に失敗しました。リモートがファイルの受信に設定されていることを確認してください。</string>
+    <string name="failed_filename_send">Failed to send, please ensure remote is set to receive file</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send_reconnecct">送信できませんでした。再接続してください。</string>
+    <string name="failed_filename_send_reconnecct">Failed to send, please reconnect</string>
     <!-- Failed to receive files in transfer tab -->
-    <string name="failed_filename_receive">受信に失敗しました</string>
+    <string name="failed_filename_receive">Failed to receive</string>
     <!-- Failed to receive files in transfer tab -->
-    <string name="failed_filename_receive_reconnecct">受信できませんでした。再接続してください。</string>
+    <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
     <!-- Transfer complete in transfer tab -->
     <string name="transfer_complete">File transferred</string>
     <!-- Need extra permissions for transfer tab -->
@@ -382,17 +382,17 @@
     <!-- Need extra permissions for transfer tab -->
     <string name="location_permission_not_granted">Please grant storage permission to connect with nearby devices.</string>
     <!-- Waiting for permissions in transfer tab -->
-    <string name="waiting_for_permissions">権限を待機中…</string>
+    <string name="waiting_for_permissions">Waiting for permissions…</string>
     <!-- Enable gps for transfer tab -->
     <string name="gps_disabled">Your GPS seems to be disabled, please enable to proceed</string>
     <!-- Enable location to scan nearby devices in transfer tab -->
-    <string name="enable_location">スキャンするには位置情報を有効にしてください</string>
+    <string name="enable_location">Please enable location to scan.</string>
     <!-- generic yes -->
-    <string name="yes">はい</string>
+    <string name="yes">Yes</string>
     <!-- generic no -->
-    <string name="no">いいえ</string>
+    <string name="no">No</string>
     <!-- Enable location / wifi in transfer tab -->
-    <string name="enable">有効</string>
+    <string name="enable">Enable</string>
     <!-- No nearby devices found in transfer tab -->
     <string name="no_devices_found">No devices found nearby,
         please make sure your device is connected to same network and have WiFi-Direct enabled in settings</string>
@@ -401,100 +401,100 @@
     <!-- Resetting network discovery in transfer tab -->
     <string name="resetting_network_discovery">Resetting network discovery</string>
     <!-- Disconnected in transfer tab -->
-    <string name="disconnected">切断されました</string>
+    <string name="disconnected">Disconnected</string>
     <!-- Disconnect from connection in transfer tab -->
-    <string name="disconnect">接続を解除</string>
+    <string name="disconnect">Disconnect</string>
     <!-- Already connected to a device in transfer tab -->
     <string name="existing_connection">Existing connection exists, please disconnect first!</string>
     <!-- Connecting to nearby device in transfer tab -->
-    <string name="connecting">接続中…</string>
+    <string name="connecting">Connecting…</string>
     <!-- Aspect ratio of video in video player -->
-    <string name="aspect_ratio">アスペクト比</string>
+    <string name="aspect_ratio">Aspect ratio</string>
     <!-- Playback speed dialog for video / audio player -->
-    <string name="playback_speed">再生速度</string>
+    <string name="playback_speed">Playback Speed</string>
     <!-- Playback pitch in video / audio player -->
-    <string name="pitch_speed">ピッチ(半音)</string>
+    <string name="pitch_speed">Pitch (semitones)</string>
     <!-- Add subtitles in video player -->
-    <string name="subtitles">字幕</string>
+    <string name="subtitles">Subtitles</string>
     <!-- Video info dialog in video player -->
-    <string name="file">ファイル</string>
+    <string name="file">File</string>
     <!-- Video info dialog in video player -->
-    <string name="media">メディア</string>
+    <string name="media">Media</string>
     <!-- Video info dialog in video player -->
-    <string name="audio">オーディオ</string>
+    <string name="audio">Audio</string>
     <!-- Video info dialog in video player -->
-    <string name="video">ビデオ</string>
+    <string name="video">Video</string>
     <!-- Video info dialog in video player -->
-    <string name="file_path">パス</string>
+    <string name="file_path">Path</string>
     <!-- Video info dialog in video player -->
-    <string name="last_modified">最終更新日</string>
+    <string name="last_modified">Last Modified</string>
     <!-- Video info dialog in video player -->
-    <string name="description">説明</string>
+    <string name="description">Description</string>
     <!-- Video info dialog in video player -->
-    <string name="recording_date">録音の月/年</string>
+    <string name="recording_date">Recording month/year</string>
     <!-- Video info dialog in video player -->
-    <string name="release_date">リリース月/年</string>
+    <string name="release_date">Release month/year</string>
     <!-- Video info dialog in video player -->
-    <string name="bitrate">ビットレート</string>
+    <string name="bitrate">Bitrate</string>
     <!-- Video info dialog in video player -->
-    <string name="channel">チャンネル</string>
+    <string name="channel">Channel</string>
     <!-- Video info dialog in video player -->
-    <string name="frame_rate">フレームレート</string>
+    <string name="frame_rate">Frame Rate</string>
     <!-- Video info dialog in video player -->
-    <string name="mime_type">コンテナのタイプ</string>
+    <string name="mime_type">Container Type</string>
     <!-- Video info dialog in video player -->
-    <string name="width">横幅</string>
+    <string name="width">Width</string>
     <!-- Video info dialog in video player -->
-    <string name="height">高さ</string>
+    <string name="height">Height</string>
     <!-- Video info dialog in video player -->
-    <string name="codecs">コーデック</string>
+    <string name="codecs">Codecs</string>
     <!-- Video info dialog in video player -->
-    <string name="sample_rate">サンプルレート</string>
+    <string name="sample_rate">Sample Rate</string>
     <!-- Failed to gain audio focus in music player -->
     <string name="failed_to_gain_focus">Failed to gain audio focus</string>
     <!-- Open existing subtitles file in video player -->
-    <string name="open">開く</string>
+    <string name="open">Open</string>
     <!-- Search for subtitles file online dialog button in video player -->
-    <string name="search">検索</string>
+    <string name="search">Search</string>
     <!-- Search for subtitles file online dialog title in video player -->
-    <string name="search_online">オンラインで検索</string>
+    <string name="search_online">Search online</string>
     <!-- Synchronize subtitles list item in video player -->
-    <string name="synchronize">同期</string>
+    <string name="synchronize">Synchronize</string>
     <!-- Download subtitles in video player -->
-    <string name="download_subtitles">字幕をダウンロード</string>
+    <string name="download_subtitles">Download subtitles</string>
     <!-- Download subtitles info in video player -->
     <string name="download_subtitles_info">Enter keywords and select your language to search subtitles from <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
     <string name="amaze_fm_redirect">You\'re being redirected to Amaze File Manager. It\'s our open source offering that has all features a modern file manager has completely free of cost with over 2M downloads and 4.3 rating on Play Store.</string>
     <!-- Download button in dialog prompt -->
-    <string name="download">ダウンロード</string>
+    <string name="download">Download</string>
     <string name="amaze_file_manager">Amaze File Manager</string>
     <!-- Download subtitles video player device not connected to internet -->
     <string name="not_connected_to_internet">Device not connected to internet</string>
     <!-- Search subtitles dialog in video player -->
-    <string name="upload_date">アップロード日時</string>
+    <string name="upload_date">Upload date</string>
     <!-- Search subtitles dialog in video player -->
-    <string name="rating">評価</string>
+    <string name="rating">Rating</string>
     <!-- Search subtitles dialog in video player -->
     <string name="cd">CD</string>
     <!-- Uploader info in search subtitles dialog in video player -->
-    <string name="uploader">アップローダー</string>
+    <string name="uploader">Uploader</string>
     <!-- Downloads info in search subtitles dialog in video player -->
-    <string name="downloads">ダウンロード</string>
+    <string name="downloads">Downloads</string>
     <!-- Language info in search subtitles dialog in video player -->
-    <string name="language">言語</string>
+    <string name="language">Language</string>
     <!-- No subtitles found in video player -->
     <string name="no_results_subtitles">No results, please try with different keywords…</string>
     <!-- Download subtitles in video player -->
-    <string name="downloading">ダウンロード中…</string>
+    <string name="downloading">Downloading…</string>
     <!-- Can't download subtitles in video player -->
-    <string name="choose_different_subtitle">ダウンロードできません。他の字幕を選択してください</string>
+    <string name="choose_different_subtitle">Can\'t download, choose some other subtitles</string>
     <!-- Subtitles applied in video player -->
-    <string name="subtitles_applied">字幕が適用されました</string>
+    <string name="subtitles_applied">Subtitles applied</string>
     <!-- Failed to download subtitles in video player -->
     <string name="failed_to_download">Failed to download</string>
     <!-- Share file dialog -->
-    <string name="bluetooth">ブルートゥース</string>
+    <string name="bluetooth">Bluetooth</string>
     <!-- Share logs in about section -->
     <string name="share_logs">Share logs</string>
     <!-- No app found in share dialog -->
@@ -508,109 +508,109 @@
     <!-- No item selected to delete in analysis tab -->
     <string name="no_item_selected">No item selected</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
-    <string name="analysis_updated">解析を更新しました</string>
+    <string name="analysis_updated">Updated analysis</string>
     <!-- Failed to share pdf/ video/audio files  -->
     <string name="failed_to_share">Failed to share files</string>
     <!-- Transfer tab connected hint -->
-    <string name="connected_send_receive_hint">Connected… before you start sending,
+    <string name="connected_send_receive_hint">Connected… before you start sending, 
         make sure to enable receiver on the other device</string>
     <!-- Transfer tab receiving files -->
-    <string name="receiving">受信中…</string>
+    <string name="receiving">Receiving…</string>
     <!-- Transfer tab hint for connection -->
     <string name="devices_present_select">Make sure to initiate connection only from one device not both.</string>
     <!-- Transfer tab hint for connection -->
     <string name="start_scan_both_devices">Make sure to start scan on both the devices</string>
     <!-- Transfer tab connecting countdown -->
-    <string name="connecting_please_wait">接続中…（%s 秒）</string>
+    <string name="connecting_please_wait">Connecting… (%s secs)</string>
     <!-- Transfer tab enable wifi to continue -->
     <string name="enable_wifi_to_continue">Please enable Wifi to continue</string>
     <!-- Transfer tab my device info -->
-    <string name="my_device">私のデバイス：%s</string>
+    <string name="my_device">My device: %s</string>
     <!-- Transfer tab my device status -->
-    <string name="device_status">ステータス: %s</string>
+    <string name="device_status">Status: %s</string>
     <!-- Transfer tab progress -->
-    <string name="transfer_in_progress_title">転送中</string>
+    <string name="transfer_in_progress_title">Transfer in progress</string>
     <!-- Transfer tab transfer in progress but user trying to leave the screen -->
     <string name="transfer_in_progress_summary">There is a P2P transfer currently in progress,
         it is recommended that you don\'t leave this screen,
         otherwise you\'ll not be able to track the transfer</string>
     <!-- Transfer tab leave in progress -->
-    <string name="leave">退出する</string>
+    <string name="leave">Leave</string>
     <!-- Transfer app stay in progress -->
-    <string name="stay">留まる</string>
+    <string name="stay">Stay</string>
     <!-- Image viewer edit image -->
-    <string name="edit">編集</string>
+    <string name="edit">Edit</string>
     <!-- Image viewer set image as wallpaper -->
     <string name="set_as">Set as…</string>
     <!-- Image viewer delete image -->
-    <string name="delete">削除</string>
+    <string name="delete">Delete</string>
     <!-- Image viewer details of image -->
-    <string name="details">詳細</string>
+    <string name="details">Details</string>
     <!-- Image viewer manufacturer of camera lens -->
-    <string name="make">メーカー</string>
+    <string name="make">Make</string>
     <!-- Image viewer model of camera lens -->
-    <string name="model">モデル</string>
+    <string name="model">Model</string>
     <!-- Image viewer camera aperture -->
-    <string name="aperture">絞り</string>
+    <string name="aperture">Aperture</string>
     <!-- Image viewer iso of image -->
-    <string name="iso">ISO感度</string>
+    <string name="iso">ISO</string>
     <!-- Image viewer shutter time -->
-    <string name="shutter_time">シャッタータイム</string>
+    <string name="shutter_time">Shutter time</string>
     <!-- Image viewer image location -->
-    <string name="location">場所</string>
+    <string name="location">Location</string>
     <!-- Image viewer gps -->
     <string name="gps">GPS</string>
     <!-- Image viewer image latitude -->
-    <string name="latitude">緯度</string>
+    <string name="latitude">Latitude</string>
     <!-- Image viewer image longitude -->
-    <string name="longitude">経度</string>
+    <string name="longitude">Longitude</string>
     <!-- Image viewer image file name -->
-    <string name="file_name">ファイル名</string>
+    <string name="file_name">File Name</string>
     <!-- Image viewer image path -->
-    <string name="path">パス</string>
+    <string name="path">Path</string>
     <!-- Image viewer open image location in map -->
-    <string name="open_in_maps">地図で開く</string>
+    <string name="open_in_maps">Open in Map</string>
     <!-- Share image / video -->
-    <string name="share">共有</string>
+    <string name="share">Share</string>
     <!-- Share / document no app found to open -->
     <string name="no_app_found">No App found to open this file</string>
     <!-- File not found while opening -->
-    <string name="file_not_found">ファイルが見つかりません</string>
+    <string name="file_not_found">File not found</string>
     <!-- Delete file -->
-    <string name="delete_files_title">削除</string>
+    <string name="delete_files_title">Delete</string>
     <!-- Delete file summary -->
     <string name="delete_files_message">You\'re about to permanently delete these files.
         Are you sure you want to proceed?\n\n%s Files, %s Size</string>
     <!-- Delete file progress -->
-    <string name="deleted_progress">%s 中 %sを削除しました</string>
+    <string name="deleted_progress">Deleted %s of %s</string>
     <!-- Delete file successful -->
     <string name="successfully_deleted">Successfully deleted</string>
     <!-- Delete file failure -->
     <string name="failed_to_update_list_reopen">Failed to update list, please restart the app</string>
     <!-- Device id in about section -->
-    <string name="device_id">デバイスID</string>
+    <string name="device_id">Device ID</string>
     <!-- Subscription status in about section -->
     <string name="subscription_status">Subscription status</string>
     <!-- Device id copied in about section -->
-    <string name="device_id_copied">デバイスIDをクリップボードにコピーしました</string>
+    <string name="device_id_copied">Device ID copied to clipboard</string>
     <!-- App version in about section -->
-    <string name="version_title">バージョン</string>
+    <string name="version_title">Version</string>
     <!-- License title in about section -->
-    <string name="license">ライセンス</string>
+    <string name="license">License</string>
     <!-- Submit issue in about section -->
     <string name="submit_issue">Submit Issue</string>
     <!-- Contact us in about section -->
-    <string name="contact_us">お問い合わせ</string>
+    <string name="contact_us">Contact Us</string>
     <!-- Translate in about section -->
     <string name="translate_title">Translate</string>
     <!-- Translate summary in about section -->
     <string name="translate_summary">Help us translate Amaze in your language</string>
     <!-- About app screen title -->
-    <string name="about_app_title">アプリについて</string>
+    <string name="about_app_title">About app</string>
     <!-- Made in india about section -->
     <string name="made_in_india">Made with ❤ in India</string>
     <!-- Trail dialog trial started -->
-    <string name="trial_started_title">試用開始（%s 日）</string>
+    <string name="trial_started_title">Trial started (%s days)</string>
     <!-- Trial dialog trial started content -->
     <string name="trial_started_message">Thank you for choosing Amaze File Utilities.\n
         We are a team of open source developers working hard to provide an ad-free experience,
@@ -619,7 +619,7 @@
         You\'ll be able to contact directly to our team on Telegram.\n
         Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
     <!-- Trial dialog trial ending last day title -->
-    <string name="trial_last_day_title">試用期間がまもなく終了します。</string>
+    <string name="trial_last_day_title">Trial about to expire</string>
     <!-- Trial dialog trial ending last day summary -->
     <string name="trial_last_day_message">Hey There! Thank you for choosing Amaze File Utilities.
         \nYour trial is going to expire tomorrow, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.
@@ -627,7 +627,7 @@
         and we need funds to keep us afloat.\nYou can write to us if you want to extend the trial period a bit more.
     </string>
     <!-- Trial expired title -->
-    <string name="trial_expired_title">試用期間が終了しました</string>
+    <string name="trial_expired_title">Trial expired</string>
     <!-- Trial expired summary -->
     <string name="trial_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         Your trial has expired, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
@@ -645,7 +645,7 @@
         and we need funds to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.</string>
     <!-- Subscription dialog subscription purchased title -->
-    <string name="subscription_purchased_title">購読済み</string>
+    <string name="subscription_purchased_title">Subscribed</string>
     <!-- Subscription dialog subscription purchased summary -->
     <string name="subscription_purchased_message">Thank you for choosing Amaze File Utilities.\n
         We are a team of open source developers working hard to provide an ad-free experience,
@@ -654,7 +654,7 @@
         You\'ll be able to contact directly to our team on Telegram.\n
         Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
     <!-- Subscription dialog yearly subscription expired title -->
-    <string name="subscription_expired_title">サブスクリプションの有効期限が切れました</string>
+    <string name="subscription_expired_title">Subscription expired</string>
     <!-- Subscription dialog yearly subscription expired summary -->
     <string name="subscription_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         Your subscription has expired,
@@ -668,11 +668,11 @@
     <string name="not_connected_trial_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         We\'re not able to validate your license, please connect to internet and restart the app.</string>
     <!-- Subscribe button in dialog -->
-    <string name="subscribe">購読</string>
+    <string name="subscribe">Subscribe</string>
     <!-- Generic don't show dialog again -->
-    <string name="dont_show_again">再表示しない</string>
+    <string name="dont_show_again">Don\'t show again</string>
     <!-- Welcome screen title -->
-    <string name="welcome_media_title">メディアファイルを管理</string>
+    <string name="welcome_media_title">Manage media files</string>
     <!-- Welcome screen summary -->
     <string name="welcome_media_summary">View images, videos, audios, documents in list or grid\nOpen using inbuilt players\nGesture support for easy navigation\nJump to any date instantly\nGroup or sort list\nCast on TV</string>
     <!-- Welcome screen analysis summary -->
@@ -682,9 +682,9 @@
     <!-- Welcome screen permission required -->
     <string name="welcome_permission">We need storage permissions to access your media files</string>
     <!-- Welcome screen license agreement page -->
-    <string name="before_we_start">始める前に…</string>
+    <string name="before_we_start">Before we start…</string>
     <!-- Welcome screen license agreement page -->
-    <string name="privacy_title">あなたの個人情報とプライバシーは大切です。</string>
+    <string name="privacy_title">We care for your privacy!</string>
     <!-- Welcome screen license agreement page -->
     <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.\n
         We assure you that we do not collect any of your private information.\nWe don\'t say this, our track record does.\nWe\'re a group of open source developers and are managing Amaze File Manager for around 8 years now.\n\nWe look forward to your subscription.
@@ -692,7 +692,7 @@
     <!-- Subscription dialog failed to fetch subscriptions -->
     <string name="error_fetching_google_play_product_list">Error fetching product list from Google Play.</string>
     <!-- Welcome screen done with the wizard -->
-    <string name="done">完了</string>
+    <string name="done">Done</string>
     <!-- Unable to find cast for tv framework -->
     <string name="cast_framework_unavailable">Unable to initialize cast framework, please update Google Play services</string>
     <!-- Updating app from in app updater -->
@@ -700,7 +700,7 @@
     <!-- App updated from in app updater -->
     <string name="app_updated">App updated successfully</string>
     <!-- Update cancelled from in app updater -->
-    <string name="update_cancelled">更新がキャンセルされました。</string>
+    <string name="update_cancelled">Update cancelled</string>
     <!-- Failed to update from in app updater -->
     <string name="failed_to_update_app">Failed to update the app…</string>
     <!-- Home screen design info in about section -->
@@ -708,41 +708,45 @@
     <!-- Welcome screen accept license agreement -->
     <string name="license_agreement"><![CDATA[I accept the <a href="https://teamamaze.xyz/license-agreement-utilities">License Agreement</a>]]></string>
     <!-- Welcome screen license not accepted -->
-    <string name="license_agreement_not_accepted">ライセンス契約に同意してください</string>
+    <string name="license_agreement_not_accepted">Please accept license agreement</string>
     <!-- Subscription dialog renewal cycle info -->
-    <string name="renewal_cycle">更新のサイクル - %s</string>
+    <string name="renewal_cycle">Renewal cycle - %s</string>
     <!-- Subscription dialog lifetime membership -->
-    <string name="lifetime_membership">永久会員</string>
+    <string name="lifetime_membership">Lifetime Membership</string>
     <!-- Subscription dialog one year membership -->
-    <string name="one_year">1年</string>
+    <string name="one_year">1 Year</string>
     <!-- Generic operation failed -->
-    <string name="operation_failed">操作は失敗しました</string>
+    <string name="operation_failed">Operation failed</string>
     <!-- Settings page number of columns for media lists grid view -->
-    <string name="columns_grid_title">グリッド内の列数</string>
+    <string name="columns_grid_title">No. of columns in grid</string>
     <!-- Settings page appearance -->
-    <string name="appearance">外観</string>
+    <string name="appearance">Appearance</string>
     <!-- Settings page appearance summary -->
-    <string name="appearance_summary">外観の設定を変更</string>
+    <string name="appearance_summary">App appearance settings</string>
     <!-- Settings page general settings -->
-    <string name="general">一般</string>
+    <string name="general">General</string>
     <!-- Playback properties in video player -->
-    <string name="playback_properties">再生のプロパティ</string>
+    <string name="playback_properties">Playback properties</string>
     <!-- Apply dialog button in apply playback settings -->
-    <string name="apply">適用</string>
+    <string name="apply">Apply</string>
     <!-- Playback settings dialog pitch settings info -->
     <string name="pitch_hint_text">A value of zero means that the key is not changed.\nOne full step corresponds to one semitone.\nA change of -12 semitones means that the song is played one octave lower.</string>
     <!-- Playback settings dialog reset settings -->
-    <string name="reset">リセット</string>
+    <string name="reset">Reset</string>
     <!-- Settings page extract music player background color from album -->
-    <string name="audio_player_enable_palette">アルバムからパレットの色を抽出する</string>
+    <string name="audio_player_enable_palette">Extract palette color from album</string>
     <!-- Settings page extract music player background color from album info -->
-    <string name="audio_player_enable_palette_summary">オーディオプレーヤーの背景色を設定します</string>
+    <string name="audio_player_enable_palette_summary">Sets background color for audio player</string>
     <!-- Settings page extract image viewer background color from image -->
-    <string name="image_viewer_enable_palette">画像からパレットの色を抽出する</string>
+    <string name="image_viewer_enable_palette">Extract palette color from image</string>
     <!-- Settings page extract image viewer background color from image summary -->
-    <string name="image_viewer_enable_palette_summary">画像ビューアーの背景色を設定します</string>
+    <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
     <!-- Unused apps in analysis tab -->
     <string name="unused_apps">Unused apps</string>
+    <!-- Most used apps in analysis tab -->
+    <string name="most_used_apps">Most used apps</string>
+    <!-- Least used apps in analysis tab -->
+    <string name="least_used_apps">Least used apps</string>
     <!-- Large apps in analysis tab -->
     <string name="large_apps">Large apps</string>
     <!-- Games installed in analysis tab -->
@@ -757,6 +761,10 @@
     <string name="refresh">Refresh</string>
     <!-- Unused apps preference dialog message -->
     <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
+    <!-- Most used apps preference dialog message -->
+    <string name="most_used_apps_pref_message">Apps most used in last number of days</string>
+    <!-- Least used apps preference dialog message -->
+    <string name="least_used_apps_pref_message">Apps least used in last number of days</string>
     <!-- Stopping analysis by pressing on (X) button in analysis tab -->
     <string name="stopping_analysis">Stopping analysis</string>
     <!-- Remove battery optimizations on welcome screen and settings page -->
@@ -839,4 +847,12 @@
     <string name="clear_lyrics">Clearing lyrics</string>
     <!-- lyrics type dialog -->
     <string name="added_lyrics">Added lyrics</string>
+    <!-- whatsapp images in analysis section -->
+    <string name="whatsapp_images">Whatsapp Images</string>
+    <!-- whatsapp videos in analysis section -->
+    <string name="whatsapp_videos">Whatsapp Videos</string>
+    <!-- whatsapp analysis in settings -->
+    <string name="whatsapp_media">Whatsapp Media</string>
+    <!-- large files in analysis tab -->
+    <string name="large_files">Large Files</string>
 </resources>

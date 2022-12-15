@@ -1,11 +1,21 @@
 /*
- * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2021 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.home_page.ui.analyse
@@ -22,6 +32,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentAnalyseBinding
 import com.amaze.fileutilities.home_page.database.AppDatabase
@@ -111,7 +122,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 }
             }
 
-            analyseViewModel.getSadImages(dao).observe(viewLifecycleOwner) {
+            /*analyseViewModel.getSadImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
                     sadPreview.loadPreviews(it) {
                         cleanButtonClick(it) {
@@ -135,7 +146,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             }
             distractedPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing) {
                 filesViewModel.isImageFeaturesAnalysing = false
-            }
+            }*/
 
             analyseViewModel.getSleepingImages(dao).observe(viewLifecycleOwner) {
                 if (it != null) {
@@ -216,6 +227,20 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     filesViewModel.isInternalStorageAnalysing = false
                 }
             }
+
+            filesViewModel.getLargeFilesLiveData().observe(viewLifecycleOwner) {
+                largeFiles ->
+                largeFilesPreview.invalidateProgress(true, null)
+                largeFiles?.let {
+                    largeFilesPreview.invalidateProgress(false, null)
+                    largeFilesPreview.loadPreviews(largeFiles) {
+                        cleanButtonClick(it) {
+                            filesViewModel.largeFilesMutableLiveData = null
+                        }
+                    }
+                }
+            }
+
             analyseViewModel.getDuplicateDirectories(
                 internalStorageDao, searchMediaFiles, deepSearch
             ).observe(viewLifecycleOwner) {
@@ -260,7 +285,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 }
 
             if (PathPreferences.isEnabled(prefs, PathPreferences.FEATURE_ANALYSIS_DOWNLOADS)) {
-                analyseViewModel.getLargeDownloads(pathPreferencesDao)
+                filesViewModel.getLargeDownloads(pathPreferencesDao)
                     .observe(viewLifecycleOwner) {
                         largeDownloads ->
                         largeDownloadPreview.invalidateProgress(true, null)
@@ -268,26 +293,26 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                             largeDownloadPreview.invalidateProgress(false, null)
                             largeDownloadPreview.loadPreviews(largeDownloads) {
                                 cleanButtonClick(it) {
-                                    analyseViewModel.largeDownloadsLiveData = null
+                                    filesViewModel.largeDownloadsLiveData = null
                                 }
                             }
                         }
                     }
-                analyseViewModel.getOldDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
+                filesViewModel.getOldDownloads(pathPreferencesDao).observe(viewLifecycleOwner) {
                     oldDownloads ->
                     oldDownloadPreview.invalidateProgress(true, null)
                     oldDownloads?.let {
                         oldDownloadPreview.invalidateProgress(false, null)
                         oldDownloadPreview.loadPreviews(oldDownloads) {
                             cleanButtonClick(it) {
-                                analyseViewModel.oldDownloadsLiveData = null
+                                filesViewModel.oldDownloadsLiveData = null
                             }
                         }
                     }
                 }
             }
             if (PathPreferences.isEnabled(prefs, PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS)) {
-                analyseViewModel.getOldScreenshots(pathPreferencesDao)
+                filesViewModel.getOldScreenshots(pathPreferencesDao)
                     .observe(viewLifecycleOwner) {
                         oldScreenshots ->
                         oldScreenshotsPreview.invalidateProgress(true, null)
@@ -295,25 +320,55 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                             oldScreenshotsPreview.invalidateProgress(false, null)
                             oldScreenshotsPreview.loadPreviews(oldScreenshots) {
                                 cleanButtonClick(it) {
-                                    analyseViewModel.oldScreenshotsLiveData = null
+                                    filesViewModel.oldScreenshotsLiveData = null
                                 }
                             }
                         }
                     }
             }
             if (PathPreferences.isEnabled(prefs, PathPreferences.FEATURE_ANALYSIS_RECORDING)) {
-                analyseViewModel.getOldRecordings(pathPreferencesDao).observe(viewLifecycleOwner) {
+                filesViewModel.getOldRecordings(pathPreferencesDao).observe(viewLifecycleOwner) {
                     oldRecordings ->
                     oldRecordingsPreview.invalidateProgress(true, null)
                     oldRecordings?.let {
                         oldRecordingsPreview.invalidateProgress(false, null)
                         oldRecordingsPreview.loadPreviews(oldRecordings) {
                             cleanButtonClick(it) {
-                                analyseViewModel.oldRecordingsLiveData = null
+                                filesViewModel.oldRecordingsLiveData = null
                             }
                         }
                     }
                 }
+            }
+            if (PathPreferences.isEnabled(prefs, PathPreferences.FEATURE_ANALYSIS_WHATSAPP)) {
+                filesViewModel.getWhatsappMediaLiveData(pathPreferencesDao)
+                    .observe(viewLifecycleOwner) {
+                        whatsappMedia ->
+                        whatsappPreview.invalidateProgress(true, null)
+                        whatsappMedia?.let {
+                            whatsappPreview.invalidateProgress(false, null)
+                            whatsappPreview.loadPreviews(whatsappMedia) {
+                                cleanButtonClick(it) {
+                                    filesViewModel.whatsappMediaMutableLiveData = null
+                                }
+                            }
+                        }
+                    }
+            }
+            if (PathPreferences.isEnabled(prefs, PathPreferences.FEATURE_ANALYSIS_TELEGRAM)) {
+                filesViewModel.getTelegramMediaFiles(pathPreferencesDao)
+                    .observe(viewLifecycleOwner) {
+                        telegramMedia ->
+                        telegramPreview.invalidateProgress(true, null)
+                        telegramMedia?.let {
+                            telegramPreview.invalidateProgress(false, null)
+                            telegramPreview.loadPreviews(telegramMedia) {
+                                cleanButtonClick(it) {
+                                    filesViewModel.telegramMediaMutableLiveData = null
+                                }
+                            }
+                        }
+                    }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                 unusedAppsPreview.visibility = View.VISIBLE
@@ -333,6 +388,50 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                             unusedAppsPreview.loadPreviews(mediaFileInfoList) {
                                 cleanButtonClick(it) {
                                     filesViewModel.unusedAppsLiveData = null
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                mostUsedAppsPreview.visibility = View.VISIBLE
+                leastUsedAppsPreview.visibility = View.VISIBLE
+                if (!isUsageStatsPermissionGranted()) {
+                    mostUsedAppsPreview.loadRequireElevatedPermission({
+                        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                        startActivity(intent)
+                    }, {
+                        reloadFragment()
+                    })
+                    leastUsedAppsPreview.loadRequireElevatedPermission({
+                        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                        startActivity(intent)
+                    }, {
+                        reloadFragment()
+                    })
+                } else {
+                    filesViewModel.getMostUsedApps().observe(viewLifecycleOwner) {
+                        mediaFileInfoList ->
+                        mostUsedAppsPreview.invalidateProgress(true, null)
+                        mediaFileInfoList?.let {
+                            mostUsedAppsPreview.invalidateProgress(false, null)
+                            mostUsedAppsPreview.loadPreviews(mediaFileInfoList) {
+                                cleanButtonClick(it) {
+                                    filesViewModel.mostUsedAppsLiveData = null
+                                }
+                            }
+                        }
+                    }
+                    filesViewModel.getLeastUsedApps().observe(viewLifecycleOwner) {
+                        mediaFileInfoList ->
+                        leastUsedAppsPreview.invalidateProgress(true, null)
+                        mediaFileInfoList?.let {
+                            leastUsedAppsPreview.invalidateProgress(false, null)
+                            leastUsedAppsPreview.loadPreviews(mediaFileInfoList) {
+                                cleanButtonClick(it) {
+                                    filesViewModel.leastUsedAppsLiveData = null
                                 }
                             }
                         }
@@ -433,7 +532,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Utils.checkUsageStatsPermission(requireContext())
         } else {
-            Utils.getAppsUsageStats(requireContext()).isNotEmpty()
+            Utils.getAppsUsageStats(requireContext(), 30).isNotEmpty()
         }
     }
 
@@ -459,16 +558,10 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             memesPreview.visibility = if (PathPreferences.isEnabled(
                     sharedPrefs,
                     PathPreferences.FEATURE_ANALYSIS_MEME
-                )
+                ) && !BuildConfig.IS_VERSION_FDROID
             ) View.VISIBLE else View.GONE
 
-            sadPreview.visibility = if (PathPreferences.isEnabled(
-                    sharedPrefs,
-                    PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
-                )
-            ) View.VISIBLE else View.GONE
-
-            sleepingPreview.visibility = if (PathPreferences.isEnabled(
+            /*sadPreview.visibility = if (PathPreferences.isEnabled(
                     sharedPrefs,
                     PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
                 )
@@ -478,16 +571,22 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     sharedPrefs,
                     PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
                 )
+            ) View.VISIBLE else View.GONE*/
+
+            sleepingPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
+                ) && !BuildConfig.IS_VERSION_FDROID
             ) View.VISIBLE else View.GONE
             selfiePreview.visibility = if (PathPreferences.isEnabled(
                     sharedPrefs,
                     PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
-                )
+                ) && !BuildConfig.IS_VERSION_FDROID
             ) View.VISIBLE else View.GONE
             groupPicPreview.visibility = if (PathPreferences.isEnabled(
                     sharedPrefs,
                     PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
-                )
+                ) && !BuildConfig.IS_VERSION_FDROID
             ) View.VISIBLE else View.GONE
 
             largeDownloadPreview.visibility = if (PathPreferences.isEnabled(
@@ -510,12 +609,16 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS
                 )
             ) View.VISIBLE else View.GONE
-            /*telegramPreview.visibility = if (sharedPrefs.getBoolean(
-                    PathPreferences
-                        .getSharedPreferenceKey(PathPreferences.FEATURE_ANALYSIS_TELEGRAM),
-                    PreferencesConstants.DEFAULT_ENABLED_ANALYSIS
+            whatsappPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_WHATSAPP
                 )
-            ) View.VISIBLE else View.GONE*/
+            ) View.VISIBLE else View.GONE
+            telegramPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_TELEGRAM
+                )
+            ) View.VISIBLE else View.GONE
         }
     }
 
@@ -539,21 +642,21 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     this@AnalyseFragment
                 )
             }
-            sadPreview.setOnClickListener {
+            /*sadPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_SAD,
-                    this@AnalyseFragment
-                )
-            }
-            sleepingPreview.setOnClickListener {
-                ReviewImagesFragment.newInstance(
-                    ReviewImagesFragment.TYPE_SLEEPING,
                     this@AnalyseFragment
                 )
             }
             distractedPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_DISTRACTED,
+                    this@AnalyseFragment
+                )
+            }*/
+            sleepingPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_SLEEPING,
                     this@AnalyseFragment
                 )
             }
@@ -578,6 +681,12 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             duplicateFilesPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_DUPLICATES,
+                    this@AnalyseFragment
+                )
+            }
+            largeFilesPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_LARGE_FILES,
                     this@AnalyseFragment
                 )
             }
@@ -606,12 +715,24 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     this@AnalyseFragment
                 )
             }
-            /*telegramPreview.setOnClickListener {
+            largeFilesPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_LARGE_FILES,
+                    this@AnalyseFragment
+                )
+            }
+            whatsappPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_WHATSAPP,
+                    this@AnalyseFragment
+                )
+            }
+            telegramPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_TELEGRAM,
                     this@AnalyseFragment
                 )
-            }*/
+            }
             clutteredVideoPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_CLUTTERED_VIDEOS,
@@ -631,6 +752,20 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     shouldCallbackAppUninstall = false
                     ReviewImagesFragment.newInstance(
                         ReviewImagesFragment.TYPE_UNUSED_APPS,
+                        this@AnalyseFragment
+                    )
+                }
+                mostUsedAppsPreview.setOnClickListener {
+                    shouldCallbackAppUninstall = false
+                    ReviewImagesFragment.newInstance(
+                        ReviewImagesFragment.TYPE_MOST_USED_APPS,
+                        this@AnalyseFragment
+                    )
+                }
+                leastUsedAppsPreview.setOnClickListener {
+                    shouldCallbackAppUninstall = false
+                    ReviewImagesFragment.newInstance(
+                        ReviewImagesFragment.TYPE_LEAST_USED_APPS,
                         this@AnalyseFragment
                     )
                 }

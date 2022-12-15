@@ -1,11 +1,21 @@
 /*
- * Copyright (C) 2021-2022 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2022 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.home_page.ui.settings
@@ -36,9 +46,13 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
         private const val KEY_SCREENSHOT = "screenshot_paths"
         private const val KEY_TELEGRAM = "telegram_paths"
         private const val KEY_UNUSED_APPS = "unused_apps"
+        private const val KEY_MOST_USED_APPS = "most_used_apps"
+        private const val KEY_LEAST_USED_APPS = "least_used_apps"
+        private const val KEY_WHATSAPP_MEDIA = "whatsapp_media"
         private val KEYS = listOf(
             KEY_DUPLICATES, KEY_MEMES, KEY_BLUR, KEY_LOW_LIGHT, KEY_FEATURES, KEY_DOWNLOAD,
-            KEY_RECORDING, KEY_SCREENSHOT, KEY_UNUSED_APPS
+            KEY_RECORDING, KEY_SCREENSHOT, KEY_UNUSED_APPS, KEY_MOST_USED_APPS, KEY_LEAST_USED_APPS,
+            KEY_WHATSAPP_MEDIA, KEY_TELEGRAM
         )
     }
 
@@ -138,13 +152,38 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                     R.string.telegram_files
                 )
             }
+            KEY_WHATSAPP_MEDIA -> {
+                (activity as PreferenceActivity).inflatePreferenceFragment(
+                    PathPreferencesFragment
+                        .newInstance(PathPreferences.FEATURE_ANALYSIS_WHATSAPP),
+                    R.string.whatsapp_media
+                )
+            }
             KEY_UNUSED_APPS -> {
                 val days = prefs.getInt(
                     PreferencesConstants.KEY_UNUSED_APPS_DAYS,
                     PreferencesConstants.DEFAULT_UNUSED_APPS_DAYS
                 )
-                Utils.buildUnusedAppsDaysPrefDialog(requireContext(), days) {
+                Utils.buildDigitInputDialog(requireContext(), days) {
                     prefs.edit().putInt(PreferencesConstants.KEY_UNUSED_APPS_DAYS, it).apply()
+                }
+            }
+            KEY_MOST_USED_APPS -> {
+                val days = prefs.getInt(
+                    PreferencesConstants.KEY_MOST_USED_APPS_DAYS,
+                    PreferencesConstants.DEFAULT_MOST_USED_APPS_DAYS
+                )
+                Utils.buildDigitInputDialog(requireContext(), days) {
+                    prefs.edit().putInt(PreferencesConstants.KEY_MOST_USED_APPS_DAYS, it).apply()
+                }
+            }
+            KEY_LEAST_USED_APPS -> {
+                val days = prefs.getInt(
+                    PreferencesConstants.KEY_LEAST_USED_APPS_DAYS,
+                    PreferencesConstants.DEFAULT_LEAST_USED_APPS_DAYS
+                )
+                Utils.buildDigitInputDialog(requireContext(), days) {
+                    prefs.edit().putInt(PreferencesConstants.KEY_LEAST_USED_APPS_DAYS, it).apply()
                 }
             }
         }

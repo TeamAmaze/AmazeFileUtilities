@@ -1,11 +1,21 @@
 /*
- * Copyright (C) 2021-2022 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2022 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.utilis
@@ -38,12 +48,14 @@ class PreferencesConstants {
         const val KEY_ENABLE_AUDIO_PALETTE = "pref_audio_enable_palette"
         const val KEY_ENABLE_IMAGE_PALETTE = "pref_image_enable_palette"
         const val KEY_UNUSED_APPS_DAYS = "unused_apps_days"
+        const val KEY_MOST_USED_APPS_DAYS = "most_used_apps_days"
+        const val KEY_LEAST_USED_APPS_DAYS = "most_used_apps_days"
 
         const val VAL_SEARCH_DUPLICATES_MEDIA_STORE = 0
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1
         const val VAL_SEARCH_DUPLICATES_INTERNAL_DEEP = 2
         // increment this if add new default paths for analysis
-        const val VAL_PATH_PREFS_MIGRATION = 1
+        const val VAL_PATH_PREFS_MIGRATION = 2
 
         const val VAL_MIGRATION_FEATURE_ANALYSIS_MEME = 1
         const val VAL_MIGRATION_FEATURE_ANALYSIS_BLUR = 1
@@ -70,5 +82,7 @@ class PreferencesConstants {
         const val DEFAULT_PLAYBACK_SEMITONES = 0f
         const val DEFAULT_PALETTE_EXTRACT = true
         const val DEFAULT_UNUSED_APPS_DAYS = 30
+        const val DEFAULT_MOST_USED_APPS_DAYS = 7
+        const val DEFAULT_LEAST_USED_APPS_DAYS = 7
     }
 }

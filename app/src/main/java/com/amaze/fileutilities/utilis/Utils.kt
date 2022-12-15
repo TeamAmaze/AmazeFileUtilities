@@ -1,17 +1,29 @@
 /*
- * Copyright (C) 2021-2022 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2022 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.utilis
 
 import android.app.Activity
 import android.app.AppOpsManager
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.usage.StorageStatsManager
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
@@ -471,6 +483,35 @@ class Utils {
             return builder
         }
 
+        fun buildPurchaseFdroidDialog(
+            context: Context,
+            paypalCallback: () -> Unit,
+            liberaPayCallback: () -> Unit
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.purchase_fdroid_title)
+                .setMessage(R.string.purchase_fdroid_message)
+                .setPositiveButton(
+                    context.resources.getString(R.string.purchase_fdroid_paypal)
+                ) { dialog, _ ->
+                    paypalCallback.invoke()
+                    dialog.dismiss()
+                }
+                .setNeutralButton(
+                    context.resources.getString(R.string.purchase_fdroid_liberapay)
+                ) { dialog, _ ->
+                    liberaPayCallback.invoke()
+                    dialog.dismiss()
+                }
+                .setNegativeButton(
+                    context.resources.getString(R.string.close)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
         fun buildTrialExclusiveInactiveDialog(
             context: Context,
             positiveCallback: () -> Unit
@@ -728,17 +769,12 @@ class Utils {
         }
 
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
-        fun getAppsUsageStats(context: Context): List<UsageStats> {
+        fun getAppsUsageStats(context: Context, days: Int): List<UsageStats> {
             val usm: UsageStatsManager = (
                 context.getSystemService(Context.USAGE_STATS_SERVICE)
                     as UsageStatsManager
                 )
             val endTime = LocalDateTime.now()
-            val sharedPrefs = context.getAppCommonSharedPreferences()
-            val days = sharedPrefs.getInt(
-                PreferencesConstants.KEY_UNUSED_APPS_DAYS,
-                PreferencesConstants.DEFAULT_UNUSED_APPS_DAYS
-            )
             val startTime = LocalDateTime.now().minusDays(days.toLong())
             return usm.queryUsageStats(
                 UsageStatsManager.INTERVAL_DAILY,
@@ -761,7 +797,7 @@ class Utils {
                 Process.myUid(), context.packageName
             )
             return if (mode != AppOpsManager.MODE_ALLOWED) {
-                getAppsUsageStats(context).isNotEmpty()
+                getAppsUsageStats(context, 30).isNotEmpty()
             } else {
                 true
             }
@@ -916,7 +952,7 @@ class Utils {
             }
         }
 
-        fun buildUnusedAppsDaysPrefDialog(
+        fun buildDigitInputDialog(
             context: Context,
             days: Int,
             callback: (Int) -> Unit
@@ -1011,6 +1047,23 @@ class Utils {
 
         fun convertDrawableToBitmap(drawable: Drawable): Bitmap {
             return drawable.toBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, null)
+        }
+
+        /**
+         * For compatibility purposes. Wraps the pending intent flag, return with FLAG_IMMUTABLE if device
+         * SDK >= 32.
+         *
+         * @see PendingIntent.FLAG_IMMUTABLE
+         *
+         * @param pendingIntentFlag proposed PendingIntent flag
+         * @return original PendingIntent flag if SDK < 32, otherwise adding FLAG_IMMUTABLE flag.
+         */
+        fun getPendingIntentFlag(pendingIntentFlag: Int): Int {
+            return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+                pendingIntentFlag
+            } else {
+                pendingIntentFlag or FLAG_IMMUTABLE
+            }
         }
 
         private fun findApplicationInfoSizeFallback(applicationInfo: ApplicationInfo): Long {

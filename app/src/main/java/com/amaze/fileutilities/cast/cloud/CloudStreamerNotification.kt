@@ -1,11 +1,21 @@
 /*
- * Copyright (C) 2021-2022 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2022 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.cast.cloud
@@ -14,12 +24,12 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.utilis.NotificationConstants
+import com.amaze.fileutilities.utilis.Utils.Companion.getPendingIntentFlag
 
 class CloudStreamerNotification {
 
@@ -46,7 +56,7 @@ class CloudStreamerNotification {
                 Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             val contentIntent = PendingIntent.getActivity(
                 context, 0,
-                notificationIntent, 0
+                notificationIntent, getPendingIntentFlag(0)
             )
             val `when` = System.currentTimeMillis()
             val builder: NotificationCompat.Builder =
@@ -67,9 +77,7 @@ class CloudStreamerNotification {
             val stopPendingIntent =
                 PendingIntent.getBroadcast(
                     context, 0, stopIntent,
-                    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S)
-                        PendingIntent.FLAG_ONE_SHOT and PendingIntent.FLAG_IMMUTABLE
-                    else PendingIntent.FLAG_ONE_SHOT
+                    getPendingIntentFlag(PendingIntent.FLAG_ONE_SHOT)
                 )
 
             builder.addAction(stopIcon, stopText, stopPendingIntent)

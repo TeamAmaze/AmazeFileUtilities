@@ -1,11 +1,21 @@
 /*
- * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2021 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.home_page.ui.files
@@ -19,9 +29,9 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.text.format.DateUtils
 import androidx.core.content.FileProvider
-import com.amaze.fileutilities.CastActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerDialogActivity
+import com.amaze.fileutilities.home_page.ui.options.CastActivity
 import com.amaze.fileutilities.image_viewer.ImageViewerDialogActivity
 import com.amaze.fileutilities.utilis.FileUtils
 import com.amaze.fileutilities.utilis.Utils
@@ -65,11 +75,51 @@ data class MediaFileInfo(
             )
         }
 
+        fun fromFile(
+            name: String,
+            path: String,
+            modified: Long,
+            size: Long,
+            extraInfo: ExtraInfo
+        ): MediaFileInfo {
+            return MediaFileInfo(
+                name, path, modified, size,
+                extraInfo = extraInfo
+            )
+        }
+
         fun fromFile(file: File, context: Context, extraInfo: ExtraInfo): MediaFileInfo {
             return MediaFileInfo(
                 file.name, file.path, file.lastModified(), file.length(),
                 extraInfo = extraInfo,
                 contentUri = FileProvider.getUriForFile(context, context.packageName, file)
+            )
+        }
+
+        fun fromFile(
+            mediaType: Int,
+            id: Long,
+            name: String,
+            path: String,
+            modified: Long,
+            size: Long,
+            context: Context,
+            extraInfo: ExtraInfo
+        ): MediaFileInfo {
+            return MediaFileInfo(
+                name, path, modified, size,
+                extraInfo = extraInfo,
+                contentUri = /*if (id != -1L && mediaType == MEDIA_TYPE_AUDIO) {
+                    ContentUris.withAppendedId(
+                        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                        id
+                    )
+                } else*/ if (mediaType == MEDIA_TYPE_AUDIO) {
+                    // we want to load uri only for audio files for finding current playing item
+                    FileProvider.getUriForFile(context, context.packageName, File(path))
+                } else {
+                    null
+                }
             )
         }
 
@@ -159,7 +209,7 @@ data class MediaFileInfo(
     }
 
     fun getContentUri(context: Context): Uri? {
-        return if (exists() && contentUri == null) {
+        return if (contentUri == null && exists()) {
             val uri = FileProvider.getUriForFile(context, context.packageName, File(path))
             contentUri = uri
             uri
@@ -291,7 +341,7 @@ data class MediaFileInfo(
     }
 
     data class ExtraInfo(
-        val mediaType: Int,
+        var mediaType: Int,
         val audioMetaData: AudioMetaData?,
         val videoMetaData: VideoMetaData?,
         val imageMetaData: ImageMetaData?,
@@ -303,7 +353,7 @@ data class MediaFileInfo(
         val artistName: String?,
         val duration: Long?,
         val albumId: Long?,
-        val albumArt: Bitmap?
+        var albumArt: Bitmap?
     )
     data class VideoMetaData(val duration: Long?, val width: Int?, val height: Int?)
     data class ImageMetaData(val width: Int?, val height: Int?)

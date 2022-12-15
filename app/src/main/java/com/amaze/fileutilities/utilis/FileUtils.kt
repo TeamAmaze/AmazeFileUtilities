@@ -1,11 +1,21 @@
 /*
- * Copyright (C) 2021-2021 Team Amaze - Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
- * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com>. All Rights reserved.
+ * Copyright (C) 2021-2021 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
  *
- * 'Amaze File Utilities' is a registered trademark of Team Amaze. All other product
- * and company names mentioned are trademarks or registered trademarks of their respective owners.
+ * Amaze File Utilities is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.amaze.fileutilities.utilis
@@ -47,12 +57,20 @@ class FileUtils {
         private const val WHATSAPP_BASE = "WhatsApp/Media"
         private const val WHATSAPP_IMAGES_BASE = "WhatsApp Images"
         private const val WHATSAPP_AUDIO_BASE = "WhatsApp Audio"
+        private const val WHATSAPP_DOCUMENTS_BASE = "WhatsApp Documents"
+        private const val WHATSAPP_VIDEO_BASE = "WhatsApp Video"
         private const val WHATSAPP_IMAGES =
             "$WHATSAPP_BASE_ANDROID/$WHATSAPP_BASE/$WHATSAPP_IMAGES_BASE"
         private const val WHATSAPP_IMAGES_2 = "$WHATSAPP_BASE/$WHATSAPP_IMAGES_BASE"
         private const val WHATSAPP_AUDIO =
             "$WHATSAPP_BASE_ANDROID/$WHATSAPP_BASE/$WHATSAPP_AUDIO_BASE"
         private const val WHATSAPP_AUDIO_2 = "$WHATSAPP_BASE/$WHATSAPP_AUDIO_BASE"
+        private const val WHATSAPP_DOCUMENTS =
+            "$WHATSAPP_BASE_ANDROID/$WHATSAPP_BASE/$WHATSAPP_DOCUMENTS_BASE"
+        private const val WHATSAPP_DOCUMENTS_2 = "$WHATSAPP_BASE/$WHATSAPP_DOCUMENTS_BASE"
+        private const val WHATSAPP_VIDEO =
+            "$WHATSAPP_BASE_ANDROID/$WHATSAPP_BASE/$WHATSAPP_VIDEO_BASE"
+        private const val WHATSAPP_VIDEO_2 = "$WHATSAPP_BASE/$WHATSAPP_VIDEO_BASE"
         private const val RECORDINGS = "Recordings"
         private const val SCREENSHOTS = "Screenshots"
         private const val RINGTONES_MUSIC = "Music/ringtone"
@@ -62,6 +80,8 @@ class FileUtils {
         private const val TELEGRAM = "Telegram"
         private const val TELEGRAM_IMAGES = "Telegram Images"
         private const val TELEGRAM_VIDEO = "Telegram Video"
+        private const val TELEGRAM_AUDIO = "Telegram Audio"
+        private const val TELEGRAM_DOCUMENTS = "Telegram Documents"
         private val CAMERA = "${Environment.DIRECTORY_DCIM}/$CAMERA_BASE"
 
         private val DEFAULT_MEMES = listOf(
@@ -109,12 +129,19 @@ class FileUtils {
             "${Environment.DIRECTORY_PICTURES}/$SCREENSHOTS"
         )
 
+        private val DEFAULT_WHATSAPP = listOf(
+            WHATSAPP_AUDIO, WHATSAPP_AUDIO_2, WHATSAPP_DOCUMENTS, WHATSAPP_DOCUMENTS_2,
+            WHATSAPP_VIDEO, WHATSAPP_VIDEO_2, WHATSAPP_IMAGES, WHATSAPP_IMAGES_2
+        )
+
         private val DEFAULT_TELEGRAM =
             listOf(
                 "${Environment.DIRECTORY_PICTURES}/$TELEGRAM/$TELEGRAM_IMAGES",
                 "${Environment.DIRECTORY_PICTURES}/$TELEGRAM/$TELEGRAM_VIDEO",
                 "$TELEGRAM/$TELEGRAM_IMAGES",
-                "$TELEGRAM/$TELEGRAM_VIDEO"
+                "$TELEGRAM/$TELEGRAM_VIDEO",
+                "$TELEGRAM/$TELEGRAM_AUDIO",
+                "$TELEGRAM/$TELEGRAM_DOCUMENTS"
             )
 
         /*val DEFAULT_PATH_PREFS_INCLUSIVE = listOf(DEFAULT_MEMES, DEFAULT_BLUR, DEFAULT_GROUP_PIC,
@@ -129,6 +156,7 @@ class FileUtils {
             Pair(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS, DEFAULT_DOWNLOADS),
             Pair(PathPreferences.FEATURE_ANALYSIS_RECORDING, DEFAULT_RECORDINGS),
             Pair(PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS, DEFAULT_SCREENSHOTS),
+            Pair(PathPreferences.FEATURE_ANALYSIS_WHATSAPP, DEFAULT_WHATSAPP),
             Pair(PathPreferences.FEATURE_ANALYSIS_TELEGRAM, DEFAULT_TELEGRAM)
         )
 
