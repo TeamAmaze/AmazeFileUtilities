@@ -102,10 +102,10 @@ Here some important points to keep in mind, as to how we handle licensing:
 - We will ALWAYS use all our legal options, if you do not strictly adhere to these licencing terms.
 
 ```
-    Copyright (C) 2014-2018 Arpit Khurana <arpitkh96@gmail.com>
-    Copyright (C) 2014-2021 Vishal Nehra <vishalmeham2@gmail.com>
-    Copyright (C) 2017-2021 Emmanuel Messulam <emmanuelbendavid@gmail.com>
-    Copyright (C) 2018-2021 Raymond Lai <airwave209gt at gmail.com>
+    Copyright (C) 2021-2022 Arpit Khurana <arpitkh96@gmail.com>
+    Copyright (C) 2021-2022 Vishal Nehra <vishalmeham2@gmail.com>
+    Copyright (C) 2021-2022 Emmanuel Messulam <emmanuelbendavid@gmail.com>
+    Copyright (C) 2021-2022 Raymond Lai <airwave209gt at gmail.com>
     This file is part of Amaze File Manager.
     Amaze File Manager is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
