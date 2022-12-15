@@ -101,7 +101,7 @@ Here some important points to keep in mind, as to how we handle licensing:
 - You are required to give us full credits for any work you may be using from us.
 - We will ALWAYS use all our legal options, if you do not strictly adhere to these licencing terms.
 
-
+```
     Copyright (C) 2014-2018 Arpit Khurana <arpitkh96@gmail.com>
     Copyright (C) 2014-2021 Vishal Nehra <vishalmeham2@gmail.com>
     Copyright (C) 2017-2021 Emmanuel Messulam <emmanuelbendavid@gmail.com>
@@ -117,3 +117,4 @@ Here some important points to keep in mind, as to how we handle licensing:
     GNU General Public License for more details.
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+```
