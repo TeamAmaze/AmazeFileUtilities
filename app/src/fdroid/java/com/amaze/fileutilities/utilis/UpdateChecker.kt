@@ -31,7 +31,7 @@ object UpdateChecker {
         // do nothing
     }
 
-    fun shouldUpdateApp(context: MainActivity) {
+    fun shouldRateApp(context: MainActivity) {
         // do nothing
     }
 }

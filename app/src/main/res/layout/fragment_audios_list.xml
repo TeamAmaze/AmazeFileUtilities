@@ -84,7 +84,7 @@
                 app:srcCompat="@drawable/ic_outline_audio_file_32"
                 android:layout_gravity="center_vertical"
                 android:layout_alignParentLeft="true"
-                android:layout_alignBottom="@+id/sheet_down_arrow"
+                android:gravity="center_vertical"
                 />
             <LinearLayout
                 android:layout_width="0dp"
@@ -97,7 +97,6 @@
                 android:layout_toEndOf="@id/album_image_small"
                 android:layout_toLeftOf="@id/time_summary_small"
                 android:layout_toStartOf="@id/time_summary_small"
-                android:layout_alignBottom="@+id/sheet_down_arrow"
                 >
                 <TextView
                     android:id="@+id/title_small"

@@ -95,7 +95,7 @@ We strongly recommend using apk signed by us (either Play Store version or from 
 ### License: 
 Amaze File Utilities is licenced under [GPLv3](https://teamamaze.xyz/license-agreement-utilities) and anyone wanting to use it (as a base for your own project or even use some of its parts or features) has to adhere to this license completely. Make sure that you are aware of all the licensing terms before creating your own project based on Amaze Utilities.
 
-Here some important points to keep in mind, as to how we handle licensing for Pulse Music:
+Here some important points to keep in mind, as to how we handle licensing:
 
 - You cannot simply rename our app, strip it of all credit and upload it anywhere as your own, be this with or without monetization.
 - You have to make changes in terms of design, features, etc before publishing it anywhere. Changing app name, package name and logo is not enough.

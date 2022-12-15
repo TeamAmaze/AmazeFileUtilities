@@ -237,7 +237,7 @@ class MainActivity :
                     }
                 }
             }
-            UpdateChecker.shouldUpdateApp(this)
+            UpdateChecker.shouldRateApp(this)
         } else {
             // add install time in preferences
             getAppCommonSharedPreferences()

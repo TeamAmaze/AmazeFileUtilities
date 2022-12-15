@@ -25,6 +25,7 @@ import android.content.SharedPreferences
 import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.amaze.fileutilities.utilis.PreferencesConstants
@@ -43,6 +44,7 @@ data class PathPreferences(
     @ColumnInfo(name = "feature") val feature: Int,
     @ColumnInfo(name = "excludes") val excludes: Boolean,
 ) {
+    @Ignore
     constructor(path: String, feature: Int, excludes: Boolean = false) :
         this(0, path, feature, excludes)
 
