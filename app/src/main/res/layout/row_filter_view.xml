@@ -6,9 +6,10 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/four_dp"
-    android:padding="@dimen/four_dp">
+    android:padding="@dimen/four_dp"
+    >
 
-    <ImageView
+    <ja.burhanrashid52.photoeditor.PhotoEditorView
         android:id="@+id/imgFilterView"
         android:layout_width="@dimen/sixty_four_dp"
         android:layout_height="@dimen/sixty_four_dp"
@@ -17,8 +18,7 @@
         app:layout_constraintDimensionRatio="h,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/backgrounds/scenic" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtFilterName"
