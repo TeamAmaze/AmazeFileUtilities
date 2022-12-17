@@ -104,17 +104,22 @@
             android:visibility="visible"
             />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvFilterView"
+        <HorizontalScrollView
+            android:id="@+id/rvFilterViewParent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="@dimen/four_dp"
             android:paddingBottom="@dimen/four_dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/row_filter_view"
             android:visibility="gone"
-            />
+            >
+            <LinearLayout
+                android:id="@+id/rvFilterView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                />
+        </HorizontalScrollView>
     </RelativeLayout>
 
     <!--<TextView

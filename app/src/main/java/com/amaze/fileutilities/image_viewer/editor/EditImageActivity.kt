@@ -28,16 +28,21 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.MotionEvent
 import android.view.View
+import android.widget.HorizontalScrollView
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.annotation.RequiresPermission
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -50,7 +55,6 @@ import com.amaze.fileutilities.image_viewer.editor.StickerBSFragment.Companion.A
 import com.amaze.fileutilities.image_viewer.editor.StickerBSFragment.StickerListener
 import com.amaze.fileutilities.image_viewer.editor.base.BaseActivity
 import com.amaze.fileutilities.image_viewer.editor.filters.FilterListener
-import com.amaze.fileutilities.image_viewer.editor.filters.FilterViewAdapter
 import com.amaze.fileutilities.image_viewer.editor.tools.EditingToolsAdapter
 import com.amaze.fileutilities.image_viewer.editor.tools.EditingToolsAdapter.OnItemSelected
 import com.amaze.fileutilities.image_viewer.editor.tools.ToolType
@@ -62,6 +66,10 @@ import com.amaze.fileutilities.utilis.share.showEditImageDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.amaze.fileutilities.utilis.showFade
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.canhub.cropper.CropImageView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener
@@ -108,8 +116,9 @@ class EditImageActivity :
     private var cropImageView: CropImageView? = null
     private var mWonderFont: Typeface? = null
     private var mRvTools: RecyclerView? = null
-    private var mRvFilters: RecyclerView? = null
-    private val mFilterViewAdapter = FilterViewAdapter(this)
+    private var mRvFilters: LinearLayout? = null
+    private var mRvFiltersParent: HorizontalScrollView? = null
+    private var loadedBitmap: Bitmap? = null
     private var mIsFilterVisible = false
     private var isRotateApplied = false
     private var isFlipHApplied = false
@@ -123,6 +132,14 @@ class EditImageActivity :
     @VisibleForTesting
     var mSaveImageUri: Uri? = null
     private var mSaveFileHelper: FileSaveHelper? = null
+    private val supportedFilters = arrayListOf(
+        PhotoFilter.NONE, PhotoFilter.AUTO_FIX,
+        PhotoFilter.BRIGHTNESS, PhotoFilter.CONTRAST, PhotoFilter.DOCUMENTARY, PhotoFilter.DUE_TONE,
+        PhotoFilter.FILL_LIGHT, PhotoFilter.FISH_EYE, PhotoFilter.GRAIN, PhotoFilter.GRAY_SCALE,
+        PhotoFilter.LOMISH, PhotoFilter.NEGATIVE, PhotoFilter.POSTERIZE, PhotoFilter.SATURATE,
+        PhotoFilter.SEPIA, PhotoFilter.SHARPEN, PhotoFilter.TEMPERATURE, PhotoFilter.TINT,
+        PhotoFilter.VIGNETTE, PhotoFilter.CROSS_PROCESS, PhotoFilter.BLACK_WHITE
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,9 +159,6 @@ class EditImageActivity :
         val llmTools = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         mRvTools?.layoutManager = llmTools
         mRvTools?.adapter = EditingToolsAdapter(this, getToolsAdapterList())
-        val llmFilters = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        mRvFilters?.layoutManager = llmFilters
-        mRvFilters?.adapter = mFilterViewAdapter
 
         // NOTE(lucianocheng): Used to set integration testing parameters to PhotoEditor
         val pinchTextScalable = intent.getBooleanExtra(PINCH_TEXT_SCALABLE_INTENT_KEY, true)
@@ -182,7 +196,32 @@ class EditImageActivity :
                             .load(
                                 resources.getDrawable(R.drawable.ic_outline_image_32)
                             )
-                    ).into(source!!)
+                    )
+                        .addListener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                // do nothing
+                                log.warn("failed to display image in editor", e)
+                                return false
+                            }
+
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                loadedBitmap = resource?.toBitmap()
+                                addFilterViews()
+                                return false
+                            }
+                        })
+                        .into(source!!)
                 } catch (e: IOException) {
                     log.warn("failed to display image in editor", e)
                 }
@@ -197,7 +236,32 @@ class EditImageActivity :
                             .load(
                                 resources.getDrawable(R.drawable.ic_outline_image_32)
                             )
-                    ).into(source!!)
+                    )
+                        .addListener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                // do nothing
+                                log.warn("failed to display image in editor", e)
+                                return false
+                            }
+
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                loadedBitmap = resource?.toBitmap()
+                                addFilterViews()
+                                return false
+                            }
+                        })
+                        .into(source!!)
                 }
             }
         }
@@ -209,6 +273,7 @@ class EditImageActivity :
         customToolbar = findViewById(R.id.custom_toolbar)
         mRvTools = findViewById(R.id.rvConstraintTools)
         mRvFilters = findViewById(R.id.rvFilterView)
+        mRvFiltersParent = findViewById(R.id.rvFilterViewParent)
 
         val imgUndo: ImageView = findViewById(R.id.imgUndo)
         imgUndo.setOnClickListener(this)
@@ -244,6 +309,28 @@ class EditImageActivity :
                 ),
                 PICK_REQUEST
             )
+        }
+    }
+
+    private fun addFilterViews() {
+        loadedBitmap?.let {
+            supportedFilters.forEach {
+                photoFilter ->
+                val filterItem = layoutInflater.inflate(R.layout.row_filter_view, null)
+                val photoEditorView = filterItem.findViewById<PhotoEditorView>(R.id.imgFilterView)
+                val txtFilterName = filterItem.findViewById<TextView>(R.id.txtFilterName)
+                txtFilterName.text = photoFilter.name.replace("_", " ")
+                photoEditorView.source.setImageBitmap(loadedBitmap)
+                try {
+                    photoEditorView.setFilterEffect(photoFilter)
+                } catch (e: Exception) {
+                    log.warn("failed to apply effect")
+                }
+                filterItem.setOnClickListener {
+                    onFilterSelected(photoFilter)
+                }
+                mRvFilters?.addView(filterItem)
+            }
         }
     }
 
@@ -645,9 +732,9 @@ class EditImageActivity :
         mIsFilterVisible = isVisible
         if (isVisible) {
             mRvTools?.hideFade(300)
-            mRvFilters?.showFade(300)
+            mRvFiltersParent?.showFade(300)
         } else {
-            mRvFilters?.hideFade(300)
+            mRvFiltersParent?.hideFade(300)
             mRvTools?.showFade(300)
         }
     }
