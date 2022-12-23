@@ -85,7 +85,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="false"
-                    android:ellipsize="middle"
+                    android:ellipsize="marquee"
                     android:fadingEdge="horizontal"
                     android:longClickable="false"
                     android:marqueeRepeatLimit="marquee_forever"
@@ -104,6 +104,8 @@
                     android:singleLine="true"
                     android:textSize="@dimen/twelve_sp"
                     android:textColor="@color/gray_text"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:ellipsize="marquee"
                     />
                 <TextView
                     android:id="@+id/extra_info"

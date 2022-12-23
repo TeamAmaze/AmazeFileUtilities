@@ -31,12 +31,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerService
+import com.amaze.fileutilities.audio_player.AudioUtils
 import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeHeaderView
 import com.amaze.fileutilities.home_page.ui.options.CastActivity
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
+import com.amaze.fileutilities.utilis.FileUtils
 import com.amaze.fileutilities.utilis.HeaderViewHolder
 import com.amaze.fileutilities.utilis.ListBannerViewHolder
-import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.executeAsyncTask
 
 class MediaFileAdapter(
@@ -122,6 +123,35 @@ class MediaFileAdapter(
                         ?: context.resources.getString(R.string.undetermined)
                 )
 
+                val headerItems = mediaFileInfoList
+                    .filter { it.listHeader == mediaFileListItems[position].header }
+                var headerBytes = 0L
+                headerItems.forEach {
+                    headerBytes += it.longSize
+                }
+
+                if (mediaListType == MEDIA_TYPE_AUDIO) {
+                    var headerTime = 0L
+                    headerItems.forEach {
+                        headerTime += it.extraInfo?.audioMetaData?.duration ?: 0L
+                    }
+                    holder.setSummaryText(
+                        context.resources.getString(
+                            R.string.header_list_summary,
+                            String.format("%s", headerItems.size),
+                            String.format("%s", AudioUtils.getReadableDurationString(headerTime))
+                        )
+                    )
+                } else {
+                    holder.setSummaryText(
+                        context.resources.getString(
+                            R.string.header_list_summary,
+                            String.format("%s", headerItems.size),
+                            String.format("%s", FileUtils.formatStorageLength(context, headerBytes))
+                        )
+                    )
+                }
+
                 holder.setOverflowButtons(
                     context,
                     if (mediaListType == MEDIA_TYPE_AUDIO)
@@ -130,8 +160,7 @@ class MediaFileAdapter(
                     item ->
                     titleOverflowPopupClick?.invoke(
                         item,
-                        mediaFileInfoList
-                            .filter { it.listHeader == mediaFileListItems[position].header }
+                        headerItems
                     )
                     true
                 }
@@ -159,8 +188,6 @@ class MediaFileAdapter(
                     } else {
                         holder.currentPlayingImageView.visibility = View.GONE
                     }
-                    Utils.marqueeAfterDelay(2000, holder.infoTitle)
-                    Utils.marqueeAfterDelay(2000, holder.infoSummary)
                     holder.root.setOnClickListener {
                         // for audio list fragment we want to just show bottom sheet
                         val listItem = mediaFileListItems[position]

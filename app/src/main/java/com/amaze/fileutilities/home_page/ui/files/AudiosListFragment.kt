@@ -113,6 +113,26 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
             PreferencesConstants.KEY_ENABLE_WAVEFORM,
             PreferencesConstants.DEFAULT_AUDIO_PLAYER_WAVEFORM
         )
+        binding.shuffleButtonFab.visibility = View.VISIBLE
+        binding.shuffleButtonFab.show()
+        binding.shuffleButtonFab.setOnClickListener {
+            performShuffleAction(
+                requireContext(),
+                fileStorageSummaryAndMediaFileInfo.second ?: emptyList()
+            )
+        }
+        val bottomSheetParams: CoordinatorLayout.LayoutParams = binding.layoutBottomSheet
+            .layoutParams as CoordinatorLayout.LayoutParams
+        val behavior = bottomSheetParams.behavior as BottomSheetBehavior
+        behavior.addBottomSheetCallback(bottomSheetCallback)
+        behavior.state = if (!isBottomFragmentVisible)
+            BottomSheetBehavior.STATE_HIDDEN else BottomSheetBehavior.STATE_COLLAPSED
+        val fabParams: CoordinatorLayout.LayoutParams = binding.shuffleButtonFab
+            .layoutParams as CoordinatorLayout.LayoutParams
+        fabParams.setMargins(
+            0, 0, 16.px.toInt(),
+            if (!isBottomFragmentVisible) 16.px.toInt() else 100.px.toInt()
+        )
         filesViewModel.usedAudiosSummaryTransformations().observe(
             viewLifecycleOwner
         ) { metaInfoAndSummaryPair ->
@@ -233,11 +253,14 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
 
     override fun setupActionButtons(audioServiceRef: WeakReference<ServiceOperationCallback>) {
         if (!isBottomFragmentVisible) {
-            binding.layoutBottomSheet.visibility = View.VISIBLE
+            val fabParams: CoordinatorLayout.LayoutParams = binding.shuffleButtonFab
+                .layoutParams as CoordinatorLayout.LayoutParams
+            fabParams.setMargins(0, 0, 16.px.toInt(), 100.px.toInt())
             val params: CoordinatorLayout.LayoutParams = binding.layoutBottomSheet
                 .layoutParams as CoordinatorLayout.LayoutParams
             val behavior = params.behavior as BottomSheetBehavior
-            behavior.addBottomSheetCallback(bottomSheetCallback)
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            behavior.isHideable = false
             binding.layoutBottomSheet.setOnClickListener {
                 if (behavior.state == BottomSheetBehavior.STATE_EXPANDED) {
                     behavior.state = BottomSheetBehavior.STATE_COLLAPSED

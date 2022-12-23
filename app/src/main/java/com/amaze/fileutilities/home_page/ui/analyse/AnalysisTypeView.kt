@@ -140,8 +140,14 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         }
         var count =
             if (mediaFileInfoList.size > PREVIEW_COUNT) PREVIEW_COUNT else mediaFileInfoList.size
+        val randomComputedHash = hashMapOf<Int, Boolean>()
         while (count -- > 1) {
             val idx = Utils.generateRandom(0, mediaFileInfoList.size - 1)
+            if (randomComputedHash[idx] == true) {
+                count++
+                continue
+            }
+            randomComputedHash[idx] = true
             val imageView = getImageView(mediaFileInfoList[idx])
             imagesListParent.addView(imageView)
         }
@@ -192,7 +198,8 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         view.setVerticalGravity(Gravity.CENTER_VERTICAL)
         view.background = resources.getDrawable(R.drawable.button_curved_unselected)
         view.setOnClickListener {
-            rootView.performClick()
+//            rootView.performClick()
+            this.performClick()
         }
         return view
     }

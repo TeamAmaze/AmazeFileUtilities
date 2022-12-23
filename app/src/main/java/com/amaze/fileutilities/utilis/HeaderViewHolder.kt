@@ -34,10 +34,17 @@ import com.amaze.fileutilities.R
 class HeaderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     // each data item is just a string in this case
     private val txtTitle: TextView = view.findViewById(R.id.header_title)
+    private val summaryTextView: TextView = view.findViewById(R.id.header_summary)
     private val overflowButton: ImageView = view.findViewById(R.id.overflow_button)
 
     fun setText(headerText: String) {
         txtTitle.text = headerText
+        Utils.marqueeAfterDelay(3000, txtTitle)
+    }
+
+    fun setSummaryText(summaryText: String) {
+        summaryTextView.visibility = View.VISIBLE
+        summaryTextView.text = summaryText
     }
 
     fun setOverflowButtons(

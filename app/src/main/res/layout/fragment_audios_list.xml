@@ -46,6 +46,16 @@
             android:layout_height="match_parent"
             />
     </RelativeLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/shuffleButtonFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_round_shuffle_24"
+        app:backgroundTint="@color/highlight_yellow"
+        app:layout_anchor="@+id/layoutBottomSheet"
+        app:layout_anchorGravity="top|end"
+        app:tint="@color/black"
+        />
     <RelativeLayout
         android:id="@+id/layoutBottomSheet"
         android:layout_width="match_parent"
@@ -56,10 +66,9 @@
         android:paddingLeft="@dimen/eight_dp"
         android:paddingRight="@dimen/eight_dp"
         android:paddingBottom="@dimen/eight_dp"
-        app:behavior_hideable="false"
+        app:behavior_hideable="true"
         app:behavior_peekHeight="@dimen/audio_player_peek_height"
         app:layout_behavior="@string/bottom_sheet_behavior"
-        android:visibility="gone"
         >
         <RelativeLayout
             android:id="@+id/bottomSheetSmall"

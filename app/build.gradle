@@ -129,8 +129,8 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             if (appProps != null &&
                     appProps.containsKey('OPENSUBTITLES_API_KEY_DEBUG')) {

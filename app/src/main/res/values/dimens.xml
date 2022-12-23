@@ -8,6 +8,7 @@
     <dimen name="material_generic_medium">32dp</dimen>
     <dimen name="sixty_four_dp">64dp</dimen>
     <dimen name="material_generic_large">72dp</dimen>
+    <dimen name="one_hundred_dp">100dp</dimen>
     <dimen name="one_twenty_dp">120dp</dimen>
     <dimen name="one_sixty_dp">160dp</dimen>
     <dimen name="material_sheet_peek_height">400dp</dimen>

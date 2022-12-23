@@ -875,4 +875,6 @@
     <string name="purchase_fdroid_paypal">Paypal</string>
     <!-- purchase fdroid subscription liberapay -->
     <string name="purchase_fdroid_liberapay">Liberapay</string>
+    <!-- header summary in media list fragments -->
+    <string name="header_list_summary">%s • %s</string>
 </resources>
