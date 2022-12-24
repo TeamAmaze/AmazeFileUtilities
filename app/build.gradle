@@ -57,8 +57,8 @@ android {
         applicationId "com.amaze.fileutilities"
         minSdk 19
         targetSdk 31
-        versionCode 72
-        versionName "1.72"
+        versionCode 73
+        versionName "1.73"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -171,15 +171,28 @@ android {
     flavorDimensions 'static'
 
     productFlavors {
-        fdroid {
+        register("fdroid") {
             dimension 'static'
             buildConfigField "boolean", "IS_VERSION_FDROID", "true"
         }
 
-        play {
+        register("play") {
             dimension 'static'
             buildConfigField "boolean", "IS_VERSION_FDROID", "false"
             signingConfig signingConfigs.config
+        }
+    }
+
+    playConfigs {
+        register("play") {
+            serviceAccountCredentials.set(file("service_account_config.json"))
+            defaultToAppBundles.set(true)
+
+            //    track.set("internal")
+            track.set("production")
+            userFraction.set(1.0d)
+            updatePriority.set(3)
+            releaseStatus.set(com.github.triplet.gradle.androidpublisher.ReleaseStatus.COMPLETED)
         }
     }
 
@@ -208,17 +221,6 @@ android {
             }
         }
     }
-}
-
-play {
-    serviceAccountCredentials.set(file("service_account_config.json"))
-    defaultToAppBundles.set(true)
-
-//    track.set("internal")
-    track.set("production")
-    userFraction.set(1.0d)
-    updatePriority.set(5)
-    releaseStatus.set(com.github.triplet.gradle.androidpublisher.ReleaseStatus.COMPLETED)
 }
 
 dependencies {
