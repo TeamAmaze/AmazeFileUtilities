@@ -42,7 +42,6 @@ abstract class AbstractMediaInfoListFragment :
     ItemsActionBarFragment(),
     MediaFileAdapter.OptionsMenuSelected {
 
-    private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
     private var mediaFileAdapter: MediaFileAdapter? = null
     private var linearLayoutManager: LinearLayoutManager? = null
     private var gridLayoutManager: GridLayoutManager? = null
@@ -83,6 +82,8 @@ abstract class AbstractMediaInfoListFragment :
 
     abstract fun getItemPressedCallback(mediaFileInfo: MediaFileInfo)
 
+    abstract fun setupAdapter()
+
     override fun hideActionBarOnClick(): Boolean {
         return true
     }
@@ -107,7 +108,7 @@ abstract class AbstractMediaInfoListFragment :
                 )
                 // set list adapter
                 val sizeProvider = ViewPreloadSizeProvider<String>()
-                recyclerViewPreloader = RecyclerViewPreloader(
+                val recyclerViewPreloader = RecyclerViewPreloader(
                     Glide.with(requireActivity()),
                     getMediaAdapterPreloader(),
                     sizeProvider,
@@ -174,6 +175,9 @@ abstract class AbstractMediaInfoListFragment :
                             }
                         }
                     }
+                }, {
+                    getRecyclerView().clearOnScrollListeners()
+                    setupAdapter()
                 }
                 )
                 getRecyclerView().addOnScrollListener(recyclerViewPreloader!!)

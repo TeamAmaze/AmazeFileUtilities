@@ -42,7 +42,7 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
             f1, f2 ->
             var compareGroupBy = 0
             when (sortingPreference.groupBy) {
-                GROUP_PARENT -> {
+                GROUP_NAME -> {
                     compareGroupBy = groupByAsc * f1.listHeader[0].compareTo(f2.listHeader[0])
                 }
                 GROUP_DATE -> {
@@ -51,7 +51,7 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
                         compareGroupBy = groupByAsc * f1.date.compareTo(f2.date)
                     }
                 }
-                GROUP_NAME, GROUP_ALBUM, GROUP_ARTIST -> {
+                GROUP_PARENT, GROUP_ALBUM, GROUP_ARTIST, GROUP_PLAYLISTS -> {
                     compareGroupBy = groupByAsc * f1.listHeader.compareTo(f2.listHeader)
                 }
             }
@@ -112,13 +112,14 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
         const val GROUP_NAME = 5
         const val GROUP_ALBUM = 6
         const val GROUP_ARTIST = 7
+        const val GROUP_PLAYLISTS = 8
 
         val GROUP_BY_MEDIA_TYPE_MAP = mapOf(
             Pair(
                 MediaFileAdapter.MEDIA_TYPE_AUDIO,
                 listOf(
                     GROUP_NAME, GROUP_DATE, GROUP_PARENT,
-                    GROUP_ALBUM, GROUP_ARTIST
+                    GROUP_ALBUM, GROUP_ARTIST, GROUP_PLAYLISTS
                 )
             ),
             Pair(MediaFileAdapter.MEDIA_TYPE_VIDEO, listOf(GROUP_NAME, GROUP_DATE, GROUP_PARENT)),
@@ -171,6 +172,10 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
                         it.listHeader = it.extraInfo?.audioMetaData?.artistName?.uppercase()
                             ?: context.getString(R.string.unknown_artist)
                     }
+                    GROUP_PLAYLISTS -> {
+                        it.listHeader = it.extraInfo?.audioMetaData?.playlist?.name?.uppercase()
+                            ?: context.getString(R.string.unknown_artist)
+                    }
                 }
             }
             Collections.sort(mediaFileList, MediaFileListSorter(sortingPreference))
@@ -183,6 +188,7 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
                 GROUP_DATE -> resources.getString(R.string.date)
                 GROUP_ALBUM -> resources.getString(R.string.album)
                 GROUP_ARTIST -> resources.getString(R.string.artist)
+                GROUP_PLAYLISTS -> resources.getString(R.string.playlists)
                 else -> ""
             }
         }

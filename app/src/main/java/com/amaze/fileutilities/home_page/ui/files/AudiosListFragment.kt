@@ -65,11 +65,14 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
     private lateinit var viewModel: AudioPlayerInterfaceHandlerViewModel
     private var _binding: FragmentAudiosListBinding? = null
     private var isBottomFragmentVisible = false
-    private lateinit var fileStorageSummaryAndMediaFileInfo:
-        Pair<FilesViewModel.StorageSummary, List<MediaFileInfo>?>
+    private var fileStorageSummaryAndMediaFileInfo:
+        Pair<FilesViewModel.StorageSummary, List<MediaFileInfo>?>? = null
+    private var playListStorageSummaryAndMediaFileInfo:
+        Pair<FilesViewModel.StorageSummary, List<MediaFileInfo>?>? = null
 
     private lateinit var audioPlaybackServiceConnection: ServiceConnection
-    private var preloader: MediaAdapterPreloader? = null
+    private var filesPreloader: MediaAdapterPreloader? = null
+    private var playlistsPreloader: MediaAdapterPreloader? = null
     private var isWaveformProcessing = false
     private var lastPaletteColor: Int = 0
     private var lastLyrics: String? = null
@@ -115,12 +118,6 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         )
         binding.shuffleButtonFab.visibility = View.VISIBLE
         binding.shuffleButtonFab.show()
-        binding.shuffleButtonFab.setOnClickListener {
-            performShuffleAction(
-                requireContext(),
-                fileStorageSummaryAndMediaFileInfo.second ?: emptyList()
-            )
-        }
         val bottomSheetParams: CoordinatorLayout.LayoutParams = binding.layoutBottomSheet
             .layoutParams as CoordinatorLayout.LayoutParams
         val behavior = bottomSheetParams.behavior as BottomSheetBehavior
@@ -135,40 +132,49 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         )
         filesViewModel.usedAudiosSummaryTransformations().observe(
             viewLifecycleOwner
-        ) { metaInfoAndSummaryPair ->
-            binding.audiosListInfoText.text = resources.getString(R.string.loading)
-            metaInfoAndSummaryPair?.let {
-                val metaInfoList = metaInfoAndSummaryPair.second
-                metaInfoList.run {
-                    if (this.isEmpty()) {
-                        binding.audiosListInfoText.text =
-                            resources.getString(R.string.no_files)
-                        binding.loadingProgress.visibility = View.GONE
-                    } else {
-                        binding.audiosListInfoText.visibility = View.GONE
-                        binding.loadingProgress.visibility = View.GONE
-                    }
-                    fileStorageSummaryAndMediaFileInfo = it
-                    resetAdapter()
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        binding.fastscroll.visibility = View.GONE
-                        val popupStyle = Consumer<TextView> { popupView ->
-                            PopupStyles.MD2.accept(popupView)
-                            popupView.setTextColor(Color.BLACK)
-                            popupView.setTextSize(
-                                TypedValue.COMPLEX_UNIT_PX,
-                                resources.getDimension(R.dimen.twenty_four_sp)
-                            )
-                        }
-                        FastScrollerBuilder(binding.audiosListView).useMd2Style()
-                            .setPopupStyle(popupStyle).build()
-                    } else {
-                        binding.fastscroll.visibility = View.VISIBLE
-                        binding.fastscroll.setRecyclerView(binding.audiosListView, 1)
-                    }
+        ) { pair ->
+            if (pair != null) {
+                fileStorageSummaryAndMediaFileInfo = pair
+                val groupByPref = sharedPrefs.getInt(
+                    MediaFileListSorter.SortingPreference
+                        .getGroupByKey(MediaFileAdapter.MEDIA_TYPE_AUDIO),
+                    PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
+                )
+                if (groupByPref != MediaFileListSorter.GROUP_PLAYLISTS) {
+                    setupAdapter()
                 }
             }
+        }
+        filesViewModel.usedPlaylistsSummaryTransformations().observe(
+            viewLifecycleOwner
+        ) { metaInfoAndSummaryPair ->
+            if (metaInfoAndSummaryPair != null) {
+                playListStorageSummaryAndMediaFileInfo = metaInfoAndSummaryPair
+                val groupByPref = sharedPrefs.getInt(
+                    MediaFileListSorter.SortingPreference
+                        .getGroupByKey(MediaFileAdapter.MEDIA_TYPE_AUDIO),
+                    PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
+                )
+                if (groupByPref == MediaFileListSorter.GROUP_PLAYLISTS) {
+                    setupAdapter()
+                }
+            }
+        }
+        binding.shuffleButtonFab.setOnClickListener {
+            val groupByPref = sharedPrefs.getInt(
+                MediaFileListSorter.SortingPreference
+                    .getGroupByKey(MediaFileAdapter.MEDIA_TYPE_AUDIO),
+                PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
+            )
+            performShuffleAction(
+                requireContext(),
+                if (groupByPref != MediaFileListSorter.GROUP_PLAYLISTS) {
+                    fileStorageSummaryAndMediaFileInfo?.second
+                } else {
+                    playListStorageSummaryAndMediaFileInfo?.second
+                }
+                    ?: emptyList()
+            )
         }
         return root
     }
@@ -368,18 +374,41 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
 
     override fun getFileStorageSummaryAndMediaFileInfoPair(): Pair<FilesViewModel.StorageSummary,
         List<MediaFileInfo>?>? {
-        return if (::fileStorageSummaryAndMediaFileInfo.isInitialized)
-            fileStorageSummaryAndMediaFileInfo else null
+        val sharedPrefs = requireContext().getAppCommonSharedPreferences()
+        val groupByPref = sharedPrefs.getInt(
+            MediaFileListSorter.SortingPreference.getGroupByKey(MediaFileAdapter.MEDIA_TYPE_AUDIO),
+            PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
+        )
+        return if (groupByPref != MediaFileListSorter.GROUP_PLAYLISTS) {
+            fileStorageSummaryAndMediaFileInfo
+        } else {
+            playListStorageSummaryAndMediaFileInfo
+        }
     }
 
     override fun getMediaAdapterPreloader(): MediaAdapterPreloader {
-        if (preloader == null) {
-            preloader = MediaAdapterPreloader(
-                requireContext(),
-                R.drawable.ic_outline_audio_file_32
-            )
+        val sharedPrefs = requireContext().getAppCommonSharedPreferences()
+        val groupByPref = sharedPrefs.getInt(
+            MediaFileListSorter.SortingPreference.getGroupByKey(MediaFileAdapter.MEDIA_TYPE_AUDIO),
+            PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
+        )
+        if (groupByPref != MediaFileListSorter.GROUP_PLAYLISTS) {
+            if (filesPreloader == null) {
+                filesPreloader = MediaAdapterPreloader(
+                    requireContext(),
+                    R.drawable.ic_outline_audio_file_32
+                )
+            }
+            return filesPreloader!!
+        } else {
+            if (playlistsPreloader == null) {
+                playlistsPreloader = MediaAdapterPreloader(
+                    requireContext(),
+                    R.drawable.ic_outline_audio_file_32
+                )
+            }
+            return playlistsPreloader!!
         }
-        return preloader!!
     }
 
     override fun getRecyclerView(): RecyclerView {
@@ -505,6 +534,51 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
 
     override fun animateCurrentPlayingItem(playingUri: Uri) {
         getMediaFileAdapter()?.invalidateCurrentPlayingAnimation(playingUri)
+    }
+
+    override fun setupAdapter() {
+        binding.audiosListInfoText.text = resources.getString(R.string.loading)
+        val sharedPrefs = requireContext().getAppCommonSharedPreferences()
+        val groupByPref = sharedPrefs.getInt(
+            MediaFileListSorter.SortingPreference.getGroupByKey(MediaFileAdapter.MEDIA_TYPE_AUDIO),
+            PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
+        )
+        val metaInfoAndSummaryPair = if (groupByPref == MediaFileListSorter.GROUP_PLAYLISTS) {
+            playListStorageSummaryAndMediaFileInfo
+        } else {
+            fileStorageSummaryAndMediaFileInfo
+        }
+        metaInfoAndSummaryPair?.let {
+            val metaInfoList = metaInfoAndSummaryPair.second
+            metaInfoList?.run {
+                if (this.isEmpty()) {
+                    binding.audiosListInfoText.text =
+                        resources.getString(R.string.no_files)
+                    binding.loadingProgress.visibility = View.GONE
+                } else {
+                    binding.audiosListInfoText.visibility = View.GONE
+                    binding.loadingProgress.visibility = View.GONE
+                }
+                resetAdapter()
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    binding.fastscroll.visibility = View.GONE
+                    val popupStyle = Consumer<TextView> { popupView ->
+                        PopupStyles.MD2.accept(popupView)
+                        popupView.setTextColor(Color.BLACK)
+                        popupView.setTextSize(
+                            TypedValue.COMPLEX_UNIT_PX,
+                            resources.getDimension(R.dimen.twenty_four_sp)
+                        )
+                    }
+                    FastScrollerBuilder(binding.audiosListView).useMd2Style()
+                        .setPopupStyle(popupStyle).build()
+                } else {
+                    binding.fastscroll.visibility = View.VISIBLE
+                    binding.fastscroll.setRecyclerView(binding.audiosListView, 1)
+                }
+            }
+        }
     }
 
     private fun hideLyricsView() {

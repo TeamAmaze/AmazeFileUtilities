@@ -53,7 +53,8 @@ data class MediaFileInfo(
     var isDirectory: Boolean = false,
     var listHeader: String = "",
     var extraInfo: ExtraInfo? = null,
-    var contentUri: Uri? = null
+    var contentUri: Uri? = null,
+    val id: Long = -1,
 ) {
 
     companion object {
@@ -61,12 +62,12 @@ data class MediaFileInfo(
 
 //        private const val DATE_TIME_FORMAT = "%s %s, %s"
         private const val UNKNOWN = "UNKNOWN"
-        const val MEDIA_TYPE_UNKNOWN = 1000
-        const val MEDIA_TYPE_IMAGE = 1001
-        const val MEDIA_TYPE_AUDIO = 1002
-        const val MEDIA_TYPE_VIDEO = 1003
-        const val MEDIA_TYPE_DOCUMENT = 1004
-        const val MEDIA_TYPE_APK = 1005
+        const val MEDIA_TYPE_UNKNOWN = 4
+        const val MEDIA_TYPE_IMAGE = 3
+        const val MEDIA_TYPE_AUDIO = 0
+        const val MEDIA_TYPE_VIDEO = 1
+        const val MEDIA_TYPE_DOCUMENT = 2
+        const val MEDIA_TYPE_APK = 5
 
         fun fromFile(file: File, extraInfo: ExtraInfo): MediaFileInfo {
             return MediaFileInfo(
@@ -119,7 +120,8 @@ data class MediaFileInfo(
                     FileProvider.getUriForFile(context, context.packageName, File(path))
                 } else {
                     null
-                }
+                },
+                id = id
             )
         }
 
@@ -353,9 +355,12 @@ data class MediaFileInfo(
         val artistName: String?,
         val duration: Long?,
         val albumId: Long?,
-        var albumArt: Bitmap?
+        var albumArt: Bitmap?,
+        var idInPlaylist: Long?,
+        var playlist: Playlist?,
     )
     data class VideoMetaData(val duration: Long?, val width: Int?, val height: Int?)
     data class ImageMetaData(val width: Int?, val height: Int?)
     data class ApkMetaData(val packageName: String, val drawable: Drawable?)
+    data class Playlist(var id: Long, var name: String)
 }

@@ -60,42 +60,7 @@ class ImagesListFragment : AbstractMediaInfoListFragment() {
         val root: View = binding.root
         (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.images))
         (activity as MainActivity).invalidateBottomBar(false)
-        filesViewModel.usedImagesSummaryTransformations().observe(
-            viewLifecycleOwner
-        ) { metaInfoAndSummaryPair ->
-            binding.imagesListInfoText.text = resources.getString(R.string.loading)
-            metaInfoAndSummaryPair?.let {
-                val metaInfoList = metaInfoAndSummaryPair.second
-                metaInfoList.run {
-                    if (this.isEmpty()) {
-                        binding.imagesListInfoText.text =
-                            resources.getString(R.string.no_files)
-                        binding.loadingProgress.visibility = View.GONE
-                    } else {
-                        binding.imagesListInfoText.visibility = View.GONE
-                        binding.loadingProgress.visibility = View.GONE
-                    }
-                    fileStorageSummaryAndMediaFileInfo = it
-                    resetAdapter()
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        binding.fastscroll.visibility = View.GONE
-                        val popupStyle = Consumer<TextView> { popupView ->
-                            PopupStyles.MD2.accept(popupView)
-                            popupView.setTextColor(Color.BLACK)
-                            popupView.setTextSize(
-                                TypedValue.COMPLEX_UNIT_PX,
-                                resources.getDimension(R.dimen.twenty_four_sp)
-                            )
-                        }
-                        FastScrollerBuilder(binding.imagesListView).useMd2Style()
-                            .setPopupStyle(popupStyle).build()
-                    } else {
-                        binding.fastscroll.visibility = View.VISIBLE
-                        binding.fastscroll.setRecyclerView(binding.imagesListView, 1)
-                    }
-                }
-            }
-        }
+        setupAdapter()
         return root
     }
 
@@ -133,5 +98,44 @@ class ImagesListFragment : AbstractMediaInfoListFragment() {
 
     override fun getItemPressedCallback(mediaFileInfo: MediaFileInfo) {
         // do nothing
+    }
+
+    override fun setupAdapter() {
+        filesViewModel.usedImagesSummaryTransformations().observe(
+            viewLifecycleOwner
+        ) { metaInfoAndSummaryPair ->
+            binding.imagesListInfoText.text = resources.getString(R.string.loading)
+            metaInfoAndSummaryPair?.let {
+                val metaInfoList = metaInfoAndSummaryPair.second
+                metaInfoList.run {
+                    if (this.isEmpty()) {
+                        binding.imagesListInfoText.text =
+                            resources.getString(R.string.no_files)
+                        binding.loadingProgress.visibility = View.GONE
+                    } else {
+                        binding.imagesListInfoText.visibility = View.GONE
+                        binding.loadingProgress.visibility = View.GONE
+                    }
+                    fileStorageSummaryAndMediaFileInfo = it
+                    resetAdapter()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        binding.fastscroll.visibility = View.GONE
+                        val popupStyle = Consumer<TextView> { popupView ->
+                            PopupStyles.MD2.accept(popupView)
+                            popupView.setTextColor(Color.BLACK)
+                            popupView.setTextSize(
+                                TypedValue.COMPLEX_UNIT_PX,
+                                resources.getDimension(R.dimen.twenty_four_sp)
+                            )
+                        }
+                        FastScrollerBuilder(binding.imagesListView).useMd2Style()
+                            .setPopupStyle(popupStyle).build()
+                    } else {
+                        binding.fastscroll.visibility = View.VISIBLE
+                        binding.fastscroll.setRecyclerView(binding.imagesListView, 1)
+                    }
+                }
+            }
+        }
     }
 }

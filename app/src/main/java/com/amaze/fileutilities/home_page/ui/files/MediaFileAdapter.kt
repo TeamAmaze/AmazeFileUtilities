@@ -46,13 +46,16 @@ class MediaFileAdapter(
     private val optionsMenuSelected: OptionsMenuSelected,
     isGrid: Boolean,
     private var sortingPreference: MediaFileListSorter.SortingPreference,
-    private val mediaFileInfoList: MutableList<MediaFileInfo>,
+    private var mediaFileInfoList: MutableList<MediaFileInfo>,
     private val mediaListType: Int,
     private val drawBannerCallback: (mediaTypeHeader: MediaTypeHeaderView) -> Unit,
     listItemPressedCallback: (mediaFileInfo: MediaFileInfo) -> Unit,
     toggleCheckCallback: (checkedSize: Int, itemsCount: Int, bytesFormatted: String) -> Unit,
     private val titleOverflowPopupClick:
-        ((item: MenuItem, actionItems: List<MediaFileInfo>) -> Unit)?
+        ((item: MenuItem, actionItems: List<MediaFileInfo>) -> Unit)?,
+    // callback called if we want to refresh data when user tries to switch groupping / sorting
+    // eg. in case of audio player we would want to utilise different dataset for playlists
+    private val invalidateDataCallback: (() -> Unit)?
 ) : AbstractMediaFilesAdapter(
     context,
     preloader, isGrid, listItemPressedCallback, toggleCheckCallback
@@ -251,12 +254,16 @@ class MediaFileAdapter(
     }
 
     fun invalidateData(sortPref: MediaFileListSorter.SortingPreference) {
-        mediaFileInfoList.run {
-            sortingPreference = sortPref
-            // triggers set call
-            mediaFileListItems = mutableListOf()
-            notifyDataSetChanged()
+        if (mediaListType == MEDIA_TYPE_AUDIO) {
+            // callback to refresh data as groupping might've changed from playlists to normal list
+            invalidateDataCallback?.invoke()
+            return
         }
+        sortingPreference = sortPref
+
+        // triggers set call
+        mediaFileListItems = mutableListOf()
+        notifyDataSetChanged()
     }
 
     fun invalidateCurrentPlayingAnimation(uri: Uri) {
@@ -283,7 +290,7 @@ class MediaFileAdapter(
     }
 
     private fun setBannerResources(holder: ListBannerViewHolder) {
-        when (mediaFileInfoList[0].extraInfo?.mediaType) {
+        when (mediaListType) {
             MediaFileInfo.MEDIA_TYPE_AUDIO -> {
                 holder.mediaTypeHeaderView.setHeaderColor(
                     ResourcesCompat

@@ -877,4 +877,16 @@
     <string name="purchase_fdroid_liberapay">Liberapay</string>
     <!-- header summary in media list fragments -->
     <string name="header_list_summary">%s • %s</string>
+    <!-- playlist in audio fragment -->
+    <string name="created_playlist">Playlist created</string>
+    <!-- playlist in audio fragment -->
+    <string name="could_not_create_playlist">Failed to create playlist</string>
+    <!-- playlist in audio fragment -->
+    <string name="insert_songs_playlist">Added %d songs to playlist %s</string>
+    <!-- playlist in audio fragment -->
+    <string name="failed_insert_songs_playlist">Failed to add songs</string>
+    <!-- playlist in audio fragment -->
+    <string name="failed_remove_songs_playlist">Failed to remove songs</string>
+    <!-- playlists header in audio fragment grouping -->
+    <string name="playlists">Playlists</string>
 </resources>
