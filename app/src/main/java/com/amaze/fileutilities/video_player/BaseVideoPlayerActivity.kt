@@ -453,8 +453,11 @@ abstract class BaseVideoPlayerActivity :
 
     override fun onPictureInPictureModeChanged(
         isInPictureInPictureMode: Boolean,
-        newConfig: Configuration?
+        newConfig: Configuration
     ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        }
         videoPlayerViewModel?.isInPictureInPicture = isInPictureInPictureMode
         refactorPlayerController(
             !(

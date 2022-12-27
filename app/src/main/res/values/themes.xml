@@ -111,4 +111,16 @@
         <item name="currentPageColor">@color/yellow</item>
         <item name="animation">slide</item>
     </style>
+
+    <style name="CustomAboutLibrariesStyle" parent="Theme.MaterialComponents.NoActionBar">
+        <!-- AboutLibraries specific values -->
+        <item name="aboutLibrariesCardBackground">?cardBackgroundColor</item>
+        <item name="aboutLibrariesDescriptionTitle">?android:textColorPrimary</item>
+        <item name="aboutLibrariesDescriptionText">?android:textColorSecondary</item>
+        <item name="aboutLibrariesDescriptionDivider">@color/opensource_divider</item>
+        <item name="aboutLibrariesOpenSourceTitle">?android:textColorPrimary</item>
+        <item name="aboutLibrariesOpenSourceText">?android:textColorSecondary</item>
+        <item name="aboutLibrariesSpecialButtonText">?android:textColorPrimary</item>
+        <item name="aboutLibrariesOpenSourceDivider">@color/opensource_divider</item>
+    </style>
 </resources>
