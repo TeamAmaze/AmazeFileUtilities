@@ -38,7 +38,9 @@ import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.FileUtils
 import com.amaze.fileutilities.utilis.HeaderViewHolder
 import com.amaze.fileutilities.utilis.ListBannerViewHolder
+import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.executeAsyncTask
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 
 class MediaFileAdapter(
     val context: Context,
@@ -154,11 +156,24 @@ class MediaFileAdapter(
                         )
                     )
                 }
+                val sharedPrefs = context.getAppCommonSharedPreferences()
+                val groupByPref = sharedPrefs.getInt(
+                    MediaFileListSorter.SortingPreference
+                        .getGroupByKey(MEDIA_TYPE_AUDIO),
+                    PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
+                )
 
                 holder.setOverflowButtons(
                     context,
-                    if (mediaListType == MEDIA_TYPE_AUDIO)
-                        R.menu.audio_list_overflow else R.menu.generic_list_overflow
+                    if (mediaListType == MEDIA_TYPE_AUDIO) {
+                        if (groupByPref == MediaFileListSorter.GROUP_PLAYLISTS) {
+                            R.menu.audio_playlist_overflow
+                        } else {
+                            R.menu.audio_list_overflow
+                        }
+                    } else {
+                        R.menu.generic_list_overflow
+                    }
                 ) {
                     item ->
                     titleOverflowPopupClick?.invoke(

@@ -29,8 +29,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerService
+import com.amaze.fileutilities.audio_player.playlist.PlaylistsUtil
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewImagesFragment
+import com.amaze.fileutilities.home_page.ui.files.AbstractMediaInfoListFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.share.showShareDialog
@@ -265,6 +267,52 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
                             if (openFile.isNotEmpty()) {
                                 openFile[0].startLocateFileAction(requireContext())
                                 getMediaFileAdapter()?.uncheckChecked()
+                            }
+                        }
+                    }
+                    R.id.addToPlaylistButtonFab -> {
+                        getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }?.let {
+                            checkedItems ->
+                            if (checkedItems.isNotEmpty()) {
+                                Utils.buildAddToPlaylistDialog(requireContext(), {
+                                    playlist ->
+                                    PlaylistsUtil.addToPlaylist(
+                                        requireContext(), checkedItems,
+                                        playlist.id, true
+                                    )
+                                    // reset the dataset
+                                    getFilesViewModelObj()
+                                        .usedPlaylistsSummaryTransformations = null
+                                    (this as AbstractMediaInfoListFragment).setupAdapter()
+                                }, {
+                                    Utils.buildCreateNewPlaylistDialog(requireContext()) {
+                                        val playlistId = PlaylistsUtil
+                                            .createPlaylist(requireContext(), it)
+                                        if (playlistId != -1L) {
+                                            PlaylistsUtil.addToPlaylist(
+                                                requireContext(),
+                                                checkedItems,
+                                                playlistId, true
+                                            )
+
+                                            // reset the dataset
+                                            getFilesViewModelObj()
+                                                .usedPlaylistsSummaryTransformations = null
+                                            (this as AbstractMediaInfoListFragment).setupAdapter()
+                                        }
+                                    }
+                                }, {
+                                    Utils.buildRemoveFromPlaylistDialog(requireContext()) {
+                                        PlaylistsUtil.removeFromPlaylist(
+                                            requireContext(),
+                                            checkedItems
+                                        )
+                                        // reset the dataset
+                                        getFilesViewModelObj()
+                                            .usedPlaylistsSummaryTransformations = null
+                                        (this as AbstractMediaInfoListFragment).setupAdapter()
+                                    }.show()
+                                }).show()
                             }
                         }
                     }

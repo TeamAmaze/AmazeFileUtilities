@@ -225,6 +225,18 @@ public class PlaylistsUtil {
   }
 
   public static void removeFromPlaylist(
+      @NonNull final Context context, @NonNull final List<MediaFileInfo> songs) {
+    for (MediaFileInfo song : songs) {
+      if (song.getExtraInfo() != null
+          && song.getExtraInfo().getAudioMetaData() != null
+          && song.getExtraInfo().getAudioMetaData().getPlaylist() != null) {
+        long playlistId = song.getExtraInfo().getAudioMetaData().getPlaylist().getId();
+        removeSongFromPlaylist(context, song, playlistId);
+      }
+    }
+  }
+
+  private static void removeSongFromPlaylist(
       @NonNull final Context context, @NonNull final MediaFileInfo song, long playlistId) {
     Uri uri = MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId);
     String selection = MediaStore.Audio.Playlists.Members.AUDIO_ID + " =?";
@@ -233,15 +245,20 @@ public class PlaylistsUtil {
       context.getContentResolver().delete(uri, selection, selectionArgs);
       // Necessary because somehow the MediaStoreObserver doesn't work for playlists
       context.getContentResolver().notifyChange(uri, null);
+      Toast.makeText(
+              context,
+              context.getResources().getString(R.string.removed_from_playlist),
+              Toast.LENGTH_SHORT)
+          .show();
     } catch (SecurityException se) {
-      LOG.warn("failed to add to playlist due to security exception", se);
+      LOG.warn("failed to remove from playlist due to security exception", se);
       Toast.makeText(
               context,
               context.getResources().getString(R.string.failed_remove_songs_playlist),
               Toast.LENGTH_SHORT)
           .show();
     } catch (Exception e) {
-      LOG.warn("failed to add to playlist", e);
+      LOG.warn("failed to remove from playlist", e);
       Toast.makeText(
               context,
               context.getResources().getString(R.string.failed_remove_songs_playlist),

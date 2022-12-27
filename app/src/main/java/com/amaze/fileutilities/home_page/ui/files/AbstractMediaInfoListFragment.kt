@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.audio_player.playlist.PlaylistsUtil
 import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
 import com.amaze.fileutilities.home_page.ui.options.CastActivity
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
@@ -170,6 +171,54 @@ abstract class AbstractMediaInfoListFragment :
                             context?.let {
                                 context ->
                                 performShuffleAction(context, actionItems)
+                            }
+                        }
+                        R.id.delete_playlist -> {
+                            if (actionItems.isNotEmpty()) {
+                                val playlist = actionItems[0]
+                                    .extraInfo?.audioMetaData?.playlist?.name
+                                playlist?.let {
+                                    Utils.buildDeletePlaylistDialog(requireContext(), playlist) {
+                                        PlaylistsUtil.deletePlaylists(
+                                            requireContext(),
+                                            arrayListOf(
+                                                actionItems[0]
+                                                    .extraInfo?.audioMetaData?.playlist
+                                            )
+                                        )
+                                        // reset the dataset
+                                        getFilesViewModelObj()
+                                            .usedPlaylistsSummaryTransformations = null
+                                        setupAdapter()
+                                    }.show()
+                                }
+                            }
+                        }
+                        R.id.rename_playlist -> {
+                            if (actionItems.isNotEmpty()) {
+                                val playlist = actionItems[0]
+                                    .extraInfo?.audioMetaData?.playlist?.name
+                                playlist?.let {
+                                    val playlistId = actionItems[0]
+                                        .extraInfo?.audioMetaData?.playlist?.id
+                                    if (playlistId != -1L) {
+                                        Utils.buildRenamePlaylistDialog(
+                                            requireContext(),
+                                            playlist
+                                        ) {
+                                            newName ->
+                                            PlaylistsUtil.renamePlaylist(
+                                                requireContext(),
+                                                playlistId!!,
+                                                newName
+                                            )
+                                            // reset the dataset
+                                            getFilesViewModelObj()
+                                                .usedPlaylistsSummaryTransformations = null
+                                            setupAdapter()
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

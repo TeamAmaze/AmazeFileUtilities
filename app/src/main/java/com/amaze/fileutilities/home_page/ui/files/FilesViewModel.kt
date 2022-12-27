@@ -120,7 +120,7 @@ class FilesViewModel(val applicationContext: Application) :
             ArrayList<MediaFileInfo>>?>? = null
     private var usedAudiosSummaryTransformations: LiveData<Pair<StorageSummary,
             ArrayList<MediaFileInfo>>?>? = null
-    private var usedPlaylistsSummaryTransformations: LiveData<Pair<StorageSummary,
+    var usedPlaylistsSummaryTransformations: LiveData<Pair<StorageSummary,
             ArrayList<MediaFileInfo>>?>? = null
     private var usedImagesSummaryTransformations: LiveData<Pair<StorageSummary,
             ArrayList<MediaFileInfo>>?>? = null

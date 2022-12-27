@@ -137,36 +137,7 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
             0, 0, 16.px.toInt(),
             if (!isBottomFragmentVisible) 16.px.toInt() else 100.px.toInt()
         )
-        filesViewModel.usedAudiosSummaryTransformations().observe(
-            viewLifecycleOwner
-        ) { pair ->
-            if (pair != null) {
-                fileStorageSummaryAndMediaFileInfo = pair
-                val groupByPref = sharedPrefs.getInt(
-                    MediaFileListSorter.SortingPreference
-                        .getGroupByKey(MediaFileAdapter.MEDIA_TYPE_AUDIO),
-                    PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
-                )
-                if (groupByPref != MediaFileListSorter.GROUP_PLAYLISTS) {
-                    setupAdapter()
-                }
-            }
-        }
-        filesViewModel.usedPlaylistsSummaryTransformations().observe(
-            viewLifecycleOwner
-        ) { metaInfoAndSummaryPair ->
-            if (metaInfoAndSummaryPair != null) {
-                playListStorageSummaryAndMediaFileInfo = metaInfoAndSummaryPair
-                val groupByPref = sharedPrefs.getInt(
-                    MediaFileListSorter.SortingPreference
-                        .getGroupByKey(MediaFileAdapter.MEDIA_TYPE_AUDIO),
-                    PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
-                )
-                if (groupByPref == MediaFileListSorter.GROUP_PLAYLISTS) {
-                    setupAdapter()
-                }
-            }
-        }
+        setupAdapter()
         binding.shuffleButtonFab.setOnClickListener {
             val groupByPref = sharedPrefs.getInt(
                 MediaFileListSorter.SortingPreference
@@ -565,6 +536,40 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
     }
 
     override fun setupAdapter() {
+        val sharedPrefs = requireContext().getAppCommonSharedPreferences()
+        filesViewModel.usedAudiosSummaryTransformations().observe(
+            viewLifecycleOwner
+        ) { pair ->
+            if (pair != null) {
+                fileStorageSummaryAndMediaFileInfo = pair
+                val groupByPref = sharedPrefs.getInt(
+                    MediaFileListSorter.SortingPreference
+                        .getGroupByKey(MediaFileAdapter.MEDIA_TYPE_AUDIO),
+                    PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
+                )
+                if (groupByPref != MediaFileListSorter.GROUP_PLAYLISTS) {
+                    setupAdapterViews()
+                }
+            }
+        }
+        filesViewModel.usedPlaylistsSummaryTransformations().observe(
+            viewLifecycleOwner
+        ) { metaInfoAndSummaryPair ->
+            if (metaInfoAndSummaryPair != null) {
+                playListStorageSummaryAndMediaFileInfo = metaInfoAndSummaryPair
+                val groupByPref = sharedPrefs.getInt(
+                    MediaFileListSorter.SortingPreference
+                        .getGroupByKey(MediaFileAdapter.MEDIA_TYPE_AUDIO),
+                    PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
+                )
+                if (groupByPref == MediaFileListSorter.GROUP_PLAYLISTS) {
+                    setupAdapterViews()
+                }
+            }
+        }
+    }
+
+    private fun setupAdapterViews() {
         binding.audiosListInfoText.text = resources.getString(R.string.loading)
         val sharedPrefs = requireContext().getAppCommonSharedPreferences()
         val groupByPref = sharedPrefs.getInt(

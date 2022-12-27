@@ -133,6 +133,7 @@ class CursorUtils {
             Pair<FilesViewModel.StorageSummary,
                 ArrayList<MediaFileInfo>> {
             val projection = arrayOf(
+                MediaStore.Audio.Playlists.Members.AUDIO_ID,
                 MediaStore.MediaColumns.TITLE,
                 MediaStore.MediaColumns.DISPLAY_NAME,
                 MediaStore.MediaColumns.DATE_MODIFIED,
@@ -142,7 +143,7 @@ class CursorUtils {
                 MediaStore.Audio.AudioColumns.ALBUM,
                 MediaStore.Audio.AudioColumns.ARTIST,
                 MediaStore.Audio.AudioColumns.ALBUM_ID,
-                MediaStore.Audio.Playlists.Members._ID,
+//                MediaStore.Audio.Playlists.Members._ID,
             )
             return listMediaCommon(
                 context,
@@ -309,6 +310,7 @@ class CursorUtils {
                         /*if (path != null && (endsWith.isEmpty()
                                     || endsWith.stream().anyMatch { path.endsWith(it) })) {*/
                         if (path != null) {
+                            loadMediaColumnIdx(cursor, mediaType, mediaColumnIdxValues)
                             val mediaFileInfo = buildMediaFileInfoFromCursor(
                                 context, dataColumnIdx,
                                 cursor, mediaColumnIdxValues, mediaType
@@ -381,6 +383,12 @@ class CursorUtils {
                                 .getColumnIndex(MediaStore.Files.FileColumns.DATA)
                     }
                     if (dataColumnIdx >= 0) {
+                        loadMediaColumnIdx(cursor, mediaType, mediaColumnIdxValues)
+                        if (projection[0] == MediaStore.Audio.Playlists.Members.AUDIO_ID) {
+                            // hack to change _id column name while querying playlists
+                            mediaColumnIdxValues.commonIdIdx =
+                                cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.AUDIO_ID)
+                        }
                         val mediaFileInfo = buildMediaFileInfoFromCursor(
                             context, dataColumnIdx,
                             cursor, mediaColumnIdxValues, mediaType
@@ -482,7 +490,6 @@ class CursorUtils {
             mediaType: Int
         ): MediaFileInfo {
             val path = cursor.getString(dataColumnIdx)
-            loadMediaColumnIdx(cursor, mediaType, mediaColumnIdxValues)
             var id: Long? = -1L
             var title: String?
             var lastModified: Long?

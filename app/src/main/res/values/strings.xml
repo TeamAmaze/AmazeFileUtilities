@@ -895,4 +895,28 @@
     <string name="locate">Locate</string>
     <!-- options in floating action button to add to playlist -->
     <string name="playlist">Playlist</string>
+    <!-- options in media headers when playlist is enabled -->
+    <string name="delete_playlist">Delete Playlist</string>
+    <!-- options in media headers when playlist is enabled -->
+    <string name="rename_playlist">Rename Playlist</string>
+    <!-- Delete playlist summary dialog -->
+    <string name="delete_playlist_message">You\'re about to permanently delete playlist %s.
+        Are you sure you want to proceed?</string>
+    <!-- Rename playlist summary dialog -->
+    <string name="rename_playlist_message">Please enter new playlist name</string>
+    <!-- Rename playlist summary dialog button -->
+    <string name="rename">Rename</string>
+    <!-- create playlist dialog in audio fragment -->
+    <string name="create_new_playlist">Create New</string>
+    <!-- remove from playlist dialog in audio fragment -->
+    <string name="remove">Remove</string>
+    <!-- Remove from playlist summary dialog -->
+    <string name="remove_from_playlist_message">You\'re about to remove selected songs from playlist(s).
+        Are you sure you want to proceed?</string>
+    <!-- add to playlist dialog in audio fragment -->
+    <string name="add_to_playlist">Add to Playlist</string>
+    <!-- create dialog in audio fragment -->
+    <string name="create">Create</string>
+    <!-- removed songs from playlist in audio fragment -->
+    <string name="removed_from_playlist">Removed from playlist(s)</string>
 </resources>
