@@ -154,4 +154,8 @@ class VideosListFragment : AbstractMediaInfoListFragment() {
             }
         }
     }
+
+    override fun adapterItemSelected(checkedCount: Int) {
+        // do nothing
+    }
 }

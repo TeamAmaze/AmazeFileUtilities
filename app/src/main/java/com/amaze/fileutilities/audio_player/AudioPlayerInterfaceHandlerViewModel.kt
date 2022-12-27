@@ -38,7 +38,7 @@ class AudioPlayerInterfaceHandlerViewModel : ViewModel() {
     private var localAudioModelList: ArrayList<LocalAudioModel>? = null
 //    var uriList: ArrayList<Uri>? = null
     // approx value if player is playing
-    var isPlaying: Boolean = true
+    var isPlaying: Boolean = false
     var forceShowSeekbar = false
 
     companion object {

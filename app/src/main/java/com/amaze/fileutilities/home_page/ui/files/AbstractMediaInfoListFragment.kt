@@ -84,6 +84,8 @@ abstract class AbstractMediaInfoListFragment :
 
     abstract fun setupAdapter()
 
+    abstract fun adapterItemSelected(checkedCount: Int)
+
     override fun hideActionBarOnClick(): Boolean {
         return true
     }
@@ -155,7 +157,7 @@ abstract class AbstractMediaInfoListFragment :
                     } else {
                         hideActionBar()
                     }
-
+                    adapterItemSelected(checkedSize)
                     val countView = getCountView()
                     countView?.text = title
                 }, {

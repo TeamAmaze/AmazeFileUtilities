@@ -22,7 +22,6 @@ package com.amaze.fileutilities.home_page.ui.files
 
 import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
 import android.graphics.Color
 import android.media.AudioManager
 import android.net.Uri
@@ -34,6 +33,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.util.Consumer
 import androidx.core.view.isVisible
@@ -71,7 +71,7 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
     private var playListStorageSummaryAndMediaFileInfo:
         Pair<FilesViewModel.StorageSummary, List<MediaFileInfo>?>? = null
 
-    private lateinit var audioPlaybackServiceConnection: ServiceConnection
+    private lateinit var audioPlaybackServiceConnection: AudioPlaybackServiceConnection
     private var filesPreloader: MediaAdapterPreloader? = null
     private var playlistsPreloader: MediaAdapterPreloader? = null
     private var isWaveformProcessing = false
@@ -416,6 +416,7 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
     override fun hideOptionsCallback() {
         binding.shuffleButtonFab.show()
         binding.shuffleButtonFab.visibility = View.VISIBLE
+        getPlayNextButton()?.visibility = View.GONE
     }
 
     override fun getItemPressedCallback(mediaFileInfo: MediaFileInfo) {
@@ -566,6 +567,31 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
                     setupAdapterViews()
                 }
             }
+        }
+    }
+
+    override fun adapterItemSelected(checkedCount: Int) {
+        if (checkedCount == 1 && viewModel.isPlaying) {
+            getPlayNextButton()?.visibility = View.VISIBLE
+            getPlayNextButton()?.setOnClickListener {
+                val selectedSongList = getMediaFileAdapter()?.checkItemsList
+                if (selectedSongList?.size == 1) {
+                    selectedSongList[0].mediaFileInfo?.getContentUri(requireContext())?.let { it1 ->
+                        audioPlaybackServiceConnection
+                            .getAudioServiceInstance()?.insertPlayNextSong(
+                                it1
+                            )
+                        Toast.makeText(
+                            requireContext(), R.string.play_next_success,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+                hideActionBar()
+                getMediaFileAdapter()?.uncheckChecked()
+            }
+        } else {
+            getPlayNextButton()?.visibility = View.GONE
         }
     }
 

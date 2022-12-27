@@ -87,7 +87,7 @@ data class AudioProgressHandler(
         return playingIndex
     }
 
-    private fun calculatePlayingIndex(): Int {
+    fun calculatePlayingIndex(): Int {
         if (uriList != null) {
             var index = 0
             for (uri in uriList!!) {

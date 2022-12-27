@@ -24,6 +24,7 @@ import android.content.Context
 import android.net.Uri
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -104,6 +105,7 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
         getAllOptionsFAB().forEach {
             it.hide()
         }
+        getPlayNextButton()?.visibility = View.GONE
         hideOptionsCallback()
     }
 
@@ -145,6 +147,10 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
 
     fun getThumbsDown(): ImageView? {
         return optionsActionBar?.findViewById(R.id.thumbsDown)
+    }
+
+    fun getPlayNextButton(): TextView? {
+        return optionsActionBar?.findViewById(R.id.playNextButton)
     }
 
     private fun getOptionsFab(): FloatingActionButton {

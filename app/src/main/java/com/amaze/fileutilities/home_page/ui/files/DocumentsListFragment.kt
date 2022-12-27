@@ -154,4 +154,8 @@ class DocumentsListFragment : AbstractMediaInfoListFragment() {
             }
         }
     }
+
+    override fun adapterItemSelected(checkedCount: Int) {
+        // do nothing
+    }
 }
