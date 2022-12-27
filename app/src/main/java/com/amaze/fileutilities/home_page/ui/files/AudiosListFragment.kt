@@ -46,6 +46,7 @@ import com.amaze.fileutilities.databinding.FragmentAudiosListBinding
 import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.utilis.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.slider.Slider
 import com.masoudss.lib.WaveformSeekBar
 import me.tankery.lib.circularseekbar.CircularSeekBar
@@ -127,6 +128,12 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         val fabParams: CoordinatorLayout.LayoutParams = binding.shuffleButtonFab
             .layoutParams as CoordinatorLayout.LayoutParams
         fabParams.setMargins(
+            0, 0, 16.px.toInt(),
+            if (!isBottomFragmentVisible) 16.px.toInt() else 100.px.toInt()
+        )
+        val fabOptionsParams: CoordinatorLayout.LayoutParams = binding.optionsFabParent
+            .layoutParams as CoordinatorLayout.LayoutParams
+        fabOptionsParams.setMargins(
             0, 0, 16.px.toInt(),
             if (!isBottomFragmentVisible) 16.px.toInt() else 100.px.toInt()
         )
@@ -262,6 +269,10 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
             val fabParams: CoordinatorLayout.LayoutParams = binding.shuffleButtonFab
                 .layoutParams as CoordinatorLayout.LayoutParams
             fabParams.setMargins(0, 0, 16.px.toInt(), 100.px.toInt())
+            val fabOptionsParams: CoordinatorLayout.LayoutParams = binding.optionsFabParent
+                .layoutParams as CoordinatorLayout.LayoutParams
+            fabOptionsParams.setMargins(0, 0, 16.px.toInt(), 100.px.toInt())
+            binding.optionsFabParent.bringToFront()
             val params: CoordinatorLayout.LayoutParams = binding.layoutBottomSheet
                 .layoutParams as CoordinatorLayout.LayoutParams
             val behavior = params.behavior as BottomSheetBehavior
@@ -417,6 +428,23 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
 
     override fun getMediaListType(): Int {
         return MediaFileAdapter.MEDIA_TYPE_AUDIO
+    }
+
+    override fun getAllOptionsFAB(): List<FloatingActionButton> {
+        return arrayListOf(
+            binding.optionsButtonFab, binding.deleteButtonFab,
+            binding.shareButtonFab, binding.locateFileButtonFab, binding.addToPlaylistButtonFab
+        )
+    }
+
+    override fun showOptionsCallback() {
+        binding.shuffleButtonFab.hide()
+        binding.shuffleButtonFab.visibility = View.GONE
+    }
+
+    override fun hideOptionsCallback() {
+        binding.shuffleButtonFab.show()
+        binding.shuffleButtonFab.visibility = View.VISIBLE
     }
 
     override fun getItemPressedCallback(mediaFileInfo: MediaFileInfo) {

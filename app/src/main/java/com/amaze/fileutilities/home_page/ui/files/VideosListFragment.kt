@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentVideosListBinding
 import com.amaze.fileutilities.home_page.MainActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import me.zhanghai.android.fastscroll.PopupStyles
 
@@ -94,6 +95,21 @@ class VideosListFragment : AbstractMediaInfoListFragment() {
 
     override fun getMediaListType(): Int {
         return MediaFileAdapter.MEDIA_TYPE_VIDEO
+    }
+
+    override fun getAllOptionsFAB(): List<FloatingActionButton> {
+        return arrayListOf(
+            binding.optionsButtonFab, binding.deleteButtonFab,
+            binding.shareButtonFab, binding.locateFileButtonFab
+        )
+    }
+
+    override fun showOptionsCallback() {
+        // do nothing
+    }
+
+    override fun hideOptionsCallback() {
+        // do nothing
     }
 
     override fun getItemPressedCallback(mediaFileInfo: MediaFileInfo) {

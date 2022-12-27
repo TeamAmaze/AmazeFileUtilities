@@ -40,6 +40,7 @@ import com.amaze.fileutilities.utilis.showToastInCenter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.ramijemli.percentagechartview.callback.AdaptiveColorProvider
 
 class FilesFragment : ItemsActionBarFragment() {
@@ -313,8 +314,7 @@ class FilesFragment : ItemsActionBarFragment() {
                         if (checkedSize > 0) {
                             setupShowActionBar()
                             setupCommonButtons()
-                            getLocateFileButton()?.visibility = if (checkedSize == 1)
-                                View.VISIBLE else View.GONE
+                            if (checkedSize == 1) enableLocateFileFab() else disableLocateFileFab()
                         } else {
                             hideActionBar()
                         }
@@ -350,6 +350,21 @@ class FilesFragment : ItemsActionBarFragment() {
 
     override fun getMediaListType(): Int {
         return MediaFileAdapter.MEDIA_TYPE_UNKNOWN
+    }
+
+    override fun getAllOptionsFAB(): List<FloatingActionButton> {
+        return arrayListOf(
+            binding.optionsButtonFab, binding.deleteButtonFab,
+            binding.shareButtonFab, binding.locateFileButtonFab
+        )
+    }
+
+    override fun showOptionsCallback() {
+        // do nothing
+    }
+
+    override fun hideOptionsCallback() {
+        // do nothing
     }
 
     private fun startListFragment(listFragment: Fragment) {

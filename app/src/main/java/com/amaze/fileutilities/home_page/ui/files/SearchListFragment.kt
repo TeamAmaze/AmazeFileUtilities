@@ -43,6 +43,7 @@ import com.amaze.fileutilities.utilis.ItemsActionBarFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class SearchListFragment :
     ItemsActionBarFragment(),
@@ -288,6 +289,21 @@ class SearchListFragment :
 
     override fun getMediaListType(): Int {
         return MediaFileAdapter.MEDIA_TYPE_UNKNOWN
+    }
+
+    override fun getAllOptionsFAB(): List<FloatingActionButton> {
+        return arrayListOf(
+            binding.optionsButtonFab, binding.deleteButtonFab,
+            binding.shareButtonFab, binding.locateFileButtonFab
+        )
+    }
+
+    override fun showOptionsCallback() {
+        // do nothing
+    }
+
+    override fun hideOptionsCallback() {
+        // do nothing
     }
 
     private fun showLoadingViews(doShow: Boolean) {

@@ -52,6 +52,7 @@ import com.amaze.fileutilities.utilis.showToastOnBottom
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import me.zhanghai.android.fastscroll.PopupStyles
 import org.slf4j.Logger
@@ -191,6 +192,21 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                 MediaFileAdapter.MEDIA_TYPE_UNKNOWN
             }
         }
+    }
+
+    override fun getAllOptionsFAB(): List<FloatingActionButton> {
+        return arrayListOf(
+            binding.optionsButtonFab, binding.deleteButtonFab,
+            binding.shareButtonFab, binding.locateFileButtonFab
+        )
+    }
+
+    override fun showOptionsCallback() {
+        // do nothing
+    }
+
+    override fun hideOptionsCallback() {
+        // do nothing
     }
 
     private fun initAnalysisView(analysisType: Int) {
@@ -600,11 +616,10 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                 if (doShowDown) {
                     thumbsDownButton?.visibility = View.VISIBLE
                 }
-                getLocateFileButton()?.visibility = if (checkedSize == 1)
-                    View.VISIBLE else View.GONE
+                if (checkedSize == 1) enableLocateFileFab() else disableLocateFileFab()
             } else {
                 thumbsDownButton?.visibility = View.GONE
-                getLocateFileButton()?.visibility = View.GONE
+                disableLocateFileFab()
             }
         }
         setupActionBarButtons(cleanData)

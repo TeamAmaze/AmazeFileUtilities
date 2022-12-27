@@ -889,4 +889,10 @@
     <string name="failed_remove_songs_playlist">Failed to remove songs</string>
     <!-- playlists header in audio fragment grouping -->
     <string name="playlists">Playlists</string>
+    <!-- options in floating action button -->
+    <string name="options">Options</string>
+    <!-- options in floating action button to locate the file -->
+    <string name="locate">Locate</string>
+    <!-- options in floating action button to add to playlist -->
+    <string name="playlist">Playlist</string>
 </resources>

@@ -34,6 +34,7 @@ import com.amaze.fileutilities.home_page.ui.analyse.ReviewImagesFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.share.showShareDialog
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -44,6 +45,9 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
     abstract fun hideActionBarOnClick(): Boolean
     abstract fun getMediaFileAdapter(): AbstractMediaFilesAdapter?
     abstract fun getMediaListType(): Int
+    abstract fun getAllOptionsFAB(): List<FloatingActionButton>
+    abstract fun showOptionsCallback()
+    abstract fun hideOptionsCallback()
 
     override fun getFilesViewModelObj(): FilesViewModel {
         return filesViewModel
@@ -56,6 +60,9 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
     private val filesViewModel: FilesViewModel by activityViewModels()
 
     private var optionsActionBar: View? = null
+
+    private var areNonOptionsFabShown = false
+    private var isLocateFabEnabled = true
 
     override fun onDestroyView() {
         (activity as MainActivity).invalidateSelectedActionBar(
@@ -71,11 +78,47 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
             true,
             hideActionBarOnClick(), handleBackPressed()
         )
+        getOptionsFab().show()
+        areNonOptionsFabShown = false
+        isLocateFabEnabled = true
+        getOptionsFab().setOnClickListener {
+            areNonOptionsFabShown = !areNonOptionsFabShown
+            if (areNonOptionsFabShown) {
+                showNonOptionsFab()
+            } else {
+                hideNonOptionsFab()
+            }
+        }
+        hideNonOptionsFab()
+        showOptionsCallback()
     }
 
     fun hideActionBar() {
         optionsActionBar = (activity as MainActivity)
-            .invalidateSelectedActionBar(false, hideActionBarOnClick(), handleBackPressed())
+            .invalidateSelectedActionBar(
+                false, hideActionBarOnClick(),
+                handleBackPressed()
+            )
+        getAllOptionsFAB().forEach {
+            it.hide()
+        }
+        hideOptionsCallback()
+    }
+
+    fun getLocateFileFab(): FloatingActionButton {
+        return getNonOptionsFab().filter {
+            R.id.locateFileButtonFab == it.id
+        }[0]
+    }
+
+    fun disableLocateFileFab() {
+        isLocateFabEnabled = false
+        showNonOptionsFab()
+    }
+
+    fun enableLocateFileFab() {
+        isLocateFabEnabled = true
+        showNonOptionsFab()
     }
 
     fun handleBackPressed(): (() -> Unit) {
@@ -102,16 +145,42 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
         return optionsActionBar?.findViewById(R.id.thumbsDown)
     }
 
-    private fun getShareButton(): ImageView? {
-        return optionsActionBar?.findViewById(R.id.shareFiles)
+    private fun getOptionsFab(): FloatingActionButton {
+        return getAllOptionsFAB().filter {
+            it.id == R.id.optionsButtonFab
+        }[0]
     }
 
-    private fun getTrashButton(): ImageView? {
-        return optionsActionBar?.findViewById(R.id.trashButton)
+    private fun getNonOptionsFab(): List<FloatingActionButton> {
+        return getAllOptionsFAB().filter {
+            it.id != R.id.optionsButtonFab
+        }
     }
 
-    fun getLocateFileButton(): ImageView? {
-        return optionsActionBar?.findViewById(R.id.locateFile)
+    private fun showNonOptionsFab() {
+        if (areNonOptionsFabShown) {
+            getNonOptionsFab().forEach {
+                if (it.id == R.id.locateFileButtonFab && !isLocateFabEnabled) {
+                    it.hide()
+                    it.visibility = View.GONE
+                } else {
+                    it.show()
+                }
+            }
+        }
+    }
+
+    private fun hideNonOptionsFab() {
+        if (!areNonOptionsFabShown) {
+            getNonOptionsFab().forEach {
+                if (it.id == R.id.locateFileButtonFab && !isLocateFabEnabled) {
+                    it.hide()
+                    it.visibility = View.GONE
+                } else {
+                    it.hide()
+                }
+            }
+        }
     }
 
     private fun deleteFromFileViewmodelLists(toDelete: List<MediaFileInfo>) {
@@ -167,30 +236,43 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
     }
 
     fun setupCommonButtons() {
-        getShareButton()?.setOnClickListener {
-            getMediaFileAdapter()?.checkItemsList?.let {
-                checkedItems ->
-                val checkedMediaFiles = checkedItems.map { it.mediaFileInfo!! }
-                if (!checkedMediaFiles.isNullOrEmpty()) {
-                    performShareAction(checkedMediaFiles)
-                    getMediaFileAdapter()?.uncheckChecked()
-                } else {
-                    requireContext().showToastOnBottom(getString(R.string.no_item_selected))
+        getNonOptionsFab().forEach {
+            fab ->
+            fab.setOnClickListener {
+                when (fab.id) {
+                    R.id.deleteButtonFab -> {
+                        getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }
+                            ?.let { toDelete ->
+                                performDeleteAction(toDelete)
+                            }
+                    }
+                    R.id.shareButtonFab -> {
+                        getMediaFileAdapter()?.checkItemsList?.let {
+                            checkedItems ->
+                            val checkedMediaFiles = checkedItems.map { it.mediaFileInfo!! }
+                            if (!checkedMediaFiles.isNullOrEmpty()) {
+                                performShareAction(checkedMediaFiles)
+                                getMediaFileAdapter()?.uncheckChecked()
+                            } else {
+                                requireContext()
+                                    .showToastOnBottom(getString(R.string.no_item_selected))
+                            }
+                        }
+                    }
+                    R.id.locateFileButtonFab -> {
+                        getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }?.let {
+                            openFile ->
+                            if (openFile.isNotEmpty()) {
+                                openFile[0].startLocateFileAction(requireContext())
+                                getMediaFileAdapter()?.uncheckChecked()
+                            }
+                        }
+                    }
+                    else -> {
+                        // do nothing
+                    }
                 }
-            }
-        }
-        getTrashButton()?.setOnClickListener {
-            getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }?.let { toDelete ->
-                performDeleteAction(toDelete)
-            }
-        }
-        getLocateFileButton()?.setOnClickListener {
-            getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }?.let {
-                openFile ->
-                if (openFile.isNotEmpty()) {
-                    openFile[0].startLocateFileAction(requireContext())
-                    getMediaFileAdapter()?.uncheckChecked()
-                }
+                hideNonOptionsFab()
             }
         }
     }

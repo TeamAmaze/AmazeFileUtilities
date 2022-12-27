@@ -39,41 +39,10 @@
         app:srcCompat="@drawable/ic_round_thumb_down_off_alt_32"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_toLeftOf="@+id/locateFile"
-        android:layout_toStartOf="@id/locateFile"
-        android:layout_marginLeft="@dimen/eight_dp"
-        android:layout_marginStart="@dimen/eight_dp"
-        android:visibility="gone"
-        />
-    <ImageView
-        android:id="@+id/locateFile"
-        app:srcCompat="@drawable/ic_round_open_in_new_32"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_toLeftOf="@+id/shareFiles"
-        android:layout_toStartOf="@id/shareFiles"
-        android:layout_marginLeft="@dimen/eight_dp"
-        android:layout_marginStart="@dimen/eight_dp"
-        android:visibility="gone"
-        />
-    <ImageView
-        android:id="@+id/shareFiles"
-        app:srcCompat="@drawable/ic_twotone_share_32"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_toLeftOf="@+id/trashButton"
-        android:layout_toStartOf="@id/trashButton"
-        android:layout_marginLeft="@dimen/eight_dp"
-        android:layout_marginStart="@dimen/eight_dp"
-        />
-    <ImageView
-        android:id="@+id/trashButton"
-        app:srcCompat="@drawable/ic_round_delete_outline_32"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginLeft="@dimen/eight_dp"
         android:layout_marginStart="@dimen/eight_dp"
+        android:visibility="gone"
         />
 </RelativeLayout>
