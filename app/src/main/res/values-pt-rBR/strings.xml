@@ -5,27 +5,27 @@
     <!-- App name in launcher -->
     <string name="app_name_launcher">Amaze Utilities</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
+    <string name="about_app">Aplicativo utilitário de arquivos com reprodutores de mídia embutidos para todas as suas necessidades.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Amaze Image Viewer</string>
+    <string name="image_viewer">Visualizador de imagens Amaze</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">Image Viewer</string>
+    <string name="image_viewer_normal">Visualizador de imagem</string>
     <!-- Video player activity label -->
-    <string name="video_player">Amaze Video Player</string>
+    <string name="video_player">Reprodutor de vídeo Amaze</string>
     <!-- Video player dialog intent filter label -->
-    <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
+    <string name="video_player_dialog">Reprodutor de vídeo Amaze (dialog)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
+    <string name="video_player_full_screen">Reprodutor de vídeo Amaze (tela inteira)</string>
     <!-- Music player activity label -->
-    <string name="amaze_audio_player">Amaze Music Player</string>
+    <string name="amaze_audio_player">Reprodutor de música Amaze</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Amaze Pdf Viewer</string>
+    <string name="pdf_viewer">Visualizador de PDF Amaze</string>
     <!-- Epub activity label -->
-    <string name="epub_viewer">Amaze Epub Viewer</string>
+    <string name="epub_viewer">Visualizador de Epub Amaze</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">Amaze Doc Viewer</string>
+    <string name="docx_viewer">Visualizador de documentos Amaze</string>
     <!-- Image viewer dialog intent filter label -->
-    <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
+    <string name="intent_image_viewer_dialog">Visualizador de imagens Amaze (dialog)</string>
     <!-- Image viewer full screen intent label -->
     <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
     <!-- User didn't accept all storage permissions -->
@@ -855,4 +855,59 @@
     <string name="whatsapp_media">Whatsapp Media</string>
     <!-- large files in analysis tab -->
     <string name="large_files">Large Files</string>
+    <!-- purchase fdroid subscription -->
+    <string name="purchase_fdroid_title">Purchase</string>
+    <!-- purchase fdroid subscription summary -->
+    <string name="purchase_fdroid_message">You\'re running an Fdroid build.
+        You can unlock a lifetime subscription by donating any amount of your choice.
+        Please donate using one of the options below.
+        Once done please contact us through telegram / email by sharing your device ID and we\'ll unlock the subscription for you.</string>
+    <!-- purchase fdroid subscription paypal -->
+    <string name="purchase_fdroid_paypal">Paypal</string>
+    <!-- purchase fdroid subscription liberapay -->
+    <string name="purchase_fdroid_liberapay">Liberapay</string>
+    <!-- header summary in media list fragments -->
+    <string name="header_list_summary">%s • %s</string>
+    <!-- playlist in audio fragment -->
+    <string name="created_playlist">Playlist created</string>
+    <!-- playlist in audio fragment -->
+    <string name="could_not_create_playlist">Failed to create playlist</string>
+    <!-- playlist in audio fragment -->
+    <string name="insert_songs_playlist">Added %d songs to playlist %s</string>
+    <!-- playlist in audio fragment -->
+    <string name="failed_insert_songs_playlist">Failed to add songs</string>
+    <!-- playlist in audio fragment -->
+    <string name="failed_remove_songs_playlist">Failed to remove songs</string>
+    <!-- playlists header in audio fragment grouping -->
+    <string name="playlists">Playlists</string>
+    <!-- options in floating action button -->
+    <string name="options">Options</string>
+    <!-- options in floating action button to locate the file -->
+    <string name="locate">Locate</string>
+    <!-- options in floating action button to add to playlist -->
+    <string name="playlist">Playlist</string>
+    <!-- options in media headers when playlist is enabled -->
+    <string name="delete_playlist">Delete Playlist</string>
+    <!-- options in media headers when playlist is enabled -->
+    <string name="rename_playlist">Rename Playlist</string>
+    <!-- Delete playlist summary dialog -->
+    <string name="delete_playlist_message">You\'re about to permanently delete playlist %s.
+        Are you sure you want to proceed?</string>
+    <!-- Rename playlist summary dialog -->
+    <string name="rename_playlist_message">Please enter new playlist name</string>
+    <!-- Rename playlist summary dialog button -->
+    <string name="rename">Rename</string>
+    <!-- create playlist dialog in audio fragment -->
+    <string name="create_new_playlist">Create New</string>
+    <!-- remove from playlist dialog in audio fragment -->
+    <string name="remove">Remove</string>
+    <!-- Remove from playlist summary dialog -->
+    <string name="remove_from_playlist_message">You\'re about to remove selected songs from playlist(s).
+        Are you sure you want to proceed?</string>
+    <!-- add to playlist dialog in audio fragment -->
+    <string name="add_to_playlist">Add to Playlist</string>
+    <!-- create dialog in audio fragment -->
+    <string name="create">Create</string>
+    <!-- removed songs from playlist in audio fragment -->
+    <string name="removed_from_playlist">Removed from playlist(s)</string>
 </resources>
