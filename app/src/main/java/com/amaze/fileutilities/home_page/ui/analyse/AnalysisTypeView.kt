@@ -198,7 +198,6 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         view.setVerticalGravity(Gravity.CENTER_VERTICAL)
         view.background = resources.getDrawable(R.drawable.button_curved_unselected)
         view.setOnClickListener {
-//            rootView.performClick()
             this.performClick()
         }
         return view

@@ -32,7 +32,6 @@ class AudioPlaybackServiceConnection(private val activityRef: WeakReference<OnPl
     ServiceConnection {
 
     private var specificService: ServiceOperationCallback? = null
-    private var audioPlayerService: AudioPlayerService? = null
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder: ObtainableServiceBinder<out AudioPlayerService?> =
             service as ObtainableServiceBinder<out AudioPlayerService?>
