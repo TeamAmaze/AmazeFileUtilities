@@ -1,6 +1,7 @@
 Changelog:
+- Add support for playlists in music player
+- Add Floating Action Button for options menu
 - Add new analysis capabilities
-- Improved performance
-- Media player list titles now support actions such as delete, share or shuffle
+- Add group summary in media list screen
 - Music player performance fixes
 - Other bugfixes

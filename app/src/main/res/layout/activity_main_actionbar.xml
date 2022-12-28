@@ -23,8 +23,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal|center_vertical"
-        android:maxLines="1"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:marqueeRepeatLimit="marquee_forever"
+        />
     <ImageView
         android:id="@+id/searchActionBar"
         app:srcCompat="@drawable/ic_baseline_search_32"

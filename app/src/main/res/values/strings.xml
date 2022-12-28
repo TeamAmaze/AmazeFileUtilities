@@ -6,7 +6,7 @@
     <!-- App info shown in about screen -->
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.72</string>
+    <string name="app_version" translatable="false">v1.74</string>
     <!-- Image viewer activity label -->
     <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
@@ -875,4 +875,52 @@
     <string name="purchase_fdroid_paypal">Paypal</string>
     <!-- purchase fdroid subscription liberapay -->
     <string name="purchase_fdroid_liberapay">Liberapay</string>
+    <!-- header summary in media list fragments -->
+    <string name="header_list_summary">%s • %s</string>
+    <!-- playlist in audio fragment -->
+    <string name="created_playlist">Playlist created</string>
+    <!-- playlist in audio fragment -->
+    <string name="could_not_create_playlist">Failed to create playlist</string>
+    <!-- playlist in audio fragment -->
+    <string name="insert_songs_playlist">Added %d songs to playlist %s</string>
+    <!-- playlist in audio fragment -->
+    <string name="failed_insert_songs_playlist">Failed to add songs</string>
+    <!-- playlist in audio fragment -->
+    <string name="failed_remove_songs_playlist">Failed to remove songs</string>
+    <!-- playlists header in audio fragment grouping -->
+    <string name="playlists">Playlists</string>
+    <!-- options in floating action button -->
+    <string name="options">Options</string>
+    <!-- options in floating action button to locate the file -->
+    <string name="locate">Locate</string>
+    <!-- options in floating action button to add to playlist -->
+    <string name="playlist">Playlist</string>
+    <!-- options in media headers when playlist is enabled -->
+    <string name="delete_playlist">Delete Playlist</string>
+    <!-- options in media headers when playlist is enabled -->
+    <string name="rename_playlist">Rename Playlist</string>
+    <!-- Delete playlist summary dialog -->
+    <string name="delete_playlist_message">You\'re about to permanently delete playlist %s.
+        Are you sure you want to proceed?</string>
+    <!-- Rename playlist summary dialog -->
+    <string name="rename_playlist_message">Please enter new playlist name</string>
+    <!-- Rename playlist summary dialog button -->
+    <string name="rename">Rename</string>
+    <!-- create playlist dialog in audio fragment -->
+    <string name="create_new_playlist">Create New</string>
+    <!-- remove from playlist dialog in audio fragment -->
+    <string name="remove">Remove</string>
+    <!-- Remove from playlist summary dialog -->
+    <string name="remove_from_playlist_message">You\'re about to remove selected songs from playlist(s).
+        Are you sure you want to proceed?</string>
+    <!-- add to playlist dialog in audio fragment -->
+    <string name="add_to_playlist">Add to Playlist</string>
+    <!-- create dialog in audio fragment -->
+    <string name="create">Create</string>
+    <!-- removed songs from playlist in audio fragment -->
+    <string name="removed_from_playlist">Removed from playlist(s)</string>
+    <!-- play next song button in options in audio fragment -->
+    <string name="play_next">PLAY NEXT</string>
+    <!-- play next song button in options in audio fragment -->
+    <string name="play_next_success">Song added to queue</string>
 </resources>

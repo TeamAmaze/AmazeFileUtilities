@@ -16,7 +16,9 @@
         app:rippleColor="@color/highlight_yellow"
         style="@style/MaterialButton.White"
         android:textColor="@color/navy_blue"
+        android:maxEms="15"
+        android:ellipsize="marquee"
         android:singleLine="true"
-        android:maxLength="25"
+        android:marqueeRepeatLimit="marquee_forever"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

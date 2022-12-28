@@ -31,13 +31,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioPlayerService
+import com.amaze.fileutilities.audio_player.AudioUtils
 import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeHeaderView
 import com.amaze.fileutilities.home_page.ui.options.CastActivity
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
+import com.amaze.fileutilities.utilis.FileUtils
 import com.amaze.fileutilities.utilis.HeaderViewHolder
 import com.amaze.fileutilities.utilis.ListBannerViewHolder
-import com.amaze.fileutilities.utilis.Utils
+import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.executeAsyncTask
+import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 
 class MediaFileAdapter(
     val context: Context,
@@ -45,13 +48,16 @@ class MediaFileAdapter(
     private val optionsMenuSelected: OptionsMenuSelected,
     isGrid: Boolean,
     private var sortingPreference: MediaFileListSorter.SortingPreference,
-    private val mediaFileInfoList: MutableList<MediaFileInfo>,
+    private var mediaFileInfoList: MutableList<MediaFileInfo>,
     private val mediaListType: Int,
     private val drawBannerCallback: (mediaTypeHeader: MediaTypeHeaderView) -> Unit,
     listItemPressedCallback: (mediaFileInfo: MediaFileInfo) -> Unit,
     toggleCheckCallback: (checkedSize: Int, itemsCount: Int, bytesFormatted: String) -> Unit,
     private val titleOverflowPopupClick:
-        ((item: MenuItem, actionItems: List<MediaFileInfo>) -> Unit)?
+        ((item: MenuItem, actionItems: List<MediaFileInfo>) -> Unit)?,
+    // callback called if we want to refresh data when user tries to switch groupping / sorting
+    // eg. in case of audio player we would want to utilise different dataset for playlists
+    private val invalidateDataCallback: (() -> Unit)?
 ) : AbstractMediaFilesAdapter(
     context,
     preloader, isGrid, listItemPressedCallback, toggleCheckCallback
@@ -122,16 +128,57 @@ class MediaFileAdapter(
                         ?: context.resources.getString(R.string.undetermined)
                 )
 
+                val headerItems = mediaFileInfoList
+                    .filter { it.listHeader == mediaFileListItems[position].header }
+                var headerBytes = 0L
+                headerItems.forEach {
+                    headerBytes += it.longSize
+                }
+
+                if (mediaListType == MEDIA_TYPE_AUDIO) {
+                    var headerTime = 0L
+                    headerItems.forEach {
+                        headerTime += it.extraInfo?.audioMetaData?.duration ?: 0L
+                    }
+                    holder.setSummaryText(
+                        context.resources.getString(
+                            R.string.header_list_summary,
+                            String.format("%s", headerItems.size),
+                            String.format("%s", AudioUtils.getReadableDurationString(headerTime))
+                        )
+                    )
+                } else {
+                    holder.setSummaryText(
+                        context.resources.getString(
+                            R.string.header_list_summary,
+                            String.format("%s", headerItems.size),
+                            String.format("%s", FileUtils.formatStorageLength(context, headerBytes))
+                        )
+                    )
+                }
+                val sharedPrefs = context.getAppCommonSharedPreferences()
+                val groupByPref = sharedPrefs.getInt(
+                    MediaFileListSorter.SortingPreference
+                        .getGroupByKey(MEDIA_TYPE_AUDIO),
+                    PreferencesConstants.DEFAULT_MEDIA_LIST_GROUP_BY
+                )
+
                 holder.setOverflowButtons(
                     context,
-                    if (mediaListType == MEDIA_TYPE_AUDIO)
-                        R.menu.audio_list_overflow else R.menu.generic_list_overflow
+                    if (mediaListType == MEDIA_TYPE_AUDIO) {
+                        if (groupByPref == MediaFileListSorter.GROUP_PLAYLISTS) {
+                            R.menu.audio_playlist_overflow
+                        } else {
+                            R.menu.audio_list_overflow
+                        }
+                    } else {
+                        R.menu.generic_list_overflow
+                    }
                 ) {
                     item ->
                     titleOverflowPopupClick?.invoke(
                         item,
-                        mediaFileInfoList
-                            .filter { it.listHeader == mediaFileListItems[position].header }
+                        headerItems
                     )
                     true
                 }
@@ -159,8 +206,6 @@ class MediaFileAdapter(
                     } else {
                         holder.currentPlayingImageView.visibility = View.GONE
                     }
-                    Utils.marqueeAfterDelay(2000, holder.infoTitle)
-                    Utils.marqueeAfterDelay(2000, holder.infoSummary)
                     holder.root.setOnClickListener {
                         // for audio list fragment we want to just show bottom sheet
                         val listItem = mediaFileListItems[position]
@@ -224,12 +269,16 @@ class MediaFileAdapter(
     }
 
     fun invalidateData(sortPref: MediaFileListSorter.SortingPreference) {
-        mediaFileInfoList.run {
-            sortingPreference = sortPref
-            // triggers set call
-            mediaFileListItems = mutableListOf()
-            notifyDataSetChanged()
+        if (mediaListType == MEDIA_TYPE_AUDIO) {
+            // callback to refresh data as groupping might've changed from playlists to normal list
+            invalidateDataCallback?.invoke()
+            return
         }
+        sortingPreference = sortPref
+
+        // triggers set call
+        mediaFileListItems = mutableListOf()
+        notifyDataSetChanged()
     }
 
     fun invalidateCurrentPlayingAnimation(uri: Uri) {
@@ -256,7 +305,7 @@ class MediaFileAdapter(
     }
 
     private fun setBannerResources(holder: ListBannerViewHolder) {
-        when (mediaFileInfoList[0].extraInfo?.mediaType) {
+        when (mediaListType) {
             MediaFileInfo.MEDIA_TYPE_AUDIO -> {
                 holder.mediaTypeHeaderView.setHeaderColor(
                     ResourcesCompat

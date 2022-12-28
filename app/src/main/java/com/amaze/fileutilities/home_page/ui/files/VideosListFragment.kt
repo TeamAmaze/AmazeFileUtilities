@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentVideosListBinding
 import com.amaze.fileutilities.home_page.MainActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import me.zhanghai.android.fastscroll.PopupStyles
 
@@ -60,6 +61,62 @@ class VideosListFragment : AbstractMediaInfoListFragment() {
         val root: View = binding.root
         (requireActivity() as MainActivity).setCustomTitle(resources.getString(R.string.videos))
         (activity as MainActivity).invalidateBottomBar(false)
+        setupAdapter()
+        return root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (requireActivity() as MainActivity)
+            .setCustomTitle(resources.getString(R.string.title_utilities))
+        (activity as MainActivity).invalidateBottomBar(true)
+        _binding = null
+    }
+
+    override fun getFileStorageSummaryAndMediaFileInfoPair(): Pair<FilesViewModel.StorageSummary,
+        List<MediaFileInfo>?>? {
+        return if (::fileStorageSummaryAndMediaFileInfo.isInitialized)
+            fileStorageSummaryAndMediaFileInfo else null
+    }
+
+    override fun getMediaAdapterPreloader(): MediaAdapterPreloader {
+        if (preloader == null) {
+            preloader = MediaAdapterPreloader(
+                requireContext(),
+                R.drawable.ic_outline_video_library_32
+            )
+        }
+        return preloader!!
+    }
+
+    override fun getRecyclerView(): RecyclerView {
+        return binding.videosListView
+    }
+
+    override fun getMediaListType(): Int {
+        return MediaFileAdapter.MEDIA_TYPE_VIDEO
+    }
+
+    override fun getAllOptionsFAB(): List<FloatingActionButton> {
+        return arrayListOf(
+            binding.optionsButtonFab, binding.deleteButtonFab,
+            binding.shareButtonFab, binding.locateFileButtonFab
+        )
+    }
+
+    override fun showOptionsCallback() {
+        // do nothing
+    }
+
+    override fun hideOptionsCallback() {
+        // do nothing
+    }
+
+    override fun getItemPressedCallback(mediaFileInfo: MediaFileInfo) {
+        // do nothing
+    }
+
+    override fun setupAdapter() {
         filesViewModel.usedVideosSummaryTransformations().observe(
             viewLifecycleOwner
         ) { metaInfoAndSummaryPair ->
@@ -96,42 +153,9 @@ class VideosListFragment : AbstractMediaInfoListFragment() {
                 }
             }
         }
-        return root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        (requireActivity() as MainActivity)
-            .setCustomTitle(resources.getString(R.string.title_utilities))
-        (activity as MainActivity).invalidateBottomBar(true)
-        _binding = null
-    }
-
-    override fun getFileStorageSummaryAndMediaFileInfoPair(): Pair<FilesViewModel.StorageSummary,
-        List<MediaFileInfo>?>? {
-        return if (::fileStorageSummaryAndMediaFileInfo.isInitialized)
-            fileStorageSummaryAndMediaFileInfo else null
-    }
-
-    override fun getMediaAdapterPreloader(): MediaAdapterPreloader {
-        if (preloader == null) {
-            preloader = MediaAdapterPreloader(
-                requireContext(),
-                R.drawable.ic_outline_video_library_32
-            )
-        }
-        return preloader!!
-    }
-
-    override fun getRecyclerView(): RecyclerView {
-        return binding.videosListView
-    }
-
-    override fun getMediaListType(): Int {
-        return MediaFileAdapter.MEDIA_TYPE_VIDEO
-    }
-
-    override fun getItemPressedCallback(mediaFileInfo: MediaFileInfo) {
+    override fun adapterItemSelected(checkedCount: Int) {
         // do nothing
     }
 }

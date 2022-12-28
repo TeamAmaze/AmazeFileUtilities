@@ -41,9 +41,7 @@ import com.amaze.fileutilities.utilis.log
 import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.amaze.fileutilities.utilis.showToastOnBottom
-import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
-import com.mikepenz.aboutlibraries.util.Colors
 
 class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickListener {
 
@@ -180,8 +178,6 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
                     .withAboutSpecial1(getString(R.string.licenses))
                     .withAboutSpecial1Description(getString(R.string.amaze_license))
                     .withLicenseShown(true)
-                    .withActivityColor(Colors(R.color.blue, R.color.blue))
-                libsBuilder.withActivityStyle(Libs.ActivityStyle.DARK)
                 libsBuilder.start(requireContext())
             }
             KEY_SUBSCRIPTION_STATUS -> {

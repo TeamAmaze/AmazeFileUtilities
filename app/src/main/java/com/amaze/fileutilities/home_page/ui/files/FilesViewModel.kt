@@ -40,6 +40,7 @@ import androidx.lifecycle.viewModelScope
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioUtils
+import com.amaze.fileutilities.audio_player.playlist.PlaylistLoader
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.BlurAnalysis
 import com.amaze.fileutilities.home_page.database.ImageAnalysis
@@ -118,6 +119,8 @@ class FilesViewModel(val applicationContext: Application) :
     private var usedVideosSummaryTransformations: LiveData<Pair<StorageSummary,
             ArrayList<MediaFileInfo>>?>? = null
     private var usedAudiosSummaryTransformations: LiveData<Pair<StorageSummary,
+            ArrayList<MediaFileInfo>>?>? = null
+    var usedPlaylistsSummaryTransformations: LiveData<Pair<StorageSummary,
             ArrayList<MediaFileInfo>>?>? = null
     private var usedImagesSummaryTransformations: LiveData<Pair<StorageSummary,
             ArrayList<MediaFileInfo>>?>? = null
@@ -251,6 +254,18 @@ class FilesViewModel(val applicationContext: Application) :
             }
         }
         return usedAudiosSummaryTransformations!!
+    }
+
+    fun usedPlaylistsSummaryTransformations():
+        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
+        if (usedPlaylistsSummaryTransformations == null) {
+            usedPlaylistsSummaryTransformations =
+                Transformations.switchMap(internalStorageStats()) {
+                    input ->
+                    getPlaylistsSummaryLiveData(input)
+                }
+        }
+        return usedPlaylistsSummaryTransformations!!
     }
 
     fun usedVideosSummaryTransformations():
@@ -1476,7 +1491,8 @@ class FilesViewModel(val applicationContext: Application) :
             service.postValidation(
                 TrialValidationApi.TrialRequest(
                     TrialValidationApi.AUTH_TOKEN, deviceId,
-                    applicationContext.packageName + "_" + BuildConfig.API_REQ_TRIAL_APP_HASH,
+                    applicationContext.packageName +
+                        "_" + BuildConfig.API_REQ_TRIAL_APP_HASH,
                     subscriptionStatus,
                     purchaseToken
                 )
@@ -1691,6 +1707,57 @@ class FilesViewModel(val applicationContext: Application) :
                     val albumBitmap = AudioUtils
                         .getAlbumBitmap(applicationContext.applicationContext, albumUri)
                     mediaFileInfo.extraInfo?.audioMetaData?.albumArt = albumBitmap
+                }
+            }
+        }
+    }
+
+    private fun getPlaylistsSummaryLiveData(storageSummary: StorageSummary?):
+        LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(null)
+            if (storageSummary == null) {
+                return@liveData
+            }
+            val dao = AppDatabase.getInstance(applicationContext).pathPreferencesDao()
+            val pathPreferences = dao.findByFeature(PathPreferences.FEATURE_AUDIO_PLAYER)
+            val playlists = PlaylistLoader.getAllPlaylists(applicationContext)
+            val playlistFiles = arrayListOf<MediaFileInfo>()
+            var mediaStorageSummary: StorageSummary? = null
+            playlists.forEach {
+                if (it.id != -1L) {
+                    val metaInfoAndSummaryPair = CursorUtils
+                        .listPlaylists(
+                            applicationContext.applicationContext,
+                            it.id,
+                            pathPreferences.map {
+                                pathPrefs ->
+                                pathPrefs.path
+                            }
+                        )
+                    metaInfoAndSummaryPair.second.forEach {
+                        mediaFileInfo ->
+                        mediaFileInfo.extraInfo?.audioMetaData?.playlist = it
+                    }
+                    playlistFiles.addAll(metaInfoAndSummaryPair.second)
+                    mediaStorageSummary = metaInfoAndSummaryPair.first
+                } else {
+                    log.warn("invalid playlist {}", it)
+                }
+            }
+            mediaStorageSummary?.let {
+                setMediaInfoSummary(it, storageSummary)
+                emit(Pair(it, playlistFiles))
+                playlistFiles.forEach {
+                    mediaFileInfo ->
+                    // load album arts lazily
+                    mediaFileInfo.extraInfo?.audioMetaData?.albumId?.let {
+                        albumId ->
+                        val albumUri = AudioUtils.getMediaStoreAlbumCoverUri(albumId)
+                        val albumBitmap = AudioUtils
+                            .getAlbumBitmap(applicationContext.applicationContext, albumUri)
+                        mediaFileInfo.extraInfo?.audioMetaData?.albumArt = albumBitmap
+                    }
                 }
             }
         }

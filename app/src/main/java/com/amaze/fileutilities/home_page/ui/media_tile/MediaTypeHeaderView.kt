@@ -314,14 +314,14 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(
                     this.putInt(
                         MediaFileListSorter.SortingPreference.getGroupByKey(mediaListType),
                         groupByType
-                    ).apply()
+                    ).commit()
                 }
                 sortingPreference.groupBy = groupByType
                 isAsc = !isAsc
                 sharedPreferences.edit().putBoolean(
                     MediaFileListSorter.SortingPreference.getIsGroupByAscKey(mediaListType),
                     isAsc
-                ).apply()
+                ).commit()
                 sortingPreference.isGroupByAsc = isAsc
                 optionsMenuSelected.groupBy(sortingPreference)
             }

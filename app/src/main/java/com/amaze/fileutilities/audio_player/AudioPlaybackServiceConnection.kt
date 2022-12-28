@@ -22,6 +22,7 @@ package com.amaze.fileutilities.audio_player
 
 import android.content.ComponentName
 import android.content.ServiceConnection
+import android.net.Uri
 import android.os.IBinder
 import com.amaze.fileutilities.utilis.ObtainableServiceBinder
 import com.google.android.exoplayer2.PlaybackParameters
@@ -48,6 +49,10 @@ class AudioPlaybackServiceConnection(private val activityRef: WeakReference<OnPl
         activityRef.get()?.serviceDisconnected()
         specificService?.getPlaybackInfoUpdateCallback(null)
     }
+
+    fun getAudioServiceInstance(): ServiceOperationCallback? {
+        return specificService
+    }
 }
 
 interface ServiceOperationCallback {
@@ -64,4 +69,5 @@ interface ServiceOperationCallback {
     fun getRepeat(): Int
     fun invokePlaybackProperties(playbackSpeed: Float, pitch: Float): Unit
     fun getPlaybackParameters(): PlaybackParameters?
+    fun insertPlayNextSong(uri: Uri)
 }

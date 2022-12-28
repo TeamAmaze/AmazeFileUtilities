@@ -5,629 +5,628 @@
     <!-- App name in launcher -->
     <string name="app_name_launcher">כלי Amaze</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">אפליקציית File Utility עם נגני מדיה מובנים לכל הצרכים שלך.</string>
+    <string name="about_app">יישומון כלי עזר לקבצים עם נגני מדיה מובנים לכל הצרכים שלך.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Amaze Image Viewer</string>
+    <string name="image_viewer">מציג תמונות מבית Amaze</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">Image Viewer</string>
+    <string name="image_viewer_normal">מציג תמונות</string>
     <!-- Video player activity label -->
-    <string name="video_player">Amaze Video Player</string>
+    <string name="video_player">נגן סרטונים מבית Amaze</string>
     <!-- Video player dialog intent filter label -->
-    <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
+    <string name="video_player_dialog">נגן סרטונים מבית Amaze (חלונית)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
+    <string name="video_player_full_screen">נגן סרטונים מבית Amaze (מסך מלא)</string>
     <!-- Music player activity label -->
-    <string name="amaze_audio_player">Amaze Music Player</string>
+    <string name="amaze_audio_player">נגן מוזיקה מבית Amaze</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Amaze Pdf Viewer</string>
+    <string name="pdf_viewer">מציג תמונות מבית Amaze</string>
     <!-- Epub activity label -->
-    <string name="epub_viewer">Amaze Epub Viewer</string>
+    <string name="epub_viewer">מציג Epub מבית Amaze</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">Amaze Doc Viewer</string>
+    <string name="docx_viewer">מציג מסמכים מבית Amaze</string>
     <!-- Image viewer dialog intent filter label -->
-    <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
+    <string name="intent_image_viewer_dialog">מציג תמונות מבית Amaze (חלונית)</string>
     <!-- Image viewer full screen intent label -->
-    <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
+    <string name="intent_image_viewer_full_screen">מציג תמונות מבית Amaze (מסך מלא)</string>
     <!-- User didn't accept all storage permissions -->
-    <string name="grantfailed">Storage permission not granted</string>
+    <string name="grantfailed">לא הוענקו הרשאות לאחסון</string>
     <!-- User didn't accept location permission for transfer files tab -->
-    <string name="grant_location_failed">Location permission not granted</string>
+    <string name="grant_location_failed">לא הוענקו הרשאות למיקום</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
+    <string name="grant_storage_read_permission">ליישומון דרושה גישה לקרוא מהאחסון לביצועים מיטביים.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_permission">Grant permission</string>
+    <string name="grant_permission">הענקת הרשאה</string>
     <!-- Grant permission button for welcome screen -->
-    <string name="grant">Grant</string>
+    <string name="grant">הענקה</string>
     <!-- Cancel button in dialogs mainly to cancel any operation -->
-    <string name="cancel">Cancel</string>
+    <string name="cancel">ביטול</string>
     <!-- Play button label in music player notification -->
-    <string name="play">Play</string>
+    <string name="play">נגינה</string>
     <!-- Shuffle button label in music player notification -->
-    <string name="shuffle">Shuffle</string>
+    <string name="shuffle">ערבוב</string>
     <!-- Repeat button label in music player notification -->
-    <string name="repeat">Repeat</string>
+    <string name="repeat">חזרה</string>
     <!-- Previous button label in music player notification -->
-    <string name="previous">Previous</string>
+    <string name="previous">הקודם</string>
     <!-- Next button label in music player notification -->
-    <string name="next">Next</string>
+    <string name="next">הבא</string>
     <!-- Not allowed to perform any operation -->
-    <string name="not_allowed">Not allowed</string>
+    <string name="not_allowed">לא מורשה</string>
     <!-- Audio player notification channel description -->
-    <string name="audio_player_service_description">Plays audio for Amaze File Utilities</string>
+    <string name="audio_player_service_description">השמעת קטעי קול לכלי עזר לקבצים מבית Amaze</string>
     <!-- Invert colors in document / pdf viewer -->
-    <string name="invert_colors">Invert colors</string>
+    <string name="invert_colors">היפוך צבעים</string>
     <!-- Location any list eg. images or videos list -->
-    <string name="loading">Loading…</string>
+    <string name="loading">בטעינה…</string>
     <!-- Analyse tab on app main screen bottom tab -->
-    <string name="title_analyse">Analyse</string>
+    <string name="title_analyse">ניתוח</string>
     <!-- Utilities tab on app main screen bottom tab -->
-    <string name="title_utilities">Utilities</string>
+    <string name="title_utilities">כלי עזר</string>
     <!-- Transfer files tab on app main screen bottom tab -->
-    <string name="title_transfer">Transfer</string>
+    <string name="title_transfer">העברה</string>
     <!-- Scan nearby connections button in transfer tab -->
-    <string name="title_scan">Scan</string>
+    <string name="title_scan">סריקה</string>
     <!-- Stop scan nearby devices in transfer tab -->
-    <string name="title_stop_scan">Stop</string>
+    <string name="title_stop_scan">עצירה</string>
     <!-- Internal storage on app main screen -->
-    <string name="internal_storage">Internal Storage</string>
+    <string name="internal_storage">אחסון פנימי</string>
     <!-- Images title in images list screen in utilities tab -->
-    <string name="images">Images</string>
+    <string name="images">תמונות</string>
     <!-- Audios title in audios list screen in utilities tab -->
-    <string name="audios">Audios</string>
+    <string name="audios">קטעי שמע</string>
     <!-- Videos title in videos list screen in utilities tab -->
-    <string name="videos">Videos</string>
+    <string name="videos">סרטונים</string>
     <!-- Documents title in documents list screen in utilities tab -->
-    <string name="documents">Documents</string>
+    <string name="documents">מסמכים</string>
     <!-- Number of files in utilities tab individual list screens eg in images / number of images -->
-    <string name="num_of_files">%s Files</string>
+    <string name="num_of_files">%s קבצים</string>
     <!-- Number of total media files on main screen -->
-    <string name="num_of_media_files">%s Media Files</string>
+    <string name="num_of_media_files">%s קובצי מדיה</string>
     <!-- Used space in utilties tab in individual lists screen eg in images - Used: 300 MB / 1 GB -->
-    <string name="used_space">Used: %s</string>
+    <string name="used_space">בשימוש: %s</string>
     <!-- Send file in transfer tab -->
-    <string name="send">Send</string>
+    <string name="send">שליחה</string>
     <!-- Receive file in transfer tab -->
-    <string name="receive">Receive</string>
+    <string name="receive">קבלה</string>
     <!-- Stop receiving file in transfer tab -->
-    <string name="stop_receiving">Stop Receiving</string>
+    <string name="stop_receiving">עצירת הקבלה</string>
     <!-- Calculating number of media files in utilities tab on app startup -->
-    <string name="calculating">Calculating…</string>
+    <string name="calculating">מתבצע חישוב…</string>
     <!-- Recent files on utilities tab main screen -->
-    <string name="recent_files">Recent Files</string>
+    <string name="recent_files">קבצים אחרונים</string>
     <!-- No files found after searching media files -->
-    <string name="no_files">No files</string>
+    <string name="no_files">אין קבצים</string>
     <!-- Number of media files in utilities tab in individual list screen eg in images / number of total files -->
-    <string name="media_files_subs">Media Files: %s</string>
+    <string name="media_files_subs">קובצי מדיה: %s</string>
     <!-- Search screen title bar hint -->
-    <string name="action_bar_search_hint">Search for files…</string>
+    <string name="action_bar_search_hint">חיפוש קבצים…</string>
     <!-- Generic message shown when loading results of list or operation -->
-    <string name="please_wait">Please wait…</string>
+    <string name="please_wait">נא להמתין…</string>
     <!-- No search results found -->
-    <string name="its_quiet_here">It\'s quiet in here…</string>
+    <string name="its_quiet_here">שקט כאן…</string>
     <!-- Settings screen title -->
-    <string name="settings">Settings</string>
+    <string name="settings">הגדרות</string>
     <!-- About screen title -->
-    <string name="about">About</string>
+    <string name="about">על אודות</string>
     <!-- Copyright dialog content in about section -->
-    <string name="rights_reserved">Copyright © 2021–2022 Team Amaze\nAll Rights Reserved</string>
+    <string name="rights_reserved">כל הזכויות שמורות © 2021–2022 צוות Amaze\nכל הזכויות שמורות</string>
     <!-- Open source licenses in about section -->
-    <string name="open_source_licenses">Open-source licenses</string>
+    <string name="open_source_licenses">רישיונות קוד פתוח</string>
     <!-- Privacy policy label in about section -->
-    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy">מדיניות פרטיות</string>
     <!-- Licenses label in about section -->
-    <string name="licenses">Licenses</string>
+    <string name="licenses">רישיונות</string>
     <!-- Information about a pdf / doc file -->
-    <string name="information">Information</string>
+    <string name="information">פרטים</string>
     <!-- Unable to open pdf / doc / video / image file -->
-    <string name="unsupported_content">Unsupported content</string>
+    <string name="unsupported_content">תוכן לא נתמך</string>
     <!-- Group utilities list eg images / videos by parent folder -->
-    <string name="parent">Parent</string>
+    <string name="parent">הורה</string>
     <!-- Group utilities list eg images / videos by date -->
-    <string name="date">Date</string>
+    <string name="date">תאריך</string>
     <!-- Group utilities list eg iamges / videos by name -->
-    <string name="name">Name</string>
+    <string name="name">שם</string>
     <!-- Show utilities list by list view -->
-    <string name="list_view">List View</string>
+    <string name="list_view">תצוגת רשימה</string>
     <!-- Show utilities list by grid view -->
-    <string name="grid_view">Grid View</string>
+    <string name="grid_view">תצוגת רשת</string>
     <!-- Sort utilities by size -->
-    <string name="size">Size</string>
+    <string name="size">גודל</string>
     <!-- Group audio utilities list by album names  -->
-    <string name="album">Album</string>
+    <string name="album">אלבום</string>
     <!-- Group audio utilities list by artist name -->
-    <string name="artist">Artist</string>
+    <string name="artist">יוצר</string>
     <!-- Sort audio / video utilities list by duration -->
-    <string name="duration">Duration</string>
+    <string name="duration">משך</string>
     <!-- Crash fallback screen title -->
-    <string name="sorry_string">Sorry, that should not have happened.</string>
+    <string name="sorry_string">זה לא אמור היה לקרות, סליחה.</string>
     <!-- Crash fallback screen report by email -->
-    <string name="error_report_button_text">Report this error via e-mail</string>
+    <string name="error_report_button_text">דיווח על השגיאה הזאת בדוא״ל</string>
     <!-- Crash fallback screen report by telegram -->
-    <string name="error_report_button_telegram">Report this error via telegram</string>
+    <string name="error_report_button_telegram">דיווח על השגיאה הזאת בטלגרם</string>
     <!-- Crash fallback screen copy report -->
-    <string name="copy_for_github">Copy formatted report</string>
+    <string name="copy_for_github">העתקת דוח מעוצב</string>
     <!-- Crash fallback screen report on github -->
-    <string name="error_report_open_issue_button_text">Report on GitHub</string>
+    <string name="error_report_open_issue_button_text">דיווח ב־GitHub</string>
     <!-- Crash fallback screen info -->
-    <string name="error_report_open_github_notice">Please check whether an issue discussing your crash already exists.</string>
+    <string name="error_report_open_github_notice">נא לבדוק אם כבר קיים דיווח שדן בקריסה שלך.</string>
     <!-- Toast shown when we failed to display crash fallback screen -->
-    <string name="error_snackbar_message">Sorry, something went wrong.</string>
+    <string name="error_snackbar_message">משהו השתבש, עמך הסליחה.</string>
     <!-- Crash fallback screen report -->
-    <string name="error_snackbar_action">Report</string>
+    <string name="error_snackbar_action">דיווח</string>
     <!-- Crash fallback screen info about device -->
-    <string name="what_device_headline">Info:</string>
+    <string name="what_device_headline">פרטים:</string>
     <!-- Crash fallback screen info about crash -->
-    <string name="what_happened_headline">What happened:</string>
+    <string name="what_happened_headline">מה קרה:</string>
     <!-- Crash fallback screen info about device -->
-    <string name="info_labels">What:\\nRequest:\\nGMT Time:\\nPackage:\\nVersion:\\nOS version:\\nDevice:\\nModel:\\nProduct:\\nDevice ID:</string>
+    <string name="info_labels">מה:\\nבקשה:\\nשעה ב־GMT:\\nחבילה:\\nגרסהn:\\nגרסת מערכת הפעלה:\\nמכשיר:\\nדגם:\\nמוצר:\\nמזהה מכשיר:</string>
     <!-- Crash fallback screen ask user input -->
-    <string name="your_comment">Your comment (in English):</string>
+    <string name="your_comment">ההערה שלך (באנגלית):</string>
     <!-- Crash fallback screen show more details -->
-    <string name="error_details_headline">Details:</string>
+    <string name="error_details_headline">פרטים:</string>
     <!-- Crash fallback screen info -->
-    <string name="app_ui_crash">App/UI crashed</string>
+    <string name="app_ui_crash">יישומון/מנשק משתמש קרסו</string>
     <!-- Crash fallback screen title -->
-    <string name="error_report_title">Error report</string>
+    <string name="error_report_title">דוח שגיאה</string>
     <!-- Crash fallback screen crash report copied -->
-    <string name="crash_report_copied">Crash report copied to clipboard</string>
+    <string name="crash_report_copied">דוח הקריסה הועתק ללוח הגזירים</string>
     <!-- Crash fallback screen report copied to clipboard -->
-    <string name="clipboard_path_copy">Path copied to clipboard</string>
+    <string name="clipboard_path_copy">הנתיב הועתק ללוח הגזירים</string>
     <!-- Pdf activity password prompt -->
-    <string name="pdf_password_title">Password required</string>
+    <string name="pdf_password_title">דרושה סיסמה</string>
     <!-- Pdf activity password required info -->
-    <string name="pdf_password_required">Please enter the password to open this document</string>
+    <string name="pdf_password_required">נא למלא את הסיסמה כדי לפתוח את המסמך הזה</string>
     <!-- Generic ok button in dialogs -->
-    <string name="ok">OK</string>
+    <string name="ok">אישור</string>
     <!-- Pdf activity wrong password entered -->
-    <string name="wrong_password">Wrong password</string>
+    <string name="wrong_password">סיסמה שגויה</string>
     <!-- Generic message for any operation not supported -->
-    <string name="unsupported_operation">Unsupported Operation</string>
+    <string name="unsupported_operation">פעולה לא נתמכת</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>Since Android 11, Google requests File Managers to request user permission for managing all files on the device. Details <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">here</a>.
-        \n\nAmaze File Utilities needs this permission too. After pressing &quot;Grant&quot;here, please select <b>Allow access to manage all files</b> option on the next screen.
-        \n\n<font color="#ff6347"><i>Canceling this dialog will exit the app.</i></font></body></html></string>
+    <string name="grant_all_files_permission"><html><body>מאז Android 11, Google מבקשת ממנהלי הקבצים לבקש הרשאת משתמש לניהול כל הקבצים במכשיר.  פרטים <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">כאן</a>.
+         \n\nAmaze File Utilities זקוקה גם להרשאה זו.  לאחר הקשה על &quot;הענקה&quot;כאן, אנא בחר באפשרות <b>אפשר גישה לניהול כל הקבצים</b> במסך הבא.
+         \n\n<font color="#ff6347"><i>ביטול דו-שיח זה יגרום ליציאה מהאפליקציה.</i></font></body></html></string>
     <!-- Pdf activity copy page content title -->
-    <string name="copy_page">Copy page</string>
+    <string name="copy_page">העתקת דף</string>
     <!-- Pdf activity view bookmarks -->
-    <string name="bookmarks">Bookmarks</string>
+    <string name="bookmarks">סימניות</string>
     <!-- Pdf activity pdf title -->
-    <string name="title">Title</string>
+    <string name="title">כותרת</string>
     <!-- Pdf activity pdf author -->
-    <string name="author">Author</string>
+    <string name="author">מחבר</string>
     <!-- Pdf activity pdf creator -->
-    <string name="creator">Creator</string>
+    <string name="creator">יוצר</string>
     <!-- Pdf activity pdf creation date -->
-    <string name="creation_date">Creation date</string>
+    <string name="creation_date">מועד יצירה</string>
     <!-- Pdf activity pdf modification date -->
-    <string name="modification_date">Modification Date</string>
+    <string name="modification_date">מועד שינוי</string>
     <!-- Pdf activity pdf subject -->
-    <string name="subject">Subject</string>
+    <string name="subject">נושא</string>
     <!-- Pdf activity pdf keywords -->
-    <string name="keywords">Keywords</string>
+    <string name="keywords">מילות מפתח</string>
     <!-- Pdf activity pdf producer -->
-    <string name="producer">Producer</string>
+    <string name="producer">מפיק</string>
     <!-- Generic dialog close button -->
-    <string name="close">Close</string>
+    <string name="close">סגירה</string>
     <!-- Analysing internal storage shown in analysis tab -->
-    <string name="analysing">Analysing…</string>
+    <string name="analysing">מתבצע ניתוח…</string>
     <!-- Pdf activity page content copied -->
-    <string name="page_copied_to_clipboard">Page content copied to clipboard</string>
+    <string name="page_copied_to_clipboard">תוכן הדף הועתק ללוח הגזירים</string>
     <!-- Clean button in analysis tab to clean junk files -->
-    <string name="clean">Clean</string>
+    <string name="clean">ניקוי</string>
     <!-- Blurred images label in analysis -->
-    <string name="blurred_pics">Blurred</string>
+    <string name="blurred_pics">מטושטש</string>
     <!-- Low light label in analysis -->
-    <string name="low_light">Low-Light</string>
+    <string name="low_light">תאורה חלשה</string>
     <!-- Memes label in analysis -->
-    <string name="memes">Memes</string>
+    <string name="memes">ממים</string>
     <!-- Sad images label in analysis -->
-    <string name="frown">Frown</string>
+    <string name="frown">כעס</string>
     <!-- Sad images analysis hint -->
-    <string name="frown_hint">Images that doesn\'t have smiling faces</string>
+    <string name="frown_hint">תמונות שאין בהן פרצופים מחייכים</string>
     <!-- Closed eyes analysis label -->
-    <string name="closed_eyes">Closed Eyes</string>
+    <string name="closed_eyes">עיניים עצומות</string>
     <!-- Closed eyes analysis hint -->
-    <string name="closed_eyes_hint">Images that have people with closed eyes</string>
+    <string name="closed_eyes_hint">תמונות שמצולמים בהן אנשים עם עיניים עצומות</string>
     <!-- Distracted images analysis label -->
-    <string name="distracted">Distracted</string>
+    <string name="distracted">הסחה</string>
     <!-- Distracted images analysis hint -->
-    <string name="distracted_hint">Images that have people looking elsewhere</string>
+    <string name="distracted_hint">תמונות שמצולמים בהן אנשים שמסיטים את המבט</string>
     <!-- Selfie images analysis label -->
-    <string name="selfie">Selfies</string>
+    <string name="selfie">תמונות עצמיות</string>
     <!-- Group images analysis label -->
-    <string name="group_pics">Group Pics</string>
+    <string name="group_pics">תמונות קבוצתיות</string>
     <!-- Memes analysis hint -->
-    <string name="memes_hint">Memes are images that have something prominent written over them</string>
+    <string name="memes_hint">ממים הן תמונות שכתוב עליהן משהו בולט</string>
     <!-- Duplicate files analysis label -->
-    <string name="duplicates">Duplicate files</string>
+    <string name="duplicates">קבצים כפולים</string>
     <!-- App caches analysis labels -->
-    <string name="cache">App Cache</string>
+    <string name="cache">מטמון יישומונים</string>
     <!-- Large videos analysis label -->
-    <string name="large_videos">Large videos</string>
+    <string name="large_videos">סרטונים גדולים</string>
     <!-- Large downloads analysis label -->
-    <string name="large_downloads">Large downloads</string>
+    <string name="large_downloads">הורדות גדולות</string>
     <!-- Old screenshots analysis label -->
-    <string name="old_screenshots">Old Screenshots</string>
+    <string name="old_screenshots">צילומי מסך ישנים</string>
     <!-- Old downloads analysis label -->
-    <string name="old_downloads">Old downloads</string>
+    <string name="old_downloads">הורדות ישנות</string>
     <!-- Old recordings analysis label -->
-    <string name="old_recordings">Old recordings</string>
+    <string name="old_recordings">הקלטות ישנות</string>
     <!-- Empty files analysis label -->
-    <string name="empty_files">Empty files / folders</string>
+    <string name="empty_files">קבצים / תיקיות ריקים</string>
     <!-- Junk files analysis label -->
-    <string name="junk_files">Junk files</string>
+    <string name="junk_files">קובצי זבל</string>
     <!-- Junk files analysis hint -->
-    <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
+    <string name="junk_files_hint">קובצי זבל הם קבצים שנותרו מאחור לאחר הסרת יישומונים</string>
     <!-- Telegram analysis label -->
-    <string name="telegram_files">Telegram Media</string>
+    <string name="telegram_files">טלגרם</string>
     <!-- More optimisations coming at analysis tab bottom -->
-    <string name="more_to_come">More optimizations to come!</string>
+    <string name="more_to_come">יהיו שיפורים נוספים!</string>
     <!-- View all analysed content analysis tab -->
-    <string name="view_all">View all</string>
+    <string name="view_all">להציג הכול</string>
     <!-- Analysis settings title -->
-    <string name="analysis">Analysis</string>
+    <string name="analysis">ניתוח</string>
     <!-- Analysis settings hint -->
-    <string name="analysis_hint">Control analysis tab settings such as paths to include analysis from, show / hide various analysis</string>
+    <string name="analysis_hint">שליטה בהגדרות לשונית הניתוח כגון נתיבים מהם לכלול ניתוח, להציג / להסתיר מגוון ניתוחים שונים</string>
     <!-- Exclude paths from scan for music player -->
-    <string name="exclusions">Exclusions</string>
+    <string name="exclusions">החרגות</string>
     <!-- Exclude paths from scan for music player summary -->
-    <string name="exclusions_summary">Paths to exclude while scanning media</string>
+    <string name="exclusions_summary">נתיבים להחרגה בעת סריקת מדיה</string>
     <!-- Audio player settings title -->
-    <string name="audio_player">Audio Player</string>
+    <string name="audio_player">נגן שמע</string>
     <!-- Audio player settings summary -->
-    <string name="audio_player_hint">Control audio player settings such as paths to exclude</string>
+    <string name="audio_player_hint">שליטה בהגדרות נגן השמע כגון נתיבים להחרגה</string>
     <!-- Image viewer settings title -->
-    <string name="image_viewer_hint">Control image viewer settings</string>
+    <string name="image_viewer_hint">שליטה בהגדרות מציג התמונות</string>
     <!-- Analysis in settings page -->
-    <string name="search_duplicates">Search duplicates in…</string>
+    <string name="search_duplicates">חיפוש כפילויות תחת…</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="media_store">Android media store (fastest)</string>
+    <string name="media_store">אחסון מדיה של Android (הכי מהיר)</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="internal_storage_shallow">Internal Storage (Shallow / slow)</string>
+    <string name="internal_storage_shallow">אחסון פנימי (שטחי / אטי)</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="internal_storage_deep">Internal Storage (Deep / slowest)</string>
+    <string name="internal_storage_deep">אחסון פנימי (עמוק / הכי אטי)</string>
     <!-- Show/hide analysis checkbox in settings -->
-    <string name="show_analysis">Show analysis</string>
+    <string name="show_analysis">הצגת ניתוח</string>
     <!-- Add new path to analyse or new path to exclude from scan in settings -->
-    <string name="add_item">Add Item</string>
+    <string name="add_item">הוספת פריט</string>
     <!-- Paths included for analysis in settings -->
-    <string name="paths_included">Paths Included</string>
+    <string name="paths_included">נתיבים שיוכללו</string>
     <!-- Paths excluded from music player scan in settings -->
-    <string name="paths_excluded">Paths Excluded</string>
+    <string name="paths_excluded">נתיבים שיוחרגו</string>
     <!-- Delete path from analysis / exclusion dialog in settings -->
-    <string name="delete_preference">Delete Preference</string>
+    <string name="delete_preference">מחיקת העדפה</string>
     <!-- Delete path from analysis / exclusions dialog message in settings -->
-    <string name="delete_pref_override_message">You\'re about to override an existing path.
-        This will reset the existing analysis data for that path.</string>
+    <string name="delete_pref_override_message">פעולה זו תדרוס נתיב קיים.
+        כך יתאפסו נתוני ניתוח קיימים לנתיב הזה.</string>
     <!-- Generic message to confirm -->
-    <string name="confirm">Confirm</string>
+    <string name="confirm">אישור</string>
     <!-- Images features group name in analysis settings -->
-    <string name="image_features">Image Features</string>
+    <string name="image_features">מאפייני תמונה</string>
     <!-- Images features group hint in analysis settings -->
-    <string name="features_paths_hint">Includes closed eyes, selfie, group paths</string>
+    <string name="features_paths_hint">לכלול נתיבים של עיניים עצומות, הסחות דעת, עצב, תמונות עצמיות, קבוצתיות</string>
     <!-- Downloads label in analysis settings -->
-    <string name="download_paths">Downloads</string>
+    <string name="download_paths">הורדות</string>
     <!-- Downloads hint in analysis settings -->
-    <string name="download_paths_hint">Includes old, large downloads</string>
+    <string name="download_paths_hint">כולל הורדות ישנות, גדולות</string>
     <!-- Cluttered videos in analysis tab -->
-    <string name="cluttered_videos">Cluttered Videos</string>
+    <string name="cluttered_videos">סרטונים מבולגנים</string>
     <!-- Cluttered videos hint in analysis tab -->
-    <string name="cluttered_videos_hint">A group of videos that have similar running time.</string>
+    <string name="cluttered_videos_hint">קבוצה של סרטונים באותו האורך.</string>
     <!-- Re-analyse button in analysis settings -->
-    <string name="reanalyse">Re-analyse</string>
+    <string name="reanalyse">ניתוח מחדש</string>
     <!-- Re-analyse hint in analysis settings -->
-    <string name="reanalyse_hint">Clears existing analysis data and starts again</string>
+    <string name="reanalyse_hint">מפנה את נתוני הניתוח הקיימים ומתחיל מחדש</string>
     <!-- Unknown artist / album for music player -->
-    <string name="unknown_artist">&lt;UNKNOWN&gt;</string>
+    <string name="unknown_artist">&lt;לא ידוע&gt;</string>
     <!-- Search for nearby connections in transfer tab -->
-    <string name="searching">Searching…</string>
+    <string name="searching">מתבצע חיפוש…</string>
     <!-- Searching for nearby connections with timer in transfer tab -->
-    <string name="searching_timer">Searching… (%s secs)</string>
+    <string name="searching_timer">מתבצע חיפוש… (%s שניות)</string>
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
-    <string name="enable_wifi">Please enable your Wi-Fi</string>
+    <string name="enable_wifi">נא להפעיל את הרשת האלחוטית שלך</string>
     <!-- Failed to discover nearby devices in transfer tab -->
     <string name="discovery_failure">Failed to discover peers. Please try reconnecting to Wifi network</string>
     <!-- Receiving files in transfer tab -->
-    <string name="receiving_files">Receiving files</string>
+    <string name="receiving_files">מתקבלים קבצים</string>
     <!-- Search for nearby devices in transfer tab -->
-    <string name="search_devices">Search for devices…</string>
+    <string name="search_devices">חיפוש מכשירים…</string>
     <!-- Enable waveform bar for music player in settings -->
-    <string name="enable_waveform">Enable waveform seekbar</string>
+    <string name="enable_waveform">אפשר סרגל חיפוש של צורות גל</string>
     <!-- Failed to start cast session when trying to cast images / videos from their list pages -->
-    <string name="failed_to_start_cast">Failed to start cast session</string>
+    <string name="failed_to_start_cast">הפעלת השידור נכשלה</string>
     <!-- Ready to cast images / videos to tv -->
-    <string name="ready_to_cast">Ready to cast, select any media</string>
+    <string name="ready_to_cast">ההכנות לשידור הושלמו, נא לבחור מדיה</string>
     <!-- Creating new cast to tv connection -->
-    <string name="establishing_cast">Establishing cast connection</string>
+    <string name="establishing_cast">חיבור השידור מוקם</string>
     <!-- Cast session suspended for tv -->
-    <string name="cast_suspended">Cast session suspended</string>
+    <string name="cast_suspended">השידור מושהה</string>
     <!-- Resuming tv cast session -->
-    <string name="resuming_cast">Resuming cast session</string>
+    <string name="resuming_cast">השידור משוחזר</string>
     <!-- Failed to resume tv cast session -->
-    <string name="failed_resume_cast">Failed to resume cast session</string>
+    <string name="failed_resume_cast">שחזור השידור נכשל</string>
     <!-- Tv cast session resumed -->
-    <string name="cast_resumed">Cast session resumed</string>
+    <string name="cast_resumed">השידור השתחזר</string>
     <!-- Tv cast session ending -->
-    <string name="cast_ending">Ending cast session</string>
+    <string name="cast_ending">השידור מסתיים</string>
     <!-- Tv cast session ended -->
-    <string name="cast_ended">Cast session ended</string>
+    <string name="cast_ended">השידור הסתיים</string>
     <!-- Open image/ videos/ audios with either cast on tv or open in mobile -->
-    <string name="open_with">Open with…</string>
+    <string name="open_with">פתיחה באמצעות…</string>
     <!-- Open images / videos/ audios using inbuilt player -->
-    <string name="inbuilt_player">In-built player</string>
+    <string name="inbuilt_player">נגן מובנה</string>
     <!-- Tv Cast notification title server running -->
-    <string name="cast_notification_title">Server running…</string>
+    <string name="cast_notification_title">שרת פועל…</string>
     <!-- tv casting content notification content -->
-    <string name="cast_notification_summary">Casting content on TV</string>
+    <string name="cast_notification_summary">תוכן משודר לטלוויזיה</string>
     <!-- stop tv cast server notification button -->
-    <string name="stop">Stop</string>
+    <string name="stop">עצירה</string>
     <!-- Service description to cast media files to tv -->
-    <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
+    <string name="cloud_streamer_service_description">משדר מדיה לכלי עזר לקבצים מבית Amaze</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
     <string name="failed_to_handshake">Failed to establish connection with remote device. Please try reconnecting to Wifi network</string>
     <!-- Connection successful to transfer files in tranfer tab -->
-    <string name="connection_successful">Connection successful</string>
+    <string name="connection_successful">החיבור הצליח</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send">Failed to send, please ensure remote is set to receive file</string>
+    <string name="failed_filename_send">השליחה נכשלה, נא לוודא שהצד המרוחק מוגדר לקבל קבצים</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send_reconnecct">Failed to send, please reconnect</string>
+    <string name="failed_filename_send_reconnecct">השליחה נכשלה, נא להתחבר מחדש</string>
     <!-- Failed to receive files in transfer tab -->
-    <string name="failed_filename_receive">Failed to receive</string>
+    <string name="failed_filename_receive">הקבלה נכשלה</string>
     <!-- Failed to receive files in transfer tab -->
-    <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
+    <string name="failed_filename_receive_reconnecct">הקבלה נכשלה, נא להתחבר מחדש</string>
     <!-- Transfer complete in transfer tab -->
     <string name="transfer_complete">File transferred</string>
     <!-- Need extra permissions for transfer tab -->
-    <string name="grant_location_permission">App needs location permission to connect with nearby devices.</string>
+    <string name="grant_location_permission">ליישום נדרשת הרשאת מיקום כדי להתחבר למכשירים סמוכים.</string>
     <!-- Need extra permissions for transfer tab -->
-    <string name="location_permission_not_granted">Please grant storage permission to connect with nearby devices.</string>
+    <string name="location_permission_not_granted">נא להעניק הרשאת אחסון כדי להתחבר למכשירים סמוכים.</string>
     <!-- Waiting for permissions in transfer tab -->
-    <string name="waiting_for_permissions">Waiting for permissions…</string>
+    <string name="waiting_for_permissions">בהמתנה להרשאות…</string>
     <!-- Enable gps for transfer tab -->
-    <string name="gps_disabled">Your GPS seems to be disabled, please enable to proceed</string>
+    <string name="gps_disabled">ה־GPS שלך כנראה מושבת, נא להפעיל אותו כדי להמשיך</string>
     <!-- Enable location to scan nearby devices in transfer tab -->
-    <string name="enable_location">Please enable location to scan.</string>
+    <string name="enable_location">נא להפעיל את המיקום כדי לסרוק.</string>
     <!-- generic yes -->
-    <string name="yes">Yes</string>
+    <string name="yes">כן</string>
     <!-- generic no -->
-    <string name="no">No</string>
+    <string name="no">לא</string>
     <!-- Enable location / wifi in transfer tab -->
-    <string name="enable">Enable</string>
+    <string name="enable">הפעלה</string>
     <!-- No nearby devices found in transfer tab -->
-    <string name="no_devices_found">No devices found nearby,
-        please make sure your device is connected to same network and have WiFi-Direct enabled in settings</string>
+    <string name="no_devices_found">לא נמצאו התקנים סמוכים.
+        נא לוודא שהמכשיר שלך מחובר לאותה הרשת ושה־WiFi-Direct מופעל בהגדרות</string>
     <!-- Failed to stop discovery in transfer tab -->
-    <string name="failed_to_stop_peer_discovery">Failed to stop peer discovery</string>
+    <string name="failed_to_stop_peer_discovery">עצירת גילוי עמיתים נכשלה</string>
     <!-- Resetting network discovery in transfer tab -->
-    <string name="resetting_network_discovery">Resetting network discovery</string>
+    <string name="resetting_network_discovery">גילוי הרשת מתאפס</string>
     <!-- Disconnected in transfer tab -->
-    <string name="disconnected">Disconnected</string>
+    <string name="disconnected">מנותק</string>
     <!-- Disconnect from connection in transfer tab -->
-    <string name="disconnect">Disconnect</string>
+    <string name="disconnect">ניתוק</string>
     <!-- Already connected to a device in transfer tab -->
-    <string name="existing_connection">Existing connection exists, please disconnect first!</string>
+    <string name="existing_connection">יש חיבור קיים, נא להתנתק קודם!</string>
     <!-- Connecting to nearby device in transfer tab -->
-    <string name="connecting">Connecting…</string>
+    <string name="connecting">מתבצעת התחברות…</string>
     <!-- Aspect ratio of video in video player -->
-    <string name="aspect_ratio">Aspect ratio</string>
+    <string name="aspect_ratio">יחס גובה־רוחב</string>
     <!-- Playback speed dialog for video / audio player -->
-    <string name="playback_speed">Playback Speed</string>
+    <string name="playback_speed">מהירות נגינה</string>
     <!-- Playback pitch in video / audio player -->
-    <string name="pitch_speed">Pitch (semitones)</string>
+    <string name="pitch_speed">גובה צליל (חצאי טונים)</string>
     <!-- Add subtitles in video player -->
-    <string name="subtitles">Subtitles</string>
+    <string name="subtitles">כתוביות</string>
     <!-- Video info dialog in video player -->
-    <string name="file">File</string>
+    <string name="file">קובץ</string>
     <!-- Video info dialog in video player -->
-    <string name="media">Media</string>
+    <string name="media">מדיה</string>
     <!-- Video info dialog in video player -->
-    <string name="audio">Audio</string>
+    <string name="audio">שמע</string>
     <!-- Video info dialog in video player -->
-    <string name="video">Video</string>
+    <string name="video">וידאו</string>
     <!-- Video info dialog in video player -->
-    <string name="file_path">Path</string>
+    <string name="file_path">נתיב</string>
     <!-- Video info dialog in video player -->
-    <string name="last_modified">Last Modified</string>
+    <string name="last_modified">שינוי אחרון</string>
     <!-- Video info dialog in video player -->
-    <string name="description">Description</string>
+    <string name="description">תיאור</string>
     <!-- Video info dialog in video player -->
-    <string name="recording_date">Recording month/year</string>
+    <string name="recording_date">חודש/שנת ההקלטה</string>
     <!-- Video info dialog in video player -->
-    <string name="release_date">Release month/year</string>
+    <string name="release_date">חודש/שנת ההפצה</string>
     <!-- Video info dialog in video player -->
-    <string name="bitrate">Bitrate</string>
+    <string name="bitrate">קצב סיביות</string>
     <!-- Video info dialog in video player -->
-    <string name="channel">Channel</string>
+    <string name="channel">ערוץ</string>
     <!-- Video info dialog in video player -->
-    <string name="frame_rate">Frame Rate</string>
+    <string name="frame_rate">קצב תמוניות</string>
     <!-- Video info dialog in video player -->
-    <string name="mime_type">Container Type</string>
+    <string name="mime_type">סוג מיכל</string>
     <!-- Video info dialog in video player -->
-    <string name="width">Width</string>
+    <string name="width">רוחב</string>
     <!-- Video info dialog in video player -->
-    <string name="height">Height</string>
+    <string name="height">גובה</string>
     <!-- Video info dialog in video player -->
-    <string name="codecs">Codecs</string>
+    <string name="codecs">מפענחים</string>
     <!-- Video info dialog in video player -->
-    <string name="sample_rate">Sample Rate</string>
+    <string name="sample_rate">קצב דגימה</string>
     <!-- Failed to gain audio focus in music player -->
-    <string name="failed_to_gain_focus">Failed to gain audio focus</string>
+    <string name="failed_to_gain_focus">תפיסת המיקוד על השמע נכשלה</string>
     <!-- Open existing subtitles file in video player -->
-    <string name="open">Open</string>
+    <string name="open">פתיחה</string>
     <!-- Search for subtitles file online dialog button in video player -->
-    <string name="search">Search</string>
+    <string name="search">חיפוש</string>
     <!-- Search for subtitles file online dialog title in video player -->
-    <string name="search_online">Search online</string>
+    <string name="search_online">חיפוש באינטרנט</string>
     <!-- Synchronize subtitles list item in video player -->
-    <string name="synchronize">Synchronize</string>
+    <string name="synchronize">סנכרון</string>
     <!-- Download subtitles in video player -->
-    <string name="download_subtitles">Download subtitles</string>
+    <string name="download_subtitles">הורדת כתוביות</string>
     <!-- Download subtitles info in video player -->
-    <string name="download_subtitles_info">Enter keywords and select your language to search subtitles from <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
+    <string name="download_subtitles_info">נא למלא מילות מפתח ולבחור את השפה שלך כדי לחפש כתוביות ב־<html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
-    <string name="amaze_fm_redirect">You\'re being redirected to Amaze File Manager. It\'s our open source offering that has all features a modern file manager has completely free of cost with over 2M downloads and 4.3 rating on Play Store.</string>
+    <string name="amaze_fm_redirect">אתה מופנה מחדש למנהל הקבצים של Amaze. זוהי הצעת הקוד הפתוח שלנו הכוללת את כל התכונות שיש למנהל קבצים מודרני ללא עלות לחלוטין עם למעלה מ-2 מיליון הורדות ודירוג 4.3 בחנות Play.</string>
     <!-- Download button in dialog prompt -->
-    <string name="download">Download</string>
+    <string name="download">הורדה</string>
     <string name="amaze_file_manager">Amaze File Manager</string>
     <!-- Download subtitles video player device not connected to internet -->
-    <string name="not_connected_to_internet">Device not connected to internet</string>
+    <string name="not_connected_to_internet">המכשיר לא מחובר לאינטרנט</string>
     <!-- Search subtitles dialog in video player -->
-    <string name="upload_date">Upload date</string>
+    <string name="upload_date">תאריך העלאה</string>
     <!-- Search subtitles dialog in video player -->
-    <string name="rating">Rating</string>
+    <string name="rating">דירוג</string>
     <!-- Search subtitles dialog in video player -->
     <string name="cd">CD</string>
     <!-- Uploader info in search subtitles dialog in video player -->
-    <string name="uploader">Uploader</string>
+    <string name="uploader">מעלה</string>
     <!-- Downloads info in search subtitles dialog in video player -->
-    <string name="downloads">Downloads</string>
+    <string name="downloads">הורדות</string>
     <!-- Language info in search subtitles dialog in video player -->
-    <string name="language">Language</string>
+    <string name="language">שפה</string>
     <!-- No subtitles found in video player -->
-    <string name="no_results_subtitles">No results, please try with different keywords…</string>
+    <string name="no_results_subtitles">אין תוצאות, נא לנסות מילות מפתח אחרות…</string>
     <!-- Download subtitles in video player -->
-    <string name="downloading">Downloading…</string>
+    <string name="downloading">מתבצעת הורדה…</string>
     <!-- Can't download subtitles in video player -->
-    <string name="choose_different_subtitle">Can\'t download, choose some other subtitles</string>
+    <string name="choose_different_subtitle">לא ניתן להוריד, נא לבחור כתוביות אחרות</string>
     <!-- Subtitles applied in video player -->
-    <string name="subtitles_applied">Subtitles applied</string>
+    <string name="subtitles_applied">הכתוביות הוצמדו</string>
     <!-- Failed to download subtitles in video player -->
-    <string name="failed_to_download">Failed to download</string>
+    <string name="failed_to_download">ההורדה נכשלה</string>
     <!-- Share file dialog -->
     <string name="bluetooth">Bluetooth</string>
     <!-- Share logs in about section -->
-    <string name="share_logs">Share logs</string>
+    <string name="share_logs">שיתוף יומנים</string>
     <!-- No app found in share dialog -->
-    <string name="no_apps_found_to_share">No apps found to share</string>
+    <string name="no_apps_found_to_share">לא נמצאו יישומונים לשיתוף</string>
     <!-- Failed to extract logs to share in about section -->
-    <string name="failed_to_extract_logs">Failed to extract logs file</string>
+    <string name="failed_to_extract_logs">חילוץ קובצי היומן נכשל</string>
     <!-- Continue playing button in video player when video was previously played and we want to resume -->
-    <string name="continue_playing">Continue playing</string>
+    <string name="continue_playing">להמשיך לנגן</string>
     <!-- No language selected for subtitles download in video player -->
-    <string name="no_language_selected">No language selected</string>
+    <string name="no_language_selected">לא נבחרה שפה</string>
     <!-- No item selected to delete in analysis tab -->
-    <string name="no_item_selected">No item selected</string>
+    <string name="no_item_selected">לא נבחרו פריטים</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
-    <string name="analysis_updated">Updated analysis</string>
+    <string name="analysis_updated">ניתוח מעודכן</string>
     <!-- Failed to share pdf/ video/audio files  -->
-    <string name="failed_to_share">Failed to share files</string>
+    <string name="failed_to_share">שיתוף הקבצים נכשל</string>
     <!-- Transfer tab connected hint -->
-    <string name="connected_send_receive_hint">Connected… before you start sending, 
-        make sure to enable receiver on the other device</string>
+    <string name="connected_send_receive_hint">מחובר... לפני שתתחיל לשלוח,
+         הקפד להפעיל את המקלט במכשיר השני</string>
     <!-- Transfer tab receiving files -->
-    <string name="receiving">Receiving…</string>
+    <string name="receiving">מתקבל…</string>
     <!-- Transfer tab hint for connection -->
-    <string name="devices_present_select">Make sure to initiate connection only from one device not both.</string>
+    <string name="devices_present_select">נא ליזום את החיבור מאחד המכשירים, לא משניהם יחד.</string>
     <!-- Transfer tab hint for connection -->
-    <string name="start_scan_both_devices">Make sure to start scan on both the devices</string>
+    <string name="start_scan_both_devices">נא להפעיל את הסריקה בשני המכשירים</string>
     <!-- Transfer tab connecting countdown -->
-    <string name="connecting_please_wait">Connecting… (%s secs)</string>
+    <string name="connecting_please_wait">מתבצעת התחברות… (%s שניות)</string>
     <!-- Transfer tab enable wifi to continue -->
-    <string name="enable_wifi_to_continue">Please enable Wifi to continue</string>
+    <string name="enable_wifi_to_continue">נא להפעיל רשת אלחוטית כדי להמשיך</string>
     <!-- Transfer tab my device info -->
-    <string name="my_device">My device: %s</string>
+    <string name="my_device">המכשיר שלי: %s</string>
     <!-- Transfer tab my device status -->
-    <string name="device_status">Status: %s</string>
+    <string name="device_status">מצב: %s</string>
     <!-- Transfer tab progress -->
-    <string name="transfer_in_progress_title">Transfer in progress</string>
+    <string name="transfer_in_progress_title">מתבצעת העברה</string>
     <!-- Transfer tab transfer in progress but user trying to leave the screen -->
-    <string name="transfer_in_progress_summary">There is a P2P transfer currently in progress,
-        it is recommended that you don\'t leave this screen,
-        otherwise you\'ll not be able to track the transfer</string>
+    <string name="transfer_in_progress_summary">כרגע מתבצעת העברה P2P,
+         מומלץ לא לעזוב את המסך הזה,
+         אחרת לא תוכל לעקוב אחר ההעברה</string>
     <!-- Transfer tab leave in progress -->
-    <string name="leave">Leave</string>
+    <string name="leave">לעזוב</string>
     <!-- Transfer app stay in progress -->
-    <string name="stay">Stay</string>
+    <string name="stay">להישאר</string>
     <!-- Image viewer edit image -->
-    <string name="edit">Edit</string>
+    <string name="edit">עריכה</string>
     <!-- Image viewer set image as wallpaper -->
-    <string name="set_as">Set as…</string>
+    <string name="set_as">הגדרה בתור…</string>
     <!-- Image viewer delete image -->
-    <string name="delete">Delete</string>
+    <string name="delete">מחיקה</string>
     <!-- Image viewer details of image -->
-    <string name="details">Details</string>
+    <string name="details">פרטים</string>
     <!-- Image viewer manufacturer of camera lens -->
-    <string name="make">Make</string>
+    <string name="make">יצרן</string>
     <!-- Image viewer model of camera lens -->
-    <string name="model">Model</string>
+    <string name="model">דגם</string>
     <!-- Image viewer camera aperture -->
-    <string name="aperture">Aperture</string>
+    <string name="aperture">צמצם</string>
     <!-- Image viewer iso of image -->
     <string name="iso">ISO</string>
     <!-- Image viewer shutter time -->
-    <string name="shutter_time">Shutter time</string>
+    <string name="shutter_time">מהירות התריס</string>
     <!-- Image viewer image location -->
-    <string name="location">Location</string>
+    <string name="location">מיקום</string>
     <!-- Image viewer gps -->
     <string name="gps">GPS</string>
     <!-- Image viewer image latitude -->
-    <string name="latitude">Latitude</string>
+    <string name="latitude">קו רוחב</string>
     <!-- Image viewer image longitude -->
-    <string name="longitude">Longitude</string>
+    <string name="longitude">קו אורך</string>
     <!-- Image viewer image file name -->
-    <string name="file_name">File Name</string>
+    <string name="file_name">שם קובץ</string>
     <!-- Image viewer image path -->
-    <string name="path">Path</string>
+    <string name="path">נתיב</string>
     <!-- Image viewer open image location in map -->
-    <string name="open_in_maps">Open in Map</string>
+    <string name="open_in_maps">פתיחה במפה</string>
     <!-- Share image / video -->
-    <string name="share">Share</string>
+    <string name="share">שיתוף</string>
     <!-- Share / document no app found to open -->
-    <string name="no_app_found">No App found to open this file</string>
+    <string name="no_app_found">לא נמצא יישומון לפתיחת קובץ זה</string>
     <!-- File not found while opening -->
-    <string name="file_not_found">File not found</string>
+    <string name="file_not_found">קובץ לא נמצא</string>
     <!-- Delete file -->
-    <string name="delete_files_title">Delete</string>
+    <string name="delete_files_title">מחיקה</string>
     <!-- Delete file summary -->
-    <string name="delete_files_message">You\'re about to permanently delete these files.
-        Are you sure you want to proceed?\n\n%s Files, %s Size</string>
+    <string name="delete_files_message">אתה עומד למחוק לצמיתות את הקבצים האלה.
+         האם אתה בטוח שברצונך להמשיך?\n\n%s קבצים, %s גודל</string>
     <!-- Delete file progress -->
-    <string name="deleted_progress">Deleted %s of %s</string>
+    <string name="deleted_progress">נמחקו %s מתוך %s</string>
     <!-- Delete file successful -->
-    <string name="successfully_deleted">Successfully deleted</string>
+    <string name="successfully_deleted">נמחק בהצלחה</string>
     <!-- Delete file failure -->
-    <string name="failed_to_update_list_reopen">Failed to update list, please restart the app</string>
+    <string name="failed_to_update_list_reopen">עדכון הרשימה נמחק, נא להפעיל את היישומון מחדש</string>
     <!-- Device id in about section -->
-    <string name="device_id">Device ID</string>
+    <string name="device_id">מזהה מכשיר</string>
     <!-- Subscription status in about section -->
-    <string name="subscription_status">Subscription status</string>
+    <string name="subscription_status">מצב מינוי</string>
     <!-- Device id copied in about section -->
-    <string name="device_id_copied">Device ID copied to clipboard</string>
+    <string name="device_id_copied">מזהה המכשיר הועתק ללוח הגזירים</string>
     <!-- App version in about section -->
-    <string name="version_title">Version</string>
+    <string name="version_title">גרסה</string>
     <!-- License title in about section -->
-    <string name="license">License</string>
+    <string name="license">רישיון</string>
     <!-- Submit issue in about section -->
-    <string name="submit_issue">Submit Issue</string>
+    <string name="submit_issue">הגשת תקלה</string>
     <!-- Contact us in about section -->
-    <string name="contact_us">Contact Us</string>
+    <string name="contact_us">יצירת קשר</string>
     <!-- Translate in about section -->
-    <string name="translate_title">Translate</string>
+    <string name="translate_title">תרגום</string>
     <!-- Translate summary in about section -->
-    <string name="translate_summary">Help us translate Amaze in your language</string>
+    <string name="translate_summary">עזור לנו לתרגם את Amaze לשפה שלך</string>
     <!-- About app screen title -->
-    <string name="about_app_title">About app</string>
+    <string name="about_app_title">על היישומון</string>
     <!-- Made in india about section -->
-    <string name="made_in_india">Made with ❤ in India</string>
+    <string name="made_in_india">נוצר ב־❤ בהודו</string>
     <!-- Trail dialog trial started -->
-    <string name="trial_started_title">Trial started (%s days)</string>
+    <string name="trial_started_title">תקופת ההתנסות החלה (%s ימים)</string>
     <!-- Trial dialog trial started content -->
-    <string name="trial_started_message">Thank you for choosing Amaze File Utilities.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and your purchase will really help to keep us afloat.\n
-        At any point if you need any help feel free to contact us in About section.
-        You\'ll be able to contact directly to our team on Telegram.\n
-        Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
+    <string name="trial_started_message">תודה שבחרת ב-Amaze File Utilities.\n
+         אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
+         והרכישה שלך באמת תעזור לנו לשמור על זה ככה.\n
+         בכל שלב אם אתה זקוק לעזרה כלשהי, אל תהסס לפנות אלינו בקטע אודות.
+         תוכל ליצור קשר ישירות עם הצוות שלנו בטלגרם.\n
+         אנא נסה גם את אפליקציית מנהל הקבצים בקוד פתוח שלנו \'Amaze File Manager\' לחוויית ניהול קבצים חלקה.</string>
     <!-- Trial dialog trial ending last day title -->
-    <string name="trial_last_day_title">Trial about to expire</string>
+    <string name="trial_last_day_title">תקופת ההתנסות עומדת לפוג</string>
     <!-- Trial dialog trial ending last day summary -->
-    <string name="trial_last_day_message">Hey There! Thank you for choosing Amaze File Utilities.
-        \nYour trial is going to expire tomorrow, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.
-        \nWe are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to keep us afloat.\nYou can write to us if you want to extend the trial period a bit more.
-    </string>
+    <string name="trial_last_day_message">שלום!  תודה שבחרת ב-Amaze File Utilities.
+         \nתקופת הניסיון שלך עומדת להסתיים מחר, אנו מקווים שנהנית מהתוכנה שלנו, ואנו מצפים שתשלם תשלום סמלי.
+         \nאנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
+         ואנחנו זקוקים לכספים כדי לשמור עלינו.\nתוכל לכתוב לנו אם אתה רוצה להאריך עוד קצת את תקופת הניסיון.    </string>
     <!-- Trial expired title -->
-    <string name="trial_expired_title">Trial expired</string>
+    <string name="trial_expired_title">תקופת הנסיון הסתיימה</string>
     <!-- Trial expired summary -->
     <string name="trial_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         Your trial has expired, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
@@ -636,7 +635,7 @@
         You can write to us if you want to extend the trial period a bit more.
     </string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
-    <string name="trial_inactive_title">Trial inactive</string>
+    <string name="trial_inactive_title">ניסיון לא פעיל</string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
     <string name="trial_inactive_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         Your trial is inactive and you\'re not longer an exclusive member,
@@ -645,7 +644,7 @@
         and we need funds to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.</string>
     <!-- Subscription dialog subscription purchased title -->
-    <string name="subscription_purchased_title">Subscribed</string>
+    <string name="subscription_purchased_title">יש מינוי</string>
     <!-- Subscription dialog subscription purchased summary -->
     <string name="subscription_purchased_message">Thank you for choosing Amaze File Utilities.\n
         We are a team of open source developers working hard to provide an ad-free experience,
@@ -654,7 +653,7 @@
         You\'ll be able to contact directly to our team on Telegram.\n
         Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
     <!-- Subscription dialog yearly subscription expired title -->
-    <string name="subscription_expired_title">Subscription expired</string>
+    <string name="subscription_expired_title">פג תוקף המינוי</string>
     <!-- Subscription dialog yearly subscription expired summary -->
     <string name="subscription_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         Your subscription has expired,
@@ -663,180 +662,172 @@
         and we need funds to keep us afloat.\n
         You can write to us if you want to extend the trial period a bit more.</string>
     <!-- Trial validation dialog failed to validate -->
-    <string name="not_connected_trial_title">Failed to validate</string>
+    <string name="not_connected_trial_title">האימות נכשל</string>
     <!-- Trial validation dialog failed to validate summary -->
     <string name="not_connected_trial_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         We\'re not able to validate your license, please connect to internet and restart the app.</string>
     <!-- Subscribe button in dialog -->
-    <string name="subscribe">Subscribe</string>
+    <string name="subscribe">הרשמה למינוי</string>
     <!-- Generic don't show dialog again -->
-    <string name="dont_show_again">Don\'t show again</string>
+    <string name="dont_show_again">לא להציג שוב</string>
     <!-- Welcome screen title -->
-    <string name="welcome_media_title">Manage media files</string>
+    <string name="welcome_media_title">ניהול קובצי מדיה</string>
     <!-- Welcome screen summary -->
     <string name="welcome_media_summary">View images, videos, audios, documents in list or grid\nOpen using inbuilt players\nGesture support for easy navigation\nJump to any date instantly\nGroup or sort list\nCast on TV</string>
     <!-- Welcome screen analysis summary -->
     <string name="welcome_analyse_summary">Analyse storage for junk files to delete\nGroup images by memes, low-light, blurry, selfies or group\nGroup large files in storage\nGroup old downloads, recordings or screenshots\n</string>
     <!-- Welcome screen transfer summary -->
-    <string name="welcome_transfer_summary">Transfer data between devices through wifi\nHigh transfer speeds using android wifi direct</string>
+    <string name="welcome_transfer_summary">העברת נתונים בין מכשירים דרך רשת אלחוטית\nמהירויות במהירות גבוהה עם Android Wi-Fi Direct</string>
     <!-- Welcome screen permission required -->
-    <string name="welcome_permission">We need storage permissions to access your media files</string>
+    <string name="welcome_permission">אנחנו צריכים הרשאות לאחסון כדי לגשת לקובצי המדיה שלך</string>
     <!-- Welcome screen license agreement page -->
-    <string name="before_we_start">Before we start…</string>
+    <string name="before_we_start">לפני שנתחיל…</string>
     <!-- Welcome screen license agreement page -->
-    <string name="privacy_title">We care for your privacy!</string>
+    <string name="privacy_title">הפרטיות שלך חשובה לנו!</string>
     <!-- Welcome screen license agreement page -->
     <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.\n
         We assure you that we do not collect any of your private information.\nWe don\'t say this, our track record does.\nWe\'re a group of open source developers and are managing Amaze File Manager for around 8 years now.\n\nWe look forward to your subscription.
     </string>
     <!-- Subscription dialog failed to fetch subscriptions -->
-    <string name="error_fetching_google_play_product_list">Error fetching product list from Google Play.</string>
+    <string name="error_fetching_google_play_product_list">שגיאה במשיכת רשימת מוצרים מ־Google Play.</string>
     <!-- Welcome screen done with the wizard -->
-    <string name="done">Done</string>
+    <string name="done">סיום</string>
     <!-- Unable to find cast for tv framework -->
-    <string name="cast_framework_unavailable">Unable to initialize cast framework, please update Google Play services</string>
+    <string name="cast_framework_unavailable">לא ניתן להפעיל את תשתית השידור, נא לעדכן את שירותי Google Play</string>
     <!-- Updating app from in app updater -->
-    <string name="updating_app">Closing app during update…</string>
+    <string name="updating_app">היישומון נסגר במהלך העדכון…</string>
     <!-- App updated from in app updater -->
-    <string name="app_updated">App updated successfully</string>
+    <string name="app_updated">היישומון עודכן בהצלחה</string>
     <!-- Update cancelled from in app updater -->
-    <string name="update_cancelled">Update cancelled</string>
+    <string name="update_cancelled">העדכון בוטל</string>
     <!-- Failed to update from in app updater -->
-    <string name="failed_to_update_app">Failed to update the app…</string>
+    <string name="failed_to_update_app">עדכון היישומון נכשל…</string>
     <!-- Home screen design info in about section -->
-    <string name="home_screen_design"><![CDATA[Home screen design - <a href="https://dribbble.com/topu-roy-antu">Topu Roy Antu</a>]]></string>
+    <string name="home_screen_design"><![CDATA[עיצוב מסך הבית - <a href="https://dribbble.com/topu-roy-antu">Topu Roy Antu</a>]]></string>
     <!-- Welcome screen accept license agreement -->
-    <string name="license_agreement"><![CDATA[I accept the <a href="https://teamamaze.xyz/license-agreement-utilities">License Agreement</a>]]></string>
+    <string name="license_agreement"><![CDATA[<a href="https://teamamaze.xyz/license-agreement-utilities">הסכם הרישוי</a> מקובל עלי]]></string>
     <!-- Welcome screen license not accepted -->
-    <string name="license_agreement_not_accepted">Please accept license agreement</string>
+    <string name="license_agreement_not_accepted">נא לאשר את הסכם הרישוי</string>
     <!-- Subscription dialog renewal cycle info -->
-    <string name="renewal_cycle">Renewal cycle - %s</string>
+    <string name="renewal_cycle">מחזור חידוש - %s</string>
     <!-- Subscription dialog lifetime membership -->
-    <string name="lifetime_membership">Lifetime Membership</string>
+    <string name="lifetime_membership">חברות לכל החיים</string>
     <!-- Subscription dialog one year membership -->
-    <string name="one_year">1 Year</string>
+    <string name="one_year">שנה</string>
     <!-- Generic operation failed -->
-    <string name="operation_failed">Operation failed</string>
+    <string name="operation_failed">הפעולה נכשלה</string>
     <!-- Settings page number of columns for media lists grid view -->
-    <string name="columns_grid_title">No. of columns in grid</string>
+    <string name="columns_grid_title">מספר העמודות ברשת</string>
     <!-- Settings page appearance -->
-    <string name="appearance">Appearance</string>
+    <string name="appearance">מראה</string>
     <!-- Settings page appearance summary -->
-    <string name="appearance_summary">App appearance settings</string>
+    <string name="appearance_summary">הגדרות מראה היישומון</string>
     <!-- Settings page general settings -->
-    <string name="general">General</string>
+    <string name="general">כללי</string>
     <!-- Playback properties in video player -->
-    <string name="playback_properties">Playback properties</string>
+    <string name="playback_properties">מאפייני נגינה</string>
     <!-- Apply dialog button in apply playback settings -->
-    <string name="apply">Apply</string>
+    <string name="apply">החלה</string>
     <!-- Playback settings dialog pitch settings info -->
     <string name="pitch_hint_text">A value of zero means that the key is not changed.\nOne full step corresponds to one semitone.\nA change of -12 semitones means that the song is played one octave lower.</string>
     <!-- Playback settings dialog reset settings -->
-    <string name="reset">Reset</string>
+    <string name="reset">איפוס</string>
     <!-- Settings page extract music player background color from album -->
-    <string name="audio_player_enable_palette">Extract palette color from album</string>
+    <string name="audio_player_enable_palette">חילוץ ערכת צבעים מאלבום</string>
     <!-- Settings page extract music player background color from album info -->
-    <string name="audio_player_enable_palette_summary">Sets background color for audio player</string>
+    <string name="audio_player_enable_palette_summary">מגדיר את צבע רקע נגן השמע</string>
     <!-- Settings page extract image viewer background color from image -->
-    <string name="image_viewer_enable_palette">Extract palette color from image</string>
+    <string name="image_viewer_enable_palette">חילוץ ערכת צבעים מתמונה</string>
     <!-- Settings page extract image viewer background color from image summary -->
-    <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
+    <string name="image_viewer_enable_palette_summary">מגדיר את צבע רקע מציג התמונות</string>
     <!-- Unused apps in analysis tab -->
-    <string name="unused_apps">Unused apps</string>
-    <!-- Most used apps in analysis tab -->
-    <string name="most_used_apps">Most used apps</string>
-    <!-- Least used apps in analysis tab -->
-    <string name="least_used_apps">Least used apps</string>
+    <string name="unused_apps">יישומונים שאינם בשימוש</string>
     <!-- Large apps in analysis tab -->
-    <string name="large_apps">Large apps</string>
+    <string name="large_apps">יישומונים גדולים</string>
     <!-- Games installed in analysis tab -->
-    <string name="games_installed">Games</string>
+    <string name="games_installed">משחקים</string>
     <!-- Games installed hint in analysis tab -->
-    <string name="games_installed_hint">Games currently installed on this device</string>
+    <string name="games_installed_hint">מותקנים משחקים על המכשיר הזה</string>
     <!-- Required elevated permission for analysis in analysis tab -->
-    <string name="require_permission">Required elevated permissions for this analysis</string>
+    <string name="require_permission">נדרשות הרשאות מורחבות לניתוח הזה</string>
     <!-- Already granted analysis permission, ask user to refresh -->
-    <string name="granted_permission_refresh">Already granted?</string>
+    <string name="granted_permission_refresh">כבר הוענקו?</string>
     <!-- Refresh button in analysis after permission granted -->
-    <string name="refresh">Refresh</string>
+    <string name="refresh">לרענן</string>
     <!-- Unused apps preference dialog message -->
-    <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
-    <!-- Most used apps preference dialog message -->
-    <string name="most_used_apps_pref_message">Apps most used in last number of days</string>
-    <!-- Least used apps preference dialog message -->
-    <string name="least_used_apps_pref_message">Apps least used in last number of days</string>
+    <string name="unused_apps_pref_message">מספר הימים בהם לא נפתח היישומון</string>
     <!-- Stopping analysis by pressing on (X) button in analysis tab -->
-    <string name="stopping_analysis">Stopping analysis</string>
+    <string name="stopping_analysis">הניתוח נעצר</string>
     <!-- Remove battery optimizations on welcome screen and settings page -->
-    <string name="remove_battery_optimizations">Remove battery optimizations</string>
+    <string name="remove_battery_optimizations">הסרת מיטובי סוללה</string>
     <!-- Remove battery optimizations hint on welcome screen and settings page -->
-    <string name="remove_battery_optimizations_hint">Please remove battery optimizations for music player to function properly in background</string>
+    <string name="remove_battery_optimizations_hint">נא להסיר את מיטובי הסוללה כדי שנגן המוזיקה יוכל לתפקד ברקע כראוי</string>
     <!-- Apk listing in analysis -->
-    <string name="apk_files">APK files</string>
+    <string name="apk_files">קובצי APK</string>
     <!-- Image editor tools -->
-    <string name="shape">Shape</string>
+    <string name="shape">צורה</string>
     <!-- Apk listing in analysis -->
-    <string name="text">Text</string>
+    <string name="text">טקסט</string>
     <!-- Apk listing in analysis -->
-    <string name="eraser">Eraser</string>
+    <string name="eraser">מוחק</string>
     <!-- Apk listing in analysis -->
-    <string name="filter">Filter</string>
+    <string name="filter">מסנן</string>
     <!-- Apk listing in analysis -->
-    <string name="emoji">Emoji</string>
+    <string name="emoji">אמוג׳י</string>
     <!-- Apk listing in analysis -->
-    <string name="sticker">Sticker</string>
+    <string name="sticker">מדבקה</string>
     <!-- Apk listing in analysis -->
-    <string name="rotate">Rotate</string>
+    <string name="rotate">סיבוב</string>
     <!-- Apk listing in analysis -->
-    <string name="flip_horizontal">Flip-H</string>
+    <string name="flip_horizontal">היפוך אופקי</string>
     <!-- Apk listing in analysis -->
-    <string name="flip_vertical">Flip-V</string>
+    <string name="flip_vertical">היפוך אנכי</string>
     <!-- Apk listing in analysis -->
-    <string name="resize">Resize</string>
+    <string name="resize">שינוי גודל</string>
     <!-- In Image editor -->
-    <string name="label_brush">Brush</string>
+    <string name="label_brush">מכחול</string>
     <!-- In Image editor -->
-    <string name="label_shape">Shape</string>
+    <string name="label_shape">צורה</string>
     <!-- In Image editor -->
-    <string name="label_oval">Oval</string>
+    <string name="label_oval">עגול</string>
     <!-- In Image editor -->
-    <string name="label_rectangle">Rectangle</string>
+    <string name="label_rectangle">מלבן</string>
     <!-- In Image editor -->
-    <string name="label_line">Line</string>
+    <string name="label_line">קו</string>
     <!-- In Image editor -->
-    <string name="label_emoji">Emoji</string>
+    <string name="label_emoji">אמוג׳י</string>
     <!-- In Image editor -->
-    <string name="label_sticker">Sticker</string>
+    <string name="label_sticker">מדבקה</string>
     <!-- In Image editor -->
-    <string name="label_eraser">Eraser</string>
+    <string name="label_eraser">מוחק</string>
     <!-- In Image editor -->
-    <string name="label_eraser_mode">Eraser Mode</string>
+    <string name="label_eraser_mode">מצב מחיקה</string>
     <!-- In Image editor to write text over image -->
-    <string name="label_text">Text</string>
+    <string name="label_text">טקסט</string>
     <!-- In Image editor -->
-    <string name="label_filter">Filter</string>
+    <string name="label_filter">מסנן</string>
     <!-- In Image editor to crop or adjust image -->
-    <string name="label_adjust">Adjust</string>
+    <string name="label_adjust">התאמה</string>
     <!-- In Image editor -->
     <string name="msg_save_image">Are you want to exit without saving image?</string>
     <!-- In Image editor -->
-    <string name="msg_share_image">Share Image</string>
+    <string name="msg_share_image">שיתוף תמונה</string>
     <!-- In Image editor to add picture to edit -->
-    <string name="select_picture">Select Picture</string>
+    <string name="select_picture">בחירת תמונה</string>
     <!-- In Image editor saving modified image -->
-    <string name="saving">Saving…</string>
+    <string name="saving">מתבצעת שמירה…</string>
     <!-- In Image editor -->
-    <string name="image_saved">Image saved successfully</string>
+    <string name="image_saved">התמונה נשמרה בהצלחה</string>
     <!-- In Image editor -->
-    <string name="failed_image_save">Failed to save image</string>
+    <string name="failed_image_save">שמירת התמונה נכשלה</string>
     <!-- In Image editor to save edited image -->
-    <string name="save">Save</string>
+    <string name="save">שמירה</string>
     <!-- In Image editor to discard saving image -->
-    <string name="discard">Discard</string>
+    <string name="discard">התעלמות</string>
     <!-- Image editor activity label -->
-    <string name="image_editor">Amaze Image Editor</string>
+    <string name="image_editor">עורך התמונות Amaze</string>
     <!-- Failed while loading docx file -->
-    <string name="failed_to_load_document">Failed to load document</string>
+    <string name="failed_to_load_document">טעינת המסמך נכשלה</string>
     <!-- load music lyrics -->
     <string name="load">Load</string>
     <!-- paste lyrics dialog -->
@@ -847,12 +838,4 @@
     <string name="clear_lyrics">Clearing lyrics</string>
     <!-- lyrics type dialog -->
     <string name="added_lyrics">Added lyrics</string>
-    <!-- whatsapp images in analysis section -->
-    <string name="whatsapp_images">Whatsapp Images</string>
-    <!-- whatsapp videos in analysis section -->
-    <string name="whatsapp_videos">Whatsapp Videos</string>
-    <!-- whatsapp analysis in settings -->
-    <string name="whatsapp_media">Whatsapp Media</string>
-    <!-- large files in analysis tab -->
-    <string name="large_files">Large Files</string>
 </resources>

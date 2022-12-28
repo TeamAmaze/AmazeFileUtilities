@@ -712,6 +712,20 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
         return exoPlayer?.playbackParameters
     }
 
+    override fun insertPlayNextSong(uri: Uri) {
+        val tempUriList = mutableListOf<Uri>()
+        uriList?.forEach {
+            if (it != uri) {
+                tempUriList.add(it)
+            }
+            if (it == currentUri) {
+                tempUriList.add(uri)
+            }
+        }
+        uriList = tempUriList
+        audioProgressHandler?.calculatePlayingIndex()
+    }
+
     override fun invokeSeekPlayer(position: Long) {
         seekPlayer(position)
     }

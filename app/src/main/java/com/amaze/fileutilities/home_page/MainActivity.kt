@@ -558,6 +558,7 @@ class MainActivity :
     ): View? {
         if (::selectedItemActionBarBinding.isInitialized) {
             selectedItemActionBarBinding.run {
+                Utils.marqueeAfterDelay(2000, selectedItemActionBarBinding.title)
                 return if (doShow) {
                     actionBarBinding.root.hideFade(200)
                     selectedItemActionBarBinding.root.showFade(300)

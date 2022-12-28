@@ -1,47 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Amaze File Utilities</string>
+    <string name="app_name">Amaze Datei-Tools</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">Amaze Utilities</string>
+    <string name="app_name_launcher">Amaze Tools</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
+    <string name="about_app">Datei-Browser-App mit eingebautem Media-Player, der alle Bedürfnisse deckt.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Amaze Image Viewer</string>
+    <string name="image_viewer">Amaze Bildbetrachter</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">Image Viewer</string>
+    <string name="image_viewer_normal">Bildbetrachter</string>
     <!-- Video player activity label -->
-    <string name="video_player">Amaze Video Player</string>
+    <string name="video_player">Amaze Videoplayer</string>
     <!-- Video player dialog intent filter label -->
-    <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
+    <string name="video_player_dialog">Amaze Videoplayer (Dialog)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
+    <string name="video_player_full_screen">Amaze Videoplayer (Vollbild)</string>
     <!-- Music player activity label -->
-    <string name="amaze_audio_player">Amaze Music Player</string>
+    <string name="amaze_audio_player">Amaze Musik-Player</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Amaze Pdf Viewer</string>
+    <string name="pdf_viewer">Amaze PDF-Betrachter</string>
     <!-- Epub activity label -->
-    <string name="epub_viewer">Amaze Epub Viewer</string>
+    <string name="epub_viewer">Amaze Epub-Betrachter</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">Amaze Doc Viewer</string>
+    <string name="docx_viewer">Amaze Dokumente-Betrachter</string>
     <!-- Image viewer dialog intent filter label -->
-    <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
+    <string name="intent_image_viewer_dialog">Amaze Bildbetrachter (Dialog)</string>
     <!-- Image viewer full screen intent label -->
-    <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
+    <string name="intent_image_viewer_full_screen">Amaze Bildbetrachter (Vollbild)</string>
     <!-- User didn't accept all storage permissions -->
-    <string name="grantfailed">Storage permission not granted</string>
+    <string name="grantfailed">Speicher-Berechtigung nicht gewährt</string>
     <!-- User didn't accept location permission for transfer files tab -->
-    <string name="grant_location_failed">Location permission not granted</string>
+    <string name="grant_location_failed">Standortzugriff nicht gewährt</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
+    <string name="grant_storage_read_permission">Die App benötigt Leserechte für eine optimale Performance.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_permission">Grant permission</string>
+    <string name="grant_permission">Zugriff gewähren</string>
     <!-- Grant permission button for welcome screen -->
-    <string name="grant">Grant</string>
+    <string name="grant">Erlauben</string>
     <!-- Cancel button in dialogs mainly to cancel any operation -->
-    <string name="cancel">Cancel</string>
+    <string name="cancel">Abbrechen</string>
     <!-- Play button label in music player notification -->
-    <string name="play">Play</string>
+    <string name="play">Wiedergabe</string>
     <!-- Shuffle button label in music player notification -->
     <string name="shuffle">Shuffle</string>
     <!-- Repeat button label in music player notification -->
@@ -259,7 +259,7 @@
     <!-- Junk files analysis hint -->
     <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
     <!-- Telegram analysis label -->
-    <string name="telegram_files">Telegram Media</string>
+    <string name="telegram_files">Telegram</string>
     <!-- More optimisations coming at analysis tab bottom -->
     <string name="more_to_come">More optimizations to come!</string>
     <!-- View all analysed content analysis tab -->
@@ -304,7 +304,7 @@
     <!-- Images features group name in analysis settings -->
     <string name="image_features">Image Features</string>
     <!-- Images features group hint in analysis settings -->
-    <string name="features_paths_hint">Includes closed eyes, selfie, group paths</string>
+    <string name="features_paths_hint">Includes closed eyes, distracted, sad, selfie, group paths</string>
     <!-- Downloads label in analysis settings -->
     <string name="download_paths">Downloads</string>
     <!-- Downloads hint in analysis settings -->
@@ -512,7 +512,7 @@
     <!-- Failed to share pdf/ video/audio files  -->
     <string name="failed_to_share">Failed to share files</string>
     <!-- Transfer tab connected hint -->
-    <string name="connected_send_receive_hint">Connected… before you start sending, 
+    <string name="connected_send_receive_hint">Connected… before you start sending,
         make sure to enable receiver on the other device</string>
     <!-- Transfer tab receiving files -->
     <string name="receiving">Receiving…</string>
@@ -743,10 +743,6 @@
     <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
     <!-- Unused apps in analysis tab -->
     <string name="unused_apps">Unused apps</string>
-    <!-- Most used apps in analysis tab -->
-    <string name="most_used_apps">Most used apps</string>
-    <!-- Least used apps in analysis tab -->
-    <string name="least_used_apps">Least used apps</string>
     <!-- Large apps in analysis tab -->
     <string name="large_apps">Large apps</string>
     <!-- Games installed in analysis tab -->
@@ -761,10 +757,6 @@
     <string name="refresh">Refresh</string>
     <!-- Unused apps preference dialog message -->
     <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
-    <!-- Most used apps preference dialog message -->
-    <string name="most_used_apps_pref_message">Apps most used in last number of days</string>
-    <!-- Least used apps preference dialog message -->
-    <string name="least_used_apps_pref_message">Apps least used in last number of days</string>
     <!-- Stopping analysis by pressing on (X) button in analysis tab -->
     <string name="stopping_analysis">Stopping analysis</string>
     <!-- Remove battery optimizations on welcome screen and settings page -->
@@ -847,12 +839,4 @@
     <string name="clear_lyrics">Clearing lyrics</string>
     <!-- lyrics type dialog -->
     <string name="added_lyrics">Added lyrics</string>
-    <!-- whatsapp images in analysis section -->
-    <string name="whatsapp_images">Whatsapp Images</string>
-    <!-- whatsapp videos in analysis section -->
-    <string name="whatsapp_videos">Whatsapp Videos</string>
-    <!-- whatsapp analysis in settings -->
-    <string name="whatsapp_media">Whatsapp Media</string>
-    <!-- large files in analysis tab -->
-    <string name="large_files">Large Files</string>
 </resources>

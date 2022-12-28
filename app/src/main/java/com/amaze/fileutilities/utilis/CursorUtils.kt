@@ -75,7 +75,7 @@ class CursorUtils {
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 projection,
                 null, null, BASE_SELECTION_IMAGES, null,
-                MediaFileInfo.MEDIA_TYPE_IMAGE
+                MediaFileInfo.MEDIA_TYPE_IMAGE, null
             )
         }
 
@@ -97,7 +97,7 @@ class CursorUtils {
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                 projection, null, null, BASE_SELECTION_VIDEOS,
                 null,
-                MediaFileInfo.MEDIA_TYPE_VIDEO
+                MediaFileInfo.MEDIA_TYPE_VIDEO, null
             )
         }
 
@@ -121,7 +121,38 @@ class CursorUtils {
                 projection,
                 null,
                 null, BASE_SELECTION_AUDIO, blacklistPaths,
-                MediaFileInfo.MEDIA_TYPE_AUDIO
+                MediaFileInfo.MEDIA_TYPE_AUDIO, null
+            )
+        }
+
+        fun listPlaylists(
+            context: Context,
+            playlistId: Long,
+            blacklistPaths: List<String>
+        ):
+            Pair<FilesViewModel.StorageSummary,
+                ArrayList<MediaFileInfo>> {
+            val projection = arrayOf(
+                MediaStore.Audio.Playlists.Members.AUDIO_ID,
+                MediaStore.MediaColumns.TITLE,
+                MediaStore.MediaColumns.DISPLAY_NAME,
+                MediaStore.MediaColumns.DATE_MODIFIED,
+                MediaStore.MediaColumns.SIZE,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.AudioColumns.DURATION,
+                MediaStore.Audio.AudioColumns.ALBUM,
+                MediaStore.Audio.AudioColumns.ARTIST,
+                MediaStore.Audio.AudioColumns.ALBUM_ID,
+//                MediaStore.Audio.Playlists.Members._ID,
+            )
+            return listMediaCommon(
+                context,
+                MediaStore.Audio.Playlists.Members.getContentUri("external", playlistId),
+                projection,
+                null,
+                null, BASE_SELECTION_AUDIO, blacklistPaths,
+                MediaFileInfo.MEDIA_TYPE_AUDIO,
+                MediaStore.Audio.Playlists.Members.DEFAULT_SORT_ORDER
             )
         }
 
@@ -279,6 +310,7 @@ class CursorUtils {
                         /*if (path != null && (endsWith.isEmpty()
                                     || endsWith.stream().anyMatch { path.endsWith(it) })) {*/
                         if (path != null) {
+                            loadMediaColumnIdx(cursor, mediaType, mediaColumnIdxValues)
                             val mediaFileInfo = buildMediaFileInfoFromCursor(
                                 context, dataColumnIdx,
                                 cursor, mediaColumnIdxValues, mediaType
@@ -305,7 +337,8 @@ class CursorUtils {
             selectionValues: Array<String?>?,
             baseSelection: String?,
             blacklistPaths: List<String>?,
-            mediaType: Int
+            mediaType: Int,
+            sortOrder: String?
         ): Pair<FilesViewModel.StorageSummary, ArrayList<MediaFileInfo>> {
             var selection = selection
             var selectionValues = selectionValues
@@ -330,7 +363,7 @@ class CursorUtils {
             val cursor =
                 context.contentResolver.query(
                     contentUri, projection, selection,
-                    selectionValues, null
+                    selectionValues, sortOrder
                 )
             val mediaFileInfoFile: ArrayList<MediaFileInfo> = ArrayList()
 //            var cursorCount = 0
@@ -350,6 +383,12 @@ class CursorUtils {
                                 .getColumnIndex(MediaStore.Files.FileColumns.DATA)
                     }
                     if (dataColumnIdx >= 0) {
+                        loadMediaColumnIdx(cursor, mediaType, mediaColumnIdxValues)
+                        if (projection[0] == MediaStore.Audio.Playlists.Members.AUDIO_ID) {
+                            // hack to change _id column name while querying playlists
+                            mediaColumnIdxValues.commonIdIdx =
+                                cursor.getColumnIndex(MediaStore.Audio.Playlists.Members.AUDIO_ID)
+                        }
                         val mediaFileInfo = buildMediaFileInfoFromCursor(
                             context, dataColumnIdx,
                             cursor, mediaColumnIdxValues, mediaType
@@ -451,7 +490,6 @@ class CursorUtils {
             mediaType: Int
         ): MediaFileInfo {
             val path = cursor.getString(dataColumnIdx)
-            loadMediaColumnIdx(cursor, mediaType, mediaColumnIdxValues)
             var id: Long? = -1L
             var title: String?
             var lastModified: Long?
@@ -535,6 +573,7 @@ class CursorUtils {
                         var audioAlbum: String? = null
                         var audioArtist: String? = null
                         var albumId: Long? = null
+                        var idInPlaylist: Long? = null
                         if (mediaColumnIdxValues.audioDurationIdx >= 0) {
                             audioDuration = cursor.getLong(mediaColumnIdxValues.audioDurationIdx)
                         }
@@ -547,10 +586,13 @@ class CursorUtils {
                         if (mediaColumnIdxValues.audioAlbumIdIdx >= 0) {
                             albumId = cursor.getLong(mediaColumnIdxValues.audioAlbumIdIdx)
                         }
+                        if (mediaColumnIdxValues.audioIdInPlaylist >= 0) {
+                            idInPlaylist = cursor.getLong(mediaColumnIdxValues.audioIdInPlaylist)
+                        }
                         audioMetaData = MediaFileInfo
                             .AudioMetaData(
                                 audioAlbum, audioArtist, audioDuration, albumId,
-                                null
+                                null, idInPlaylist, null
                             )
                     }
                     MediaFileInfo.MEDIA_TYPE_VIDEO -> {
@@ -633,6 +675,7 @@ class CursorUtils {
         }
 
         data class MediaColumnIdxValues(
+            var audioIdInPlaylist: Int = -1,
             var audioDurationIdx: Int = -1,
             var audioAlbumIdx: Int = -1,
             var audioArtistIdx: Int = -1,

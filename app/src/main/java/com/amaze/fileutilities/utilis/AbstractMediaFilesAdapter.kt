@@ -204,6 +204,8 @@ abstract class AbstractMediaFilesAdapter(
                 mediaFileInfo?.let {
                     mediaFileInfo ->
                     holder.infoTitle.text = mediaFileInfo.title
+                    Utils.marqueeAfterDelay(3000, holder.infoTitle)
+                    Utils.marqueeAfterDelay(3000, holder.infoSummary)
                     Glide.with(superContext).clear(holder.iconView)
                     superPreloader.loadImage(mediaFileInfo, holder.iconView, isGrid)
                     if (isChecked) {

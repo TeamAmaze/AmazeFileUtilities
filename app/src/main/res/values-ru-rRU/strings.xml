@@ -1,858 +1,912 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Amaze File Utilities</string>
+    <string name="app_name">Amaze - Инструменты для работы с файлами / файловой системой</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">Amaze Utilities</string>
+    <string name="app_name_launcher">Инструменты</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
+    <string name="about_app">Amaze File Utility - Приложение содержащие в себе набор инструментов для работы с файловой системой. Имеющее встроенные проигрыватели для воспроизведения Ваших медиа файлов.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Amaze Image Viewer</string>
+    <string name="image_viewer">Просмотр Изображения</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">Image Viewer</string>
+    <string name="image_viewer_normal">Просмотр изображений</string>
     <!-- Video player activity label -->
-    <string name="video_player">Amaze Video Player</string>
+    <string name="video_player">Amaze Видео Проигрыватель</string>
     <!-- Video player dialog intent filter label -->
-    <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
+    <string name="video_player_dialog">Amaze Видео Проигрыватель (Окно)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
+    <string name="video_player_full_screen">Amaze Видео Проигрыватель (Полный экран)</string>
     <!-- Music player activity label -->
-    <string name="amaze_audio_player">Amaze Music Player</string>
+    <string name="amaze_audio_player">Amaze Аудиопроигрыватель</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Amaze Pdf Viewer</string>
+    <string name="pdf_viewer">Amaze Просмотр Pdf</string>
     <!-- Epub activity label -->
-    <string name="epub_viewer">Amaze Epub Viewer</string>
+    <string name="epub_viewer">Amaze Просмотр Epub</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">Amaze Doc Viewer</string>
+    <string name="docx_viewer">Amaze Просмотр Документов</string>
     <!-- Image viewer dialog intent filter label -->
-    <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
+    <string name="intent_image_viewer_dialog">Amaze Просмотр Изображений (Окно)</string>
     <!-- Image viewer full screen intent label -->
-    <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
+    <string name="intent_image_viewer_full_screen">Amaze Просмотр Изображений (Полный экран)</string>
     <!-- User didn't accept all storage permissions -->
-    <string name="grantfailed">Storage permission not granted</string>
+    <string name="grantfailed">Доступ к хранилищу не предоставлен</string>
     <!-- User didn't accept location permission for transfer files tab -->
-    <string name="grant_location_failed">Location permission not granted</string>
+    <string name="grant_location_failed">Доступ к геолокации не предоставлен</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
+    <string name="grant_storage_read_permission">Приложению требуется разрешение для чтения хранилища для оптимальной производительности.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_permission">Grant permission</string>
+    <string name="grant_permission">Предоставьте доступ</string>
     <!-- Grant permission button for welcome screen -->
-    <string name="grant">Grant</string>
+    <string name="grant">Предоставить</string>
     <!-- Cancel button in dialogs mainly to cancel any operation -->
-    <string name="cancel">Cancel</string>
+    <string name="cancel">Отменить</string>
     <!-- Play button label in music player notification -->
-    <string name="play">Play</string>
+    <string name="play">Воспроизвести</string>
     <!-- Shuffle button label in music player notification -->
-    <string name="shuffle">Shuffle</string>
+    <string name="shuffle">Перемешать</string>
     <!-- Repeat button label in music player notification -->
-    <string name="repeat">Repeat</string>
+    <string name="repeat">Повторять</string>
     <!-- Previous button label in music player notification -->
-    <string name="previous">Previous</string>
+    <string name="previous">Предыдущий</string>
     <!-- Next button label in music player notification -->
-    <string name="next">Next</string>
+    <string name="next">Следующий</string>
     <!-- Not allowed to perform any operation -->
-    <string name="not_allowed">Not allowed</string>
+    <string name="not_allowed">Запрещено</string>
     <!-- Audio player notification channel description -->
-    <string name="audio_player_service_description">Plays audio for Amaze File Utilities</string>
+    <string name="audio_player_service_description">Воспроизведение аудио для Amaze File Utilities</string>
     <!-- Invert colors in document / pdf viewer -->
-    <string name="invert_colors">Invert colors</string>
+    <string name="invert_colors">Инвертировать цвета</string>
     <!-- Location any list eg. images or videos list -->
-    <string name="loading">Loading…</string>
+    <string name="loading">Загрузка…</string>
     <!-- Analyse tab on app main screen bottom tab -->
-    <string name="title_analyse">Analyse</string>
+    <string name="title_analyse">Анализ</string>
     <!-- Utilities tab on app main screen bottom tab -->
-    <string name="title_utilities">Utilities</string>
+    <string name="title_utilities">Утилиты</string>
     <!-- Transfer files tab on app main screen bottom tab -->
-    <string name="title_transfer">Transfer</string>
+    <string name="title_transfer">Передача</string>
     <!-- Scan nearby connections button in transfer tab -->
-    <string name="title_scan">Scan</string>
+    <string name="title_scan">Сканировать</string>
     <!-- Stop scan nearby devices in transfer tab -->
-    <string name="title_stop_scan">Stop</string>
+    <string name="title_stop_scan">Стоп</string>
     <!-- Internal storage on app main screen -->
-    <string name="internal_storage">Internal Storage</string>
+    <string name="internal_storage">Внутренняя память</string>
     <!-- Images title in images list screen in utilities tab -->
-    <string name="images">Images</string>
+    <string name="images">Изображения</string>
     <!-- Audios title in audios list screen in utilities tab -->
-    <string name="audios">Audios</string>
+    <string name="audios">Аудио</string>
     <!-- Videos title in videos list screen in utilities tab -->
-    <string name="videos">Videos</string>
+    <string name="videos">Видео</string>
     <!-- Documents title in documents list screen in utilities tab -->
-    <string name="documents">Documents</string>
+    <string name="documents">Документы</string>
     <!-- Number of files in utilities tab individual list screens eg in images / number of images -->
-    <string name="num_of_files">%s Files</string>
+    <string name="num_of_files">%s Файлов</string>
     <!-- Number of total media files on main screen -->
-    <string name="num_of_media_files">%s Media Files</string>
+    <string name="num_of_media_files">%s Медиа Файлов</string>
     <!-- Used space in utilties tab in individual lists screen eg in images - Used: 300 MB / 1 GB -->
-    <string name="used_space">Used: %s</string>
+    <string name="used_space">Использовано: %s</string>
     <!-- Send file in transfer tab -->
-    <string name="send">Send</string>
+    <string name="send">Отправить</string>
     <!-- Receive file in transfer tab -->
-    <string name="receive">Receive</string>
+    <string name="receive">Получить</string>
     <!-- Stop receiving file in transfer tab -->
-    <string name="stop_receiving">Stop Receiving</string>
+    <string name="stop_receiving">Остановить получение</string>
     <!-- Calculating number of media files in utilities tab on app startup -->
-    <string name="calculating">Calculating…</string>
+    <string name="calculating">Вычисление…</string>
     <!-- Recent files on utilities tab main screen -->
-    <string name="recent_files">Recent Files</string>
+    <string name="recent_files">Недавние файлы</string>
     <!-- No files found after searching media files -->
-    <string name="no_files">No files</string>
+    <string name="no_files">Нет файлов</string>
     <!-- Number of media files in utilities tab in individual list screen eg in images / number of total files -->
-    <string name="media_files_subs">Media Files: %s</string>
+    <string name="media_files_subs">Медиа Файлов: %s</string>
     <!-- Search screen title bar hint -->
-    <string name="action_bar_search_hint">Search for files…</string>
+    <string name="action_bar_search_hint">Поиск файлов…</string>
     <!-- Generic message shown when loading results of list or operation -->
-    <string name="please_wait">Please wait…</string>
+    <string name="please_wait">Пожалуйста, подождите…</string>
     <!-- No search results found -->
-    <string name="its_quiet_here">It\'s quiet in here…</string>
+    <string name="its_quiet_here">Ничего не найдено…</string>
     <!-- Settings screen title -->
-    <string name="settings">Settings</string>
+    <string name="settings">Настройки</string>
     <!-- About screen title -->
-    <string name="about">About</string>
+    <string name="about">О нас</string>
     <!-- Copyright dialog content in about section -->
-    <string name="rights_reserved">Copyright © 2021–2022 Team Amaze\nAll Rights Reserved</string>
+    <string name="rights_reserved">Авторское право © 2021–2022 команда Amaze\nВсе права защищены</string>
     <!-- Open source licenses in about section -->
-    <string name="open_source_licenses">Open-source licenses</string>
+    <string name="open_source_licenses">Лицензии с открытым исходным кодом</string>
     <!-- Privacy policy label in about section -->
-    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy">Политика конфиденциальности</string>
     <!-- Licenses label in about section -->
-    <string name="licenses">Licenses</string>
+    <string name="licenses">Лицензии</string>
     <!-- Information about a pdf / doc file -->
-    <string name="information">Information</string>
+    <string name="information">Информация</string>
     <!-- Unable to open pdf / doc / video / image file -->
-    <string name="unsupported_content">Unsupported content</string>
+    <string name="unsupported_content">Неподдерживаемый формат данных</string>
     <!-- Group utilities list eg images / videos by parent folder -->
-    <string name="parent">Parent</string>
+    <string name="parent">Родительская</string>
     <!-- Group utilities list eg images / videos by date -->
-    <string name="date">Date</string>
+    <string name="date">Дата</string>
     <!-- Group utilities list eg iamges / videos by name -->
-    <string name="name">Name</string>
+    <string name="name">Имя</string>
     <!-- Show utilities list by list view -->
-    <string name="list_view">List View</string>
+    <string name="list_view">В виде списка</string>
     <!-- Show utilities list by grid view -->
-    <string name="grid_view">Grid View</string>
+    <string name="grid_view">В виде сетки</string>
     <!-- Sort utilities by size -->
-    <string name="size">Size</string>
+    <string name="size">Размер</string>
     <!-- Group audio utilities list by album names  -->
-    <string name="album">Album</string>
+    <string name="album">Альбом</string>
     <!-- Group audio utilities list by artist name -->
-    <string name="artist">Artist</string>
+    <string name="artist">Исполнитель</string>
     <!-- Sort audio / video utilities list by duration -->
-    <string name="duration">Duration</string>
+    <string name="duration">Длительность</string>
     <!-- Crash fallback screen title -->
-    <string name="sorry_string">Sorry, that should not have happened.</string>
+    <string name="sorry_string">Извините, этого не должно было случиться.</string>
     <!-- Crash fallback screen report by email -->
-    <string name="error_report_button_text">Report this error via e-mail</string>
+    <string name="error_report_button_text">Сообщить об этой ошибке по электронной почте</string>
     <!-- Crash fallback screen report by telegram -->
-    <string name="error_report_button_telegram">Report this error via telegram</string>
+    <string name="error_report_button_telegram">Сообщить об этой ошибке через telegram</string>
     <!-- Crash fallback screen copy report -->
-    <string name="copy_for_github">Copy formatted report</string>
+    <string name="copy_for_github">Копировать отформатированный отчет</string>
     <!-- Crash fallback screen report on github -->
-    <string name="error_report_open_issue_button_text">Report on GitHub</string>
+    <string name="error_report_open_issue_button_text">Сообщить об ошибке на GitHub</string>
     <!-- Crash fallback screen info -->
-    <string name="error_report_open_github_notice">Please check whether an issue discussing your crash already exists.</string>
+    <string name="error_report_open_github_notice">Пожалуйста, проверьте, существует ли обсуждение на вашу проблему.</string>
     <!-- Toast shown when we failed to display crash fallback screen -->
-    <string name="error_snackbar_message">Sorry, something went wrong.</string>
+    <string name="error_snackbar_message">Упс, что-то пошло не так.</string>
     <!-- Crash fallback screen report -->
-    <string name="error_snackbar_action">Report</string>
+    <string name="error_snackbar_action">Отчет</string>
     <!-- Crash fallback screen info about device -->
-    <string name="what_device_headline">Info:</string>
+    <string name="what_device_headline">Информация:</string>
     <!-- Crash fallback screen info about crash -->
-    <string name="what_happened_headline">What happened:</string>
+    <string name="what_happened_headline">Что случилось:</string>
     <!-- Crash fallback screen info about device -->
-    <string name="info_labels">What:\\nRequest:\\nGMT Time:\\nPackage:\\nVersion:\\nOS version:\\nDevice:\\nModel:\\nProduct:\\nDevice ID:</string>
+    <string name="info_labels">Что:\\nЗапрос:\\nGMT Время:\\nПакет:\\nВерсия:\\nВерсия ОС:\\nУстройство:\\nМодель:\\nПродукт:\\nID Устройства:</string>
     <!-- Crash fallback screen ask user input -->
-    <string name="your_comment">Your comment (in English):</string>
+    <string name="your_comment">Ваш комментарий (на английском языке):</string>
     <!-- Crash fallback screen show more details -->
-    <string name="error_details_headline">Details:</string>
+    <string name="error_details_headline">Детали:</string>
     <!-- Crash fallback screen info -->
-    <string name="app_ui_crash">App/UI crashed</string>
+    <string name="app_ui_crash">Сбой приложения/интерфейса</string>
     <!-- Crash fallback screen title -->
-    <string name="error_report_title">Error report</string>
+    <string name="error_report_title">Отчет об ошибке</string>
     <!-- Crash fallback screen crash report copied -->
-    <string name="crash_report_copied">Crash report copied to clipboard</string>
+    <string name="crash_report_copied">Отчёт об ошибке скопирован в буфер обмена</string>
     <!-- Crash fallback screen report copied to clipboard -->
-    <string name="clipboard_path_copy">Path copied to clipboard</string>
+    <string name="clipboard_path_copy">Путь скопирован в буфер обмена</string>
     <!-- Pdf activity password prompt -->
-    <string name="pdf_password_title">Password required</string>
+    <string name="pdf_password_title">Требуется пароль</string>
     <!-- Pdf activity password required info -->
-    <string name="pdf_password_required">Please enter the password to open this document</string>
+    <string name="pdf_password_required">Введите пароль для открытия этого файла</string>
     <!-- Generic ok button in dialogs -->
-    <string name="ok">OK</string>
+    <string name="ok">ОК</string>
     <!-- Pdf activity wrong password entered -->
-    <string name="wrong_password">Wrong password</string>
+    <string name="wrong_password">Неправильный пароль</string>
     <!-- Generic message for any operation not supported -->
-    <string name="unsupported_operation">Unsupported Operation</string>
+    <string name="unsupported_operation">Неподдерживаемая операция</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>Since Android 11, Google requests File Managers to request user permission for managing all files on the device. Details <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">here</a>.
-        \n\nAmaze File Utilities needs this permission too. After pressing &quot;Grant&quot;here, please select <b>Allow access to manage all files</b> option on the next screen.
-        \n\n<font color="#ff6347"><i>Canceling this dialog will exit the app.</i></font></body></html></string>
+    <string name="grant_all_files_permission"><html><body>С версии Android 11, Google просит Файловые менеджеры запрашивать разрещение пользователя на управление всеми файлами на устройстве. Подробнее <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">здесь</a>.
+        \n\nAmaze File Utilities тоже необходимо это разрешение. После нажатия &quot;Предоставить&quot;здесь, пожалуйста выберете <b>Разрешить доступ для управления всеми файлами</b> на следующем экране.
+        \n\n<font color="#ff6347"><i>Отмена этого диалога закроет приложение.</i></font></body></html></string>
     <!-- Pdf activity copy page content title -->
-    <string name="copy_page">Copy page</string>
+    <string name="copy_page">Копировать страницу</string>
     <!-- Pdf activity view bookmarks -->
-    <string name="bookmarks">Bookmarks</string>
+    <string name="bookmarks">Закладки</string>
     <!-- Pdf activity pdf title -->
-    <string name="title">Title</string>
+    <string name="title">Название</string>
     <!-- Pdf activity pdf author -->
-    <string name="author">Author</string>
+    <string name="author">Автор</string>
     <!-- Pdf activity pdf creator -->
-    <string name="creator">Creator</string>
+    <string name="creator">Создатель</string>
     <!-- Pdf activity pdf creation date -->
-    <string name="creation_date">Creation date</string>
+    <string name="creation_date">Дата создания</string>
     <!-- Pdf activity pdf modification date -->
-    <string name="modification_date">Modification Date</string>
+    <string name="modification_date">Дата изменения</string>
     <!-- Pdf activity pdf subject -->
-    <string name="subject">Subject</string>
+    <string name="subject">Тема</string>
     <!-- Pdf activity pdf keywords -->
-    <string name="keywords">Keywords</string>
+    <string name="keywords">Ключевые слова</string>
     <!-- Pdf activity pdf producer -->
-    <string name="producer">Producer</string>
+    <string name="producer">Создатель</string>
     <!-- Generic dialog close button -->
-    <string name="close">Close</string>
+    <string name="close">Закрыть</string>
     <!-- Analysing internal storage shown in analysis tab -->
-    <string name="analysing">Analysing…</string>
+    <string name="analysing">Анализ…</string>
     <!-- Pdf activity page content copied -->
-    <string name="page_copied_to_clipboard">Page content copied to clipboard</string>
+    <string name="page_copied_to_clipboard">Страница скопирована в буфер обмена</string>
     <!-- Clean button in analysis tab to clean junk files -->
-    <string name="clean">Clean</string>
+    <string name="clean">Очистить</string>
     <!-- Blurred images label in analysis -->
-    <string name="blurred_pics">Blurred</string>
+    <string name="blurred_pics">Размытые</string>
     <!-- Low light label in analysis -->
-    <string name="low_light">Low-Light</string>
+    <string name="low_light">Слабое освещение</string>
     <!-- Memes label in analysis -->
-    <string name="memes">Memes</string>
+    <string name="memes">Мемы</string>
     <!-- Sad images label in analysis -->
-    <string name="frown">Frown</string>
+    <string name="frown">Хмурые</string>
     <!-- Sad images analysis hint -->
-    <string name="frown_hint">Images that doesn\'t have smiling faces</string>
+    <string name="frown_hint">Изображения, в которых нет улыбающихся лиц</string>
     <!-- Closed eyes analysis label -->
-    <string name="closed_eyes">Closed Eyes</string>
+    <string name="closed_eyes">Закрытые глаза</string>
     <!-- Closed eyes analysis hint -->
-    <string name="closed_eyes_hint">Images that have people with closed eyes</string>
+    <string name="closed_eyes_hint">Изображения, в которых есть люди с закрытыми глазами</string>
     <!-- Distracted images analysis label -->
-    <string name="distracted">Distracted</string>
+    <string name="distracted">Рассеянные</string>
     <!-- Distracted images analysis hint -->
-    <string name="distracted_hint">Images that have people looking elsewhere</string>
+    <string name="distracted_hint">Изображения, в которых люди не смотрят в камеру</string>
     <!-- Selfie images analysis label -->
-    <string name="selfie">Selfies</string>
+    <string name="selfie">Селфи</string>
     <!-- Group images analysis label -->
-    <string name="group_pics">Group Pics</string>
+    <string name="group_pics">Групповые изображения</string>
     <!-- Memes analysis hint -->
-    <string name="memes_hint">Memes are images that have something prominent written over them</string>
+    <string name="memes_hint">Мета - это изображения, которые имеют заметный текст</string>
     <!-- Duplicate files analysis label -->
-    <string name="duplicates">Duplicate files</string>
+    <string name="duplicates">Дублирующиеся файлы</string>
     <!-- App caches analysis labels -->
-    <string name="cache">App Cache</string>
+    <string name="cache">Кэш приложения</string>
     <!-- Large videos analysis label -->
-    <string name="large_videos">Large videos</string>
+    <string name="large_videos">Большие видео</string>
     <!-- Large downloads analysis label -->
-    <string name="large_downloads">Large downloads</string>
+    <string name="large_downloads">Большие загрузки</string>
     <!-- Old screenshots analysis label -->
-    <string name="old_screenshots">Old Screenshots</string>
+    <string name="old_screenshots">Старые скриншоты</string>
     <!-- Old downloads analysis label -->
-    <string name="old_downloads">Old downloads</string>
+    <string name="old_downloads">Старые загрузки</string>
     <!-- Old recordings analysis label -->
-    <string name="old_recordings">Old recordings</string>
+    <string name="old_recordings">Старые записи</string>
     <!-- Empty files analysis label -->
-    <string name="empty_files">Empty files / folders</string>
+    <string name="empty_files">Пустые файлы / папки</string>
     <!-- Junk files analysis label -->
-    <string name="junk_files">Junk files</string>
+    <string name="junk_files">Мусорные файлы</string>
     <!-- Junk files analysis hint -->
-    <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
+    <string name="junk_files_hint">Мусорные файлы - это файлы, оставшиеся от удаленных приложений</string>
     <!-- Telegram analysis label -->
-    <string name="telegram_files">Telegram Media</string>
+    <string name="telegram_files">Медиа Телеграма</string>
     <!-- More optimisations coming at analysis tab bottom -->
-    <string name="more_to_come">More optimizations to come!</string>
+    <string name="more_to_come">Больше оптимизаций в будущем!</string>
     <!-- View all analysed content analysis tab -->
-    <string name="view_all">View all</string>
+    <string name="view_all">Посмотреть все</string>
     <!-- Analysis settings title -->
-    <string name="analysis">Analysis</string>
+    <string name="analysis">Анализ</string>
     <!-- Analysis settings hint -->
-    <string name="analysis_hint">Control analysis tab settings such as paths to include analysis from, show / hide various analysis</string>
+    <string name="analysis_hint">Настройки Анализа, например, откуда проводить анализ, показать / спрятать различные фильтры</string>
     <!-- Exclude paths from scan for music player -->
-    <string name="exclusions">Exclusions</string>
+    <string name="exclusions">Исключения</string>
     <!-- Exclude paths from scan for music player summary -->
-    <string name="exclusions_summary">Paths to exclude while scanning media</string>
+    <string name="exclusions_summary">Пути, которые будут исключены при сканировании медиа</string>
     <!-- Audio player settings title -->
-    <string name="audio_player">Audio Player</string>
+    <string name="audio_player">Аудиопроигрыватель</string>
     <!-- Audio player settings summary -->
-    <string name="audio_player_hint">Control audio player settings such as paths to exclude</string>
+    <string name="audio_player_hint">Управление настройками аудио плеера, такими как пути для исключения</string>
     <!-- Image viewer settings title -->
-    <string name="image_viewer_hint">Control image viewer settings</string>
+    <string name="image_viewer_hint">Управлять настройками Просмотра Изображений</string>
     <!-- Analysis in settings page -->
-    <string name="search_duplicates">Search duplicates in…</string>
+    <string name="search_duplicates">Поиск дубликатов в…</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="media_store">Android media store (fastest)</string>
+    <string name="media_store">Хранилище медиа Андроид (быстрый)</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="internal_storage_shallow">Internal Storage (Shallow / slow)</string>
+    <string name="internal_storage_shallow">Внутреннее хранилище (небольшие / медленные)</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="internal_storage_deep">Internal Storage (Deep / slowest)</string>
+    <string name="internal_storage_deep">Внутреннее хранилище (Глубокие / медленные)</string>
     <!-- Show/hide analysis checkbox in settings -->
-    <string name="show_analysis">Show analysis</string>
+    <string name="show_analysis">Показать анализ</string>
     <!-- Add new path to analyse or new path to exclude from scan in settings -->
-    <string name="add_item">Add Item</string>
+    <string name="add_item">Добавить элемент</string>
     <!-- Paths included for analysis in settings -->
-    <string name="paths_included">Paths Included</string>
+    <string name="paths_included">Включенные пути</string>
     <!-- Paths excluded from music player scan in settings -->
-    <string name="paths_excluded">Paths Excluded</string>
+    <string name="paths_excluded">Исключенные пути</string>
     <!-- Delete path from analysis / exclusion dialog in settings -->
-    <string name="delete_preference">Delete Preference</string>
+    <string name="delete_preference">Удалить предпочтение</string>
     <!-- Delete path from analysis / exclusions dialog message in settings -->
-    <string name="delete_pref_override_message">You\'re about to override an existing path.
-        This will reset the existing analysis data for that path.</string>
+    <string name="delete_pref_override_message">Вы собираетесь переопределить существующий путь.
+        Это сбросит существующие данные анализа для этого пути.</string>
     <!-- Generic message to confirm -->
-    <string name="confirm">Confirm</string>
+    <string name="confirm">Подтвердить</string>
     <!-- Images features group name in analysis settings -->
-    <string name="image_features">Image Features</string>
+    <string name="image_features">Особенности изображения</string>
     <!-- Images features group hint in analysis settings -->
-    <string name="features_paths_hint">Includes closed eyes, selfie, group paths</string>
+    <string name="features_paths_hint">Включает закрытые глаза, селфи, групповые пути</string>
     <!-- Downloads label in analysis settings -->
-    <string name="download_paths">Downloads</string>
+    <string name="download_paths">Загрузки</string>
     <!-- Downloads hint in analysis settings -->
-    <string name="download_paths_hint">Includes old, large downloads</string>
+    <string name="download_paths_hint">Включая старые, большие загрузки</string>
     <!-- Cluttered videos in analysis tab -->
-    <string name="cluttered_videos">Cluttered Videos</string>
+    <string name="cluttered_videos">Беспорядочные Видео</string>
     <!-- Cluttered videos hint in analysis tab -->
-    <string name="cluttered_videos_hint">A group of videos that have similar running time.</string>
+    <string name="cluttered_videos_hint">Группа видео, которые имеют похожую продолжительность.</string>
     <!-- Re-analyse button in analysis settings -->
-    <string name="reanalyse">Re-analyse</string>
+    <string name="reanalyse">Повторить Анализ</string>
     <!-- Re-analyse hint in analysis settings -->
-    <string name="reanalyse_hint">Clears existing analysis data and starts again</string>
+    <string name="reanalyse_hint">Очистить существующие данные анализа и начать заново</string>
     <!-- Unknown artist / album for music player -->
-    <string name="unknown_artist">&lt;UNKNOWN&gt;</string>
+    <string name="unknown_artist">&lt;НЕИЗВЕСТНЫЙ&gt;</string>
     <!-- Search for nearby connections in transfer tab -->
-    <string name="searching">Searching…</string>
+    <string name="searching">Поиск…</string>
     <!-- Searching for nearby connections with timer in transfer tab -->
-    <string name="searching_timer">Searching… (%s secs)</string>
+    <string name="searching_timer">Поиск… (%s секунд)</string>
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
-    <string name="enable_wifi">Please enable your Wi-Fi</string>
+    <string name="enable_wifi">Включите Wi-Fi</string>
     <!-- Failed to discover nearby devices in transfer tab -->
-    <string name="discovery_failure">Failed to discover peers. Please try reconnecting to Wifi network</string>
+    <string name="discovery_failure">Не удалось найти пиров. Пожалуйста, попробуйте переподключиться к сети Wi-Fi</string>
     <!-- Receiving files in transfer tab -->
-    <string name="receiving_files">Receiving files</string>
+    <string name="receiving_files">Получение файлов</string>
     <!-- Search for nearby devices in transfer tab -->
-    <string name="search_devices">Search for devices…</string>
+    <string name="search_devices">Поиск устройств…</string>
     <!-- Enable waveform bar for music player in settings -->
-    <string name="enable_waveform">Enable waveform seekbar</string>
+    <string name="enable_waveform">Включить панель с волнами</string>
     <!-- Failed to start cast session when trying to cast images / videos from their list pages -->
-    <string name="failed_to_start_cast">Failed to start cast session</string>
+    <string name="failed_to_start_cast">Не удалось начать трансляцию</string>
     <!-- Ready to cast images / videos to tv -->
-    <string name="ready_to_cast">Ready to cast, select any media</string>
+    <string name="ready_to_cast">Готово к трансляции, выберите медиа</string>
     <!-- Creating new cast to tv connection -->
-    <string name="establishing_cast">Establishing cast connection</string>
+    <string name="establishing_cast">Устанавливаем соединение для трансляции</string>
     <!-- Cast session suspended for tv -->
-    <string name="cast_suspended">Cast session suspended</string>
+    <string name="cast_suspended">Трансляция приостановлена</string>
     <!-- Resuming tv cast session -->
-    <string name="resuming_cast">Resuming cast session</string>
+    <string name="resuming_cast">Возобновление трансляции</string>
     <!-- Failed to resume tv cast session -->
-    <string name="failed_resume_cast">Failed to resume cast session</string>
+    <string name="failed_resume_cast">Не удалось возобновить трансляцию</string>
     <!-- Tv cast session resumed -->
-    <string name="cast_resumed">Cast session resumed</string>
+    <string name="cast_resumed">Трансляция возобновлена</string>
     <!-- Tv cast session ending -->
-    <string name="cast_ending">Ending cast session</string>
+    <string name="cast_ending">Завершение трансляции</string>
     <!-- Tv cast session ended -->
-    <string name="cast_ended">Cast session ended</string>
+    <string name="cast_ended">Трансляция завершена</string>
     <!-- Open image/ videos/ audios with either cast on tv or open in mobile -->
-    <string name="open_with">Open with…</string>
+    <string name="open_with">Открыть с помощью…</string>
     <!-- Open images / videos/ audios using inbuilt player -->
-    <string name="inbuilt_player">In-built player</string>
+    <string name="inbuilt_player">Встроенный плеер</string>
     <!-- Tv Cast notification title server running -->
-    <string name="cast_notification_title">Server running…</string>
+    <string name="cast_notification_title">Сервер запущен…</string>
     <!-- tv casting content notification content -->
-    <string name="cast_notification_summary">Casting content on TV</string>
+    <string name="cast_notification_summary">Трансляция контента на TV</string>
     <!-- stop tv cast server notification button -->
-    <string name="stop">Stop</string>
+    <string name="stop">Стоп</string>
     <!-- Service description to cast media files to tv -->
-    <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
+    <string name="cloud_streamer_service_description">Транслировать медиа для Amaze Файловых Утилит</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
-    <string name="failed_to_handshake">Failed to establish connection with remote device. Please try reconnecting to Wifi network</string>
+    <string name="failed_to_handshake">Не удалось установить соединение с удалённым устройством. Пожалуйста, попробуйте переподключиться к сети Wi-Fi</string>
     <!-- Connection successful to transfer files in tranfer tab -->
-    <string name="connection_successful">Connection successful</string>
+    <string name="connection_successful">Подключение успешно</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send">Failed to send, please ensure remote is set to receive file</string>
+    <string name="failed_filename_send">Не удалось отправить, пожалуйста, убедитесь, что дистанционное устройство принимает файл</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send_reconnecct">Failed to send, please reconnect</string>
+    <string name="failed_filename_send_reconnecct">Не удалось отправить, переподключитесь</string>
     <!-- Failed to receive files in transfer tab -->
-    <string name="failed_filename_receive">Failed to receive</string>
+    <string name="failed_filename_receive">Не удалось получить</string>
     <!-- Failed to receive files in transfer tab -->
-    <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
+    <string name="failed_filename_receive_reconnecct">Не удалось получить, переподключитесь</string>
     <!-- Transfer complete in transfer tab -->
-    <string name="transfer_complete">File transferred</string>
+    <string name="transfer_complete">Файл передан</string>
     <!-- Need extra permissions for transfer tab -->
-    <string name="grant_location_permission">App needs location permission to connect with nearby devices.</string>
+    <string name="grant_location_permission">Приложению требуется разрешение на определение местоположения для подключения к ближайшим устройствам.</string>
     <!-- Need extra permissions for transfer tab -->
-    <string name="location_permission_not_granted">Please grant storage permission to connect with nearby devices.</string>
+    <string name="location_permission_not_granted">Пожалуйста, предоставьте разрешение на доступ к хранилищу для подключения к ближайшим устройствам.</string>
     <!-- Waiting for permissions in transfer tab -->
-    <string name="waiting_for_permissions">Waiting for permissions…</string>
+    <string name="waiting_for_permissions">Ожидаем разрешения…</string>
     <!-- Enable gps for transfer tab -->
-    <string name="gps_disabled">Your GPS seems to be disabled, please enable to proceed</string>
+    <string name="gps_disabled">Ваш GPS отключен, включите для продолжения</string>
     <!-- Enable location to scan nearby devices in transfer tab -->
-    <string name="enable_location">Please enable location to scan.</string>
+    <string name="enable_location">Пожалуйста, включите геолокацию для сканирования.</string>
     <!-- generic yes -->
-    <string name="yes">Yes</string>
+    <string name="yes">Да</string>
     <!-- generic no -->
-    <string name="no">No</string>
+    <string name="no">Нет</string>
     <!-- Enable location / wifi in transfer tab -->
-    <string name="enable">Enable</string>
+    <string name="enable">Включить</string>
     <!-- No nearby devices found in transfer tab -->
-    <string name="no_devices_found">No devices found nearby,
-        please make sure your device is connected to same network and have WiFi-Direct enabled in settings</string>
+    <string name="no_devices_found">Устройства не найдены,
+        Пожалуйста, убедитесь, что ваше устройство подключено к той же сети и WiFi-Direct включен в настройках</string>
     <!-- Failed to stop discovery in transfer tab -->
-    <string name="failed_to_stop_peer_discovery">Failed to stop peer discovery</string>
+    <string name="failed_to_stop_peer_discovery">Не удалось остановить поиск пиров</string>
     <!-- Resetting network discovery in transfer tab -->
-    <string name="resetting_network_discovery">Resetting network discovery</string>
+    <string name="resetting_network_discovery">Сброс обнаружения сети</string>
     <!-- Disconnected in transfer tab -->
-    <string name="disconnected">Disconnected</string>
+    <string name="disconnected">Отключен</string>
     <!-- Disconnect from connection in transfer tab -->
-    <string name="disconnect">Disconnect</string>
+    <string name="disconnect">Отключить</string>
     <!-- Already connected to a device in transfer tab -->
-    <string name="existing_connection">Existing connection exists, please disconnect first!</string>
+    <string name="existing_connection">Соединение уже существует, пожалуйста, сначала отсоединитесь!</string>
     <!-- Connecting to nearby device in transfer tab -->
-    <string name="connecting">Connecting…</string>
+    <string name="connecting">Подключение…</string>
     <!-- Aspect ratio of video in video player -->
-    <string name="aspect_ratio">Aspect ratio</string>
+    <string name="aspect_ratio">Соотношение сторон</string>
     <!-- Playback speed dialog for video / audio player -->
-    <string name="playback_speed">Playback Speed</string>
+    <string name="playback_speed">Скорость воспроизведения</string>
     <!-- Playback pitch in video / audio player -->
-    <string name="pitch_speed">Pitch (semitones)</string>
+    <string name="pitch_speed">Высота тона (полутона)</string>
     <!-- Add subtitles in video player -->
-    <string name="subtitles">Subtitles</string>
+    <string name="subtitles">Субтитры</string>
     <!-- Video info dialog in video player -->
-    <string name="file">File</string>
+    <string name="file">Файл</string>
     <!-- Video info dialog in video player -->
-    <string name="media">Media</string>
+    <string name="media">Медиа</string>
     <!-- Video info dialog in video player -->
-    <string name="audio">Audio</string>
+    <string name="audio">Аудио</string>
     <!-- Video info dialog in video player -->
-    <string name="video">Video</string>
+    <string name="video">Видео</string>
     <!-- Video info dialog in video player -->
-    <string name="file_path">Path</string>
+    <string name="file_path">Путь</string>
     <!-- Video info dialog in video player -->
-    <string name="last_modified">Last Modified</string>
+    <string name="last_modified">Последнее изменение</string>
     <!-- Video info dialog in video player -->
-    <string name="description">Description</string>
+    <string name="description">Описание</string>
     <!-- Video info dialog in video player -->
-    <string name="recording_date">Recording month/year</string>
+    <string name="recording_date">Месяц/год записи</string>
     <!-- Video info dialog in video player -->
-    <string name="release_date">Release month/year</string>
+    <string name="release_date">Месяц/год выпуска</string>
     <!-- Video info dialog in video player -->
-    <string name="bitrate">Bitrate</string>
+    <string name="bitrate">Битрейт</string>
     <!-- Video info dialog in video player -->
-    <string name="channel">Channel</string>
+    <string name="channel">Канал</string>
     <!-- Video info dialog in video player -->
-    <string name="frame_rate">Frame Rate</string>
+    <string name="frame_rate">Частота кадров</string>
     <!-- Video info dialog in video player -->
-    <string name="mime_type">Container Type</string>
+    <string name="mime_type">Тип контейнера</string>
     <!-- Video info dialog in video player -->
-    <string name="width">Width</string>
+    <string name="width">Ширина</string>
     <!-- Video info dialog in video player -->
-    <string name="height">Height</string>
+    <string name="height">Высота</string>
     <!-- Video info dialog in video player -->
-    <string name="codecs">Codecs</string>
+    <string name="codecs">Кодеки</string>
     <!-- Video info dialog in video player -->
-    <string name="sample_rate">Sample Rate</string>
+    <string name="sample_rate">Частота дискретизации</string>
     <!-- Failed to gain audio focus in music player -->
-    <string name="failed_to_gain_focus">Failed to gain audio focus</string>
+    <string name="failed_to_gain_focus">Не удалось не получить фокус аудио</string>
     <!-- Open existing subtitles file in video player -->
-    <string name="open">Open</string>
+    <string name="open">Открыть</string>
     <!-- Search for subtitles file online dialog button in video player -->
-    <string name="search">Search</string>
+    <string name="search">Найти</string>
     <!-- Search for subtitles file online dialog title in video player -->
-    <string name="search_online">Search online</string>
+    <string name="search_online">Найти онлайн</string>
     <!-- Synchronize subtitles list item in video player -->
-    <string name="synchronize">Synchronize</string>
+    <string name="synchronize">Синхронизировать</string>
     <!-- Download subtitles in video player -->
-    <string name="download_subtitles">Download subtitles</string>
+    <string name="download_subtitles">Скачать субтитры</string>
     <!-- Download subtitles info in video player -->
-    <string name="download_subtitles_info">Enter keywords and select your language to search subtitles from <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
+    <string name="download_subtitles_info">Введите ключевые слова и выберите язык для поиска субтитров из <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
-    <string name="amaze_fm_redirect">You\'re being redirected to Amaze File Manager. It\'s our open source offering that has all features a modern file manager has completely free of cost with over 2M downloads and 4.3 rating on Play Store.</string>
+    <string name="amaze_fm_redirect">Вы будете перенаправлены на Amaze Файловый Менеджер. Это наш открытый исходный код, который предлагает все возможности современного файлового менеджера абсолютно бесплатно с более чем 2M загрузками и рейтингом 4.3 в Play Маркет.</string>
     <!-- Download button in dialog prompt -->
-    <string name="download">Download</string>
-    <string name="amaze_file_manager">Amaze File Manager</string>
+    <string name="download">Скачать</string>
+    <string name="amaze_file_manager">Amaze Файловый Менеджер</string>
     <!-- Download subtitles video player device not connected to internet -->
-    <string name="not_connected_to_internet">Device not connected to internet</string>
+    <string name="not_connected_to_internet">Нет подключения к интернету</string>
     <!-- Search subtitles dialog in video player -->
-    <string name="upload_date">Upload date</string>
+    <string name="upload_date">Дата загрузки</string>
     <!-- Search subtitles dialog in video player -->
-    <string name="rating">Rating</string>
+    <string name="rating">Рейтинг</string>
     <!-- Search subtitles dialog in video player -->
     <string name="cd">CD</string>
     <!-- Uploader info in search subtitles dialog in video player -->
-    <string name="uploader">Uploader</string>
+    <string name="uploader">Загрузчик</string>
     <!-- Downloads info in search subtitles dialog in video player -->
-    <string name="downloads">Downloads</string>
+    <string name="downloads">Загрузки</string>
     <!-- Language info in search subtitles dialog in video player -->
-    <string name="language">Language</string>
+    <string name="language">Язык</string>
     <!-- No subtitles found in video player -->
-    <string name="no_results_subtitles">No results, please try with different keywords…</string>
+    <string name="no_results_subtitles">Результаты не найдены. Попробуйте поиск с другими ключевыми словами…</string>
     <!-- Download subtitles in video player -->
-    <string name="downloading">Downloading…</string>
+    <string name="downloading">Скачивание…</string>
     <!-- Can't download subtitles in video player -->
-    <string name="choose_different_subtitle">Can\'t download, choose some other subtitles</string>
+    <string name="choose_different_subtitle">Не удается загрузить, выберите другие субтитры</string>
     <!-- Subtitles applied in video player -->
-    <string name="subtitles_applied">Subtitles applied</string>
+    <string name="subtitles_applied">Субтитры применены</string>
     <!-- Failed to download subtitles in video player -->
-    <string name="failed_to_download">Failed to download</string>
+    <string name="failed_to_download">Ошибка загрузки</string>
     <!-- Share file dialog -->
     <string name="bluetooth">Bluetooth</string>
     <!-- Share logs in about section -->
-    <string name="share_logs">Share logs</string>
+    <string name="share_logs">Поделиться логами</string>
     <!-- No app found in share dialog -->
-    <string name="no_apps_found_to_share">No apps found to share</string>
+    <string name="no_apps_found_to_share">Не найдено приложение для отправки</string>
     <!-- Failed to extract logs to share in about section -->
-    <string name="failed_to_extract_logs">Failed to extract logs file</string>
+    <string name="failed_to_extract_logs">Не удалось извлечь файлы логов</string>
     <!-- Continue playing button in video player when video was previously played and we want to resume -->
-    <string name="continue_playing">Continue playing</string>
+    <string name="continue_playing">Продолжить играть</string>
     <!-- No language selected for subtitles download in video player -->
-    <string name="no_language_selected">No language selected</string>
+    <string name="no_language_selected">Язык не выбран</string>
     <!-- No item selected to delete in analysis tab -->
-    <string name="no_item_selected">No item selected</string>
+    <string name="no_item_selected">Ничего не выбрано</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
-    <string name="analysis_updated">Updated analysis</string>
+    <string name="analysis_updated">Обновленный анализ</string>
     <!-- Failed to share pdf/ video/audio files  -->
-    <string name="failed_to_share">Failed to share files</string>
+    <string name="failed_to_share">Не удалось поделиться файлами</string>
     <!-- Transfer tab connected hint -->
-    <string name="connected_send_receive_hint">Connected… before you start sending, 
-        make sure to enable receiver on the other device</string>
+    <string name="connected_send_receive_hint">Подключено… перед отправкой, 
+        убедитесь, что приёмник включен на другом устройстве</string>
     <!-- Transfer tab receiving files -->
-    <string name="receiving">Receiving…</string>
+    <string name="receiving">Получение…</string>
     <!-- Transfer tab hint for connection -->
-    <string name="devices_present_select">Make sure to initiate connection only from one device not both.</string>
+    <string name="devices_present_select">Убедитесь, что соединение инициируется только с одного устройства, а не с обоих устройств.</string>
     <!-- Transfer tab hint for connection -->
-    <string name="start_scan_both_devices">Make sure to start scan on both the devices</string>
+    <string name="start_scan_both_devices">Убедитесь, что сканирование запускается на обоих устройствах</string>
     <!-- Transfer tab connecting countdown -->
-    <string name="connecting_please_wait">Connecting… (%s secs)</string>
+    <string name="connecting_please_wait">Подключение… (%s секунд)</string>
     <!-- Transfer tab enable wifi to continue -->
-    <string name="enable_wifi_to_continue">Please enable Wifi to continue</string>
+    <string name="enable_wifi_to_continue">Чтобы продолжить, пожалуйста, включите Wi-Fi</string>
     <!-- Transfer tab my device info -->
-    <string name="my_device">My device: %s</string>
+    <string name="my_device">Мое устройство: %s</string>
     <!-- Transfer tab my device status -->
-    <string name="device_status">Status: %s</string>
+    <string name="device_status">Статус: %s</string>
     <!-- Transfer tab progress -->
-    <string name="transfer_in_progress_title">Transfer in progress</string>
+    <string name="transfer_in_progress_title">Передача в процессе</string>
     <!-- Transfer tab transfer in progress but user trying to leave the screen -->
-    <string name="transfer_in_progress_summary">There is a P2P transfer currently in progress,
-        it is recommended that you don\'t leave this screen,
-        otherwise you\'ll not be able to track the transfer</string>
+    <string name="transfer_in_progress_summary">В настоящее время идет передача P2P,
+        рекомендуется не покидать этот экран,
+        иначе вы не сможете отслеживать передачу</string>
     <!-- Transfer tab leave in progress -->
-    <string name="leave">Leave</string>
+    <string name="leave">Покинуть</string>
     <!-- Transfer app stay in progress -->
-    <string name="stay">Stay</string>
+    <string name="stay">Остаться</string>
     <!-- Image viewer edit image -->
-    <string name="edit">Edit</string>
+    <string name="edit">Редактировать</string>
     <!-- Image viewer set image as wallpaper -->
-    <string name="set_as">Set as…</string>
+    <string name="set_as">Установить как…</string>
     <!-- Image viewer delete image -->
-    <string name="delete">Delete</string>
+    <string name="delete">Удалить</string>
     <!-- Image viewer details of image -->
-    <string name="details">Details</string>
+    <string name="details">Детали</string>
     <!-- Image viewer manufacturer of camera lens -->
-    <string name="make">Make</string>
+    <string name="make">Производитель камеры</string>
     <!-- Image viewer model of camera lens -->
-    <string name="model">Model</string>
+    <string name="model">Модель</string>
     <!-- Image viewer camera aperture -->
-    <string name="aperture">Aperture</string>
+    <string name="aperture">Апертура</string>
     <!-- Image viewer iso of image -->
     <string name="iso">ISO</string>
     <!-- Image viewer shutter time -->
-    <string name="shutter_time">Shutter time</string>
+    <string name="shutter_time">Время затвора</string>
     <!-- Image viewer image location -->
-    <string name="location">Location</string>
+    <string name="location">Местоположение</string>
     <!-- Image viewer gps -->
     <string name="gps">GPS</string>
     <!-- Image viewer image latitude -->
-    <string name="latitude">Latitude</string>
+    <string name="latitude">Широта</string>
     <!-- Image viewer image longitude -->
-    <string name="longitude">Longitude</string>
+    <string name="longitude">Долгота</string>
     <!-- Image viewer image file name -->
-    <string name="file_name">File Name</string>
+    <string name="file_name">Имя файла</string>
     <!-- Image viewer image path -->
-    <string name="path">Path</string>
+    <string name="path">Путь</string>
     <!-- Image viewer open image location in map -->
-    <string name="open_in_maps">Open in Map</string>
+    <string name="open_in_maps">Открыть на карте</string>
     <!-- Share image / video -->
-    <string name="share">Share</string>
+    <string name="share">Поделиться</string>
     <!-- Share / document no app found to open -->
-    <string name="no_app_found">No App found to open this file</string>
+    <string name="no_app_found">Нет приложений для открытия этого файла</string>
     <!-- File not found while opening -->
-    <string name="file_not_found">File not found</string>
+    <string name="file_not_found">Файл не найден</string>
     <!-- Delete file -->
-    <string name="delete_files_title">Delete</string>
+    <string name="delete_files_title">Удалить</string>
     <!-- Delete file summary -->
-    <string name="delete_files_message">You\'re about to permanently delete these files.
-        Are you sure you want to proceed?\n\n%s Files, %s Size</string>
+    <string name="delete_files_message">Вы собираетесь навсегда удалить эти файлы.
+        Вы уверены, что хотите продолжить?\n\n%s Файлов, %s Размер</string>
     <!-- Delete file progress -->
-    <string name="deleted_progress">Deleted %s of %s</string>
+    <string name="deleted_progress">Удалено %s из %s</string>
     <!-- Delete file successful -->
-    <string name="successfully_deleted">Successfully deleted</string>
+    <string name="successfully_deleted">Успешно удалено</string>
     <!-- Delete file failure -->
-    <string name="failed_to_update_list_reopen">Failed to update list, please restart the app</string>
+    <string name="failed_to_update_list_reopen">Не удалось обновить список, пожалуйста, перезапустите приложение</string>
     <!-- Device id in about section -->
-    <string name="device_id">Device ID</string>
+    <string name="device_id">ID устройства</string>
     <!-- Subscription status in about section -->
-    <string name="subscription_status">Subscription status</string>
+    <string name="subscription_status">Статус подписки</string>
     <!-- Device id copied in about section -->
-    <string name="device_id_copied">Device ID copied to clipboard</string>
+    <string name="device_id_copied">ID устройства скопирован в буфер обмена</string>
     <!-- App version in about section -->
-    <string name="version_title">Version</string>
+    <string name="version_title">Версия</string>
     <!-- License title in about section -->
-    <string name="license">License</string>
+    <string name="license">Лицензия</string>
     <!-- Submit issue in about section -->
-    <string name="submit_issue">Submit Issue</string>
+    <string name="submit_issue">Сообщить о проблеме</string>
     <!-- Contact us in about section -->
-    <string name="contact_us">Contact Us</string>
+    <string name="contact_us">Связаться с нами</string>
     <!-- Translate in about section -->
-    <string name="translate_title">Translate</string>
+    <string name="translate_title">Перевод</string>
     <!-- Translate summary in about section -->
-    <string name="translate_summary">Help us translate Amaze in your language</string>
+    <string name="translate_summary">Помогите нам перевести приложение на Ваш язык</string>
     <!-- About app screen title -->
-    <string name="about_app_title">About app</string>
+    <string name="about_app_title">О приложении</string>
     <!-- Made in india about section -->
-    <string name="made_in_india">Made with ❤ in India</string>
+    <string name="made_in_india">Сделано с ❤ в Индии</string>
     <!-- Trail dialog trial started -->
-    <string name="trial_started_title">Trial started (%s days)</string>
+    <string name="trial_started_title">Пробный период (%s дней)</string>
     <!-- Trial dialog trial started content -->
-    <string name="trial_started_message">Thank you for choosing Amaze File Utilities.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and your purchase will really help to keep us afloat.\n
-        At any point if you need any help feel free to contact us in About section.
-        You\'ll be able to contact directly to our team on Telegram.\n
-        Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
+    <string name="trial_started_message">Благодарим вас за выбор Amaze File Utilities.\n
+        Мы — команда разработчиков с открытым исходным кодом, прилагаем все усилия, чтобы избегать рекламы,
+        и ваша покупка действительно поможет нам продолжать это делать.\n
+        Eсли вам нужна помощь, свяжитесь с нами в разделе О программе.
+        Вы можете напрямую связаться с нашей командой на Телеграме.\n
+        Также попробуйте наше приложение для открытого файлового менеджера \'Amaze Файловый Менеджер\' для удобного управления файлами.</string>
     <!-- Trial dialog trial ending last day title -->
-    <string name="trial_last_day_title">Trial about to expire</string>
+    <string name="trial_last_day_title">Пробный период почти истек</string>
     <!-- Trial dialog trial ending last day summary -->
-    <string name="trial_last_day_message">Hey There! Thank you for choosing Amaze File Utilities.
-        \nYour trial is going to expire tomorrow, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.
-        \nWe are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to keep us afloat.\nYou can write to us if you want to extend the trial period a bit more.
+    <string name="trial_last_day_message">Привет! Спасибо, что выбрали Amaze Файловые Утилиты.
+        \nПробный период закончится завтра, мы надеемся, что вам понравилось наше программное обеспечение, и мы с нетерпением ждем вас сделать номинальный платеж.
+        \nМы — команда разработчиков с открытым исходным кодом, прилагаем все усилия для того, чтобы не допускать рекламу,
+        и нам нужны средства для того, чтобы продолжать это делать.\nВы можете написать нам, если вы хотите продлить пробный период немного больше.
     </string>
     <!-- Trial expired title -->
-    <string name="trial_expired_title">Trial expired</string>
+    <string name="trial_expired_title">Пробный период закончился</string>
     <!-- Trial expired summary -->
-    <string name="trial_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your trial has expired, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to keep us afloat.\n
-        You can write to us if you want to extend the trial period a bit more.
+    <string name="trial_expired_message">Привет! Спасибо, что выбрали Amaze Файловые Утилиты.\n
+        Пробный период закончится завтра, мы надеемся, что вам понравилось наше программное обеспечение, и мы с нетерпением ждем вас сделать номинальный платеж.\n
+        Мы — команда разработчиков с открытым исходным кодом, прилагаем все усилия для того, чтобы не допускать рекламу,
+        и нам нужны средства для того, чтобы продолжать это делать.\n
+        Вы можете написать нам, если вы хотите продлить пробный период немного больше.
     </string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
-    <string name="trial_inactive_title">Trial inactive</string>
+    <string name="trial_inactive_title">Пробный период неактивен</string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
-    <string name="trial_inactive_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your trial is inactive and you\'re not longer an exclusive member,
-        we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to keep us afloat.\n
-        You can write to us if you want to extend the trial period a bit more.</string>
+    <string name="trial_inactive_message">Привет! Спасибо, что выбрали Amaze Файловые Утилиты.\n
+        Пробный период закончился,
+        мы надеемся, что вам понравилось наше программное обеспечение, и мы с нетерпением ждем вас сделать номинальный платеж.\n
+        Мы — команда разработчиков с открытым исходным кодом, прилагаем все усилия для того, чтобы не допускать рекламу,
+        и нам нужны средства для того, чтобы продолжать это делать.\n
+        Вы можете написать нам, если вы хотите продлить пробный период немного больше.</string>
     <!-- Subscription dialog subscription purchased title -->
-    <string name="subscription_purchased_title">Subscribed</string>
+    <string name="subscription_purchased_title">Вы подписаны</string>
     <!-- Subscription dialog subscription purchased summary -->
-    <string name="subscription_purchased_message">Thank you for choosing Amaze File Utilities.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and your subscription will really help us in development.\n
-        At any point if you need any help feel free to contact us in About section.
-        You\'ll be able to contact directly to our team on Telegram.\n
-        Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
+    <string name="subscription_purchased_message">Привет! Спасибо, что выбрали Amaze Файловые Утилиты.\n
+        Мы — команда разработчиков с открытым исходным кодом, прилагаем все усилия для того, чтобы не допускать рекламу,
+        и ваша подписка сильно поможет нам в разработке.\n
+        Если Вам необходима помощь свяжитесь с нами в секции \'О нас\'
+        Вы можете напрямую связаться с нашей командой в Телеграм.\n
+        Пожалуйста, попробуйте наше приложение с открытым кодом \'Amaze Файловый Менеджер\' для удобного администрирования файлов.</string>
     <!-- Subscription dialog yearly subscription expired title -->
-    <string name="subscription_expired_title">Subscription expired</string>
+    <string name="subscription_expired_title">Истек срок действия подписки</string>
     <!-- Subscription dialog yearly subscription expired summary -->
-    <string name="subscription_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your subscription has expired,
-        we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to keep us afloat.\n
-        You can write to us if you want to extend the trial period a bit more.</string>
+    <string name="subscription_expired_message">Привет! Спасибо, что выбрали Amaze Файловые Утилиты.\n
+        Ваша бесплатная подписка истекла,
+        мы надеемся Вам понравилось наше приложение и мы надеемся вы совершите номинальный платёж.\n
+        Мы — команда разработчиков с открытым исходным кодом, прилагаем все усилия для того, чтобы не допускать рекламу,
+        и нам нужны средства для того, чтобы продолжать это делать.\n
+        Вы можете написать нам, если вы хотите продлить пробный период немного больше.</string>
     <!-- Trial validation dialog failed to validate -->
-    <string name="not_connected_trial_title">Failed to validate</string>
+    <string name="not_connected_trial_title">Не удалось проверить</string>
     <!-- Trial validation dialog failed to validate summary -->
-    <string name="not_connected_trial_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        We\'re not able to validate your license, please connect to internet and restart the app.</string>
+    <string name="not_connected_trial_message">Привет! Спасибо, что выбрали Amaze Файловые Утилиты.\n
+        Мы не можем проверить вашу подписку. Пожалуйста, подключитесь к интернету и перезапустите приложение.</string>
     <!-- Subscribe button in dialog -->
-    <string name="subscribe">Subscribe</string>
+    <string name="subscribe">Подписаться</string>
     <!-- Generic don't show dialog again -->
-    <string name="dont_show_again">Don\'t show again</string>
+    <string name="dont_show_again">Больше не показывать</string>
     <!-- Welcome screen title -->
-    <string name="welcome_media_title">Manage media files</string>
+    <string name="welcome_media_title">Управление файлами мультимедиа</string>
     <!-- Welcome screen summary -->
-    <string name="welcome_media_summary">View images, videos, audios, documents in list or grid\nOpen using inbuilt players\nGesture support for easy navigation\nJump to any date instantly\nGroup or sort list\nCast on TV</string>
+    <string name="welcome_media_summary">Просматривайте изображения, видео, аудио, документы списком или таблицей\nОткрывайте, используя встроенные проигрыватели\nПоддержка жестов для удобной навигации\nМгновенный переход к любой дате\nГрупируйте и сортируйте списки\nТранслируйте на TV</string>
     <!-- Welcome screen analysis summary -->
-    <string name="welcome_analyse_summary">Analyse storage for junk files to delete\nGroup images by memes, low-light, blurry, selfies or group\nGroup large files in storage\nGroup old downloads, recordings or screenshots\n</string>
+    <string name="welcome_analyse_summary">Анализируйте хранилище для удаления мусорных файлов\nГрупируйте изображения по мемам, с плохой освещённосью, с размытиями или селфи\nГруппируте большие файлы в памяти\nГрупируйте по старым загрузкам, записям или скриншотам\n</string>
     <!-- Welcome screen transfer summary -->
-    <string name="welcome_transfer_summary">Transfer data between devices through wifi\nHigh transfer speeds using android wifi direct</string>
+    <string name="welcome_transfer_summary">Передавайте данные между устройствами через Wi-Fi\nВысокая скорость передачи данных с помощью android Wi-Fi Direct</string>
     <!-- Welcome screen permission required -->
-    <string name="welcome_permission">We need storage permissions to access your media files</string>
+    <string name="welcome_permission">Нам нужно разрешение к хранилищу для доступа к вашим медиа-файлам</string>
     <!-- Welcome screen license agreement page -->
-    <string name="before_we_start">Before we start…</string>
+    <string name="before_we_start">До начала…</string>
     <!-- Welcome screen license agreement page -->
-    <string name="privacy_title">We care for your privacy!</string>
+    <string name="privacy_title">Мы заботимся о вашей конфиденциальности!</string>
     <!-- Welcome screen license agreement page -->
-    <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.\n
-        We assure you that we do not collect any of your private information.\nWe don\'t say this, our track record does.\nWe\'re a group of open source developers and are managing Amaze File Manager for around 8 years now.\n\nWe look forward to your subscription.
+    <string name="privacy_summary">Не любите рекламу? Мы тоже, мы ценим Ваши данные также как и Вы\n
+        Мы заверяем Вас, что мы не собираем ваши личные данные.\nЭто не мы говорим, это говорит наш послужной список.\nМы — команда разработчиков с открытым исходным кодом и поддерижваем Amaze Файловый Менеджер уже 8 лет.\n\nМы с нетерпением ждём вашей подписки.
     </string>
     <!-- Subscription dialog failed to fetch subscriptions -->
-    <string name="error_fetching_google_play_product_list">Error fetching product list from Google Play.</string>
+    <string name="error_fetching_google_play_product_list">Ошибка при получении списка продуктов из Google Play.</string>
     <!-- Welcome screen done with the wizard -->
-    <string name="done">Done</string>
+    <string name="done">Готово</string>
     <!-- Unable to find cast for tv framework -->
-    <string name="cast_framework_unavailable">Unable to initialize cast framework, please update Google Play services</string>
+    <string name="cast_framework_unavailable">Не удается инициализировать фреймворк для трансляции, пожалуйста, обновите сервисы Google Play</string>
     <!-- Updating app from in app updater -->
-    <string name="updating_app">Closing app during update…</string>
+    <string name="updating_app">Закрытие приложения во время обновления…</string>
     <!-- App updated from in app updater -->
-    <string name="app_updated">App updated successfully</string>
+    <string name="app_updated">Приложение обновлено успешно</string>
     <!-- Update cancelled from in app updater -->
-    <string name="update_cancelled">Update cancelled</string>
+    <string name="update_cancelled">Обновление отменено</string>
     <!-- Failed to update from in app updater -->
-    <string name="failed_to_update_app">Failed to update the app…</string>
+    <string name="failed_to_update_app">Не удалось обновить приложение…</string>
     <!-- Home screen design info in about section -->
-    <string name="home_screen_design"><![CDATA[Home screen design - <a href="https://dribbble.com/topu-roy-antu">Topu Roy Antu</a>]]></string>
+    <string name="home_screen_design"><![CDATA[Дизайн домашнего экрана - <a href="https://dribbble.com/topu-roy-antu">Topu Roy Antu</a>]]></string>
     <!-- Welcome screen accept license agreement -->
-    <string name="license_agreement"><![CDATA[I accept the <a href="https://teamamaze.xyz/license-agreement-utilities">License Agreement</a>]]></string>
+    <string name="license_agreement"><![CDATA[Я принимаю <a href="https://teamamaze.xyz/license-agreement-utilities">Лицензионное Соглашение</a>]]></string>
     <!-- Welcome screen license not accepted -->
-    <string name="license_agreement_not_accepted">Please accept license agreement</string>
+    <string name="license_agreement_not_accepted">Пожалуйста, примите лицензионное соглашение</string>
     <!-- Subscription dialog renewal cycle info -->
-    <string name="renewal_cycle">Renewal cycle - %s</string>
+    <string name="renewal_cycle">Цикл обновления - %s</string>
     <!-- Subscription dialog lifetime membership -->
-    <string name="lifetime_membership">Lifetime Membership</string>
+    <string name="lifetime_membership">Пожизненное Членство</string>
     <!-- Subscription dialog one year membership -->
-    <string name="one_year">1 Year</string>
+    <string name="one_year">1 год</string>
     <!-- Generic operation failed -->
-    <string name="operation_failed">Operation failed</string>
+    <string name="operation_failed">Ошибка при выполнении</string>
     <!-- Settings page number of columns for media lists grid view -->
-    <string name="columns_grid_title">No. of columns in grid</string>
+    <string name="columns_grid_title">Количество колонок в сетке</string>
     <!-- Settings page appearance -->
-    <string name="appearance">Appearance</string>
+    <string name="appearance">Внешний вид</string>
     <!-- Settings page appearance summary -->
-    <string name="appearance_summary">App appearance settings</string>
+    <string name="appearance_summary">Настройки внешнего вида приложения</string>
     <!-- Settings page general settings -->
-    <string name="general">General</string>
+    <string name="general">Общие</string>
     <!-- Playback properties in video player -->
-    <string name="playback_properties">Playback properties</string>
+    <string name="playback_properties">Свойства воспроизведения</string>
     <!-- Apply dialog button in apply playback settings -->
-    <string name="apply">Apply</string>
+    <string name="apply">Применить</string>
     <!-- Playback settings dialog pitch settings info -->
-    <string name="pitch_hint_text">A value of zero means that the key is not changed.\nOne full step corresponds to one semitone.\nA change of -12 semitones means that the song is played one octave lower.</string>
+    <string name="pitch_hint_text">Значение нуля означает, что ключ не изменился.\nОдин полный шаг соответствует одному полутону.\nИзменение -12 полутонов означает, что песня воспроизведена на одну октаву ниже.</string>
     <!-- Playback settings dialog reset settings -->
-    <string name="reset">Reset</string>
+    <string name="reset">Сбросить</string>
     <!-- Settings page extract music player background color from album -->
-    <string name="audio_player_enable_palette">Extract palette color from album</string>
+    <string name="audio_player_enable_palette">Извлечь цвет палитры из альбома</string>
     <!-- Settings page extract music player background color from album info -->
-    <string name="audio_player_enable_palette_summary">Sets background color for audio player</string>
+    <string name="audio_player_enable_palette_summary">Установите цвет фона для аудио проигрывателя</string>
     <!-- Settings page extract image viewer background color from image -->
-    <string name="image_viewer_enable_palette">Extract palette color from image</string>
+    <string name="image_viewer_enable_palette">Извлечь цвета палитры из изображения</string>
     <!-- Settings page extract image viewer background color from image summary -->
-    <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
+    <string name="image_viewer_enable_palette_summary">Установите цвет фона для Просмотра Изображений</string>
     <!-- Unused apps in analysis tab -->
-    <string name="unused_apps">Unused apps</string>
+    <string name="unused_apps">Неиспользуемые приложения</string>
     <!-- Most used apps in analysis tab -->
-    <string name="most_used_apps">Most used apps</string>
+    <string name="most_used_apps">Наиболее используемые приложения</string>
     <!-- Least used apps in analysis tab -->
-    <string name="least_used_apps">Least used apps</string>
+    <string name="least_used_apps">Наименее используемые приложения</string>
     <!-- Large apps in analysis tab -->
-    <string name="large_apps">Large apps</string>
+    <string name="large_apps">Большие приложения</string>
     <!-- Games installed in analysis tab -->
-    <string name="games_installed">Games</string>
+    <string name="games_installed">Игры</string>
     <!-- Games installed hint in analysis tab -->
-    <string name="games_installed_hint">Games currently installed on this device</string>
+    <string name="games_installed_hint">Игры, установленные на этом устройстве</string>
     <!-- Required elevated permission for analysis in analysis tab -->
-    <string name="require_permission">Required elevated permissions for this analysis</string>
+    <string name="require_permission">Требуются дополнительные разрешения для этого анализа</string>
     <!-- Already granted analysis permission, ask user to refresh -->
-    <string name="granted_permission_refresh">Already granted?</string>
+    <string name="granted_permission_refresh">Уже предоставлено?</string>
     <!-- Refresh button in analysis after permission granted -->
-    <string name="refresh">Refresh</string>
+    <string name="refresh">Обновить</string>
     <!-- Unused apps preference dialog message -->
-    <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
+    <string name="unused_apps_pref_message">Количество дней приложение не открывалось</string>
     <!-- Most used apps preference dialog message -->
-    <string name="most_used_apps_pref_message">Apps most used in last number of days</string>
+    <string name="most_used_apps_pref_message">Наиболее часто используемые приложения в течение последнего времени</string>
     <!-- Least used apps preference dialog message -->
-    <string name="least_used_apps_pref_message">Apps least used in last number of days</string>
+    <string name="least_used_apps_pref_message">Наименее используемые приложения в течение последнего времени</string>
     <!-- Stopping analysis by pressing on (X) button in analysis tab -->
-    <string name="stopping_analysis">Stopping analysis</string>
+    <string name="stopping_analysis">Остановка анализа</string>
     <!-- Remove battery optimizations on welcome screen and settings page -->
-    <string name="remove_battery_optimizations">Remove battery optimizations</string>
+    <string name="remove_battery_optimizations">Убрать оптимизацию энергопотребления</string>
     <!-- Remove battery optimizations hint on welcome screen and settings page -->
-    <string name="remove_battery_optimizations_hint">Please remove battery optimizations for music player to function properly in background</string>
+    <string name="remove_battery_optimizations_hint">Пожалуйста, уберите оптимизацию энергопотребления для музыкального проигрывателя для корректной работы в фоновом режиме</string>
     <!-- Apk listing in analysis -->
-    <string name="apk_files">APK files</string>
+    <string name="apk_files">APK файлы</string>
     <!-- Image editor tools -->
-    <string name="shape">Shape</string>
+    <string name="shape">Форма</string>
     <!-- Apk listing in analysis -->
-    <string name="text">Text</string>
+    <string name="text">Текст</string>
     <!-- Apk listing in analysis -->
-    <string name="eraser">Eraser</string>
+    <string name="eraser">Ластик</string>
     <!-- Apk listing in analysis -->
-    <string name="filter">Filter</string>
+    <string name="filter">Фильтр</string>
     <!-- Apk listing in analysis -->
-    <string name="emoji">Emoji</string>
+    <string name="emoji">Эмодзи</string>
     <!-- Apk listing in analysis -->
-    <string name="sticker">Sticker</string>
+    <string name="sticker">Стикер</string>
     <!-- Apk listing in analysis -->
-    <string name="rotate">Rotate</string>
+    <string name="rotate">Повернуть</string>
     <!-- Apk listing in analysis -->
-    <string name="flip_horizontal">Flip-H</string>
+    <string name="flip_horizontal">Повернуть по горизонтали</string>
     <!-- Apk listing in analysis -->
-    <string name="flip_vertical">Flip-V</string>
+    <string name="flip_vertical">Повернуть по вертикали</string>
     <!-- Apk listing in analysis -->
-    <string name="resize">Resize</string>
+    <string name="resize">Изменить размер</string>
     <!-- In Image editor -->
-    <string name="label_brush">Brush</string>
+    <string name="label_brush">Кисть</string>
     <!-- In Image editor -->
-    <string name="label_shape">Shape</string>
+    <string name="label_shape">Форма</string>
     <!-- In Image editor -->
-    <string name="label_oval">Oval</string>
+    <string name="label_oval">Овал</string>
     <!-- In Image editor -->
-    <string name="label_rectangle">Rectangle</string>
+    <string name="label_rectangle">Прямоугольник</string>
     <!-- In Image editor -->
-    <string name="label_line">Line</string>
+    <string name="label_line">Линия</string>
     <!-- In Image editor -->
-    <string name="label_emoji">Emoji</string>
+    <string name="label_emoji">Эмодзи</string>
     <!-- In Image editor -->
-    <string name="label_sticker">Sticker</string>
+    <string name="label_sticker">Стикер</string>
     <!-- In Image editor -->
-    <string name="label_eraser">Eraser</string>
+    <string name="label_eraser">Ластик</string>
     <!-- In Image editor -->
-    <string name="label_eraser_mode">Eraser Mode</string>
+    <string name="label_eraser_mode">Режим ластика</string>
     <!-- In Image editor to write text over image -->
-    <string name="label_text">Text</string>
+    <string name="label_text">Текст</string>
     <!-- In Image editor -->
-    <string name="label_filter">Filter</string>
+    <string name="label_filter">Фильтр</string>
     <!-- In Image editor to crop or adjust image -->
-    <string name="label_adjust">Adjust</string>
+    <string name="label_adjust">Подстроить</string>
     <!-- In Image editor -->
-    <string name="msg_save_image">Are you want to exit without saving image?</string>
+    <string name="msg_save_image">Вы действительно хотите выйти без сохранения?</string>
     <!-- In Image editor -->
-    <string name="msg_share_image">Share Image</string>
+    <string name="msg_share_image">Поделиться изображением</string>
     <!-- In Image editor to add picture to edit -->
-    <string name="select_picture">Select Picture</string>
+    <string name="select_picture">Выберите изображение</string>
     <!-- In Image editor saving modified image -->
-    <string name="saving">Saving…</string>
+    <string name="saving">Сохранение…</string>
     <!-- In Image editor -->
-    <string name="image_saved">Image saved successfully</string>
+    <string name="image_saved">Изображение сохранено</string>
     <!-- In Image editor -->
-    <string name="failed_image_save">Failed to save image</string>
+    <string name="failed_image_save">Ошибка при сохранении изображения</string>
     <!-- In Image editor to save edited image -->
-    <string name="save">Save</string>
+    <string name="save">Сохранить</string>
     <!-- In Image editor to discard saving image -->
-    <string name="discard">Discard</string>
+    <string name="discard">Отменить</string>
     <!-- Image editor activity label -->
-    <string name="image_editor">Amaze Image Editor</string>
+    <string name="image_editor">Amaze Редактор Изображений</string>
     <!-- Failed while loading docx file -->
-    <string name="failed_to_load_document">Failed to load document</string>
+    <string name="failed_to_load_document">Не удалось загрузить документ</string>
     <!-- load music lyrics -->
-    <string name="load">Load</string>
+    <string name="load">Загрузка</string>
     <!-- paste lyrics dialog -->
-    <string name="paste_lyrics">Paste lyrics</string>
+    <string name="paste_lyrics">Вставить текст песни</string>
     <!-- lyrics type dialog -->
-    <string name="lyrics_type">Lyrics type</string>
+    <string name="lyrics_type">Тип текста песни</string>
     <!-- lyrics type dialog -->
-    <string name="clear_lyrics">Clearing lyrics</string>
+    <string name="clear_lyrics">Очистить текст песни</string>
     <!-- lyrics type dialog -->
-    <string name="added_lyrics">Added lyrics</string>
+    <string name="added_lyrics">Добавленные тексты песен</string>
     <!-- whatsapp images in analysis section -->
-    <string name="whatsapp_images">Whatsapp Images</string>
+    <string name="whatsapp_images">Whatsapp изображения</string>
     <!-- whatsapp videos in analysis section -->
-    <string name="whatsapp_videos">Whatsapp Videos</string>
+    <string name="whatsapp_videos">Whatsapp видео</string>
     <!-- whatsapp analysis in settings -->
-    <string name="whatsapp_media">Whatsapp Media</string>
+    <string name="whatsapp_media">Whatsapp Медиа</string>
     <!-- large files in analysis tab -->
-    <string name="large_files">Large Files</string>
+    <string name="large_files">Большие файлы</string>
+    <!-- purchase fdroid subscription -->
+    <string name="purchase_fdroid_title">Купить</string>
+    <!-- purchase fdroid subscription summary -->
+    <string name="purchase_fdroid_message">У вас установлена сборка Fdroid.
+        Вы можете разблокировать пожизненную подписку, пожертвовав любую сумму на свой выбор.
+        Пожалуйста, сделайте пожертвование, используя один из вариантов ниже.
+        После этого свяжитесь с нами по телеграм / электронной почте, поделившись ID вашего устройства и мы разблокируем подписку для вас.</string>
+    <!-- purchase fdroid subscription paypal -->
+    <string name="purchase_fdroid_paypal">Paypal</string>
+    <!-- purchase fdroid subscription liberapay -->
+    <string name="purchase_fdroid_liberapay">Liberapay</string>
+    <!-- header summary in media list fragments -->
+    <string name="header_list_summary">%s • %s</string>
+    <!-- playlist in audio fragment -->
+    <string name="created_playlist">Плейлист создан</string>
+    <!-- playlist in audio fragment -->
+    <string name="could_not_create_playlist">Не удалось создать плейлист</string>
+    <!-- playlist in audio fragment -->
+    <string name="insert_songs_playlist">Добавлено %d песен в плейлист %s</string>
+    <!-- playlist in audio fragment -->
+    <string name="failed_insert_songs_playlist">Не удалось добавить песни</string>
+    <!-- playlist in audio fragment -->
+    <string name="failed_remove_songs_playlist">Не удалось удалить песни</string>
+    <!-- playlists header in audio fragment grouping -->
+    <string name="playlists">Плейлисты</string>
+    <!-- options in floating action button -->
+    <string name="options">Опции</string>
+    <!-- options in floating action button to locate the file -->
+    <string name="locate">Искать</string>
+    <!-- options in floating action button to add to playlist -->
+    <string name="playlist">Изменить плейлист</string>
+    <!-- options in media headers when playlist is enabled -->
+    <string name="delete_playlist">Удалить плейлист</string>
+    <!-- options in media headers when playlist is enabled -->
+    <string name="rename_playlist">Переименовать плейлист</string>
+    <!-- Delete playlist summary dialog -->
+    <string name="delete_playlist_message">Плейлист %s будет удален безвозвратно. Продолжить?</string>
+    <!-- Rename playlist summary dialog -->
+    <string name="rename_playlist_message">Пожалуйста, введите название плейлиста</string>
+    <!-- Rename playlist summary dialog button -->
+    <string name="rename">Переименовать</string>
+    <!-- create playlist dialog in audio fragment -->
+    <string name="create_new_playlist">Create New</string>
+    <!-- remove from playlist dialog in audio fragment -->
+    <string name="remove">Remove</string>
+    <!-- Remove from playlist summary dialog -->
+    <string name="remove_from_playlist_message">You\'re about to remove selected songs from playlist(s).
+        Are you sure you want to proceed?</string>
+    <!-- add to playlist dialog in audio fragment -->
+    <string name="add_to_playlist">Add to Playlist</string>
+    <!-- create dialog in audio fragment -->
+    <string name="create">Create</string>
+    <!-- removed songs from playlist in audio fragment -->
+    <string name="removed_from_playlist">Removed from playlist(s)</string>
 </resources>

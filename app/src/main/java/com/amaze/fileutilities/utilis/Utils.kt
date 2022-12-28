@@ -56,9 +56,11 @@ import android.provider.Settings
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
@@ -66,6 +68,8 @@ import androidx.annotation.FloatRange
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
@@ -73,9 +77,11 @@ import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.GridLayoutManager
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.audio_player.playlist.PlaylistLoader
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewAnalysisAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
+import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.google.android.material.slider.Slider
 import okhttp3.ConnectionPool
 import okhttp3.OkHttpClient
@@ -957,16 +963,16 @@ class Utils {
             days: Int,
             callback: (Int) -> Unit
         ) {
-            val inputEditTextField = EditText(context)
-            inputEditTextField.inputType = InputType.TYPE_CLASS_NUMBER
-            inputEditTextField.setText("$days")
+            val inputEditTextViewPair = getEditTextViewForDialog(context, "$days")
+            inputEditTextViewPair.second.inputType = InputType.TYPE_CLASS_NUMBER
+            inputEditTextViewPair.second.setText("$days")
             val dialog = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
                 .setTitle(R.string.unused_apps)
                 .setMessage(R.string.unused_apps_pref_message)
-                .setView(inputEditTextField)
+                .setView(inputEditTextViewPair.first)
                 .setCancelable(false)
                 .setPositiveButton(R.string.ok) { dialog, _ ->
-                    val salt = inputEditTextField.text.toString()
+                    val salt = inputEditTextViewPair.second.text.toString()
                     callback.invoke(salt.toInt())
                     dialog.dismiss()
                 }
@@ -1001,17 +1007,16 @@ class Utils {
             context: Context,
             callback: (String) -> Unit
         ) {
-            val inputEditTextField = EditText(context)
-            inputEditTextField.inputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE
-            inputEditTextField.isSingleLine = false
-            inputEditTextField.minimumHeight = 500
-            inputEditTextField.setTextColor(Color.WHITE)
+            val inputEditTextView = getEditTextViewForDialog(context, "")
+            inputEditTextView.second.inputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            inputEditTextView.second.isSingleLine = false
+            inputEditTextView.second.minimumHeight = 500
             val dialog = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
                 .setTitle(R.string.paste_lyrics)
-                .setView(inputEditTextField)
+                .setView(inputEditTextView.first)
                 .setCancelable(false)
                 .setPositiveButton(R.string.ok) { dialog, _ ->
-                    callback.invoke(inputEditTextField.text.toString())
+                    callback.invoke(inputEditTextView.second.text.toString())
                     dialog.dismiss()
                 }
                 .setNegativeButton(
@@ -1064,6 +1069,139 @@ class Utils {
             } else {
                 pendingIntentFlag or FLAG_IMMUTABLE
             }
+        }
+
+        fun buildRenamePlaylistDialog(
+            context: Context,
+            playlistName: String,
+            callback: (String) -> Unit
+        ) {
+            val inputEditTextViewPair = getEditTextViewForDialog(context, playlistName)
+            val dialog = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+                .setTitle(R.string.rename_playlist)
+                .setMessage(R.string.rename_playlist_message)
+                .setView(inputEditTextViewPair.first)
+                .setCancelable(false)
+                .setPositiveButton(R.string.rename) { dialog, _ ->
+                    val newName = inputEditTextViewPair.second.text.toString()
+                    callback.invoke(newName)
+                    dialog.dismiss()
+                }
+                .setNegativeButton(
+                    R.string.cancel
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+            dialog.show()
+        }
+
+        fun buildDeletePlaylistDialog(
+            context: Context,
+            playlistName: String,
+            positiveCallback: () -> Unit
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.delete_playlist)
+                .setMessage(
+                    context.resources.getString(R.string.delete_playlist_message)
+                        .format(playlistName)
+                )
+                .setPositiveButton(
+                    context.resources.getString(R.string.yes)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                    positiveCallback.invoke()
+                }
+                .setNegativeButton(
+                    context.resources.getString(R.string.no)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun buildAddToPlaylistDialog(
+            context: Context,
+            addToPlaylistCallback: (playlist: MediaFileInfo.Playlist) -> Unit,
+            createNewPlaylistCallback: () -> Unit,
+            removeFromPlaylistsCallback: () -> Unit
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            val playlists = PlaylistLoader.getAllPlaylists(context)
+            builder
+                .setTitle(R.string.add_to_playlist)
+                .setItems(
+                    playlists.map {
+                        it.name
+                    }.toTypedArray()
+                ) { dialog, which ->
+                    addToPlaylistCallback.invoke(playlists[which])
+                    dialog?.dismiss()
+                }
+                .setPositiveButton(
+                    context.resources.getString(R.string.create_new_playlist)
+                ) { dialog, _ ->
+                    createNewPlaylistCallback.invoke()
+                    dialog.dismiss()
+                }.setNeutralButton(
+                    context.resources.getString(R.string.cancel)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setNegativeButton(
+                    context.resources.getString(R.string.remove)
+                ) { dialog, _ ->
+                    removeFromPlaylistsCallback.invoke()
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun buildCreateNewPlaylistDialog(
+            context: Context,
+            callback: (String) -> Unit
+        ) {
+            val inputEditTextViewPair = getEditTextViewForDialog(context, "")
+            val dialog = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+                .setTitle(R.string.create_new_playlist)
+                .setView(inputEditTextViewPair.first)
+                .setCancelable(false)
+                .setPositiveButton(R.string.create) { dialog, _ ->
+                    val newName = inputEditTextViewPair.second.text.toString()
+                    callback.invoke(newName)
+                    dialog.dismiss()
+                }
+                .setNegativeButton(
+                    R.string.cancel
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .create()
+            dialog.show()
+        }
+
+        fun buildRemoveFromPlaylistDialog(
+            context: Context,
+            positiveCallback: () -> Unit
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.remove)
+                .setMessage(R.string.remove_from_playlist_message)
+                .setPositiveButton(
+                    context.resources.getString(R.string.yes)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                    positiveCallback.invoke()
+                }
+                .setNegativeButton(
+                    context.resources.getString(R.string.cancel)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
         }
 
         private fun findApplicationInfoSizeFallback(applicationInfo: ApplicationInfo): Long {
@@ -1147,6 +1285,31 @@ class Utils {
                 hsv[2] *= by
                 (alpha shl 24) + (16777215 and Color.HSVToColor(hsv))
             }
+        }
+
+        private fun getEditTextViewForDialog(
+            context: Context,
+            editTextString: String
+        ): Pair<LinearLayout, EditText> {
+            val params = LinearLayout.LayoutParams(
+                MATCH_PARENT,
+                MATCH_PARENT
+            )
+            val editTextParams = LinearLayout.LayoutParams(
+                MATCH_PARENT,
+                MATCH_PARENT
+            )
+            editTextParams.leftMargin = 16.px.toInt()
+            editTextParams.rightMargin = 16.px.toInt()
+            val inputEditTextField = AppCompatEditText(context)
+            inputEditTextField.layoutParams = editTextParams
+            inputEditTextField.setTextColor(context.resources.getColor(R.color.white))
+            inputEditTextField.setText(editTextString)
+            inputEditTextField.requestFocus()
+            val linearLayout = LinearLayout(context)
+            linearLayout.layoutParams = params
+            linearLayout.addView(inputEditTextField)
+            return Pair(linearLayout, inputEditTextField)
         }
     }
 }

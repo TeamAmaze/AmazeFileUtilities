@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
+import com.amaze.fileutilities.utilis.Utils
 
 class MediaTypeViewOptionsListAdapter(
     val context: Context,
@@ -54,6 +55,7 @@ class MediaTypeViewOptionsListAdapter(
             holder.headerListButton.setOnClickListener {
                 optionsMenuSelected.select(headerListItems[position])
             }
+            Utils.marqueeAfterDelay(2000, holder.headerListButton)
         }
     }
 

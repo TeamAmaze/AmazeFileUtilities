@@ -20,12 +20,12 @@
 
 package com.amaze.fileutilities.home_page.ui.files
 
-import android.view.View
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amaze.fileutilities.R
+import com.amaze.fileutilities.audio_player.playlist.PlaylistsUtil
 import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
 import com.amaze.fileutilities.home_page.ui.options.CastActivity
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
@@ -42,7 +42,6 @@ abstract class AbstractMediaInfoListFragment :
     ItemsActionBarFragment(),
     MediaFileAdapter.OptionsMenuSelected {
 
-    private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
     private var mediaFileAdapter: MediaFileAdapter? = null
     private var linearLayoutManager: LinearLayoutManager? = null
     private var gridLayoutManager: GridLayoutManager? = null
@@ -83,6 +82,10 @@ abstract class AbstractMediaInfoListFragment :
 
     abstract fun getItemPressedCallback(mediaFileInfo: MediaFileInfo)
 
+    abstract fun setupAdapter()
+
+    abstract fun adapterItemSelected(checkedCount: Int)
+
     override fun hideActionBarOnClick(): Boolean {
         return true
     }
@@ -107,7 +110,7 @@ abstract class AbstractMediaInfoListFragment :
                 )
                 // set list adapter
                 val sizeProvider = ViewPreloadSizeProvider<String>()
-                recyclerViewPreloader = RecyclerViewPreloader(
+                val recyclerViewPreloader = RecyclerViewPreloader(
                     Glide.with(requireActivity()),
                     getMediaAdapterPreloader(),
                     sizeProvider,
@@ -150,12 +153,11 @@ abstract class AbstractMediaInfoListFragment :
                     if (checkedSize > 0) {
                         setupShowActionBar()
                         setupCommonButtons()
-                        getLocateFileButton()?.visibility = if (checkedSize == 1)
-                            View.VISIBLE else View.GONE
+                        if (checkedSize == 1) enableLocateFileFab() else disableLocateFileFab()
                     } else {
                         hideActionBar()
                     }
-
+                    adapterItemSelected(checkedSize)
                     val countView = getCountView()
                     countView?.text = title
                 }, {
@@ -173,7 +175,58 @@ abstract class AbstractMediaInfoListFragment :
                                 performShuffleAction(context, actionItems)
                             }
                         }
+                        R.id.delete_playlist -> {
+                            if (actionItems.isNotEmpty()) {
+                                val playlist = actionItems[0]
+                                    .extraInfo?.audioMetaData?.playlist?.name
+                                playlist?.let {
+                                    Utils.buildDeletePlaylistDialog(requireContext(), playlist) {
+                                        PlaylistsUtil.deletePlaylists(
+                                            requireContext(),
+                                            arrayListOf(
+                                                actionItems[0]
+                                                    .extraInfo?.audioMetaData?.playlist
+                                            )
+                                        )
+                                        // reset the dataset
+                                        getFilesViewModelObj()
+                                            .usedPlaylistsSummaryTransformations = null
+                                        setupAdapter()
+                                    }.show()
+                                }
+                            }
+                        }
+                        R.id.rename_playlist -> {
+                            if (actionItems.isNotEmpty()) {
+                                val playlist = actionItems[0]
+                                    .extraInfo?.audioMetaData?.playlist?.name
+                                playlist?.let {
+                                    val playlistId = actionItems[0]
+                                        .extraInfo?.audioMetaData?.playlist?.id
+                                    if (playlistId != -1L) {
+                                        Utils.buildRenamePlaylistDialog(
+                                            requireContext(),
+                                            playlist
+                                        ) {
+                                            newName ->
+                                            PlaylistsUtil.renamePlaylist(
+                                                requireContext(),
+                                                playlistId!!,
+                                                newName
+                                            )
+                                            // reset the dataset
+                                            getFilesViewModelObj()
+                                                .usedPlaylistsSummaryTransformations = null
+                                            setupAdapter()
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
+                }, {
+                    getRecyclerView().clearOnScrollListeners()
+                    setupAdapter()
                 }
                 )
                 getRecyclerView().addOnScrollListener(recyclerViewPreloader!!)
