@@ -79,7 +79,6 @@
         android:layout_height="@dimen/material_generic_medium"
         app:srcCompat="@drawable/avd_music_note"
         android:layout_toStartOf="@id/extra_info"
-        android:layout_toRightOf="@id/info_parent"
         android:layout_marginStart="@dimen/material_generic"
         android:layout_marginEnd="@dimen/material_generic"
         android:gravity="center_vertical"
