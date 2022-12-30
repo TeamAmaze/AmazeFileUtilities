@@ -118,7 +118,6 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
 
             val transaction = fragment.parentFragmentManager.beginTransaction()
             transaction.add(R.id.nav_host_fragment_activity_main, analyseFragment, FRAGMENT_TAG)
-            transaction.addToBackStack(null)
             transaction.commit()
         }
     }

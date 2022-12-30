@@ -571,7 +571,7 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
     }
 
     override fun adapterItemSelected(checkedCount: Int) {
-        if (checkedCount == 1 && viewModel.isPlaying) {
+        if (isVisible && checkedCount == 1 && viewModel.isPlaying) {
             getPlayNextButton()?.visibility = View.VISIBLE
             getPlayNextButton()?.setOnClickListener {
                 val selectedSongList = getMediaFileAdapter()?.checkItemsList

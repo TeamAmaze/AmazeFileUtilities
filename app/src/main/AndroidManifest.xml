@@ -52,7 +52,6 @@
             android:label="@string/app_name_launcher"
             android:theme="@style/Theme.AmazeFileUtilities"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysVisible"
             tools:ignore="LockedOrientationActivity"
             android:launchMode="singleInstance"
             >
@@ -111,7 +110,6 @@
             android:name=".image_viewer.editor.EditImageActivity"
             android:label="@string/image_editor"
             android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark"
-            android:windowSoftInputMode="stateAlwaysVisible"
             android:launchMode="singleInstance"
             android:exported="true"
             >

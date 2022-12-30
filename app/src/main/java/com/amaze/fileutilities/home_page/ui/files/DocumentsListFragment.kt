@@ -105,7 +105,7 @@ class DocumentsListFragment : AbstractMediaInfoListFragment() {
     }
 
     override fun showOptionsCallback() {
-        // do nothing
+        getPlayNextButton()?.visibility = View.GONE
     }
 
     override fun hideOptionsCallback() {

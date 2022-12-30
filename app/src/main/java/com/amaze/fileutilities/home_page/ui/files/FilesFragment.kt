@@ -360,7 +360,7 @@ class FilesFragment : ItemsActionBarFragment() {
     }
 
     override fun showOptionsCallback() {
-        // do nothing
+        getPlayNextButton()?.visibility = View.GONE
     }
 
     override fun hideOptionsCallback() {
