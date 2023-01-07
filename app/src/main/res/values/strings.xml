@@ -923,4 +923,12 @@
     <string name="play_next">PLAY NEXT</string>
     <!-- play next song button in options in audio fragment -->
     <string name="play_next_success">Song added to queue</string>
+    <!-- newly installed apps in settings preferences -->
+    <string name="newly_installed_apps">Newly installed apps</string>
+    <!-- newly installed apps summary in settings preferences -->
+    <string name="newly_installed_apps_summary">Apps newly installed (in days)</string>
+    <!-- newly installed apps in settings preferences -->
+    <string name="recently_updated_apps">Recently updated apps</string>
+    <!-- newly installed apps summary in settings preferences -->
+    <string name="recently_updated_apps_summary">Apps recently updated (in days)</string>
 </resources>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2021 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Copyright (C) 2021-2023 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
  * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
@@ -44,6 +44,7 @@ import com.amaze.fileutilities.audio_player.playlist.PlaylistLoader
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.BlurAnalysis
 import com.amaze.fileutilities.home_page.database.ImageAnalysis
+import com.amaze.fileutilities.home_page.database.InstalledApps
 import com.amaze.fileutilities.home_page.database.InternalStorageAnalysis
 import com.amaze.fileutilities.home_page.database.InternalStorageAnalysisDao
 import com.amaze.fileutilities.home_page.database.LowLightAnalysis
@@ -79,6 +80,9 @@ import java.lang.ref.WeakReference
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.nio.charset.Charset
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.Calendar
 import java.util.Collections
 import java.util.Date
@@ -99,12 +103,15 @@ class FilesViewModel(val applicationContext: Application) :
     var isCasting = false
     var castSetupSuccess = true
     var wifiIpAddress: String? = null
-    val uniqueIdSalt = "#%36zkpCE2"
+    private val uniqueIdSalt = BuildConfig.SALT_DEVICE_ID
 
     var unusedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var mostUsedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var leastUsedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var newlyInstalledAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var recentlyUpdatedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var junkFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var apksLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var gamesInstalledLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var largeFilesMutableLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
@@ -127,7 +134,8 @@ class FilesViewModel(val applicationContext: Application) :
     private var usedDocsSummaryTransformations: LiveData<Pair<StorageSummary,
             ArrayList<MediaFileInfo>>?>? = null
 
-    private var allApps: AtomicReference<List<ApplicationInfo>?> = AtomicReference()
+    private var allApps: AtomicReference<List<Pair<ApplicationInfo,
+                PackageInfo?>>?> = AtomicReference()
 
     var internalStorageStatsLiveData: MutableLiveData<StorageSummary?>? = null
 
@@ -913,7 +921,10 @@ class FilesViewModel(val applicationContext: Application) :
                     trial.subscriptionStatus == Trial.SUBSCRIPTION_STATUS_DEFAULT
                 ) {
                     // check immediately if there's an update in trial status
-                    fetchBillingStatusAndInitTrial(deviceId, dao, isNetworkAvailable, trialResponse)
+                    fetchBillingStatusAndInitTrial(
+                        deviceId, dao, isNetworkAvailable,
+                        trialResponse
+                    )
                 } else {
                     // trial is active, if we've already processed today, don't fetch
                     val cal = GregorianCalendar.getInstance()
@@ -993,8 +1004,10 @@ class FilesViewModel(val applicationContext: Application) :
                 it.packageName
             }.toSet()
             val unusedAppsList =
-                allApps.get()?.filter { !usageStatsPackages.contains(it.packageName) }?.mapNotNull {
-                    MediaFileInfo.fromApplicationInfo(applicationContext, it)
+                allApps.get()?.filter {
+                    !usageStatsPackages.contains(it.first.packageName)
+                }?.mapNotNull {
+                    MediaFileInfo.fromApplicationInfo(applicationContext, it.first, it.second)
                 }
             unusedAppsLiveData?.postValue(unusedAppsList?.let { ArrayList(it) })
         }
@@ -1043,9 +1056,12 @@ class FilesViewModel(val applicationContext: Application) :
             mostUsedAppsListRaw.forEach {
                 appName ->
                 allApps.get()?.find {
-                    it.packageName.equals(appName, true)
+                    it.first.packageName.equals(appName, true)
                 }?.let {
-                    MediaFileInfo.fromApplicationInfo(applicationContext, it)?.let {
+                    MediaFileInfo.fromApplicationInfo(
+                        applicationContext,
+                        it.first, it.second
+                    )?.let {
                         mediaFileInfo ->
                         mostUsedApps.add(mediaFileInfo)
                     }
@@ -1098,9 +1114,12 @@ class FilesViewModel(val applicationContext: Application) :
             leastUsedAppsListRaw.forEach {
                 appName ->
                 allApps.get()?.find {
-                    it.packageName.equals(appName, true)
+                    it.first.packageName.equals(appName, true)
                 }?.let {
-                    MediaFileInfo.fromApplicationInfo(applicationContext, it)?.let {
+                    MediaFileInfo.fromApplicationInfo(
+                        applicationContext, it.first,
+                        it.second
+                    )?.let {
                         mediaFileInfo ->
                         leastUsedApps.add(mediaFileInfo)
                     }
@@ -1131,7 +1150,10 @@ class FilesViewModel(val applicationContext: Application) :
                 if (index > 49) {
                     priorityQueue.remove()
                 }
-                MediaFileInfo.fromApplicationInfo(applicationContext, applicationInfo)?.let {
+                MediaFileInfo.fromApplicationInfo(
+                    applicationContext, applicationInfo.first,
+                    applicationInfo.second
+                )?.let {
                     priorityQueue.add(it)
                 }
             }
@@ -1143,6 +1165,143 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
             largeAppsLiveData?.postValue(ArrayList(result.reversed()))
+        }
+    }
+
+    fun getNewlyInstalledApps(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (newlyInstalledAppsLiveData == null) {
+            newlyInstalledAppsLiveData = MutableLiveData()
+            newlyInstalledAppsLiveData?.value = null
+            processNewlyInstalledApps(applicationContext.packageManager)
+        }
+        return newlyInstalledAppsLiveData!!
+    }
+
+    private fun processNewlyInstalledApps(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+            val sharedPrefs = applicationContext.getAppCommonSharedPreferences()
+            val days = sharedPrefs.getInt(
+                PreferencesConstants.KEY_NEWLY_INSTALLED_APPS_DAYS,
+                PreferencesConstants.DEFAULT_NEWLY_INSTALLED_APPS_DAYS
+            )
+            val pastDate = LocalDateTime.now().minusDays(days.toLong())
+            val priorityQueue = PriorityQueue<MediaFileInfo>(
+                50
+            ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
+
+            allApps.get()?.filter {
+                if (it.second == null) return@filter false
+                val installDateTime = Instant.ofEpochMilli(it.second?.firstInstallTime!!)
+                    .atZone(ZoneId.systemDefault()).toLocalDate()
+                installDateTime.isAfter(pastDate.toLocalDate())
+            }?.forEachIndexed { index, applicationInfo ->
+                if (index > 49) {
+                    priorityQueue.remove()
+                }
+                MediaFileInfo.fromApplicationInfo(
+                    applicationContext, applicationInfo.first,
+                    applicationInfo.second
+                )?.let {
+                    priorityQueue.add(it)
+                }
+            }
+
+            val result = ArrayList<MediaFileInfo>()
+            while (!priorityQueue.isEmpty()) {
+                priorityQueue.remove()?.let {
+                    result.add(it)
+                }
+            }
+            newlyInstalledAppsLiveData?.postValue(ArrayList(result.reversed()))
+        }
+    }
+
+    fun getRecentlyUpdatedApps(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (recentlyUpdatedAppsLiveData == null) {
+            recentlyUpdatedAppsLiveData = MutableLiveData()
+            recentlyUpdatedAppsLiveData?.value = null
+            processRecentlyUpdatedApps(applicationContext.packageManager)
+        }
+        return recentlyUpdatedAppsLiveData!!
+    }
+
+    private fun processRecentlyUpdatedApps(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+            val sharedPrefs = applicationContext.getAppCommonSharedPreferences()
+            val days = sharedPrefs.getInt(
+                PreferencesConstants.KEY_RECENTLY_UPDATED_APPS_DAYS,
+                PreferencesConstants.DEFAULT_RECENTLY_UPDATED_APPS_DAYS
+            )
+            val pastDate = LocalDateTime.now().minusDays(days.toLong())
+            val priorityQueue = PriorityQueue<MediaFileInfo>(
+                50
+            ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
+
+            allApps.get()?.filter {
+                if (it.second == null) return@filter false
+                val updateDateTime = Instant.ofEpochMilli(it.second?.lastUpdateTime!!)
+                    .atZone(ZoneId.systemDefault()).toLocalDate()
+                updateDateTime.isAfter(pastDate.toLocalDate())
+            }?.forEachIndexed { index, applicationInfo ->
+                if (index > 49) {
+                    priorityQueue.remove()
+                }
+                MediaFileInfo.fromApplicationInfo(
+                    applicationContext, applicationInfo.first,
+                    applicationInfo.second
+                )?.let {
+                    priorityQueue.add(it)
+                }
+            }
+
+            val result = ArrayList<MediaFileInfo>()
+            while (!priorityQueue.isEmpty()) {
+                priorityQueue.remove()?.let {
+                    result.add(it)
+                }
+            }
+            recentlyUpdatedAppsLiveData?.postValue(ArrayList(result.reversed()))
+        }
+    }
+
+    fun getJunkFilesLiveData(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (junkFilesLiveData == null) {
+            junkFilesLiveData = MutableLiveData()
+            junkFilesLiveData?.value = null
+            processJunkFiles(applicationContext.packageManager)
+        }
+        return junkFilesLiveData!!
+    }
+
+    private fun processJunkFiles(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+            val dao = AppDatabase.getInstance(applicationContext).installedAppsDao()
+            val savedInstalledApps = dao.findAll().filter {
+                savedAppData ->
+                allApps.get()?.any {
+                    !it.first.packageName.equals(savedAppData.packageName)
+                } == false
+            }
+            log.info("found following apps not installed {}", savedInstalledApps)
+            val result = ArrayList<MediaFileInfo>()
+            savedInstalledApps.forEach {
+                savedApp ->
+                savedApp.dataDirs.forEach {
+                    result.add(
+                        MediaFileInfo.fromFile(
+                            File(it),
+                            MediaFileInfo.ExtraInfo(
+                                MediaFileInfo.MEDIA_TYPE_UNKNOWN,
+                                null, null, null
+                            )
+                        )
+                    )
+                }
+            }
+            junkFilesLiveData?.postValue(result)
         }
     }
 
@@ -1330,30 +1489,36 @@ class FilesViewModel(val applicationContext: Application) :
         viewModelScope.launch(Dispatchers.IO) {
             loadAllInstalledApps(packageManager)
 
-            val games = allApps.get()?.filter {
-                Utils.applicationIsGame(it)
+            allApps.get()?.filter {
+                Utils.applicationIsGame(it.first)
             }?.mapNotNull {
-                MediaFileInfo.fromApplicationInfo(applicationContext, it)
+                MediaFileInfo.fromApplicationInfo(applicationContext, it.first, it.second)
+            }?.let {
+                gamesInstalledLiveData?.postValue(ArrayList(it))
             }
-            gamesInstalledLiveData?.postValue(ArrayList(games))
         }
     }
 
     private fun loadAllInstalledApps(packageManager: PackageManager) {
         if (allApps.get() == null) {
+            val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
             allApps.set(
-                packageManager.getInstalledApplications(PackageManager.GET_META_DATA).filter {
+                apps.map {
                     var info: PackageInfo?
                     var androidInfo: PackageInfo? = null
                     try {
                         info = packageManager.getPackageInfo(
                             it.packageName,
-                            PackageManager.GET_SIGNATURES
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
+                                PackageManager.GET_SIGNATURES
+                            else PackageManager.GET_SIGNING_CERTIFICATES
                         )
                         androidInfo =
                             packageManager.getPackageInfo(
                                 "android",
-                                PackageManager.GET_SIGNATURES
+                                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
+                                    PackageManager.GET_SIGNATURES
+                                else PackageManager.GET_SIGNING_CERTIFICATES
                             )
                     } catch (e: PackageManager.NameNotFoundException) {
                         log.warn(
@@ -1363,16 +1528,27 @@ class FilesViewModel(val applicationContext: Application) :
                         )
                         info = null
                     }
-                    !Utils.isAppInSystemPartition(it) && (
-                        info == null ||
-                            (
-                                !Utils.isSignedBySystem(info, androidInfo) && !info.packageName
-                                    .equals(applicationContext.packageName)
-                                )
-                        )
+                    !Utils.isAppInSystemPartition(it) &&
+                        (
+                            info == null ||
+                                (
+                                    !Utils.isSignedBySystem(info, androidInfo) &&
+                                        !info.packageName.equals(applicationContext.packageName)
+                                    )
+                            )
+                    Pair(it, info)
                 }
             )
+            insertInstalledApps(apps)
         }
+    }
+
+    private fun insertInstalledApps(infoList: List<ApplicationInfo>) {
+        val installedApps = infoList.map {
+            InstalledApps(it.packageName, listOf(it.sourceDir, it.dataDir))
+        }
+        val dao = AppDatabase.getInstance(applicationContext).installedAppsDao()
+        dao.insert(installedApps)
     }
 
     /**

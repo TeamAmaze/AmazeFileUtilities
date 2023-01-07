@@ -18,20 +18,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.amaze.fileutilities.utilis
+package com.amaze.fileutilities.home_page.database
 
-import com.amaze.fileutilities.home_page.MainActivity
+import androidx.annotation.Keep
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.Index
+import androidx.room.PrimaryKey
 
-object UpdateChecker {
-    fun checkForAppUpdates(context: MainActivity) {
-        // do nothing
-    }
-
-    fun unregisterListener() {
-        // do nothing
-    }
-
-    fun shouldRateApp(context: MainActivity) {
-        // do nothing
-    }
+@Entity(indices = [Index(value = ["package_name"], unique = true)])
+@Keep
+data class InstalledApps(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "_id")
+    val uid: Int,
+    @ColumnInfo(name = "package_name") val packageName: String,
+    @ColumnInfo(name = "data_dirs") val dataDirs: List<String>,
+) {
+    @Ignore
+    constructor(
+        packageName: String,
+        dataDirs: List<String>,
+    ) :
+        this(0, packageName, dataDirs)
 }

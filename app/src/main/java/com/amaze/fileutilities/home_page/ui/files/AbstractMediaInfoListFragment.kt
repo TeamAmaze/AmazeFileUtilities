@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Copyright (C) 2021-2023 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
  * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
@@ -229,7 +229,7 @@ abstract class AbstractMediaInfoListFragment :
                     setupAdapter()
                 }
                 )
-                getRecyclerView().addOnScrollListener(recyclerViewPreloader!!)
+                getRecyclerView().addOnScrollListener(recyclerViewPreloader)
                 linearLayoutManager = LinearLayoutManager(context)
                 gridLayoutManager = GridLayoutManager(
                     context,

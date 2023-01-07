@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Copyright (C) 2021-2023 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
  * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
@@ -48,11 +48,13 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
         private const val KEY_UNUSED_APPS = "unused_apps"
         private const val KEY_MOST_USED_APPS = "most_used_apps"
         private const val KEY_LEAST_USED_APPS = "least_used_apps"
+        private const val KEY_NEWLY_INSTALLED_APPS = "newly_installed_apps"
+        private const val KEY_RECENTLY_UPDATED_APPS = "recently_updated_apps"
         private const val KEY_WHATSAPP_MEDIA = "whatsapp_media"
         private val KEYS = listOf(
             KEY_DUPLICATES, KEY_MEMES, KEY_BLUR, KEY_LOW_LIGHT, KEY_FEATURES, KEY_DOWNLOAD,
             KEY_RECORDING, KEY_SCREENSHOT, KEY_UNUSED_APPS, KEY_MOST_USED_APPS, KEY_LEAST_USED_APPS,
-            KEY_WHATSAPP_MEDIA, KEY_TELEGRAM
+            KEY_NEWLY_INSTALLED_APPS, KEY_RECENTLY_UPDATED_APPS, KEY_WHATSAPP_MEDIA, KEY_TELEGRAM
         )
     }
 
@@ -184,6 +186,30 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                 )
                 Utils.buildDigitInputDialog(requireContext(), days) {
                     prefs.edit().putInt(PreferencesConstants.KEY_LEAST_USED_APPS_DAYS, it).apply()
+                }
+            }
+            KEY_NEWLY_INSTALLED_APPS -> {
+                val days = prefs.getInt(
+                    PreferencesConstants.KEY_NEWLY_INSTALLED_APPS_DAYS,
+                    PreferencesConstants.DEFAULT_NEWLY_INSTALLED_APPS_DAYS
+                )
+                Utils.buildDigitInputDialog(requireContext(), days) {
+                    prefs.edit().putInt(
+                        PreferencesConstants.KEY_NEWLY_INSTALLED_APPS_DAYS,
+                        it
+                    ).apply()
+                }
+            }
+            KEY_RECENTLY_UPDATED_APPS -> {
+                val days = prefs.getInt(
+                    PreferencesConstants.KEY_RECENTLY_UPDATED_APPS_DAYS,
+                    PreferencesConstants.DEFAULT_RECENTLY_UPDATED_APPS_DAYS
+                )
+                Utils.buildDigitInputDialog(requireContext(), days) {
+                    prefs.edit().putInt(
+                        PreferencesConstants.KEY_RECENTLY_UPDATED_APPS_DAYS,
+                        it
+                    ).apply()
                 }
             }
         }

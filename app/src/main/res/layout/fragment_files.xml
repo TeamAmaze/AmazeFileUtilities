@@ -233,7 +233,7 @@
                 app:srcCompat="@drawable/ic_baseline_more_vert_24"
                 app:backgroundTint="@color/highlight_yellow"
                 app:tint="@color/black"
-                android:layout_marginBottom="@dimen/material_generic"
+                android:layout_marginBottom="@dimen/material_generic_large"
                 android:visibility="gone"
                 />
         </LinearLayout>

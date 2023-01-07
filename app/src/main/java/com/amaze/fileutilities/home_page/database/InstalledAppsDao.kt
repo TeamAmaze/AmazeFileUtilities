@@ -18,20 +18,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.amaze.fileutilities.utilis
+package com.amaze.fileutilities.home_page.database
 
-import com.amaze.fileutilities.home_page.MainActivity
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
-object UpdateChecker {
-    fun checkForAppUpdates(context: MainActivity) {
-        // do nothing
-    }
+@Dao
+interface InstalledAppsDao {
 
-    fun unregisterListener() {
-        // do nothing
-    }
+    @Query("SELECT * FROM installedapps WHERE package_name=:packageName")
+    fun findByPackageName(packageName: String): InstalledApps?
 
-    fun shouldRateApp(context: MainActivity) {
-        // do nothing
-    }
+    @Query("SELECT * FROM installedapps")
+    fun findAll(): List<InstalledApps>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(installedAppsList: List<InstalledApps>)
+
+    @Query("DELETE FROM installedapps")
+    fun deleteAll()
 }

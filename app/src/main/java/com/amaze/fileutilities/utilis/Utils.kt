@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Copyright (C) 2021-2023 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
  * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
@@ -838,8 +838,14 @@ class Utils {
 
         /** Check if an App is signed by system or not.  */
         fun isSignedBySystem(piApp: PackageInfo?, piSys: PackageInfo?): Boolean {
-            return piApp != null && piSys != null && piApp.signatures != null &&
-                piSys.signatures[0] == piApp.signatures[0]
+            if (piApp == null || piSys == null) {
+                return false
+            }
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                piApp.signingInfo != null && piSys.signingInfo == piApp.signingInfo
+            } else {
+                piApp.signatures != null && piSys.signatures[0] == piApp.signatures[0]
+            }
         }
 
         fun openExternalApp(context: Context, packageName: String): Boolean {

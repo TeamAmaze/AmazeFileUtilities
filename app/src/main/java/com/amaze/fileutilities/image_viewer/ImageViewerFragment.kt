@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2021 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Copyright (C) 2021-2023 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
  * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
@@ -512,14 +512,16 @@ class ImageViewerFragment : AbstractMediaFragment() {
                         summaryDialog.show()
                         filesViewModel.getMediaFileListSize(toDelete).observe(viewLifecycleOwner) {
                             sizeRaw ->
-                            val size = Formatter.formatFileSize(requireContext(), sizeRaw)
-                            summaryDialog.setMessage(
-                                resources
-                                    .getString(R.string.delete_files_message).format(
-                                        toDelete.size,
-                                        size
-                                    )
-                            )
+                            if (summaryDialog.isShowing) {
+                                val size = Formatter.formatFileSize(requireContext(), sizeRaw)
+                                summaryDialog.setMessage(
+                                    resources
+                                        .getString(R.string.delete_files_message).format(
+                                            toDelete.size,
+                                            size
+                                        )
+                                )
+                            }
                         }
                     }
             }

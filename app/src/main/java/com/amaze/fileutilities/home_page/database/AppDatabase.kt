@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Copyright (C) 2021-2023 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
  * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
@@ -33,9 +33,9 @@ import com.amaze.fileutilities.utilis.DbConverters
     entities = [
         ImageAnalysis::class, InternalStorageAnalysis::class, PathPreferences::class,
         BlurAnalysis::class, LowLightAnalysis::class, MemeAnalysis::class, VideoPlayerState::class,
-        Trial::class, Lyrics::class
+        Trial::class, Lyrics::class, InstalledApps::class
     ],
-    version = 2
+    version = 3
 )
 @TypeConverters(DbConverters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -47,6 +47,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun pathPreferencesDao(): PathPreferencesDao
     abstract fun videoPlayerStateDao(): VideoPlayerStateDao
     abstract fun trialValidatorDao(): TrialValidatorDao
+    abstract fun installedAppsDao(): InstalledAppsDao
     abstract fun lyricsDao(): LyricsDao
 
     companion object {
@@ -58,7 +59,7 @@ abstract class AppDatabase : RoomDatabase() {
                     applicationContext,
                     AppDatabase::class.java, "amaze-utils"
                 ).allowMainThreadQueries()
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build()
             }
             return appDatabase!!
@@ -74,6 +75,20 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL(
                     "CREATE UNIQUE INDEX IF NOT EXISTS `index_Lyrics_file_path`" +
                         " ON `Lyrics` (`file_path`)"
+                )
+            }
+        }
+
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `InstalledApps` (`_id` INTEGER " +
+                        "PRIMARY KEY AUTOINCREMENT NOT NULL, `package_name` TEXT NOT NULL, " +
+                        "`data_dirs` TEXT NOT NULL)"
+                )
+                database.execSQL(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS `index_InstalledApps_package_name`" +
+                        " ON `InstalledApps` (`package_name`)"
                 )
             }
         }

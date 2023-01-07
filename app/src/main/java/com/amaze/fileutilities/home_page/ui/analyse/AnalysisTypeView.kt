@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Copyright (C) 2021-2023 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
  * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
@@ -59,6 +59,7 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     private val refreshParent: LinearLayout
     private val grantPermissionButton: Button
     private val refreshButton: Button
+    private var showPreview = false
 
     companion object {
         private const val PREVIEW_COUNT = 5
@@ -89,7 +90,7 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
             R.styleable.AnalysisTypeView, 0, 0
         )
         val titleText = a.getString(R.styleable.AnalysisTypeView_analysisTitle)
-        val showPreview = a.getBoolean(R.styleable.AnalysisTypeView_showPreview, false)
+        showPreview = a.getBoolean(R.styleable.AnalysisTypeView_showPreview, false)
         val hintText = a.getString(R.styleable.AnalysisTypeView_hint)
         if (showPreview) {
             imagesListScroll.visibility = View.VISIBLE
@@ -134,24 +135,30 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     }
 
     fun loadPreviews(mediaFileInfoList: List<MediaFileInfo>, cleanButtonClick: () -> Unit) {
-        loadingHorizontalScroll.visibility = View.GONE
         if (mediaFileInfoList.isEmpty()) {
             hideFade(300)
         }
-        var count =
-            if (mediaFileInfoList.size > PREVIEW_COUNT) PREVIEW_COUNT else mediaFileInfoList.size
-        val randomComputedHash = hashMapOf<Int, Boolean>()
-        while (count -- > 1) {
-            val idx = Utils.generateRandom(0, mediaFileInfoList.size - 1)
-            if (randomComputedHash[idx] == true) {
-                count++
-                continue
+        if (showPreview) {
+            loadingHorizontalScroll.visibility = View.GONE
+            if (mediaFileInfoList.isEmpty()) {
+                hideFade(300)
             }
-            randomComputedHash[idx] = true
-            val imageView = getImageView(mediaFileInfoList[idx])
-            imagesListParent.addView(imageView)
+            var count =
+                if (mediaFileInfoList.size > PREVIEW_COUNT) PREVIEW_COUNT
+                else mediaFileInfoList.size
+            val randomComputedHash = hashMapOf<Int, Boolean>()
+            while (count -- > 1) {
+                val idx = Utils.generateRandom(0, mediaFileInfoList.size - 1)
+                if (randomComputedHash[idx] == true) {
+                    count++
+                    continue
+                }
+                randomComputedHash[idx] = true
+                val imageView = getImageView(mediaFileInfoList[idx])
+                imagesListParent.addView(imageView)
+            }
+            imagesListParent.addView(getSummaryView(mediaFileInfoList.size))
         }
-        imagesListParent.addView(getSummaryView(mediaFileInfoList.size))
         cleanButton.setOnClickListener {
             cleanButtonClick.invoke()
         }

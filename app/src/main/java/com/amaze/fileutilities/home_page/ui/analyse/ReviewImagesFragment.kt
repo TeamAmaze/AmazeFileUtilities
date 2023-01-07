@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Copyright (C) 2021-2023 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
  * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
@@ -107,6 +107,8 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         const val TYPE_LARGE_FILES = 24
         const val TYPE_MOST_USED_APPS = 25
         const val TYPE_LEAST_USED_APPS = 26
+        const val TYPE_NEWLY_INSTALLED_APPS = 27
+        const val TYPE_RECENTLY_UPDATED_APPS = 28
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -184,7 +186,8 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                 MediaFileAdapter.MEDIA_TYPE_AUDIO
             }
             TYPE_LARGE_APPS, TYPE_UNUSED_APPS, TYPE_MOST_USED_APPS, TYPE_LEAST_USED_APPS,
-            TYPE_GAMES_INSTALLED, TYPE_APK_FILES -> {
+            TYPE_GAMES_INSTALLED, TYPE_APK_FILES, TYPE_NEWLY_INSTALLED_APPS,
+            TYPE_RECENTLY_UPDATED_APPS -> {
                 MediaFileAdapter.MEDIA_TYPE_APKS
             }
             else -> {
@@ -563,6 +566,26 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                     .observe(viewLifecycleOwner) { largeApps ->
                         invalidateProcessing(true, false)
                         largeApps?.let {
+                            setMediaInfoList(it, false)
+                            invalidateProcessing(false, false)
+                        }
+                    }
+            }
+            TYPE_NEWLY_INSTALLED_APPS -> {
+                filesViewModel.getNewlyInstalledApps()
+                    .observe(viewLifecycleOwner) { newApps ->
+                        invalidateProcessing(true, false)
+                        newApps?.let {
+                            setMediaInfoList(it, false)
+                            invalidateProcessing(false, false)
+                        }
+                    }
+            }
+            TYPE_RECENTLY_UPDATED_APPS -> {
+                filesViewModel.getRecentlyUpdatedApps()
+                    .observe(viewLifecycleOwner) { recentApps ->
+                        invalidateProcessing(true, false)
+                        recentApps?.let {
                             setMediaInfoList(it, false)
                             invalidateProcessing(false, false)
                         }

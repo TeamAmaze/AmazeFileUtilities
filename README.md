@@ -1,4 +1,4 @@
-[![GitHub release](https://img.shields.io/github/release/TeamAmaze/AmazeFileUtilities.svg)](https://github.com/TeamAmaze/AmazeFileManager/releases)
+[![GitHub release](https://img.shields.io/github/release/TeamAmaze/AmazeFileUtilities.svg)](https://github.com/TeamAmaze/AmazeFileUtilities/releases)
 [![Chat on Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/AmazeFileManager)
 [![XDA Developers](https://img.shields.io/badge/XDA-Developers%20-%23AC6E2F.svg?&style=for-the-badge&logo=XDA-Developers&logoColor=white)](http://forum.xda-developers.com/android/apps-games/app-amaze-file-managermaterial-theme-t2937314)  
 [![Liberapay](https://img.shields.io/liberapay/receives/Team-Amaze.svg?logo=liberapay)](https://liberapay.com/Team-Amaze/donate)  

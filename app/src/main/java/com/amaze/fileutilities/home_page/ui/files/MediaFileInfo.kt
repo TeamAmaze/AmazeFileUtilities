@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2021 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
+ * Copyright (C) 2021-2023 Arpit Khurana <arpitkh96@gmail.com>, Vishal Nehra <vishalmeham2@gmail.com>,
  * Emmanuel Messulam<emmanuelbendavid@gmail.com>, Raymond Lai <airwave209gt at gmail.com> and Contributors.
  *
  * This file is part of Amaze File Utilities.
@@ -24,6 +24,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -127,7 +128,8 @@ data class MediaFileInfo(
 
         fun fromApplicationInfo(
             context: Context,
-            applicationInfo: ApplicationInfo
+            applicationInfo: ApplicationInfo,
+            packageInfo: PackageInfo?
         ): MediaFileInfo? {
             if (applicationInfo.sourceDir == null) {
                 return null
