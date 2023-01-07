@@ -52,6 +52,7 @@ android {
         buildConfigField "String", "API_REQ_TRIAL_YEARLY", "new String()"
         buildConfigField "String", "API_REQ_STICKER_PACK_TOKEN", "new String()"
         buildConfigField "String", "OPENSUBTITLES_API_KEY", "new String()"
+        buildConfigField "String", "SALT_DEVICE_ID", "new String()"
     }
 
     defaultConfig {
@@ -81,7 +82,8 @@ android {
                 appProps.containsKey('API_REQ_TRIAL_TRIAL_EXCLUSIVE') &&
                 appProps.containsKey('API_REQ_TRIAL_TRIAL_UNOFFICIAL') &&
                 appProps.containsKey('API_REQ_TRIAL_YEARLY') &&
-                appProps.containsKey('API_REQ_STICKER_PACK_TOKEN')
+                appProps.containsKey('API_REQ_STICKER_PACK_TOKEN') &&
+                appProps.containsKey('SALT_DEVICE_ID')
         ) {
             buildConfigField "String", "BASE_CLOUD_FUNC", appProps["BASE_CLOUD_FUNC"]
             buildConfigField "String", "BASE_API_STICKER_PACK", appProps["BASE_API_STICKER_PACK"]
@@ -100,6 +102,7 @@ android {
             buildConfigField "String", "API_REQ_TRIAL_YEARLY", appProps["API_REQ_TRIAL_YEARLY"]
             buildConfigField "String", "API_REQ_STICKER_PACK_TOKEN", appProps["API_REQ_STICKER_PACK_TOKEN"]
             buildConfigField "String", "API_REQ_TRIAL_AUTH_TOKEN", appProps["API_REQ_TRIAL_AUTH_TOKEN"]
+            buildConfigField "String", "SALT_DEVICE_ID", appProps["SALT_DEVICE_ID"]
         } else {
             println 'application.properties found but some entries are missing'
             buildConfigField "String", "BASE_CLOUD_FUNC", "new String()"
@@ -119,6 +122,7 @@ android {
             buildConfigField "String", "API_REQ_TRIAL_YEARLY", "new String()"
             buildConfigField "String", "API_REQ_STICKER_PACK_TOKEN", "new String()"
             buildConfigField "String", "API_REQ_TRIAL_AUTH_TOKEN", "new String()"
+            buildConfigField "String", "SALT_DEVICE_ID", "new String()"
         }
     }
 

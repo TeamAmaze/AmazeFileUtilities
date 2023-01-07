@@ -20,6 +20,16 @@
         app:title="@string/least_used_apps"
         android:summary="@string/least_used_apps_pref_message"
         />
+    <Preference
+        app:key="newly_installed_apps"
+        app:title="@string/newly_installed_apps"
+        android:summary="@string/newly_installed_apps_summary"
+        />
+    <Preference
+        app:key="recently_updated_apps"
+        app:title="@string/recently_updated_apps"
+        android:summary="@string/recently_updated_apps_summary"
+        />
     <PreferenceCategory
         app:title="@string/paths_included">
         <Preference

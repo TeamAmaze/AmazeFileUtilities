@@ -512,14 +512,16 @@ class ImageViewerFragment : AbstractMediaFragment() {
                         summaryDialog.show()
                         filesViewModel.getMediaFileListSize(toDelete).observe(viewLifecycleOwner) {
                             sizeRaw ->
-                            val size = Formatter.formatFileSize(requireContext(), sizeRaw)
-                            summaryDialog.setMessage(
-                                resources
-                                    .getString(R.string.delete_files_message).format(
-                                        toDelete.size,
-                                        size
-                                    )
-                            )
+                            if (summaryDialog.isShowing) {
+                                val size = Formatter.formatFileSize(requireContext(), sizeRaw)
+                                summaryDialog.setMessage(
+                                    resources
+                                        .getString(R.string.delete_files_message).format(
+                                            toDelete.size,
+                                            size
+                                        )
+                                )
+                            }
                         }
                     }
             }

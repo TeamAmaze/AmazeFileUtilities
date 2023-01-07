@@ -24,6 +24,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
@@ -127,7 +128,8 @@ data class MediaFileInfo(
 
         fun fromApplicationInfo(
             context: Context,
-            applicationInfo: ApplicationInfo
+            applicationInfo: ApplicationInfo,
+            packageInfo: PackageInfo?
         ): MediaFileInfo? {
             if (applicationInfo.sourceDir == null) {
                 return null

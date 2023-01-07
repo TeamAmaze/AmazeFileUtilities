@@ -55,21 +55,27 @@ class EpubViewerActivity : PermissionsActivity() {
                 return
             }
             log.info(
-                "Loading epub from path ${epubUri?.path} " +
+                "Loading epub from path ${epubUri.path} " +
                     "and mimetype $mimeType"
             )
-            epubModel = LocalEpubModel(uri = epubUri!!, mimeType = mimeType)
-            val config: Config = Config()
-                .setAllowedDirection(Config.AllowedDirection.ONLY_HORIZONTAL)
-                .setDirection(Config.Direction.HORIZONTAL)
-                .setFontSize(1)
-                .setNightMode(false)
-                .setThemeColorInt(resources.getColor(R.color.blue))
-                .setShowTts(false)
-            FolioReader.get()
-                .setConfig(config, true)
-                .openBook(epubUri.getFileFromUri()!!.canonicalPath)
-            finish()
+            epubModel = LocalEpubModel(uri = epubUri, mimeType = mimeType)
+            val filePathFromUri = epubUri.getFileFromUri()
+            if (filePathFromUri != null) {
+                val config: Config = Config()
+                    .setAllowedDirection(Config.AllowedDirection.ONLY_HORIZONTAL)
+                    .setDirection(Config.Direction.HORIZONTAL)
+                    .setFontSize(1)
+                    .setNightMode(false)
+                    .setThemeColorInt(resources.getColor(R.color.blue))
+                    .setShowTts(false)
+                FolioReader.get()
+                    .setConfig(config, true)
+                    .openBook(filePathFromUri.canonicalPath)
+                finish()
+            } else {
+                showToastInCenter(resources.getString(R.string.unsupported_content))
+                return
+            }
         }
     }
 }

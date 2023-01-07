@@ -838,8 +838,14 @@ class Utils {
 
         /** Check if an App is signed by system or not.  */
         fun isSignedBySystem(piApp: PackageInfo?, piSys: PackageInfo?): Boolean {
-            return piApp != null && piSys != null && piApp.signatures != null &&
-                piSys.signatures[0] == piApp.signatures[0]
+            if (piApp == null || piSys == null) {
+                return false
+            }
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                piApp.signingInfo != null && piSys.signingInfo == piApp.signingInfo
+            } else {
+                piApp.signatures != null && piSys.signatures[0] == piApp.signatures[0]
+            }
         }
 
         fun openExternalApp(context: Context, packageName: String): Boolean {

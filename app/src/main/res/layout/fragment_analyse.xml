@@ -155,14 +155,15 @@
                 android:visibility="gone"
                 />
             <!-- junk files files of uninstalled apps that aren't deleted -->
-            <!--<com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
                 android:id="@+id/junk_files_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/junk_files"
                 app:hint="@string/junk_files_hint"
+                app:showPreview="false"
                 android:layout_marginTop="@dimen/material_generic"
-                />-->
+                />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
                 android:id="@+id/old_download_preview"
                 android:layout_width="match_parent"
@@ -245,6 +246,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/large_apps"
+                app:showPreview="true"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/newly_installed_apps_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/newly_installed_apps"
+                app:showPreview="true"
+                android:layout_marginTop="@dimen/material_generic"
+                />
+
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/recently_updated_apps_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/recently_updated_apps"
                 app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 />

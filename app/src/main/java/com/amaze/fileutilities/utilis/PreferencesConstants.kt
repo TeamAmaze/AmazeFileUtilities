@@ -49,7 +49,9 @@ class PreferencesConstants {
         const val KEY_ENABLE_IMAGE_PALETTE = "pref_image_enable_palette"
         const val KEY_UNUSED_APPS_DAYS = "unused_apps_days"
         const val KEY_MOST_USED_APPS_DAYS = "most_used_apps_days"
-        const val KEY_LEAST_USED_APPS_DAYS = "most_used_apps_days"
+        const val KEY_LEAST_USED_APPS_DAYS = "least_used_apps_days"
+        const val KEY_NEWLY_INSTALLED_APPS_DAYS = "newly_installed_apps_days"
+        const val KEY_RECENTLY_UPDATED_APPS_DAYS = "recently_updated_apps_days"
 
         const val VAL_SEARCH_DUPLICATES_MEDIA_STORE = 0
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1
@@ -84,5 +86,7 @@ class PreferencesConstants {
         const val DEFAULT_UNUSED_APPS_DAYS = 30
         const val DEFAULT_MOST_USED_APPS_DAYS = 7
         const val DEFAULT_LEAST_USED_APPS_DAYS = 7
+        const val DEFAULT_NEWLY_INSTALLED_APPS_DAYS = 7
+        const val DEFAULT_RECENTLY_UPDATED_APPS_DAYS = 7
     }
 }

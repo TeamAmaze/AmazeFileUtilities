@@ -229,7 +229,7 @@ abstract class AbstractMediaInfoListFragment :
                     setupAdapter()
                 }
                 )
-                getRecyclerView().addOnScrollListener(recyclerViewPreloader!!)
+                getRecyclerView().addOnScrollListener(recyclerViewPreloader)
                 linearLayoutManager = LinearLayoutManager(context)
                 gridLayoutManager = GridLayoutManager(
                     context,

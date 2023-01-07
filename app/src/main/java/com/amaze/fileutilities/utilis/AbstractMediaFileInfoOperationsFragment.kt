@@ -93,7 +93,7 @@ abstract class AbstractMediaFileInfoOperationsFragment : Fragment() {
             .showProcessingDialog(layoutInflater, "")
         val summaryDialogBuilder = Utils.buildDeleteSummaryDialog(requireContext()) {
             if (toDelete[0].extraInfo?.mediaType == MediaFileInfo.MEDIA_TYPE_APK) {
-                toDelete.forEachIndexed { index, mediaFileInfo ->
+                toDelete.forEachIndexed { _, mediaFileInfo ->
                     Utils.uninstallPackage(
                         mediaFileInfo.extraInfo!!.apkMetaData!!.packageName,
                         requireActivity()
@@ -117,11 +117,13 @@ abstract class AbstractMediaFileInfoOperationsFragment : Fragment() {
         summaryDialog.show()
         getFilesViewModelObj().getMediaFileListSize(toDelete).observe(viewLifecycleOwner) {
             sizeRaw ->
-            val size = Formatter.formatFileSize(requireContext(), sizeRaw)
-            summaryDialog.setMessage(
-                resources.getString(R.string.delete_files_message)
-                    .format(toDelete.size, size)
-            )
+            if (summaryDialog.isShowing) {
+                val size = Formatter.formatFileSize(requireContext(), sizeRaw)
+                summaryDialog.setMessage(
+                    resources.getString(R.string.delete_files_message)
+                        .format(toDelete.size, size)
+                )
+            }
         }
     }
 }

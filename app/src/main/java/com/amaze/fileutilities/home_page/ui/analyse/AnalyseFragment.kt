@@ -44,6 +44,7 @@ import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.amaze.fileutilities.utilis.showToastOnBottom
+import kotlin.concurrent.thread
 
 class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
 
@@ -91,6 +92,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             val memeAnalysisDao = appDatabase.memesAnalysisDao()
             val pathPreferencesDao = appDatabase.pathPreferencesDao()
             val internalStorageDao = appDatabase.internalStorageAnalysisDao()
+            val installedAppsDao = AppDatabase.getInstance(requireContext()).installedAppsDao()
 
             analyseViewModel.getBlurImages(blurAnalysisDao).observe(viewLifecycleOwner) {
                 if (it != null) {
@@ -236,6 +238,22 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     largeFilesPreview.loadPreviews(largeFiles) {
                         cleanButtonClick(it) {
                             filesViewModel.largeFilesMutableLiveData = null
+                        }
+                    }
+                }
+            }
+
+            filesViewModel.getJunkFilesLiveData().observe(viewLifecycleOwner) {
+                junkFiles ->
+                junkFilesPreview.invalidateProgress(true, null)
+                junkFiles?.let {
+                    junkFilesPreview.invalidateProgress(false, null)
+                    junkFilesPreview.loadPreviews(junkFiles) {
+                        cleanButtonClick(it) {
+                            filesViewModel.junkFilesLiveData = null
+                            thread {
+                                installedAppsDao.deleteAll()
+                            }
                         }
                     }
                 }
@@ -446,6 +464,30 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     largeAppsPreview.loadPreviews(mediaFileInfoList) {
                         cleanButtonClick(it) {
                             filesViewModel.largeAppsLiveData = null
+                        }
+                    }
+                }
+            }
+            filesViewModel.getNewlyInstalledApps().observe(viewLifecycleOwner) {
+                mediaFileInfoList ->
+                newlyInstalledAppsPreview.invalidateProgress(true, null)
+                mediaFileInfoList?.let {
+                    newlyInstalledAppsPreview.invalidateProgress(false, null)
+                    newlyInstalledAppsPreview.loadPreviews(mediaFileInfoList) {
+                        cleanButtonClick(it) {
+                            filesViewModel.newlyInstalledAppsLiveData = null
+                        }
+                    }
+                }
+            }
+            filesViewModel.getRecentlyUpdatedApps().observe(viewLifecycleOwner) {
+                mediaFileInfoList ->
+                recentlyUpdatedAppsPreview.invalidateProgress(true, null)
+                mediaFileInfoList?.let {
+                    recentlyUpdatedAppsPreview.invalidateProgress(false, null)
+                    recentlyUpdatedAppsPreview.loadPreviews(mediaFileInfoList) {
+                        cleanButtonClick(it) {
+                            filesViewModel.recentlyUpdatedAppsLiveData = null
                         }
                     }
                 }
@@ -774,6 +816,20 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 shouldCallbackAppUninstall = false
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_LARGE_APPS,
+                    this@AnalyseFragment
+                )
+            }
+            newlyInstalledAppsPreview.setOnClickListener {
+                shouldCallbackAppUninstall = false
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_NEWLY_INSTALLED_APPS,
+                    this@AnalyseFragment
+                )
+            }
+            recentlyUpdatedAppsPreview.setOnClickListener {
+                shouldCallbackAppUninstall = false
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_RECENTLY_UPDATED_APPS,
                     this@AnalyseFragment
                 )
             }
