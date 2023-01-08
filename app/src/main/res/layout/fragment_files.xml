@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@null"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
+        android:background="@null"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -15,8 +19,6 @@
             android:background="@null"
             android:padding="@dimen/material_generic_medium"
             android:orientation="vertical"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             >
             <!-- Internal storage -->
             <LinearLayout
@@ -187,55 +189,56 @@
                 android:gravity="center_horizontal"
                 />
         </LinearLayout>
-        <LinearLayout
-            android:id="@+id/optionsFabParent"
+    </androidx.core.widget.NestedScrollView>
+    <LinearLayout
+        android:id="@+id/optionsFabParent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/material_generic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/locateFileButtonFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="@dimen/material_generic"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            >
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/locateFileButtonFab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_baseline_open_in_new_24"
-                app:backgroundTint="@color/highlight_yellow"
-                app:tint="@color/black"
-                android:layout_marginBottom="@dimen/material_generic"
-                android:visibility="gone"
-                />
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/shareButtonFab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_share"
-                app:backgroundTint="@color/highlight_yellow"
-                app:tint="@color/black"
-                android:layout_marginBottom="@dimen/material_generic"
-                android:visibility="gone"
-                />
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/deleteButtonFab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_round_delete_outline_32"
-                app:backgroundTint="@color/highlight_yellow"
-                app:tint="@color/black"
-                android:layout_marginBottom="@dimen/material_generic"
-                android:visibility="gone"
-                />
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/optionsButtonFab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_baseline_more_vert_24"
-                app:backgroundTint="@color/highlight_yellow"
-                app:tint="@color/black"
-                android:layout_marginBottom="@dimen/material_generic_large"
-                android:visibility="gone"
-                />
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+            app:srcCompat="@drawable/ic_baseline_open_in_new_24"
+            app:backgroundTint="@color/highlight_yellow"
+            app:tint="@color/black"
+            android:layout_marginBottom="@dimen/material_generic"
+            android:visibility="gone"
+            />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/shareButtonFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_share"
+            app:backgroundTint="@color/highlight_yellow"
+            app:tint="@color/black"
+            android:layout_marginBottom="@dimen/material_generic"
+            android:visibility="gone"
+            />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/deleteButtonFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_round_delete_outline_32"
+            app:backgroundTint="@color/highlight_yellow"
+            app:tint="@color/black"
+            android:layout_marginBottom="@dimen/material_generic"
+            android:visibility="gone"
+            />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/optionsButtonFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_baseline_more_vert_24"
+            app:backgroundTint="@color/highlight_yellow"
+            app:tint="@color/black"
+            android:layout_marginBottom="@dimen/material_generic_large"
+            android:visibility="gone"
+            />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

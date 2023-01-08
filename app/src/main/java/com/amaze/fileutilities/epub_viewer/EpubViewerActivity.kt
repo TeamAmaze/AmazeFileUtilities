@@ -59,7 +59,7 @@ class EpubViewerActivity : PermissionsActivity() {
                     "and mimetype $mimeType"
             )
             epubModel = LocalEpubModel(uri = epubUri, mimeType = mimeType)
-            val filePathFromUri = epubUri.getFileFromUri()
+            val filePathFromUri = epubUri.getFileFromUri(this)
             if (filePathFromUri != null) {
                 val config: Config = Config()
                     .setAllowedDirection(Config.AllowedDirection.ONLY_HORIZONTAL)

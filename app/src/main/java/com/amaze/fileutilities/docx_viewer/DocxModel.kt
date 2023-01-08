@@ -42,7 +42,7 @@ data class LocalDocxModel(
     }
 
     override fun getName(context: Context): String {
-        uri.getFileFromUri()?.run {
+        uri.getFileFromUri(context)?.run {
             return this.name
         }
         uri.path?.run {

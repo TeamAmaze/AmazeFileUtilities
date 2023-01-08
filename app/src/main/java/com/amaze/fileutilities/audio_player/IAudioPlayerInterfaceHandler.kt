@@ -442,7 +442,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             getContextWeakRef().get()?.let {
                 context ->
                 val file = progressHandler.audioPlaybackInfo
-                    .audioModel.getUri().getFileFromUri()
+                    .audioModel.getUri().getFileFromUri(context)
                 if (file != null) {
                     lifecycleScope.launch {
                         try {
@@ -502,7 +502,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                 context ->
                 if (context != null) {
                     val file = audioService?.getAudioProgressHandlerCallback()?.audioPlaybackInfo
-                        ?.audioModel?.getUri()?.getFileFromUri()
+                        ?.audioModel?.getUri()?.getFileFromUri(context)
                     if (file != null) {
                         lifecycleScope.launch {
                             try {

@@ -1504,15 +1504,25 @@ class FilesViewModel(val applicationContext: Application) :
             val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
             allApps.set(
                 apps.map {
-                    var info: PackageInfo?
-                    var androidInfo: PackageInfo? = null
-                    try {
-                        info = packageManager.getPackageInfo(
+                    val info: PackageInfo? = try {
+                        packageManager.getPackageInfo(
                             it.packageName,
                             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
                                 PackageManager.GET_SIGNATURES
                             else PackageManager.GET_SIGNING_CERTIFICATES
                         )
+                    } catch (e: PackageManager.NameNotFoundException) {
+                        log.warn(
+                            "failed to find package name {} while loading apps list",
+                            it.packageName,
+                            e
+                        )
+                        null
+                    }
+                    Pair(it, info)
+                }.filter {
+                    val androidInfo: PackageInfo?
+                    try {
                         androidInfo =
                             packageManager.getPackageInfo(
                                 "android",
@@ -1520,35 +1530,37 @@ class FilesViewModel(val applicationContext: Application) :
                                     PackageManager.GET_SIGNATURES
                                 else PackageManager.GET_SIGNING_CERTIFICATES
                             )
+                        !Utils.isAppInSystemPartition(it.first) && (
+                            it.second == null ||
+                                (
+                                    !Utils.isSignedBySystem(it.second, androidInfo) &&
+                                        !it.second!!.packageName
+                                            .equals(applicationContext.packageName)
+                                    )
+                            )
                     } catch (e: PackageManager.NameNotFoundException) {
                         log.warn(
                             "failed to find package name {} while loading apps list",
-                            it.packageName,
+                            it.first.packageName,
                             e
                         )
-                        info = null
+                        true
                     }
-                    !Utils.isAppInSystemPartition(it) &&
-                        (
-                            info == null ||
-                                (
-                                    !Utils.isSignedBySystem(info, androidInfo) &&
-                                        !info.packageName.equals(applicationContext.packageName)
-                                    )
-                            )
-                    Pair(it, info)
                 }
             )
-            insertInstalledApps(apps)
+            insertInstalledApps()
         }
     }
 
-    private fun insertInstalledApps(infoList: List<ApplicationInfo>) {
-        val installedApps = infoList.map {
-            InstalledApps(it.packageName, listOf(it.sourceDir, it.dataDir))
+    private fun insertInstalledApps() {
+        allApps.get()?.let {
+            infoListPair ->
+            val installedApps = infoListPair.map {
+                InstalledApps(it.first.packageName, listOf(it.first.sourceDir, it.first.dataDir))
+            }
+            val dao = AppDatabase.getInstance(applicationContext).installedAppsDao()
+            dao.insert(installedApps)
         }
-        val dao = AppDatabase.getInstance(applicationContext).installedAppsDao()
-        dao.insert(installedApps)
     }
 
     /**

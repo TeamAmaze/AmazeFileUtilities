@@ -595,7 +595,9 @@ abstract class BaseVideoPlayerActivity :
             customToolbar.setBackButtonClickListener {
                 onBackPressed()
             }
-            val mediaFile = videoPlayerViewModel?.videoModel?.uri?.getFileFromUri()
+            val mediaFile = videoPlayerViewModel?.videoModel?.uri?.getFileFromUri(
+                this@BaseVideoPlayerActivity
+            )
             val fileName = mediaFile?.name
             customToolbar.setTitle(fileName ?: "")
             customToolbar.setOverflowPopup(R.menu.video_activity) { item ->
@@ -712,7 +714,7 @@ abstract class BaseVideoPlayerActivity :
                 R.id.search_subtitles -> {
                     if (isNetworkAvailable()) {
                         videoPlayerViewModel?.videoModel?.uri?.let {
-                            val mediaFile = it.getFileFromUri()
+                            val mediaFile = it.getFileFromUri(this)
                             mediaFile?.let {
                                 file ->
                                 player?.pause()
@@ -794,7 +796,7 @@ abstract class BaseVideoPlayerActivity :
         var dialogMessage = ""
         val uri = videoPlayerViewModel?.videoModel?.uri
         uri?.let {
-            val file = uri.getFileFromUri()
+            val file = uri.getFileFromUri(this)
             file?.let {
                 dialogMessage += "${resources.getString(R.string.file)}\n---\n"
                 dialogMessage += "${resources.getString(R.string.name)}: ${file.name}" + "\n"
@@ -1016,7 +1018,7 @@ abstract class BaseVideoPlayerActivity :
             setMediaItemWithSubtitle(File(videoPlayerViewModel?.subtitleFilePath!!))
         } else {
             val uri = videoPlayerViewModel?.videoModel?.uri
-            setMediaItemWithSubtitle(uri?.getFileFromUri())
+            setMediaItemWithSubtitle(uri?.getFileFromUri(this))
         }
     }
 
