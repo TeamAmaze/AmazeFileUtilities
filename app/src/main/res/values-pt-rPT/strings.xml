@@ -838,33 +838,51 @@
     <!-- playlists header in audio fragment grouping -->
     <string name="playlists">Listas de reprodução</string>
     <!-- options in floating action button -->
-    <string name="options">Options</string>
+    <string name="options">Opções</string>
     <!-- options in floating action button to locate the file -->
-    <string name="locate">Locate</string>
+    <string name="locate">Localizar</string>
     <!-- options in floating action button to add to playlist -->
-    <string name="playlist">Playlist</string>
+    <string name="playlist">Lista de reprodução</string>
     <!-- options in media headers when playlist is enabled -->
-    <string name="delete_playlist">Delete Playlist</string>
+    <string name="delete_playlist">Eliminar lista de reprodução</string>
     <!-- options in media headers when playlist is enabled -->
-    <string name="rename_playlist">Rename Playlist</string>
+    <string name="rename_playlist">Renomear lista de reprodução</string>
     <!-- Delete playlist summary dialog -->
-    <string name="delete_playlist_message">You\'re about to permanently delete playlist %s.
-        Are you sure you want to proceed?</string>
+    <string name="delete_playlist_message">Está prestes a eliminar permanentemente a lista de reprodução %s.
+        Tem a certeza de que deseja prosseguir?</string>
     <!-- Rename playlist summary dialog -->
-    <string name="rename_playlist_message">Please enter new playlist name</string>
+    <string name="rename_playlist_message">Por favor, introduza o novo nome da lista de reprodução</string>
     <!-- Rename playlist summary dialog button -->
-    <string name="rename">Rename</string>
+    <string name="rename">Renomear</string>
     <!-- create playlist dialog in audio fragment -->
-    <string name="create_new_playlist">Create New</string>
+    <string name="create_new_playlist">Criar Novo</string>
     <!-- remove from playlist dialog in audio fragment -->
-    <string name="remove">Remove</string>
+    <string name="remove">Remover</string>
     <!-- Remove from playlist summary dialog -->
-    <string name="remove_from_playlist_message">You\'re about to remove selected songs from playlist(s).
-        Are you sure you want to proceed?</string>
+    <string name="remove_from_playlist_message">Está prestes a remover canções selecionadas da lista(s) de reprodução.
+        Tem a certeza de que deseja prosseguir?</string>
     <!-- add to playlist dialog in audio fragment -->
-    <string name="add_to_playlist">Add to Playlist</string>
+    <string name="add_to_playlist">Adicionar à lista de reprodução</string>
     <!-- create dialog in audio fragment -->
-    <string name="create">Create</string>
+    <string name="create">Criar</string>
     <!-- removed songs from playlist in audio fragment -->
-    <string name="removed_from_playlist">Removed from playlist(s)</string>
+    <string name="removed_from_playlist">Removido da lista(s) de reprodução</string>
+    <!-- play next song button in options in audio fragment -->
+    <string name="play_next">Reproduzir Seguinte</string>
+    <!-- play next song button in options in audio fragment -->
+    <string name="play_next_success">Música adicionada à fila</string>
+    <!-- newly installed apps in settings preferences -->
+    <string name="newly_installed_apps">Aplicações recém-instaladas</string>
+    <!-- newly installed apps summary in settings preferences -->
+    <string name="newly_installed_apps_summary">Aplicações recentemente instaladas (em dias)</string>
+    <!-- newly installed apps in settings preferences -->
+    <string name="recently_updated_apps">Aplicações recentemente atualizadas</string>
+    <!-- newly installed apps summary in settings preferences -->
+    <string name="recently_updated_apps_summary">Apps recentemente atualizadas (em dias)</string>
+    <!-- ram usage in analysis -->
+    <string name="ram_usage">Uso de memória (RAM)</string>
+    <!-- ram usage in analysis -->
+    <string name="ram_usage_title">%s available | %s total</string>
+    <!-- clearing ram in analysis -->
+    <string name="ram_usage_clear">Closed background processes</string>
 </resources>

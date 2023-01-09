@@ -910,4 +910,22 @@
     <string name="create">Create</string>
     <!-- removed songs from playlist in audio fragment -->
     <string name="removed_from_playlist">Removed from playlist(s)</string>
+    <!-- play next song button in options in audio fragment -->
+    <string name="play_next">PLAY NEXT</string>
+    <!-- play next song button in options in audio fragment -->
+    <string name="play_next_success">Song added to queue</string>
+    <!-- newly installed apps in settings preferences -->
+    <string name="newly_installed_apps">Newly installed apps</string>
+    <!-- newly installed apps summary in settings preferences -->
+    <string name="newly_installed_apps_summary">Apps newly installed (in days)</string>
+    <!-- newly installed apps in settings preferences -->
+    <string name="recently_updated_apps">Recently updated apps</string>
+    <!-- newly installed apps summary in settings preferences -->
+    <string name="recently_updated_apps_summary">Apps recently updated (in days)</string>
+    <!-- ram usage in analysis -->
+    <string name="ram_usage">Memory (RAM) Usage</string>
+    <!-- ram usage in analysis -->
+    <string name="ram_usage_title">%s available | %s total</string>
+    <!-- clearing ram in analysis -->
+    <string name="ram_usage_clear">Closed background processes</string>
 </resources>
