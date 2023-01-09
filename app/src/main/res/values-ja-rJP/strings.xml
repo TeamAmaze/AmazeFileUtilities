@@ -743,6 +743,10 @@
     <string name="image_viewer_enable_palette_summary">画像ビューアーの背景色を設定します</string>
     <!-- Unused apps in analysis tab -->
     <string name="unused_apps">Unused apps</string>
+    <!-- Most used apps in analysis tab -->
+    <string name="most_used_apps">Most used apps</string>
+    <!-- Least used apps in analysis tab -->
+    <string name="least_used_apps">Least used apps</string>
     <!-- Large apps in analysis tab -->
     <string name="large_apps">Large apps</string>
     <!-- Games installed in analysis tab -->
@@ -757,6 +761,10 @@
     <string name="refresh">Refresh</string>
     <!-- Unused apps preference dialog message -->
     <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
+    <!-- Most used apps preference dialog message -->
+    <string name="most_used_apps_pref_message">Apps most used in last number of days</string>
+    <!-- Least used apps preference dialog message -->
+    <string name="least_used_apps_pref_message">Apps least used in last number of days</string>
     <!-- Stopping analysis by pressing on (X) button in analysis tab -->
     <string name="stopping_analysis">Stopping analysis</string>
     <!-- Remove battery optimizations on welcome screen and settings page -->
@@ -839,4 +847,85 @@
     <string name="clear_lyrics">Clearing lyrics</string>
     <!-- lyrics type dialog -->
     <string name="added_lyrics">Added lyrics</string>
+    <!-- whatsapp images in analysis section -->
+    <string name="whatsapp_images">Whatsapp Images</string>
+    <!-- whatsapp videos in analysis section -->
+    <string name="whatsapp_videos">Whatsapp Videos</string>
+    <!-- whatsapp analysis in settings -->
+    <string name="whatsapp_media">Whatsapp Media</string>
+    <!-- large files in analysis tab -->
+    <string name="large_files">Large Files</string>
+    <!-- purchase fdroid subscription -->
+    <string name="purchase_fdroid_title">Purchase</string>
+    <!-- purchase fdroid subscription summary -->
+    <string name="purchase_fdroid_message">You\'re running an Fdroid build.
+        You can unlock a lifetime subscription by donating any amount of your choice.
+        Please donate using one of the options below.
+        Once done please contact us through telegram / email by sharing your device ID and we\'ll unlock the subscription for you.</string>
+    <!-- purchase fdroid subscription paypal -->
+    <string name="purchase_fdroid_paypal">Paypal</string>
+    <!-- purchase fdroid subscription liberapay -->
+    <string name="purchase_fdroid_liberapay">Liberapay</string>
+    <!-- header summary in media list fragments -->
+    <string name="header_list_summary">%s • %s</string>
+    <!-- playlist in audio fragment -->
+    <string name="created_playlist">Playlist created</string>
+    <!-- playlist in audio fragment -->
+    <string name="could_not_create_playlist">Failed to create playlist</string>
+    <!-- playlist in audio fragment -->
+    <string name="insert_songs_playlist">Added %d songs to playlist %s</string>
+    <!-- playlist in audio fragment -->
+    <string name="failed_insert_songs_playlist">Failed to add songs</string>
+    <!-- playlist in audio fragment -->
+    <string name="failed_remove_songs_playlist">Failed to remove songs</string>
+    <!-- playlists header in audio fragment grouping -->
+    <string name="playlists">Playlists</string>
+    <!-- options in floating action button -->
+    <string name="options">Options</string>
+    <!-- options in floating action button to locate the file -->
+    <string name="locate">Locate</string>
+    <!-- options in floating action button to add to playlist -->
+    <string name="playlist">Playlist</string>
+    <!-- options in media headers when playlist is enabled -->
+    <string name="delete_playlist">Delete Playlist</string>
+    <!-- options in media headers when playlist is enabled -->
+    <string name="rename_playlist">Rename Playlist</string>
+    <!-- Delete playlist summary dialog -->
+    <string name="delete_playlist_message">You\'re about to permanently delete playlist %s.
+        Are you sure you want to proceed?</string>
+    <!-- Rename playlist summary dialog -->
+    <string name="rename_playlist_message">Please enter new playlist name</string>
+    <!-- Rename playlist summary dialog button -->
+    <string name="rename">Rename</string>
+    <!-- create playlist dialog in audio fragment -->
+    <string name="create_new_playlist">Create New</string>
+    <!-- remove from playlist dialog in audio fragment -->
+    <string name="remove">Remove</string>
+    <!-- Remove from playlist summary dialog -->
+    <string name="remove_from_playlist_message">You\'re about to remove selected songs from playlist(s).
+        Are you sure you want to proceed?</string>
+    <!-- add to playlist dialog in audio fragment -->
+    <string name="add_to_playlist">Add to Playlist</string>
+    <!-- create dialog in audio fragment -->
+    <string name="create">Create</string>
+    <!-- removed songs from playlist in audio fragment -->
+    <string name="removed_from_playlist">Removed from playlist(s)</string>
+    <!-- play next song button in options in audio fragment -->
+    <string name="play_next">PLAY NEXT</string>
+    <!-- play next song button in options in audio fragment -->
+    <string name="play_next_success">Song added to queue</string>
+    <!-- newly installed apps in settings preferences -->
+    <string name="newly_installed_apps">Newly installed apps</string>
+    <!-- newly installed apps summary in settings preferences -->
+    <string name="newly_installed_apps_summary">Apps newly installed (in days)</string>
+    <!-- newly installed apps in settings preferences -->
+    <string name="recently_updated_apps">Recently updated apps</string>
+    <!-- newly installed apps summary in settings preferences -->
+    <string name="recently_updated_apps_summary">Apps recently updated (in days)</string>
+    <!-- ram usage in analysis -->
+    <string name="ram_usage">Memory (RAM) Usage</string>
+    <!-- ram usage in analysis -->
+    <string name="ram_usage_title">%s available | %s total</string>
+    <!-- clearing ram in analysis -->
+    <string name="ram_usage_clear">Closed background processes</string>
 </resources>

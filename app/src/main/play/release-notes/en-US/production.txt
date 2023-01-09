@@ -1,7 +1,6 @@
 Changelog:
+- Add analysis to clear background processes
+- Add analysis for newly installed / recently updated apps
 - Add support for playlists in music player
 - Add Floating Action Button for options menu
-- Add new analysis capabilities
-- Add group summary in media list screen
-- Music player performance fixes
 - Other bugfixes

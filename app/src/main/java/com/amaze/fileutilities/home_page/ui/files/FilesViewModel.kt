@@ -20,7 +20,9 @@
 
 package com.amaze.fileutilities.home_page.ui.files
 
+import android.app.ActivityManager
 import android.app.Application
+import android.content.Context.ACTIVITY_SERVICE
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
@@ -28,6 +30,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.text.format.Formatter
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
@@ -111,7 +114,7 @@ class FilesViewModel(val applicationContext: Application) :
     var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var newlyInstalledAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var recentlyUpdatedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
-    var junkFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var junkFilesLiveData: MutableLiveData<Pair<ArrayList<MediaFileInfo>, String>?>? = null
     var apksLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var gamesInstalledLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var largeFilesMutableLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
@@ -121,6 +124,7 @@ class FilesViewModel(val applicationContext: Application) :
     var oldDownloadsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var oldRecordingsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var oldScreenshotsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var memoryInfoLiveData: MutableLiveData<String?>? = null
     var allMediaFilesPair: ArrayList<MediaFileInfo>? = null
 
     private var usedVideosSummaryTransformations: LiveData<Pair<StorageSummary,
@@ -1266,7 +1270,7 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
-    fun getJunkFilesLiveData(): LiveData<ArrayList<MediaFileInfo>?> {
+    fun getJunkFilesLiveData(): LiveData<Pair<ArrayList<MediaFileInfo>, String>?> {
         if (junkFilesLiveData == null) {
             junkFilesLiveData = MutableLiveData()
             junkFilesLiveData?.value = null
@@ -1301,7 +1305,16 @@ class FilesViewModel(val applicationContext: Application) :
                     )
                 }
             }
-            junkFilesLiveData?.postValue(result)
+            var size = 0L
+            result.forEach {
+                size += it.longSize
+            }
+            junkFilesLiveData?.postValue(
+                Pair(
+                    result,
+                    Formatter.formatFileSize(applicationContext, size)
+                )
+            )
         }
     }
 
@@ -1499,20 +1512,73 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun getMemoryInfo(): LiveData<String?> {
+        if (memoryInfoLiveData == null) {
+            memoryInfoLiveData = MutableLiveData()
+            memoryInfoLiveData?.value = null
+            processMemoryUsage()
+        }
+        return memoryInfoLiveData!!
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun processMemoryUsage() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val activityManager = applicationContext
+                .getSystemService(ACTIVITY_SERVICE) as ActivityManager
+            val memInfo = ActivityManager.MemoryInfo()
+            activityManager.getMemoryInfo(memInfo)
+            val totalMemory = memInfo.totalMem
+            val availMemory = memInfo.availMem
+            val usageSummary = applicationContext.resources.getString(
+                R.string.ram_usage_title,
+                String.format("%s", Formatter.formatFileSize(applicationContext, availMemory)),
+                String.format("%s", Formatter.formatFileSize(applicationContext, totalMemory))
+            )
+            memoryInfoLiveData?.postValue(usageSummary)
+        }
+    }
+
+    fun killBackgroundProcesses(packageManager: PackageManager, callback: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+            allApps.get()?.filter {
+                it.first.packageName != applicationContext.packageName
+            }?.forEach {
+                val activityManager = applicationContext
+                    .getSystemService(ACTIVITY_SERVICE) as ActivityManager
+                activityManager.killBackgroundProcesses(it.first.packageName)
+            }
+            callback.invoke()
+        }
+    }
+
     private fun loadAllInstalledApps(packageManager: PackageManager) {
         if (allApps.get() == null) {
             val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
             allApps.set(
                 apps.map {
-                    var info: PackageInfo?
-                    var androidInfo: PackageInfo? = null
-                    try {
-                        info = packageManager.getPackageInfo(
+                    val info: PackageInfo? = try {
+                        packageManager.getPackageInfo(
                             it.packageName,
                             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
                                 PackageManager.GET_SIGNATURES
                             else PackageManager.GET_SIGNING_CERTIFICATES
                         )
+                    } catch (e: PackageManager.NameNotFoundException) {
+                        log.warn(
+                            "failed to find package name {} while loading apps list",
+                            it.packageName,
+                            e
+                        )
+                        null
+                    }
+
+                    Pair(it, info)
+                }.filter {
+                    val androidInfo: PackageInfo?
+                    try {
                         androidInfo =
                             packageManager.getPackageInfo(
                                 "android",
@@ -1520,35 +1586,37 @@ class FilesViewModel(val applicationContext: Application) :
                                     PackageManager.GET_SIGNATURES
                                 else PackageManager.GET_SIGNING_CERTIFICATES
                             )
+                        !Utils.isAppInSystemPartition(it.first) && (
+                            it.second == null ||
+                                (
+                                    !Utils.isSignedBySystem(it.second, androidInfo) &&
+                                        !it.second!!.packageName
+                                            .equals(applicationContext.packageName)
+                                    )
+                            )
                     } catch (e: PackageManager.NameNotFoundException) {
                         log.warn(
                             "failed to find package name {} while loading apps list",
-                            it.packageName,
+                            it.first.packageName,
                             e
                         )
-                        info = null
+                        true
                     }
-                    !Utils.isAppInSystemPartition(it) &&
-                        (
-                            info == null ||
-                                (
-                                    !Utils.isSignedBySystem(info, androidInfo) &&
-                                        !info.packageName.equals(applicationContext.packageName)
-                                    )
-                            )
-                    Pair(it, info)
                 }
             )
-            insertInstalledApps(apps)
+            insertInstalledApps()
         }
     }
 
-    private fun insertInstalledApps(infoList: List<ApplicationInfo>) {
-        val installedApps = infoList.map {
-            InstalledApps(it.packageName, listOf(it.sourceDir, it.dataDir))
+    private fun insertInstalledApps() {
+        allApps.get()?.let {
+            infoListPair ->
+            val installedApps = infoListPair.map {
+                InstalledApps(it.first.packageName, listOf(it.first.sourceDir, it.first.dataDir))
+            }
+            val dao = AppDatabase.getInstance(applicationContext).installedAppsDao()
+            dao.insert(installedApps)
         }
-        val dao = AppDatabase.getInstance(applicationContext).installedAppsDao()
-        dao.insert(installedApps)
     }
 
     /**

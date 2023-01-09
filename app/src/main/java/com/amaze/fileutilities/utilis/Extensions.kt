@@ -20,6 +20,7 @@
 
 package com.amaze.fileutilities.utilis
 
+import android.content.ContentResolver
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
@@ -28,6 +29,8 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.os.ParcelFileDescriptor
+import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.View
@@ -58,6 +61,9 @@ import kotlinx.coroutines.withContext
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.io.FileDescriptor
+import java.io.FileInputStream
+import java.io.FileOutputStream
 
 var log: Logger = LoggerFactory.getLogger(Utils::class.java)
 
@@ -94,6 +100,70 @@ fun Uri.getSiblingUriFiles(): ArrayList<Uri>? {
     return null
 }
 
+fun Uri.getFileFromUri(context: Context): File? {
+    if (this == Uri.EMPTY) {
+        return null
+    }
+    var songFile: File? = getFileFromUri()
+    if (songFile == null) {
+        songFile = getContentResolverFilePathFromUri(context, this)?.let {
+            filePath ->
+            File(filePath)
+        }
+        if (songFile == null) {
+            var parcelFileDescriptor: ParcelFileDescriptor? = null
+            var outputStream: FileOutputStream? = null
+            try {
+                parcelFileDescriptor = context.contentResolver.openFileDescriptor(
+                    this,
+                    "r"
+                )
+                parcelFileDescriptor?.let {
+                    val fileDescriptor: FileDescriptor = parcelFileDescriptor.fileDescriptor
+                    val fis = FileInputStream(fileDescriptor)
+                    val outputFile = File(
+                        context.cacheDir,
+                        getContentName(context.contentResolver) ?: "sharedFile"
+                    )
+                    outputStream = outputFile.outputStream()
+                    outputStream?.let {
+                        fis.copyTo(it)
+                    }
+                    songFile = outputFile
+                }
+            } finally {
+                parcelFileDescriptor?.close()
+                outputStream?.close()
+            }
+        }
+    }
+    return songFile
+}
+
+fun Uri.getContentName(resolver: ContentResolver): String? {
+    var cursor: Cursor? = null
+    try {
+        cursor =
+            resolver.query(
+                this, arrayOf(MediaStore.MediaColumns.DISPLAY_NAME),
+                null,
+                null, null
+            )
+        cursor!!.moveToFirst()
+        val nameIndex = cursor.getColumnIndex(cursor.columnNames[0])
+        return if (nameIndex >= 0) {
+            cursor.getString(nameIndex)
+        } else {
+            null
+        }
+    } catch (e: Exception) {
+        log.warn("failed to load name for uri {}", this)
+        return null
+    } finally {
+        cursor?.close()
+    }
+}
+
 fun Uri.getFileFromUri(): File? {
     if (this == Uri.EMPTY) {
         return null
@@ -116,7 +186,7 @@ fun Uri.getFileFromUri(): File? {
             )
         )
         if (songFile == null || !songFile.exists()) {
-            songFile = File(this.path)
+            songFile = this.path?.let { File(it) }
         }
     }
     if (songFile == null || !songFile.exists()) {
@@ -131,17 +201,18 @@ fun File.getUriFromFile(context: Context): Uri {
 
 private fun getContentResolverFilePathFromUri(context: Context, uri: Uri): String? {
     var cursor: Cursor? = null
-    val column = "_data"
-    val projection = arrayOf(
-        column
-    )
     try {
-        cursor = context.contentResolver.query(
-            uri, projection, null, null,
-            null
-        )
+        val projection = arrayOf(MediaStore.Files.FileColumns.DATA)
+        cursor = context
+            .contentResolver
+            .query(
+                uri,
+                projection, null,
+                null,
+                null
+            )
         if (cursor != null && cursor.moveToFirst()) {
-            val columnIndex = cursor.getColumnIndexOrThrow(column)
+            val columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA)
             return cursor.getString(columnIndex)
         }
     } catch (e: Exception) {

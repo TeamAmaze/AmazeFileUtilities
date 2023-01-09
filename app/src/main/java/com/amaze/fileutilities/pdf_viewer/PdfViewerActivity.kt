@@ -39,6 +39,7 @@ import com.amaze.fileutilities.databinding.PdfViewerActivityBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.dp
+import com.amaze.fileutilities.utilis.getContentName
 import com.amaze.fileutilities.utilis.getFileFromUri
 import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.share.showShareDialog
@@ -108,10 +109,8 @@ class PdfViewerActivity :
 
     override fun loadComplete(nbPages: Int) {
         val meta: PdfDocument.Meta = viewBinding.pdfView.documentMeta
-        viewModel.pdfFileName = if (meta.title.isEmpty()) {
-            pdfModel.uri.getFileFromUri()?.name
-        } else {
-            meta.title
+        viewModel.pdfFileName = meta.title.ifEmpty {
+            pdfModel.uri.getFileFromUri(this)?.name
         }
         viewBinding.pageNumber.text = String.format(
             "%s / %s", viewModel.pageNumber + 1,
@@ -121,7 +120,10 @@ class PdfViewerActivity :
             switchView()
         }
         viewBinding.customToolbar.setBackButtonClickListener { finish() }
-        viewBinding.customToolbar.setTitle(viewModel.pdfFileName ?: "pdf")
+        viewBinding.customToolbar.setTitle(
+            viewModel.pdfFileName
+                ?: pdfModel.uri.getContentName(contentResolver) ?: "pdf"
+        )
         viewBinding.customToolbar.setOverflowPopup(R.menu.pdf_activity) { item ->
             when (item!!.itemId) {
                 R.id.info -> {
@@ -135,7 +137,7 @@ class PdfViewerActivity :
                 }
                 R.id.share -> {
                     var processed = false
-                    pdfModel.uri.getFileFromUri().let {
+                    pdfModel.uri.getFileFromUri(this).let {
                         file ->
                         if (file == null) {
                             showToastInCenter(getString(R.string.failed_to_share))

@@ -89,13 +89,13 @@
     <!-- Receive file in transfer tab -->
     <string name="receive">קבלה</string>
     <!-- Stop receiving file in transfer tab -->
-    <string name="stop_receiving">עצירת הקבלה</string>
+    <string name="stop_receiving">עצירת העברה</string>
     <!-- Calculating number of media files in utilities tab on app startup -->
-    <string name="calculating">מתבצע חישוב…</string>
+    <string name="calculating">מבצע חישוב…</string>
     <!-- Recent files on utilities tab main screen -->
     <string name="recent_files">קבצים אחרונים</string>
     <!-- No files found after searching media files -->
-    <string name="no_files">אין קבצים</string>
+    <string name="no_files">לא נמצאו קבצים</string>
     <!-- Number of media files in utilities tab in individual list screen eg in images / number of total files -->
     <string name="media_files_subs">קובצי מדיה: %s</string>
     <!-- Search screen title bar hint -->
@@ -107,7 +107,7 @@
     <!-- Settings screen title -->
     <string name="settings">הגדרות</string>
     <!-- About screen title -->
-    <string name="about">על אודות</string>
+    <string name="about">אודות</string>
     <!-- Copyright dialog content in about section -->
     <string name="rights_reserved">כל הזכויות שמורות © 2021–2022 צוות Amaze\nכל הזכויות שמורות</string>
     <!-- Open source licenses in about section -->
@@ -139,7 +139,7 @@
     <!-- Sort audio / video utilities list by duration -->
     <string name="duration">משך</string>
     <!-- Crash fallback screen title -->
-    <string name="sorry_string">זה לא אמור היה לקרות, סליחה.</string>
+    <string name="sorry_string">זה לא היה אמור לקרות, סליחה.</string>
     <!-- Crash fallback screen report by email -->
     <string name="error_report_button_text">דיווח על השגיאה הזאת בדוא״ל</string>
     <!-- Crash fallback screen report by telegram -->
@@ -326,7 +326,7 @@
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
     <string name="enable_wifi">נא להפעיל את הרשת האלחוטית שלך</string>
     <!-- Failed to discover nearby devices in transfer tab -->
-    <string name="discovery_failure">Failed to discover peers. Please try reconnecting to Wifi network</string>
+    <string name="discovery_failure">נכשל במציאת עמיתים. נסה להתחבר מחדש לרשת Wifi</string>
     <!-- Receiving files in transfer tab -->
     <string name="receiving_files">מתקבלים קבצים</string>
     <!-- Search for nearby devices in transfer tab -->
@@ -364,7 +364,7 @@
     <!-- Service description to cast media files to tv -->
     <string name="cloud_streamer_service_description">משדר מדיה לכלי עזר לקבצים מבית Amaze</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
-    <string name="failed_to_handshake">Failed to establish connection with remote device. Please try reconnecting to Wifi network</string>
+    <string name="failed_to_handshake">יצירת חיבור עם מכשיר מרוחק נכשלה. נסה להתחבר מחדש לרשת Wifi</string>
     <!-- Connection successful to transfer files in tranfer tab -->
     <string name="connection_successful">החיבור הצליח</string>
     <!-- Failed to send files in transfer tab -->
@@ -376,7 +376,7 @@
     <!-- Failed to receive files in transfer tab -->
     <string name="failed_filename_receive_reconnecct">הקבלה נכשלה, נא להתחבר מחדש</string>
     <!-- Transfer complete in transfer tab -->
-    <string name="transfer_complete">File transferred</string>
+    <string name="transfer_complete">הקובץ נשלח</string>
     <!-- Need extra permissions for transfer tab -->
     <string name="grant_location_permission">ליישום נדרשת הרשאת מיקום כדי להתחבר למכשירים סמוכים.</string>
     <!-- Need extra permissions for transfer tab -->
@@ -468,7 +468,7 @@
     <string name="amaze_fm_redirect">אתה מופנה מחדש למנהל הקבצים של Amaze. זוהי הצעת הקוד הפתוח שלנו הכוללת את כל התכונות שיש למנהל קבצים מודרני ללא עלות לחלוטין עם למעלה מ-2 מיליון הורדות ודירוג 4.3 בחנות Play.</string>
     <!-- Download button in dialog prompt -->
     <string name="download">הורדה</string>
-    <string name="amaze_file_manager">Amaze File Manager</string>
+    <string name="amaze_file_manager">מנהל הקבצים של Amaze</string>
     <!-- Download subtitles video player device not connected to internet -->
     <string name="not_connected_to_internet">המכשיר לא מחובר לאינטרנט</string>
     <!-- Search subtitles dialog in video player -->
@@ -494,7 +494,7 @@
     <!-- Failed to download subtitles in video player -->
     <string name="failed_to_download">ההורדה נכשלה</string>
     <!-- Share file dialog -->
-    <string name="bluetooth">Bluetooth</string>
+    <string name="bluetooth">בלוטוס</string>
     <!-- Share logs in about section -->
     <string name="share_logs">שיתוף יומנים</string>
     <!-- No app found in share dialog -->
@@ -628,44 +628,43 @@
     <!-- Trial expired title -->
     <string name="trial_expired_title">תקופת הנסיון הסתיימה</string>
     <!-- Trial expired summary -->
-    <string name="trial_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your trial has expired, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to keep us afloat.\n
-        You can write to us if you want to extend the trial period a bit more.
-    </string>
+    <string name="trial_expired_message">שלום!  תודה שבחרת ב-Amaze File Utilities.\n
+         תקופת הניסיון שלך פג, אנו מקווים שנהנית מהתוכנה שלנו, ואנו מצפים שתשלם תשלום סמלי.\n
+         אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
+         ואנחנו צריכים כספים כדי לשמור את המוצר במצב הזה.\n
+         אתה יכול לכתוב לנו אם אתה רוצה להאריך עוד קצת את תקופת הניסיון.    </string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
     <string name="trial_inactive_title">ניסיון לא פעיל</string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
-    <string name="trial_inactive_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your trial is inactive and you\'re not longer an exclusive member,
-        we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to keep us afloat.\n
-        You can write to us if you want to extend the trial period a bit more.</string>
+    <string name="trial_inactive_message">שלום!  תודה שבחרת ב-Amaze File Utilities.\n
+         תקופת הניסיון שלך אינה פעילה ואתה כבר לא חבר בלעדי,
+         אנו מקווים שנהנית מהתוכנה שלנו, ואנו מצפים שתשלם תשלום סמלי.\n
+         אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
+         ואנחנו צריכים כספים כדי לשמור את המוצר בצורה הזאת.\n
+         אתה יכול לכתוב לנו אם אתה רוצה להאריך עוד קצת את תקופת הניסיון.</string>
     <!-- Subscription dialog subscription purchased title -->
     <string name="subscription_purchased_title">יש מינוי</string>
     <!-- Subscription dialog subscription purchased summary -->
-    <string name="subscription_purchased_message">Thank you for choosing Amaze File Utilities.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and your subscription will really help us in development.\n
-        At any point if you need any help feel free to contact us in About section.
-        You\'ll be able to contact directly to our team on Telegram.\n
-        Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
+    <string name="subscription_purchased_message">תודה שבחרת ב-Amaze File Utilities.\n
+         אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
+         והמנוי שלך באמת יעזור לנו בפיתוח.\n
+         בכל שלב אם אתה זקוק לעזרה כלשהי, אל תהסס לפנות אלינו בקטע אודות.
+         תוכל ליצור קשר ישירות עם הצוות שלנו בטלגרם.\n
+         אנא נסה גם את אפליקציית מנהל הקבצים בקוד פתוח \'Amaze File Manager\' לחוויית ניהול קבצים בכיף ובפרטיות.</string>
     <!-- Subscription dialog yearly subscription expired title -->
     <string name="subscription_expired_title">פג תוקף המינוי</string>
     <!-- Subscription dialog yearly subscription expired summary -->
-    <string name="subscription_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your subscription has expired,
-        we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to keep us afloat.\n
-        You can write to us if you want to extend the trial period a bit more.</string>
+    <string name="subscription_expired_message">שלום!  תודה שבחרת ב-Amaze File Utilities.\n
+         פג תוקף המנוי שלך,
+         אנו מקווים שנהנית מהתוכנה שלנו, ואנו מצפים שתשלם תשלום סמלי.\n
+         אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
+         ואנחנו צריכים כספים כדי לשמור את האפליקציה כזאת.\n
+         אתה יכול לכתוב לנו אם אתה רוצה להאריך עוד קצת את תקופת הניסיון.</string>
     <!-- Trial validation dialog failed to validate -->
     <string name="not_connected_trial_title">האימות נכשל</string>
     <!-- Trial validation dialog failed to validate summary -->
-    <string name="not_connected_trial_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        We\'re not able to validate your license, please connect to internet and restart the app.</string>
+    <string name="not_connected_trial_message">שלום!  תודה שבחרת ב-Amaze File Utilities.\n
+         אין לנו אפשרות לאמת את הרישיון שלך, אנא התחבר לאינטרנט והפעל מחדש את האפליקציה.</string>
     <!-- Subscribe button in dialog -->
     <string name="subscribe">הרשמה למינוי</string>
     <!-- Generic don't show dialog again -->
@@ -673,9 +672,9 @@
     <!-- Welcome screen title -->
     <string name="welcome_media_title">ניהול קובצי מדיה</string>
     <!-- Welcome screen summary -->
-    <string name="welcome_media_summary">View images, videos, audios, documents in list or grid\nOpen using inbuilt players\nGesture support for easy navigation\nJump to any date instantly\nGroup or sort list\nCast on TV</string>
+    <string name="welcome_media_summary">הצג תמונות, קטעי וידאו, אודיו, מסמכים ברשימה או רשת\nפתח באמצעות נגנים מובנים\nתמיכה במחוות לניווט קל\nקפוץ לכל תאריך באופן מיידי\nקבץ או מיון רשימה\nהעברה בטלוויזיה</string>
     <!-- Welcome screen analysis summary -->
-    <string name="welcome_analyse_summary">Analyse storage for junk files to delete\nGroup images by memes, low-light, blurry, selfies or group\nGroup large files in storage\nGroup old downloads, recordings or screenshots\n</string>
+    <string name="welcome_analyse_summary">נתח אחסון לקבצי זבל כדי למחוק\nקבץ תמונות לפי ממים, תאורה חלשה, מטושטשת, סלפי או קבוצה\nקבץ קבצים גדולים באחסון\nקבץ הורדות ישנות, הקלטות או צילומי מסך\n</string>
     <!-- Welcome screen transfer summary -->
     <string name="welcome_transfer_summary">העברת נתונים בין מכשירים דרך רשת אלחוטית\nמהירויות במהירות גבוהה עם Android Wi-Fi Direct</string>
     <!-- Welcome screen permission required -->
@@ -685,9 +684,8 @@
     <!-- Welcome screen license agreement page -->
     <string name="privacy_title">הפרטיות שלך חשובה לנו!</string>
     <!-- Welcome screen license agreement page -->
-    <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.\n
-        We assure you that we do not collect any of your private information.\nWe don\'t say this, our track record does.\nWe\'re a group of open source developers and are managing Amaze File Manager for around 8 years now.\n\nWe look forward to your subscription.
-    </string>
+    <string name="privacy_summary">לא אוהב פרסומות?  גם אנחנו לא, אנחנו מעריכים את הנתונים שלך כמוך.\n
+         אנו מבטיחים לך שאיננו אוספים אף מידע פרטי שלך.\nאנחנו לא אומרים את זה, הרקורד שלנו כן.\nאנחנו קבוצה של מפתחי קוד פתוח ומנהלים את Amaze File Manager כבר כ-8 שנים. \n\nאנו מצפים למנוי שלך.    </string>
     <!-- Subscription dialog failed to fetch subscriptions -->
     <string name="error_fetching_google_play_product_list">שגיאה במשיכת רשימת מוצרים מ־Google Play.</string>
     <!-- Welcome screen done with the wizard -->
@@ -729,7 +727,7 @@
     <!-- Apply dialog button in apply playback settings -->
     <string name="apply">החלה</string>
     <!-- Playback settings dialog pitch settings info -->
-    <string name="pitch_hint_text">A value of zero means that the key is not changed.\nOne full step corresponds to one semitone.\nA change of -12 semitones means that the song is played one octave lower.</string>
+    <string name="pitch_hint_text">ערך של אפס אומר שהמפתח לא משתנה.\nצעד שלם אחד מתאים לחצי טון אחד.\nשינוי של -12 חצאי טון אומר שהשיר מושמע באוקטבה אחת נמוכה יותר.</string>
     <!-- Playback settings dialog reset settings -->
     <string name="reset">איפוס</string>
     <!-- Settings page extract music player background color from album -->
@@ -742,6 +740,10 @@
     <string name="image_viewer_enable_palette_summary">מגדיר את צבע רקע מציג התמונות</string>
     <!-- Unused apps in analysis tab -->
     <string name="unused_apps">יישומונים שאינם בשימוש</string>
+    <!-- Most used apps in analysis tab -->
+    <string name="most_used_apps">האפליקציות הנפוצות ביותר</string>
+    <!-- Least used apps in analysis tab -->
+    <string name="least_used_apps">אפליקציות הכי פחות בשימוש</string>
     <!-- Large apps in analysis tab -->
     <string name="large_apps">יישומונים גדולים</string>
     <!-- Games installed in analysis tab -->
@@ -756,6 +758,10 @@
     <string name="refresh">לרענן</string>
     <!-- Unused apps preference dialog message -->
     <string name="unused_apps_pref_message">מספר הימים בהם לא נפתח היישומון</string>
+    <!-- Most used apps preference dialog message -->
+    <string name="most_used_apps_pref_message">האפליקציות בשימוש הרב ביותר במספר הימים האחרונים</string>
+    <!-- Least used apps preference dialog message -->
+    <string name="least_used_apps_pref_message">אפליקציות שנעשו הכי פחות בשימוש במספר הימים האחרונים</string>
     <!-- Stopping analysis by pressing on (X) button in analysis tab -->
     <string name="stopping_analysis">הניתוח נעצר</string>
     <!-- Remove battery optimizations on welcome screen and settings page -->
@@ -809,7 +815,7 @@
     <!-- In Image editor to crop or adjust image -->
     <string name="label_adjust">התאמה</string>
     <!-- In Image editor -->
-    <string name="msg_save_image">Are you want to exit without saving image?</string>
+    <string name="msg_save_image">האם ברצונך לצאת מבלי לשמור תמונה?</string>
     <!-- In Image editor -->
     <string name="msg_share_image">שיתוף תמונה</string>
     <!-- In Image editor to add picture to edit -->
@@ -829,13 +835,94 @@
     <!-- Failed while loading docx file -->
     <string name="failed_to_load_document">טעינת המסמך נכשלה</string>
     <!-- load music lyrics -->
-    <string name="load">Load</string>
+    <string name="load">טוען</string>
     <!-- paste lyrics dialog -->
-    <string name="paste_lyrics">Paste lyrics</string>
+    <string name="paste_lyrics">הדבק מילים</string>
     <!-- lyrics type dialog -->
-    <string name="lyrics_type">Lyrics type</string>
+    <string name="lyrics_type">סוג מילות השיר</string>
     <!-- lyrics type dialog -->
-    <string name="clear_lyrics">Clearing lyrics</string>
+    <string name="clear_lyrics">ניקוי מילים</string>
     <!-- lyrics type dialog -->
-    <string name="added_lyrics">Added lyrics</string>
+    <string name="added_lyrics">נוספו מילים</string>
+    <!-- whatsapp images in analysis section -->
+    <string name="whatsapp_images">תמונות וואטסאפ</string>
+    <!-- whatsapp videos in analysis section -->
+    <string name="whatsapp_videos">סרטוני ווטסאפ</string>
+    <!-- whatsapp analysis in settings -->
+    <string name="whatsapp_media">וואטסאפ מדיה</string>
+    <!-- large files in analysis tab -->
+    <string name="large_files">קבצים גדולים</string>
+    <!-- purchase fdroid subscription -->
+    <string name="purchase_fdroid_title">לרכוש</string>
+    <!-- purchase fdroid subscription summary -->
+    <string name="purchase_fdroid_message">אתה מפעיל גירסת Fdroid.
+         אתה יכול לפתוח מנוי לכל החיים על ידי תרומה של כל סכום שתבחר.
+         אנא תרמו באמצעות אחת מהאפשרויות למטה.
+         לאחר שתסיים, אנא צור איתנו קשר באמצעות טלגרם / אימייל על ידי שיתוף מזהה המכשיר שלך ואנו נבטל את נעילת המנוי עבורך.</string>
+    <!-- purchase fdroid subscription paypal -->
+    <string name="purchase_fdroid_paypal">פייפאל</string>
+    <!-- purchase fdroid subscription liberapay -->
+    <string name="purchase_fdroid_liberapay">Liberapay</string>
+    <!-- header summary in media list fragments -->
+    <string name="header_list_summary">%s • %s</string>
+    <!-- playlist in audio fragment -->
+    <string name="created_playlist">רשימת השמעה נוצרה</string>
+    <!-- playlist in audio fragment -->
+    <string name="could_not_create_playlist">יצירת רשימת השמעה נכשלה</string>
+    <!-- playlist in audio fragment -->
+    <string name="insert_songs_playlist">נוספו %d שירים לרשימת ההשמעה %s</string>
+    <!-- playlist in audio fragment -->
+    <string name="failed_insert_songs_playlist">הוספת שירים נכשלה</string>
+    <!-- playlist in audio fragment -->
+    <string name="failed_remove_songs_playlist">הסרת השירים נכשלה</string>
+    <!-- playlists header in audio fragment grouping -->
+    <string name="playlists">רשימות השמעה</string>
+    <!-- options in floating action button -->
+    <string name="options">אפשרויות</string>
+    <!-- options in floating action button to locate the file -->
+    <string name="locate">לאתר</string>
+    <!-- options in floating action button to add to playlist -->
+    <string name="playlist">רשימת השמעה</string>
+    <!-- options in media headers when playlist is enabled -->
+    <string name="delete_playlist">מחיקת רשימת השמעה</string>
+    <!-- options in media headers when playlist is enabled -->
+    <string name="rename_playlist">שנה שם לרשימת ההשמעה</string>
+    <!-- Delete playlist summary dialog -->
+    <string name="delete_playlist_message">אתה עומד למחוק לצמיתות את רשימת ההשמעה %s.
+         האם אתה בטוח שאתה רוצה להמשיך?</string>
+    <!-- Rename playlist summary dialog -->
+    <string name="rename_playlist_message">נא להזין שם רשימת השמעה חדשה</string>
+    <!-- Rename playlist summary dialog button -->
+    <string name="rename">שינוי שם</string>
+    <!-- create playlist dialog in audio fragment -->
+    <string name="create_new_playlist">Create New</string>
+    <!-- remove from playlist dialog in audio fragment -->
+    <string name="remove">Remove</string>
+    <!-- Remove from playlist summary dialog -->
+    <string name="remove_from_playlist_message">You\'re about to remove selected songs from playlist(s).
+        Are you sure you want to proceed?</string>
+    <!-- add to playlist dialog in audio fragment -->
+    <string name="add_to_playlist">Add to Playlist</string>
+    <!-- create dialog in audio fragment -->
+    <string name="create">Create</string>
+    <!-- removed songs from playlist in audio fragment -->
+    <string name="removed_from_playlist">Removed from playlist(s)</string>
+    <!-- play next song button in options in audio fragment -->
+    <string name="play_next">PLAY NEXT</string>
+    <!-- play next song button in options in audio fragment -->
+    <string name="play_next_success">Song added to queue</string>
+    <!-- newly installed apps in settings preferences -->
+    <string name="newly_installed_apps">Newly installed apps</string>
+    <!-- newly installed apps summary in settings preferences -->
+    <string name="newly_installed_apps_summary">Apps newly installed (in days)</string>
+    <!-- newly installed apps in settings preferences -->
+    <string name="recently_updated_apps">Recently updated apps</string>
+    <!-- newly installed apps summary in settings preferences -->
+    <string name="recently_updated_apps_summary">Apps recently updated (in days)</string>
+    <!-- ram usage in analysis -->
+    <string name="ram_usage">Memory (RAM) Usage</string>
+    <!-- ram usage in analysis -->
+    <string name="ram_usage_title">%s available | %s total</string>
+    <!-- clearing ram in analysis -->
+    <string name="ram_usage_clear">Closed background processes</string>
 </resources>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Amaze - Инструменты для работы с файлами / файловой системой</string>
+    <string name="app_name">Amaze Файловые Утилиты</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">Инструменты</string>
+    <string name="app_name_launcher">Amaze Утилиты</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">Amaze File Utility - Приложение содержащие в себе набор инструментов для работы с файловой системой. Имеющее встроенные проигрыватели для воспроизведения Ваших медиа файлов.</string>
+    <string name="about_app">Приложение для работы с файлами с встроенным медиа плеером для всех ваших потребностей.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Просмотр Изображения</string>
+    <string name="image_viewer">Amaze Просмотр Изображений</string>
     <!-- Image viewer label in settings -->
     <string name="image_viewer_normal">Просмотр изображений</string>
     <!-- Video player activity label -->
@@ -909,4 +909,22 @@
     <string name="create">Create</string>
     <!-- removed songs from playlist in audio fragment -->
     <string name="removed_from_playlist">Removed from playlist(s)</string>
+    <!-- play next song button in options in audio fragment -->
+    <string name="play_next">PLAY NEXT</string>
+    <!-- play next song button in options in audio fragment -->
+    <string name="play_next_success">Song added to queue</string>
+    <!-- newly installed apps in settings preferences -->
+    <string name="newly_installed_apps">Newly installed apps</string>
+    <!-- newly installed apps summary in settings preferences -->
+    <string name="newly_installed_apps_summary">Apps newly installed (in days)</string>
+    <!-- newly installed apps in settings preferences -->
+    <string name="recently_updated_apps">Recently updated apps</string>
+    <!-- newly installed apps summary in settings preferences -->
+    <string name="recently_updated_apps_summary">Apps recently updated (in days)</string>
+    <!-- ram usage in analysis -->
+    <string name="ram_usage">Memory (RAM) Usage</string>
+    <!-- ram usage in analysis -->
+    <string name="ram_usage_title">%s available | %s total</string>
+    <!-- clearing ram in analysis -->
+    <string name="ram_usage_clear">Closed background processes</string>
 </resources>

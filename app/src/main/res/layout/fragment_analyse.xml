@@ -8,6 +8,7 @@
     android:background="@null">
 
     <ScrollView
+        android:id="@+id/analyse_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -161,7 +162,7 @@
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/junk_files"
                 app:hint="@string/junk_files_hint"
-                app:showPreview="false"
+                app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 />
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
@@ -206,6 +207,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:analysisTitle="@string/telegram_files"
+                android:layout_marginTop="@dimen/material_generic"
+                android:visibility="gone"
+                app:showPreview="true"
+                />
+
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/memory_usage_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/ram_usage"
                 android:layout_marginTop="@dimen/material_generic"
                 android:visibility="gone"
                 app:showPreview="true"

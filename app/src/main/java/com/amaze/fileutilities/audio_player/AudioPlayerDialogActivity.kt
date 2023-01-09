@@ -114,7 +114,7 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
                     dialog.show()
                 } else {
                     dialog.dismiss()
-                    audioUri.getFileFromUri()?.length()?.also {
+                    audioUri.getFileFromUri(this)?.length()?.also {
                         if (it > AudioPlayerInterfaceHandlerViewModel.WAVEFORM_THRESHOLD_BYTES) {
                             viewModel.forceShowSeekbar = true
                         }
