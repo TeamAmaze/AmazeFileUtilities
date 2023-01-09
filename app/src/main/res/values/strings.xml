@@ -931,4 +931,10 @@
     <string name="recently_updated_apps">Recently updated apps</string>
     <!-- newly installed apps summary in settings preferences -->
     <string name="recently_updated_apps_summary">Apps recently updated (in days)</string>
+    <!-- ram usage in analysis -->
+    <string name="ram_usage">Memory (RAM) Usage</string>
+    <!-- ram usage in analysis -->
+    <string name="ram_usage_title">%s available | %s total</string>
+    <!-- clearing ram in analysis -->
+    <string name="ram_usage_clear">Closed background processes</string>
 </resources>

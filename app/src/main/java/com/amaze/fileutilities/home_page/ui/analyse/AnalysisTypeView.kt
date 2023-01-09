@@ -27,6 +27,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.HorizontalScrollView
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -56,9 +57,14 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
     private val loadingHorizontalScroll: ProgressBar
     private val cancelLoadingView: ImageView
     private val requirePermissionsParent: LinearLayout
+    private val requirePermissionsTitle: TextView
     private val refreshParent: LinearLayout
     private val grantPermissionButton: Button
     private val refreshButton: Button
+    private val requirePermissionScroll: HorizontalScrollView
+    private val summaryViewParent: LinearLayout
+    private val summaryTextView: TextView
+    private val summaryViewButton: Button
     private var showPreview = false
 
     companion object {
@@ -81,8 +87,14 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         cancelLoadingView = loadingProgressParent.findViewById(R.id.cancel_loading_button)
         loadingHorizontalScroll = imagesListScroll.findViewById(R.id.scroll_progress)
         requirePermissionsParent = imagesListParent.findViewById(R.id.require_permission_parent)
+        requirePermissionsTitle = requirePermissionsParent
+            .findViewById(R.id.require_permission_title)
         refreshParent = imagesListParent.findViewById(R.id.refresh_parent)
         grantPermissionButton = requirePermissionsParent.findViewById(R.id.grant_button)
+        requirePermissionScroll = imagesListScroll.findViewById(R.id.require_permission_scroll)
+        summaryViewParent = imagesListScroll.findViewById(R.id.summary_view_parent)
+        summaryTextView = imagesListScroll.findViewById(R.id.summary_view_title)
+        summaryViewButton = imagesListScroll.findViewById(R.id.summary_view_button)
         refreshButton = refreshParent.findViewById(R.id.refresh_button)
 
         val a = context.obtainStyledAttributes(
@@ -176,6 +188,31 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         }
         refreshButton.setOnClickListener {
             refreshCallback.invoke()
+        }
+    }
+
+    fun loadSummaryTextPreview(
+        text: String?,
+        refreshCallback: (() -> Unit)?,
+        cleanButtonClick: () -> Unit
+    ) {
+        if (text.isNullOrEmpty()) {
+            hideFade(300)
+        }
+        loadingHorizontalScroll.visibility = View.GONE
+        requirePermissionScroll.visibility = View.GONE
+        if (showPreview) {
+            summaryViewParent.visibility = View.VISIBLE
+            summaryTextView.text = text
+            if (refreshCallback != null) {
+                summaryViewButton.visibility = View.VISIBLE
+                summaryViewButton.setOnClickListener {
+                    refreshCallback.invoke()
+                }
+            }
+        }
+        cleanButton.setOnClickListener {
+            cleanButtonClick.invoke()
         }
     }
 

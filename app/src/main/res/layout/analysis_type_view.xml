@@ -22,6 +22,7 @@
             android:layout_gravity="center_horizontal|center_vertical"
             />
         <HorizontalScrollView
+            android:id="@+id/require_permission_scroll"
             android:layout_width="match_parent"
             android:layout_height="@dimen/grid_view"
             android:scrollbars="none">
@@ -97,6 +98,35 @@
                 </LinearLayout>
             </LinearLayout>
         </HorizontalScrollView>
+        <LinearLayout
+            android:id="@+id/summary_view_parent"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/grid_view"
+            android:gravity="center_horizontal|center_vertical"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
+            <TextView
+                android:id="@+id/summary_view_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/eighteen_sp"
+                />
+            <Button
+                android:id="@+id/summary_view_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/refresh"
+                app:cornerRadius="@dimen/material_generic"
+                app:rippleColor="@color/highlight_yellow"
+                android:textColor="@color/navy_blue"
+                app:backgroundTint="@color/white"
+                android:layout_marginTop="@dimen/material_generic"
+                android:visibility="gone"
+                />
+        </LinearLayout>
         <View
             android:id="@+id/fading_start"
             android:layout_width="@dimen/material_generic"

@@ -60,6 +60,7 @@ class AnalyseViewModel : ViewModel() {
     var distractedImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var selfieImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var groupPicImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var fragmentScrollPosition: Int? = null
 
     fun getBlurImages(dao: BlurAnalysisDao): LiveData<ArrayList<MediaFileInfo>?> {
         if (blurImagesLiveData == null) {

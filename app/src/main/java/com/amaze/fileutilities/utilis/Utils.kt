@@ -108,7 +108,8 @@ class Utils {
         var log: Logger = LoggerFactory.getLogger(Utils::class.java)
 
         const val URL_PRIVACY_POLICY = "https://teamamaze.xyz/privacy-policy-utilities"
-        const val URL_LICENSE_AGREEMENT = "https://teamamaze.xyz/license-agreement-utilities"
+        const val URL_LICENSE_AGREEMENT =
+            "https://github.com/TeamAmaze/AmazeFileUtilities/blob/main/LICENSE.txt"
         const val URL_GITHUB_ISSUES =
             "https://github.com/TeamAmaze/AmazeFileUtilities-Issue-Tracker/issues"
         const val AMAZE_FILE_MANAGER_MAIN = "com.amaze.filemanager.ui.activities.MainActivity"

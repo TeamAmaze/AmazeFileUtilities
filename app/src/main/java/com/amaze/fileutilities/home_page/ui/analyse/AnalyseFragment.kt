@@ -24,6 +24,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
@@ -248,8 +249,12 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 junkFilesPreview.invalidateProgress(true, null)
                 junkFiles?.let {
                     junkFilesPreview.invalidateProgress(false, null)
-                    junkFilesPreview.loadPreviews(junkFiles) {
-                        cleanButtonClick(it) {
+                    junkFilesPreview.loadSummaryTextPreview(
+                        if (it.first.isEmpty())
+                            null else it.second,
+                        null
+                    ) {
+                        cleanButtonClick(it.first) {
                             filesViewModel.junkFilesLiveData = null
                             thread {
                                 installedAppsDao.deleteAll()
@@ -279,7 +284,10 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                         analyseViewModel.getClutteredVideos(mediaFilePair.second)
                             .observe(viewLifecycleOwner) { clutteredVideosInfo ->
                                 clutteredVideosInfo?.let {
-                                    clutteredVideoPreview.invalidateProgress(false, null)
+                                    clutteredVideoPreview.invalidateProgress(
+                                        false,
+                                        null
+                                    )
                                     clutteredVideoPreview.loadPreviews(clutteredVideosInfo) {
                                         cleanButtonClick(it) {
                                             analyseViewModel.clutteredVideosLiveData = null
@@ -291,7 +299,10 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                             .observe(viewLifecycleOwner) {
                                 largeVideosList ->
                                 largeVideosList?.let {
-                                    largeVideoPreview.invalidateProgress(false, null)
+                                    largeVideoPreview.invalidateProgress(
+                                        false,
+                                        null
+                                    )
                                     largeVideoPreview.loadPreviews(largeVideosList) {
                                         cleanButtonClick(it) {
                                             analyseViewModel.largeVideosLiveData = null
@@ -308,7 +319,10 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                         largeDownloads ->
                         largeDownloadPreview.invalidateProgress(true, null)
                         largeDownloads?.let {
-                            largeDownloadPreview.invalidateProgress(false, null)
+                            largeDownloadPreview.invalidateProgress(
+                                false,
+                                null
+                            )
                             largeDownloadPreview.loadPreviews(largeDownloads) {
                                 cleanButtonClick(it) {
                                     filesViewModel.largeDownloadsLiveData = null
@@ -388,6 +402,32 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                         }
                     }
             }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                memoryUsagePreview.visibility = View.VISIBLE
+                filesViewModel.getMemoryInfo().observe(viewLifecycleOwner) {
+                    memoryUsage ->
+                    memoryUsagePreview.invalidateProgress(true, null)
+                    memoryUsage?.let {
+                        memoryUsagePreview.invalidateProgress(false, null)
+                        memoryUsagePreview.loadSummaryTextPreview(it, {
+                            filesViewModel.memoryInfoLiveData = null
+                            reloadFragment()
+                        }, {
+                            filesViewModel.killBackgroundProcesses(
+                                requireContext()
+                                    .packageManager
+                            ) {
+                                requireActivity().runOnUiThread {
+                                    requireContext()
+                                        .showToastOnBottom(getString(R.string.ram_usage_clear))
+                                    filesViewModel.memoryInfoLiveData = null
+                                    reloadFragment()
+                                }
+                            }
+                        })
+                    }
+                }
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                 unusedAppsPreview.visibility = View.VISIBLE
                 if (!isUsageStatsPermissionGranted()) {
@@ -434,7 +474,10 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                         mediaFileInfoList ->
                         mostUsedAppsPreview.invalidateProgress(true, null)
                         mediaFileInfoList?.let {
-                            mostUsedAppsPreview.invalidateProgress(false, null)
+                            mostUsedAppsPreview.invalidateProgress(
+                                false,
+                                null
+                            )
                             mostUsedAppsPreview.loadPreviews(mediaFileInfoList) {
                                 cleanButtonClick(it) {
                                     filesViewModel.mostUsedAppsLiveData = null
@@ -446,7 +489,10 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                         mediaFileInfoList ->
                         leastUsedAppsPreview.invalidateProgress(true, null)
                         mediaFileInfoList?.let {
-                            leastUsedAppsPreview.invalidateProgress(false, null)
+                            leastUsedAppsPreview.invalidateProgress(
+                                false,
+                                null
+                            )
                             leastUsedAppsPreview.loadPreviews(mediaFileInfoList) {
                                 cleanButtonClick(it) {
                                     filesViewModel.leastUsedAppsLiveData = null
@@ -521,6 +567,12 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     }
                 }
             }
+            if (analyseViewModel.fragmentScrollPosition != null) {
+                Handler().postDelayed({
+                    analyseScrollView.scrollY = analyseViewModel.fragmentScrollPosition!!
+                    analyseViewModel.fragmentScrollPosition = null
+                }, 1000)
+            }
         }
         return root
     }
@@ -579,6 +631,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
     }
 
     private fun reloadFragment() {
+        analyseViewModel.fragmentScrollPosition = binding.analyseScrollView.scrollY
         val navController = NavHostFragment.findNavController(this)
         navController.popBackStack()
         navController.navigate(R.id.navigation_analyse)
