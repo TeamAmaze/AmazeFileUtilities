@@ -29,10 +29,12 @@ import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.home_page.ui.files.MediaInfoRecyclerViewHolder
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.EmptyViewHolder
+import com.amaze.fileutilities.utilis.FileUtils
 import java.lang.ref.WeakReference
 
 class ReviewAnalysisAdapter(
     val context: Context,
+    val analysisType: Int?,
     private val preloader: MediaAdapterPreloader,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
     toggleCheckCallback: (
@@ -71,8 +73,19 @@ class ReviewAnalysisAdapter(
         if (holder is MediaInfoRecyclerViewHolder) {
             getMediaFilesListItems()[position].run {
                 mediaFileInfo?.let { mediaFileInfo ->
-                    holder.infoSummary.text =
-                        this.mediaFileInfo?.getFormattedSize(context)
+                    if (analysisType == ReviewImagesFragment.TYPE_NETWORK_INTENSIVE_APPS) {
+                        val networkBytes = this.mediaFileInfo?.extraInfo?.apkMetaData?.networkBytes
+                        if (networkBytes != null) {
+                            holder.infoSummary.text = FileUtils.formatStorageLength(
+                                context,
+                                networkBytes
+                            )
+                        } else {
+                            holder.infoSummary.text = this.mediaFileInfo?.getFormattedSize(context)
+                        }
+                    } else {
+                        holder.infoSummary.text = this.mediaFileInfo?.getFormattedSize(context)
+                    }
                     holder.expand.visibility = View.VISIBLE
                     invalidateCheckedTitle(getOnlyItemsCount())
                     holder.root.setOnClickListener {

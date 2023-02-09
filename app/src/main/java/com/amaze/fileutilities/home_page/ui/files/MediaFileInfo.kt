@@ -149,7 +149,8 @@ data class MediaFileInfo(
                     null, null, null,
                     ApkMetaData(
                         applicationInfo.packageName,
-                        packageManager.getApplicationIcon(applicationInfo.packageName)
+                        packageManager.getApplicationIcon(applicationInfo.packageName),
+                        Utils.getApplicationNetworkBytes(context, applicationInfo)
                     )
                 )
                 mediaFileInfo.extraInfo = extraInfo
@@ -349,7 +350,8 @@ data class MediaFileInfo(
         val audioMetaData: AudioMetaData?,
         val videoMetaData: VideoMetaData?,
         val imageMetaData: ImageMetaData?,
-        val apkMetaData: ApkMetaData? = null
+        val apkMetaData: ApkMetaData? = null,
+        val extraMetaData: ExtraMetaData? = null
     )
 
     data class AudioMetaData(
@@ -363,6 +365,7 @@ data class MediaFileInfo(
     )
     data class VideoMetaData(val duration: Long?, val width: Int?, val height: Int?)
     data class ImageMetaData(val width: Int?, val height: Int?)
-    data class ApkMetaData(val packageName: String, val drawable: Drawable?)
+    data class ApkMetaData(val packageName: String, val drawable: Drawable?, val networkBytes: Long)
+    data class ExtraMetaData(val checksum: String)
     data class Playlist(var id: Long, var name: String)
 }

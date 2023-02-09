@@ -24,6 +24,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.speech.RecognizerIntent
 import android.view.MotionEvent
 import android.view.View
@@ -46,6 +47,7 @@ import com.amaze.fileutilities.databinding.ActivityMainActionbarSearchBinding
 import com.amaze.fileutilities.databinding.ActivityMainBinding
 import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
+import com.amaze.fileutilities.home_page.ui.files.FilesFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
 import com.amaze.fileutilities.home_page.ui.files.SearchListFragment
 import com.amaze.fileutilities.home_page.ui.files.TrialValidationApi
@@ -403,11 +405,36 @@ class MainActivity :
                 transaction.commit()
             }
         } else {
-            super.onBackPressed()
+            if (fragment?.childFragmentManager?.fragments?.isNotEmpty() == true &&
+                fragment.childFragmentManager
+                    .fragments[fragment.childFragmentManager.fragments.size - 1] is FilesFragment
+            ) {
+                exit()
+            } else {
+                super.onBackPressed()
+            }
         }
         if (isOptionsVisible) {
             isOptionsVisible = !isOptionsVisible
             invalidateOptionsTabs()
+        }
+    }
+
+    private fun exit() {
+        if (getFilesModel().backPressedToExitOnce) {
+            finish()
+        } else {
+            getFilesModel().backPressedToExitOnce = true
+            showToastInCenter(getString(R.string.press_again))
+            object : CountDownTimer(2000, 2000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    // do nothing
+                }
+
+                override fun onFinish() {
+                    getFilesModel().backPressedToExitOnce = false
+                }
+            }.start()
         }
     }
 

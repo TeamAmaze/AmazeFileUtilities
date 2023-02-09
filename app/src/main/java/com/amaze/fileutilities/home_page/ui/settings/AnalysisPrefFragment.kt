@@ -166,7 +166,10 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                     PreferencesConstants.KEY_UNUSED_APPS_DAYS,
                     PreferencesConstants.DEFAULT_UNUSED_APPS_DAYS
                 )
-                Utils.buildDigitInputDialog(requireContext(), days) {
+                Utils.buildDigitInputDialog(
+                    requireContext(), getString(R.string.unused_apps),
+                    getString(R.string.unused_apps_pref_message), days
+                ) {
                     prefs.edit().putInt(PreferencesConstants.KEY_UNUSED_APPS_DAYS, it).apply()
                 }
             }
@@ -175,7 +178,12 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                     PreferencesConstants.KEY_MOST_USED_APPS_DAYS,
                     PreferencesConstants.DEFAULT_MOST_USED_APPS_DAYS
                 )
-                Utils.buildDigitInputDialog(requireContext(), days) {
+                Utils.buildDigitInputDialog(
+                    requireContext(),
+                    getString(R.string.most_used_apps),
+                    getString(R.string.most_used_apps_pref_message),
+                    days
+                ) {
                     prefs.edit().putInt(PreferencesConstants.KEY_MOST_USED_APPS_DAYS, it).apply()
                 }
             }
@@ -184,7 +192,12 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                     PreferencesConstants.KEY_LEAST_USED_APPS_DAYS,
                     PreferencesConstants.DEFAULT_LEAST_USED_APPS_DAYS
                 )
-                Utils.buildDigitInputDialog(requireContext(), days) {
+                Utils.buildDigitInputDialog(
+                    requireContext(),
+                    getString(R.string.least_used_apps),
+                    getString(R.string.least_used_apps_pref_message),
+                    days
+                ) {
                     prefs.edit().putInt(PreferencesConstants.KEY_LEAST_USED_APPS_DAYS, it).apply()
                 }
             }
@@ -193,7 +206,12 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                     PreferencesConstants.KEY_NEWLY_INSTALLED_APPS_DAYS,
                     PreferencesConstants.DEFAULT_NEWLY_INSTALLED_APPS_DAYS
                 )
-                Utils.buildDigitInputDialog(requireContext(), days) {
+                Utils.buildDigitInputDialog(
+                    requireContext(),
+                    getString(R.string.newly_installed_apps),
+                    getString(R.string.newly_installed_apps_summary),
+                    days
+                ) {
                     prefs.edit().putInt(
                         PreferencesConstants.KEY_NEWLY_INSTALLED_APPS_DAYS,
                         it
@@ -205,7 +223,12 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                     PreferencesConstants.KEY_RECENTLY_UPDATED_APPS_DAYS,
                     PreferencesConstants.DEFAULT_RECENTLY_UPDATED_APPS_DAYS
                 )
-                Utils.buildDigitInputDialog(requireContext(), days) {
+                Utils.buildDigitInputDialog(
+                    requireContext(),
+                    getString(R.string.recently_updated_apps),
+                    getString(R.string.recently_updated_apps_summary),
+                    days
+                ) {
                     prefs.edit().putInt(
                         PreferencesConstants.KEY_RECENTLY_UPDATED_APPS_DAYS,
                         it

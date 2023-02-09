@@ -109,6 +109,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         const val TYPE_LEAST_USED_APPS = 26
         const val TYPE_NEWLY_INSTALLED_APPS = 27
         const val TYPE_RECENTLY_UPDATED_APPS = 28
+        const val TYPE_NETWORK_INTENSIVE_APPS = 29
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -187,7 +188,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
             }
             TYPE_LARGE_APPS, TYPE_UNUSED_APPS, TYPE_MOST_USED_APPS, TYPE_LEAST_USED_APPS,
             TYPE_GAMES_INSTALLED, TYPE_APK_FILES, TYPE_NEWLY_INSTALLED_APPS,
-            TYPE_RECENTLY_UPDATED_APPS -> {
+            TYPE_RECENTLY_UPDATED_APPS, TYPE_NETWORK_INTENSIVE_APPS -> {
                 MediaFileAdapter.MEDIA_TYPE_APKS
             }
             else -> {
@@ -537,6 +538,16 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                         }
                 }
             }
+            TYPE_NETWORK_INTENSIVE_APPS -> {
+                filesViewModel.getNetworkIntensiveApps().observe(viewLifecycleOwner) {
+                    networkIntensiveApps ->
+                    invalidateProcessing(true, false)
+                    networkIntensiveApps?.let {
+                        setMediaInfoList(it, false)
+                        invalidateProcessing(false, false)
+                    }
+                }
+            }
             TYPE_MOST_USED_APPS -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                     filesViewModel.getMostUsedApps()
@@ -628,6 +639,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         val thumbsDownButton = getThumbsDown()
         mediaFileAdapter = ReviewAnalysisAdapter(
             requireActivity(),
+            analysisType,
             preloader!!, mediaInfoList
         ) { checkedSize, itemsCount, bytesFormatted ->
             val title = "$checkedSize / $itemsCount" +

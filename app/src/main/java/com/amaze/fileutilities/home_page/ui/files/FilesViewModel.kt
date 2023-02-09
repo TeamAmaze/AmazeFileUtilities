@@ -106,11 +106,13 @@ class FilesViewModel(val applicationContext: Application) :
     var isCasting = false
     var castSetupSuccess = true
     var wifiIpAddress: String? = null
+    var backPressedToExitOnce = false
     private val uniqueIdSalt = BuildConfig.SALT_DEVICE_ID
 
     var unusedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var mostUsedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var leastUsedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var networkIntensiveAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var newlyInstalledAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var recentlyUpdatedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
@@ -1017,6 +1019,51 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
+    fun getNetworkIntensiveApps(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (networkIntensiveAppsLiveData == null) {
+            networkIntensiveAppsLiveData = MutableLiveData()
+            networkIntensiveAppsLiveData?.value = null
+            processNetworkIntensiveApps(applicationContext.packageManager)
+        }
+        return networkIntensiveAppsLiveData!!
+    }
+
+    private fun processNetworkIntensiveApps(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+
+            val priorityQueue = PriorityQueue<MediaFileInfo>(
+                50
+            ) { o1, o2 ->
+                o2.extraInfo?.apkMetaData?.networkBytes?.let {
+                    o1.extraInfo?.apkMetaData?.networkBytes?.compareTo(
+                        it
+                    )
+                } ?: 0
+            }
+
+            allApps.get()?.forEachIndexed { index, applicationInfo ->
+                if (index > 49 && priorityQueue.isNotEmpty()) {
+                    priorityQueue.remove()
+                }
+                MediaFileInfo.fromApplicationInfo(
+                    applicationContext, applicationInfo.first,
+                    applicationInfo.second
+                )?.let {
+                    priorityQueue.add(it)
+                }
+            }
+
+            val result = ArrayList<MediaFileInfo>()
+            while (!priorityQueue.isEmpty()) {
+                priorityQueue.remove()?.let {
+                    result.add(it)
+                }
+            }
+            networkIntensiveAppsLiveData?.postValue(ArrayList(result.reversed()))
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     fun getMostUsedApps(): LiveData<ArrayList<MediaFileInfo>?> {
         if (mostUsedAppsLiveData == null) {
@@ -1151,7 +1198,7 @@ class FilesViewModel(val applicationContext: Application) :
             ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
 
             allApps.get()?.forEachIndexed { index, applicationInfo ->
-                if (index > 49) {
+                if (index > 49 && priorityQueue.isNotEmpty()) {
                     priorityQueue.remove()
                 }
                 MediaFileInfo.fromApplicationInfo(
@@ -1200,7 +1247,7 @@ class FilesViewModel(val applicationContext: Application) :
                     .atZone(ZoneId.systemDefault()).toLocalDate()
                 installDateTime.isAfter(pastDate.toLocalDate())
             }?.forEachIndexed { index, applicationInfo ->
-                if (index > 49) {
+                if (index > 49 && priorityQueue.isNotEmpty()) {
                     priorityQueue.remove()
                 }
                 MediaFileInfo.fromApplicationInfo(
@@ -1249,7 +1296,7 @@ class FilesViewModel(val applicationContext: Application) :
                     .atZone(ZoneId.systemDefault()).toLocalDate()
                 updateDateTime.isAfter(pastDate.toLocalDate())
             }?.forEachIndexed { index, applicationInfo ->
-                if (index > 49) {
+                if (index > 49 && priorityQueue.isNotEmpty()) {
                     priorityQueue.remove()
                 }
                 MediaFileInfo.fromApplicationInfo(
@@ -1472,7 +1519,7 @@ class FilesViewModel(val applicationContext: Application) :
                 it.path.contains(pathPref, true)
             }
         }?.forEach {
-            if (priorityQueue.size > limit - 1) {
+            if (priorityQueue.isNotEmpty() && priorityQueue.size > limit - 1) {
                 priorityQueue.remove()
             }
             priorityQueue.add(it)
@@ -1574,7 +1621,6 @@ class FilesViewModel(val applicationContext: Application) :
                         )
                         null
                     }
-
                     Pair(it, info)
                 }.filter {
                     val androidInfo: PackageInfo?

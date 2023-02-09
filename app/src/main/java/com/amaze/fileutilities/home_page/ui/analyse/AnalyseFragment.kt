@@ -269,7 +269,19 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             ).observe(viewLifecycleOwner) {
                 if (it != null) {
                     duplicateFilesPreview.loadPreviews(it) {
-                        cleanButtonClick(it) {
+                        val checksumHash: HashMap<String, Boolean> = HashMap()
+                        cleanButtonClick(
+                            it.filter {
+                                mediaFile ->
+                                val fileChecksum = mediaFile.extraInfo?.extraMetaData?.checksum
+                                if (fileChecksum == null || checksumHash[fileChecksum] == true) {
+                                    true
+                                } else {
+                                    checksumHash[fileChecksum] = true
+                                    false
+                                }
+                            }
+                        ) {
                             analyseViewModel.duplicateFilesLiveData = null
                         }
                     }
@@ -497,6 +509,32 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                                 cleanButtonClick(it) {
                                     filesViewModel.leastUsedAppsLiveData = null
                                 }
+                            }
+                        }
+                    }
+                }
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1 &&
+                !isUsageStatsPermissionGranted()
+            ) {
+                networkIntensiveAppsPreview.loadRequireElevatedPermission({
+                    val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                    startActivity(intent)
+                }, {
+                    reloadFragment()
+                })
+            } else {
+                filesViewModel.getNetworkIntensiveApps().observe(viewLifecycleOwner) {
+                    mediaFileInfoList ->
+                    networkIntensiveAppsPreview.invalidateProgress(true, null)
+                    mediaFileInfoList?.let {
+                        networkIntensiveAppsPreview.invalidateProgress(
+                            false,
+                            null
+                        )
+                        networkIntensiveAppsPreview.loadPreviews(mediaFileInfoList) {
+                            cleanButtonClick(it) {
+                                filesViewModel.networkIntensiveAppsLiveData = null
                             }
                         }
                     }
@@ -861,6 +899,17 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     shouldCallbackAppUninstall = false
                     ReviewImagesFragment.newInstance(
                         ReviewImagesFragment.TYPE_LEAST_USED_APPS,
+                        this@AnalyseFragment
+                    )
+                }
+            }
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP_MR1 ||
+                isUsageStatsPermissionGranted()
+            ) {
+                shouldCallbackAppUninstall = false
+                networkIntensiveAppsPreview.setOnClickListener {
+                    ReviewImagesFragment.newInstance(
+                        ReviewImagesFragment.TYPE_NETWORK_INTENSIVE_APPS,
                         this@AnalyseFragment
                     )
                 }

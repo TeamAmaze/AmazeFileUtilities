@@ -480,11 +480,13 @@ class AnalyseViewModel : ViewModel() {
         }.map {
             it.files.map {
                 filePath ->
+                val extraMetaData = MediaFileInfo.ExtraMetaData(it.checksum)
                 MediaFileInfo.fromFile(
                     File(filePath),
                     MediaFileInfo.ExtraInfo(
                         MediaFileInfo.MEDIA_TYPE_UNKNOWN,
-                        null, null, null
+                        null, null, null, null,
+                        extraMetaData
                     )
                 )
             }
