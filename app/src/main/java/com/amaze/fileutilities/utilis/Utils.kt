@@ -24,6 +24,8 @@ import android.app.Activity
 import android.app.AppOpsManager
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
+import android.app.usage.NetworkStats
+import android.app.usage.NetworkStatsManager
 import android.app.usage.StorageStatsManager
 import android.app.usage.UsageStats
 import android.app.usage.UsageStatsManager
@@ -44,6 +46,8 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.drawable.Drawable
+import android.net.ConnectivityManager
+import android.net.TrafficStats
 import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.Build
@@ -53,6 +57,7 @@ import android.os.Process
 import android.os.RemoteException
 import android.provider.MediaStore
 import android.provider.Settings
+import android.telephony.TelephonyManager
 import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
@@ -69,7 +74,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
@@ -950,7 +954,21 @@ class Utils {
             }
         }
 
-        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+        fun getApplicationNetworkBytes(context: Context, info: ApplicationInfo): Long {
+            return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                val receivedBytes = TrafficStats.getUidRxBytes(info.uid)
+                val sentBytes = TrafficStats.getUidTxBytes(info.uid)
+                receivedBytes + sentBytes
+            } else {
+                val service: NetworkStatsManager =
+                    context.getSystemService(Context.NETWORK_STATS_SERVICE) as NetworkStatsManager
+                getPackageRxBytesMobile(context, info.uid, service) +
+                    getPackageTxBytesMobile(context, info.uid, service) +
+                    getPackageRxBytesWifi(info.uid, service) +
+                    getPackageTxBytesWifi(info.uid, service)
+            }
+        }
+
         fun applicationIsGame(info: ApplicationInfo): Boolean {
             return try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -967,6 +985,8 @@ class Utils {
 
         fun buildDigitInputDialog(
             context: Context,
+            title: String,
+            summary: String,
             days: Int,
             callback: (Int) -> Unit
         ) {
@@ -974,8 +994,8 @@ class Utils {
             inputEditTextViewPair.second.inputType = InputType.TYPE_CLASS_NUMBER
             inputEditTextViewPair.second.setText("$days")
             val dialog = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
-                .setTitle(R.string.unused_apps)
-                .setMessage(R.string.unused_apps_pref_message)
+                .setTitle(title)
+                .setMessage(summary)
                 .setView(inputEditTextViewPair.first)
                 .setCancelable(false)
                 .setPositiveButton(R.string.ok) { dialog, _ ->
@@ -1317,6 +1337,126 @@ class Utils {
             linearLayout.layoutParams = params
             linearLayout.addView(inputEditTextField)
             return Pair(linearLayout, inputEditTextField)
+        }
+
+        @RequiresApi(Build.VERSION_CODES.M)
+        private fun getPackageRxBytesMobile(
+            context: Context,
+            packageUid: Int,
+            networkStatsManager: NetworkStatsManager
+        ): Long {
+            val networkStats: NetworkStats? = try {
+                networkStatsManager.queryDetailsForUid(
+                    ConnectivityManager.TYPE_MOBILE,
+                    getSubscriberId(context, ConnectivityManager.TYPE_MOBILE),
+                    0,
+                    System.currentTimeMillis(),
+                    packageUid
+                )
+            } catch (e: RemoteException) {
+                log.warn("failed to get mobile bytes for package {}", packageUid, e)
+                return 0
+            }
+            var rxBytes = 0L
+            val bucket = NetworkStats.Bucket()
+            while (networkStats?.hasNextBucket() == true) {
+                networkStats.getNextBucket(bucket)
+                rxBytes += bucket.rxBytes
+            }
+            networkStats?.close()
+            return rxBytes
+        }
+
+        @RequiresApi(Build.VERSION_CODES.M)
+        private fun getPackageTxBytesMobile(
+            context: Context,
+            packageUid: Int,
+            networkStatsManager: NetworkStatsManager
+        ): Long {
+            val networkStats: NetworkStats? = try {
+                networkStatsManager.queryDetailsForUid(
+                    ConnectivityManager.TYPE_MOBILE,
+                    getSubscriberId(context, ConnectivityManager.TYPE_MOBILE),
+                    0,
+                    System.currentTimeMillis(),
+                    packageUid
+                )
+            } catch (e: RemoteException) {
+                log.warn("failed to get mobile bytes for package {}", packageUid)
+                return 0
+            }
+            var txBytes = 0L
+            val bucket = NetworkStats.Bucket()
+            while (networkStats?.hasNextBucket() == true) {
+                networkStats.getNextBucket(bucket)
+                txBytes += bucket.txBytes
+            }
+            networkStats?.close()
+            return txBytes
+        }
+
+        @RequiresApi(Build.VERSION_CODES.M)
+        private fun getPackageRxBytesWifi(
+            packageUid: Int,
+            networkStatsManager: NetworkStatsManager
+        ): Long {
+            val networkStats: NetworkStats? = try {
+                networkStatsManager.queryDetailsForUid(
+                    ConnectivityManager.TYPE_WIFI,
+                    "",
+                    0,
+                    System.currentTimeMillis(),
+                    packageUid
+                )
+            } catch (e: RemoteException) {
+                return -1
+            }
+            var rxBytes = 0L
+            val bucket = NetworkStats.Bucket()
+            while (networkStats?.hasNextBucket() == true) {
+                networkStats.getNextBucket(bucket)
+                rxBytes += bucket.rxBytes
+            }
+            networkStats?.close()
+            return rxBytes
+        }
+
+        @RequiresApi(Build.VERSION_CODES.M)
+        private fun getPackageTxBytesWifi(
+            packageUid: Int,
+            networkStatsManager: NetworkStatsManager
+        ): Long {
+            val networkStats: NetworkStats? = try {
+                networkStatsManager.queryDetailsForUid(
+                    ConnectivityManager.TYPE_WIFI,
+                    "",
+                    0,
+                    System.currentTimeMillis(),
+                    packageUid
+                )
+            } catch (e: RemoteException) {
+                return -1
+            }
+            var txBytes = 0L
+            val bucket = NetworkStats.Bucket()
+            while (networkStats?.hasNextBucket() == true) {
+                networkStats.getNextBucket(bucket)
+                txBytes += bucket.txBytes
+            }
+            networkStats?.close()
+            return txBytes
+        }
+
+        private fun getSubscriberId(context: Context, networkType: Int): String? {
+            try {
+                if (ConnectivityManager.TYPE_MOBILE == networkType) {
+                    val tm = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                    return if (tm.subscriberId == null) "" else tm.subscriberId
+                }
+            } catch (se: SecurityException) {
+                return ""
+            }
+            return ""
         }
     }
 }

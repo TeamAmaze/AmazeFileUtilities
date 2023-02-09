@@ -15,7 +15,7 @@ plugins {
     id 'com.hiya.jacoco-android'
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
-    id("com.github.triplet.play") version "3.7.0"
+    id("com.github.triplet.play") version "3.8.1"
     id 'com.starter.easylauncher'
     id 'com.mikepenz.aboutlibraries.plugin'
 }
@@ -59,8 +59,8 @@ android {
         applicationId "com.amaze.fileutilities"
         minSdk 19
         targetSdk 31
-        versionCode 76
-        versionName "1.76"
+        versionCode 77
+        versionName "1.77"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
