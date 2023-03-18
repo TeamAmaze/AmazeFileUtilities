@@ -2086,7 +2086,7 @@ class FilesViewModel(val applicationContext: Application) :
                 val mediaFiles = ArrayList<MediaFileInfo>()
                 pair.filter {
                     mediaFileInfo ->
-                    arrayListOf(".pdf", ".epub", ".docx").stream()
+                    arrayListOf(".pdf", ".epub", ".docx", ".xps", ".oxps", ".cbz", ".fb2", ".mobi").stream()
                         .anyMatch { mediaFileInfo.path.endsWith(it) }
                 }.forEach {
                     mediaFileInfo ->
