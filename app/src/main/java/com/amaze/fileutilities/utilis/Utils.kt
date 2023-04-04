@@ -914,7 +914,7 @@ class Utils {
                     )
                     return cacheSize + dataSize + apkSize + externalSize
                 } catch (e: Exception) {
-                    log.warn("failed to extract app size for {}", applicationInfo.packageName, e)
+                    log.info("failed to extract app size for {}", applicationInfo.packageName, e)
                     return findApplicationInfoSizeFallback(applicationInfo)
                 }
             } else {
@@ -1354,7 +1354,7 @@ class Utils {
                     packageUid
                 )
             } catch (e: RemoteException) {
-                log.warn("failed to get mobile bytes for package {}", packageUid, e)
+                log.info("failed to get mobile bytes for package {}", packageUid, e)
                 return 0
             }
             var rxBytes = 0L

@@ -218,4 +218,51 @@
                 />
         </LinearLayout>
     </FrameLayout>
+    <LinearLayout
+        android:id="@+id/histogram_info_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/material_generic"
+        android:layout_marginTop="@dimen/material_generic"
+        android:background="@drawable/background_curved_recents">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/histogram"
+            android:textColor="@color/highlight_yellow"
+            android:textSize="@dimen/eighteen_sp"
+            android:textStyle="bold"
+            />
+        <ProgressBar
+            android:id="@+id/histogram_loading_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:gravity="center"
+            />
+        <Button
+            android:id="@+id/load_histogram_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/load"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/button_curved_selected"
+            app:cornerRadius="@dimen/material_generic"
+            app:rippleColor="@color/highlight_yellow"
+            app:elevation="@dimen/material_generic"
+            android:textColor="@color/white"
+            />
+        <ImageView
+            android:id="@+id/histogram_info"
+            android:outlineSpotShadowColor="@color/highlight_yellow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:visibility="gone"
+            />
+    </LinearLayout>
 </LinearLayout>

@@ -294,7 +294,7 @@ dependencies {
     api "com.caverock:androidsvg:1.4"
     implementation 'com.burhanrashid52:photoeditor:2.0.0'
     implementation 'com.github.CanHub:Android-Image-Cropper:4.3.1'
-    api 'com.github.TeamAmaze:mupdf-android-viewer:1.0.18'
+    api 'com.github.TeamAmaze:mupdf-android-viewer:1.0.19'
 
     //Detect memory leaks
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'

@@ -941,4 +941,6 @@
     <string name="press_again">Press again to exit</string>
     <!-- highest data usage apps in analysis fragment -->
     <string name="network_intensive_apps">Network intensive apps</string>
+    <!-- histogram in image viewer -->
+    <string name="histogram">Histogram</string>
 </resources>

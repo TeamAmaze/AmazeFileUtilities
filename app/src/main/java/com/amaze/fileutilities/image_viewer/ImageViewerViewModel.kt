@@ -20,7 +20,9 @@
 
 package com.amaze.fileutilities.image_viewer
 
-import androidx.lifecycle.*
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.amaze.fileutilities.utilis.getSiblingUriFiles
 import com.amaze.fileutilities.utilis.isImageMimeType
 import kotlinx.coroutines.Dispatchers

@@ -74,21 +74,35 @@ fun Uri.getSiblingUriFiles(): ArrayList<Uri>? {
             if (currentPath.exists()) {
                 val parent = currentPath.parentFile
                 var siblings: ArrayList<Uri>? = null
-                parent.listFiles()?.run {
-                    if (this.isNotEmpty()) {
-                        siblings = ArrayList()
-                        for (currentSibling in this) {
-                            siblings!!.add(
-                                Uri.parse(
-                                    if (!currentSibling.path
-                                        .startsWith("/")
-                                    )
-                                        "/${currentSibling.path}"
-                                    else currentSibling.path
-                                )
-                            )
+                if (parent != null) {
+                    val filesList = parent.listFiles()
+                    if (filesList != null) {
+                        if (filesList.size < 500) {
+                            parent.listFiles()?.sortBy { it.lastModified() }
+                            parent.listFiles()?.run {
+                                if (this.isNotEmpty()) {
+                                    siblings = ArrayList()
+                                    for (currentSibling in this) {
+                                        siblings!!.add(
+                                            Uri.parse(
+                                                if (!currentSibling.path
+                                                        .startsWith("/")
+                                                )
+                                                    "/${currentSibling.path}"
+                                                else currentSibling.path
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                        } else {
+                            siblings = arrayListOf(this)
                         }
+                    } else {
+                        siblings = arrayListOf(this)
                     }
+                } else {
+                    siblings = arrayListOf(this)
                 }
                 return siblings
             }

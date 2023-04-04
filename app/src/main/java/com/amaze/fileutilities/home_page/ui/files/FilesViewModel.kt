@@ -898,7 +898,7 @@ class FilesViewModel(val applicationContext: Application) :
                 socket.close()
                 emit(true)
             } catch (ex: IOException) {
-                log.warn("failed to ping for connection", ex)
+                log.info("failed to ping for connection", ex)
                 emit(applicationContext.isNetworkAvailable())
             }
         }
@@ -1376,7 +1376,7 @@ class FilesViewModel(val applicationContext: Application) :
                 allMediaFilesPair?.filter {
                     it.path.endsWith(".apk")
                 }?.map {
-                    it.extraInfo?.mediaType = MediaFileInfo.MEDIA_TYPE_APK
+                    it.extraInfo?.mediaType = MediaFileInfo.MEDIA_TYPE_UNKNOWN
                     it
                 }?.let {
                     apksLiveData?.postValue(ArrayList(it))

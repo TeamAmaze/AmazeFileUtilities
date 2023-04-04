@@ -13,6 +13,7 @@
     <dimen name="one_sixty_dp">160dp</dimen>
     <dimen name="material_sheet_peek_height">400dp</dimen>
     <dimen name="audio_player_sheet_height">500dp</dimen>
+    <dimen name="three_hundred">300dp</dimen>
     <dimen name="files_tab_heights">180dp</dimen>
     <dimen name="list_banners_height">400dp</dimen>
     <dimen name="twelve_dp">12dp</dimen>

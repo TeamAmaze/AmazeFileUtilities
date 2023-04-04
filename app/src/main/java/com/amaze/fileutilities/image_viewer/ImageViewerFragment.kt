@@ -34,6 +34,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.QuickViewFragmentBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
@@ -63,6 +64,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
     var log: Logger = LoggerFactory.getLogger(ImageViewerFragment::class.java)
     private var _binding: QuickViewFragmentBinding? = null
     private val filesViewModel: FilesViewModel by activityViewModels()
+    private lateinit var viewModel: ImageFragmentViewModel
 
     private var hideToolbars = false
 
@@ -104,6 +106,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = QuickViewFragmentBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this).get(ImageFragmentViewModel::class.java)
         return _binding!!.root
     }
 
@@ -321,6 +324,21 @@ class ImageViewerFragment : AbstractMediaFragment() {
                                         imageMetadataLayout.longitude.visibility = View.GONE
                                         imageMetadataLayout.lat.visibility = View.GONE
                                     }
+                                }
+                            }
+                        }
+                        imageMetadataLayout.loadHistogramButton.setOnClickListener {
+                            viewModel.loadHistogram(file.path,
+                                imageMetadataLayout.histogramInfoParent.width.toDouble(), resources)
+                                .observe(viewLifecycleOwner) {
+                                    bitmap ->
+                                if (bitmap != null) {
+                                    imageMetadataLayout.histogramInfo.visibility = View.VISIBLE
+                                    imageMetadataLayout.histogramLoadingBar.visibility = View.GONE
+                                    imageMetadataLayout.histogramInfo.setImageBitmap(bitmap)
+                                } else {
+                                    imageMetadataLayout.loadHistogramButton.visibility = View.GONE
+                                    imageMetadataLayout.histogramLoadingBar.visibility = View.VISIBLE
                                 }
                             }
                         }
@@ -674,6 +692,12 @@ class ImageViewerFragment : AbstractMediaFragment() {
                                 }
                                 if (gpsInfoParent?.isVisible == true) {
                                     gpsInfoParent.background?.setColorFilter(
+                                        colorPair.second,
+                                        PorterDuff.Mode.SRC_ATOP
+                                    )
+                                }
+                                if (metadataLayout?.histogramInfoParent?.isVisible == true) {
+                                    metadataLayout.histogramInfoParent.background?.setColorFilter(
                                         colorPair.second,
                                         PorterDuff.Mode.SRC_ATOP
                                     )
