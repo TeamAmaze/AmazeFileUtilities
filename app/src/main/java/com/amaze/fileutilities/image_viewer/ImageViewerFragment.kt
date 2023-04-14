@@ -225,7 +225,10 @@ class ImageViewerFragment : AbstractMediaFragment() {
                                         height ->
                                         if (!height.isNullOrEmpty()) {
                                             widthAndHeight =
-                                                "${width.replace(" pixels", "")}" +
+                                                "${width.replace(
+                                                " pixels",
+                                                ""
+                                            )}" +
                                                 "x${height.replace(
                                                     " pixels",
                                                     ""
@@ -306,20 +309,32 @@ class ImageViewerFragment : AbstractMediaFragment() {
                         if (gpsDirectory != null && gpsDescriptor != null) {
                             gpsDescriptor.gpsLatitudeDescription.let { latitude ->
                                 gpsDescriptor.gpsLongitudeDescription.let { longitude ->
-                                    if (!longitude.isNullOrEmpty() && !latitude.isNullOrEmpty()) {
+                                    if (!longitude.isNullOrEmpty() &&
+                                        !latitude.isNullOrEmpty()
+                                    ) {
                                         imageMetadataLayout.longitude.visibility = View.VISIBLE
                                         imageMetadataLayout.gpsInfoParent.visibility = View.VISIBLE
                                         imageMetadataLayout.longitude.text =
-                                            "${resources.getString(R.string.longitude)}: $longitude"
+                                            "${resources.getString(R.string.longitude)}: " +
+                                            "$longitude"
                                         imageMetadataLayout.lat.visibility = View.VISIBLE
                                         imageMetadataLayout.lat.text =
-                                            "${resources.getString(R.string.latitude)}: $latitude"
-                                        imageMetadataLayout.openInMapsImage.setOnClickListener {
-                                            Utils.openInMaps(requireContext(), latitude, longitude)
-                                        }
-                                        imageMetadataLayout.openInMapsText.setOnClickListener {
-                                            Utils.openInMaps(requireContext(), latitude, longitude)
-                                        }
+                                            "${resources.getString(R.string.latitude)}: " +
+                                            "$latitude"
+                                        imageMetadataLayout.openInMapsImage
+                                            .setOnClickListener {
+                                                Utils.openInMaps(
+                                                    requireContext(), latitude,
+                                                    longitude
+                                                )
+                                            }
+                                        imageMetadataLayout.openInMapsText
+                                            .setOnClickListener {
+                                                Utils.openInMaps(
+                                                    requireContext(), latitude,
+                                                    longitude
+                                                )
+                                            }
                                     } else {
                                         imageMetadataLayout.longitude.visibility = View.GONE
                                         imageMetadataLayout.lat.visibility = View.GONE
@@ -328,19 +343,26 @@ class ImageViewerFragment : AbstractMediaFragment() {
                             }
                         }
                         imageMetadataLayout.loadHistogramButton.setOnClickListener {
-                            viewModel.loadHistogram(file.path,
-                                imageMetadataLayout.histogramInfoParent.width.toDouble(), resources)
+                            viewModel.loadHistogram(
+                                file.path,
+                                imageMetadataLayout.histogramInfoParent.width.toDouble(),
+                                resources
+                            )
                                 .observe(viewLifecycleOwner) {
                                     bitmap ->
-                                if (bitmap != null) {
-                                    imageMetadataLayout.histogramInfo.visibility = View.VISIBLE
-                                    imageMetadataLayout.histogramLoadingBar.visibility = View.GONE
-                                    imageMetadataLayout.histogramInfo.setImageBitmap(bitmap)
-                                } else {
-                                    imageMetadataLayout.loadHistogramButton.visibility = View.GONE
-                                    imageMetadataLayout.histogramLoadingBar.visibility = View.VISIBLE
+                                    if (bitmap != null) {
+                                        imageMetadataLayout.histogramInfo.visibility =
+                                            View.VISIBLE
+                                        imageMetadataLayout.histogramLoadingBar.visibility =
+                                            View.GONE
+                                        imageMetadataLayout.histogramInfo.setImageBitmap(bitmap)
+                                    } else {
+                                        imageMetadataLayout.loadHistogramButton.visibility =
+                                            View.GONE
+                                        imageMetadataLayout.histogramLoadingBar.visibility =
+                                            View.VISIBLE
+                                    }
                                 }
-                            }
                         }
                     } catch (e: Exception) {
                         log.warn("failed to parse image metadata", e)
@@ -465,7 +487,10 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 resources.getString(R.string.set_as)
             ) {
                 localImageModel?.let {
-                    showSetAsDialog(localImageModel.uri, this@ImageViewerFragment.requireContext())
+                    showSetAsDialog(
+                        localImageModel.uri,
+                        this@ImageViewerFragment.requireContext()
+                    )
                 }
             }
             customBottomBar.addButton(
@@ -528,19 +553,20 @@ class ImageViewerFragment : AbstractMediaFragment() {
                             }
                         val summaryDialog = summaryDialogBuilder.create()
                         summaryDialog.show()
-                        filesViewModel.getMediaFileListSize(toDelete).observe(viewLifecycleOwner) {
-                            sizeRaw ->
-                            if (summaryDialog.isShowing) {
-                                val size = Formatter.formatFileSize(requireContext(), sizeRaw)
-                                summaryDialog.setMessage(
-                                    resources
-                                        .getString(R.string.delete_files_message).format(
-                                            toDelete.size,
-                                            size
-                                        )
-                                )
+                        filesViewModel.getMediaFileListSize(toDelete)
+                            .observe(viewLifecycleOwner) {
+                                sizeRaw ->
+                                if (summaryDialog.isShowing) {
+                                    val size = Formatter.formatFileSize(requireContext(), sizeRaw)
+                                    summaryDialog.setMessage(
+                                        resources
+                                            .getString(R.string.delete_files_message).format(
+                                                toDelete.size,
+                                                size
+                                            )
+                                    )
+                                }
                             }
-                        }
                     }
             }
         }
@@ -564,7 +590,9 @@ class ImageViewerFragment : AbstractMediaFragment() {
                     } else {
                         imageView.visibility = View.VISIBLE
                         sheetUpArrow.visibility = View.INVISIBLE
-                        if ((activity as ImageViewerActivity).getViewpager().isUserInputEnabled) {
+                        if ((activity as ImageViewerActivity).getViewpager()
+                            .isUserInputEnabled
+                        ) {
                             (activity as ImageViewerActivity).getViewpager()
                                 .isUserInputEnabled = false
                         }
@@ -697,10 +725,11 @@ class ImageViewerFragment : AbstractMediaFragment() {
                                     )
                                 }
                                 if (metadataLayout?.histogramInfoParent?.isVisible == true) {
-                                    metadataLayout.histogramInfoParent.background?.setColorFilter(
-                                        colorPair.second,
-                                        PorterDuff.Mode.SRC_ATOP
-                                    )
+                                    metadataLayout.histogramInfoParent
+                                        .background?.setColorFilter(
+                                            colorPair.second,
+                                            PorterDuff.Mode.SRC_ATOP
+                                        )
                                 }
                                 _binding?.customToolbar?.customToolbarRoot?.background
                                     ?.setColorFilter(

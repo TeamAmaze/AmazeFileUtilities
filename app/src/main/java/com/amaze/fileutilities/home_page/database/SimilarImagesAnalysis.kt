@@ -23,34 +23,26 @@ package com.amaze.fileutilities.home_page.database
 import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
- * While fetching and processing, be sure to validate that file exists
+ * Metadata used to process similar images
  */
 @Keep
-@Entity(indices = [Index(value = ["sha256_checksum"], unique = true)])
-data class InternalStorageAnalysis(
+@Entity(indices = [Index(value = ["histogram_checksum"], unique = true)])
+data class SimilarImagesAnalysis(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
     val uid: Int,
-    @ColumnInfo(name = "sha256_checksum") val checksum: String,
-    @ColumnInfo(name = "files_path") var files: List<String>,
-    @ColumnInfo(name = "is_empty") val isEmpty: Boolean,
-    @ColumnInfo(name = "is_junk") val isJunk: Boolean,
-    @ColumnInfo(name = "is_directory") val isDirectory: Boolean,
-    @ColumnInfo(name = "is_mediastore") val isMediaStore: Boolean,
-    @ColumnInfo(name = "depth") val depth: Int
+    @ColumnInfo(name = "histogram_checksum") val histogram_checksum: String,
+    @ColumnInfo(name = "files_path") var files: Set<String>
 ) {
+    @Ignore
     constructor(
-        checksum: String,
-        filesPath: List<String>,
-        isEmpty: Boolean,
-        isJunk: Boolean,
-        isDirectory: Boolean,
-        isMediaStore: Boolean,
-        depth: Int
+        histogramChecksum: String,
+        filesPath: Set<String>
     ) :
-        this(0, checksum, filesPath, isEmpty, isJunk, isDirectory, isMediaStore, depth)
+        this(0, histogramChecksum, filesPath)
 }

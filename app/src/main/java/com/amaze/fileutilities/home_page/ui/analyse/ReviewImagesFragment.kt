@@ -110,6 +110,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         const val TYPE_NEWLY_INSTALLED_APPS = 27
         const val TYPE_RECENTLY_UPDATED_APPS = 28
         const val TYPE_NETWORK_INTENSIVE_APPS = 29
+        const val TYPE_SIMILAR_IMAGES = 30
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -177,7 +178,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         // this will never be called, as it's only used by abstract media list fragment
         return when (analysisType) {
             TYPE_BLUR, TYPE_LOW_LIGHT, TYPE_MEME, TYPE_SAD, TYPE_DISTRACTED, TYPE_SLEEPING,
-            TYPE_SELFIE, TYPE_GROUP_PIC -> {
+            TYPE_SELFIE, TYPE_GROUP_PIC, TYPE_SIMILAR_IMAGES -> {
                 MediaFileAdapter.MEDIA_TYPE_IMAGES
             }
             TYPE_LARGE_VIDEOS, TYPE_CLUTTERED_VIDEOS -> {
@@ -215,6 +216,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
     private fun initAnalysisView(analysisType: Int) {
         val appDatabase = AppDatabase.getInstance(requireContext())
         val dao = appDatabase.analysisDao()
+        val similarImagesAnalysisDao = appDatabase.similarImagesAnalysisDao()
         val blurAnalysisDao = appDatabase.blurAnalysisDao()
         val lowLightAnalysisDao = appDatabase.lowLightAnalysisDao()
         val memeAnalysisDao = appDatabase.memesAnalysisDao()
@@ -430,6 +432,28 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                         invalidateProcessing(
                             false,
                             filesViewModel.isImageFeaturesAnalysing
+                        )
+                    }
+                }
+            }
+            TYPE_SIMILAR_IMAGES -> {
+                viewModel.getSimilarImages(similarImagesAnalysisDao).observe(viewLifecycleOwner) {
+                    if (it == null) {
+                        invalidateProcessing(
+                            true,
+                            filesViewModel.isSimilarImagesAnalysing
+                        )
+                    } else {
+                        setMediaInfoList(it, true) {
+                            checkedItems ->
+                            viewModel.cleanSimilarImageAnalysis(
+                                similarImagesAnalysisDao,
+                                checkedItems
+                            )
+                        }
+                        invalidateProcessing(
+                            false,
+                            filesViewModel.isSimilarImagesAnalysing
                         )
                     }
                 }

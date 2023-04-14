@@ -943,4 +943,8 @@
     <string name="network_intensive_apps">Network intensive apps</string>
     <!-- histogram in image viewer -->
     <string name="histogram">Histogram</string>
+    <!-- similar images in analysis fragment -->
+    <string name="similar_images">Similar Images</string>
+    <!-- similar images summary in analysis fragment -->
+    <string name="similar_images_hint">Images that have similar colors</string>
 </resources>

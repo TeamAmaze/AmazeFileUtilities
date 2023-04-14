@@ -93,11 +93,14 @@ import okhttp3.Protocol
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
+import java.io.InputStream
 import java.lang.reflect.Method
 import java.math.BigInteger
 import java.net.InetAddress
 import java.net.UnknownHostException
 import java.nio.ByteOrder
+import java.nio.charset.Charset
+import java.security.MessageDigest
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -1229,6 +1232,29 @@ class Utils {
                     dialog.dismiss()
                 }
             return builder
+        }
+
+        fun getMd5ForString(inputString: String): String {
+            val messageDigest = MessageDigest.getInstance("SHA-256")
+            val input = ByteArray(8192)
+            var length: Int
+            val inputStream: InputStream = inputString.byteInputStream(Charset.defaultCharset())
+            while (inputStream.read(input).also { length = it } != -1) {
+                if (length > 0) messageDigest.update(input, 0, length)
+            }
+
+            val hash = messageDigest.digest()
+
+            val hexString = StringBuilder()
+
+            for (aHash in hash) {
+                // convert hash to base 16
+                val hex = Integer.toHexString(0xff and aHash.toInt())
+                if (hex.length == 1) hexString.append('0')
+                hexString.append(hex)
+            }
+            inputStream.close()
+            return hexString.toString()
         }
 
         private fun findApplicationInfoSizeFallback(applicationInfo: ApplicationInfo): Long {

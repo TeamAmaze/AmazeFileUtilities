@@ -194,6 +194,14 @@ data class MediaFileInfo(
         }
     }
 
+    fun getParentPath(): String {
+        return if (exists()) {
+            File(path).parentFile?.path ?: UNKNOWN
+        } else {
+            UNKNOWN
+        }
+    }
+
     fun getParentFile(): File? {
         return if (exists()) {
             File(path).parentFile

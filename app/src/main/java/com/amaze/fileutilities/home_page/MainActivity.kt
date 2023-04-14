@@ -200,6 +200,10 @@ class MainActivity :
                                     mediaFileInfoList,
                                     pathPreferences
                                 )
+                                viewModel.analyseSimilarImages(
+                                    mediaFileInfoList,
+                                    pathPreferences
+                                )
                             }
                         }
                     }

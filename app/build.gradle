@@ -124,6 +124,12 @@ android {
             buildConfigField "String", "API_REQ_TRIAL_AUTH_TOKEN", "new String()"
             buildConfigField "String", "SALT_DEVICE_ID", "new String()"
         }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     signingConfigs {
@@ -294,7 +300,7 @@ dependencies {
     api "com.caverock:androidsvg:1.4"
     implementation 'com.burhanrashid52:photoeditor:2.0.0'
     implementation 'com.github.CanHub:Android-Image-Cropper:4.3.1'
-    api 'com.github.TeamAmaze:mupdf-android-viewer:1.0.19'
+    api 'com.github.TeamAmaze:mupdf-android-viewer:1.0.20'
 
     //Detect memory leaks
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
