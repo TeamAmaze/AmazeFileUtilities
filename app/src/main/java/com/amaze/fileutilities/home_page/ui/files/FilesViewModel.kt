@@ -633,27 +633,42 @@ class FilesViewModel(val applicationContext: Application) :
                 }
                 Utils.containsInPreferences(it.path, pathPrefsList, true)
             }
-            filterList.forEach {
-                mediaFileInfo ->
-                if (isSimilarImagesAnalysing && dao.findByPath(mediaFileInfo.path) == null) {
-                    val histogramPeaks = ImgUtils.getHistogramChannelsWithPeaks(mediaFileInfo.path)
-                    histogramPeaks?.let {
-                        dao.insert(
-                            SimilarImagesAnalysisMetadata(
-                                mediaFileInfo.getParentPath(),
-                                mediaFileInfo.path,
-                                it[0], it[1], it[2], ImgUtils.DATAPOINTS,
-                                ImgUtils.THRESHOLD
-                            )
-                        )
+            if (isSimilarImagesAnalysing) {
+                val metadataCount = dao.getAllCount()
+                if (filterList.size != metadataCount) {
+                    var imagesProcessed = 0
+                    filterList.forEach {
+                        mediaFileInfo ->
+                        if (isSimilarImagesAnalysing &&
+                            dao.findByPath(mediaFileInfo.path) == null
+                        ) {
+                            if (imagesProcessed++ > 5000) {
+                                // hard limit in a single run
+                                return@forEach
+                            }
+                            val histogramPeaks = ImgUtils
+                                .getHistogramChannelsWithPeaks(mediaFileInfo.path)
+                            histogramPeaks?.let {
+                                dao.insert(
+                                    SimilarImagesAnalysisMetadata(
+                                        mediaFileInfo.getParentPath(),
+                                        mediaFileInfo.path,
+                                        it[0], it[1], it[2], ImgUtils.DATAPOINTS,
+                                        ImgUtils.THRESHOLD
+                                    )
+                                )
+                            }
+                        }
                     }
-                }
-            }
-            filterList.forEach {
-                // init analysis for this image
-                val savedInfo = dao.findByPath(it.path)
-                if (savedInfo != null && !savedInfo.isAnalysed) {
-                    analyseHistogramForMatch(similarImagesAnalysisDao, dao, savedInfo)
+                } else {
+                    filterList.forEach {
+                        if (isSimilarImagesAnalysing) {
+                            val savedInfo = dao.findByPath(it.path)
+                            if (savedInfo != null && !savedInfo.isAnalysed) {
+                                analyseHistogramForMatch(similarImagesAnalysisDao, dao, savedInfo)
+                            }
+                        }
+                    }
                 }
             }
             isSimilarImagesAnalysing = false
@@ -708,13 +723,11 @@ class FilesViewModel(val applicationContext: Application) :
 
             val similarFilePaths = mutableSetOf<String>()
             val similarFilesMetadata = mutableSetOf<SimilarImagesAnalysisMetadata>()
-            similarFilesMetadata.add(analysisMetadata)
             val existingAnalysedData =
                 similarImagesAnalysisDao.findByHistogramChecksum(histChecksum)
             if (existingAnalysedData != null) {
                 similarFilePaths.addAll(existingAnalysedData.files)
             }
-            similarFilePaths.add(analysisMetadata.filePath)
 
             for (currentFile in parentFiles) {
                 if (currentFile.filePath != analysisMetadata.filePath && !currentFile.isAnalysed) {
@@ -796,7 +809,9 @@ class FilesViewModel(val applicationContext: Application) :
                     matchedDatapointsRed = 0
                 }
             }
-            if (similarFilePaths.size > 1) {
+            if (similarFilePaths.size >= 1) {
+                similarFilesMetadata.add(analysisMetadata)
+                similarFilePaths.add(analysisMetadata.filePath)
                 similarImagesAnalysisDao.insert(
                     SimilarImagesAnalysis(
                         histChecksum,

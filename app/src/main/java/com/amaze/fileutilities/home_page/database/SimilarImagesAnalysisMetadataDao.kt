@@ -52,4 +52,7 @@ interface SimilarImagesAnalysisMetadataDao {
 
     @Query("DELETE FROM similarimagesanalysismetadata WHERE file_path like '%' || :path || '%'")
     fun deleteByPathContains(path: String)
+
+    @Query("SELECT count(*) from similarimagesanalysismetadata")
+    fun getAllCount(): Int
 }

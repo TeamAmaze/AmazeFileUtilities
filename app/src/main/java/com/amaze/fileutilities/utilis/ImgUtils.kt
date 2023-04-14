@@ -47,11 +47,11 @@ class ImgUtils {
 
         var log: Logger = LoggerFactory.getLogger(ImgUtils::class.java)
 
-        const val DATAPOINTS = 7
+        const val DATAPOINTS = 8
         const val THRESHOLD = 100
-        const val ASSERT_DATAPOINTS = 5
-        const val PIXEL_POSITION_NORMALIZE_FACTOR = 10
-        const val PIXEL_INTENSITY_NORMALIZE_FACTOR = 30
+        const val ASSERT_DATAPOINTS = 6
+        const val PIXEL_POSITION_NORMALIZE_FACTOR = 20
+        const val PIXEL_INTENSITY_NORMALIZE_FACTOR = 50
 
 //        private var tessBaseApi: TessBaseAPI? = null
         val wordRegex = "^[A-Za-z]*$".toRegex()
@@ -378,58 +378,68 @@ class ImgUtils {
                     THRESHOLD.toDouble()
                 )
 
+                val windowWidth = 256 / DATAPOINTS
                 val priorityQueueBlue = PriorityQueue<Pair<Int, Int>>(
-                    DATAPOINTS
+                    windowWidth + 1
                 ) { o1, o2 -> o1.second.compareTo(o2.second) }
                 val priorityQueueGreen = PriorityQueue<Pair<Int, Int>>(
-                    DATAPOINTS
+                    windowWidth + 1
                 ) { o1, o2 -> o1.second.compareTo(o2.second) }
                 val priorityQueueRed = PriorityQueue<Pair<Int, Int>>(
-                    DATAPOINTS
+                    windowWidth + 1
                 ) { o1, o2 -> o1.second.compareTo(o2.second) }
 
+                val blueTopValues: MutableList<Pair<Int, Int>> = mutableListOf()
+                val greenTopValues: MutableList<Pair<Int, Int>> = mutableListOf()
+                val redTopValues: MutableList<Pair<Int, Int>> = mutableListOf()
                 histograms.forEachIndexed { index, mat ->
                     for (j in 0 until 256) {
                         val channelCurrentLevel = mat.get(j, 0)[0].roundToInt()
                         when (index) {
                             0 -> {
-                                if (j > DATAPOINTS - 1) {
-                                    priorityQueueBlue.remove()
+                                if (j % windowWidth == 0) {
+                                    if (!priorityQueueBlue.isEmpty()) {
+                                        blueTopValues.add(priorityQueueBlue.remove())
+                                        priorityQueueBlue.clear()
+                                    }
+                                } else {
+                                    priorityQueueBlue.add(Pair(j, channelCurrentLevel))
                                 }
-                                priorityQueueBlue.add(Pair(j, channelCurrentLevel))
                             }
                             1 -> {
-                                if (j > DATAPOINTS - 1) {
-                                    priorityQueueGreen.remove()
+                                if (j % windowWidth == 0) {
+                                    if (!priorityQueueGreen.isEmpty()) {
+                                        greenTopValues.add(priorityQueueGreen.remove())
+                                        priorityQueueGreen.clear()
+                                    }
+                                } else {
+                                    priorityQueueGreen.add(Pair(j, channelCurrentLevel))
                                 }
-                                priorityQueueGreen.add(Pair(j, channelCurrentLevel))
                             }
                             2 -> {
-                                if (j > DATAPOINTS - 1) {
-                                    priorityQueueRed.remove()
+                                if (j % windowWidth == 0) {
+                                    if (!priorityQueueRed.isEmpty()) {
+                                        redTopValues.add(priorityQueueRed.remove())
+                                        priorityQueueRed.clear()
+                                    }
+                                } else {
+                                    priorityQueueRed.add(Pair(j, channelCurrentLevel))
                                 }
-                                priorityQueueRed.add(Pair(j, channelCurrentLevel))
                             }
                         }
                     }
                 }
-                val blueTopValues: MutableList<Pair<Int, Int>> = mutableListOf()
-                val greenTopValues: MutableList<Pair<Int, Int>> = mutableListOf()
-                val redTopValues: MutableList<Pair<Int, Int>> = mutableListOf()
-                while (!priorityQueueBlue.isEmpty()) {
-                    priorityQueueBlue.remove()?.let {
-                        blueTopValues.add(it)
-                    }
+                if (!priorityQueueBlue.isEmpty()) {
+                    blueTopValues.add(priorityQueueBlue.remove())
+                    priorityQueueBlue.clear()
                 }
-                while (!priorityQueueGreen.isEmpty()) {
-                    priorityQueueGreen.remove()?.let {
-                        greenTopValues.add(it)
-                    }
+                if (!priorityQueueGreen.isEmpty()) {
+                    greenTopValues.add(priorityQueueGreen.remove())
+                    priorityQueueGreen.clear()
                 }
-                while (!priorityQueueRed.isEmpty()) {
-                    priorityQueueRed.remove()?.let {
-                        redTopValues.add(it)
-                    }
+                if (!priorityQueueRed.isEmpty()) {
+                    redTopValues.add(priorityQueueRed.remove())
+                    priorityQueueRed.clear()
                 }
                 histograms.forEach { it.release() }
                 matrix.release()

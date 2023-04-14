@@ -35,6 +35,7 @@ import com.amaze.fileutilities.home_page.database.LowLightAnalysis
 import com.amaze.fileutilities.home_page.database.LowLightAnalysisDao
 import com.amaze.fileutilities.home_page.database.MemeAnalysis
 import com.amaze.fileutilities.home_page.database.MemeAnalysisDao
+import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysis
 import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisDao
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
@@ -501,9 +502,14 @@ class AnalyseViewModel : ViewModel() {
             it.invalidate(dao)
         }.filter {
             it.files.size > 1
-        }.sortedBy {
-            it.histogram_checksum
-        }.map {
+        }.toSortedSet(object : Comparator<SimilarImagesAnalysis> {
+            override fun compare(o1: SimilarImagesAnalysis?, o2: SimilarImagesAnalysis?): Int {
+                if (o1 == null || o2 == null || o1.histogram_checksum == o2.histogram_checksum) {
+                    return 0
+                }
+                return 1
+            }
+        }).map {
             it.files.map {
                 filePath ->
                 val extraMetaData = MediaFileInfo.ExtraMetaData(it.histogram_checksum)
