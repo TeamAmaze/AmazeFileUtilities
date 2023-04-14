@@ -53,7 +53,7 @@ interface SubtitlesApi {
             "Api-Key: $API_KEY", "User-Agent: $USER_AGENT"
         ]
     )
-    @GET(API_SEARCH_SUBTITLES)
+    @GET("" + API_SEARCH_SUBTITLES)
     fun getSearchResults(
         @Query(value = "query") query: String,
         @Query(value = "languages") languages: String
@@ -65,7 +65,7 @@ interface SubtitlesApi {
             "Content-type:application/json", "Api-Key: $API_KEY", "User-Agent: $USER_AGENT"
         ]
     )
-    @POST(API_DOWNLOAD_SUBTITLES)
+    @POST("" + API_DOWNLOAD_SUBTITLES)
     fun getDownloadLink(
         @Body downloadLinkRequest: GetDownloadLinkRequest
     ): Call<GetDownloadLinkResponse>?
