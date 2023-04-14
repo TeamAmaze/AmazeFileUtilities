@@ -50,6 +50,11 @@
             app:summary="@string/features_paths_hint"
             />
         <Preference
+            app:key="features_similar_images"
+            android:title="@string/similar_images"
+            app:summary="@string/similar_images_hint"
+            />
+        <Preference
             app:key="download_paths"
             app:title="@string/download_paths"
             android:summary="@string/download_paths_hint"

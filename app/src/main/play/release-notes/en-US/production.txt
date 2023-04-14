@@ -1,6 +1,6 @@
 Changelog:
-- Add analysis to clear background processes
-- Add analysis for newly installed / recently updated apps
-- Add support for playlists in music player
-- Add Floating Action Button for options menu
+- Add analysis for similar images
+- Add support for .cbz , .fb2 and .mobi
+- Add support to search in pdf
+- Improve performance
 - Other bugfixes

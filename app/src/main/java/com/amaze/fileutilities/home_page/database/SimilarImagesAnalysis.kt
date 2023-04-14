@@ -18,14 +18,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.amaze.fileutilities.epub_viewer
+package com.amaze.fileutilities.home_page.database
 
-import android.net.Uri
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import androidx.annotation.Keep
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Ignore
+import androidx.room.Index
+import androidx.room.PrimaryKey
 
-@Parcelize
-data class LocalEpubModel(
-    var uri: Uri,
-    val mimeType: String?
-) : Parcelable
+/**
+ * Metadata used to process similar images
+ */
+@Keep
+@Entity(indices = [Index(value = ["histogram_checksum"], unique = true)])
+data class SimilarImagesAnalysis(
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "_id")
+    val uid: Int,
+    @ColumnInfo(name = "histogram_checksum") val histogram_checksum: String,
+    @ColumnInfo(name = "files_path") var files: Set<String>
+) {
+    @Ignore
+    constructor(
+        histogramChecksum: String,
+        filesPath: Set<String>
+    ) :
+        this(0, histogramChecksum, filesPath)
+}

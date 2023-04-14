@@ -23,23 +23,35 @@ package com.amaze.fileutilities.utilis
 import android.graphics.Bitmap
 import org.opencv.android.Utils
 import org.opencv.core.Core
+import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.core.MatOfDouble
+import org.opencv.core.MatOfFloat
+import org.opencv.core.MatOfInt
 import org.opencv.core.MatOfPoint
 import org.opencv.core.Point
 import org.opencv.core.Scalar
 import org.opencv.core.Size
+import org.opencv.core.TermCriteria
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.PriorityQueue
 import kotlin.math.pow
+import kotlin.math.roundToInt
 
 class ImgUtils {
 
     companion object {
 
         var log: Logger = LoggerFactory.getLogger(ImgUtils::class.java)
+
+        const val DATAPOINTS = 8
+        const val THRESHOLD = 100
+        const val ASSERT_DATAPOINTS = 6
+        const val PIXEL_POSITION_NORMALIZE_FACTOR = 20
+        const val PIXEL_INTENSITY_NORMALIZE_FACTOR = 50
 
 //        private var tessBaseApi: TessBaseAPI? = null
         val wordRegex = "^[A-Za-z]*$".toRegex()
@@ -192,6 +204,288 @@ class ImgUtils {
             }
         }
 
+        fun imgChannels(
+            path: String
+        ): Boolean? {
+            return try {
+                val matrix = readImage(path)
+                if (matrix == null) {
+                    log.warn("failure to find low light for input")
+                    return false
+                }
+                val resizeimage = resize(
+                    matrix, getGenericWidth(matrix),
+                    getGenericHeight(matrix)
+                )
+                /*Imgproc.cvtColor(input, rgb, Imgproc.COLOR_BGR2RGB)
+                Imgproc.compareHist()
+                for (i in 0 until resizeimage.height()) {
+                    for (j in 0 until resizeimage.width()) {
+                        val pixelVal = resizeimage.get(i, j)
+                    }
+                }*/
+                /*val threshold = thresholdWithoutBlur(resizeimage, 120.0)
+                val outputRGB = Mat()
+                Imgproc.cvtColor(threshold, outputRGB, Imgproc.COLOR_BGR2RGB)
+                val outputChannels = arrayListOf<Double>()
+                for (k in 0 until outputRGB.channels()) {
+                    outputChannels.add(0.0)
+                }
+                for (i in 0 until outputRGB.width()) {
+                    for (j in 0 until outputRGB.height()) {
+                        val pixelVal = outputRGB.get(i, j)
+                        if (!pixelVal.all { _v -> _v == 255.0 || _v == 0.0 }) {
+                            for (k in 0 until outputRGB.channels()) {
+                                outputChannels[k] += pixelVal[k]
+                            }
+                        }
+                    }
+                }*/
+                /*val orb: ORB = ORB.__fromPtr__(1)
+                val bfMatcher = BFMatcher()
+                bfMatcher
+                orb.detectAndCompute()*/
+                resizeimage.convertTo(resizeimage, CvType.CV_32F)
+                val data: Mat = resizeimage.reshape(1, resizeimage.total().toInt())
+
+                val K = 2
+                val bestLabels = Mat()
+                val criteria = TermCriteria()
+                val attempts = 10
+                val flags = Core.KMEANS_PP_CENTERS
+                val centers = Mat()
+                val compactness: Double =
+                    Core.kmeans(data, K, bestLabels, criteria, attempts, flags, centers)
+                var draw = Mat(resizeimage.total().toInt(), 1, CvType.CV_32FC3)
+                val colors = centers.reshape(3, K)
+                for (i in 0 until K) {
+                    val mask = Mat() // a mask for each cluster label
+                    Core.compare(bestLabels, Scalar(i.toDouble()), mask, Core.CMP_EQ)
+                    val col =
+                        colors.row(i) // can't use the Mat directly with setTo() (see #19100)
+                    val d = col[0, 0] // can't create Scalar directly from get(), 3 vs 4 elements
+                    draw.setTo(Scalar(d[0], d[1], d[2]), mask)
+                }
+                draw = draw.reshape(3, resizeimage.rows())
+                draw.convertTo(draw, CvType.CV_8U)
+
+                processForLowLight(matrix)
+            } catch (e: Exception) {
+                log.warn("Failed to check for low light image", e)
+                null
+            } catch (oom: OutOfMemoryError) {
+                log.warn("Failed to check for low light image", oom)
+                null
+            }
+        }
+
+        fun getHistogram(inputPath: String, widthPx: Double, heightPx: Double): Bitmap? {
+            return try {
+                val matrix = readImage(inputPath)
+                if (matrix == null) {
+                    log.warn("failure to find input for histogram for path {}", inputPath)
+                    return null
+                }
+                val histograms = processHistogram(matrix, heightPx)
+                val histMatBitmap = Mat(
+                    Size(256.0, heightPx), CvType.CV_8UC4,
+                    Scalar(
+                        0.0, 0.0,
+                        0.0, 0.0
+                    )
+                )
+                /*val colorsBgr =
+                    arrayOf(Scalar(0.0, 0.0, 200.0, 255.0),
+                        Scalar(0.0, 200.0, 0.0, 255.0),
+                        Scalar(200.0, 0.0, 0.0, 255.0))*/
+                histograms.forEachIndexed { index, mat ->
+                    for (j in 0 until 256) {
+                        /*val p1 = Point(
+                            (binWidth * (j - 1)).toDouble(), (heightPx - Math.round(
+                                mat.get(j - 1, 0)[0]
+                            ))
+                        )
+                        val p2 =
+                            Point(
+                                (binWidth * j).toDouble(),
+                                (heightPx - Math.round(mat.get(j, 0)[0]))
+                            )
+                        Imgproc.line(histMatBitmap, p1, p2, colorsBgr.get(index), 4, 16, 0)*/
+                        val heightCalc = heightPx - Math.round(mat.get(j, 0)[0])
+                        for (pt in heightPx.toInt() - 1 downTo heightCalc.toInt()) {
+                            val existingChannel1 = histMatBitmap.get(pt, j)[0]
+                            val existingChannel2 = histMatBitmap.get(pt, j)[1]
+                            val existingChannel3 = histMatBitmap.get(pt, j)[2]
+                            when (index) {
+                                0 ->
+                                    histMatBitmap.put(
+                                        pt, j,
+                                        existingChannel1, existingChannel2, 200.0, 0.0
+                                    )
+                                1 ->
+                                    histMatBitmap.put(
+                                        pt, j,
+                                        existingChannel1, 200.0, existingChannel3, 0.0
+                                    )
+                                2 ->
+                                    histMatBitmap.put(
+                                        pt, j,
+                                        200.0, existingChannel2, existingChannel3, 0.0
+                                    )
+                            }
+                        }
+                    }
+                }
+                val resultBitmap = Mat()
+                Imgproc.resize(histMatBitmap, resultBitmap, Size(widthPx, heightPx))
+
+                val resultBitmapFiltered = Mat(
+                    resultBitmap.rows(), resultBitmap.cols(),
+                    resultBitmap.type()
+                )
+                Imgproc.medianBlur(resultBitmap, resultBitmapFiltered, 19)
+
+                val histBitmap = Bitmap.createBitmap(
+                    resultBitmapFiltered.cols(),
+                    resultBitmapFiltered.rows(),
+                    Bitmap.Config.ARGB_8888
+                )
+                Utils.matToBitmap(resultBitmapFiltered, histBitmap)
+                resultBitmapFiltered.release()
+                resultBitmap.release()
+                histMatBitmap.release()
+                histograms.forEach { it.release() }
+                matrix.release()
+                return histBitmap
+            } catch (e: Exception) {
+                log.warn("Failed to get histogram for {}", inputPath, e)
+                null
+            } catch (oom: OutOfMemoryError) {
+                log.warn("Failed to get histogram for {}", inputPath, oom)
+                null
+            }
+        }
+
+        fun getHistogramChannelsWithPeaks(inputPath: String): List<List<Pair<Int, Int>>>? {
+            return try {
+                val matrix = readImage(inputPath)
+                if (matrix == null) {
+                    log.warn("failure to find input for histogram for path {}", inputPath)
+                    return null
+                }
+                val histograms = processHistogram(
+                    matrix,
+                    THRESHOLD.toDouble()
+                )
+
+                val windowWidth = 256 / DATAPOINTS
+                val priorityQueueBlue = PriorityQueue<Pair<Int, Int>>(
+                    windowWidth + 1
+                ) { o1, o2 -> o1.second.compareTo(o2.second) }
+                val priorityQueueGreen = PriorityQueue<Pair<Int, Int>>(
+                    windowWidth + 1
+                ) { o1, o2 -> o1.second.compareTo(o2.second) }
+                val priorityQueueRed = PriorityQueue<Pair<Int, Int>>(
+                    windowWidth + 1
+                ) { o1, o2 -> o1.second.compareTo(o2.second) }
+
+                val blueTopValues: MutableList<Pair<Int, Int>> = mutableListOf()
+                val greenTopValues: MutableList<Pair<Int, Int>> = mutableListOf()
+                val redTopValues: MutableList<Pair<Int, Int>> = mutableListOf()
+                histograms.forEachIndexed { index, mat ->
+                    for (j in 0 until 256) {
+                        val channelCurrentLevel = mat.get(j, 0)[0].roundToInt()
+                        when (index) {
+                            0 -> {
+                                if (j % windowWidth == 0) {
+                                    if (!priorityQueueBlue.isEmpty()) {
+                                        blueTopValues.add(priorityQueueBlue.remove())
+                                        priorityQueueBlue.clear()
+                                    }
+                                } else {
+                                    priorityQueueBlue.add(Pair(j, channelCurrentLevel))
+                                }
+                            }
+                            1 -> {
+                                if (j % windowWidth == 0) {
+                                    if (!priorityQueueGreen.isEmpty()) {
+                                        greenTopValues.add(priorityQueueGreen.remove())
+                                        priorityQueueGreen.clear()
+                                    }
+                                } else {
+                                    priorityQueueGreen.add(Pair(j, channelCurrentLevel))
+                                }
+                            }
+                            2 -> {
+                                if (j % windowWidth == 0) {
+                                    if (!priorityQueueRed.isEmpty()) {
+                                        redTopValues.add(priorityQueueRed.remove())
+                                        priorityQueueRed.clear()
+                                    }
+                                } else {
+                                    priorityQueueRed.add(Pair(j, channelCurrentLevel))
+                                }
+                            }
+                        }
+                    }
+                }
+                if (!priorityQueueBlue.isEmpty()) {
+                    blueTopValues.add(priorityQueueBlue.remove())
+                    priorityQueueBlue.clear()
+                }
+                if (!priorityQueueGreen.isEmpty()) {
+                    greenTopValues.add(priorityQueueGreen.remove())
+                    priorityQueueGreen.clear()
+                }
+                if (!priorityQueueRed.isEmpty()) {
+                    redTopValues.add(priorityQueueRed.remove())
+                    priorityQueueRed.clear()
+                }
+                histograms.forEach { it.release() }
+                matrix.release()
+                return mutableListOf(blueTopValues, greenTopValues, redTopValues)
+            } catch (e: Exception) {
+                log.warn("Failed to process similar images histogram for {}", inputPath, e)
+                null
+            } catch (oom: OutOfMemoryError) {
+                log.warn("Failed to process similar images histogram for {}", inputPath, oom)
+                null
+            }
+        }
+
+        private fun processHistogram(inputMat: Mat, heightPx: Double): List<Mat> {
+            val bHist = Mat()
+            val gHist = Mat()
+            val rHist = Mat()
+            val bgrPlane = ArrayList<Mat>(3)
+            Core.split(inputMat, bgrPlane)
+            Imgproc.calcHist(
+                arrayListOf(bgrPlane[0]), MatOfInt(0), Mat(), bHist,
+                MatOfInt(256), MatOfFloat(0f, 256f), false
+            )
+            Imgproc.calcHist(
+                arrayListOf(bgrPlane[1]), MatOfInt(0), Mat(), gHist,
+                MatOfInt(256), MatOfFloat(0f, 256f), false
+            )
+            Imgproc.calcHist(
+                arrayListOf(bgrPlane[2]), MatOfInt(0), Mat(), rHist,
+                MatOfInt(256), MatOfFloat(0f, 256f), false
+            )
+            Core.normalize(
+                bHist, bHist, heightPx,
+                0.0, Core.NORM_INF
+            )
+            Core.normalize(
+                gHist, gHist, heightPx,
+                0.0, Core.NORM_INF
+            )
+            Core.normalize(
+                rHist, rHist, heightPx,
+                0.0, Core.NORM_INF
+            )
+            return arrayListOf(bHist, gHist, rHist)
+        }
+
         private fun processForLowLight(matrix: Mat): Boolean? {
             return try {
                 val zerosPair = getTotalAndZeros(matrix)
@@ -329,6 +623,45 @@ class ImgUtils {
             val threshold = Mat()
             Imgproc.threshold(
                 blur, threshold, intensity, 255.0,
+                Imgproc.THRESH_BINARY
+            )
+            return threshold
+        }
+
+        fun getHistogramChecksum(
+            blueChannelMap: Map<Int, Int>,
+            greenChannelMap: Map<Int, Int>,
+            redChannelMap: Map<Int, Int>,
+            parentPath: String
+        ): String {
+            var blueChannelPosSum = 0
+            var blueChannelIntensitySum = 0
+            var greenChannelPosSum = 0
+            var greenChannelIntensitySum = 0
+            var redChannelPosSum = 0
+            var redChannelIntensitySum = 0
+            blueChannelMap.forEach {
+                blueChannelPosSum += it.key
+                blueChannelIntensitySum += it.value
+            }
+            greenChannelMap.forEach {
+                greenChannelPosSum += it.key
+                greenChannelIntensitySum += it.value
+            }
+            redChannelMap.forEach {
+                redChannelPosSum += it.key
+                redChannelIntensitySum += it.value
+            }
+            val checksumRaw = "$parentPath/$blueChannelPosSum:${blueChannelIntensitySum}_" +
+                "$greenChannelPosSum:${greenChannelIntensitySum}_" +
+                "$redChannelPosSum:$redChannelIntensitySum"
+            return com.amaze.fileutilities.utilis.Utils.getMd5ForString(checksumRaw)
+        }
+
+        private fun thresholdWithoutBlur(matrix: Mat, intensity: Double): Mat {
+            val threshold = Mat()
+            Imgproc.threshold(
+                matrix, threshold, intensity, 255.0,
                 Imgproc.THRESH_BINARY
             )
             return threshold

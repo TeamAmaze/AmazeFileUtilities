@@ -34,6 +34,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.QuickViewFragmentBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
@@ -63,6 +64,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
     var log: Logger = LoggerFactory.getLogger(ImageViewerFragment::class.java)
     private var _binding: QuickViewFragmentBinding? = null
     private val filesViewModel: FilesViewModel by activityViewModels()
+    private lateinit var viewModel: ImageFragmentViewModel
 
     private var hideToolbars = false
 
@@ -104,6 +106,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = QuickViewFragmentBinding.inflate(inflater, container, false)
+        viewModel = ViewModelProvider(this).get(ImageFragmentViewModel::class.java)
         return _binding!!.root
     }
 
@@ -222,7 +225,10 @@ class ImageViewerFragment : AbstractMediaFragment() {
                                         height ->
                                         if (!height.isNullOrEmpty()) {
                                             widthAndHeight =
-                                                "${width.replace(" pixels", "")}" +
+                                                "${width.replace(
+                                                " pixels",
+                                                ""
+                                            )}" +
                                                 "x${height.replace(
                                                     " pixels",
                                                     ""
@@ -303,26 +309,60 @@ class ImageViewerFragment : AbstractMediaFragment() {
                         if (gpsDirectory != null && gpsDescriptor != null) {
                             gpsDescriptor.gpsLatitudeDescription.let { latitude ->
                                 gpsDescriptor.gpsLongitudeDescription.let { longitude ->
-                                    if (!longitude.isNullOrEmpty() && !latitude.isNullOrEmpty()) {
+                                    if (!longitude.isNullOrEmpty() &&
+                                        !latitude.isNullOrEmpty()
+                                    ) {
                                         imageMetadataLayout.longitude.visibility = View.VISIBLE
                                         imageMetadataLayout.gpsInfoParent.visibility = View.VISIBLE
                                         imageMetadataLayout.longitude.text =
-                                            "${resources.getString(R.string.longitude)}: $longitude"
+                                            "${resources.getString(R.string.longitude)}: " +
+                                            "$longitude"
                                         imageMetadataLayout.lat.visibility = View.VISIBLE
                                         imageMetadataLayout.lat.text =
-                                            "${resources.getString(R.string.latitude)}: $latitude"
-                                        imageMetadataLayout.openInMapsImage.setOnClickListener {
-                                            Utils.openInMaps(requireContext(), latitude, longitude)
-                                        }
-                                        imageMetadataLayout.openInMapsText.setOnClickListener {
-                                            Utils.openInMaps(requireContext(), latitude, longitude)
-                                        }
+                                            "${resources.getString(R.string.latitude)}: " +
+                                            "$latitude"
+                                        imageMetadataLayout.openInMapsImage
+                                            .setOnClickListener {
+                                                Utils.openInMaps(
+                                                    requireContext(), latitude,
+                                                    longitude
+                                                )
+                                            }
+                                        imageMetadataLayout.openInMapsText
+                                            .setOnClickListener {
+                                                Utils.openInMaps(
+                                                    requireContext(), latitude,
+                                                    longitude
+                                                )
+                                            }
                                     } else {
                                         imageMetadataLayout.longitude.visibility = View.GONE
                                         imageMetadataLayout.lat.visibility = View.GONE
                                     }
                                 }
                             }
+                        }
+                        imageMetadataLayout.loadHistogramButton.setOnClickListener {
+                            viewModel.loadHistogram(
+                                file.path,
+                                imageMetadataLayout.histogramInfoParent.width.toDouble(),
+                                resources
+                            )
+                                .observe(viewLifecycleOwner) {
+                                    bitmap ->
+                                    if (bitmap != null) {
+                                        imageMetadataLayout.histogramInfo.visibility =
+                                            View.VISIBLE
+                                        imageMetadataLayout.histogramLoadingBar.visibility =
+                                            View.GONE
+                                        imageMetadataLayout.histogramInfo.setImageBitmap(bitmap)
+                                    } else {
+                                        imageMetadataLayout.loadHistogramButton.visibility =
+                                            View.GONE
+                                        imageMetadataLayout.histogramLoadingBar.visibility =
+                                            View.VISIBLE
+                                    }
+                                }
                         }
                     } catch (e: Exception) {
                         log.warn("failed to parse image metadata", e)
@@ -447,7 +487,10 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 resources.getString(R.string.set_as)
             ) {
                 localImageModel?.let {
-                    showSetAsDialog(localImageModel.uri, this@ImageViewerFragment.requireContext())
+                    showSetAsDialog(
+                        localImageModel.uri,
+                        this@ImageViewerFragment.requireContext()
+                    )
                 }
             }
             customBottomBar.addButton(
@@ -510,19 +553,20 @@ class ImageViewerFragment : AbstractMediaFragment() {
                             }
                         val summaryDialog = summaryDialogBuilder.create()
                         summaryDialog.show()
-                        filesViewModel.getMediaFileListSize(toDelete).observe(viewLifecycleOwner) {
-                            sizeRaw ->
-                            if (summaryDialog.isShowing) {
-                                val size = Formatter.formatFileSize(requireContext(), sizeRaw)
-                                summaryDialog.setMessage(
-                                    resources
-                                        .getString(R.string.delete_files_message).format(
-                                            toDelete.size,
-                                            size
-                                        )
-                                )
+                        filesViewModel.getMediaFileListSize(toDelete)
+                            .observe(viewLifecycleOwner) {
+                                sizeRaw ->
+                                if (summaryDialog.isShowing) {
+                                    val size = Formatter.formatFileSize(requireContext(), sizeRaw)
+                                    summaryDialog.setMessage(
+                                        resources
+                                            .getString(R.string.delete_files_message).format(
+                                                toDelete.size,
+                                                size
+                                            )
+                                    )
+                                }
                             }
-                        }
                     }
             }
         }
@@ -546,7 +590,9 @@ class ImageViewerFragment : AbstractMediaFragment() {
                     } else {
                         imageView.visibility = View.VISIBLE
                         sheetUpArrow.visibility = View.INVISIBLE
-                        if ((activity as ImageViewerActivity).getViewpager().isUserInputEnabled) {
+                        if ((activity as ImageViewerActivity).getViewpager()
+                            .isUserInputEnabled
+                        ) {
                             (activity as ImageViewerActivity).getViewpager()
                                 .isUserInputEnabled = false
                         }
@@ -677,6 +723,13 @@ class ImageViewerFragment : AbstractMediaFragment() {
                                         colorPair.second,
                                         PorterDuff.Mode.SRC_ATOP
                                     )
+                                }
+                                if (metadataLayout?.histogramInfoParent?.isVisible == true) {
+                                    metadataLayout.histogramInfoParent
+                                        .background?.setColorFilter(
+                                            colorPair.second,
+                                            PorterDuff.Mode.SRC_ATOP
+                                        )
                                 }
                                 _binding?.customToolbar?.customToolbarRoot?.background
                                     ?.setColorFilter(

@@ -104,6 +104,11 @@ class FileUtils {
             "${Environment.DIRECTORY_PICTURES}/$INSTAGRAM"
         )
 
+        private val DEFAULT_SIMILAR_IMAGES = listOf(
+            CAMERA,
+            "${Environment.DIRECTORY_PICTURES}/$INSTAGRAM"
+        )
+
         private val DEFAULT_DOWNLOADS = listOf(
             Environment.DIRECTORY_DOWNLOADS,
             "${Environment.DIRECTORY_DOWNLOADS}/$ADM", ADM
@@ -153,6 +158,7 @@ class FileUtils {
             Pair(PathPreferences.FEATURE_ANALYSIS_BLUR, DEFAULT_BLUR),
             Pair(PathPreferences.FEATURE_ANALYSIS_LOW_LIGHT, DEFAULT_LOW_LIGHT),
             Pair(PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES, DEFAULT_IMAGE_FEATURES),
+            Pair(PathPreferences.FEATURE_ANALYSIS_SIMILAR_IMAGES, DEFAULT_SIMILAR_IMAGES),
             Pair(PathPreferences.FEATURE_ANALYSIS_DOWNLOADS, DEFAULT_DOWNLOADS),
             Pair(PathPreferences.FEATURE_ANALYSIS_RECORDING, DEFAULT_RECORDINGS),
             Pair(PathPreferences.FEATURE_ANALYSIS_SCREENSHOTS, DEFAULT_SCREENSHOTS),

@@ -35,6 +35,8 @@ import com.amaze.fileutilities.home_page.database.LowLightAnalysis
 import com.amaze.fileutilities.home_page.database.LowLightAnalysisDao
 import com.amaze.fileutilities.home_page.database.MemeAnalysis
 import com.amaze.fileutilities.home_page.database.MemeAnalysisDao
+import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysis
+import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisDao
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.PreferencesConstants
@@ -60,6 +62,7 @@ class AnalyseViewModel : ViewModel() {
     var distractedImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var selfieImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var groupPicImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var similarImagesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var fragmentScrollPosition: Int? = null
 
     fun getBlurImages(dao: BlurAnalysisDao): LiveData<ArrayList<MediaFileInfo>?> {
@@ -206,6 +209,25 @@ class AnalyseViewModel : ViewModel() {
                 transformAnalysisToMediaFileInfo(
                     dao
                         .getAllGroupPic(),
+                    dao
+                )
+            )
+        }
+    }
+
+    fun getSimilarImages(dao: SimilarImagesAnalysisDao): LiveData<ArrayList<MediaFileInfo>?> {
+        if (similarImagesLiveData == null) {
+            similarImagesLiveData = MutableLiveData()
+            similarImagesLiveData?.value = null
+            processSimilarImages(dao)
+        }
+        return similarImagesLiveData!!
+    }
+
+    private fun processSimilarImages(dao: SimilarImagesAnalysisDao) {
+        viewModelScope.launch(Dispatchers.IO) {
+            similarImagesLiveData?.postValue(
+                transformSimilarImagesAnalysisToMediaFile(
                     dao
                 )
             )
@@ -360,6 +382,40 @@ class AnalyseViewModel : ViewModel() {
         }
     }
 
+    fun cleanSimilarImageAnalysis(
+        dao: SimilarImagesAnalysisDao,
+        checkItemsList: List<AbstractMediaFilesAdapter.ListItem>
+    ):
+        LiveData<Boolean> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            emit(false)
+            checkItemsList.filter {
+                listItem ->
+                listItem.mediaFileInfo != null
+            }.let { list ->
+                for (item in list) {
+                    val mediaItem = item.mediaFileInfo
+                    if (mediaItem?.extraInfo != null &&
+                        mediaItem.extraInfo?.extraMetaData != null &&
+                        mediaItem.extraInfo?.extraMetaData?.checksum != null
+                    ) {
+                        val existingEntry =
+                            dao.findByHistogramChecksum(
+                                mediaItem.extraInfo?.extraMetaData?.checksum!!
+                            )
+                        val newFiles =
+                            existingEntry?.files?.filter { mediaItem.path != it }?.toSet()
+                        newFiles?.let {
+                            existingEntry.files = newFiles
+                            dao.insert(existingEntry)
+                        }
+                    }
+                }
+            }
+            emit(true)
+        }
+    }
+
     fun cleanMemeAnalysis(
         dao: MemeAnalysisDao,
         checkItemsList: List<AbstractMediaFilesAdapter.ListItem>
@@ -437,6 +493,38 @@ class AnalyseViewModel : ViewModel() {
                 priorityQueue.add(mediaFile)
             }
         }
+    }
+
+    private fun transformSimilarImagesAnalysisToMediaFile(dao: SimilarImagesAnalysisDao):
+        ArrayList<MediaFileInfo> {
+        val analysis = dao.getAll()
+        val response = analysis.filter {
+            it.invalidate(dao)
+        }.filter {
+            it.files.size > 1
+        }.toSortedSet(object : Comparator<SimilarImagesAnalysis> {
+            override fun compare(o1: SimilarImagesAnalysis?, o2: SimilarImagesAnalysis?): Int {
+                if (o1 == null || o2 == null || o1.histogram_checksum == o2.histogram_checksum) {
+                    return 0
+                }
+                return 1
+            }
+        }).map {
+            it.files.map {
+                filePath ->
+                val extraMetaData = MediaFileInfo.ExtraMetaData(it.histogram_checksum)
+                MediaFileInfo.fromFile(
+                    File(filePath),
+                    MediaFileInfo.ExtraInfo(
+                        MediaFileInfo.MEDIA_TYPE_IMAGE,
+                        null, null, null, null,
+                        extraMetaData
+                    )
+                )
+            }
+        }
+        return ArrayList(response.flatten())
+//        return ArrayList(response)
     }
 
     private fun transformInternalStorageAnalysisToMediaFile(dao: InternalStorageAnalysisDao):

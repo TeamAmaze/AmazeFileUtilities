@@ -54,6 +54,10 @@ import com.amaze.fileutilities.home_page.database.LowLightAnalysis
 import com.amaze.fileutilities.home_page.database.MemeAnalysis
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.database.PathPreferencesDao
+import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysis
+import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisDao
+import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisMetadata
+import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisMetadataDao
 import com.amaze.fileutilities.home_page.database.Trial
 import com.amaze.fileutilities.home_page.database.TrialValidatorDao
 import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
@@ -98,6 +102,7 @@ class FilesViewModel(val applicationContext: Application) :
     AndroidViewModel(applicationContext) {
 
     var isImageFeaturesAnalysing = true
+    var isSimilarImagesAnalysing = true
     var isImageBlurAnalysing = true
     var isImageLowLightAnalysing = true
     var isImageMemesAnalysing = true
@@ -197,7 +202,7 @@ class FilesViewModel(val applicationContext: Application) :
                 )
                 val db = AppDatabase.getInstance(applicationContext)
                 val dao = db.pathPreferencesDao()
-                if (migrationPref < PathPreferences.MIGRATION_PREF_MAP[it] ?: 1) {
+                if (migrationPref < (PathPreferences.MIGRATION_PREF_MAP[it] ?: 1)) {
                     PathPreferences.deleteAnalysisData(
                         dao.findByFeature(it),
                         WeakReference(applicationContext)
@@ -603,6 +608,224 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
+    fun analyseSimilarImages(
+        mediaFileInfoList: List<MediaFileInfo>,
+        pathPreferencesList: List<PathPreferences>
+    ) {
+        if (!PathPreferences.isEnabled(
+                applicationContext.getAppCommonSharedPreferences(),
+                PathPreferences.FEATURE_ANALYSIS_SIMILAR_IMAGES
+            )
+        ) {
+            log.info("analyse similar images not enabled")
+            return
+        }
+        viewModelScope.launch(Dispatchers.Default) {
+            val dao = AppDatabase.getInstance(applicationContext)
+                .similarImagesAnalysisMetadataDao()
+            val similarImagesAnalysisDao =
+                AppDatabase.getInstance(applicationContext).similarImagesAnalysisDao()
+            isSimilarImagesAnalysing = true
+            val filterList = mediaFileInfoList.filter {
+                val pathPrefsList = pathPreferencesList.filter { pref ->
+                    pref.feature == PathPreferences
+                        .FEATURE_ANALYSIS_SIMILAR_IMAGES
+                }
+                Utils.containsInPreferences(it.path, pathPrefsList, true)
+            }
+            if (isSimilarImagesAnalysing) {
+                val metadataCount = dao.getAllCount()
+                if (filterList.size != metadataCount) {
+                    var imagesProcessed = 0
+                    filterList.forEach {
+                        mediaFileInfo ->
+                        if (isSimilarImagesAnalysing &&
+                            dao.findByPath(mediaFileInfo.path) == null
+                        ) {
+                            if (imagesProcessed++ > 5000) {
+                                // hard limit in a single run
+                                return@forEach
+                            }
+                            val histogramPeaks = ImgUtils
+                                .getHistogramChannelsWithPeaks(mediaFileInfo.path)
+                            histogramPeaks?.let {
+                                dao.insert(
+                                    SimilarImagesAnalysisMetadata(
+                                        mediaFileInfo.getParentPath(),
+                                        mediaFileInfo.path,
+                                        it[0], it[1], it[2], ImgUtils.DATAPOINTS,
+                                        ImgUtils.THRESHOLD
+                                    )
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    filterList.forEach {
+                        if (isSimilarImagesAnalysing) {
+                            val savedInfo = dao.findByPath(it.path)
+                            if (savedInfo != null && !savedInfo.isAnalysed) {
+                                analyseHistogramForMatch(similarImagesAnalysisDao, dao, savedInfo)
+                            }
+                        }
+                    }
+                }
+            }
+            isSimilarImagesAnalysing = false
+        }
+    }
+
+    private fun analyseHistogramForMatch(
+        similarImagesAnalysisDao: SimilarImagesAnalysisDao,
+        similarAnalysisMetadataDao:
+            SimilarImagesAnalysisMetadataDao,
+        analysisMetadata: SimilarImagesAnalysisMetadata
+    ) {
+        val parentFiles = similarAnalysisMetadataDao
+            .findAllByParentPath(analysisMetadata.parentPath)
+        if (parentFiles.size > 1) {
+            log.info(
+                "analysing image with parent files {} path at {}", parentFiles.size,
+                analysisMetadata.filePath
+            )
+            // normalize channels
+            val normalizedBlueMap = mutableMapOf<Int, Int>()
+            val normalizedGreenMap = mutableMapOf<Int, Int>()
+            val normalizedRedMap = mutableMapOf<Int, Int>()
+            analysisMetadata.blueChannel.forEach {
+                normalizedBlueMap[
+                    it.first /
+                        ImgUtils.PIXEL_POSITION_NORMALIZE_FACTOR
+                ] =
+                    it.second / ImgUtils.PIXEL_INTENSITY_NORMALIZE_FACTOR
+            }
+            analysisMetadata.greenChannel.forEach {
+                normalizedGreenMap[
+                    it.first /
+                        ImgUtils.PIXEL_POSITION_NORMALIZE_FACTOR
+                ] =
+                    it.second / ImgUtils.PIXEL_INTENSITY_NORMALIZE_FACTOR
+            }
+            analysisMetadata.redChannel.forEach {
+                normalizedRedMap[
+                    it.first /
+                        ImgUtils.PIXEL_POSITION_NORMALIZE_FACTOR
+                ] =
+                    it.second / ImgUtils.PIXEL_INTENSITY_NORMALIZE_FACTOR
+            }
+            val histChecksum = ImgUtils.getHistogramChecksum(
+                normalizedBlueMap, normalizedGreenMap,
+                normalizedRedMap, analysisMetadata.parentPath
+            )
+            var matchedDatapointsBlue = 0
+            var matchedDatapointsGreen = 0
+            var matchedDatapointsRed = 0
+
+            val similarFilePaths = mutableSetOf<String>()
+            val similarFilesMetadata = mutableSetOf<SimilarImagesAnalysisMetadata>()
+            val existingAnalysedData =
+                similarImagesAnalysisDao.findByHistogramChecksum(histChecksum)
+            if (existingAnalysedData != null) {
+                similarFilePaths.addAll(existingAnalysedData.files)
+            }
+
+            for (currentFile in parentFiles) {
+                if (currentFile.filePath != analysisMetadata.filePath && !currentFile.isAnalysed) {
+                    currentFile.blueChannel.forEach {
+                        if (normalizedBlueMap[
+                            it.first /
+                                ImgUtils.PIXEL_POSITION_NORMALIZE_FACTOR
+                        ]
+                            == it.second /
+                            ImgUtils.PIXEL_INTENSITY_NORMALIZE_FACTOR
+                        ) {
+                            matchedDatapointsBlue++
+                        }
+                        if (matchedDatapointsBlue
+                            >= ImgUtils.ASSERT_DATAPOINTS
+                        ) {
+                            log.info(
+                                "matched datapoints for blue channel for path {} and {}",
+                                analysisMetadata.filePath, currentFile.filePath
+                            )
+                            return@forEach
+                        }
+                    }
+                    currentFile.greenChannel.forEach {
+                        if (normalizedGreenMap[
+                            it.first /
+                                ImgUtils.PIXEL_POSITION_NORMALIZE_FACTOR
+                        ]
+                            == it.second /
+                            ImgUtils.PIXEL_INTENSITY_NORMALIZE_FACTOR
+                        ) {
+                            matchedDatapointsGreen++
+                        }
+                        if (matchedDatapointsGreen
+                            >= ImgUtils.ASSERT_DATAPOINTS
+                        ) {
+                            log.info(
+                                "matched datapoints for green channel for path {} and {}",
+                                analysisMetadata.filePath, currentFile.filePath
+                            )
+                            return@forEach
+                        }
+                    }
+                    currentFile.redChannel.forEach {
+                        if (normalizedRedMap[
+                            it.first /
+                                ImgUtils.PIXEL_POSITION_NORMALIZE_FACTOR
+                        ]
+                            == it.second /
+                            ImgUtils.PIXEL_INTENSITY_NORMALIZE_FACTOR
+                        ) {
+                            matchedDatapointsRed++
+                        }
+                        if (matchedDatapointsRed
+                            >= ImgUtils.ASSERT_DATAPOINTS
+                        ) {
+                            log.info(
+                                "matched datapoints for red channel for path {} and {}",
+                                analysisMetadata.filePath, currentFile.filePath
+                            )
+                            return@forEach
+                        }
+                    }
+                    if (matchedDatapointsBlue >= ImgUtils.ASSERT_DATAPOINTS &&
+                        matchedDatapointsGreen
+                        >= ImgUtils.ASSERT_DATAPOINTS &&
+                        matchedDatapointsRed
+                        >= ImgUtils.ASSERT_DATAPOINTS
+                    ) {
+                        log.info(
+                            "matched datapoints for all channels for path {} and {}",
+                            analysisMetadata.filePath, currentFile.filePath
+                        )
+                        similarFilePaths.add(currentFile.filePath)
+                        similarFilesMetadata.add(currentFile)
+                    }
+                    matchedDatapointsBlue = 0
+                    matchedDatapointsGreen = 0
+                    matchedDatapointsRed = 0
+                }
+            }
+            if (similarFilePaths.size >= 1) {
+                similarFilesMetadata.add(analysisMetadata)
+                similarFilePaths.add(analysisMetadata.filePath)
+                similarImagesAnalysisDao.insert(
+                    SimilarImagesAnalysis(
+                        histChecksum,
+                        similarFilePaths
+                    )
+                )
+            }
+            similarFilesMetadata.forEach {
+                it.isAnalysed = true
+                similarAnalysisMetadataDao.insert(it)
+            }
+        }
+    }
+
     fun analyseInternalStorage(deepSearch: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             val dao = AppDatabase.getInstance(applicationContext).internalStorageAnalysisDao()
@@ -898,7 +1121,7 @@ class FilesViewModel(val applicationContext: Application) :
                 socket.close()
                 emit(true)
             } catch (ex: IOException) {
-                log.warn("failed to ping for connection", ex)
+                log.info("failed to ping for connection", ex)
                 emit(applicationContext.isNetworkAvailable())
             }
         }
@@ -1376,7 +1599,7 @@ class FilesViewModel(val applicationContext: Application) :
                 allMediaFilesPair?.filter {
                     it.path.endsWith(".apk")
                 }?.map {
-                    it.extraInfo?.mediaType = MediaFileInfo.MEDIA_TYPE_APK
+                    it.extraInfo?.mediaType = MediaFileInfo.MEDIA_TYPE_UNKNOWN
                     it
                 }?.let {
                     apksLiveData?.postValue(ArrayList(it))
@@ -2086,7 +2309,10 @@ class FilesViewModel(val applicationContext: Application) :
                 val mediaFiles = ArrayList<MediaFileInfo>()
                 pair.filter {
                     mediaFileInfo ->
-                    arrayListOf(".pdf", ".epub", ".docx").stream()
+                    arrayListOf(
+                        ".pdf", ".epub", ".docx", ".xps", ".oxps",
+                        ".cbz", ".fb2", ".mobi"
+                    ).stream()
                         .anyMatch { mediaFileInfo.path.endsWith(it) }
                 }.forEach {
                     mediaFileInfo ->

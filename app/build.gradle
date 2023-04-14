@@ -57,10 +57,10 @@ android {
 
     defaultConfig {
         applicationId "com.amaze.fileutilities"
-        minSdk 19
+        minSdk 21
         targetSdk 31
-        versionCode 77
-        versionName "1.77"
+        versionCode 78
+        versionName "1.78"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -123,6 +123,12 @@ android {
             buildConfigField "String", "API_REQ_STICKER_PACK_TOKEN", "new String()"
             buildConfigField "String", "API_REQ_TRIAL_AUTH_TOKEN", "new String()"
             buildConfigField "String", "SALT_DEVICE_ID", "new String()"
+        }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
         }
     }
 
@@ -251,9 +257,6 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment-ktx:2.5.2'
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.2'
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
-//    implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
-    implementation 'com.github.barteksc:android-pdf-viewer:3.2.0-beta.1'
-    implementation 'com.github.VishalNehra:FolioReader-Android:0.5.8'
     implementation 'org.zwobble.mammoth:mammoth:1.4.2'
     implementation 'me.zhanghai.android.fastscroll:library:1.1.8'
     implementation "ch.acra:acra-core:5.7.0"
@@ -272,7 +275,7 @@ dependencies {
     implementation 'com.github.lincollincol:amplituda:2.1.6'
     //Simple library show
     implementation 'com.mikepenz:aboutlibraries:10.0.0'
-    implementation 'com.quickbirdstudios:opencv:4.5.3.0'
+    implementation 'com.github.TeamAmaze:opencv-android:v1.0.0'
     // https://mvnrepository.com/artifact/net.sourceforge.tess4j/tess4j
 //    implementation 'com.rmtheis:tess-two:9.1.0'
     implementation "androidx.room:room-runtime:$roomVersion"
@@ -297,6 +300,7 @@ dependencies {
     api "com.caverock:androidsvg:1.4"
     implementation 'com.burhanrashid52:photoeditor:2.0.0'
     implementation 'com.github.CanHub:Android-Image-Cropper:4.3.1'
+    api 'com.github.TeamAmaze:mupdf-android-viewer:1.0.20'
 
     //Detect memory leaks
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'

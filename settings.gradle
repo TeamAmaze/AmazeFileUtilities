@@ -6,6 +6,10 @@ dependencyResolutionManagement {
         jcenter() // Warning: this repository is going to shut down soon
         maven { url "https://jitpack.io" }
         maven { url "https://jcenter.bintray.com" }
+        maven {
+            url 'http://maven.ghostscript.com'
+            allowInsecureProtocol = true
+        }
     }
 }
 rootProject.name = "Amaze File Utilities"

@@ -23,34 +23,40 @@ package com.amaze.fileutilities.home_page.database
 import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
- * While fetching and processing, be sure to validate that file exists
+ * While processing similar images
  */
 @Keep
-@Entity(indices = [Index(value = ["sha256_checksum"], unique = true)])
-data class InternalStorageAnalysis(
+@Entity(indices = [Index(value = ["file_path", "parent_path"], unique = true)])
+data class SimilarImagesAnalysisMetadata(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
     val uid: Int,
-    @ColumnInfo(name = "sha256_checksum") val checksum: String,
-    @ColumnInfo(name = "files_path") var files: List<String>,
-    @ColumnInfo(name = "is_empty") val isEmpty: Boolean,
-    @ColumnInfo(name = "is_junk") val isJunk: Boolean,
-    @ColumnInfo(name = "is_directory") val isDirectory: Boolean,
-    @ColumnInfo(name = "is_mediastore") val isMediaStore: Boolean,
-    @ColumnInfo(name = "depth") val depth: Int
+    @ColumnInfo(name = "parent_path") val parentPath: String,
+    @ColumnInfo(name = "file_path") val filePath: String,
+    @ColumnInfo(name = "blue_channel") val blueChannel: List<Pair<Int, Int>>,
+    @ColumnInfo(name = "green_channel") val greenChannel: List<Pair<Int, Int>>,
+    @ColumnInfo(name = "red_channel") val redChannel: List<Pair<Int, Int>>,
+    @ColumnInfo(name = "datapoints") val datapoints: Int,
+    @ColumnInfo(name = "threshold") val threshold: Int,
+    @ColumnInfo(name = "is_analysed") var isAnalysed: Boolean
 ) {
+    @Ignore
     constructor(
-        checksum: String,
-        filesPath: List<String>,
-        isEmpty: Boolean,
-        isJunk: Boolean,
-        isDirectory: Boolean,
-        isMediaStore: Boolean,
-        depth: Int
+        parentPath: String,
+        filePath: String,
+        blueChannel: List<Pair<Int, Int>>,
+        greenChannel: List<Pair<Int, Int>>,
+        redChannel: List<Pair<Int, Int>>,
+        datapoints: Int,
+        threshold: Int
     ) :
-        this(0, checksum, filesPath, isEmpty, isJunk, isDirectory, isMediaStore, depth)
+        this(
+            0, parentPath, filePath, blueChannel, greenChannel, redChannel, datapoints,
+            threshold, false
+        )
 }

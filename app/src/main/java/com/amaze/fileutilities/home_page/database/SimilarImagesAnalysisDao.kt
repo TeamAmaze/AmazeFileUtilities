@@ -18,14 +18,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.amaze.fileutilities.pdf_viewer
+package com.amaze.fileutilities.home_page.database
 
-import android.net.Uri
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
-@Parcelize
-data class LocalPdfModel(
-    var uri: Uri,
-    val mimeType: String?
-) : Parcelable
+@Dao
+interface SimilarImagesAnalysisDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(imagesAnalysis: SimilarImagesAnalysis)
+
+    @Query("SELECT * FROM similarimagesanalysis WHERE histogram_checksum=:histogramChecksum")
+    fun findByHistogramChecksum(histogramChecksum: String): SimilarImagesAnalysis?
+
+    @Query("SELECT * FROM similarimagesanalysis")
+    fun getAll(): List<SimilarImagesAnalysis>
+
+    @Delete
+    fun delete(imagesAnalysis: SimilarImagesAnalysis)
+
+    @Query("DELETE FROM similarimagesanalysis")
+    fun deleteAll()
+}

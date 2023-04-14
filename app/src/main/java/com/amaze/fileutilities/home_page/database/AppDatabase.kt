@@ -33,9 +33,11 @@ import com.amaze.fileutilities.utilis.DbConverters
     entities = [
         ImageAnalysis::class, InternalStorageAnalysis::class, PathPreferences::class,
         BlurAnalysis::class, LowLightAnalysis::class, MemeAnalysis::class, VideoPlayerState::class,
-        Trial::class, Lyrics::class, InstalledApps::class
+        Trial::class, Lyrics::class, InstalledApps::class, SimilarImagesAnalysis::class,
+        SimilarImagesAnalysisMetadata::class
     ],
-    version = 3
+    exportSchema = true,
+    version = 4
 )
 @TypeConverters(DbConverters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -43,6 +45,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun blurAnalysisDao(): BlurAnalysisDao
     abstract fun memesAnalysisDao(): MemeAnalysisDao
     abstract fun lowLightAnalysisDao(): LowLightAnalysisDao
+    abstract fun similarImagesAnalysisDao(): SimilarImagesAnalysisDao
+    abstract fun similarImagesAnalysisMetadataDao(): SimilarImagesAnalysisMetadataDao
     abstract fun internalStorageAnalysisDao(): InternalStorageAnalysisDao
     abstract fun pathPreferencesDao(): PathPreferencesDao
     abstract fun videoPlayerStateDao(): VideoPlayerStateDao
@@ -59,7 +63,7 @@ abstract class AppDatabase : RoomDatabase() {
                     applicationContext,
                     AppDatabase::class.java, "amaze-utils"
                 ).allowMainThreadQueries()
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                     .build()
             }
             return appDatabase!!
@@ -89,6 +93,34 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL(
                     "CREATE UNIQUE INDEX IF NOT EXISTS `index_InstalledApps_package_name`" +
                         " ON `InstalledApps` (`package_name`)"
+                )
+            }
+        }
+
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `SimilarImagesAnalysis` " +
+                        "(`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                        " `histogram_checksum` TEXT NOT NULL, `files_path` TEXT NOT NULL)"
+                )
+                database.execSQL(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS " +
+                        "`index_SimilarImagesAnalysis_histogram_checksum` " +
+                        "ON `SimilarImagesAnalysis` (`histogram_checksum`)"
+                )
+                database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `SimilarImagesAnalysisMetadata` (`_id` " +
+                        "INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `parent_path` " +
+                        "TEXT NOT NULL, `file_path` TEXT NOT NULL, `blue_channel` " +
+                        "TEXT NOT NULL, `green_channel` TEXT NOT NULL, `red_channel` " +
+                        "TEXT NOT NULL, `datapoints` INTEGER NOT NULL, `threshold` " +
+                        "INTEGER NOT NULL, `is_analysed` INTEGER NOT NULL)"
+                )
+                database.execSQL(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS " +
+                        "`index_SimilarImagesAnalysisMetadata_file_path_parent_path` " +
+                        "ON `SimilarImagesAnalysisMetadata` (`file_path`, `parent_path`)"
                 )
             }
         }

@@ -60,10 +60,12 @@ data class PathPreferences(
         const val FEATURE_ANALYSIS_LOW_LIGHT = 8
         const val FEATURE_ANALYSIS_WHATSAPP = 9
         const val FEATURE_ANALYSIS_LARGE_FILES = 10
+        const val FEATURE_ANALYSIS_SIMILAR_IMAGES = 11
 
         val ANALYSE_FEATURES_LIST = arrayListOf(
             FEATURE_ANALYSIS_MEME, FEATURE_ANALYSIS_BLUR,
-            FEATURE_ANALYSIS_IMAGE_FEATURES, FEATURE_ANALYSIS_LOW_LIGHT
+            FEATURE_ANALYSIS_IMAGE_FEATURES, FEATURE_ANALYSIS_LOW_LIGHT,
+            FEATURE_ANALYSIS_SIMILAR_IMAGES
         )
 
         val MIGRATION_PREF_MAP = mapOf(
@@ -76,6 +78,10 @@ data class PathPreferences(
             Pair(
                 FEATURE_ANALYSIS_LOW_LIGHT,
                 PreferencesConstants.VAL_MIGRATION_FEATURE_ANALYSIS_LOW_LIGHT
+            ),
+            Pair(
+                FEATURE_ANALYSIS_SIMILAR_IMAGES,
+                PreferencesConstants.VAL_MIGRATION_FEATURE_ANALYSIS_SIMILAR_IMAGES
             )
         )
 
@@ -101,23 +107,30 @@ data class PathPreferences(
             contextRef.get()?.let {
                 context ->
                 val db = AppDatabase.getInstance(context)
-                val analysisDao = db.analysisDao()
-                val memesDao = db.memesAnalysisDao()
-                val blurDao = db.blurAnalysisDao()
-                val lowLightDao = db.lowLightAnalysisDao()
                 pathPreferences.forEach {
                     when (it.feature) {
                         FEATURE_ANALYSIS_IMAGE_FEATURES -> {
+                            val analysisDao = db.analysisDao()
                             analysisDao.deleteByPathContains(it.path)
                         }
                         FEATURE_ANALYSIS_BLUR -> {
+                            val blurDao = db.blurAnalysisDao()
                             blurDao.deleteByPathContains(it.path)
                         }
                         FEATURE_ANALYSIS_MEME -> {
+                            val memesDao = db.memesAnalysisDao()
                             memesDao.deleteByPathContains(it.path)
                         }
                         FEATURE_ANALYSIS_LOW_LIGHT -> {
+                            val lowLightDao = db.lowLightAnalysisDao()
                             lowLightDao.deleteByPathContains(it.path)
+                        }
+                        FEATURE_ANALYSIS_SIMILAR_IMAGES -> {
+                            val similarImagesAnalysisDao = db.similarImagesAnalysisDao()
+                            val similarImagesAnalysisMetadataDao =
+                                db.similarImagesAnalysisMetadataDao()
+                            similarImagesAnalysisMetadataDao.deleteByPathContains(it.path)
+                            similarImagesAnalysisDao.deleteAll()
                         }
                     }
                 }

@@ -6,7 +6,7 @@
     <!-- App info shown in about screen -->
     <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <string name="team_amaze" translatable="false">Team Amaze</string>
-    <string name="app_version" translatable="false">v1.77</string>
+    <string name="app_version" translatable="false">v1.78</string>
     <!-- Image viewer activity label -->
     <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
@@ -941,4 +941,10 @@
     <string name="press_again">Press again to exit</string>
     <!-- highest data usage apps in analysis fragment -->
     <string name="network_intensive_apps">Network intensive apps</string>
+    <!-- histogram in image viewer -->
+    <string name="histogram">Histogram</string>
+    <!-- similar images in analysis fragment -->
+    <string name="similar_images">Similar Images</string>
+    <!-- similar images summary in analysis fragment -->
+    <string name="similar_images_hint">Images that have similar colors</string>
 </resources>

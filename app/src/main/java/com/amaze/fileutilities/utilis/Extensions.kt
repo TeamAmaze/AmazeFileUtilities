@@ -54,6 +54,10 @@ import com.amaze.fileutilities.home_page.database.LowLightAnalysis
 import com.amaze.fileutilities.home_page.database.LowLightAnalysisDao
 import com.amaze.fileutilities.home_page.database.MemeAnalysis
 import com.amaze.fileutilities.home_page.database.MemeAnalysisDao
+import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysis
+import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisDao
+import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisMetadata
+import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisMetadataDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -74,21 +78,35 @@ fun Uri.getSiblingUriFiles(): ArrayList<Uri>? {
             if (currentPath.exists()) {
                 val parent = currentPath.parentFile
                 var siblings: ArrayList<Uri>? = null
-                parent.listFiles()?.run {
-                    if (this.isNotEmpty()) {
-                        siblings = ArrayList()
-                        for (currentSibling in this) {
-                            siblings!!.add(
-                                Uri.parse(
-                                    if (!currentSibling.path
-                                        .startsWith("/")
-                                    )
-                                        "/${currentSibling.path}"
-                                    else currentSibling.path
-                                )
-                            )
+                if (parent != null) {
+                    val filesList = parent.listFiles()
+                    if (filesList != null) {
+                        if (filesList.size < 500) {
+                            parent.listFiles()?.sortBy { it.lastModified() }
+                            parent.listFiles()?.run {
+                                if (this.isNotEmpty()) {
+                                    siblings = ArrayList()
+                                    for (currentSibling in this) {
+                                        siblings!!.add(
+                                            Uri.parse(
+                                                if (!currentSibling.path
+                                                    .startsWith("/")
+                                                )
+                                                    "/${currentSibling.path}"
+                                                else currentSibling.path
+                                            )
+                                        )
+                                    }
+                                }
+                            }
+                        } else {
+                            siblings = arrayListOf(this)
                         }
+                    } else {
+                        siblings = arrayListOf(this)
                     }
+                } else {
+                    siblings = arrayListOf(this)
                 }
                 return siblings
             }
@@ -415,13 +433,49 @@ fun LowLightAnalysis.invalidate(dao: LowLightAnalysisDao): Boolean {
     }
 }
 
-fun InternalStorageAnalysis.invalidate(dao: InternalStorageAnalysisDao): Boolean {
-    this.files.forEach {
-        val file = File(it)
-        if (!file.exists()) {
-            dao.delete(this)
-            return false
+fun SimilarImagesAnalysisMetadata.invalidate(dao: SimilarImagesAnalysisMetadataDao): Boolean {
+    val file = File(filePath)
+    val parentFile = File(parentPath)
+    return if (!parentFile.exists() || !file.exists()) {
+        dao.delete(this)
+        false
+    } else {
+        true
+    }
+}
+
+fun SimilarImagesAnalysis.invalidate(dao: SimilarImagesAnalysisDao): Boolean {
+    val validFiles = mutableSetOf<String>()
+    for (imageFilePath in files) {
+        val imageFile = File(imageFilePath)
+        if (imageFile.exists()) {
+            validFiles.add(imageFilePath)
         }
+    }
+    if (validFiles.size <= 1) {
+        dao.delete(this)
+        return false
+    } else if (validFiles.size != files.size) {
+        this.files = validFiles
+        dao.insert(this)
+    }
+    return true
+}
+
+fun InternalStorageAnalysis.invalidate(dao: InternalStorageAnalysisDao): Boolean {
+    val validFiles = mutableListOf<String>()
+    for (imageFilePath in files) {
+        val imageFile = File(imageFilePath)
+        if (imageFile.exists()) {
+            validFiles.add(imageFilePath)
+        }
+    }
+    if (validFiles.size <= 1) {
+        dao.delete(this)
+        return false
+    } else if (validFiles.size != files.size) {
+        this.files = validFiles
+        dao.insert(this)
     }
     return true
 }

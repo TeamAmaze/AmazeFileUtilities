@@ -93,6 +93,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             val memeAnalysisDao = appDatabase.memesAnalysisDao()
             val pathPreferencesDao = appDatabase.pathPreferencesDao()
             val internalStorageDao = appDatabase.internalStorageAnalysisDao()
+            val similarImagesAnalysisDao = appDatabase.similarImagesAnalysisDao()
             val installedAppsDao = AppDatabase.getInstance(requireContext()).installedAppsDao()
 
             analyseViewModel.getBlurImages(blurAnalysisDao).observe(viewLifecycleOwner) {
@@ -188,6 +189,34 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             }
             groupPicPreview.invalidateProgress(filesViewModel.isImageFeaturesAnalysing) {
                 filesViewModel.isImageFeaturesAnalysing = false
+            }
+
+            analyseViewModel.getSimilarImages(similarImagesAnalysisDao)
+                .observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        similarImagesPreview.loadPreviews(it) {
+                            val checksumHash: HashMap<String, Boolean> = HashMap()
+                            cleanButtonClick(
+                                it.filter {
+                                    mediaFile ->
+                                    val fileChecksum = mediaFile.extraInfo?.extraMetaData?.checksum
+                                    if (fileChecksum == null ||
+                                        checksumHash[fileChecksum] == true
+                                    ) {
+                                        true
+                                    } else {
+                                        checksumHash[fileChecksum] = true
+                                        false
+                                    }
+                                }
+                            ) {
+                                analyseViewModel.similarImagesLiveData = null
+                            }
+                        }
+                    }
+                }
+            similarImagesPreview.invalidateProgress(filesViewModel.isSimilarImagesAnalysing) {
+                filesViewModel.isSimilarImagesAnalysing = false
             }
 
             val duplicatePref = prefs.getInt(
@@ -359,9 +388,15 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 filesViewModel.getOldScreenshots(pathPreferencesDao)
                     .observe(viewLifecycleOwner) {
                         oldScreenshots ->
-                        oldScreenshotsPreview.invalidateProgress(true, null)
+                        oldScreenshotsPreview.invalidateProgress(
+                            true,
+                            null
+                        )
                         oldScreenshots?.let {
-                            oldScreenshotsPreview.invalidateProgress(false, null)
+                            oldScreenshotsPreview.invalidateProgress(
+                                false,
+                                null
+                            )
                             oldScreenshotsPreview.loadPreviews(oldScreenshots) {
                                 cleanButtonClick(it) {
                                     filesViewModel.oldScreenshotsLiveData = null
@@ -721,6 +756,11 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     PathPreferences.FEATURE_ANALYSIS_IMAGE_FEATURES
                 ) && !BuildConfig.IS_VERSION_FDROID
             ) View.VISIBLE else View.GONE
+            similarImagesPreview.visibility = if (PathPreferences.isEnabled(
+                    sharedPrefs,
+                    PathPreferences.FEATURE_ANALYSIS_SIMILAR_IMAGES
+                )
+            ) View.VISIBLE else View.GONE
 
             largeDownloadPreview.visibility = if (PathPreferences.isEnabled(
                     sharedPrefs,
@@ -802,6 +842,12 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             groupPicPreview.setOnClickListener {
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_GROUP_PIC,
+                    this@AnalyseFragment
+                )
+            }
+            similarImagesPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_SIMILAR_IMAGES,
                     this@AnalyseFragment
                 )
             }
