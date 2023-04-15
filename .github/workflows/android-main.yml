@@ -47,9 +47,11 @@ jobs:
       - name: Publish on Telegram
         run: |
           COMMIT_COUNT=$(git rev-list --count ${GITHUB_REF})
+          working_dir=$PWD
           cd app/build/outputs/apk/fdroid/debug
           7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on app-fdroid-arm64-v8a-debug.7z app-fdroid-arm64-v8a-debug.apk
           7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on app-fdroid-armeabi-v7a-debug.7z app-fdroid-armeabi-v7a-debug.apk
+          cd $working_dir
           cd app/build/outputs/apk/play/debug
           7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on app-play-arm64-v8a-debug.7z app-play-arm64-v8a-debug.apk
           7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on app-play-armeabi-v7a-debug.7z app-play-armeabi-v7a-debug.apk
