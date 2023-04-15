@@ -15,40 +15,50 @@ jobs:
     name: Check spotless
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: "temurin"
           java-version: 11
-          cache: 'gradle'
       - name: Check formatting using spotless
-        run: ./gradlew spotlessCheck
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: spotlessCheck
   build:
     name: Build debug
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Set up JDK 11
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: "temurin"
           java-version: 11
-          cache: 'gradle'
       - name: Build with Gradle
-        run: |
-          ./gradlew assembleDebug
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: assembledebug
         env:
           TZ: UTC
       - name: Publish on Telegram
         run: |
           COMMIT_COUNT=$(git rev-list --count ${GITHUB_REF})
-          cd app/build/outputs/apk/debug
-          7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on app-arm64-v8a-debug.7z app-arm64-v8a-debug.apk
-          7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on app-armeabi-v7a-debug.7z app-armeabi-v7a-debug.apk
-          cp app-arm64-v8a-debug.7z amaze-utils-arm64-v8a-v0.1-$(echo $COMMIT_COUNT).7z
-          cp app-armeabi-v7a-debug.7z amaze-utils-armeabi-v7a-v0.1-$(echo $COMMIT_COUNT).7z
-          echo $(curl -v -F "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" --header "Content-Type: multipart/form-data" -F document=@amaze-utils-arm64-v8a-v0.1-$(echo $COMMIT_COUNT).7z https://api.telegram.org/${{ secrets.AMAZE_BOT_ID }}:${{ secrets.TELEGRAM_INTEGRATION_KEY }}/sendDocument)
-          echo $(curl -v -F "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" --header "Content-Type: multipart/form-data" -F document=@amaze-utils-armeabi-v7a-v0.1-$(echo $COMMIT_COUNT).7z https://api.telegram.org/${{ secrets.AMAZE_BOT_ID }}:${{ secrets.TELEGRAM_INTEGRATION_KEY }}/sendDocument)
+          working_dir=$PWD
+          cd app/build/outputs/apk/fdroid/debug
+          7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on app-fdroid-arm64-v8a-debug.7z app-fdroid-arm64-v8a-debug.apk
+          7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on app-fdroid-armeabi-v7a-debug.7z app-fdroid-armeabi-v7a-debug.apk
+          cp app-fdroid-arm64-v8a-debug.7z amaze-utils-fdroid-arm64-v8a-v0.1-$(echo $COMMIT_COUNT).7z
+          cp app-fdroid-armeabi-v7a-debug.7z amaze-utils-fdroid-armeabi-v7a-v0.1-$(echo $COMMIT_COUNT).7z
+          echo $(curl -v -F "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" --header "Content-Type: multipart/form-data" -F document=@amaze-utils-fdroid-arm64-v8a-v0.1-$(echo $COMMIT_COUNT).7z https://api.telegram.org/${{ secrets.AMAZE_BOT_ID }}:${{ secrets.TELEGRAM_INTEGRATION_KEY }}/sendDocument)
+          echo $(curl -v -F "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" --header "Content-Type: multipart/form-data" -F document=@amaze-utils-fdroid-armeabi-v7a-v0.1-$(echo $COMMIT_COUNT).7z https://api.telegram.org/${{ secrets.AMAZE_BOT_ID }}:${{ secrets.TELEGRAM_INTEGRATION_KEY }}/sendDocument)
+          cd $working_dir
+          cd app/build/outputs/apk/play/debug
+          7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on app-play-arm64-v8a-debug.7z app-play-arm64-v8a-debug.apk
+          7z a -t7z -m0=lzma -mx=9 -mfb=64 -md=32m -ms=on app-play-armeabi-v7a-debug.7z app-play-armeabi-v7a-debug.apk
+          cp app-play-arm64-v8a-debug.7z amaze-utils-play-arm64-v8a-v0.1-$(echo $COMMIT_COUNT).7z
+          cp app-play-armeabi-v7a-debug.7z amaze-utils-play-armeabi-v7a-v0.1-$(echo $COMMIT_COUNT).7z
+          echo $(curl -v -F "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" --header "Content-Type: multipart/form-data" -F document=@amaze-utils-play-arm64-v8a-v0.1-$(echo $COMMIT_COUNT).7z https://api.telegram.org/${{ secrets.AMAZE_BOT_ID }}:${{ secrets.TELEGRAM_INTEGRATION_KEY }}/sendDocument)
+          echo $(curl -v -F "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" --header "Content-Type: multipart/form-data" -F document=@amaze-utils-play-armeabi-v7a-v0.1-$(echo $COMMIT_COUNT).7z https://api.telegram.org/${{ secrets.AMAZE_BOT_ID }}:${{ secrets.TELEGRAM_INTEGRATION_KEY }}/sendDocument)
