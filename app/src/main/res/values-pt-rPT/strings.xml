@@ -648,7 +648,7 @@
     <!-- Welcome screen license agreement page -->
     <string name="privacy_title">Cuidamos da sua privacidade!</string>
     <!-- Welcome screen license agreement page -->
-    <string name="privacy_summary">Não gosta de anúncios? Nós também não, valorizamos seus dados tanto quanto você.\n Garantimos que não coletamos nenhuma de suas informações privadas.\nNão dizemos isso, nosso histórico sim.\nSomos uma empresa grupo de desenvolvedores de código aberto e gerenciam o Amaze File Manager há cerca de 8 anos.\n\nAguardamos sua assinatura.</string>
+    <string name="privacy_summary">Não gosta de anúncios? Nós também não, valorizamos seus dados tanto quanto você.\n Garantimos que não coletamos nenhuma de suas informações privadas.\nNão dizemos isso, nosso histórico sim.\nSomos uma empresa grupo de desenvolvedores de código aberto e gerenciam o Amaze File Manager há cerca de 8 anos.\n\nAguardamos sua assinatura.    </string>
     <!-- Subscription dialog failed to fetch subscriptions -->
     <string name="error_fetching_google_play_product_list">Erro ao buscar a lista de produtos do Google Play.</string>
     <!-- Welcome screen done with the wizard -->
@@ -882,7 +882,17 @@
     <!-- ram usage in analysis -->
     <string name="ram_usage">Uso de memória (RAM)</string>
     <!-- ram usage in analysis -->
-    <string name="ram_usage_title">%s available | %s total</string>
+    <string name="ram_usage_title">%s disponível | %s total</string>
     <!-- clearing ram in analysis -->
-    <string name="ram_usage_clear">Closed background processes</string>
+    <string name="ram_usage_clear">Processos de fundo fechados</string>
+    <!-- back button again to exit on main screen -->
+    <string name="press_again">Pressione novamente para sair</string>
+    <!-- highest data usage apps in analysis fragment -->
+    <string name="network_intensive_apps">Aplicações intensivas de rede</string>
+    <!-- histogram in image viewer -->
+    <string name="histogram">Histograma</string>
+    <!-- similar images in analysis fragment -->
+    <string name="similar_images">Similar Images</string>
+    <!-- similar images summary in analysis fragment -->
+    <string name="similar_images_hint">Images that have similar colors</string>
 </resources>
