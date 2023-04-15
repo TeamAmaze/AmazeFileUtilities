@@ -26,7 +26,7 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Headers
+import retrofit2.http.HeaderMap
 import retrofit2.http.POST
 import retrofit2.http.Query
 import retrofit2.http.Streaming
@@ -39,34 +39,27 @@ interface SubtitlesApi {
         const val API_SEARCH_SUBTITLES = "subtitles"
         const val API_DOWNLOAD_SUBTITLES = "download"
         const val API_LANGUAGE = "infos/languages"
-        private const val API_KEY = BuildConfig.OPENSUBTITLES_API_KEY
+        private val API_KEY = BuildConfig.OPENSUBTITLES_API_KEY
         private const val USER_AGENT = "AmazeFileUtils"
+        val HEADER_API_KEY_MAP = mapOf(
+            Pair("Api-Key", API_KEY),
+            Pair("User-Agent", USER_AGENT), Pair("Accept", "application/json")
+        )
     }
 
-    @Headers(value = ["Accept: application/json", "Api-Key: $API_KEY", "User-Agent: $USER_AGENT"])
     @GET(API_LANGUAGE)
-    fun getLanguageList(): Call<LanguageResult>?
+    fun getLanguageList(@HeaderMap headersMap: Map<String, String>): Call<LanguageResult>?
 
-    @Headers(
-        value = [
-            "Accept: application/json",
-            "Api-Key: $API_KEY", "User-Agent: $USER_AGENT"
-        ]
-    )
-    @GET("" + API_SEARCH_SUBTITLES)
+    @GET(API_SEARCH_SUBTITLES)
     fun getSearchResults(
+        @HeaderMap headersMap: Map<String, String>,
         @Query(value = "query") query: String,
         @Query(value = "languages") languages: String
     ): Call<SearchResultsResponse>?
 
-    @Headers(
-        value = [
-            "Accept: application/json",
-            "Content-type:application/json", "Api-Key: $API_KEY", "User-Agent: $USER_AGENT"
-        ]
-    )
-    @POST("" + API_DOWNLOAD_SUBTITLES)
+    @POST(API_DOWNLOAD_SUBTITLES)
     fun getDownloadLink(
+        @HeaderMap headersMap: Map<String, String>,
         @Body downloadLinkRequest: GetDownloadLinkRequest
     ): Call<GetDownloadLinkResponse>?
 

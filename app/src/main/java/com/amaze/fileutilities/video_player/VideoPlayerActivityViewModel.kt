@@ -91,7 +91,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
                 .client(Utils.getOkHttpClient())
                 .build()
             val service = retrofit.create(SubtitlesApi::class.java)
-            service.getLanguageList()?.execute()?.let {
+            service.getLanguageList(SubtitlesApi.HEADER_API_KEY_MAP)?.execute()?.let {
                 response ->
                 if (response.isSuccessful && response.body() != null) {
                     val languageResponse = response.body()!!
@@ -175,7 +175,10 @@ class VideoPlayerActivityViewModel : ViewModel() {
             val languageListRequestString = languageList.map { it.code }.filter { it.isNotEmpty() }
                 .joinToString(",")
 
-            service.getSearchResults(movieName, languageListRequestString)?.execute()?.let {
+            service.getSearchResults(
+                SubtitlesApi.HEADER_API_KEY_MAP, movieName,
+                languageListRequestString
+            )?.execute()?.let {
                 response ->
                 if (response.isSuccessful && response.body() != null) {
                     val searchResultsResponse = response.body()!!
@@ -312,6 +315,7 @@ class VideoPlayerActivityViewModel : ViewModel() {
             .build()
         val service = retrofit.create(SubtitlesApi::class.java)
         service.getDownloadLink(
+            SubtitlesApi.HEADER_API_KEY_MAP,
             SubtitlesApi.GetDownloadLinkRequest(
                 fileId
             )
