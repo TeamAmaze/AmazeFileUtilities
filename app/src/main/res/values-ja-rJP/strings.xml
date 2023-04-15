@@ -19,7 +19,7 @@
     <!-- Music player activity label -->
     <string name="amaze_audio_player">Amaze音楽プレイヤー</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Amaze PDF ビューアー</string>
+    <string name="pdf_viewer">Amaze Image Viewer</string>
     <!-- Epub activity label -->
     <string name="epub_viewer">Amaze Epub ビューアー</string>
     <!-- Docx viewer activity label -->
@@ -29,7 +29,7 @@
     <!-- Image viewer full screen intent label -->
     <string name="intent_image_viewer_full_screen">Amaze Image Viewer (全画面)</string>
     <!-- User didn't accept all storage permissions -->
-    <string name="grantfailed">Storage permission not granted</string>
+    <string name="grantfailed">ストレージへのアクセス権限がありません</string>
     <!-- User didn't accept location permission for transfer files tab -->
     <string name="grant_location_failed">Location permission not granted</string>
     <!-- Shown in welcome screen for first time -->
@@ -83,7 +83,7 @@
     <!-- Number of total media files on main screen -->
     <string name="num_of_media_files">%s メディアファイル</string>
     <!-- Used space in utilties tab in individual lists screen eg in images - Used: 300 MB / 1 GB -->
-    <string name="used_space">Used: %s</string>
+    <string name="used_space">%s使用済み</string>
     <!-- Send file in transfer tab -->
     <string name="send">送信</string>
     <!-- Receive file in transfer tab -->
@@ -121,7 +121,7 @@
     <!-- Unable to open pdf / doc / video / image file -->
     <string name="unsupported_content">対応していないコンテンツ</string>
     <!-- Group utilities list eg images / videos by parent folder -->
-    <string name="parent">Parent</string>
+    <string name="parent">親項目</string>
     <!-- Group utilities list eg images / videos by date -->
     <string name="date">日付</string>
     <!-- Group utilities list eg iamges / videos by name -->
@@ -139,7 +139,7 @@
     <!-- Sort audio / video utilities list by duration -->
     <string name="duration">長さ</string>
     <!-- Crash fallback screen title -->
-    <string name="sorry_string">Sorry, that should not have happened.</string>
+    <string name="sorry_string">申し訳ありませんが、それは起こっていないはずです。</string>
     <!-- Crash fallback screen report by email -->
     <string name="error_report_button_text">Eメールでエラーを報告する</string>
     <!-- Crash fallback screen report by telegram -->
@@ -151,19 +151,19 @@
     <!-- Crash fallback screen info -->
     <string name="error_report_open_github_notice">Please check whether an issue discussing your crash already exists.</string>
     <!-- Toast shown when we failed to display crash fallback screen -->
-    <string name="error_snackbar_message">Sorry, something went wrong.</string>
+    <string name="error_snackbar_message">申し訳ありませんが、エラーが発生したようです。</string>
     <!-- Crash fallback screen report -->
-    <string name="error_snackbar_action">Report</string>
+    <string name="error_snackbar_action">報告</string>
     <!-- Crash fallback screen info about device -->
-    <string name="what_device_headline">Info:</string>
+    <string name="what_device_headline">情報:</string>
     <!-- Crash fallback screen info about crash -->
-    <string name="what_happened_headline">What happened:</string>
+    <string name="what_happened_headline">何が起きましたか？</string>
     <!-- Crash fallback screen info about device -->
     <string name="info_labels">What:\\nRequest:\\nGMT Time:\\nPackage:\\nVersion:\\nOS version:\\nDevice:\\nModel:\\nProduct:\\nDevice ID:</string>
     <!-- Crash fallback screen ask user input -->
     <string name="your_comment">Your comment (in English):</string>
     <!-- Crash fallback screen show more details -->
-    <string name="error_details_headline">Details:</string>
+    <string name="error_details_headline">詳細:</string>
     <!-- Crash fallback screen info -->
     <string name="app_ui_crash">App/UI crashed</string>
     <!-- Crash fallback screen title -->
@@ -376,7 +376,7 @@
     <!-- Failed to receive files in transfer tab -->
     <string name="failed_filename_receive_reconnecct">受信できませんでした。再接続してください。</string>
     <!-- Transfer complete in transfer tab -->
-    <string name="transfer_complete">File transferred</string>
+    <string name="transfer_complete">ファイル転送しました</string>
     <!-- Need extra permissions for transfer tab -->
     <string name="grant_location_permission">App needs location permission to connect with nearby devices.</string>
     <!-- Need extra permissions for transfer tab -->
@@ -468,9 +468,9 @@
     <string name="amaze_fm_redirect">You\'re being redirected to Amaze File Manager. It\'s our open source offering that has all features a modern file manager has completely free of cost with over 2M downloads and 4.3 rating on Play Store.</string>
     <!-- Download button in dialog prompt -->
     <string name="download">ダウンロード</string>
-    <string name="amaze_file_manager">Amaze File Manager</string>
+    <string name="amaze_file_manager">Amaze ファイルマネージャー</string>
     <!-- Download subtitles video player device not connected to internet -->
-    <string name="not_connected_to_internet">Device not connected to internet</string>
+    <string name="not_connected_to_internet">インターネットに接続していません</string>
     <!-- Search subtitles dialog in video player -->
     <string name="upload_date">アップロード日時</string>
     <!-- Search subtitles dialog in video player -->
@@ -492,13 +492,13 @@
     <!-- Subtitles applied in video player -->
     <string name="subtitles_applied">字幕が適用されました</string>
     <!-- Failed to download subtitles in video player -->
-    <string name="failed_to_download">Failed to download</string>
+    <string name="failed_to_download">ダウンロード失敗</string>
     <!-- Share file dialog -->
     <string name="bluetooth">ブルートゥース</string>
     <!-- Share logs in about section -->
-    <string name="share_logs">Share logs</string>
+    <string name="share_logs">ログを共有</string>
     <!-- No app found in share dialog -->
-    <string name="no_apps_found_to_share">No apps found to share</string>
+    <string name="no_apps_found_to_share">共有するアプリが見つかりません</string>
     <!-- Failed to extract logs to share in about section -->
     <string name="failed_to_extract_logs">Failed to extract logs file</string>
     <!-- Continue playing button in video player when video was previously played and we want to resume -->
@@ -687,7 +687,7 @@
     <string name="privacy_title">あなたの個人情報とプライバシーは大切です。</string>
     <!-- Welcome screen license agreement page -->
     <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.\n
-        We assure you that we do not collect any of your private information.\nWe don\'t say this, our track record does.\nWe\'re a group of open source developers and are managing Amaze File Manager for around 8 years now.\n\nWe look forward to your subscription.
+        We assure you that we do not collect any of your private information.\nThis is an open source software.\nWe\'re a group of open source developers and are managing Amaze mobile apps for around 8 years now.\n\nWe look forward to your subscription.
     </string>
     <!-- Subscription dialog failed to fetch subscriptions -->
     <string name="error_fetching_google_play_product_list">Error fetching product list from Google Play.</string>
@@ -742,23 +742,23 @@
     <!-- Settings page extract image viewer background color from image summary -->
     <string name="image_viewer_enable_palette_summary">画像ビューアーの背景色を設定します</string>
     <!-- Unused apps in analysis tab -->
-    <string name="unused_apps">Unused apps</string>
+    <string name="unused_apps">未使用のアプリ</string>
     <!-- Most used apps in analysis tab -->
-    <string name="most_used_apps">Most used apps</string>
+    <string name="most_used_apps">最も使用されているアプリ</string>
     <!-- Least used apps in analysis tab -->
-    <string name="least_used_apps">Least used apps</string>
+    <string name="least_used_apps">使用頻度が少ないアプリ</string>
     <!-- Large apps in analysis tab -->
-    <string name="large_apps">Large apps</string>
+    <string name="large_apps">大きいアプリ</string>
     <!-- Games installed in analysis tab -->
-    <string name="games_installed">Games</string>
+    <string name="games_installed">ゲーム</string>
     <!-- Games installed hint in analysis tab -->
-    <string name="games_installed_hint">Games currently installed on this device</string>
+    <string name="games_installed_hint">インストールされているゲーム</string>
     <!-- Required elevated permission for analysis in analysis tab -->
     <string name="require_permission">Required elevated permissions for this analysis</string>
     <!-- Already granted analysis permission, ask user to refresh -->
     <string name="granted_permission_refresh">Already granted?</string>
     <!-- Refresh button in analysis after permission granted -->
-    <string name="refresh">Refresh</string>
+    <string name="refresh">更新</string>
     <!-- Unused apps preference dialog message -->
     <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
     <!-- Most used apps preference dialog message -->
@@ -766,97 +766,97 @@
     <!-- Least used apps preference dialog message -->
     <string name="least_used_apps_pref_message">Apps least used in last number of days</string>
     <!-- Stopping analysis by pressing on (X) button in analysis tab -->
-    <string name="stopping_analysis">Stopping analysis</string>
+    <string name="stopping_analysis">解析を停止中</string>
     <!-- Remove battery optimizations on welcome screen and settings page -->
-    <string name="remove_battery_optimizations">Remove battery optimizations</string>
+    <string name="remove_battery_optimizations">バッテリーの最適化を無効にする</string>
     <!-- Remove battery optimizations hint on welcome screen and settings page -->
     <string name="remove_battery_optimizations_hint">Please remove battery optimizations for music player to function properly in background</string>
     <!-- Apk listing in analysis -->
-    <string name="apk_files">APK files</string>
+    <string name="apk_files">APKファイル</string>
     <!-- Image editor tools -->
-    <string name="shape">Shape</string>
+    <string name="shape">形</string>
     <!-- Apk listing in analysis -->
-    <string name="text">Text</string>
+    <string name="text">テキスト</string>
     <!-- Apk listing in analysis -->
-    <string name="eraser">Eraser</string>
+    <string name="eraser">消しゴム</string>
     <!-- Apk listing in analysis -->
-    <string name="filter">Filter</string>
+    <string name="filter">フィルター</string>
     <!-- Apk listing in analysis -->
-    <string name="emoji">Emoji</string>
+    <string name="emoji">絵文字</string>
     <!-- Apk listing in analysis -->
-    <string name="sticker">Sticker</string>
+    <string name="sticker">ステッカー</string>
     <!-- Apk listing in analysis -->
-    <string name="rotate">Rotate</string>
+    <string name="rotate">回転</string>
     <!-- Apk listing in analysis -->
     <string name="flip_horizontal">Flip-H</string>
     <!-- Apk listing in analysis -->
     <string name="flip_vertical">Flip-V</string>
     <!-- Apk listing in analysis -->
-    <string name="resize">Resize</string>
+    <string name="resize">リサイズ</string>
     <!-- In Image editor -->
-    <string name="label_brush">Brush</string>
+    <string name="label_brush">ブラシ</string>
     <!-- In Image editor -->
-    <string name="label_shape">Shape</string>
+    <string name="label_shape">形</string>
     <!-- In Image editor -->
-    <string name="label_oval">Oval</string>
+    <string name="label_oval">楕円</string>
     <!-- In Image editor -->
-    <string name="label_rectangle">Rectangle</string>
+    <string name="label_rectangle">長方形</string>
     <!-- In Image editor -->
-    <string name="label_line">Line</string>
+    <string name="label_line">線</string>
     <!-- In Image editor -->
-    <string name="label_emoji">Emoji</string>
+    <string name="label_emoji">絵文字</string>
     <!-- In Image editor -->
-    <string name="label_sticker">Sticker</string>
+    <string name="label_sticker">ステッカー</string>
     <!-- In Image editor -->
-    <string name="label_eraser">Eraser</string>
+    <string name="label_eraser">消しゴム</string>
     <!-- In Image editor -->
-    <string name="label_eraser_mode">Eraser Mode</string>
+    <string name="label_eraser_mode">消しゴムモード</string>
     <!-- In Image editor to write text over image -->
-    <string name="label_text">Text</string>
+    <string name="label_text">テキスト</string>
     <!-- In Image editor -->
-    <string name="label_filter">Filter</string>
+    <string name="label_filter">フィルター</string>
     <!-- In Image editor to crop or adjust image -->
-    <string name="label_adjust">Adjust</string>
+    <string name="label_adjust">調整</string>
     <!-- In Image editor -->
-    <string name="msg_save_image">Are you want to exit without saving image?</string>
+    <string name="msg_save_image">画像を保存せずに終了しますか？</string>
     <!-- In Image editor -->
-    <string name="msg_share_image">Share Image</string>
+    <string name="msg_share_image">画像を共有</string>
     <!-- In Image editor to add picture to edit -->
-    <string name="select_picture">Select Picture</string>
+    <string name="select_picture">画像を選択</string>
     <!-- In Image editor saving modified image -->
-    <string name="saving">Saving…</string>
+    <string name="saving">保存中…</string>
     <!-- In Image editor -->
-    <string name="image_saved">Image saved successfully</string>
+    <string name="image_saved">画像が正常に保存されました</string>
     <!-- In Image editor -->
-    <string name="failed_image_save">Failed to save image</string>
+    <string name="failed_image_save">画像を保存できませんでした</string>
     <!-- In Image editor to save edited image -->
-    <string name="save">Save</string>
+    <string name="save">保存</string>
     <!-- In Image editor to discard saving image -->
-    <string name="discard">Discard</string>
+    <string name="discard">破棄</string>
     <!-- Image editor activity label -->
     <string name="image_editor">Amaze Image Editor</string>
     <!-- Failed while loading docx file -->
     <string name="failed_to_load_document">Failed to load document</string>
     <!-- load music lyrics -->
-    <string name="load">Load</string>
+    <string name="load">読み込む</string>
     <!-- paste lyrics dialog -->
     <string name="paste_lyrics">Paste lyrics</string>
     <!-- lyrics type dialog -->
-    <string name="lyrics_type">Lyrics type</string>
+    <string name="lyrics_type">歌詞の形式</string>
     <!-- lyrics type dialog -->
-    <string name="clear_lyrics">Clearing lyrics</string>
+    <string name="clear_lyrics">歌詞を消去中</string>
     <!-- lyrics type dialog -->
     <string name="added_lyrics">Added lyrics</string>
     <!-- whatsapp images in analysis section -->
-    <string name="whatsapp_images">Whatsapp Images</string>
+    <string name="whatsapp_images">Whatsapp画像</string>
     <!-- whatsapp videos in analysis section -->
-    <string name="whatsapp_videos">Whatsapp Videos</string>
+    <string name="whatsapp_videos">Whatsappビデオ</string>
     <!-- whatsapp analysis in settings -->
-    <string name="whatsapp_media">Whatsapp Media</string>
+    <string name="whatsapp_media">Whatsappメディア</string>
     <!-- large files in analysis tab -->
-    <string name="large_files">Large Files</string>
+    <string name="large_files">大きなファイル</string>
     <!-- purchase fdroid subscription -->
-    <string name="purchase_fdroid_title">Purchase</string>
+    <string name="purchase_fdroid_title">購入する</string>
     <!-- purchase fdroid subscription summary -->
     <string name="purchase_fdroid_message">You\'re running an Fdroid build.
         You can unlock a lifetime subscription by donating any amount of your choice.
@@ -869,45 +869,45 @@
     <!-- header summary in media list fragments -->
     <string name="header_list_summary">%s • %s</string>
     <!-- playlist in audio fragment -->
-    <string name="created_playlist">Playlist created</string>
+    <string name="created_playlist">プレイリストを作成しました</string>
     <!-- playlist in audio fragment -->
-    <string name="could_not_create_playlist">Failed to create playlist</string>
+    <string name="could_not_create_playlist">プレイリストを作成できませんでした</string>
     <!-- playlist in audio fragment -->
-    <string name="insert_songs_playlist">Added %d songs to playlist %s</string>
+    <string name="insert_songs_playlist">%d 曲をプレイリスト %sに追加しました</string>
     <!-- playlist in audio fragment -->
     <string name="failed_insert_songs_playlist">Failed to add songs</string>
     <!-- playlist in audio fragment -->
     <string name="failed_remove_songs_playlist">Failed to remove songs</string>
     <!-- playlists header in audio fragment grouping -->
-    <string name="playlists">Playlists</string>
+    <string name="playlists">プレイリスト</string>
     <!-- options in floating action button -->
-    <string name="options">Options</string>
+    <string name="options">オプション</string>
     <!-- options in floating action button to locate the file -->
     <string name="locate">Locate</string>
     <!-- options in floating action button to add to playlist -->
-    <string name="playlist">Playlist</string>
+    <string name="playlist">プレイリスト</string>
     <!-- options in media headers when playlist is enabled -->
-    <string name="delete_playlist">Delete Playlist</string>
+    <string name="delete_playlist">プレイリストを削除</string>
     <!-- options in media headers when playlist is enabled -->
-    <string name="rename_playlist">Rename Playlist</string>
+    <string name="rename_playlist">プレイリスト名を変更</string>
     <!-- Delete playlist summary dialog -->
     <string name="delete_playlist_message">You\'re about to permanently delete playlist %s.
         Are you sure you want to proceed?</string>
     <!-- Rename playlist summary dialog -->
-    <string name="rename_playlist_message">Please enter new playlist name</string>
+    <string name="rename_playlist_message">新しいプレイリストの名前を入力してください</string>
     <!-- Rename playlist summary dialog button -->
-    <string name="rename">Rename</string>
+    <string name="rename">名前を変更</string>
     <!-- create playlist dialog in audio fragment -->
-    <string name="create_new_playlist">Create New</string>
+    <string name="create_new_playlist">新規作成</string>
     <!-- remove from playlist dialog in audio fragment -->
-    <string name="remove">Remove</string>
+    <string name="remove">除去</string>
     <!-- Remove from playlist summary dialog -->
     <string name="remove_from_playlist_message">You\'re about to remove selected songs from playlist(s).
         Are you sure you want to proceed?</string>
     <!-- add to playlist dialog in audio fragment -->
-    <string name="add_to_playlist">Add to Playlist</string>
+    <string name="add_to_playlist">プレイリストに追加する</string>
     <!-- create dialog in audio fragment -->
-    <string name="create">Create</string>
+    <string name="create">作成</string>
     <!-- removed songs from playlist in audio fragment -->
     <string name="removed_from_playlist">Removed from playlist(s)</string>
     <!-- play next song button in options in audio fragment -->
@@ -915,17 +915,27 @@
     <!-- play next song button in options in audio fragment -->
     <string name="play_next_success">Song added to queue</string>
     <!-- newly installed apps in settings preferences -->
-    <string name="newly_installed_apps">Newly installed apps</string>
+    <string name="newly_installed_apps">新規インストールされたアプリ</string>
     <!-- newly installed apps summary in settings preferences -->
-    <string name="newly_installed_apps_summary">Apps newly installed (in days)</string>
+    <string name="newly_installed_apps_summary">新しくインストールされたアプリ (日数)</string>
     <!-- newly installed apps in settings preferences -->
-    <string name="recently_updated_apps">Recently updated apps</string>
+    <string name="recently_updated_apps">最近更新されたアプリ</string>
     <!-- newly installed apps summary in settings preferences -->
-    <string name="recently_updated_apps_summary">Apps recently updated (in days)</string>
+    <string name="recently_updated_apps_summary">最近更新されたアプリ (日)</string>
     <!-- ram usage in analysis -->
-    <string name="ram_usage">Memory (RAM) Usage</string>
+    <string name="ram_usage">メモリ使用率</string>
     <!-- ram usage in analysis -->
-    <string name="ram_usage_title">%s available | %s total</string>
+    <string name="ram_usage_title">%s 利用可能 | 合計 %s</string>
     <!-- clearing ram in analysis -->
     <string name="ram_usage_clear">Closed background processes</string>
+    <!-- back button again to exit on main screen -->
+    <string name="press_again">もう一度押すと終了します</string>
+    <!-- highest data usage apps in analysis fragment -->
+    <string name="network_intensive_apps">Network intensive apps</string>
+    <!-- histogram in image viewer -->
+    <string name="histogram">Histogram</string>
+    <!-- similar images in analysis fragment -->
+    <string name="similar_images">Similar Images</string>
+    <!-- similar images summary in analysis fragment -->
+    <string name="similar_images_hint">Images that have similar colors</string>
 </resources>

@@ -175,7 +175,7 @@
     <!-- Pdf activity password prompt -->
     <string name="pdf_password_title">דרושה סיסמה</string>
     <!-- Pdf activity password required info -->
-    <string name="pdf_password_required">נא למלא את הסיסמה כדי לפתוח את המסמך הזה</string>
+    <string name="pdf_password_required">נא להזין סיסמה כדי לפתוח את המסמך</string>
     <!-- Generic ok button in dialogs -->
     <string name="ok">אישור</string>
     <!-- Pdf activity wrong password entered -->
@@ -183,7 +183,7 @@
     <!-- Generic message for any operation not supported -->
     <string name="unsupported_operation">פעולה לא נתמכת</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>מאז Android 11, Google מבקשת ממנהלי הקבצים לבקש הרשאת משתמש לניהול כל הקבצים במכשיר.  פרטים <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">כאן</a>.
+    <string name="grant_all_files_permission"><html><body>מאז Android 11, גוגל מבקשת ממנהלי הקבצים לבקש הרשאת משתמש לניהול כל הקבצים במכשיר.  פרטים <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">כאן</a>.
          \n\nAmaze File Utilities זקוקה גם להרשאה זו.  לאחר הקשה על &quot;הענקה&quot;כאן, אנא בחר באפשרות <b>אפשר גישה לניהול כל הקבצים</b> במסך הבא.
          \n\n<font color="#ff6347"><i>ביטול דו-שיח זה יגרום ליציאה מהאפליקציה.</i></font></body></html></string>
     <!-- Pdf activity copy page content title -->
@@ -197,9 +197,9 @@
     <!-- Pdf activity pdf creator -->
     <string name="creator">יוצר</string>
     <!-- Pdf activity pdf creation date -->
-    <string name="creation_date">מועד יצירה</string>
+    <string name="creation_date">תאריך יצירה</string>
     <!-- Pdf activity pdf modification date -->
-    <string name="modification_date">מועד שינוי</string>
+    <string name="modification_date">תאריך שינוי</string>
     <!-- Pdf activity pdf subject -->
     <string name="subject">נושא</string>
     <!-- Pdf activity pdf keywords -->
@@ -211,7 +211,7 @@
     <!-- Analysing internal storage shown in analysis tab -->
     <string name="analysing">מתבצע ניתוח…</string>
     <!-- Pdf activity page content copied -->
-    <string name="page_copied_to_clipboard">תוכן הדף הועתק ללוח הגזירים</string>
+    <string name="page_copied_to_clipboard">התוכן הועתק ללוח</string>
     <!-- Clean button in analysis tab to clean junk files -->
     <string name="clean">ניקוי</string>
     <!-- Blurred images label in analysis -->
@@ -233,7 +233,7 @@
     <!-- Distracted images analysis hint -->
     <string name="distracted_hint">תמונות שמצולמים בהן אנשים שמסיטים את המבט</string>
     <!-- Selfie images analysis label -->
-    <string name="selfie">תמונות עצמיות</string>
+    <string name="selfie">תמונת סלפי</string>
     <!-- Group images analysis label -->
     <string name="group_pics">תמונות קבוצתיות</string>
     <!-- Memes analysis hint -->
@@ -259,11 +259,11 @@
     <!-- Junk files analysis hint -->
     <string name="junk_files_hint">קובצי זבל הם קבצים שנותרו מאחור לאחר הסרת יישומונים</string>
     <!-- Telegram analysis label -->
-    <string name="telegram_files">טלגרם</string>
+    <string name="telegram_files">מדיה טלגרם</string>
     <!-- More optimisations coming at analysis tab bottom -->
     <string name="more_to_come">יהיו שיפורים נוספים!</string>
     <!-- View all analysed content analysis tab -->
-    <string name="view_all">להציג הכול</string>
+    <string name="view_all">הצג הכול</string>
     <!-- Analysis settings title -->
     <string name="analysis">ניתוח</string>
     <!-- Analysis settings hint -->
@@ -295,7 +295,7 @@
     <!-- Paths excluded from music player scan in settings -->
     <string name="paths_excluded">נתיבים שיוחרגו</string>
     <!-- Delete path from analysis / exclusion dialog in settings -->
-    <string name="delete_preference">מחיקת העדפה</string>
+    <string name="delete_preference">מחיקת העדפות</string>
     <!-- Delete path from analysis / exclusions dialog message in settings -->
     <string name="delete_pref_override_message">פעולה זו תדרוס נתיב קיים.
         כך יתאפסו נתוני ניתוח קיימים לנתיב הזה.</string>
@@ -326,7 +326,7 @@
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
     <string name="enable_wifi">נא להפעיל את הרשת האלחוטית שלך</string>
     <!-- Failed to discover nearby devices in transfer tab -->
-    <string name="discovery_failure">נכשל במציאת עמיתים. נסה להתחבר מחדש לרשת Wifi</string>
+    <string name="discovery_failure">נכשל במציאת חברים. נסה להתחבר מחדש לרשת Wifi</string>
     <!-- Receiving files in transfer tab -->
     <string name="receiving_files">מתקבלים קבצים</string>
     <!-- Search for nearby devices in transfer tab -->
@@ -684,8 +684,9 @@
     <!-- Welcome screen license agreement page -->
     <string name="privacy_title">הפרטיות שלך חשובה לנו!</string>
     <!-- Welcome screen license agreement page -->
-    <string name="privacy_summary">לא אוהב פרסומות?  גם אנחנו לא, אנחנו מעריכים את הנתונים שלך כמוך.\n
-         אנו מבטיחים לך שאיננו אוספים אף מידע פרטי שלך.\nאנחנו לא אומרים את זה, הרקורד שלנו כן.\nאנחנו קבוצה של מפתחי קוד פתוח ומנהלים את Amaze File Manager כבר כ-8 שנים. \n\nאנו מצפים למנוי שלך.    </string>
+    <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.\n
+        We assure you that we do not collect any of your private information.\nThis is an open source software.\nWe\'re a group of open source developers and are managing Amaze mobile apps for around 8 years now.\n\nWe look forward to your subscription.
+    </string>
     <!-- Subscription dialog failed to fetch subscriptions -->
     <string name="error_fetching_google_play_product_list">שגיאה במשיכת רשימת מוצרים מ־Google Play.</string>
     <!-- Welcome screen done with the wizard -->
@@ -895,34 +896,44 @@
     <!-- Rename playlist summary dialog button -->
     <string name="rename">שינוי שם</string>
     <!-- create playlist dialog in audio fragment -->
-    <string name="create_new_playlist">Create New</string>
+    <string name="create_new_playlist">צור חדש</string>
     <!-- remove from playlist dialog in audio fragment -->
-    <string name="remove">Remove</string>
+    <string name="remove">הסר</string>
     <!-- Remove from playlist summary dialog -->
-    <string name="remove_from_playlist_message">You\'re about to remove selected songs from playlist(s).
-        Are you sure you want to proceed?</string>
+    <string name="remove_from_playlist_message">אתה עומד להסיר שירים נבחרים מרשימה(ות) השמעה.
+         האם אתה בטוח שאתה רוצה להמשיך?</string>
     <!-- add to playlist dialog in audio fragment -->
-    <string name="add_to_playlist">Add to Playlist</string>
+    <string name="add_to_playlist">הוסף לרשימת ההשמעה</string>
     <!-- create dialog in audio fragment -->
-    <string name="create">Create</string>
+    <string name="create">צור</string>
     <!-- removed songs from playlist in audio fragment -->
-    <string name="removed_from_playlist">Removed from playlist(s)</string>
+    <string name="removed_from_playlist">הוסרו מרשימות השמעה(ות)</string>
     <!-- play next song button in options in audio fragment -->
-    <string name="play_next">PLAY NEXT</string>
+    <string name="play_next">התחל הבא</string>
     <!-- play next song button in options in audio fragment -->
-    <string name="play_next_success">Song added to queue</string>
+    <string name="play_next_success">השיר נוסף לתור</string>
     <!-- newly installed apps in settings preferences -->
-    <string name="newly_installed_apps">Newly installed apps</string>
+    <string name="newly_installed_apps">אפליקציות שהותקנו לאחרונה</string>
     <!-- newly installed apps summary in settings preferences -->
-    <string name="newly_installed_apps_summary">Apps newly installed (in days)</string>
+    <string name="newly_installed_apps_summary">אפליקציות שהותקנו לאחרונה (בימים)</string>
     <!-- newly installed apps in settings preferences -->
-    <string name="recently_updated_apps">Recently updated apps</string>
+    <string name="recently_updated_apps">אפליקציות שעודכנו לאחרונה</string>
     <!-- newly installed apps summary in settings preferences -->
-    <string name="recently_updated_apps_summary">Apps recently updated (in days)</string>
+    <string name="recently_updated_apps_summary">אפליקציות שעודכנו לאחרונה (בימים)</string>
     <!-- ram usage in analysis -->
-    <string name="ram_usage">Memory (RAM) Usage</string>
+    <string name="ram_usage">שימוש בזיכרון (RAM)</string>
     <!-- ram usage in analysis -->
-    <string name="ram_usage_title">%s available | %s total</string>
+    <string name="ram_usage_title">%s זמין | %s סך הכל</string>
     <!-- clearing ram in analysis -->
-    <string name="ram_usage_clear">Closed background processes</string>
+    <string name="ram_usage_clear">סגירת תהליכי רקע</string>
+    <!-- back button again to exit on main screen -->
+    <string name="press_again">Press again to exit</string>
+    <!-- highest data usage apps in analysis fragment -->
+    <string name="network_intensive_apps">Network intensive apps</string>
+    <!-- histogram in image viewer -->
+    <string name="histogram">Histogram</string>
+    <!-- similar images in analysis fragment -->
+    <string name="similar_images">Similar Images</string>
+    <!-- similar images summary in analysis fragment -->
+    <string name="similar_images_hint">Images that have similar colors</string>
 </resources>

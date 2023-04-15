@@ -1,423 +1,423 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Amaze Datei-Tools</string>
+    <string name="app_name">Amaze File Utilities</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">Amaze Tools</string>
+    <string name="app_name_launcher">അമേസ് യൂട്ടിലിറ്റികൾ</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">Datei-Browser-App mit eingebautem Media-Player, der alle Bedürfnisse deckt.</string>
+    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Amaze Bildbetrachter</string>
+    <string name="image_viewer">അമേസ് ചിത്രം കാഴ്ചക്കാരൻ</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">Bildbetrachter</string>
+    <string name="image_viewer_normal">ചിത്രം കാഴ്ചക്കാരൻ</string>
     <!-- Video player activity label -->
-    <string name="video_player">Amaze Videoplayer</string>
+    <string name="video_player">അമേസ് വീഡിയോ കളിക്കാരൻ</string>
     <!-- Video player dialog intent filter label -->
-    <string name="video_player_dialog">Amaze Videoplayer (Dialog)</string>
+    <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">Amaze Videoplayer (Vollbild)</string>
+    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
     <!-- Music player activity label -->
-    <string name="amaze_audio_player">Amaze Musik-Player</string>
+    <string name="amaze_audio_player">അമേസ് സംഗീത കളിക്കാരൻ</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Amaze PDF-Betrachter</string>
+    <string name="pdf_viewer">അമേസ് പിഡിഎഫ് കാഴ്ചക്കാരൻ</string>
     <!-- Epub activity label -->
-    <string name="epub_viewer">Amaze Epub-Betrachter</string>
+    <string name="epub_viewer">അമേസ് ഈപബ് കാഴ്ചക്കാരൻ</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">Amaze Dokumente-Betrachter</string>
+    <string name="docx_viewer">അമേസ് പ്രമാണ കാഴ്ചക്കാരൻ</string>
     <!-- Image viewer dialog intent filter label -->
-    <string name="intent_image_viewer_dialog">Amaze Bildbetrachter (Dialog)</string>
+    <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
     <!-- Image viewer full screen intent label -->
-    <string name="intent_image_viewer_full_screen">Amaze Bildbetrachter (Vollbild)</string>
+    <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
     <!-- User didn't accept all storage permissions -->
-    <string name="grantfailed">Speicher-Berechtigung nicht gewährt</string>
+    <string name="grantfailed">സംഭരണ അനുമതി നൽകിയിട്ടില്ല</string>
     <!-- User didn't accept location permission for transfer files tab -->
-    <string name="grant_location_failed">Standortzugriff nicht gewährt</string>
+    <string name="grant_location_failed">സ്ഥാന അനുമതി നൽകിയിട്ടില്ല</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_storage_read_permission">Die App benötigt Leserechte für eine optimale Performance.</string>
+    <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_permission">Zugriff gewähren</string>
+    <string name="grant_permission">അനുമതി നൽകുക</string>
     <!-- Grant permission button for welcome screen -->
-    <string name="grant">Erlauben</string>
+    <string name="grant">നല്‍കുക</string>
     <!-- Cancel button in dialogs mainly to cancel any operation -->
-    <string name="cancel">Abbrechen</string>
+    <string name="cancel">റദ്ദാക്കുക</string>
     <!-- Play button label in music player notification -->
-    <string name="play">Wiedergabe</string>
+    <string name="play">കളിക്കുക</string>
     <!-- Shuffle button label in music player notification -->
-    <string name="shuffle">Zufällig</string>
+    <string name="shuffle">Shuffle</string>
     <!-- Repeat button label in music player notification -->
-    <string name="repeat">Wiederholen</string>
+    <string name="repeat">ആവര്‍ത്തിക്കുക</string>
     <!-- Previous button label in music player notification -->
-    <string name="previous">Vorheriger</string>
+    <string name="previous">മുമ്പത്തെ</string>
     <!-- Next button label in music player notification -->
-    <string name="next">Nächster</string>
+    <string name="next">അടുത്തത്</string>
     <!-- Not allowed to perform any operation -->
-    <string name="not_allowed">Nicht zulässig</string>
+    <string name="not_allowed">അനുവദനീയമല്ല</string>
     <!-- Audio player notification channel description -->
-    <string name="audio_player_service_description">Spielt Audio für Amaze File Utilities ab</string>
+    <string name="audio_player_service_description">Plays audio for Amaze File Utilities</string>
     <!-- Invert colors in document / pdf viewer -->
-    <string name="invert_colors">Farben umkehren</string>
+    <string name="invert_colors">നിറങ്ങൾ വിപരീതമാക്കുക</string>
     <!-- Location any list eg. images or videos list -->
-    <string name="loading">Wird geladen…</string>
+    <string name="loading">ലഭ്യമാക്കുന്നു…</string>
     <!-- Analyse tab on app main screen bottom tab -->
-    <string name="title_analyse">Analysieren</string>
+    <string name="title_analyse">പരിശോധിക്കുക</string>
     <!-- Utilities tab on app main screen bottom tab -->
-    <string name="title_utilities">Werkzeuge</string>
+    <string name="title_utilities">യൂട്ടിലിറ്റികൾ</string>
     <!-- Transfer files tab on app main screen bottom tab -->
-    <string name="title_transfer">Dateiübertragung</string>
+    <string name="title_transfer">കൈമാറ്റം</string>
     <!-- Scan nearby connections button in transfer tab -->
-    <string name="title_scan">Scannen</string>
+    <string name="title_scan">Scan</string>
     <!-- Stop scan nearby devices in transfer tab -->
-    <string name="title_stop_scan">Stopp</string>
+    <string name="title_stop_scan">നിർത്തുക</string>
     <!-- Internal storage on app main screen -->
-    <string name="internal_storage">Interner Speicher</string>
+    <string name="internal_storage">ആന്തരിക സംഭരണം</string>
     <!-- Images title in images list screen in utilities tab -->
-    <string name="images">Bilder</string>
+    <string name="images">ചിത്രങ്ങൾ</string>
     <!-- Audios title in audios list screen in utilities tab -->
-    <string name="audios">Audios</string>
+    <string name="audios">ഓഡിയോകൾ</string>
     <!-- Videos title in videos list screen in utilities tab -->
-    <string name="videos">Videos</string>
+    <string name="videos">വീഡിയോകൾ</string>
     <!-- Documents title in documents list screen in utilities tab -->
-    <string name="documents">Dokumente</string>
+    <string name="documents">പ്രമാണങ്ങൾ</string>
     <!-- Number of files in utilities tab individual list screens eg in images / number of images -->
-    <string name="num_of_files">%s Dateien</string>
+    <string name="num_of_files">%s Files</string>
     <!-- Number of total media files on main screen -->
-    <string name="num_of_media_files">%s Mediendateien</string>
+    <string name="num_of_media_files">%s Media Files</string>
     <!-- Used space in utilties tab in individual lists screen eg in images - Used: 300 MB / 1 GB -->
-    <string name="used_space">Belegt: %s</string>
+    <string name="used_space">ഉപയോഗിച്ചിരിക്കുന്നത്:%s</string>
     <!-- Send file in transfer tab -->
-    <string name="send">Senden</string>
+    <string name="send">അയയ്ക്കുക</string>
     <!-- Receive file in transfer tab -->
-    <string name="receive">Empfangen</string>
+    <string name="receive">സ്വീകരിക്കുക</string>
     <!-- Stop receiving file in transfer tab -->
-    <string name="stop_receiving">Empfangen beenden</string>
+    <string name="stop_receiving">സ്വീകരിക്കുന്നത് നിർത്തുക</string>
     <!-- Calculating number of media files in utilities tab on app startup -->
-    <string name="calculating">Berechne…</string>
+    <string name="calculating">കണക്കുകൂട്ടുന്നു…</string>
     <!-- Recent files on utilities tab main screen -->
-    <string name="recent_files">Letzte Dateien</string>
+    <string name="recent_files">Recent Files</string>
     <!-- No files found after searching media files -->
-    <string name="no_files">Keine Ergebnisse</string>
+    <string name="no_files">No files</string>
     <!-- Number of media files in utilities tab in individual list screen eg in images / number of total files -->
-    <string name="media_files_subs">Mediendateien: %s</string>
+    <string name="media_files_subs">Media Files: %s</string>
     <!-- Search screen title bar hint -->
-    <string name="action_bar_search_hint">Suche nach Dateien…</string>
+    <string name="action_bar_search_hint">Search for files…</string>
     <!-- Generic message shown when loading results of list or operation -->
-    <string name="please_wait">Bitte warten…</string>
+    <string name="please_wait">ദയവായി കാത്തിരിക്കൂ…</string>
     <!-- No search results found -->
-    <string name="its_quiet_here">Es ist still hier…</string>
+    <string name="its_quiet_here">ഇവിടെ നിശബ്ദമാണ്…</string>
     <!-- Settings screen title -->
-    <string name="settings">Einstellungen</string>
+    <string name="settings">ക്രമീകരണങ്ങള്‍</string>
     <!-- About screen title -->
-    <string name="about">Über</string>
+    <string name="about">കുറിച്ച്</string>
     <!-- Copyright dialog content in about section -->
-    <string name="rights_reserved">Copyright ©️ 2021–2022 Team Amaze\nAlle Rechte vorbehalten</string>
+    <string name="rights_reserved">പകർപ്പവകാശം © 2021–2022 സംഘം അമേസ്\nഎല്ലാ അവകാശങ്ങളും നിക്ഷിപ്തം</string>
     <!-- Open source licenses in about section -->
-    <string name="open_source_licenses">Open Source-Lizenzen</string>
+    <string name="open_source_licenses">Open-source licenses</string>
     <!-- Privacy policy label in about section -->
-    <string name="privacy_policy">Datenschutzerklärung</string>
+    <string name="privacy_policy">സ്വകാര്യതാനയം</string>
     <!-- Licenses label in about section -->
-    <string name="licenses">Lizenzen</string>
+    <string name="licenses">അനുമതിപത്രങ്ങൾ</string>
     <!-- Information about a pdf / doc file -->
-    <string name="information">Informationen</string>
+    <string name="information">വിവരം</string>
     <!-- Unable to open pdf / doc / video / image file -->
-    <string name="unsupported_content">Nicht unterstützter Inhalt</string>
+    <string name="unsupported_content">പിന്തുണയ്ക്കാത്ത ഉള്ളടക്കം</string>
     <!-- Group utilities list eg images / videos by parent folder -->
-    <string name="parent">Ordner</string>
+    <string name="parent">രക്ഷിതാവ്</string>
     <!-- Group utilities list eg images / videos by date -->
-    <string name="date">Datum</string>
+    <string name="date">തിയതി</string>
     <!-- Group utilities list eg iamges / videos by name -->
-    <string name="name">Name</string>
+    <string name="name">പേര്</string>
     <!-- Show utilities list by list view -->
-    <string name="list_view">Listenansicht</string>
+    <string name="list_view">പട്ടിക കാഴ്ച</string>
     <!-- Show utilities list by grid view -->
-    <string name="grid_view">Gitteransicht</string>
+    <string name="grid_view">Grid View</string>
     <!-- Sort utilities by size -->
-    <string name="size">Größe</string>
+    <string name="size">വലുപ്പം</string>
     <!-- Group audio utilities list by album names  -->
-    <string name="album">Album</string>
+    <string name="album">ആൽബം</string>
     <!-- Group audio utilities list by artist name -->
-    <string name="artist">Interpret</string>
+    <string name="artist">കലാകാരൻ</string>
     <!-- Sort audio / video utilities list by duration -->
-    <string name="duration">Länge</string>
+    <string name="duration">കാലാവധി</string>
     <!-- Crash fallback screen title -->
-    <string name="sorry_string">Entschuldigung, das hätte nicht passieren dürfen.</string>
+    <string name="sorry_string">ക്ഷമിക്കണം, അങ്ങനെ സംഭവിക്കാൻ പാടില്ലായിരുന്നു.</string>
     <!-- Crash fallback screen report by email -->
-    <string name="error_report_button_text">Diesen Fehler per E-Mail melden</string>
+    <string name="error_report_button_text">Report this error via e-mail</string>
     <!-- Crash fallback screen report by telegram -->
-    <string name="error_report_button_telegram">Diesen Fehler per Telegramm melden</string>
+    <string name="error_report_button_telegram">Report this error via telegram</string>
     <!-- Crash fallback screen copy report -->
-    <string name="copy_for_github">Formatierten Fehlerbericht kopieren</string>
+    <string name="copy_for_github">Copy formatted report</string>
     <!-- Crash fallback screen report on github -->
-    <string name="error_report_open_issue_button_text">Auf GitHub melden</string>
+    <string name="error_report_open_issue_button_text">Report on GitHub</string>
     <!-- Crash fallback screen info -->
-    <string name="error_report_open_github_notice">Bitte überprüfe, ob es bereits eine Diskussion gibt, in der dieses Problem gemeldet wurde.</string>
+    <string name="error_report_open_github_notice">നിങ്ങളുടെ തകര്ച്ച ചർച്ച ചെയ്യുന്ന ഒരു പ്രശ്നം ഇതിനകം നിലവിലുണ്ടോ എന്ന് പരിശോധിക്കുക.</string>
     <!-- Toast shown when we failed to display crash fallback screen -->
-    <string name="error_snackbar_message">Entschuldigung, etwas ist schiefgelaufen.</string>
+    <string name="error_snackbar_message">ക്ഷമിക്കണം, എന്തോ കുഴപ്പം സംഭവിച്ചു.</string>
     <!-- Crash fallback screen report -->
-    <string name="error_snackbar_action">Bericht</string>
+    <string name="error_snackbar_action">Report</string>
     <!-- Crash fallback screen info about device -->
-    <string name="what_device_headline">Info:</string>
+    <string name="what_device_headline">വിവരം:</string>
     <!-- Crash fallback screen info about crash -->
-    <string name="what_happened_headline">Was passiert ist:</string>
+    <string name="what_happened_headline">എന്ത് സംഭവിച്ചു:</string>
     <!-- Crash fallback screen info about device -->
-    <string name="info_labels">Was:\\nAnfrage:\\nGMT Zeit:\\nPaket:\\nVersion:\\nOS Version:\\nGerät:\\nModell:\\nProdukt:\\nGeräte ID:</string>
+    <string name="info_labels">What:\\nRequest:\\nGMT Time:\\nPackage:\\nVersion:\\nOS version:\\nDevice:\\nModel:\\nProduct:\\nDevice ID:</string>
     <!-- Crash fallback screen ask user input -->
-    <string name="your_comment">Dein Kommentar (in Englisch):</string>
+    <string name="your_comment">നിങ്ങളുടെ അഭിപ്രായം (ഇംഗ്ലീഷിൽ):</string>
     <!-- Crash fallback screen show more details -->
-    <string name="error_details_headline">Details:</string>
+    <string name="error_details_headline">വിശദാംശങ്ങൾ:</string>
     <!-- Crash fallback screen info -->
-    <string name="app_ui_crash">App/UI abgestürzt</string>
+    <string name="app_ui_crash">App/UI crashed</string>
     <!-- Crash fallback screen title -->
-    <string name="error_report_title">Fehlerbericht</string>
+    <string name="error_report_title">Error report</string>
     <!-- Crash fallback screen crash report copied -->
-    <string name="crash_report_copied">Absturzbericht in Zwischenablage kopiert</string>
+    <string name="crash_report_copied">Crash report copied to clipboard</string>
     <!-- Crash fallback screen report copied to clipboard -->
-    <string name="clipboard_path_copy">Pfad in Zwischenablage kopiert</string>
+    <string name="clipboard_path_copy">Path copied to clipboard</string>
     <!-- Pdf activity password prompt -->
-    <string name="pdf_password_title">Passwort erforderlich</string>
+    <string name="pdf_password_title">Password required</string>
     <!-- Pdf activity password required info -->
-    <string name="pdf_password_required">Bitte Passwort eingeben, um diese Datei zu öffnen</string>
+    <string name="pdf_password_required">Please enter the password to open this document</string>
     <!-- Generic ok button in dialogs -->
-    <string name="ok">OK</string>
+    <string name="ok">ശരി</string>
     <!-- Pdf activity wrong password entered -->
-    <string name="wrong_password">Passwort falsch</string>
+    <string name="wrong_password">Wrong password</string>
     <!-- Generic message for any operation not supported -->
-    <string name="unsupported_operation">Nicht unterstützter Vorgang</string>
+    <string name="unsupported_operation">പിന്തുണയ്ക്കാത്ത പ്രവർത്തനം</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>Seit Android 11 wird seitens Google verlangt, dass Dateiverwalter Berechtigungen zum Verwalten aller Dateien auf dem Gerät anfordern. Mehr Details <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">hier</a>.\n\n
-Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &quot;Erlauben&quot; bitte die Option <b>Zugriff zum Verwalten aller Dateien zulassen</b> auf der nächsten Seite zulassen.
-\n\n<font color="#ff6347"><i>Das Abbrechen dieser Anfrage wird die App beenden.</i></font></body></html></string>
+    <string name="grant_all_files_permission"><html><body>Since Android 11, Google requests File Managers to request user permission for managing all files on the device. Details <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">here</a>.
+        \n\nAmaze File Utilities needs this permission too. After pressing &quot;Grant&quot;here, please select <b>Allow access to manage all files</b> option on the next screen.
+        \n\n<font color="#ff6347"><i>Canceling this dialog will exit the app.</i></font></body></html></string>
     <!-- Pdf activity copy page content title -->
-    <string name="copy_page">Seite kopieren</string>
+    <string name="copy_page">ഏട്‌ പകർത്തുക</string>
     <!-- Pdf activity view bookmarks -->
-    <string name="bookmarks">Lesezeichen</string>
+    <string name="bookmarks">Bookmarks</string>
     <!-- Pdf activity pdf title -->
-    <string name="title">Titel</string>
+    <string name="title">തലക്കെട്ട്‌</string>
     <!-- Pdf activity pdf author -->
-    <string name="author">Autor</string>
+    <string name="author">രചയിതാവ്</string>
     <!-- Pdf activity pdf creator -->
-    <string name="creator">Ersteller</string>
+    <string name="creator">സ്രഷ്ടാവ്</string>
     <!-- Pdf activity pdf creation date -->
-    <string name="creation_date">Erstellungsdatum</string>
+    <string name="creation_date">സൃഷ്ടിച്ച തീയതി</string>
     <!-- Pdf activity pdf modification date -->
-    <string name="modification_date">Änderungsdatum</string>
+    <string name="modification_date">Modification Date</string>
     <!-- Pdf activity pdf subject -->
-    <string name="subject">Thema</string>
+    <string name="subject">വിഷയം</string>
     <!-- Pdf activity pdf keywords -->
-    <string name="keywords">Schlüsselwörter</string>
+    <string name="keywords">Keywords</string>
     <!-- Pdf activity pdf producer -->
-    <string name="producer">Hersteller</string>
+    <string name="producer">നിർമ്മാതാവ്</string>
     <!-- Generic dialog close button -->
-    <string name="close">Schließen</string>
+    <string name="close">അടയ്ക്കുക</string>
     <!-- Analysing internal storage shown in analysis tab -->
-    <string name="analysing">Analysiere…</string>
+    <string name="analysing">Analysing…</string>
     <!-- Pdf activity page content copied -->
-    <string name="page_copied_to_clipboard">Seiteninhalt in Zwischenablage kopiert</string>
+    <string name="page_copied_to_clipboard">Page content copied to clipboard</string>
     <!-- Clean button in analysis tab to clean junk files -->
-    <string name="clean">Bereinigen</string>
+    <string name="clean">വൃത്തിയാക്കുക</string>
     <!-- Blurred images label in analysis -->
-    <string name="blurred_pics">Unscharf</string>
+    <string name="blurred_pics">മങ്ങിച്ചു</string>
     <!-- Low light label in analysis -->
-    <string name="low_light">Schwaches Licht</string>
+    <string name="low_light">കുറഞ്ഞ വെളിച്ചം</string>
     <!-- Memes label in analysis -->
     <string name="memes">Memes</string>
     <!-- Sad images label in analysis -->
-    <string name="frown">Stirnrunzeln</string>
+    <string name="frown">Frown</string>
     <!-- Sad images analysis hint -->
-    <string name="frown_hint">Bilder, die keine lächelnden Gesichter haben</string>
+    <string name="frown_hint">ചിരിക്കുന്ന മുഖങ്ങളില്ലാത്ത ചിത്രങ്ങൾ</string>
     <!-- Closed eyes analysis label -->
-    <string name="closed_eyes">Geschlossene Augen</string>
+    <string name="closed_eyes">അടഞ്ഞ കണ്ണുകൾ</string>
     <!-- Closed eyes analysis hint -->
-    <string name="closed_eyes_hint">Bilder, die Personen mit geschlossenen Augen haben</string>
+    <string name="closed_eyes_hint">കണ്ണടച്ച ആളുകളുള്ള ചിത്രങ്ങൾ</string>
     <!-- Distracted images analysis label -->
-    <string name="distracted">Abgelenkt</string>
+    <string name="distracted">Distracted</string>
     <!-- Distracted images analysis hint -->
-    <string name="distracted_hint">Images that have people looking elsewhere</string>
+    <string name="distracted_hint">ആളുകൾ മറ്റെവിടെയെങ്കിലും നോക്കുന്ന ചിത്രങ്ങൾ</string>
     <!-- Selfie images analysis label -->
     <string name="selfie">Selfies</string>
     <!-- Group images analysis label -->
-    <string name="group_pics">Gruppenbilder</string>
+    <string name="group_pics">സംഘ ചിത്രങ്ങൾ</string>
     <!-- Memes analysis hint -->
     <string name="memes_hint">Memes are images that have something prominent written over them</string>
     <!-- Duplicate files analysis label -->
-    <string name="duplicates">Doppelte Dateien</string>
+    <string name="duplicates">Duplicate files</string>
     <!-- App caches analysis labels -->
-    <string name="cache">App-Cache</string>
+    <string name="cache">App Cache</string>
     <!-- Large videos analysis label -->
-    <string name="large_videos">Große Videos</string>
+    <string name="large_videos">Large videos</string>
     <!-- Large downloads analysis label -->
-    <string name="large_downloads">Große Downloads</string>
+    <string name="large_downloads">Large downloads</string>
     <!-- Old screenshots analysis label -->
-    <string name="old_screenshots">Alte Bildschirmfotos</string>
+    <string name="old_screenshots">Old Screenshots</string>
     <!-- Old downloads analysis label -->
-    <string name="old_downloads">Alte Downloads</string>
+    <string name="old_downloads">Old downloads</string>
     <!-- Old recordings analysis label -->
-    <string name="old_recordings">Alte Aufnahmen</string>
+    <string name="old_recordings">Old recordings</string>
     <!-- Empty files analysis label -->
-    <string name="empty_files">Leere Dateien / Ordner</string>
+    <string name="empty_files">Empty files / folders</string>
     <!-- Junk files analysis label -->
-    <string name="junk_files">Datenmüll</string>
+    <string name="junk_files">Junk files</string>
     <!-- Junk files analysis hint -->
-    <string name="junk_files_hint">Junk Dateien sind Dateien, die von deinstallierten Apps übrig bleiben</string>
+    <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
     <!-- Telegram analysis label -->
-    <string name="telegram_files">Telegram</string>
+    <string name="telegram_files">Telegram Media</string>
     <!-- More optimisations coming at analysis tab bottom -->
-    <string name="more_to_come">Weitere Optimierungen werden kommen!</string>
+    <string name="more_to_come">More optimizations to come!</string>
     <!-- View all analysed content analysis tab -->
-    <string name="view_all">Alle anzeigen</string>
+    <string name="view_all">എല്ലാം കാണുക</string>
     <!-- Analysis settings title -->
-    <string name="analysis">Analyse</string>
+    <string name="analysis">വിശകലനം</string>
     <!-- Analysis settings hint -->
-    <string name="analysis_hint">Einstellungen des Analyse-Reiters wie zum Beispiel Pfade zur Analyse, Anzeige / Verbergen verschiedener Analysen</string>
+    <string name="analysis_hint">Control analysis tab settings such as paths to include analysis from, show / hide various analysis</string>
     <!-- Exclude paths from scan for music player -->
-    <string name="exclusions">Ausschlüsse</string>
+    <string name="exclusions">ഒഴിവാക്കലുകൾ</string>
     <!-- Exclude paths from scan for music player summary -->
-    <string name="exclusions_summary">Pfade, die beim Scannen von Medien ausgeschlossen werden sollen</string>
+    <string name="exclusions_summary">Paths to exclude while scanning media</string>
     <!-- Audio player settings title -->
     <string name="audio_player">Audio Player</string>
     <!-- Audio player settings summary -->
-    <string name="audio_player_hint">Festlegen von Audio Player Einstellungen wie z. B. auszuschließende Pfade</string>
+    <string name="audio_player_hint">Control audio player settings such as paths to exclude</string>
     <!-- Image viewer settings title -->
-    <string name="image_viewer_hint">Einstellungen des Bildbetrachters festlegen</string>
+    <string name="image_viewer_hint">ചിത്രം കാഴ്ചക്കാരൻ ക്രമീകരണങ്ങൾ നിയന്ത്രിക്കുക</string>
     <!-- Analysis in settings page -->
-    <string name="search_duplicates">Suche Duplikate in…</string>
+    <string name="search_duplicates">ഇതിൽ തനിപ്പകർപ്പുകൾ തിരയുക…</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="media_store">Android MediaStore (schnellste)</string>
+    <string name="media_store">Android media store (fastest)</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="internal_storage_shallow">Interner Speicher (oberflächlich / langsam)</string>
+    <string name="internal_storage_shallow">Internal Storage (Shallow / slow)</string>
     <!-- Analysis duplicate search method in settings -->
-    <string name="internal_storage_deep">Interner Speicher (tief / langsam)</string>
+    <string name="internal_storage_deep">Internal Storage (Deep / slowest)</string>
     <!-- Show/hide analysis checkbox in settings -->
-    <string name="show_analysis">Analyse anzeigen</string>
+    <string name="show_analysis">വിശകലനം കാണിക്കുക</string>
     <!-- Add new path to analyse or new path to exclude from scan in settings -->
-    <string name="add_item">Neuer Eintrag</string>
+    <string name="add_item">ഇനം ചേർക്കുക</string>
     <!-- Paths included for analysis in settings -->
-    <string name="paths_included">Eingeschlossene Pfade</string>
+    <string name="paths_included">Paths Included</string>
     <!-- Paths excluded from music player scan in settings -->
-    <string name="paths_excluded">Ausgeschlossene Pfade</string>
+    <string name="paths_excluded">Paths Excluded</string>
     <!-- Delete path from analysis / exclusion dialog in settings -->
-    <string name="delete_preference">Eintrag löschen</string>
+    <string name="delete_preference">മുൻഗണന ഇല്ലാതാക്കുക</string>
     <!-- Delete path from analysis / exclusions dialog message in settings -->
-    <string name="delete_pref_override_message">Sie überschreiben einen existierenden Pfad.
-        Dies wird die vorhandenen Analysedaten für diesen Pfad zurücksetzen.</string>
+    <string name="delete_pref_override_message">You\'re about to override an existing path.
+        This will reset the existing analysis data for that path.</string>
     <!-- Generic message to confirm -->
-    <string name="confirm">Bestätigen</string>
+    <string name="confirm">സ്ഥിരീകരിക്കുക</string>
     <!-- Images features group name in analysis settings -->
-    <string name="image_features">Bildmerkmale</string>
+    <string name="image_features">ചിത്രത്തിന്റെ സവിശേഷതകൾ</string>
     <!-- Images features group hint in analysis settings -->
-    <string name="features_paths_hint">Includes closed eyes, distracted, sad, selfie, group paths</string>
+    <string name="features_paths_hint">Includes closed eyes, selfie, group paths</string>
     <!-- Downloads label in analysis settings -->
     <string name="download_paths">Downloads</string>
     <!-- Downloads hint in analysis settings -->
-    <string name="download_paths_hint">Enthält alte, große Downloads</string>
+    <string name="download_paths_hint">Includes old, large downloads</string>
     <!-- Cluttered videos in analysis tab -->
-    <string name="cluttered_videos">Unaufgeräumte Videos</string>
+    <string name="cluttered_videos">Cluttered Videos</string>
     <!-- Cluttered videos hint in analysis tab -->
-    <string name="cluttered_videos_hint">Eine Gruppe von Videos mit ähnlicher Laufzeit.</string>
+    <string name="cluttered_videos_hint">A group of videos that have similar running time.</string>
     <!-- Re-analyse button in analysis settings -->
-    <string name="reanalyse">Erneut analysieren</string>
+    <string name="reanalyse">Re-analyse</string>
     <!-- Re-analyse hint in analysis settings -->
-    <string name="reanalyse_hint">Löscht vorhandene Analysedaten und startet erneut</string>
+    <string name="reanalyse_hint">Clears existing analysis data and starts again</string>
     <!-- Unknown artist / album for music player -->
-    <string name="unknown_artist">&lt;UNBEKANNT&gt;</string>
+    <string name="unknown_artist">&lt;UNKNOWN&gt;</string>
     <!-- Search for nearby connections in transfer tab -->
-    <string name="searching">Suche…</string>
+    <string name="searching">തിരയുന്നു…</string>
     <!-- Searching for nearby connections with timer in transfer tab -->
-    <string name="searching_timer">Suche… (%s Sekunden)</string>
+    <string name="searching_timer">തിരയുന്നു... (%s സെക്കന്റുകൾ)</string>
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
-    <string name="enable_wifi">Bitte aktivieren Sie Ihr WWLAN</string>
+    <string name="enable_wifi">ദയവായി നിങ്ങളുടെ വൈ-ഫൈ പ്രവർത്തനക്ഷമമാക്കുക</string>
     <!-- Failed to discover nearby devices in transfer tab -->
-    <string name="discovery_failure">Partner konnte nicht gefunden werden. Bitte stelle die Verbindung zum WLAN erneut her</string>
+    <string name="discovery_failure">Failed to discover peers. Please try reconnecting to Wifi network</string>
     <!-- Receiving files in transfer tab -->
-    <string name="receiving_files">Empfange Dateien</string>
+    <string name="receiving_files">Receiving files</string>
     <!-- Search for nearby devices in transfer tab -->
-    <string name="search_devices">Suche nach Geräten…</string>
+    <string name="search_devices">ഉപകരണങ്ങൾക്കായി തിരയുക…</string>
     <!-- Enable waveform bar for music player in settings -->
-    <string name="enable_waveform">Wellenform Suchleiste aktivieren</string>
+    <string name="enable_waveform">Enable waveform seekbar</string>
     <!-- Failed to start cast session when trying to cast images / videos from their list pages -->
-    <string name="failed_to_start_cast">Fehler beim Starten der Cast-Sitzung</string>
+    <string name="failed_to_start_cast">Failed to start cast session</string>
     <!-- Ready to cast images / videos to tv -->
-    <string name="ready_to_cast">Bereit zum casten, wähle beliebige Medien</string>
+    <string name="ready_to_cast">Ready to cast, select any media</string>
     <!-- Creating new cast to tv connection -->
-    <string name="establishing_cast">Cast-Verbindung wird hergestellt</string>
+    <string name="establishing_cast">Establishing cast connection</string>
     <!-- Cast session suspended for tv -->
-    <string name="cast_suspended">Cast Sitzung unterbrochen</string>
+    <string name="cast_suspended">Cast session suspended</string>
     <!-- Resuming tv cast session -->
-    <string name="resuming_cast">Cast Sitzung fortsetzen</string>
+    <string name="resuming_cast">Resuming cast session</string>
     <!-- Failed to resume tv cast session -->
-    <string name="failed_resume_cast">Fehler beim Wiederherstellen der Cast Sitzung</string>
+    <string name="failed_resume_cast">Failed to resume cast session</string>
     <!-- Tv cast session resumed -->
-    <string name="cast_resumed">Cast Sitzung wiederhergestellt</string>
+    <string name="cast_resumed">Cast session resumed</string>
     <!-- Tv cast session ending -->
-    <string name="cast_ending">Cast Sitzung beenden</string>
+    <string name="cast_ending">Ending cast session</string>
     <!-- Tv cast session ended -->
-    <string name="cast_ended">Cast Sitzung beendet</string>
+    <string name="cast_ended">Cast session ended</string>
     <!-- Open image/ videos/ audios with either cast on tv or open in mobile -->
-    <string name="open_with">Öffnen mit…</string>
+    <string name="open_with">ഇതിലൂടെ തുറക്കു…</string>
     <!-- Open images / videos/ audios using inbuilt player -->
     <string name="inbuilt_player">In-built player</string>
     <!-- Tv Cast notification title server running -->
-    <string name="cast_notification_title">Server läuft…</string>
+    <string name="cast_notification_title">Server running…</string>
     <!-- tv casting content notification content -->
-    <string name="cast_notification_summary">Inhalte werden auf TV übertragen</string>
+    <string name="cast_notification_summary">Casting content on TV</string>
     <!-- stop tv cast server notification button -->
-    <string name="stop">Stopp</string>
+    <string name="stop">നിർത്തുക</string>
     <!-- Service description to cast media files to tv -->
     <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
-    <string name="failed_to_handshake">Verbindung zum entfernten Gerät konnte nicht hergestellt werden. Bitte versuche die Verbindung mit dem WLAN erneut herzustellen</string>
+    <string name="failed_to_handshake">Failed to establish connection with remote device. Please try reconnecting to Wifi network</string>
     <!-- Connection successful to transfer files in tranfer tab -->
-    <string name="connection_successful">Erfolgreich verbunden</string>
+    <string name="connection_successful">Connection successful</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send">Senden fehlgeschlagen, bitte sicherstellen, dass die Gegenstelle auf Dateiempfang eingestellt ist</string>
+    <string name="failed_filename_send">Failed to send, please ensure remote is set to receive file</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send_reconnecct">Senden fehlgeschlagen, bitte erneut verbinden</string>
+    <string name="failed_filename_send_reconnecct">Failed to send, please reconnect</string>
     <!-- Failed to receive files in transfer tab -->
-    <string name="failed_filename_receive">Empfangen fehlgeschlagen</string>
+    <string name="failed_filename_receive">സ്വീകരിക്കുന്നതിൽ പരാജയപ്പെട്ടു</string>
     <!-- Failed to receive files in transfer tab -->
-    <string name="failed_filename_receive_reconnecct">Empfang fehlgeschlagen, bitte erneut verbinden</string>
+    <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
     <!-- Transfer complete in transfer tab -->
-    <string name="transfer_complete">Datei übertragen</string>
+    <string name="transfer_complete">File transferred</string>
     <!-- Need extra permissions for transfer tab -->
-    <string name="grant_location_permission">App benötigt Standortberechtigung, um sich mit Geräten in der Nähe zu verbinden.</string>
+    <string name="grant_location_permission">App needs location permission to connect with nearby devices.</string>
     <!-- Need extra permissions for transfer tab -->
-    <string name="location_permission_not_granted">Bitte Standortberechtigung erteilen, um sich mit Geräten in der Nähe zu verbinden.</string>
+    <string name="location_permission_not_granted">Please grant storage permission to connect with nearby devices.</string>
     <!-- Waiting for permissions in transfer tab -->
-    <string name="waiting_for_permissions">Warte auf Berechtigungen…</string>
+    <string name="waiting_for_permissions">അനുമതികൾക്കായി കാത്തിരിക്കുന്നു…</string>
     <!-- Enable gps for transfer tab -->
-    <string name="gps_disabled">Dein GPS scheint deaktiviert zu sein, bitte aktiviere es, um fortzufahren</string>
+    <string name="gps_disabled">നിങ്ങളുടെ ജിപിഎസ് പ്രവർത്തനരഹിതമാക്കിയതായി തോന്നുന്നു, ദയവായി തുടരാൻ പ്രവർത്തനക്ഷമമാക്കുക</string>
     <!-- Enable location to scan nearby devices in transfer tab -->
-    <string name="enable_location">Bitte aktiviere Standortdienste.</string>
+    <string name="enable_location">Please enable location to scan.</string>
     <!-- generic yes -->
-    <string name="yes">Ja</string>
+    <string name="yes">അതെ</string>
     <!-- generic no -->
-    <string name="no">Nein</string>
+    <string name="no">അല്ല</string>
     <!-- Enable location / wifi in transfer tab -->
-    <string name="enable">Aktivieren</string>
+    <string name="enable">പ്രവർത്തനക്ഷമമാക്കുക</string>
     <!-- No nearby devices found in transfer tab -->
-    <string name="no_devices_found">Keine Geräte in der Nähe gefunden,
-        bitte stelle sicher, dass dein Gerät mit demselben Netzwerk verbunden ist und in den Einstellungen WiFi-Direkt aktiviert ist</string>
+    <string name="no_devices_found">No devices found nearby,
+        please make sure your device is connected to same network and have WiFi-Direct enabled in settings</string>
     <!-- Failed to stop discovery in transfer tab -->
-    <string name="failed_to_stop_peer_discovery">Beenden der Partnerermittlung fehlgeschlagen</string>
+    <string name="failed_to_stop_peer_discovery">Failed to stop peer discovery</string>
     <!-- Resetting network discovery in transfer tab -->
-    <string name="resetting_network_discovery">Netzwerkerkennung zurücksetzen</string>
+    <string name="resetting_network_discovery">Resetting network discovery</string>
     <!-- Disconnected in transfer tab -->
-    <string name="disconnected">Verbindung getrennt</string>
+    <string name="disconnected">Disconnected</string>
     <!-- Disconnect from connection in transfer tab -->
-    <string name="disconnect">Verbindung trennen</string>
+    <string name="disconnect">Disconnect</string>
     <!-- Already connected to a device in transfer tab -->
-    <string name="existing_connection">Bestehende Verbindung existiert bereits, bitte trennen Sie zuerst!</string>
+    <string name="existing_connection">Existing connection exists, please disconnect first!</string>
     <!-- Connecting to nearby device in transfer tab -->
-    <string name="connecting">Verbinde…</string>
+    <string name="connecting">Connecting…</string>
     <!-- Aspect ratio of video in video player -->
-    <string name="aspect_ratio">Seitenverhältnis</string>
+    <string name="aspect_ratio">Aspect ratio</string>
     <!-- Playback speed dialog for video / audio player -->
-    <string name="playback_speed">Wiedergabegeschwindigkeit</string>
+    <string name="playback_speed">Playback Speed</string>
     <!-- Playback pitch in video / audio player -->
-    <string name="pitch_speed">Tonhöhe (Halbtonschritt)</string>
+    <string name="pitch_speed">Pitch (semitones)</string>
     <!-- Add subtitles in video player -->
-    <string name="subtitles">Untertitel</string>
+    <string name="subtitles">Subtitles</string>
     <!-- Video info dialog in video player -->
-    <string name="file">Datei</string>
+    <string name="file">File</string>
     <!-- Video info dialog in video player -->
     <string name="media">Media</string>
     <!-- Video info dialog in video player -->
@@ -425,94 +425,94 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- Video info dialog in video player -->
     <string name="video">Video</string>
     <!-- Video info dialog in video player -->
-    <string name="file_path">Pfad</string>
+    <string name="file_path">Path</string>
     <!-- Video info dialog in video player -->
-    <string name="last_modified">Zuletzt geändert</string>
+    <string name="last_modified">Last Modified</string>
     <!-- Video info dialog in video player -->
-    <string name="description">Beschreibung</string>
+    <string name="description">വിവരണം</string>
     <!-- Video info dialog in video player -->
-    <string name="recording_date">Monat / Jahr der Aufnahme</string>
+    <string name="recording_date">Recording month/year</string>
     <!-- Video info dialog in video player -->
-    <string name="release_date">Monat / Jahr der Veröffentlichung</string>
+    <string name="release_date">Release month/year</string>
     <!-- Video info dialog in video player -->
     <string name="bitrate">Bitrate</string>
     <!-- Video info dialog in video player -->
-    <string name="channel">Kanal</string>
+    <string name="channel">Channel</string>
     <!-- Video info dialog in video player -->
-    <string name="frame_rate">Bildfrequenz</string>
+    <string name="frame_rate">Frame Rate</string>
     <!-- Video info dialog in video player -->
-    <string name="mime_type">Containertyp</string>
+    <string name="mime_type">Container Type</string>
     <!-- Video info dialog in video player -->
-    <string name="width">Breite</string>
+    <string name="width">വീതി</string>
     <!-- Video info dialog in video player -->
-    <string name="height">Höhe</string>
+    <string name="height">ഉയരം</string>
     <!-- Video info dialog in video player -->
     <string name="codecs">Codecs</string>
     <!-- Video info dialog in video player -->
-    <string name="sample_rate">Abtastrate</string>
+    <string name="sample_rate">Sample Rate</string>
     <!-- Failed to gain audio focus in music player -->
-    <string name="failed_to_gain_focus">Audiofokussierung fehlgeschlagen</string>
+    <string name="failed_to_gain_focus">Failed to gain audio focus</string>
     <!-- Open existing subtitles file in video player -->
-    <string name="open">Öffnen</string>
+    <string name="open">തുറക്കുക</string>
     <!-- Search for subtitles file online dialog button in video player -->
-    <string name="search">Suchen</string>
+    <string name="search">തിരയുക</string>
     <!-- Search for subtitles file online dialog title in video player -->
-    <string name="search_online">Online suchen</string>
+    <string name="search_online">Search online</string>
     <!-- Synchronize subtitles list item in video player -->
-    <string name="synchronize">Synchronisieren</string>
+    <string name="synchronize">സമന്വയിപ്പിക്കുക</string>
     <!-- Download subtitles in video player -->
-    <string name="download_subtitles">Untertitel herunterladen</string>
+    <string name="download_subtitles">Download subtitles</string>
     <!-- Download subtitles info in video player -->
-    <string name="download_subtitles_info">Geben Sie Stichwörter ein und wählen Sie Ihre Sprache, um Untertitel auf <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html> zu suchen</string>
+    <string name="download_subtitles_info">Enter keywords and select your language to search subtitles from <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
-    <string name="amaze_fm_redirect">Sie werden zu Amaze File Manager weitergeleitet. Es ist unser Open-Source-Angebot, mit über 2 Millionen Downloads und einer Bewertung von 4,3 im Play Store, das alle Funktionen eines modernen Dateimanagers bietet und völlig kostenlos ist.</string>
+    <string name="amaze_fm_redirect">You\'re being redirected to Amaze File Manager. It\'s our open source offering that has all features a modern file manager has completely free of cost with over 2M downloads and 4.3 rating on Play Store.</string>
     <!-- Download button in dialog prompt -->
-    <string name="download">Herunterladen</string>
+    <string name="download">Download</string>
     <string name="amaze_file_manager">Amaze File Manager</string>
     <!-- Download subtitles video player device not connected to internet -->
-    <string name="not_connected_to_internet">Gerät nicht mit dem Internet verbunden</string>
+    <string name="not_connected_to_internet">Device not connected to internet</string>
     <!-- Search subtitles dialog in video player -->
-    <string name="upload_date">Uploaddatum</string>
+    <string name="upload_date">Upload date</string>
     <!-- Search subtitles dialog in video player -->
-    <string name="rating">Bewertung</string>
+    <string name="rating">Rating</string>
     <!-- Search subtitles dialog in video player -->
     <string name="cd">CD</string>
     <!-- Uploader info in search subtitles dialog in video player -->
-    <string name="uploader">Hochgeladen von</string>
+    <string name="uploader">Uploader</string>
     <!-- Downloads info in search subtitles dialog in video player -->
     <string name="downloads">Downloads</string>
     <!-- Language info in search subtitles dialog in video player -->
-    <string name="language">Sprache</string>
+    <string name="language">ഭാഷ</string>
     <!-- No subtitles found in video player -->
-    <string name="no_results_subtitles">Keine Ergebnisse, bitte versuche es mit anderen Schlüsselworten…</string>
+    <string name="no_results_subtitles">No results, please try with different keywords…</string>
     <!-- Download subtitles in video player -->
-    <string name="downloading">Herunterladen…</string>
+    <string name="downloading">Downloading…</string>
     <!-- Can't download subtitles in video player -->
-    <string name="choose_different_subtitle">Kann nicht herunterladen, wähle andere Untertitel</string>
+    <string name="choose_different_subtitle">Can\'t download, choose some other subtitles</string>
     <!-- Subtitles applied in video player -->
-    <string name="subtitles_applied">Untertitel übernommen</string>
+    <string name="subtitles_applied">Subtitles applied</string>
     <!-- Failed to download subtitles in video player -->
-    <string name="failed_to_download">Herunterladen fehlgeschlagen</string>
+    <string name="failed_to_download">Failed to download</string>
     <!-- Share file dialog -->
     <string name="bluetooth">Bluetooth</string>
     <!-- Share logs in about section -->
-    <string name="share_logs">Protokolle teilen</string>
+    <string name="share_logs">Share logs</string>
     <!-- No app found in share dialog -->
-    <string name="no_apps_found_to_share">Keine Apps zum Teilen gefunden</string>
+    <string name="no_apps_found_to_share">No apps found to share</string>
     <!-- Failed to extract logs to share in about section -->
-    <string name="failed_to_extract_logs">Fehler beim Entpacken der Protokolldatei</string>
+    <string name="failed_to_extract_logs">Failed to extract logs file</string>
     <!-- Continue playing button in video player when video was previously played and we want to resume -->
-    <string name="continue_playing">Wiedergabe fortsetzen</string>
+    <string name="continue_playing">Continue playing</string>
     <!-- No language selected for subtitles download in video player -->
-    <string name="no_language_selected">Keine Sprache ausgewählt</string>
+    <string name="no_language_selected">No language selected</string>
     <!-- No item selected to delete in analysis tab -->
-    <string name="no_item_selected">Kein Element ausgewählt</string>
+    <string name="no_item_selected">No item selected</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
     <string name="analysis_updated">Updated analysis</string>
     <!-- Failed to share pdf/ video/audio files  -->
     <string name="failed_to_share">Failed to share files</string>
     <!-- Transfer tab connected hint -->
-    <string name="connected_send_receive_hint">Connected… before you start sending,
+    <string name="connected_send_receive_hint">Connected… before you start sending, 
         make sure to enable receiver on the other device</string>
     <!-- Transfer tab receiving files -->
     <string name="receiving">Receiving…</string>
@@ -525,9 +525,9 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- Transfer tab enable wifi to continue -->
     <string name="enable_wifi_to_continue">Please enable Wifi to continue</string>
     <!-- Transfer tab my device info -->
-    <string name="my_device">My device: %s</string>
+    <string name="my_device">എന്റെ ഉപകരണം: %s</string>
     <!-- Transfer tab my device status -->
-    <string name="device_status">Status: %s</string>
+    <string name="device_status">സ്ഥിതി: %s</string>
     <!-- Transfer tab progress -->
     <string name="transfer_in_progress_title">Transfer in progress</string>
     <!-- Transfer tab transfer in progress but user trying to leave the screen -->
@@ -539,13 +539,13 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- Transfer app stay in progress -->
     <string name="stay">Stay</string>
     <!-- Image viewer edit image -->
-    <string name="edit">Edit</string>
+    <string name="edit">തിരുത്തുക</string>
     <!-- Image viewer set image as wallpaper -->
     <string name="set_as">Set as…</string>
     <!-- Image viewer delete image -->
-    <string name="delete">Delete</string>
+    <string name="delete">ഇല്ലാതാക്കുക</string>
     <!-- Image viewer details of image -->
-    <string name="details">Details</string>
+    <string name="details">വിശദാംശങ്ങൾ</string>
     <!-- Image viewer manufacturer of camera lens -->
     <string name="make">Make</string>
     <!-- Image viewer model of camera lens -->
@@ -557,13 +557,13 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- Image viewer shutter time -->
     <string name="shutter_time">Shutter time</string>
     <!-- Image viewer image location -->
-    <string name="location">Location</string>
+    <string name="location">സ്ഥാനം</string>
     <!-- Image viewer gps -->
     <string name="gps">GPS</string>
     <!-- Image viewer image latitude -->
-    <string name="latitude">Latitude</string>
+    <string name="latitude">അക്ഷാംശം</string>
     <!-- Image viewer image longitude -->
-    <string name="longitude">Longitude</string>
+    <string name="longitude">രേഖാംശം</string>
     <!-- Image viewer image file name -->
     <string name="file_name">File Name</string>
     <!-- Image viewer image path -->
@@ -571,20 +571,20 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- Image viewer open image location in map -->
     <string name="open_in_maps">Open in Map</string>
     <!-- Share image / video -->
-    <string name="share">Share</string>
+    <string name="share">പങ്കിടുക</string>
     <!-- Share / document no app found to open -->
     <string name="no_app_found">No App found to open this file</string>
     <!-- File not found while opening -->
     <string name="file_not_found">File not found</string>
     <!-- Delete file -->
-    <string name="delete_files_title">Delete</string>
+    <string name="delete_files_title">ഇല്ലാതാക്കുക</string>
     <!-- Delete file summary -->
     <string name="delete_files_message">You\'re about to permanently delete these files.
         Are you sure you want to proceed?\n\n%s Files, %s Size</string>
     <!-- Delete file progress -->
     <string name="deleted_progress">Deleted %s of %s</string>
     <!-- Delete file successful -->
-    <string name="successfully_deleted">Successfully deleted</string>
+    <string name="successfully_deleted">വിജയകരമായി ഇല്ലാതാക്കി</string>
     <!-- Delete file failure -->
     <string name="failed_to_update_list_reopen">Failed to update list, please restart the app</string>
     <!-- Device id in about section -->
@@ -594,21 +594,21 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- Device id copied in about section -->
     <string name="device_id_copied">Device ID copied to clipboard</string>
     <!-- App version in about section -->
-    <string name="version_title">Version</string>
+    <string name="version_title">പതിപ്പ്</string>
     <!-- License title in about section -->
-    <string name="license">License</string>
+    <string name="license">അനുമതിപത്രം</string>
     <!-- Submit issue in about section -->
-    <string name="submit_issue">Submit Issue</string>
+    <string name="submit_issue">പ്രശ്നം സമർപ്പിക്കുക</string>
     <!-- Contact us in about section -->
-    <string name="contact_us">Contact Us</string>
+    <string name="contact_us">ഞങ്ങളെ സമീപിക്കുക</string>
     <!-- Translate in about section -->
-    <string name="translate_title">Translate</string>
+    <string name="translate_title">വിവർത്തനം ചെയ്യുക</string>
     <!-- Translate summary in about section -->
     <string name="translate_summary">Help us translate Amaze in your language</string>
     <!-- About app screen title -->
     <string name="about_app_title">About app</string>
     <!-- Made in india about section -->
-    <string name="made_in_india">Made with ❤ in India</string>
+    <string name="made_in_india">ഇന്ത്യയിൽ ❤ത്തോടെ നിർമ്മിച്ചത്</string>
     <!-- Trail dialog trial started -->
     <string name="trial_started_title">Trial started (%s days)</string>
     <!-- Trial dialog trial started content -->
@@ -714,17 +714,17 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- Subscription dialog lifetime membership -->
     <string name="lifetime_membership">Lifetime Membership</string>
     <!-- Subscription dialog one year membership -->
-    <string name="one_year">1 Year</string>
+    <string name="one_year">1 വർഷം</string>
     <!-- Generic operation failed -->
     <string name="operation_failed">Operation failed</string>
     <!-- Settings page number of columns for media lists grid view -->
     <string name="columns_grid_title">No. of columns in grid</string>
     <!-- Settings page appearance -->
-    <string name="appearance">Appearance</string>
+    <string name="appearance">രൂപം</string>
     <!-- Settings page appearance summary -->
     <string name="appearance_summary">App appearance settings</string>
     <!-- Settings page general settings -->
-    <string name="general">General</string>
+    <string name="general">പൊതുവായ</string>
     <!-- Playback properties in video player -->
     <string name="playback_properties">Playback properties</string>
     <!-- Apply dialog button in apply playback settings -->
@@ -732,7 +732,7 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- Playback settings dialog pitch settings info -->
     <string name="pitch_hint_text">A value of zero means that the key is not changed.\nOne full step corresponds to one semitone.\nA change of -12 semitones means that the song is played one octave lower.</string>
     <!-- Playback settings dialog reset settings -->
-    <string name="reset">Reset</string>
+    <string name="reset">പുനഃക്രമീകരിക്കുക</string>
     <!-- Settings page extract music player background color from album -->
     <string name="audio_player_enable_palette">Extract palette color from album</string>
     <!-- Settings page extract music player background color from album info -->
@@ -756,7 +756,7 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- Required elevated permission for analysis in analysis tab -->
     <string name="require_permission">Required elevated permissions for this analysis</string>
     <!-- Already granted analysis permission, ask user to refresh -->
-    <string name="granted_permission_refresh">Already granted?</string>
+    <string name="granted_permission_refresh">ഇതിനകം അനുവദിച്ചിട്ടുണ്ടോ?</string>
     <!-- Refresh button in analysis after permission granted -->
     <string name="refresh">Refresh</string>
     <!-- Unused apps preference dialog message -->
@@ -774,9 +774,9 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- Apk listing in analysis -->
     <string name="apk_files">APK files</string>
     <!-- Image editor tools -->
-    <string name="shape">Shape</string>
+    <string name="shape">ആകൃതി</string>
     <!-- Apk listing in analysis -->
-    <string name="text">Text</string>
+    <string name="text">വാചകം</string>
     <!-- Apk listing in analysis -->
     <string name="eraser">Eraser</string>
     <!-- Apk listing in analysis -->
@@ -800,7 +800,7 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- In Image editor -->
     <string name="label_oval">Oval</string>
     <!-- In Image editor -->
-    <string name="label_rectangle">Rectangle</string>
+    <string name="label_rectangle">ദീർഘചതുരം</string>
     <!-- In Image editor -->
     <string name="label_line">Line</string>
     <!-- In Image editor -->
@@ -812,7 +812,7 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- In Image editor -->
     <string name="label_eraser_mode">Eraser Mode</string>
     <!-- In Image editor to write text over image -->
-    <string name="label_text">Text</string>
+    <string name="label_text">വാചകം</string>
     <!-- In Image editor -->
     <string name="label_filter">Filter</string>
     <!-- In Image editor to crop or adjust image -->
@@ -820,7 +820,7 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- In Image editor -->
     <string name="msg_save_image">Are you want to exit without saving image?</string>
     <!-- In Image editor -->
-    <string name="msg_share_image">Share Image</string>
+    <string name="msg_share_image">ചിത്രം പങ്കിടുക</string>
     <!-- In Image editor to add picture to edit -->
     <string name="select_picture">Select Picture</string>
     <!-- In Image editor saving modified image -->
@@ -830,7 +830,7 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- In Image editor -->
     <string name="failed_image_save">Failed to save image</string>
     <!-- In Image editor to save edited image -->
-    <string name="save">Save</string>
+    <string name="save">സൂക്ഷിക്കുക</string>
     <!-- In Image editor to discard saving image -->
     <string name="discard">Discard</string>
     <!-- Image editor activity label -->
@@ -856,7 +856,7 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- large files in analysis tab -->
     <string name="large_files">Large Files</string>
     <!-- purchase fdroid subscription -->
-    <string name="purchase_fdroid_title">Purchase</string>
+    <string name="purchase_fdroid_title">വാങ്ങുക</string>
     <!-- purchase fdroid subscription summary -->
     <string name="purchase_fdroid_message">You\'re running an Fdroid build.
         You can unlock a lifetime subscription by donating any amount of your choice.
@@ -875,9 +875,9 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- playlist in audio fragment -->
     <string name="insert_songs_playlist">Added %d songs to playlist %s</string>
     <!-- playlist in audio fragment -->
-    <string name="failed_insert_songs_playlist">Failed to add songs</string>
+    <string name="failed_insert_songs_playlist">പാട്ടുകൾ ചേർക്കുന്നതിൽ പരാജയപ്പെട്ടു</string>
     <!-- playlist in audio fragment -->
-    <string name="failed_remove_songs_playlist">Failed to remove songs</string>
+    <string name="failed_remove_songs_playlist">പാട്ടുകൾ നീക്കം ചെയ്യുന്നതിൽ പരാജയപ്പെട്ടു</string>
     <!-- playlists header in audio fragment grouping -->
     <string name="playlists">Playlists</string>
     <!-- options in floating action button -->
@@ -896,11 +896,11 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- Rename playlist summary dialog -->
     <string name="rename_playlist_message">Please enter new playlist name</string>
     <!-- Rename playlist summary dialog button -->
-    <string name="rename">Rename</string>
+    <string name="rename">പേരുമാറ്റുക</string>
     <!-- create playlist dialog in audio fragment -->
-    <string name="create_new_playlist">Create New</string>
+    <string name="create_new_playlist">പുതിയത് സൃഷ്ടിക്കുക</string>
     <!-- remove from playlist dialog in audio fragment -->
-    <string name="remove">Remove</string>
+    <string name="remove">നീക്കം ചെയ്യുക</string>
     <!-- Remove from playlist summary dialog -->
     <string name="remove_from_playlist_message">You\'re about to remove selected songs from playlist(s).
         Are you sure you want to proceed?</string>
@@ -929,7 +929,7 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- clearing ram in analysis -->
     <string name="ram_usage_clear">Closed background processes</string>
     <!-- back button again to exit on main screen -->
-    <string name="press_again">Press again to exit</string>
+    <string name="press_again">പുറത്തുകടക്കാൻ ഒരിക്കൽ കൂടി അമർത്തുക</string>
     <!-- highest data usage apps in analysis fragment -->
     <string name="network_intensive_apps">Network intensive apps</string>
     <!-- histogram in image viewer -->
