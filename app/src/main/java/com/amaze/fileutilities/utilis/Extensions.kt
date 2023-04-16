@@ -71,7 +71,7 @@ import java.io.FileOutputStream
 
 var log: Logger = LoggerFactory.getLogger(Utils::class.java)
 
-fun Uri.getSiblingUriFiles(): ArrayList<Uri>? {
+fun Uri.getSiblingUriFiles(filter: (File) -> Boolean): ArrayList<Uri>? {
     try {
         val currentPath = getFileFromUri()
         currentPath?.let {
@@ -81,26 +81,23 @@ fun Uri.getSiblingUriFiles(): ArrayList<Uri>? {
                 if (parent != null) {
                     val filesList = parent.listFiles()
                     if (filesList != null) {
-                        if (filesList.size < 500) {
-                            parent.listFiles()?.sortBy { it.lastModified() }
-                            parent.listFiles()?.run {
-                                if (this.isNotEmpty()) {
-                                    siblings = ArrayList()
-                                    for (currentSibling in this) {
-                                        siblings!!.add(
-                                            Uri.parse(
-                                                if (!currentSibling.path
-                                                    .startsWith("/")
-                                                )
-                                                    "/${currentSibling.path}"
-                                                else currentSibling.path
-                                            )
-                                        )
-                                    }
-                                }
-                            }
-                        } else {
+                        val filteredFiles = filesList.filter(filter)
+                        if (filteredFiles.size > 1000) {
                             siblings = arrayListOf(this)
+                        } else {
+                            siblings = ArrayList()
+                            filteredFiles.sortedBy { it.lastModified() }.forEach {
+                                    currentSibling ->
+                                siblings!!.add(
+                                    Uri.parse(
+                                        if (!currentSibling.path
+                                                .startsWith("/")
+                                        )
+                                            "/${currentSibling.path}"
+                                        else currentSibling.path
+                                    )
+                                )
+                            }
                         }
                     } else {
                         siblings = arrayListOf(this)
@@ -254,6 +251,19 @@ fun Uri.isImageMimeType(): Boolean {
         this.path?.endsWith("webp")!!
 }
 
+fun File.isImageMimeType(): Boolean {
+    return this.path.endsWith("jpg") ||
+            this.path.endsWith("jpe") ||
+            this.path.endsWith("jpeg") ||
+            this.path.endsWith("jfif") ||
+            this.path.endsWith("pjpeg") ||
+            this.path.endsWith("pjp") ||
+            this.path.endsWith("gif") ||
+            this.path.endsWith("png") ||
+            this.path.endsWith("svg") ||
+            this.path.endsWith("webp")
+}
+
 fun Uri.isVideoMimeType(): Boolean {
     return this.path?.endsWith("mp4")!! ||
         this.path?.endsWith("mkv")!! ||
@@ -279,6 +289,23 @@ fun Uri.isAudioMimeType(): Boolean {
         this.path?.endsWith("eac3")!! ||
         this.path?.endsWith("dca")!! ||
         this.path?.endsWith("opus")!!
+}
+
+fun File.isAudioMimeType(): Boolean {
+    return this.path.endsWith("mp3") ||
+            this.path.endsWith("wav") ||
+            this.path.endsWith("ogg") ||
+            this.path.endsWith("mp4") ||
+            this.path.endsWith("m4a") ||
+            this.path.endsWith("fmp4") ||
+            this.path.endsWith("flv") ||
+            this.path.endsWith("flac") ||
+            this.path.endsWith("amr") ||
+            this.path.endsWith("aac") ||
+            this.path.endsWith("ac3") ||
+            this.path.endsWith("eac3") ||
+            this.path.endsWith("dca") ||
+            this.path.endsWith("opus")
 }
 
 val Int.dp get() = this / (

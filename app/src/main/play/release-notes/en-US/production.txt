@@ -3,4 +3,5 @@ Changelog:
 - Add support for .cbz , .fb2 and .mobi
 - Add support to search in pdf
 - Improve performance
+- Update translations
 - Other bugfixes

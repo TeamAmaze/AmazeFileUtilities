@@ -74,10 +74,10 @@ class AudioPlayerInterfaceHandlerViewModel : ViewModel() {
             }*/
             if (siblingsLiveData.value.isNullOrEmpty()) {
                 val uriList = ArrayList<Uri>()
-                uri.getSiblingUriFiles().run {
+                uri.getSiblingUriFiles { it.isAudioMimeType() }.run {
                     if (this != null) {
                         uriList.addAll(
-                            this.filter { it.isAudioMimeType() }.asReversed()
+                            this.asReversed()
                         )
                     } else {
                         uriList.add(uri)
