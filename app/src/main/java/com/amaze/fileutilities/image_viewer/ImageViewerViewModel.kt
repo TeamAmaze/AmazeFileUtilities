@@ -39,12 +39,11 @@ class ImageViewerViewModel : ViewModel() {
             }*/
             siblingImagesLiveData.postValue(null)
             if (siblingImagesLiveData.value.isNullOrEmpty()) {
-                imageModel.uri.getSiblingUriFiles().run {
+                imageModel.uri.getSiblingUriFiles { it.isImageMimeType() }.run {
                     val imageModelList = ArrayList<LocalImageModel>()
                     if (this != null) {
                         imageModelList.addAll(
-                            this.filter { it.isImageMimeType() }
-                                .map { LocalImageModel(it, "") }.asReversed()
+                            this.map { LocalImageModel(it, "") }.asReversed()
                         )
                     } else {
                         imageModelList.add(imageModel)

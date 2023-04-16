@@ -86,7 +86,7 @@ class ImageViewerActivity : PermissionsActivity() {
                         }
                     }
                 }
-                viewBinding.pager.currentItem = position
+                viewBinding.pager.setCurrentItem(position, false)
             }
         }
     }

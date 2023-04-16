@@ -32,8 +32,8 @@
 -keep class com.amaze.fileutilities.cast.CastOptionsProvider { *; }
 -keep class android.support.** { *; }
 -keep class com.google.** { *; }
--keep class com.folioreader.** { *; }
 -keep class org.opencv.** { *; }
+-keep class com.artifex.mupdf.** { *;}
 
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep class * extends com.bumptech.glide.module.AppGlideModule {
