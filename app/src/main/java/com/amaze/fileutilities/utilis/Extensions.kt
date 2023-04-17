@@ -87,11 +87,11 @@ fun Uri.getSiblingUriFiles(filter: (File) -> Boolean): ArrayList<Uri>? {
                         } else {
                             siblings = ArrayList()
                             filteredFiles.sortedBy { it.lastModified() }.forEach {
-                                    currentSibling ->
+                                currentSibling ->
                                 siblings!!.add(
                                     Uri.parse(
                                         if (!currentSibling.path
-                                                .startsWith("/")
+                                            .startsWith("/")
                                         )
                                             "/${currentSibling.path}"
                                         else currentSibling.path
@@ -253,15 +253,15 @@ fun Uri.isImageMimeType(): Boolean {
 
 fun File.isImageMimeType(): Boolean {
     return this.path.endsWith("jpg") ||
-            this.path.endsWith("jpe") ||
-            this.path.endsWith("jpeg") ||
-            this.path.endsWith("jfif") ||
-            this.path.endsWith("pjpeg") ||
-            this.path.endsWith("pjp") ||
-            this.path.endsWith("gif") ||
-            this.path.endsWith("png") ||
-            this.path.endsWith("svg") ||
-            this.path.endsWith("webp")
+        this.path.endsWith("jpe") ||
+        this.path.endsWith("jpeg") ||
+        this.path.endsWith("jfif") ||
+        this.path.endsWith("pjpeg") ||
+        this.path.endsWith("pjp") ||
+        this.path.endsWith("gif") ||
+        this.path.endsWith("png") ||
+        this.path.endsWith("svg") ||
+        this.path.endsWith("webp")
 }
 
 fun Uri.isVideoMimeType(): Boolean {
@@ -293,19 +293,19 @@ fun Uri.isAudioMimeType(): Boolean {
 
 fun File.isAudioMimeType(): Boolean {
     return this.path.endsWith("mp3") ||
-            this.path.endsWith("wav") ||
-            this.path.endsWith("ogg") ||
-            this.path.endsWith("mp4") ||
-            this.path.endsWith("m4a") ||
-            this.path.endsWith("fmp4") ||
-            this.path.endsWith("flv") ||
-            this.path.endsWith("flac") ||
-            this.path.endsWith("amr") ||
-            this.path.endsWith("aac") ||
-            this.path.endsWith("ac3") ||
-            this.path.endsWith("eac3") ||
-            this.path.endsWith("dca") ||
-            this.path.endsWith("opus")
+        this.path.endsWith("wav") ||
+        this.path.endsWith("ogg") ||
+        this.path.endsWith("mp4") ||
+        this.path.endsWith("m4a") ||
+        this.path.endsWith("fmp4") ||
+        this.path.endsWith("flv") ||
+        this.path.endsWith("flac") ||
+        this.path.endsWith("amr") ||
+        this.path.endsWith("aac") ||
+        this.path.endsWith("ac3") ||
+        this.path.endsWith("eac3") ||
+        this.path.endsWith("dca") ||
+        this.path.endsWith("opus")
 }
 
 val Int.dp get() = this / (
