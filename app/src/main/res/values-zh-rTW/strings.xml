@@ -326,7 +326,7 @@
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
     <string name="enable_wifi">請啟用 Wi-Fi</string>
     <!-- Failed to discover nearby devices in transfer tab -->
-    <string name="discovery_failure">Failed to discover peers. Please try reconnecting to Wifi network</string>
+    <string name="discovery_failure">無法找到任何設備。請嘗試重新連線到 Wifi網路。</string>
     <!-- Receiving files in transfer tab -->
     <string name="receiving_files">正在接收檔案中...</string>
     <!-- Search for nearby devices in transfer tab -->
@@ -364,7 +364,7 @@
     <!-- Service description to cast media files to tv -->
     <string name="cloud_streamer_service_description">以 Amaze檔案工具程式把媒體檔案投影到電視機上</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
-    <string name="failed_to_handshake">Failed to establish connection with remote device. Please try reconnecting to Wifi network</string>
+    <string name="failed_to_handshake">無法與遠端設備建立連線。請嘗試重新連線到 Wifi網路。</string>
     <!-- Connection successful to transfer files in tranfer tab -->
     <string name="connection_successful">連線成功</string>
     <!-- Failed to send files in transfer tab -->
@@ -376,7 +376,7 @@
     <!-- Failed to receive files in transfer tab -->
     <string name="failed_filename_receive_reconnecct">接收失敗，請重新連線</string>
     <!-- Transfer complete in transfer tab -->
-    <string name="transfer_complete">File transferred</string>
+    <string name="transfer_complete">檔案傳輸完成</string>
     <!-- Need extra permissions for transfer tab -->
     <string name="grant_location_permission">請授予位置存取權限以與附近的裝置連線。</string>
     <!-- Need extra permissions for transfer tab -->
@@ -468,7 +468,7 @@
     <string name="amaze_fm_redirect">你將被帶到 Amaze檔案管理器。這是我們的開源 app，擁有所有現今檔案管理 app的所有功能，而且完全免費。在 Play Store已經有超過 200萬次下載及 4.3的評分。</string>
     <!-- Download button in dialog prompt -->
     <string name="download">下載</string>
-    <string name="amaze_file_manager">Amaze File Manager</string>
+    <string name="amaze_file_manager">Amaze 檔案管理器</string>
     <!-- Download subtitles video player device not connected to internet -->
     <string name="not_connected_to_internet">裝置未連接到互聯網</string>
     <!-- Search subtitles dialog in video player -->
@@ -602,9 +602,9 @@
     <!-- Contact us in about section -->
     <string name="contact_us">聯絡我們</string>
     <!-- Translate in about section -->
-    <string name="translate_title">Translate</string>
+    <string name="translate_title">翻譯</string>
     <!-- Translate summary in about section -->
-    <string name="translate_summary">Help us translate Amaze in your language</string>
+    <string name="translate_summary">幫助我們將 Amaze翻譯成您的語言</string>
     <!-- About app screen title -->
     <string name="about_app_title">關於此程式</string>
     <!-- Made in india about section -->
@@ -612,38 +612,39 @@
     <!-- Trail dialog trial started -->
     <string name="trial_started_title">試用期已開始（%s天）</string>
     <!-- Trial dialog trial started content -->
-    <string name="trial_started_message">Thank you for choosing Amaze File Utilities.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and your purchase will really help to keep us afloat.\n
-        At any point if you need any help feel free to contact us in About section.
-        You\'ll be able to contact directly to our team on Telegram.\n
-        Please also try our open source file manager application \'Amaze File Manager\' for a seamless file management experience.</string>
+    <string name="trial_started_message">感謝你選擇 Amaze檔案工具程式。\n
+        我們是一群開源程式開發者，致力為用戶提供無廣告的使用體驗，
+        你的訂閱對我們繼續開發很有幫助。\n
+        任何時候如果需要幫忙，歡迎在“關於本程式”一欄處聯絡我們。
+        你亦可以經 Telegram直接和我們聯絡。\n
+        亦歡迎你使用我們的開源檔案管理器“Amaze檔案管理器”以獲得完美整合的檔案管理體驗。</string>
     <!-- Trial dialog trial ending last day title -->
     <string name="trial_last_day_title">試用快將到期</string>
     <!-- Trial dialog trial ending last day summary -->
-    <string name="trial_last_day_message">Hey There! Thank you for choosing Amaze File Utilities.
-        \nYour trial is going to expire tomorrow, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.
-        \nWe are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to keep us afloat.\nYou can write to us if you want to extend the trial period a bit more.
+    <string name="trial_last_day_message">你好！感謝你選用 Amaze檔案工具程式。\n
+        你的試用期將於明天屆滿，我們希望你喜歡我們的 App，也希望你願意以非常相宜的價錢，協助我們的開發工作。\n
+        我們是一群開源程式開發者，致力為用戶提供無廣告的使用體驗，
+        但我們也需要一些經費以維持我們的服務。\n
+        如果你需要多一些試用時間，歡迎與我們聯絡。
     </string>
     <!-- Trial expired title -->
     <string name="trial_expired_title">試用已過期</string>
     <!-- Trial expired summary -->
-    <string name="trial_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your trial has expired, we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to keep us afloat.\n
-        You can write to us if you want to extend the trial period a bit more.
+    <string name="trial_expired_message">你好！感謝你選用 Amaze檔案工具程式。\n
+        你的試用期已經屆滿，我們希望你喜歡我們的 App，也希望你願意以非常相宜的價錢，協助我們的開發工作。\n
+        我們是一群開源程式開發者，致力為用戶提供無廣告的使用體驗，
+        但我們也需要一些經費以維持我們的服務。\n
+        如果你需要多一些試用時間，歡迎與我們聯絡。
     </string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
     <string name="trial_inactive_title">試用期未啟動</string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
-    <string name="trial_inactive_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your trial is inactive and you\'re not longer an exclusive member,
-        we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to keep us afloat.\n
-        You can write to us if you want to extend the trial period a bit more.</string>
+    <string name="trial_inactive_message">你好！感謝你選用 Amaze檔案工具程式。\n
+        你的試用期已經無效，而你亦已不再是我們的特選會員。
+        我們希望你喜歡我們的 App，也希望你願意以非常相宜的價錢，協助我們的開發工作。\n
+        我們是一群開源程式開發者，致力為用戶提供無廣告的使用體驗，
+        但我們也需要一些經費以維持我們的服務。\n
+        如果你需要多一些試用時間，歡迎與我們聯絡。</string>
     <!-- Subscription dialog subscription purchased title -->
     <string name="subscription_purchased_title">訂閱中</string>
     <!-- Subscription dialog subscription purchased summary -->
@@ -656,12 +657,12 @@
     <!-- Subscription dialog yearly subscription expired title -->
     <string name="subscription_expired_title">訂閱已過期</string>
     <!-- Subscription dialog yearly subscription expired summary -->
-    <string name="subscription_expired_message">Hey There! Thank you for choosing Amaze File Utilities.\n
-        Your subscription has expired,
-        we hope you\'ve enjoyed our software, and we look forward for you to make a nominal payment.\n
-        We are a team of open source developers working hard to provide an ad-free experience,
-        and we need funds to keep us afloat.\n
-        You can write to us if you want to extend the trial period a bit more.</string>
+    <string name="subscription_expired_message">你好！感謝你選用 Amaze檔案工具程式。\n
+        你的訂閱期已經屆滿，
+        我們希望你喜歡我們的 App，也希望你願意以非常相宜的價錢，協助我們的開發工作。\n
+        我們是一群開源程式開發者，致力為用戶提供無廣告的使用體驗，
+        但我們也需要一些經費以維持我們的服務。\n
+        如果你需要多一些試用時間，歡迎與我們聯絡。</string>
     <!-- Trial validation dialog failed to validate -->
     <string name="not_connected_trial_title">試用權驗證失敗</string>
     <!-- Trial validation dialog failed to validate summary -->
@@ -687,7 +688,7 @@
     <string name="privacy_title">我們關心您的個人隱私！</string>
     <!-- Welcome screen license agreement page -->
     <string name="privacy_summary">討厭廣告？我們也討厭。我們和你一樣重視你的個人資訊。\n
-        我們保證不會收集任何關於你的個人隱私。\n我們不說，但我們的記錄說明一切。\n我們是一群開源軟件開發者，開發和維護 Amaze檔案管理員已有8年時間。\n\n我們期待你的訂閱。
+        我們保證不會收集任何關於你的個人隱私。\n這是開源軟件。\n我們是一群開源軟件開發者，開發和維護 Amaze檔案管理器已有8年時間。\n\n我們期待你的訂閱。
     </string>
     <!-- Subscription dialog failed to fetch subscriptions -->
     <string name="error_fetching_google_play_product_list">無法從 Google Play擷取產品清單。</string>
@@ -742,126 +743,126 @@
     <!-- Settings page extract image viewer background color from image summary -->
     <string name="image_viewer_enable_palette_summary">設定影像檢視器的背景顏色</string>
     <!-- Unused apps in analysis tab -->
-    <string name="unused_apps">Unused apps</string>
+    <string name="unused_apps">未使用的應用程式</string>
     <!-- Most used apps in analysis tab -->
-    <string name="most_used_apps">Most used apps</string>
+    <string name="most_used_apps">最常用的應用程式</string>
     <!-- Least used apps in analysis tab -->
-    <string name="least_used_apps">Least used apps</string>
+    <string name="least_used_apps">最不常用的應用程式</string>
     <!-- Large apps in analysis tab -->
-    <string name="large_apps">Large apps</string>
+    <string name="large_apps">大型應用程式</string>
     <!-- Games installed in analysis tab -->
-    <string name="games_installed">Games</string>
+    <string name="games_installed">遊戲</string>
     <!-- Games installed hint in analysis tab -->
-    <string name="games_installed_hint">Games currently installed on this device</string>
+    <string name="games_installed_hint">安裝在此設備上的遊戲</string>
     <!-- Required elevated permission for analysis in analysis tab -->
-    <string name="require_permission">Required elevated permissions for this analysis</string>
+    <string name="require_permission">需要更多權限以進行這個分析</string>
     <!-- Already granted analysis permission, ask user to refresh -->
-    <string name="granted_permission_refresh">Already granted?</string>
+    <string name="granted_permission_refresh">已經授予權限？</string>
     <!-- Refresh button in analysis after permission granted -->
-    <string name="refresh">Refresh</string>
+    <string name="refresh">重新整理</string>
     <!-- Unused apps preference dialog message -->
-    <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
+    <string name="unused_apps_pref_message">應用程式未開啟日數</string>
     <!-- Most used apps preference dialog message -->
-    <string name="most_used_apps_pref_message">Apps most used in last number of days</string>
+    <string name="most_used_apps_pref_message">最近〇天最常用的應用程式</string>
     <!-- Least used apps preference dialog message -->
-    <string name="least_used_apps_pref_message">Apps least used in last number of days</string>
+    <string name="least_used_apps_pref_message">最近〇天最不常用的應用程式</string>
     <!-- Stopping analysis by pressing on (X) button in analysis tab -->
-    <string name="stopping_analysis">Stopping analysis</string>
+    <string name="stopping_analysis">正在停止分析</string>
     <!-- Remove battery optimizations on welcome screen and settings page -->
-    <string name="remove_battery_optimizations">Remove battery optimizations</string>
+    <string name="remove_battery_optimizations">停用電池效能最佳化設定</string>
     <!-- Remove battery optimizations hint on welcome screen and settings page -->
-    <string name="remove_battery_optimizations_hint">Please remove battery optimizations for music player to function properly in background</string>
+    <string name="remove_battery_optimizations_hint">請移除音樂播放器的電池最佳化設定，以確保它能在背景繼續運作</string>
     <!-- Apk listing in analysis -->
-    <string name="apk_files">APK files</string>
+    <string name="apk_files">APK 檔案</string>
     <!-- Image editor tools -->
-    <string name="shape">Shape</string>
+    <string name="shape">形狀</string>
     <!-- Apk listing in analysis -->
-    <string name="text">Text</string>
+    <string name="text">文字</string>
     <!-- Apk listing in analysis -->
-    <string name="eraser">Eraser</string>
+    <string name="eraser">橡皮擦</string>
     <!-- Apk listing in analysis -->
-    <string name="filter">Filter</string>
+    <string name="filter">篩選</string>
     <!-- Apk listing in analysis -->
-    <string name="emoji">Emoji</string>
+    <string name="emoji">表情符號</string>
     <!-- Apk listing in analysis -->
-    <string name="sticker">Sticker</string>
+    <string name="sticker">貼圖</string>
     <!-- Apk listing in analysis -->
-    <string name="rotate">Rotate</string>
+    <string name="rotate">旋轉</string>
     <!-- Apk listing in analysis -->
-    <string name="flip_horizontal">Flip-H</string>
+    <string name="flip_horizontal">水平翻轉</string>
     <!-- Apk listing in analysis -->
-    <string name="flip_vertical">Flip-V</string>
+    <string name="flip_vertical">垂直翻轉</string>
     <!-- Apk listing in analysis -->
-    <string name="resize">Resize</string>
+    <string name="resize">調整大小</string>
     <!-- In Image editor -->
-    <string name="label_brush">Brush</string>
+    <string name="label_brush">畫筆</string>
     <!-- In Image editor -->
-    <string name="label_shape">Shape</string>
+    <string name="label_shape">形狀</string>
     <!-- In Image editor -->
-    <string name="label_oval">Oval</string>
+    <string name="label_oval">橢圓形</string>
     <!-- In Image editor -->
-    <string name="label_rectangle">Rectangle</string>
+    <string name="label_rectangle">長方形</string>
     <!-- In Image editor -->
-    <string name="label_line">Line</string>
+    <string name="label_line">線條</string>
     <!-- In Image editor -->
-    <string name="label_emoji">Emoji</string>
+    <string name="label_emoji">表情符號</string>
     <!-- In Image editor -->
-    <string name="label_sticker">Sticker</string>
+    <string name="label_sticker">貼紙</string>
     <!-- In Image editor -->
-    <string name="label_eraser">Eraser</string>
+    <string name="label_eraser">橡皮擦</string>
     <!-- In Image editor -->
-    <string name="label_eraser_mode">Eraser Mode</string>
+    <string name="label_eraser_mode">橡皮擦模式</string>
     <!-- In Image editor to write text over image -->
-    <string name="label_text">Text</string>
+    <string name="label_text">文字</string>
     <!-- In Image editor -->
-    <string name="label_filter">Filter</string>
+    <string name="label_filter">篩選</string>
     <!-- In Image editor to crop or adjust image -->
-    <string name="label_adjust">Adjust</string>
+    <string name="label_adjust">調整</string>
     <!-- In Image editor -->
-    <string name="msg_save_image">Are you want to exit without saving image?</string>
+    <string name="msg_save_image">確定不儲存影像就離開？</string>
     <!-- In Image editor -->
-    <string name="msg_share_image">Share Image</string>
+    <string name="msg_share_image">分享影像</string>
     <!-- In Image editor to add picture to edit -->
-    <string name="select_picture">Select Picture</string>
+    <string name="select_picture">選取圖片</string>
     <!-- In Image editor saving modified image -->
-    <string name="saving">Saving…</string>
+    <string name="saving">正在儲存…</string>
     <!-- In Image editor -->
-    <string name="image_saved">Image saved successfully</string>
+    <string name="image_saved">影像儲存成功</string>
     <!-- In Image editor -->
-    <string name="failed_image_save">Failed to save image</string>
+    <string name="failed_image_save">儲存影像失敗</string>
     <!-- In Image editor to save edited image -->
-    <string name="save">Save</string>
+    <string name="save">儲存</string>
     <!-- In Image editor to discard saving image -->
-    <string name="discard">Discard</string>
+    <string name="discard">丟棄</string>
     <!-- Image editor activity label -->
-    <string name="image_editor">Amaze Image Editor</string>
+    <string name="image_editor">Amaze 影像編輯器</string>
     <!-- Failed while loading docx file -->
-    <string name="failed_to_load_document">Failed to load document</string>
+    <string name="failed_to_load_document">無法載入文件</string>
     <!-- load music lyrics -->
-    <string name="load">Load</string>
+    <string name="load">載入</string>
     <!-- paste lyrics dialog -->
-    <string name="paste_lyrics">Paste lyrics</string>
+    <string name="paste_lyrics">貼上歌詞</string>
     <!-- lyrics type dialog -->
-    <string name="lyrics_type">Lyrics type</string>
+    <string name="lyrics_type">歌詞類型</string>
     <!-- lyrics type dialog -->
-    <string name="clear_lyrics">Clearing lyrics</string>
+    <string name="clear_lyrics">正在清除歌詞</string>
     <!-- lyrics type dialog -->
-    <string name="added_lyrics">Added lyrics</string>
+    <string name="added_lyrics">已加入歌詞</string>
     <!-- whatsapp images in analysis section -->
-    <string name="whatsapp_images">Whatsapp Images</string>
+    <string name="whatsapp_images">Whatsapp圖片</string>
     <!-- whatsapp videos in analysis section -->
-    <string name="whatsapp_videos">Whatsapp Videos</string>
+    <string name="whatsapp_videos">Whatsapp 影片</string>
     <!-- whatsapp analysis in settings -->
-    <string name="whatsapp_media">Whatsapp Media</string>
+    <string name="whatsapp_media">Whatsapp 媒體檔案</string>
     <!-- large files in analysis tab -->
-    <string name="large_files">Large Files</string>
+    <string name="large_files">大型檔案</string>
     <!-- purchase fdroid subscription -->
-    <string name="purchase_fdroid_title">Purchase</string>
+    <string name="purchase_fdroid_title">購買</string>
     <!-- purchase fdroid subscription summary -->
-    <string name="purchase_fdroid_message">You\'re running an Fdroid build.
-        You can unlock a lifetime subscription by donating any amount of your choice.
-        Please donate using one of the options below.
-        Once done please contact us through telegram / email by sharing your device ID and we\'ll unlock the subscription for you.</string>
+    <string name="purchase_fdroid_message">你在使用 Fdroid版本。
+        你可以捐獻你所願意的金額，以解鎖終生訂閱授權。
+        請使用下列任何一種方法捐獻。
+        完成後請在 Telegram或以電郵通知我們你的設備識別碼，我們將會為你解鎖授權。</string>
     <!-- purchase fdroid subscription paypal -->
     <string name="purchase_fdroid_paypal">Paypal</string>
     <!-- purchase fdroid subscription liberapay -->
@@ -869,63 +870,73 @@
     <!-- header summary in media list fragments -->
     <string name="header_list_summary">%s • %s</string>
     <!-- playlist in audio fragment -->
-    <string name="created_playlist">Playlist created</string>
+    <string name="created_playlist">已建立播放清單</string>
     <!-- playlist in audio fragment -->
-    <string name="could_not_create_playlist">Failed to create playlist</string>
+    <string name="could_not_create_playlist">無法建立播放清單。</string>
     <!-- playlist in audio fragment -->
-    <string name="insert_songs_playlist">Added %d songs to playlist %s</string>
+    <string name="insert_songs_playlist">已把 %d首歌曲加入播放清單 %s</string>
     <!-- playlist in audio fragment -->
-    <string name="failed_insert_songs_playlist">Failed to add songs</string>
+    <string name="failed_insert_songs_playlist">無法把樂曲添加到播放清單</string>
     <!-- playlist in audio fragment -->
-    <string name="failed_remove_songs_playlist">Failed to remove songs</string>
+    <string name="failed_remove_songs_playlist">未能移除歌曲</string>
     <!-- playlists header in audio fragment grouping -->
-    <string name="playlists">Playlists</string>
+    <string name="playlists">播放清單</string>
     <!-- options in floating action button -->
-    <string name="options">Options</string>
+    <string name="options">選項</string>
     <!-- options in floating action button to locate the file -->
-    <string name="locate">Locate</string>
+    <string name="locate">檔案位置</string>
     <!-- options in floating action button to add to playlist -->
-    <string name="playlist">Playlist</string>
+    <string name="playlist">播放清單</string>
     <!-- options in media headers when playlist is enabled -->
-    <string name="delete_playlist">Delete Playlist</string>
+    <string name="delete_playlist">刪除播放清單</string>
     <!-- options in media headers when playlist is enabled -->
-    <string name="rename_playlist">Rename Playlist</string>
+    <string name="rename_playlist">重新命名播放清單</string>
     <!-- Delete playlist summary dialog -->
-    <string name="delete_playlist_message">You\'re about to permanently delete playlist %s.
-        Are you sure you want to proceed?</string>
+    <string name="delete_playlist_message">你將要永久刪取播放清單 %s。
+        確定要繼續？</string>
     <!-- Rename playlist summary dialog -->
-    <string name="rename_playlist_message">Please enter new playlist name</string>
+    <string name="rename_playlist_message">請輸入新的播放清單名稱</string>
     <!-- Rename playlist summary dialog button -->
-    <string name="rename">Rename</string>
+    <string name="rename">重新命名</string>
     <!-- create playlist dialog in audio fragment -->
-    <string name="create_new_playlist">Create New</string>
+    <string name="create_new_playlist">新增</string>
     <!-- remove from playlist dialog in audio fragment -->
-    <string name="remove">Remove</string>
+    <string name="remove">移除</string>
     <!-- Remove from playlist summary dialog -->
-    <string name="remove_from_playlist_message">You\'re about to remove selected songs from playlist(s).
-        Are you sure you want to proceed?</string>
+    <string name="remove_from_playlist_message">你將會從播放清單移除選擇的樂曲。
+        確定要繼續？</string>
     <!-- add to playlist dialog in audio fragment -->
-    <string name="add_to_playlist">Add to Playlist</string>
+    <string name="add_to_playlist">添加到播放清單</string>
     <!-- create dialog in audio fragment -->
-    <string name="create">Create</string>
+    <string name="create">新增</string>
     <!-- removed songs from playlist in audio fragment -->
-    <string name="removed_from_playlist">Removed from playlist(s)</string>
+    <string name="removed_from_playlist">從播放清單中移除</string>
     <!-- play next song button in options in audio fragment -->
-    <string name="play_next">PLAY NEXT</string>
+    <string name="play_next">播放下一首</string>
     <!-- play next song button in options in audio fragment -->
-    <string name="play_next_success">Song added to queue</string>
+    <string name="play_next_success">樂曲已加入到候播清單</string>
     <!-- newly installed apps in settings preferences -->
-    <string name="newly_installed_apps">Newly installed apps</string>
+    <string name="newly_installed_apps">新安裝的應用程式</string>
     <!-- newly installed apps summary in settings preferences -->
-    <string name="newly_installed_apps_summary">Apps newly installed (in days)</string>
+    <string name="newly_installed_apps_summary">新安裝應用程式的安裝日數</string>
     <!-- newly installed apps in settings preferences -->
-    <string name="recently_updated_apps">Recently updated apps</string>
+    <string name="recently_updated_apps">最近更新的應用程式</string>
     <!-- newly installed apps summary in settings preferences -->
-    <string name="recently_updated_apps_summary">Apps recently updated (in days)</string>
+    <string name="recently_updated_apps_summary">應用程式的更新日數</string>
     <!-- ram usage in analysis -->
-    <string name="ram_usage">Memory (RAM) Usage</string>
+    <string name="ram_usage">記憶體使用量</string>
     <!-- ram usage in analysis -->
-    <string name="ram_usage_title">%s available | %s total</string>
+    <string name="ram_usage_title">可用 %s | 總共 %s</string>
     <!-- clearing ram in analysis -->
-    <string name="ram_usage_clear">Closed background processes</string>
+    <string name="ram_usage_clear">已關閉的背景處理程序</string>
+    <!-- back button again to exit on main screen -->
+    <string name="press_again">再按一次退出</string>
+    <!-- highest data usage apps in analysis fragment -->
+    <string name="network_intensive_apps">經常使用網路的應用程式</string>
+    <!-- histogram in image viewer -->
+    <string name="histogram">Histogram</string>
+    <!-- similar images in analysis fragment -->
+    <string name="similar_images">Similar Images</string>
+    <!-- similar images summary in analysis fragment -->
+    <string name="similar_images_hint">Images that have similar colors</string>
 </resources>

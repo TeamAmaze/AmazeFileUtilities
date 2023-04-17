@@ -19,7 +19,7 @@
     <!-- Music player activity label -->
     <string name="amaze_audio_player">Amaze Music Player</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Amaze Pdf Viewer</string>
+    <string name="pdf_viewer">Amaze Image Viewer</string>
     <!-- Epub activity label -->
     <string name="epub_viewer">Amaze Epub Viewer</string>
     <!-- Docx viewer activity label -->
@@ -687,7 +687,7 @@
     <string name="privacy_title">We care for your privacy!</string>
     <!-- Welcome screen license agreement page -->
     <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.\n
-        We assure you that we do not collect any of your private information.\nWe don\'t say this, our track record does.\nWe\'re a group of open source developers and are managing Amaze File Manager for around 8 years now.\n\nWe look forward to your subscription.
+        We assure you that we do not collect any of your private information.\nThis is an open source software.\nWe\'re a group of open source developers and are managing Amaze mobile apps for around 8 years now.\n\nWe look forward to your subscription.
     </string>
     <!-- Subscription dialog failed to fetch subscriptions -->
     <string name="error_fetching_google_play_product_list">Error fetching product list from Google Play.</string>
@@ -928,4 +928,14 @@
     <string name="ram_usage_title">%s available | %s total</string>
     <!-- clearing ram in analysis -->
     <string name="ram_usage_clear">Closed background processes</string>
+    <!-- back button again to exit on main screen -->
+    <string name="press_again">Press again to exit</string>
+    <!-- highest data usage apps in analysis fragment -->
+    <string name="network_intensive_apps">Network intensive apps</string>
+    <!-- histogram in image viewer -->
+    <string name="histogram">Histogram</string>
+    <!-- similar images in analysis fragment -->
+    <string name="similar_images">Similar Images</string>
+    <!-- similar images summary in analysis fragment -->
+    <string name="similar_images_hint">Images that have similar colors</string>
 </resources>

@@ -686,8 +686,8 @@
     <!-- Welcome screen license agreement page -->
     <string name="privacy_title">Мы заботимся о вашей конфиденциальности!</string>
     <!-- Welcome screen license agreement page -->
-    <string name="privacy_summary">Не любите рекламу? Мы тоже, мы ценим Ваши данные также как и Вы\n
-        Мы заверяем Вас, что мы не собираем ваши личные данные.\nЭто не мы говорим, это говорит наш послужной список.\nМы — команда разработчиков с открытым исходным кодом и поддерижваем Amaze Файловый Менеджер уже 8 лет.\n\nМы с нетерпением ждём вашей подписки.
+    <string name="privacy_summary">Don\'t like ads? Neither do we, we value your data as much as you do.\n
+        We assure you that we do not collect any of your private information.\nThis is an open source software.\nWe\'re a group of open source developers and are managing Amaze mobile apps for around 8 years now.\n\nWe look forward to your subscription.
     </string>
     <!-- Subscription dialog failed to fetch subscriptions -->
     <string name="error_fetching_google_play_product_list">Ошибка при получении списка продуктов из Google Play.</string>
@@ -927,4 +927,14 @@
     <string name="ram_usage_title">%s available | %s total</string>
     <!-- clearing ram in analysis -->
     <string name="ram_usage_clear">Closed background processes</string>
+    <!-- back button again to exit on main screen -->
+    <string name="press_again">Press again to exit</string>
+    <!-- highest data usage apps in analysis fragment -->
+    <string name="network_intensive_apps">Network intensive apps</string>
+    <!-- histogram in image viewer -->
+    <string name="histogram">Histogram</string>
+    <!-- similar images in analysis fragment -->
+    <string name="similar_images">Similar Images</string>
+    <!-- similar images summary in analysis fragment -->
+    <string name="similar_images_hint">Images that have similar colors</string>
 </resources>
