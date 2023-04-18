@@ -33,7 +33,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/six_dp"
-        android:text="@string/app_version"
         android:textSize="@dimen/eighteen_sp"
         android:textColor="@color/grey_color"
         app:layout_goneMarginTop="@dimen/eight_dp"

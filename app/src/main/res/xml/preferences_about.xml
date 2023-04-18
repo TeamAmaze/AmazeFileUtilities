@@ -4,7 +4,6 @@
     <Preference
         app:key="version"
         app:title="@string/version_title"
-        android:summary="@string/app_version"
         />
     <Preference
         app:key="about"

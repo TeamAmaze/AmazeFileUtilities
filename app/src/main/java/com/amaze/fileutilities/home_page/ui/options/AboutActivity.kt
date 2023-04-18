@@ -27,6 +27,7 @@ import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.ActivityAboutBinding
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
@@ -46,6 +47,7 @@ class AboutActivity : AppCompatActivity() {
         _binding = ActivityAboutBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.homeScreenDesign.text = Html.fromHtml(getString(R.string.home_screen_design))
+        binding.version.text = BuildConfig.SUDO_VERSION_NAME
         Linkify.addLinks(binding.homeScreenDesign, Linkify.WEB_URLS)
         binding.homeScreenDesign.movementMethod = LinkMovementMethod.getInstance()
         supportActionBar?.setBackgroundDrawable(

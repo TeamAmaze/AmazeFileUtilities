@@ -304,7 +304,7 @@ public class ErrorActivity extends AppCompatActivity {
             + "\n"
             + getPackageName()
             + "\n"
-            + BuildConfig.VERSION_NAME
+            + BuildConfig.SUDO_VERSION_NAME
             + "\n"
             + getOsString()
             + "\n"
@@ -325,7 +325,7 @@ public class ErrorActivity extends AppCompatActivity {
       jsonMap.put("user_action", errorInfo.userAction);
       jsonMap.put("request", errorInfo.request);
       jsonMap.put("package", getPackageName());
-      jsonMap.put("version", BuildConfig.VERSION_NAME);
+      jsonMap.put("version", BuildConfig.SUDO_VERSION_NAME);
       jsonMap.put("os", getOsString());
       jsonMap.put("device", Build.DEVICE);
       jsonMap.put("model", Build.MODEL);
@@ -363,7 +363,7 @@ public class ErrorActivity extends AppCompatActivity {
           .append("\n* __Package:__ ")
           .append(BuildConfig.APPLICATION_ID)
           .append("\n* __Version:__ ")
-          .append(BuildConfig.VERSION_NAME)
+          .append(BuildConfig.SUDO_VERSION_NAME)
           .append("\n* __User Action:__ ")
           .append(errorInfo.userAction)
           .append("\n* __Request:__ ")

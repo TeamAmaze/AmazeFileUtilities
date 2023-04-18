@@ -59,8 +59,41 @@ android {
         applicationId "com.amaze.fileutilities"
         minSdk 21
         targetSdk 31
-        versionCode 80
-        versionName "1.80"
+
+        Integer sudoVersionCode = 21
+
+        String[] abiFilterList = property("abiFilters").toString().split(';')
+        Integer minorVersion = 0
+        if (abiFilterList.size() == 1) {
+            switch (abiFilterList[0]) {
+                case "x86":
+                    minorVersion = 1;
+                    break;
+                case "x86_64":
+                    minorVersion = 2;
+                    break;
+                case "arm64-v8a":
+                    minorVersion = 3;
+                    break;
+                case "armeabi-v7a":
+                    minorVersion = 4;
+                    break;
+                default:
+                    minorVersion = 0
+            }
+        }
+        Integer sudoVersionCodeFinal = (sudoVersionCode*4)+minorVersion
+        Integer majorVersion = (sudoVersionCodeFinal/100)+1
+        if (sudoVersionCodeFinal/100>=1) {
+            minorVersion = sudoVersionCodeFinal % 100
+        } else {
+            minorVersion = sudoVersionCodeFinal
+        }
+        versionCode sudoVersionCodeFinal
+        versionName "${majorVersion}.${minorVersion}"
+
+        buildConfigField "String", "SUDO_VERSION_NAME", "\"v${majorVersion}.${minorVersion}\""
+
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

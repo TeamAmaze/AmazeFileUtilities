@@ -28,6 +28,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.Trial
@@ -102,6 +103,9 @@ class AboutFragment : PreferenceFragmentCompat(), Preference.OnPreferenceClickLi
                     }
             }
         }
+
+        val versionName = findPreference<Preference>(KEY_VERSION)
+        versionName?.summary = BuildConfig.SUDO_VERSION_NAME
     }
 
     override fun onCreateView(

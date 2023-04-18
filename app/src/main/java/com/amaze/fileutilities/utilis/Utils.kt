@@ -243,7 +243,7 @@ class Utils {
             emailIntent.putExtra(Intent.EXTRA_CC, aEmailCCList)
             emailIntent.putExtra(
                 Intent.EXTRA_SUBJECT,
-                "Feedback : Amaze File Utilities for " + BuildConfig.VERSION_NAME
+                "Feedback : Amaze File Utilities for " + BuildConfig.SUDO_VERSION_NAME
             )
             if (!isNullOrEmpty(text)) {
                 emailIntent.putExtra(Intent.EXTRA_TEXT, text)
