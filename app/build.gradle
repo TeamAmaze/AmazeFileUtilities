@@ -72,10 +72,10 @@ android {
                 case "x86_64":
                     minorVersion = 2;
                     break;
-                case "arm64-v8a":
+                case "armeabi-v7a":
                     minorVersion = 3;
                     break;
-                case "armeabi-v7a":
+                case "arm64-v8a":
                     minorVersion = 4;
                     break;
                 default:
