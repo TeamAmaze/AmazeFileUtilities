@@ -85,9 +85,9 @@ android {
         Integer sudoVersionCodeFinal = (sudoVersionCode*4)+minorVersion
         Integer majorVersion = (sudoVersionCodeFinal/100)+1
         if (sudoVersionCodeFinal/100>=1) {
-            minorVersion = sudoVersionCodeFinal % 100
+            minorVersion = (sudoVersionCode*4) % 100
         } else {
-            minorVersion = sudoVersionCodeFinal
+            minorVersion = (sudoVersionCode*4)
         }
         versionCode sudoVersionCodeFinal
         versionName "${majorVersion}.${minorVersion}"
