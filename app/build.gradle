@@ -61,6 +61,7 @@ android {
         targetSdk 31
 
         Integer sudoVersionCode = 21
+        String versionNameText = "1.80"
 
         String[] abiFilterList = property("abiFilters").toString().split(';')
         Integer minorVersion = 0
@@ -83,16 +84,10 @@ android {
             }
         }
         Integer sudoVersionCodeFinal = (sudoVersionCode*4)+minorVersion
-        Integer majorVersion = (sudoVersionCodeFinal/100)+1
-        if (sudoVersionCodeFinal/100>=1) {
-            minorVersion = (sudoVersionCode*4) % 100
-        } else {
-            minorVersion = (sudoVersionCode*4)
-        }
         versionCode sudoVersionCodeFinal
-        versionName "${majorVersion}.${minorVersion}"
+        versionName versionNameText
 
-        buildConfigField "String", "SUDO_VERSION_NAME", "\"v${majorVersion}.${minorVersion}\""
+        buildConfigField "String", "SUDO_VERSION_NAME", "\"v${versionNameText}\""
 
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
