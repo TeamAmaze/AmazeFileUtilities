@@ -6,6 +6,26 @@ buildscript {
         fragment_version = "1.3.6"
         roomVersion = "2.4.0"
         billing_version = "4.1.0"
+        BASE_CLOUD_FUNC = "https://us-central1-useful-cathode-91310.cloudfunctions.net"
+        BASE_API_STICKER_PACK = "https://us-central1-useful-cathode-91310.cloudfunctions.net/amaze-utils-sticker-pack/"
+        API_REQ_TRIAL_URI = "/amaze-utils-fdroid-trial-validator"
+        API_REQ_TRIAL_AUTH_TOKEN = "unk2G2vXc*qsKu"
+        API_REQ_TRIAL_APP_HASH = "Aw4\$B4VfR#V^*7"
+        API_REQ_STICKER_PACK_TOKEN = "c2PxRdya"
+        OPENSUBTITLES_API_KEY_RELEASE = "5CZlDmqIhLoRcalZHXItm5Thwq57MDE2"
+        OPENSUBTITLES_API_KEY_DEBUG = "5CZlDmqIhLoRcalZHXItm5Thwq57MDE2"
+        API_REQ_TRIAL_CODE_TRIAL_ACTIVE = "12341343"
+        API_REQ_TRIAL_CODE_TRIAL_EXPIRED = "24523424"
+        API_REQ_TRIAL_CODE_TRIAL_INACTIVE = "33452345"
+        API_REQ_TRIAL_CODE_TRIAL_EXCLUSIVE = "45345234"
+        API_REQ_TRIAL_CODE_TRIAL_UNOFFICIAL = "34534247"
+        API_REQ_TRIAL_TRIAL_ACTIVE = "trial_active"
+        API_REQ_TRIAL_TRIAL_EXPIRED = "trial_expired"
+        API_REQ_TRIAL_TRIAL_INACTIVE = "trial_inactive"
+        API_REQ_TRIAL_TRIAL_EXCLUSIVE = "trial_exclusive"
+        API_REQ_TRIAL_TRIAL_UNOFFICIAL = "trial_unofficial"
+        API_REQ_TRIAL_YEARLY = "Yearly"
+        SALT_DEVICE_ID = "#%36zkpCE2"
     }
 }
 
@@ -26,34 +46,6 @@ android {
     }
 
     compileSdk 31
-
-    Properties appProps = new Properties()
-    def appPropsFile = new File('application.properties')
-
-    if (appPropsFile.canRead()) {
-        appProps.load(new FileInputStream(appPropsFile))
-    } else {
-        println 'application.properties not found'
-        buildConfigField "String", "BASE_CLOUD_FUNC", "new String()"
-        buildConfigField "String", "BASE_API_STICKER_PACK", "new String()"
-        buildConfigField "String", "API_REQ_TRIAL_URI", "new String()"
-        buildConfigField "String", "API_REQ_TRIAL_AUTH_TOKEN", "new String()"
-        buildConfigField "String", "API_REQ_TRIAL_APP_HASH", "new String()"
-        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_ACTIVE", "new Integer()"
-        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_EXPIRED", "new Integer()"
-        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_INACTIVE", "new Integer()"
-        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_EXCLUSIVE", "new Integer()"
-        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_UNOFFICIAL", "new Integer()"
-        buildConfigField "String", "API_REQ_TRIAL_TRIAL_ACTIVE", "new String()"
-        buildConfigField "String", "API_REQ_TRIAL_TRIAL_EXPIRED", "new String()"
-        buildConfigField "String", "API_REQ_TRIAL_TRIAL_INACTIVE", "new String()"
-        buildConfigField "String", "API_REQ_TRIAL_TRIAL_EXCLUSIVE", "new String()"
-        buildConfigField "String", "API_REQ_TRIAL_TRIAL_UNOFFICIAL", "new String()"
-        buildConfigField "String", "API_REQ_TRIAL_YEARLY", "new String()"
-        buildConfigField "String", "API_REQ_STICKER_PACK_TOKEN", "new String()"
-        buildConfigField "String", "OPENSUBTITLES_API_KEY", "new String()"
-        buildConfigField "String", "SALT_DEVICE_ID", "new String()"
-    }
 
     defaultConfig {
         applicationId "com.amaze.fileutilities"
@@ -93,65 +85,24 @@ android {
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        if (appProps != null &&
-                appProps.containsKey('BASE_CLOUD_FUNC') &&
-                appProps.containsKey('API_REQ_TRIAL_URI') &&
-                appProps.containsKey('API_REQ_TRIAL_AUTH_TOKEN') &&
-                appProps.containsKey('BASE_API_STICKER_PACK') &&
-                appProps.containsKey('API_REQ_TRIAL_APP_HASH') &&
-                appProps.containsKey('API_REQ_TRIAL_CODE_TRIAL_ACTIVE') &&
-                appProps.containsKey('API_REQ_TRIAL_CODE_TRIAL_EXPIRED') &&
-                appProps.containsKey('API_REQ_TRIAL_CODE_TRIAL_INACTIVE') &&
-                appProps.containsKey('API_REQ_TRIAL_CODE_TRIAL_EXCLUSIVE') &&
-                appProps.containsKey('API_REQ_TRIAL_CODE_TRIAL_UNOFFICIAL') &&
-                appProps.containsKey('API_REQ_TRIAL_TRIAL_ACTIVE') &&
-                appProps.containsKey('API_REQ_TRIAL_TRIAL_EXPIRED') &&
-                appProps.containsKey('API_REQ_TRIAL_TRIAL_INACTIVE') &&
-                appProps.containsKey('API_REQ_TRIAL_TRIAL_EXCLUSIVE') &&
-                appProps.containsKey('API_REQ_TRIAL_TRIAL_UNOFFICIAL') &&
-                appProps.containsKey('API_REQ_TRIAL_YEARLY') &&
-                appProps.containsKey('API_REQ_STICKER_PACK_TOKEN') &&
-                appProps.containsKey('SALT_DEVICE_ID')
-        ) {
-            buildConfigField "String", "BASE_CLOUD_FUNC", appProps["BASE_CLOUD_FUNC"]
-            buildConfigField "String", "BASE_API_STICKER_PACK", appProps["BASE_API_STICKER_PACK"]
-            buildConfigField "String", "API_REQ_TRIAL_URI", appProps["API_REQ_TRIAL_URI"]
-            buildConfigField "String", "API_REQ_TRIAL_APP_HASH", appProps["API_REQ_TRIAL_APP_HASH"]
-            buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_ACTIVE", appProps["API_REQ_TRIAL_CODE_TRIAL_ACTIVE"]
-            buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_EXPIRED", appProps["API_REQ_TRIAL_CODE_TRIAL_EXPIRED"]
-            buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_INACTIVE", appProps["API_REQ_TRIAL_CODE_TRIAL_INACTIVE"]
-            buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_EXCLUSIVE", appProps["API_REQ_TRIAL_CODE_TRIAL_EXCLUSIVE"]
-            buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_UNOFFICIAL", appProps["API_REQ_TRIAL_CODE_TRIAL_UNOFFICIAL"]
-            buildConfigField "String", "API_REQ_TRIAL_TRIAL_ACTIVE", appProps["API_REQ_TRIAL_TRIAL_ACTIVE"]
-            buildConfigField "String", "API_REQ_TRIAL_TRIAL_EXPIRED", appProps["API_REQ_TRIAL_TRIAL_EXPIRED"]
-            buildConfigField "String", "API_REQ_TRIAL_TRIAL_INACTIVE", appProps["API_REQ_TRIAL_TRIAL_INACTIVE"]
-            buildConfigField "String", "API_REQ_TRIAL_TRIAL_EXCLUSIVE", appProps["API_REQ_TRIAL_TRIAL_EXCLUSIVE"]
-            buildConfigField "String", "API_REQ_TRIAL_TRIAL_UNOFFICIAL", appProps["API_REQ_TRIAL_TRIAL_UNOFFICIAL"]
-            buildConfigField "String", "API_REQ_TRIAL_YEARLY", appProps["API_REQ_TRIAL_YEARLY"]
-            buildConfigField "String", "API_REQ_STICKER_PACK_TOKEN", appProps["API_REQ_STICKER_PACK_TOKEN"]
-            buildConfigField "String", "API_REQ_TRIAL_AUTH_TOKEN", appProps["API_REQ_TRIAL_AUTH_TOKEN"]
-            buildConfigField "String", "SALT_DEVICE_ID", appProps["SALT_DEVICE_ID"]
-        } else {
-            println 'application.properties found but some entries are missing'
-            buildConfigField "String", "BASE_CLOUD_FUNC", "new String()"
-            buildConfigField "String", "BASE_API_STICKER_PACK", "new String()"
-            buildConfigField "String", "API_REQ_TRIAL_URI", "new String()"
-            buildConfigField "String", "API_REQ_TRIAL_APP_HASH", "new String()"
-            buildConfigField "String", "API_REQ_TRIAL_CODE_TRIAL_ACTIVE", "new Integer()"
-            buildConfigField "String", "API_REQ_TRIAL_CODE_TRIAL_EXPIRED", "new Integer()"
-            buildConfigField "String", "API_REQ_TRIAL_CODE_TRIAL_INACTIVE", "new Integer()"
-            buildConfigField "String", "API_REQ_TRIAL_CODE_TRIAL_EXCLUSIVE", "new Integer()"
-            buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_UNOFFICIAL", "new Integer()"
-            buildConfigField "String", "API_REQ_TRIAL_TRIAL_ACTIVE", "new String()"
-            buildConfigField "String", "API_REQ_TRIAL_TRIAL_EXPIRED", "new String()"
-            buildConfigField "String", "API_REQ_TRIAL_TRIAL_INACTIVE", "new String()"
-            buildConfigField "String", "API_REQ_TRIAL_TRIAL_EXCLUSIVE", "new String()"
-            buildConfigField "String", "API_REQ_TRIAL_TRIAL_UNOFFICIAL", "new String()"
-            buildConfigField "String", "API_REQ_TRIAL_YEARLY", "new String()"
-            buildConfigField "String", "API_REQ_STICKER_PACK_TOKEN", "new String()"
-            buildConfigField "String", "API_REQ_TRIAL_AUTH_TOKEN", "new String()"
-            buildConfigField "String", "SALT_DEVICE_ID", "new String()"
-        }
+        buildConfigField "String", "BASE_CLOUD_FUNC", "\"${BASE_CLOUD_FUNC}\""
+        buildConfigField "String", "BASE_API_STICKER_PACK", "\"${BASE_API_STICKER_PACK}\""
+        buildConfigField "String", "API_REQ_TRIAL_URI", "\"${API_REQ_TRIAL_URI}\""
+        buildConfigField "String", "API_REQ_TRIAL_APP_HASH", "\"${API_REQ_TRIAL_APP_HASH}\""
+        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_ACTIVE", API_REQ_TRIAL_CODE_TRIAL_ACTIVE
+        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_EXPIRED", API_REQ_TRIAL_CODE_TRIAL_EXPIRED
+        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_INACTIVE", API_REQ_TRIAL_CODE_TRIAL_INACTIVE
+        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_EXCLUSIVE", API_REQ_TRIAL_CODE_TRIAL_EXCLUSIVE
+        buildConfigField "Integer", "API_REQ_TRIAL_CODE_TRIAL_UNOFFICIAL", API_REQ_TRIAL_CODE_TRIAL_UNOFFICIAL
+        buildConfigField "String", "API_REQ_TRIAL_TRIAL_ACTIVE", "\"${API_REQ_TRIAL_TRIAL_ACTIVE}\""
+        buildConfigField "String", "API_REQ_TRIAL_TRIAL_EXPIRED", "\"${API_REQ_TRIAL_TRIAL_EXPIRED}\""
+        buildConfigField "String", "API_REQ_TRIAL_TRIAL_INACTIVE", "\"${API_REQ_TRIAL_TRIAL_INACTIVE}\""
+        buildConfigField "String", "API_REQ_TRIAL_TRIAL_EXCLUSIVE", "\"${API_REQ_TRIAL_TRIAL_EXCLUSIVE}\""
+        buildConfigField "String", "API_REQ_TRIAL_TRIAL_UNOFFICIAL", "\"${API_REQ_TRIAL_TRIAL_UNOFFICIAL}\""
+        buildConfigField "String", "API_REQ_TRIAL_YEARLY", "\"${API_REQ_TRIAL_YEARLY}\""
+        buildConfigField "String", "API_REQ_STICKER_PACK_TOKEN", "\"${API_REQ_STICKER_PACK_TOKEN}\""
+        buildConfigField "String", "API_REQ_TRIAL_AUTH_TOKEN", "\"${API_REQ_TRIAL_AUTH_TOKEN}\""
+        buildConfigField "String", "SALT_DEVICE_ID", "\"${SALT_DEVICE_ID}\""
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -171,12 +122,7 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            if (appProps != null &&
-                    appProps.containsKey('OPENSUBTITLES_API_KEY_DEBUG')) {
-                buildConfigField "String", "OPENSUBTITLES_API_KEY", appProps["OPENSUBTITLES_API_KEY_DEBUG"]
-            } else {
-                buildConfigField "String", "OPENSUBTITLES_API_KEY", "new String()"
-            }
+            buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"${OPENSUBTITLES_API_KEY_DEBUG}\""
             debuggable true //For "debug" banner on icon
         }
 
@@ -185,12 +131,7 @@ android {
             shrinkResources true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            if (appProps != null &&
-                    appProps.containsKey('OPENSUBTITLES_API_KEY_RELEASE')) {
-                buildConfigField "String", "OPENSUBTITLES_API_KEY", appProps["OPENSUBTITLES_API_KEY_RELEASE"]
-            } else {
-                buildConfigField "String", "OPENSUBTITLES_API_KEY", "new String()"
-            }
+            buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"${OPENSUBTITLES_API_KEY_RELEASE}\""
         }
     }
     compileOptions {
