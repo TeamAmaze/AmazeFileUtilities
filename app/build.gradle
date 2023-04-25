@@ -134,6 +134,25 @@ android {
         config
     }
 
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"${OPENSUBTITLES_API_KEY_DEBUG}\""
+            debuggable true //For "debug" banner on icon
+        }
+
+        release {
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"${OPENSUBTITLES_API_KEY_RELEASE}\""
+        }
+    }
+
     compileOptions {
         // Flag to enable support for the new language APIs
         coreLibraryDesugaringEnabled true
@@ -154,50 +173,12 @@ android {
         register("fdroid") {
             dimension 'static'
             buildConfigField "boolean", "IS_VERSION_FDROID", "true"
-
-            buildTypes {
-                debug {
-                    applicationIdSuffix ".debug"
-                    minifyEnabled false
-                    shrinkResources false
-                    proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-                    buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"${OPENSUBTITLES_API_KEY_DEBUG}\""
-                    debuggable true //For "debug" banner on icon
-                }
-
-                release {
-                    minifyEnabled false
-                    shrinkResources false
-                    signingConfig signingConfigs.release
-                    proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-                    buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"${OPENSUBTITLES_API_KEY_RELEASE}\""
-                }
-            }
         }
 
         register("play") {
             dimension 'static'
             buildConfigField "boolean", "IS_VERSION_FDROID", "false"
             signingConfig signingConfigs.config
-
-            buildTypes {
-                debug {
-                    applicationIdSuffix ".debug"
-                    minifyEnabled false
-                    shrinkResources false
-                    proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-                    buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"${OPENSUBTITLES_API_KEY_DEBUG}\""
-                    debuggable true //For "debug" banner on icon
-                }
-
-                release {
-                    minifyEnabled true
-                    shrinkResources true
-                    signingConfig signingConfigs.release
-                    proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-                    buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"${OPENSUBTITLES_API_KEY_RELEASE}\""
-                }
-            }
         }
     }
 
