@@ -74,6 +74,24 @@ android {
                 default:
                     minorVersion = 0
             }
+
+            splits {
+                abi {
+                    enable true
+                    reset()
+                    include abiFilterList[0] //select ABIs to build APKs for
+                    universalApk false //generate an additional APK that contains all the ABIs
+                }
+            }
+        } else {
+            splits {
+                abi {
+                    enable true
+                    reset()
+                    include 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a' //select ABIs to build APKs for
+                    universalApk false //generate an additional APK that contains all the ABIs
+                }
+            }
         }
         Integer sudoVersionCodeFinal = (sudoVersionCode*4)+minorVersion
         versionCode sudoVersionCodeFinal
@@ -173,15 +191,6 @@ android {
             userFraction.set(1.0d)
             updatePriority.set(3)
             releaseStatus.set(com.github.triplet.gradle.androidpublisher.ReleaseStatus.COMPLETED)
-        }
-    }
-
-    splits {
-        abi {
-            enable true
-            reset()
-            include 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a' //select ABIs to build APKs for
-            universalApk false //generate an additional APK that contains all the ABIs
         }
     }
 
