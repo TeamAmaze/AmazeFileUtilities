@@ -1,32 +1,59 @@
-Required storage access 'All files' permission to analyse, transfer and open files.
+From the developers of open source app Amaze File Manager. An open source app to view, manage and analyse internal storage media files with built-in media players, without any ads and with a beautiful UI.
 
-Analyse
+Analyse:
 - Analyse storage for junk files to delete
-- Group images by memes, low-light, blurry, selfies or group
-- Group large files in storage
+- Group similar images, memes, low-light images, blurred images, selfies or group images
+- Group large or duplicate files in storage
 - Group old downloads, recordings or screenshots
+- Group unused / most used / least used installed apps, large apps or games, apps that use most data
+- Clear RAM for better performance
 
-Transfer
-- Transfer data between devices through wifi
-- High transfer speeds using android Wifi-direct
-
-Image / Videos / Documents / Music -
-- View/group/sort in list or grid
-- Delete / share them
+Media Files:
+- View / group / sort in list or grid
+- Delete / share / go to location
 - Open using inbuilt player
 - Jump to any date instantly
-- Cast on tv
+- Search for any media file instantly
+- Cast on tv 
 
-Audio player
+Music Player:
 - Shuffle, play on repeat
 - View waveform data for better insight of song
+- Change playback pitch or speed
+- Add, remove songs to playlists
 
-Video player -
+Video Player: 
 - Play videos with gestures to skip, manage volume, brightness within player
 - View in picture-in-picture mode
+- Supports gesture to play, pause, skip, change brightness or volume within player
 - Play in background
 - Lock gestures or orientation
 - Search and download online subtitles within player
+- Change playback aspect ratio, pitch and speed
 
-Image viewer -
+Image Viewer:
 - View, share or delete images
+- Edit using inbuilt image editor
+- Add stickers, text, rotate, crop or draw over images
+- View image histogram or other metadata
+
+Document Viewer:
+- View pdf, epub, docx, xps, oxps, cbz, fb2 and mobi files using inbuilt viewer
+- Search for text in viewer
+- Switch between dark or light mode in pdf viewer
+- Bookmark a page in your epub digital book
+
+Transfer:
+- Transfer data between devices through wifi p2p
+- High transfer speeds using android Wifi-direct
+
+Contact:
+Telegram - https://t.me/AmazeFileManager
+
+Issue tracker:
+https://github.com/TeamAmaze/AmazeFileUtilities-Issue-Tracker/issues
+
+Source Code:
+https://github.com/TeamAmaze/AmazeFileUtilities
+
+Note: This app is based on a trial period post which you're supposed to subscribe/ get lifetime membership to continue using the app.
