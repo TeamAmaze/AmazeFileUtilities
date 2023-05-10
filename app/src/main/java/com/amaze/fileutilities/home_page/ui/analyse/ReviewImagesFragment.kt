@@ -111,6 +111,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         const val TYPE_RECENTLY_UPDATED_APPS = 28
         const val TYPE_NETWORK_INTENSIVE_APPS = 29
         const val TYPE_SIMILAR_IMAGES = 30
+        const val TYPE_HIDDEN_FILES = 31
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -643,6 +644,16 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                     .observe(viewLifecycleOwner) { apkFiles ->
                         invalidateProcessing(true, false)
                         apkFiles?.let {
+                            setMediaInfoList(it, false)
+                            invalidateProcessing(false, false)
+                        }
+                    }
+            }
+            TYPE_HIDDEN_FILES -> {
+                filesViewModel.getHiddenFilesLiveData()
+                    .observe(viewLifecycleOwner) { hiddenFiles ->
+                        invalidateProcessing(true, false)
+                        hiddenFiles?.let {
                             setMediaInfoList(it, false)
                             invalidateProcessing(false, false)
                         }

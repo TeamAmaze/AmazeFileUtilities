@@ -40,6 +40,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.documentfile.provider.DocumentFile
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.files.FileFilter
 import com.afollestad.materialdialogs.files.fileChooser
@@ -115,6 +116,32 @@ fun Uri.getSiblingUriFiles(filter: (File) -> Boolean): ArrayList<Uri>? {
     return null
 }
 
+fun Uri.getDocumentFileFromUri(context: Context): DocumentFile? {
+    if (this == Uri.EMPTY) {
+        return null
+    }
+    try {
+        val documentFile = DocumentFile.fromSingleUri(
+            context,
+            this
+        )
+        if (documentFile?.exists() == true) {
+            return documentFile
+        }
+    } catch (e: Exception) {
+        log.warn("failed to get document file from single uri", e)
+    }
+    try {
+        val treeDocumentFile = DocumentFile.fromTreeUri(context, this)
+        if (treeDocumentFile?.exists() == true) {
+            return treeDocumentFile
+        }
+    } catch (e: Exception) {
+        log.warn("failed to get document file from tree uri", e)
+    }
+    return null
+}
+
 fun Uri.getFileFromUri(context: Context): File? {
     if (this == Uri.EMPTY) {
         return null
@@ -135,17 +162,21 @@ fun Uri.getFileFromUri(context: Context): File? {
                 )
                 parcelFileDescriptor?.let {
                     val fileDescriptor: FileDescriptor = parcelFileDescriptor.fileDescriptor
-                    val fis = FileInputStream(fileDescriptor)
-                    val outputFile = File(
-                        context.cacheDir,
-                        getContentName(context.contentResolver) ?: "sharedFile"
-                    )
-                    outputStream = outputFile.outputStream()
-                    outputStream?.let {
-                        fis.copyTo(it)
+                    if (fileDescriptor.valid()) {
+                        val fis = FileInputStream(fileDescriptor)
+                        val outputFile = File(
+                            context.cacheDir,
+                            getContentName(context.contentResolver) ?: "sharedFile"
+                        )
+                        outputStream = outputFile.outputStream()
+                        outputStream?.let {
+                            fis.copyTo(it)
+                        }
+                        songFile = outputFile
                     }
-                    songFile = outputFile
                 }
+            } catch (e: Exception) {
+                log.warn("failed to find file from uri {}", e)
             } finally {
                 parcelFileDescriptor?.close()
                 outputStream?.close()

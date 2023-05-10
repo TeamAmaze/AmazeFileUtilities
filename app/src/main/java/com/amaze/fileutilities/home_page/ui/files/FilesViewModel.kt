@@ -123,6 +123,7 @@ class FilesViewModel(val applicationContext: Application) :
     var recentlyUpdatedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var junkFilesLiveData: MutableLiveData<Pair<ArrayList<MediaFileInfo>, String>?>? = null
     var apksLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var hiddenFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var gamesInstalledLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var largeFilesMutableLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var whatsappMediaMutableLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
@@ -1228,7 +1229,7 @@ class FilesViewModel(val applicationContext: Application) :
             )
             val usageStats = Utils.getAppsUsageStats(applicationContext, days)
             val usageStatsPackages = usageStats.filter {
-                it.lastTimeUsed != 0L
+                it.lastTimeUsed != 0L || it.packageName == applicationContext.packageName
             }.map {
                 it.packageName
             }.toSet()
@@ -1367,7 +1368,7 @@ class FilesViewModel(val applicationContext: Application) :
             val usageStats = Utils.getAppsUsageStats(applicationContext, days)
             val freqMap = linkedMapOf<String, Long>()
             usageStats.filter {
-                it.lastTimeUsed != 0L
+                it.lastTimeUsed != 0L && it.packageName != applicationContext.packageName
             }.forEach {
                 if (!freqMap.contains(it.packageName)) {
                     freqMap[it.packageName] = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
@@ -1607,6 +1608,27 @@ class FilesViewModel(val applicationContext: Application) :
             }
         }
         return apksLiveData!!
+    }
+
+    fun getHiddenFilesLiveData(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (hiddenFilesLiveData == null) {
+            hiddenFilesLiveData = MutableLiveData()
+            hiddenFilesLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                if (allMediaFilesPair == null) {
+                    allMediaFilesPair = CursorUtils.listAll(applicationContext)
+                }
+                allMediaFilesPair?.filter {
+                    it.title.startsWith(".")
+                }?.sortedBy { -1 * it.longSize }?.map {
+                    it.extraInfo?.mediaType = MediaFileInfo.MEDIA_TYPE_UNKNOWN
+                    it
+                }?.let {
+                    hiddenFilesLiveData?.postValue(ArrayList(it))
+                }
+            }
+        }
+        return hiddenFilesLiveData!!
     }
 
     fun getLargeFilesLiveData(): LiveData<ArrayList<MediaFileInfo>?> {

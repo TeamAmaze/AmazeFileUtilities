@@ -38,7 +38,7 @@ import com.amaze.fileutilities.databinding.AudioPlayerDialogActivityBinding
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
-import com.amaze.fileutilities.utilis.getFileFromUri
+import com.amaze.fileutilities.utilis.getDocumentFileFromUri
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.google.android.material.slider.Slider
 import com.masoudss.lib.WaveformSeekBar
@@ -114,7 +114,7 @@ class AudioPlayerDialogActivity : PermissionsActivity(), IAudioPlayerInterfaceHa
                     dialog.show()
                 } else {
                     dialog.dismiss()
-                    audioUri.getFileFromUri(this)?.length()?.also {
+                    audioUri.getDocumentFileFromUri(this)?.length()?.also {
                         if (it > AudioPlayerInterfaceHandlerViewModel.WAVEFORM_THRESHOLD_BYTES) {
                             viewModel.forceShowSeekbar = true
                         }

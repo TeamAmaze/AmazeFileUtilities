@@ -1408,7 +1408,7 @@ class Utils {
                     packageUid
                 )
             } catch (e: RemoteException) {
-                log.warn("failed to get mobile bytes for package {}", packageUid)
+                log.info("failed to get mobile bytes for package {}", packageUid)
                 return 0
             }
             var txBytes = 0L
