@@ -129,16 +129,16 @@ class Billing(val context: Context, private var uniqueId: String) :
                             )
                         }
                     }
-                } else {
-                    // greater than 1 for BillingClient.SkuType.INAPP items.
-                    log.info("consuming in app purchase")
-                    val consumeParams =
-                        ConsumeParams.newBuilder().setPurchaseToken(
-                            latestPurchase
-                                .purchaseToken
-                        ).build()
-                    billingClient!!.consumeAsync(consumeParams, purchaseConsumerListener)
                 }
+
+                // could be greater than 1 for BillingClient.SkuType.INAPP items.
+                log.info("consuming in app purchase")
+                val consumeParams =
+                    ConsumeParams.newBuilder().setPurchaseToken(
+                        latestPurchase
+                            .purchaseToken
+                    ).build()
+                billingClient!!.consumeAsync(consumeParams, purchaseConsumerListener)
             }
         } else {
             log.warn(

@@ -1114,16 +1114,19 @@ class FilesViewModel(val applicationContext: Application) :
 
     fun checkInternetConnection(timeoutMs: Int): LiveData<Boolean> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-            try {
-                val socket = Socket()
-                val socketAddress = InetSocketAddress("8.8.8.8", 53)
-
-                socket.connect(socketAddress, timeoutMs)
-                socket.close()
-                emit(true)
-            } catch (ex: IOException) {
-                log.info("failed to ping for connection", ex)
+            if (BuildConfig.IS_VERSION_FDROID) {
                 emit(applicationContext.isNetworkAvailable())
+            } else {
+                val socket = Socket()
+                try {
+                    val socketAddress = InetSocketAddress("208.67.222.222", 53)
+                    socket.connect(socketAddress, timeoutMs)
+                    socket.close()
+                    emit(true)
+                } catch (ex: IOException) {
+                    log.info("failed to ping for connection", ex)
+                    emit(applicationContext.isNetworkAvailable())
+                }
             }
         }
     }

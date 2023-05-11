@@ -121,7 +121,7 @@
                 android:id="@+id/hidden_files_preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:analysisTitle="Hidden Files"
+                app:analysisTitle="@string/hidden_files"
                 app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 />
