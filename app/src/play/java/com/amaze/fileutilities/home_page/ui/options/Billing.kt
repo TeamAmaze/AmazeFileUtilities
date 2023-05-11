@@ -109,58 +109,119 @@ class Billing(val context: Context, private var uniqueId: String) :
 
     /** True if billing service is connected now.  */
     private var isServiceConnected = false
+    private var latestValidPurchase: Purchase? = null
     override fun onPurchasesUpdated(response: BillingResult, purchases: List<Purchase>?) {
         if (response.responseCode == BillingClient.BillingResponseCode.OK && purchases != null) {
             val latestPurchase = handlePurchases(purchases)
-            val listener =
-                ConsumeResponseListener { responseCode1: BillingResult?,
-                    purchaseToken: String? ->
-                    // we consume the purchase, so that user can perform purchase again
-                    responseCode1?.responseCode?.let {
-                        responseCode ->
-                        // mark our cloud function to update subscription status
-                        val retrofit = Retrofit.Builder()
-                            .baseUrl(TrialValidationApi.CLOUD_FUNCTION_BASE)
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .client(Utils.getOkHttpClient())
-                            .build()
-                        val service = retrofit.create(TrialValidationApi::class.java)
-                        try {
-                            service.postValidation(
-                                TrialValidationApi.TrialRequest(
-                                    TrialValidationApi.AUTH_TOKEN, uniqueId,
-                                    context.packageName + "_" + BuildConfig.API_REQ_TRIAL_APP_HASH,
-                                    latestPurchase?.purchaseState
-                                        ?: Trial.SUBSCRIPTION_STATUS_DEFAULT,
-                                    latestPurchase?.purchaseToken + "@gplay", isPurchaseInApp
-                                )
-                            )?.execute()?.let { response ->
-                                if (response.isSuccessful && response.body() != null) {
-                                    log.info(
-                                        "updated subscription state with " +
-                                            "response ${response.body()}"
-                                    )
-                                    response.body()
-                                }
-                            }
-                        } catch (e: Exception) {
-                            log.warn("failed to update subscription state for trial validation", e)
-                        }
-                        if (activity?.isFinishing == false && activity?.isDestroyed == false) {
-                            activity?.runOnUiThread {
-                                purchaseDialog?.dismiss()
-                                Utils.buildSubscriptionPurchasedDialog(activity!!).show()
-                            }
+            latestValidPurchase = latestPurchase
+            latestPurchase?.let {
+                if (it.quantity == 1) {
+                    // Always returns 1 for BillingClient.SkuType.SUBS
+                    log.info("acknowledging subscription")
+                    if (latestPurchase.purchaseState == Purchase.PurchaseState.PURCHASED) {
+                        if (!latestPurchase.isAcknowledged) {
+                            val acknowledgePurchaseParams = AcknowledgePurchaseParams.newBuilder()
+                                .setPurchaseToken(latestPurchase.purchaseToken)
+                            billingClient!!.acknowledgePurchase(
+                                acknowledgePurchaseParams
+                                    .build(),
+                                acknowledgePurchaseResponseListener
+                            )
                         }
                     }
                 }
-            latestPurchase?.let {
+
+                // could be greater than 1 for BillingClient.SkuType.INAPP items.
+                log.info("consuming in app purchase")
                 val consumeParams =
                     ConsumeParams.newBuilder().setPurchaseToken(
                         latestPurchase
                             .purchaseToken
                     ).build()
-                billingClient!!.consumeAsync(consumeParams, listener)
+                billingClient!!.consumeAsync(consumeParams, purchaseConsumerListener)
+            }
+        } else {
+            log.warn(
+                "failed to acknowledge purchase with response code {} purchases {}",
+                response.responseCode, purchases?.size
+            )
+            activity?.getString(R.string.operation_failed)?.let { activity?.showToastInCenter(it) }
+        }
+    }
+
+    private val acknowledgePurchaseResponseListener = AcknowledgePurchaseResponseListener {
+        acknowledgePurchase(it, it.responseCode, latestValidPurchase?.purchaseToken)
+    }
+
+    private val purchaseConsumerListener =
+        ConsumeResponseListener { responseCode1: BillingResult?,
+            purchaseToken: String? ->
+            acknowledgePurchase(
+                responseCode1,
+                latestValidPurchase?.purchaseState
+                    ?: Purchase.PurchaseState.PURCHASED,
+                purchaseToken
+            )
+        }
+
+    /**
+     * subscriptionStatus =
+     * @see Purchase.PurchaseState.PURCHASED
+     * for lifetime and
+     * @see BillingClient.BillingResponseCode.OK for subscriptions for ease of distinction
+     */
+    private fun acknowledgePurchase(
+        responseCode1: BillingResult?,
+        subscriptionStatus: Int,
+        purchaseToken: String?
+    ) {
+        // we consume the purchase, so that user can perform purchase again
+        responseCode1?.responseCode?.let {
+            responseCode ->
+            // mark our cloud function to update subscription status
+            if (responseCode == BillingClient.BillingResponseCode.OK) {
+                val retrofit = Retrofit.Builder()
+                    .baseUrl(TrialValidationApi.CLOUD_FUNCTION_BASE)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(Utils.getOkHttpClient())
+                    .build()
+                val service = retrofit.create(TrialValidationApi::class.java)
+                try {
+                    service.postValidation(
+                        TrialValidationApi.TrialRequest(
+                            TrialValidationApi.AUTH_TOKEN, uniqueId,
+                            context.packageName + "_" + BuildConfig.API_REQ_TRIAL_APP_HASH,
+                            subscriptionStatus,
+                            "$purchaseToken@gplay", isPurchaseInApp
+                        )
+                    )?.execute()?.let { response ->
+                        if (response.isSuccessful && response.body() != null) {
+                            log.info(
+                                "updated subscription state with " +
+                                    "response ${response.body()}"
+                            )
+                            response.body()
+                        }
+                    }
+                } catch (e: Exception) {
+                    log.warn("failed to update subscription state for trial validation", e)
+                }
+                if (activity?.isFinishing == false && activity?.isDestroyed == false) {
+                    activity?.runOnUiThread {
+                        purchaseDialog?.dismiss()
+                        Utils.buildSubscriptionPurchasedDialog(activity!!).show()
+                    }
+                } else {
+                    // do nothing
+                }
+            } else {
+                log.warn(
+                    "failed to acknowledge purchase with response {} token {}",
+                    responseCode1.responseCode, purchaseToken
+                )
+                activity?.getString(R.string.operation_failed)?.let {
+                    activity?.showToastInCenter(it)
+                }
             }
         }
     }

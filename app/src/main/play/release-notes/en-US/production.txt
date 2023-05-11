@@ -1,5 +1,5 @@
 Changelog:
-- Add analysis for similar images
+- Add analysis for similar images and hidden files
 - Add support for .cbz , .fb2 and .mobi
 - Add support to search in pdf
 - Improve performance

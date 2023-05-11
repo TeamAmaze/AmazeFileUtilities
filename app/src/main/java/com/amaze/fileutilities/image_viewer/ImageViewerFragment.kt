@@ -32,7 +32,6 @@ import android.widget.TextView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
-import androidx.documentfile.provider.DocumentFile
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.amaze.fileutilities.R
@@ -113,12 +112,17 @@ class ImageViewerFragment : AbstractMediaFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val quickViewType = requireArguments().getParcelable<LocalImageModel>(VIEW_TYPE_ARGUMENT)
+        if (quickViewType == null) {
+            requireContext().showToastInCenter(getString(R.string.operation_failed))
+            requireActivity().onBackPressed()
+            return
+        }
         if (activity is ImageViewerDialogActivity) {
             _binding?.layoutBottomSheet?.visibility = View.GONE
             _binding?.imageView?.setOnClickListener {
                 val intent = Intent(requireContext(), ImageViewerActivity::class.java)
-                intent.setDataAndType(quickViewType?.uri, quickViewType?.mimeType)
-                if (!quickViewType?.uri?.authority.equals(
+                intent.setDataAndType(quickViewType.uri, quickViewType.mimeType)
+                if (!quickViewType.uri.authority.equals(
                         requireContext()
                             .packageName,
                         true
@@ -140,10 +144,11 @@ class ImageViewerFragment : AbstractMediaFragment() {
                 }
                 frameLayout.setProxyView(imageView)
                 customToolbar.root.visibility = View.VISIBLE
-                customToolbar.title.text = DocumentFile.fromSingleUri(
-                    requireContext(),
-                    quickViewType!!.uri
-                )?.name ?: quickViewType.uri.getFileFromUri(requireContext())?.name
+                customToolbar.title.text = quickViewType.uri.getDocumentFileFromUri(
+                    requireContext()
+                )?.name ?: quickViewType.uri.getFileFromUri(
+                    requireContext()
+                )?.name
                 customToolbar.backButton.setOnClickListener {
                     requireActivity().onBackPressed()
                 }
@@ -165,7 +170,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
 //                    viewBinding.metadata.text = result
             }
         }
-        quickViewType?.let { showImage(it) }
+        showImage(quickViewType)
     }
 
     private fun setupPropertiesSheet(quickViewType: LocalImageModel) {

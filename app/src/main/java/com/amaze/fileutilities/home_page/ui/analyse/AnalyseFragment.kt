@@ -640,6 +640,19 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     }
                 }
             }
+
+            filesViewModel.getHiddenFilesLiveData().observe(viewLifecycleOwner) {
+                mediaFileInfoList ->
+                hiddenFilesPreview.invalidateProgress(true, null)
+                mediaFileInfoList?.let {
+                    hiddenFilesPreview.invalidateProgress(false, null)
+                    hiddenFilesPreview.loadPreviews(mediaFileInfoList) {
+                        cleanButtonClick(it) {
+                            filesViewModel.hiddenFilesLiveData = null
+                        }
+                    }
+                }
+            }
             if (analyseViewModel.fragmentScrollPosition != null) {
                 Handler().postDelayed({
                     analyseScrollView.scrollY = analyseViewModel.fragmentScrollPosition!!
@@ -985,6 +998,12 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 shouldCallbackAppUninstall = false
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_APK_FILES,
+                    this@AnalyseFragment
+                )
+            }
+            hiddenFilesPreview.setOnClickListener {
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_HIDDEN_FILES,
                     this@AnalyseFragment
                 )
             }

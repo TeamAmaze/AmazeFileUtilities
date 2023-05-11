@@ -123,6 +123,7 @@ class FilesViewModel(val applicationContext: Application) :
     var recentlyUpdatedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var junkFilesLiveData: MutableLiveData<Pair<ArrayList<MediaFileInfo>, String>?>? = null
     var apksLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var hiddenFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var gamesInstalledLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var largeFilesMutableLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var whatsappMediaMutableLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
@@ -1113,16 +1114,19 @@ class FilesViewModel(val applicationContext: Application) :
 
     fun checkInternetConnection(timeoutMs: Int): LiveData<Boolean> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.Default) {
-            try {
-                val socket = Socket()
-                val socketAddress = InetSocketAddress("8.8.8.8", 53)
-
-                socket.connect(socketAddress, timeoutMs)
-                socket.close()
-                emit(true)
-            } catch (ex: IOException) {
-                log.info("failed to ping for connection", ex)
+            if (BuildConfig.IS_VERSION_FDROID) {
                 emit(applicationContext.isNetworkAvailable())
+            } else {
+                val socket = Socket()
+                try {
+                    val socketAddress = InetSocketAddress("208.67.222.222", 53)
+                    socket.connect(socketAddress, timeoutMs)
+                    socket.close()
+                    emit(true)
+                } catch (ex: IOException) {
+                    log.info("failed to ping for connection", ex)
+                    emit(applicationContext.isNetworkAvailable())
+                }
             }
         }
     }
@@ -1228,7 +1232,7 @@ class FilesViewModel(val applicationContext: Application) :
             )
             val usageStats = Utils.getAppsUsageStats(applicationContext, days)
             val usageStatsPackages = usageStats.filter {
-                it.lastTimeUsed != 0L
+                it.lastTimeUsed != 0L || it.packageName == applicationContext.packageName
             }.map {
                 it.packageName
             }.toSet()
@@ -1367,7 +1371,7 @@ class FilesViewModel(val applicationContext: Application) :
             val usageStats = Utils.getAppsUsageStats(applicationContext, days)
             val freqMap = linkedMapOf<String, Long>()
             usageStats.filter {
-                it.lastTimeUsed != 0L
+                it.lastTimeUsed != 0L && it.packageName != applicationContext.packageName
             }.forEach {
                 if (!freqMap.contains(it.packageName)) {
                     freqMap[it.packageName] = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
@@ -1607,6 +1611,27 @@ class FilesViewModel(val applicationContext: Application) :
             }
         }
         return apksLiveData!!
+    }
+
+    fun getHiddenFilesLiveData(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (hiddenFilesLiveData == null) {
+            hiddenFilesLiveData = MutableLiveData()
+            hiddenFilesLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                if (allMediaFilesPair == null) {
+                    allMediaFilesPair = CursorUtils.listAll(applicationContext)
+                }
+                allMediaFilesPair?.filter {
+                    it.title.startsWith(".")
+                }?.sortedBy { -1 * it.longSize }?.map {
+                    it.extraInfo?.mediaType = MediaFileInfo.MEDIA_TYPE_UNKNOWN
+                    it
+                }?.let {
+                    hiddenFilesLiveData?.postValue(ArrayList(it))
+                }
+            }
+        }
+        return hiddenFilesLiveData!!
     }
 
     fun getLargeFilesLiveData(): LiveData<ArrayList<MediaFileInfo>?> {

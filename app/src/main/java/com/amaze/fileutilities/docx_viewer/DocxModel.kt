@@ -24,7 +24,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Parcelable
 import com.amaze.fileutilities.utilis.BaseIntentModel
-import com.amaze.fileutilities.utilis.getFileFromUri
+import com.amaze.fileutilities.utilis.getDocumentFileFromUri
 import kotlinx.parcelize.Parcelize
 import java.io.InputStream
 
@@ -42,8 +42,8 @@ data class LocalDocxModel(
     }
 
     override fun getName(context: Context): String {
-        uri.getFileFromUri(context)?.run {
-            return this.name
+        uri.getDocumentFileFromUri(context)?.name?.run {
+            return this
         }
         uri.path?.run {
             return this
