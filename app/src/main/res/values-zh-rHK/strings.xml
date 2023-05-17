@@ -940,4 +940,6 @@
     <string name="similar_images">Similar Images</string>
     <!-- similar images summary in analysis fragment -->
     <string name="similar_images_hint">Images that have similar colors</string>
+    <!-- hidden files in analysis fragment -->
+    <string name="hidden_files">Hidden Files</string>
 </resources>
