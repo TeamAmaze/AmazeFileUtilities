@@ -42,7 +42,7 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher_normal"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:label="@string/app_name_launcher"
+        android:label="${app_display_name}"
         android:largeHeap="true"
         android:requestLegacyExternalStorage="true"
         android:theme="@style/Theme.AmazeFileUtilities"
@@ -53,7 +53,7 @@
         <activity
             android:name=".home_page.MainActivity"
             android:exported="true"
-            android:label="@string/app_name_launcher"
+            android:label="${app_display_name}"
             android:theme="@style/Theme.AmazeFileUtilities"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"
