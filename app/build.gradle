@@ -127,6 +127,8 @@ android {
                 arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
+
+        manifestPlaceholders = [ app_display_name:"@string/app_name_launcher"]
     }
 
     signingConfigs {
@@ -142,6 +144,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"${OPENSUBTITLES_API_KEY_DEBUG}\""
             debuggable true //For "debug" banner on icon
+
+            manifestPlaceholders = [ app_display_name:"AFU Debug"]
         }
 
         release {
