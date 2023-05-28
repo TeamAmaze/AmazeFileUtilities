@@ -938,4 +938,6 @@ Wir sind ein Team von Open-Source-Entwicklern, die hart daran arbeiten, ein werb
     <string name="similar_images">Ähnliche Bilder</string>
     <!-- similar images summary in analysis fragment -->
     <string name="similar_images_hint">Bilder, die ähnliche Farben haben</string>
+    <!-- hidden files in analysis fragment -->
+    <string name="hidden_files">Hidden Files</string>
 </resources>
