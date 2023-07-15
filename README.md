@@ -87,6 +87,14 @@ Downloads
 
 Or download the latest APK from the [Releases Section](https://github.com/TeamAmaze/AmazeFileUtilities/releases/latest).
 
+Contribute
+---
+You can contribute via one of the following ways:
+- Help us with the translations of either [Amaze File Manager](https://www.transifex.com/amaze/amaze-file-manager/) or [Amaze Utilities](https://crowdin.com/project/amaze-file-utilities)
+- [Contribute](https://github.com/TeamAmaze/AmazeFileManager/blob/release/4.0/CONTRIBUTING.md) directly to the code, help us in fixing the bugs / implement new features.
+
+_If we feel your contribution is a significant help to us, we'll award you a bounty with any of your preferred mode of payment._
+
 Support
 ---
 <a href="https://opencollective.com/TeamAmaze"><img width="20%" alt="OpenCollective" src="opencollective.svg" ></a>
