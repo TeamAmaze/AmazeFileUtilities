@@ -112,6 +112,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         const val TYPE_NETWORK_INTENSIVE_APPS = 29
         const val TYPE_SIMILAR_IMAGES = 30
         const val TYPE_HIDDEN_FILES = 31
+        const val TYPE_TRASH_BIN = 32
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -193,6 +194,9 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
             TYPE_RECENTLY_UPDATED_APPS, TYPE_NETWORK_INTENSIVE_APPS -> {
                 MediaFileAdapter.MEDIA_TYPE_APKS
             }
+            TYPE_TRASH_BIN -> {
+                MediaFileAdapter.MEDIA_TYPE_TRASH_BIN
+            }
             else -> {
                 MediaFileAdapter.MEDIA_TYPE_UNKNOWN
             }
@@ -200,10 +204,15 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
     }
 
     override fun getAllOptionsFAB(): List<FloatingActionButton> {
-        return arrayListOf(
+        var fabOptions = arrayListOf(
+            binding.selectAllButtonFab,
             binding.optionsButtonFab, binding.deleteButtonFab,
             binding.shareButtonFab, binding.locateFileButtonFab
         )
+        if (analysisType == TYPE_TRASH_BIN) {
+            fabOptions.add(binding.restoreTrashButtonFab)
+        }
+        return fabOptions
     }
 
     override fun showOptionsCallback() {
@@ -654,6 +663,16 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                     .observe(viewLifecycleOwner) { hiddenFiles ->
                         invalidateProcessing(true, false)
                         hiddenFiles?.let {
+                            setMediaInfoList(it, false)
+                            invalidateProcessing(false, false)
+                        }
+                    }
+            }
+            TYPE_TRASH_BIN -> {
+                filesViewModel.progressTrashBinFilesLiveData()
+                    .observe(viewLifecycleOwner) { trashBinFiles ->
+                        invalidateProcessing(true, false)
+                        trashBinFiles?.let {
                             setMediaInfoList(it, false)
                             invalidateProcessing(false, false)
                         }

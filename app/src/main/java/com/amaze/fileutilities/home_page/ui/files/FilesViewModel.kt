@@ -29,6 +29,7 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.Settings
 import android.text.format.Formatter
 import androidx.annotation.RequiresApi
@@ -74,6 +75,12 @@ import com.amaze.fileutilities.utilis.isNetworkAvailable
 import com.amaze.fileutilities.utilis.log
 import com.amaze.fileutilities.utilis.share.ShareAdapter
 import com.amaze.fileutilities.utilis.share.getShareIntents
+import com.amaze.trashbin.DeletePermanentlyCallback
+import com.amaze.trashbin.ListTrashBinFilesCallback
+import com.amaze.trashbin.MoveFilesCallback
+import com.amaze.trashbin.TrashBin
+import com.amaze.trashbin.TrashBinConfig
+import com.amaze.trashbin.TrashBinFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
@@ -132,9 +139,13 @@ class FilesViewModel(val applicationContext: Application) :
     var oldDownloadsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var oldRecordingsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var oldScreenshotsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var trashBinFilesLiveData: MutableLiveData<MutableList<MediaFileInfo>?>? = null
     var memoryInfoLiveData: MutableLiveData<String?>? = null
     var allMediaFilesPair: ArrayList<MediaFileInfo>? = null
 
+    private var trashBinConfig: TrashBinConfig? = null
+    private val TRASH_BIN_BASE_PATH = Environment.getExternalStorageDirectory()
+        .path + File.separator + ".AmazeTrashBin"
     private var usedVideosSummaryTransformations: LiveData<Pair<StorageSummary,
             ArrayList<MediaFileInfo>>?>? = null
     private var usedAudiosSummaryTransformations: LiveData<Pair<StorageSummary,
@@ -150,6 +161,7 @@ class FilesViewModel(val applicationContext: Application) :
                 PackageInfo?>>?> = AtomicReference()
 
     var internalStorageStatsLiveData: MutableLiveData<StorageSummary?>? = null
+    var trashBin: TrashBin? = null
 
     fun internalStorageStats(): LiveData<StorageSummary?> {
         if (internalStorageStatsLiveData == null) {
@@ -985,34 +997,157 @@ class FilesViewModel(val applicationContext: Application) :
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             log.info("Deleting media files $mediaFileInfoList")
             var successProcessedPair = Pair(0, 0)
-            mediaFileInfoList.forEachIndexed { index, mediaFileInfo ->
-                successProcessedPair = if (mediaFileInfo.delete()) {
-                    successProcessedPair.copy(
-                        successProcessedPair.first + 1,
-                        successProcessedPair.second + 1
-                    )
-                } else {
-                    successProcessedPair.copy(
-                        successProcessedPair.first,
-                        successProcessedPair.second + 1
-                    )
-                }
 
-                try {
-                    Utils.deleteFromMediaDatabase(applicationContext, mediaFileInfo.path)
-                } catch (e: Exception) {
-                    log.warn("failed to delete media from system database", e)
-                    mediaFileInfo.getContentUri(applicationContext)?.let {
-                        uri ->
-                        FileUtils.scanFile(
-                            uri,
-                            applicationContext
-                        )
+            val trashBinFilesList = mediaFileInfoList.map { it.toTrashBinFile() }
+
+            getTrashBinInstance().deletePermanently(
+                trashBinFilesList,
+                object : DeletePermanentlyCallback {
+                    override suspend fun invoke(deletePath: String): Boolean {
+                        val mediaFileInfo = mediaFileInfoList.find {
+                            it.path == deletePath
+                        }
+                        if (mediaFileInfo != null) {
+                            successProcessedPair = if (mediaFileInfo.delete()) {
+                                successProcessedPair.copy(
+                                    successProcessedPair.first + 1,
+                                    successProcessedPair.second + 1
+                                )
+                            } else {
+                                successProcessedPair.copy(
+                                    successProcessedPair.first,
+                                    successProcessedPair.second + 1
+                                )
+                            }
+
+                            try {
+                                Utils.deleteFromMediaDatabase(
+                                    applicationContext,
+                                    mediaFileInfo.path
+                                )
+                            } catch (e: Exception) {
+                                log.warn("failed to delete media from system database", e)
+                            } finally {
+                                mediaFileInfo.getContentUri(applicationContext)?.let {
+                                    uri ->
+                                    FileUtils.scanFile(
+                                        uri,
+                                        applicationContext
+                                    )
+                                }
+                            }
+                        }
+                        emit(successProcessedPair)
+                        return true
+                    }
+                },
+                true
+            )
+        }
+    }
+
+    fun moveToTrashBin(mediaFileInfoList: List<MediaFileInfo>): LiveData<Pair<Int, Int>> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            log.info("Moving media files to bin $mediaFileInfoList")
+            var successProcessedPair = Pair(0, 0)
+            val trashBinFilesList = mediaFileInfoList.map { it.toTrashBinFile() }
+            getTrashBinInstance().moveToBin(
+                trashBinFilesList, true,
+                object : MoveFilesCallback {
+                    override suspend fun invoke(
+                        originalFilePath: String,
+                        trashBinDestination: String
+                    ): Boolean {
+                        val source = File(originalFilePath)
+                        val dest = File(trashBinDestination)
+                        if (!source.renameTo(dest)) {
+                            successProcessedPair = successProcessedPair.copy(
+                                successProcessedPair.first,
+                                successProcessedPair.second + 1
+                            )
+                            emit(successProcessedPair)
+                            return false
+                        } else {
+                            successProcessedPair = successProcessedPair.copy(
+                                successProcessedPair.first + 1,
+                                successProcessedPair.second + 1
+                            )
+                            val uri = FileProvider.getUriForFile(
+                                applicationContext,
+                                applicationContext.packageName, File(originalFilePath)
+                            )
+                            FileUtils.scanFile(
+                                uri,
+                                applicationContext
+                            )
+                            emit(successProcessedPair)
+//                        return@moveToBin true
+                            return true
+                        }
                     }
                 }
-                emit(successProcessedPair)
-            }
+            )
         }
+    }
+
+    fun restoreFromBin(mediaFileInfoList: List<MediaFileInfo>): LiveData<Pair<Int, Int>> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            log.info("Moving media files to bin $mediaFileInfoList")
+            var successProcessedPair = Pair(0, 0)
+            val trashBinFilesList = mediaFileInfoList.map { it.toTrashBinFile() }
+            getTrashBinInstance().restore(
+                trashBinFilesList, true,
+                object : MoveFilesCallback {
+                    override suspend fun invoke(source: String, dest: String): Boolean {
+                        val sourceFile = File(source)
+                        val destFile = File(dest)
+                        if (!sourceFile.renameTo(destFile)) {
+                            successProcessedPair = successProcessedPair.copy(
+                                successProcessedPair.first,
+                                successProcessedPair.second + 1
+                            )
+                            emit(successProcessedPair)
+                            return false
+                        } else {
+                            successProcessedPair = successProcessedPair.copy(
+                                successProcessedPair.first + 1,
+                                successProcessedPair.second + 1
+                            )
+                            val uri = FileProvider.getUriForFile(
+                                applicationContext,
+                                applicationContext.packageName, File(dest)
+                            )
+                            FileUtils.scanFile(
+                                uri,
+                                applicationContext
+                            )
+                            emit(successProcessedPair)
+                            return true
+                        }
+                    }
+                }
+            )
+        }
+    }
+
+    fun deleteMediaFile(mediaFileInfo: MediaFileInfo): Boolean {
+        if (mediaFileInfo.delete()) {
+            try {
+                Utils.deleteFromMediaDatabase(applicationContext, mediaFileInfo.path)
+            } catch (e: Exception) {
+                log.warn("failed to delete media file from system database", e)
+            } finally {
+                mediaFileInfo.getContentUri(applicationContext)?.let {
+                    uri ->
+                    FileUtils.scanFile(
+                        uri,
+                        applicationContext
+                    )
+                }
+            }
+            return true
+        }
+        return false
     }
 
     fun getMediaFileListSize(mediaFileInfoList: List<MediaFileInfo>): LiveData<Long> {
@@ -1790,6 +1925,69 @@ class FilesViewModel(val applicationContext: Application) :
             processGamesInstalled(applicationContext.packageManager)
         }
         return gamesInstalledLiveData!!
+    }
+
+    fun getTrashBinInstance(): TrashBin {
+        if (trashBin == null) {
+            trashBin = TrashBin.getInstance(
+                getTrashbinConfig(),
+                object : DeletePermanentlyCallback {
+                    override suspend fun invoke(deletePath: String): Boolean {
+                        // do nothing
+                        return true
+                    }
+                },
+                object : ListTrashBinFilesCallback {
+                    override suspend fun invoke(parentTrashBinPath: String): List<TrashBinFile> {
+                        // do nothing
+                        return emptyList()
+                    }
+                }
+            )
+        }
+        return trashBin!!
+    }
+
+    fun progressTrashBinFilesLiveData(): LiveData<MutableList<MediaFileInfo>?> {
+        if (trashBinFilesLiveData == null) {
+            trashBinFilesLiveData = MutableLiveData()
+            trashBinFilesLiveData?.value = null
+            viewModelScope.launch(Dispatchers.IO) {
+                trashBinFilesLiveData?.postValue(
+                    ArrayList(
+                        getTrashBinInstance().listFilesInBin()
+                            .map {
+                                MediaFileInfo.fromTrashBinFile(it, getTrashbinConfig())
+                            }
+                    )
+                )
+            }
+        }
+        return trashBinFilesLiveData!!
+    }
+
+    fun getTrashbinConfig(): TrashBinConfig {
+        if (trashBinConfig == null) {
+            val sharedPrefs = applicationContext.getAppCommonSharedPreferences()
+
+            val days = sharedPrefs.getInt(
+                PreferencesConstants.KEY_TRASH_BIN_RETENTION_DAYS,
+                TrashBinConfig.RETENTION_DAYS_INFINITE
+            )
+            val bytes = sharedPrefs.getLong(
+                PreferencesConstants.KEY_TRASH_BIN_RETENTION_BYTES,
+                TrashBinConfig.RETENTION_BYTES_INFINITE
+            )
+            val numOfFiles = sharedPrefs.getInt(
+                PreferencesConstants.KEY_TRASH_BIN_RETENTION_NUM_OF_FILES,
+                TrashBinConfig.RETENTION_NUM_OF_FILES
+            )
+            trashBinConfig = TrashBinConfig(
+                TRASH_BIN_BASE_PATH, days, bytes,
+                numOfFiles, false, true
+            )
+        }
+        return trashBinConfig!!
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)

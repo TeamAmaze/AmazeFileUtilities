@@ -25,4 +25,10 @@
         android:summary="@string/audio_player_hint"
         app:icon="@drawable/ic_header_audio"
         />
+    <Preference
+        app:key="trash_bin"
+        app:title="@string/trash_bin"
+        android:summary="@string/trash_bin_summary"
+        app:icon="@drawable/ic_header_trash"
+        />
 </PreferenceScreen>

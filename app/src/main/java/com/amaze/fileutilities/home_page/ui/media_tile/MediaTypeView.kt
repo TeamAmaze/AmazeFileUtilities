@@ -25,6 +25,7 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -91,6 +92,18 @@ class MediaTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(conte
             } else {
                 mediaProgressIndicator.progress = progress
             }
+        }
+        invalidate()
+    }
+
+    fun setItemsAndHideProgress(mediaTypeContent: MediaTypeContent) {
+        mediaTypeContent.run {
+            mediaSummaryTextView.text = resources.getString(
+                R.string.num_of_files,
+                String.format("%,d", itemsCount)
+            )
+            progressPercentTextView.visibility = View.GONE
+            mediaProgressIndicator.visibility = View.GONE
         }
         invalidate()
     }

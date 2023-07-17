@@ -156,7 +156,29 @@
                     android:layout_weight="0.5"
                     app:title="@string/documents"
                     app:mediaImageSrc="@drawable/ic_outline_insert_drive_file_32"
-                    app:themeColor="@color/green"
+                    app:themeColor="@color/yellow_dark"
+                    />
+            </LinearLayout>
+
+            <!-- trash bin -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/files_tab_heights"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_marginTop="@dimen/eight_dp"
+                android:layout_marginBottom="@dimen/four_dp"
+                >
+                <com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
+                    android:id="@+id/trash_bin_tab"
+                    android:layout_width="@dimen/zero_dp"
+                    android:layout_height="@dimen/files_tab_heights"
+                    android:layout_marginRight="@dimen/four_dp"
+                    android:layout_marginEnd="@dimen/four_dp"
+                    android:layout_weight="0.5"
+                    app:title="@string/trash_bin"
+                    app:mediaImageSrc="@drawable/ic_round_delete_outline_32"
+                    app:themeColor="@color/green_banner"
                     />
             </LinearLayout>
 

@@ -52,6 +52,9 @@ class PreferencesConstants {
         const val KEY_LEAST_USED_APPS_DAYS = "least_used_apps_days"
         const val KEY_NEWLY_INSTALLED_APPS_DAYS = "newly_installed_apps_days"
         const val KEY_RECENTLY_UPDATED_APPS_DAYS = "recently_updated_apps_days"
+        const val KEY_TRASH_BIN_RETENTION_DAYS = "trash_bin_retention_days"
+        const val KEY_TRASH_BIN_RETENTION_BYTES = "trash_bin_retention_bytes"
+        const val KEY_TRASH_BIN_RETENTION_NUM_OF_FILES = "trash_bin_retention_num_of_files"
 
         const val VAL_SEARCH_DUPLICATES_MEDIA_STORE = 0
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1

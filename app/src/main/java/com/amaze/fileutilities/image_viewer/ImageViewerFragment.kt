@@ -29,6 +29,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
@@ -522,39 +523,19 @@ class ImageViewerFragment : AbstractMediaFragment() {
                         val progressDialog = progressDialogBuilder.create()
                         val summaryDialogBuilder = Utils
                             .buildDeleteSummaryDialog(requireContext()) {
+                                deletePermanently ->
                                 progressDialog.show()
-                                filesViewModel.deleteMediaFiles(toDelete)
-                                    .observe(viewLifecycleOwner) {
-                                        progressDialog
-                                            .findViewById<TextView>(R.id.please_wait_text)?.text =
-                                            resources.getString(R.string.deleted_progress)
-                                                .format(it.first, toDelete.size)
-                                        if (it.second == toDelete.size) {
-                                            // delete deleted data from observables in fileviewmodel
-                                            filesViewModel.usedImagesSummaryTransformations()
-                                                .observe(viewLifecycleOwner) {
-                                                    pair ->
-                                                    if (pair != null) {
-                                                        filesViewModel.deleteMediaFilesFromList(
-                                                            pair.second,
-                                                            toDelete
-                                                        )
-                                                    }
-                                                }
-
-                                            // reset interal storage stats so that we recalculate storage remaining
-                                            filesViewModel.internalStorageStatsLiveData = null
-
-                                            // deletion complete, no need to check analysis data to remove
-                                            // as it will get deleted lazily while loading analysis lists
-                                            requireContext().showToastOnBottom(
-                                                resources
-                                                    .getString(R.string.successfully_deleted)
-                                            )
-                                            requireActivity().finish()
-                                            progressDialog.dismiss()
+                                if (deletePermanently) {
+                                    filesViewModel.deleteMediaFiles(toDelete)
+                                        .observe(viewLifecycleOwner) {
+                                            deleteProgressCallback(it, progressDialog, toDelete)
                                         }
-                                    }
+                                } else {
+                                    filesViewModel.moveToTrashBin(toDelete)
+                                        .observe(viewLifecycleOwner) {
+                                            deleteProgressCallback(it, progressDialog, toDelete)
+                                        }
+                                }
                             }
                         val summaryDialog = summaryDialogBuilder.create()
                         summaryDialog.show()
@@ -563,17 +544,53 @@ class ImageViewerFragment : AbstractMediaFragment() {
                                 sizeRaw ->
                                 if (summaryDialog.isShowing) {
                                     val size = Formatter.formatFileSize(requireContext(), sizeRaw)
-                                    summaryDialog.setMessage(
+                                    summaryDialog
+                                        .findViewById<TextView>(R.id.dialog_summary)?.text =
                                         resources
                                             .getString(R.string.delete_files_message).format(
                                                 toDelete.size,
                                                 size
                                             )
-                                    )
                                 }
                             }
                     }
             }
+        }
+    }
+
+    private fun deleteProgressCallback(
+        progressPair: Pair<Int, Int>,
+        progressDialog: AlertDialog,
+        toDelete: List<MediaFileInfo>
+    ) {
+        progressDialog
+            .findViewById<TextView>(R.id.please_wait_text)?.text =
+            resources.getString(R.string.deleted_progress)
+                .format(progressPair.first, toDelete.size)
+        if (progressPair.second == toDelete.size) {
+            // delete deleted data from observables in fileviewmodel
+            filesViewModel.usedImagesSummaryTransformations()
+                .observe(viewLifecycleOwner) {
+                    pair ->
+                    if (pair != null) {
+                        filesViewModel.deleteMediaFilesFromList(
+                            pair.second,
+                            toDelete
+                        )
+                    }
+                }
+
+            // reset interal storage stats so that we recalculate storage remaining
+            filesViewModel.internalStorageStatsLiveData = null
+
+            // deletion complete, no need to check analysis data to remove
+            // as it will get deleted lazily while loading analysis lists
+            requireContext().showToastOnBottom(
+                resources
+                    .getString(R.string.successfully_deleted)
+            )
+            requireActivity().finish()
+            progressDialog.dismiss()
         }
     }
 

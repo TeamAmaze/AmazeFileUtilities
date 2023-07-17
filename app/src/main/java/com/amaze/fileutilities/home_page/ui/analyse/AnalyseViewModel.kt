@@ -518,7 +518,7 @@ class AnalyseViewModel : ViewModel() {
                     MediaFileInfo.ExtraInfo(
                         MediaFileInfo.MEDIA_TYPE_IMAGE,
                         null, null, null, null,
-                        extraMetaData
+                        extraMetaData = extraMetaData
                     )
                 )
             }
@@ -574,7 +574,7 @@ class AnalyseViewModel : ViewModel() {
                     MediaFileInfo.ExtraInfo(
                         MediaFileInfo.MEDIA_TYPE_UNKNOWN,
                         null, null, null, null,
-                        extraMetaData
+                        extraMetaData = extraMetaData
                     )
                 )
             }
