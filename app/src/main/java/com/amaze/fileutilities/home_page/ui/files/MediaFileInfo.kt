@@ -38,6 +38,8 @@ import com.amaze.fileutilities.utilis.FileUtils
 import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.showToastOnBottom
 import com.amaze.fileutilities.video_player.VideoPlayerDialogActivity
+import com.amaze.trashbin.TrashBinConfig
+import com.amaze.trashbin.TrashBinFile
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import org.slf4j.Logger
@@ -69,6 +71,7 @@ data class MediaFileInfo(
         const val MEDIA_TYPE_VIDEO = 1
         const val MEDIA_TYPE_DOCUMENT = 2
         const val MEDIA_TYPE_APK = 5
+        const val MEDIA_TYPE_TRASH_BIN = 6
 
         fun fromFile(file: File, extraInfo: ExtraInfo): MediaFileInfo {
             return MediaFileInfo(
@@ -123,6 +126,23 @@ data class MediaFileInfo(
                     null
                 },
                 id = id
+            )
+        }
+
+        fun fromTrashBinFile(
+            trashBinFile: TrashBinFile,
+            trashBinConfig: TrashBinConfig
+        ): MediaFileInfo {
+            return MediaFileInfo(
+                trashBinFile.fileName,
+                trashBinFile.getDeletedPath(trashBinConfig),
+                trashBinFile.deleteTime ?: 0L,
+                trashBinFile.sizeBytes,
+                extraInfo = ExtraInfo(
+                    MEDIA_TYPE_TRASH_BIN,
+                    null, null, null, null,
+                    TrashBinData(trashBinFile.path)
+                )
             )
         }
 
@@ -214,6 +234,14 @@ data class MediaFileInfo(
         return FileUtils.formatStorageLength(context, longSize)
     }
 
+    fun toTrashBinFile(): TrashBinFile {
+        return TrashBinFile(
+            title, false,
+            extraInfo?.trashBinData?.originalFilePath ?: path,
+            longSize
+        )
+    }
+
     fun delete(): Boolean {
         if (!exists()) {
             return true
@@ -267,7 +295,7 @@ data class MediaFileInfo(
                         startAudioViewer(this, context)
                     }
                 }
-                MEDIA_TYPE_DOCUMENT, MEDIA_TYPE_UNKNOWN -> {
+                MEDIA_TYPE_DOCUMENT, MEDIA_TYPE_UNKNOWN, MEDIA_TYPE_TRASH_BIN -> {
                     castActivity.showCastFileDialog(
                         this,
                         MediaFileAdapter.MEDIA_TYPE_DOCS
@@ -359,6 +387,7 @@ data class MediaFileInfo(
         val videoMetaData: VideoMetaData?,
         val imageMetaData: ImageMetaData?,
         val apkMetaData: ApkMetaData? = null,
+        val trashBinData: TrashBinData? = null,
         val extraMetaData: ExtraMetaData? = null
     )
 
@@ -373,7 +402,12 @@ data class MediaFileInfo(
     )
     data class VideoMetaData(val duration: Long?, val width: Int?, val height: Int?)
     data class ImageMetaData(val width: Int?, val height: Int?)
-    data class ApkMetaData(val packageName: String, val drawable: Drawable?, val networkBytes: Long)
+    data class ApkMetaData(
+        val packageName: String,
+        val drawable: Drawable?,
+        val networkBytes: Long
+    )
     data class ExtraMetaData(val checksum: String)
     data class Playlist(var id: Long, var name: String)
+    data class TrashBinData(var originalFilePath: String)
 }

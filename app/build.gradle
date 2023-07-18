@@ -52,8 +52,8 @@ android {
         minSdk 21
         targetSdk 31
 
-        Integer sudoVersionCode = 25
-        String versionNameText = "1.85"
+        Integer sudoVersionCode = 26
+        String versionNameText = "1.86"
 
         String[] abiFilterList = property("abiFilters").toString().split(';')
         Integer minorVersion = 0
@@ -194,7 +194,7 @@ android {
             //    track.set("internal")
             track.set("production")
             userFraction.set(1.0d)
-            updatePriority.set(4)
+            updatePriority.set(1)
             releaseStatus.set(com.github.triplet.gradle.androidpublisher.ReleaseStatus.COMPLETED)
         }
     }
@@ -243,6 +243,8 @@ dependencies {
     implementation 'org.zwobble.mammoth:mammoth:1.4.2'
     implementation 'me.zhanghai.android.fastscroll:library:1.1.8'
     implementation "ch.acra:acra-core:5.7.0"
+
+    implementation files('libs/trashbin-release.aar')
 
     // https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor
     implementation group: 'com.drewnoakes', name: 'metadata-extractor', version: '2.16.0'

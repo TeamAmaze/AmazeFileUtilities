@@ -63,6 +63,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.WindowManager
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -421,12 +422,60 @@ class Utils {
 
         fun buildDeleteSummaryDialog(
             context: Context,
+            positiveCallback: (deletePermanently: Boolean) -> Unit
+        ): AlertDialog.Builder {
+            val dialogView: View =
+                LayoutInflater.from(context).inflate(R.layout.dialog_delete_summary, null)
+
+            val checkBox = dialogView.findViewById<CheckBox>(R.id.delete_permanently_checkbox)
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.delete_files_title)
+                .setView(dialogView)
+                .setPositiveButton(
+                    context.resources.getString(R.string.yes)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                    positiveCallback.invoke(checkBox.isChecked)
+                }
+                .setNegativeButton(
+                    context.resources.getString(R.string.no)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun buildDeletePermanentlySummaryDialog(
+            context: Context,
             positiveCallback: () -> Unit
         ): AlertDialog.Builder {
             val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
             builder
                 .setTitle(R.string.delete_files_title)
                 .setMessage(R.string.delete_files_message)
+                .setPositiveButton(
+                    context.resources.getString(R.string.yes)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                    positiveCallback.invoke()
+                }
+                .setNegativeButton(
+                    context.resources.getString(R.string.no)
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }
+            return builder
+        }
+
+        fun buildRestoreSummaryDialog(
+            context: Context,
+            positiveCallback: () -> Unit
+        ): AlertDialog.Builder {
+            val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            builder
+                .setTitle(R.string.delete_files_title)
+                .setMessage(R.string.trash_bin_restore_dialog_message)
                 .setPositiveButton(
                     context.resources.getString(R.string.yes)
                 ) { dialog, _ ->
@@ -990,8 +1039,8 @@ class Utils {
             context: Context,
             title: String,
             summary: String,
-            days: Int,
-            callback: (Int) -> Unit
+            days: Long,
+            callback: (Long?) -> Unit
         ) {
             val inputEditTextViewPair = getEditTextViewForDialog(context, "$days")
             inputEditTextViewPair.second.inputType = InputType.TYPE_CLASS_NUMBER
@@ -1003,7 +1052,7 @@ class Utils {
                 .setCancelable(false)
                 .setPositiveButton(R.string.ok) { dialog, _ ->
                     val salt = inputEditTextViewPair.second.text.toString()
-                    callback.invoke(salt.toInt())
+                    callback.invoke(salt.toLongOrNull())
                     dialog.dismiss()
                 }
                 .setNegativeButton(

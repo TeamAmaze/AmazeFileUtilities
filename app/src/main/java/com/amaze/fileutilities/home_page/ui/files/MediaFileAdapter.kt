@@ -70,6 +70,7 @@ class MediaFileAdapter(
         const val MEDIA_TYPE_IMAGES = 3
         const val MEDIA_TYPE_UNKNOWN = 4
         const val MEDIA_TYPE_APKS = 5
+        const val MEDIA_TYPE_TRASH_BIN = 6
     }
 
     private var onlyItemsCounts: Int = 0

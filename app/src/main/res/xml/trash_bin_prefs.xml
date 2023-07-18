@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+    <Preference
+        app:key="retention_num_of_files"
+        app:title="@string/retention_num_of_files_title"
+        app:summary="@string/retention_num_of_files_summary"
+        />
+    <Preference
+        app:key="retention_days"
+        app:title="@string/retention_days_title"
+        app:summary="@string/retention_days_summary"
+        />
+    <Preference
+        app:key="retention_bytes"
+        app:title="@string/retention_bytes_title"
+        app:summary="@string/retention_bytes_summary"
+        />
+</PreferenceScreen>

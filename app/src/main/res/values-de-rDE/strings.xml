@@ -578,7 +578,7 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <string name="file_not_found">Datei nicht gefunden</string>
     <!-- Delete file -->
     <string name="delete_files_title">Löschen</string>
-    <!-- Delete file summary -->
+    <!-- Delete file permanently summary in trashbin and app uninstall -->
     <string name="delete_files_message">Dies wird diese Dateien dauerhaft löschen.
         Bist du sicher, dass du fortfahren möchtest?\n\n%s Dateien, %s Größe</string>
     <!-- Delete file progress -->
@@ -940,4 +940,34 @@ Wir sind ein Team von Open-Source-Entwicklern, die hart daran arbeiten, ein werb
     <string name="similar_images_hint">Bilder, die ähnliche Farben haben</string>
     <!-- hidden files in analysis fragment -->
     <string name="hidden_files">Hidden Files</string>
+    <!-- trash bin in main screen -->
+    <string name="trash_bin">Trash Bin</string>
+    <!-- trash bin restore in options menu -->
+    <string name="trash_bin_restore">Restore</string>
+    <!-- Delete file temporarily summary -->
+    <string name="delete_files_temporarily_message">You\'re about to delete these files.
+        Are you sure you want to proceed?\n\n%s Files, %s Size</string>
+    <!-- Delete file permanently checkbox in delete dialog -->
+    <string name="delete_permanently_checkbox">Delete permanently</string>
+    <!-- trash bin restore message in dialog -->
+    <string name="trash_bin_restore_dialog_message">You\'re about to restore these files.
+        Are you sure you want to proceed?\n\n%s Files, %s Size</string>
+    <!-- Restore file progress in dialog box -->
+    <string name="restored_progress">Restored %s of %s</string>
+    <!-- trash bin summary in settings page -->
+    <string name="trash_bin_summary">Control configuration to auto-clean deleted files in trash bin</string>
+    <!-- Retention bytes title in trash bin settings -->
+    <string name="retention_bytes_title">Retention by data size</string>
+    <!-- Retention bytes summary in trash bin settings -->
+    <string name="retention_bytes_summary">Maximum data (in MBs) trash bin can store</string>
+    <!-- Retention days title in trash bin settings -->
+    <string name="retention_days_title">Retention by days</string>
+    <!-- Retention days summary in trash bin settings -->
+    <string name="retention_days_summary">Maximum days for which trash bin can store a file</string>
+    <!-- Retention number of files title in trash bin settings -->
+    <string name="retention_num_of_files_title">Retention by number of files</string>
+    <!-- Retention number of files summary in trash bin settings -->
+    <string name="retention_num_of_files_summary">Maximum files trash bin can store</string>
+    <!-- Successfully restored toast after operation success -->
+    <string name="successfully_restored">Successfully restored</string>
 </resources>

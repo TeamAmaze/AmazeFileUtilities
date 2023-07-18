@@ -12,4 +12,8 @@
         android:id="@+id/delete"
         android:title="@string/delete"
         />
+    <item
+        android:id="@+id/trash_bin_restore"
+        android:title="@string/trash_bin_restore"
+        />
 </menu>

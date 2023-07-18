@@ -31,6 +31,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentFilesBinding
+import com.amaze.fileutilities.home_page.ui.analyse.ReviewImagesFragment
 import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.FileUtils
@@ -326,6 +327,37 @@ class FilesFragment : ItemsActionBarFragment() {
                         .addOnScrollListener(recyclerViewPreloader!!)
                     binding.recentFilesList.layoutManager = linearLayoutManager
                     binding.recentFilesList.adapter = mediaFileAdapter
+                }
+            }
+            progressTrashBinFilesLiveData().observe(
+                viewLifecycleOwner
+            ) { trashBinFiles ->
+                if (trashBinFiles != null) {
+                    binding.trashBinTab.setOnClickListener {
+                        ReviewImagesFragment.newInstance(
+                            ReviewImagesFragment.TYPE_TRASH_BIN,
+                            this@FilesFragment
+                        )
+                    }
+                    val capacity = getTrashBinInstance().getTrashBinMetadata().getCapacity()
+                    if (capacity == -1) {
+                        binding.trashBinTab.setItemsAndHideProgress(
+                            MediaTypeView.MediaTypeContent(
+                                trashBinFiles.size, trashBinFiles.size.toString(), capacity
+                            )
+                        )
+                    } else {
+                        binding.trashBinTab.setProgress(
+                            MediaTypeView.MediaTypeContent(
+                                trashBinFiles.size, trashBinFiles.size.toString(), capacity
+                            )
+                        )
+                    }
+                } else {
+                    requireContext().showToastInCenter(
+                        resources
+                            .getString(R.string.please_wait)
+                    )
                 }
             }
         }

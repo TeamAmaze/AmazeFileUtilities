@@ -135,6 +135,14 @@ abstract class AbstractMediaFilesAdapter(
         return true
     }
 
+    open fun checkAll(): Boolean {
+        getMediaFilesListItems().forEach {
+            toggleChecked(it)
+        }
+        notifyDataSetChanged()
+        return true
+    }
+
     fun checkedItemBytes(): String {
         var size = 0L
         checkItemsList.forEach {

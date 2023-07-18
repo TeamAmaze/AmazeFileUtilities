@@ -77,11 +77,11 @@ abstract class AbstractMediaFileInfoOperationsFragment : Fragment() {
     }
 
     /**
-     * setup delete click
+     * setup delete permanently click
      * @param toDelete to delete media files
      * @param deletedCallback callback once deletion finishes
      */
-    fun setupDeleteButton(
+    fun setupDeletePermanentlyButton(
         toDelete: List<MediaFileInfo>,
         deletedCallback: () -> Unit
     ) {
@@ -91,7 +91,7 @@ abstract class AbstractMediaFileInfoOperationsFragment : Fragment() {
         }
         val progressDialogBuilder = requireContext()
             .showProcessingDialog(layoutInflater, "")
-        val summaryDialogBuilder = Utils.buildDeleteSummaryDialog(requireContext()) {
+        val summaryDialogBuilder = Utils.buildDeletePermanentlySummaryDialog(requireContext()) {
             if (toDelete[0].extraInfo?.mediaType == MediaFileInfo.MEDIA_TYPE_APK) {
                 toDelete.forEachIndexed { _, mediaFileInfo ->
                     Utils.uninstallPackage(
@@ -122,6 +122,102 @@ abstract class AbstractMediaFileInfoOperationsFragment : Fragment() {
                 summaryDialog.setMessage(
                     resources.getString(R.string.delete_files_message)
                         .format(toDelete.size, size)
+                )
+            }
+        }
+    }
+
+    /**
+     * setup delete click
+     * @param toDelete to delete media files
+     * @param deletedCallback callback once deletion finishes
+     */
+    fun setupDeleteButton(
+        toDelete: List<MediaFileInfo>,
+        deletedCallback: () -> Unit
+    ) {
+        if (toDelete.isEmpty()) {
+            requireContext().showToastOnBottom(getString(R.string.no_item_selected))
+            return
+        }
+        val progressDialogBuilder = requireContext()
+            .showProcessingDialog(layoutInflater, "")
+        val summaryDialogBuilder = Utils.buildDeleteSummaryDialog(requireContext()) {
+            deletePermanently ->
+            val progressDialog = progressDialogBuilder.create()
+            progressDialog.show()
+            if (deletePermanently) {
+                getFilesViewModelObj().deleteMediaFiles(toDelete).observe(viewLifecycleOwner) {
+                    progressDialog.findViewById<TextView>(R.id.please_wait_text)?.text =
+                        resources.getString(R.string.deleted_progress)
+                            .format(it.first, toDelete.size)
+                    if (it.second == toDelete.size) {
+                        deletedCallback.invoke()
+                        progressDialog.dismiss()
+                    }
+                }
+            } else {
+                getFilesViewModelObj().moveToTrashBin(toDelete).observe(viewLifecycleOwner) {
+                    progressDialog.findViewById<TextView>(R.id.please_wait_text)?.text =
+                        resources.getString(R.string.deleted_progress)
+                            .format(it.first, toDelete.size)
+                    if (it.second == toDelete.size) {
+                        deletedCallback.invoke()
+                        progressDialog.dismiss()
+                    }
+                }
+            }
+        }
+        val summaryDialog = summaryDialogBuilder.create()
+        summaryDialog.show()
+        getFilesViewModelObj().getMediaFileListSize(toDelete).observe(viewLifecycleOwner) {
+            sizeRaw ->
+            if (summaryDialog.isShowing) {
+                val size = Formatter.formatFileSize(requireContext(), sizeRaw)
+                summaryDialog.findViewById<TextView>(R.id.dialog_summary)?.text =
+                    resources.getString(R.string.delete_files_temporarily_message)
+                        .format(toDelete.size, size)
+            }
+        }
+    }
+
+    /**
+     * setup restore click
+     * @param toRestore to restore media files
+     * @param deletedCallback callback once deletion finishes
+     */
+    fun setupRestoreButton(
+        toRestore: List<MediaFileInfo>,
+        deletedCallback: () -> Unit
+    ) {
+        if (toRestore.isEmpty()) {
+            requireContext().showToastOnBottom(getString(R.string.no_item_selected))
+            return
+        }
+        val progressDialogBuilder = requireContext()
+            .showProcessingDialog(layoutInflater, "")
+        val summaryDialogBuilder = Utils.buildRestoreSummaryDialog(requireContext()) {
+            val progressDialog = progressDialogBuilder.create()
+            progressDialog.show()
+            getFilesViewModelObj().restoreFromBin(toRestore).observe(viewLifecycleOwner) {
+                progressDialog.findViewById<TextView>(R.id.please_wait_text)?.text =
+                    resources.getString(R.string.restored_progress)
+                        .format(it.first, toRestore.size)
+                if (it.second == toRestore.size) {
+                    deletedCallback.invoke()
+                    progressDialog.dismiss()
+                }
+            }
+        }
+        val summaryDialog = summaryDialogBuilder.create()
+        summaryDialog.show()
+        getFilesViewModelObj().getMediaFileListSize(toRestore).observe(viewLifecycleOwner) {
+            sizeRaw ->
+            if (summaryDialog.isShowing) {
+                val size = Formatter.formatFileSize(requireContext(), sizeRaw)
+                summaryDialog.setMessage(
+                    resources.getString(R.string.trash_bin_restore_dialog_message)
+                        .format(toRestore.size, size)
                 )
             }
         }

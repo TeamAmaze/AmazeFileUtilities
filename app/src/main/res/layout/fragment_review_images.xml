@@ -39,6 +39,16 @@
         android:layout_alignParentEnd="true"
         >
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/selectAllButtonFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_baseline_select_all_24"
+            app:backgroundTint="@color/highlight_yellow"
+            app:tint="@color/black"
+            android:layout_marginBottom="@dimen/material_generic"
+            android:visibility="gone"
+            />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/locateFileButtonFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,6 +73,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_round_delete_outline_32"
+            app:backgroundTint="@color/highlight_yellow"
+            app:tint="@color/black"
+            android:layout_marginBottom="@dimen/material_generic"
+            android:visibility="gone"
+            />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/restoreTrashButtonFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_round_restore_from_trash_24"
             app:backgroundTint="@color/highlight_yellow"
             app:tint="@color/black"
             android:layout_marginBottom="@dimen/material_generic"

@@ -35,6 +35,7 @@ import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewImagesFragment
 import com.amaze.fileutilities.home_page.ui.files.AbstractMediaInfoListFragment
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
+import com.amaze.fileutilities.home_page.ui.files.MediaFileAdapter
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -58,6 +59,10 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
 
     override fun uninstallAppCallback(mediaFileInfo: MediaFileInfo) {
         refreshListAfterTrashCallback(listOf(mediaFileInfo))
+        requireContext().showToastOnBottom(
+            resources
+                .getString(R.string.successfully_deleted)
+        )
     }
 
     private val filesViewModel: FilesViewModel by activityViewModels()
@@ -248,11 +253,28 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
             fab ->
             fab.setOnClickListener {
                 when (fab.id) {
+                    R.id.selectAllButtonFab -> {
+                        getMediaFileAdapter()?.checkAll()
+                    }
                     R.id.deleteButtonFab -> {
                         getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }
                             ?.let { toDelete ->
-                                performDeleteAction(toDelete)
+                                if (getMediaListType() == MediaFileAdapter.MEDIA_TYPE_APKS ||
+                                    getMediaListType() == MediaFileAdapter.MEDIA_TYPE_TRASH_BIN
+                                ) {
+                                    performDeletePermanentlyAction(toDelete)
+                                } else {
+                                    performDeleteAction(toDelete)
+                                }
                             }
+                    }
+                    R.id.restoreTrashButtonFab -> {
+                        if (getMediaListType() == MediaFileAdapter.MEDIA_TYPE_TRASH_BIN) {
+                            getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }
+                                ?.let { toRestore ->
+                                    performRestoreAction(toRestore)
+                                }
+                        }
                     }
                     R.id.shareButtonFab -> {
                         getMediaFileAdapter()?.checkItemsList?.let {
@@ -331,10 +353,36 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
         }
     }
 
+    fun performDeletePermanentlyAction(toDelete: List<MediaFileInfo>) {
+        setupDeletePermanentlyButton(toDelete) {
+            refreshListAfterTrashCallback(toDelete)
+            getMediaFileAdapter()?.invalidateList(toDelete)
+            requireContext().showToastOnBottom(
+                resources
+                    .getString(R.string.successfully_deleted)
+            )
+        }
+    }
+
     fun performDeleteAction(toDelete: List<MediaFileInfo>) {
         setupDeleteButton(toDelete) {
             refreshListAfterTrashCallback(toDelete)
             getMediaFileAdapter()?.invalidateList(toDelete)
+            requireContext().showToastOnBottom(
+                resources
+                    .getString(R.string.successfully_deleted)
+            )
+        }
+    }
+
+    fun performRestoreAction(toRestore: List<MediaFileInfo>) {
+        setupRestoreButton(toRestore) {
+            refreshListAfterTrashCallback(toRestore)
+            getMediaFileAdapter()?.invalidateList(toRestore)
+            requireContext().showToastOnBottom(
+                resources
+                    .getString(R.string.successfully_restored)
+            )
         }
     }
 
@@ -403,13 +451,10 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
 
         // reset interal storage stats so that we recalculate storage remaining
         filesViewModel.internalStorageStatsLiveData = null
+        filesViewModel.trashBinFilesLiveData = null
 
         // deletion complete, no need to check analysis data to remove
         // as it will get deleted lazily while loading analysis lists
-        requireContext().showToastOnBottom(
-            resources
-                .getString(R.string.successfully_deleted)
-        )
         if (hideActionBarOnClick()) {
             hideActionBar()
         }

@@ -491,7 +491,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                         mediaFileInfoList?.let {
                             unusedAppsPreview.invalidateProgress(false, null)
                             unusedAppsPreview.loadPreviews(mediaFileInfoList) {
-                                cleanButtonClick(it) {
+                                cleanButtonClick(it, true) {
                                     filesViewModel.unusedAppsLiveData = null
                                 }
                             }
@@ -526,7 +526,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                                 null
                             )
                             mostUsedAppsPreview.loadPreviews(mediaFileInfoList) {
-                                cleanButtonClick(it) {
+                                cleanButtonClick(it, true) {
                                     filesViewModel.mostUsedAppsLiveData = null
                                 }
                             }
@@ -541,7 +541,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                                 null
                             )
                             leastUsedAppsPreview.loadPreviews(mediaFileInfoList) {
-                                cleanButtonClick(it) {
+                                cleanButtonClick(it, true) {
                                     filesViewModel.leastUsedAppsLiveData = null
                                 }
                             }
@@ -568,7 +568,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                             null
                         )
                         networkIntensiveAppsPreview.loadPreviews(mediaFileInfoList) {
-                            cleanButtonClick(it) {
+                            cleanButtonClick(it, true) {
                                 filesViewModel.networkIntensiveAppsLiveData = null
                             }
                         }
@@ -581,7 +581,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 mediaFileInfoList?.let {
                     largeAppsPreview.invalidateProgress(false, null)
                     largeAppsPreview.loadPreviews(mediaFileInfoList) {
-                        cleanButtonClick(it) {
+                        cleanButtonClick(it, true) {
                             filesViewModel.largeAppsLiveData = null
                         }
                     }
@@ -593,7 +593,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 mediaFileInfoList?.let {
                     newlyInstalledAppsPreview.invalidateProgress(false, null)
                     newlyInstalledAppsPreview.loadPreviews(mediaFileInfoList) {
-                        cleanButtonClick(it) {
+                        cleanButtonClick(it, true) {
                             filesViewModel.newlyInstalledAppsLiveData = null
                         }
                     }
@@ -605,7 +605,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 mediaFileInfoList?.let {
                     recentlyUpdatedAppsPreview.invalidateProgress(false, null)
                     recentlyUpdatedAppsPreview.loadPreviews(mediaFileInfoList) {
-                        cleanButtonClick(it) {
+                        cleanButtonClick(it, true) {
                             filesViewModel.recentlyUpdatedAppsLiveData = null
                         }
                     }
@@ -620,7 +620,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     mediaFileInfoList?.let {
                         gamesPreview.invalidateProgress(false, null)
                         gamesPreview.loadPreviews(mediaFileInfoList) {
-                            cleanButtonClick(it) {
+                            cleanButtonClick(it, true) {
                                 filesViewModel.gamesInstalledLiveData = null
                             }
                         }
@@ -691,19 +691,39 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
         }
     }
 
-    private fun cleanButtonClick(toDelete: List<MediaFileInfo>, deletedCallback: () -> Unit) {
-        setupDeleteButton(toDelete) {
-            // reset interal storage stats so that we recalculate storage remaining
-            filesViewModel.internalStorageStatsLiveData = null
-            deletedCallback.invoke()
+    private fun cleanButtonClick(
+        toDelete: List<MediaFileInfo>,
+        shouldDeletePermanently: Boolean = false,
+        deletedCallback: () -> Unit
+    ) {
+        if (shouldDeletePermanently) {
+            setupDeletePermanentlyButton(toDelete) {
+                // reset interal storage stats so that we recalculate storage remaining
+                filesViewModel.internalStorageStatsLiveData = null
+                deletedCallback.invoke()
 
-            // deletion complete, no need to check analysis data to remove
-            // as it will get deleted lazily while loading analysis lists
-            requireContext().showToastOnBottom(
-                resources
-                    .getString(R.string.successfully_deleted)
-            )
-            reloadFragment()
+                // deletion complete, no need to check analysis data to remove
+                // as it will get deleted lazily while loading analysis lists
+                requireContext().showToastOnBottom(
+                    resources
+                        .getString(R.string.successfully_deleted)
+                )
+                reloadFragment()
+            }
+        } else {
+            setupDeleteButton(toDelete) {
+                // reset interal storage stats so that we recalculate storage remaining
+                filesViewModel.internalStorageStatsLiveData = null
+                deletedCallback.invoke()
+
+                // deletion complete, no need to check analysis data to remove
+                // as it will get deleted lazily while loading analysis lists
+                requireContext().showToastOnBottom(
+                    resources
+                        .getString(R.string.successfully_deleted)
+                )
+                reloadFragment()
+            }
         }
     }
 
