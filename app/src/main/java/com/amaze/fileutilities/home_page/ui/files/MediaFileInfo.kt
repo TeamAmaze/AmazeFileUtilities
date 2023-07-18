@@ -251,7 +251,7 @@ data class MediaFileInfo(
 
     fun getContentUri(context: Context): Uri? {
         return if (contentUri == null && exists()) {
-            val uri = FileProvider.getUriForFile(context, context.packageName, File(path))
+            val uri = FileUtils.getContentUri(context, path)
             contentUri = uri
             uri
         } else {
