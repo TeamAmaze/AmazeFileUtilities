@@ -32,6 +32,7 @@ import android.os.storage.StorageVolume
 import android.text.TextUtils
 import android.text.format.Formatter
 import androidx.annotation.DrawableRes
+import androidx.core.content.FileProvider
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import org.slf4j.Logger
@@ -346,6 +347,31 @@ class FileUtils {
         fun scanFile(uri: Uri, c: Context) {
             val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri)
             c.sendBroadcast(mediaScanIntent)
+        }
+
+        fun deleteFileByPath(context: Context, path: String): Boolean {
+            val file = File(path)
+            if (file.delete()) {
+                try {
+                    Utils.deleteFromMediaDatabase(context, path)
+                } catch (e: Exception) {
+                    log.warn("failed to delete media file from system database", e)
+                } finally {
+                    getContentUri(context, path)?.let {
+                        uri ->
+                        scanFile(
+                            uri,
+                            context
+                        )
+                    }
+                }
+                return true
+            }
+            return false
+        }
+
+        fun getContentUri(context: Context, path: String): Uri? {
+            return FileProvider.getUriForFile(context, context.packageName, File(path))
         }
 
         @TargetApi(VERSION_CODES.N)

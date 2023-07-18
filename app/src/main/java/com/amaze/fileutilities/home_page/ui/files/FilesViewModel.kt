@@ -1036,6 +1036,11 @@ class FilesViewModel(val applicationContext: Application) :
                                     )
                                 }
                             }
+                        } else {
+                            successProcessedPair.copy(
+                                successProcessedPair.first,
+                                mediaFileInfoList.size
+                            )
                         }
                         emit(successProcessedPair)
                         return true
@@ -1128,26 +1133,6 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             )
         }
-    }
-
-    fun deleteMediaFile(mediaFileInfo: MediaFileInfo): Boolean {
-        if (mediaFileInfo.delete()) {
-            try {
-                Utils.deleteFromMediaDatabase(applicationContext, mediaFileInfo.path)
-            } catch (e: Exception) {
-                log.warn("failed to delete media file from system database", e)
-            } finally {
-                mediaFileInfo.getContentUri(applicationContext)?.let {
-                    uri ->
-                    FileUtils.scanFile(
-                        uri,
-                        applicationContext
-                    )
-                }
-            }
-            return true
-        }
-        return false
     }
 
     fun getMediaFileListSize(mediaFileInfoList: List<MediaFileInfo>): LiveData<Long> {
@@ -1933,7 +1918,7 @@ class FilesViewModel(val applicationContext: Application) :
                 getTrashbinConfig(),
                 object : DeletePermanentlyCallback {
                     override suspend fun invoke(deletePath: String): Boolean {
-                        // do nothing
+                        FileUtils.deleteFileByPath(applicationContext, deletePath)
                         return true
                     }
                 },
