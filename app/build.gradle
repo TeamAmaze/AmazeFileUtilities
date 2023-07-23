@@ -45,12 +45,12 @@ android {
         release
     }
 
-    compileSdk 33
+    compileSdk 32
 
     defaultConfig {
         applicationId "com.amaze.fileutilities"
         minSdk 21
-        targetSdk 33
+        targetSdk 32
 
         Integer sudoVersionCode = 26
         String versionNameText = "1.86"
@@ -243,7 +243,7 @@ dependencies {
     implementation 'org.zwobble.mammoth:mammoth:1.4.2'
     implementation 'me.zhanghai.android.fastscroll:library:1.1.8'
     implementation "ch.acra:acra-core:5.7.0"
-    implementation 'com.github.TeamAmaze:AmazeTrashBin:1.0.1'
+    implementation 'com.github.TeamAmaze:AmazeTrashBin:1.0.4'
 
     // https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor
     implementation group: 'com.drewnoakes', name: 'metadata-extractor', version: '2.16.0'

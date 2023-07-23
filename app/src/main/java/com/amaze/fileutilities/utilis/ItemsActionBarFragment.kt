@@ -257,7 +257,7 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
                         getMediaFileAdapter()?.checkAll()
                     }
                     R.id.deleteButtonFab -> {
-                        getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }
+                        getMediaFileAdapter()?.checkItemsList?.filter { it.mediaFileInfo!=null }?.map { it.mediaFileInfo!! }
                             ?.let { toDelete ->
                                 if (getMediaListType() == MediaFileAdapter.MEDIA_TYPE_APKS ||
                                     getMediaListType() == MediaFileAdapter.MEDIA_TYPE_TRASH_BIN
@@ -270,7 +270,7 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
                     }
                     R.id.restoreTrashButtonFab -> {
                         if (getMediaListType() == MediaFileAdapter.MEDIA_TYPE_TRASH_BIN) {
-                            getMediaFileAdapter()?.checkItemsList?.map { it.mediaFileInfo!! }
+                            getMediaFileAdapter()?.checkItemsList?.filter { it.mediaFileInfo!=null }?.map { it.mediaFileInfo!! }
                                 ?.let { toRestore ->
                                     performRestoreAction(toRestore)
                                 }

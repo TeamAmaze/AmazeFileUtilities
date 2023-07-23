@@ -354,10 +354,12 @@ class FilesFragment : ItemsActionBarFragment() {
                         )
                     }
                 } else {
-                    requireContext().showToastInCenter(
-                        resources
-                            .getString(R.string.please_wait)
-                    )
+                    binding.trashBinTab.setOnClickListener {
+                        requireContext().showToastInCenter(
+                            resources
+                                .getString(R.string.please_wait)
+                        )
+                    }
                 }
             }
         }

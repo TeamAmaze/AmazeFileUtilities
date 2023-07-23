@@ -136,7 +136,7 @@ abstract class AbstractMediaFilesAdapter(
     }
 
     open fun checkAll(): Boolean {
-        getMediaFilesListItems().forEach {
+        getMediaFilesListItems().filter { it.listItemType == TYPE_ITEM }.forEach {
             toggleChecked(it)
         }
         notifyDataSetChanged()
