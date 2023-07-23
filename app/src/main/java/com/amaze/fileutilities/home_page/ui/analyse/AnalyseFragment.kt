@@ -700,6 +700,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             setupDeletePermanentlyButton(toDelete) {
                 // reset interal storage stats so that we recalculate storage remaining
                 filesViewModel.internalStorageStatsLiveData = null
+                filesViewModel.trashBinFilesLiveData = null
                 deletedCallback.invoke()
 
                 // deletion complete, no need to check analysis data to remove
@@ -714,6 +715,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             setupDeleteButton(toDelete) {
                 // reset interal storage stats so that we recalculate storage remaining
                 filesViewModel.internalStorageStatsLiveData = null
+                filesViewModel.trashBinFilesLiveData = null
                 deletedCallback.invoke()
 
                 // deletion complete, no need to check analysis data to remove

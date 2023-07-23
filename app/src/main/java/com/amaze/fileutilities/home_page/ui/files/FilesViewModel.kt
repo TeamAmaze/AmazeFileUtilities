@@ -1914,7 +1914,7 @@ class FilesViewModel(val applicationContext: Application) :
 
     fun getTrashBinInstance(): TrashBin {
         if (trashBin == null) {
-            trashBin = TrashBin.getInstance(
+            trashBin = TrashBin(
                 getTrashbinConfig(),
                 object : DeletePermanentlyCallback {
                     override suspend fun invoke(deletePath: String): Boolean {
