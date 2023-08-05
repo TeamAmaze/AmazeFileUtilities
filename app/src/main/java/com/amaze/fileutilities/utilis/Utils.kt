@@ -1064,6 +1064,38 @@ class Utils {
             dialog.show()
         }
 
+        fun buildDigitInputDialog(
+            context: Context,
+            title: String,
+            summary: String,
+            days: Long,
+            callback: (Long?) -> Unit,
+            neutralCallback: () -> Unit
+        ) {
+            val inputEditTextViewPair = getEditTextViewForDialog(context, "$days")
+            inputEditTextViewPair.second.inputType = InputType.TYPE_CLASS_NUMBER
+            inputEditTextViewPair.second.setText("$days")
+            val dialog = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+                .setTitle(title)
+                .setMessage(summary)
+                .setView(inputEditTextViewPair.first)
+                .setCancelable(false)
+                .setPositiveButton(R.string.ok) { dialog, _ ->
+                    val salt = inputEditTextViewPair.second.text.toString()
+                    callback.invoke(salt.toLongOrNull())
+                    dialog.dismiss()
+                }
+                .setNegativeButton(
+                    R.string.cancel
+                ) { dialog, _ ->
+                    dialog.dismiss()
+                }.setNeutralButton(R.string.default_alert_dialog) { dialog, _ ->
+                    neutralCallback.invoke()
+                    dialog.dismiss()
+                }.create()
+            dialog.show()
+        }
+
         fun buildPickLyricsTypeDialog(
             context: Context,
             callback: (Int) -> Unit

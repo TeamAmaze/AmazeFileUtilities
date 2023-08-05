@@ -972,4 +972,6 @@
     <string name="retention_num_of_files_summary">Maximum files trash bin can store</string>
     <!-- Successfully restored toast after operation success -->
     <string name="successfully_restored">Successfully restored</string>
+    <!-- Default button in alert dialogs -->
+    <string name="default_alert_dialog">Default</string>
 </resources>
