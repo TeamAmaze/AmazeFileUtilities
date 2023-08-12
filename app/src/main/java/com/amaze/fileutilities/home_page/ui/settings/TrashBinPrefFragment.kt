@@ -76,11 +76,16 @@ class TrashBinPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                 )
                 Utils.buildDigitInputDialog(
                     requireContext(), getString(R.string.retention_days_title),
-                    getString(R.string.retention_days_summary), days.toLong()
+                    getString(R.string.retention_days_summary), days.toLong(), {
+                        prefs.edit().putInt(
+                            PreferencesConstants.KEY_TRASH_BIN_RETENTION_DAYS,
+                            it?.toInt() ?: TrashBinConfig.RETENTION_DAYS_INFINITE
+                        ).apply()
+                    }
                 ) {
                     prefs.edit().putInt(
                         PreferencesConstants.KEY_TRASH_BIN_RETENTION_DAYS,
-                        it?.toInt() ?: TrashBinConfig.RETENTION_DAYS_INFINITE
+                        TrashBinConfig.RETENTION_DAYS_INFINITE
                     ).apply()
                 }
             }
@@ -91,12 +96,18 @@ class TrashBinPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                 )
                 Utils.buildDigitInputDialog(
                     requireContext(), getString(R.string.retention_bytes_title),
-                    getString(R.string.retention_bytes_summary), bytes
+                    getString(R.string.retention_bytes_summary), bytes,
+                    {
+                        val bytesInput = it?.times(1024)?.times(1024)
+                        prefs.edit().putLong(
+                            PreferencesConstants.KEY_TRASH_BIN_RETENTION_BYTES,
+                            bytesInput ?: TrashBinConfig.RETENTION_BYTES_INFINITE
+                        ).apply()
+                    }
                 ) {
-                    val bytesInput = it?.times(1024)?.times(1024)
                     prefs.edit().putLong(
                         PreferencesConstants.KEY_TRASH_BIN_RETENTION_BYTES,
-                        bytesInput ?: TrashBinConfig.RETENTION_BYTES_INFINITE
+                        TrashBinConfig.RETENTION_BYTES_INFINITE
                     ).apply()
                 }
             }
@@ -107,11 +118,17 @@ class TrashBinPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                 )
                 Utils.buildDigitInputDialog(
                     requireContext(), getString(R.string.retention_num_of_files_title),
-                    getString(R.string.retention_num_of_files_summary), days.toLong()
+                    getString(R.string.retention_num_of_files_summary), days.toLong(),
+                    {
+                        prefs.edit().putInt(
+                            PreferencesConstants.KEY_TRASH_BIN_RETENTION_NUM_OF_FILES,
+                            it?.toInt() ?: TrashBinConfig.RETENTION_NUM_OF_FILES
+                        ).apply()
+                    }
                 ) {
                     prefs.edit().putInt(
                         PreferencesConstants.KEY_TRASH_BIN_RETENTION_NUM_OF_FILES,
-                        it?.toInt() ?: TrashBinConfig.RETENTION_NUM_OF_FILES
+                        TrashBinConfig.RETENTION_NUM_OF_FILES
                     ).apply()
                 }
             }

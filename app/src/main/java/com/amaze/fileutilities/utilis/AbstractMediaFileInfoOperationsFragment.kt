@@ -20,12 +20,16 @@
 
 package com.amaze.fileutilities.utilis
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.text.format.Formatter
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.amaze.fileutilities.R
@@ -123,6 +127,144 @@ abstract class AbstractMediaFileInfoOperationsFragment : Fragment() {
                     resources.getString(R.string.delete_files_message)
                         .format(toDelete.size, size)
                 )
+            }
+        }
+    }
+
+    /**
+     * setup compress click
+     * @param toCompress to delete media files
+     * @param compressCallback callback once compression finishes
+     */
+    fun setupCompressImagesButton(
+        toCompress: List<MediaFileInfo>,
+        layoutInflater: LayoutInflater,
+        compressedCallback: (toDelete: List<MediaFileInfo>, toAdd: List<MediaFileInfo>) -> Unit
+    ) {
+        if (toCompress.isEmpty()) {
+            requireContext().showToastOnBottom(getString(R.string.no_item_selected))
+            return
+        }
+        val progressDialogBuilder = requireContext()
+            .showProcessingDialog(layoutInflater, "")
+        val summaryDialogBuilder = Utils.buildCompressImagesSummaryDialog(
+            requireContext(),
+            layoutInflater
+        ) { compressQuality, qualityFormat, deletePermanently ->
+            val progressDialog = progressDialogBuilder.create()
+            progressDialog.show()
+            val compressedFiles = mutableListOf<MediaFileInfo>()
+            getFilesViewModelObj().compressMediaFiles(
+                toCompress,
+                compressQuality, qualityFormat, deletePermanently
+            )
+                .observe(viewLifecycleOwner) {
+                    progressDialog.findViewById<TextView>(R.id.please_wait_text)?.text =
+                        resources.getString(R.string.processed_compressed)
+                            .format(it.first, Formatter.formatFileSize(requireContext(), it.second))
+                    if (it.third != null) {
+                        compressedFiles.add(it.third!!)
+                    }
+                    if (it.first == toCompress.size) {
+                        if (deletePermanently) {
+                            compressedCallback.invoke(toCompress, compressedFiles)
+                        } else {
+                            compressedCallback.invoke(emptyList(), compressedFiles)
+                        }
+                        progressDialog.setCancelable(true)
+                        progressDialog
+                            .findViewById<ProgressBar>(R.id.loadingProgress)?.visibility = View.GONE
+                    }
+                }
+        }
+        val summaryDialog = summaryDialogBuilder.create()
+        summaryDialog.show()
+        getFilesViewModelObj().getMediaFileListSize(toCompress).observe(viewLifecycleOwner) {
+            sizeRaw ->
+            if (summaryDialog.isShowing) {
+                val size = Formatter.formatFileSize(requireContext(), sizeRaw)
+                summaryDialog.findViewById<TextView>(R.id.compression_message)?.text =
+                    resources.getString(R.string.compress_message)
+                        .format(toCompress.size, size)
+            }
+        }
+    }
+
+    /**
+     * setup compress click
+     * @param toCompress to delete media files
+     * @param compressCallback callback once compression finishes
+     */
+    @SuppressLint("SetTextI18n")
+    fun setupCompressVideosButton(
+        toCompress: List<MediaFileInfo>,
+        layoutInflater: LayoutInflater,
+        compressedCallback: (toDelete: List<MediaFileInfo>, toAdd: List<MediaFileInfo>) -> Unit
+    ) {
+        if (toCompress.isEmpty()) {
+            requireContext().showToastOnBottom(getString(R.string.no_item_selected))
+            return
+        }
+        val progressDialogBuilder = requireContext()
+            .showProcessingDialog(layoutInflater, "")
+        val summaryDialogBuilder = Utils.buildCompressVideosSummaryDialog(
+            requireContext(),
+            layoutInflater
+        ) { compressQuality, disableAudio, deletePermanently ->
+            val progressDialog = progressDialogBuilder.create()
+            progressDialog.show()
+            progressDialog
+                .findViewById<ProgressBar>(R.id.loadingProgress)?.visibility = View.GONE
+            progressDialog
+                .findViewById<TextView>(R.id.loadingProgressText)?.visibility = View.VISIBLE
+            progressDialog.findViewById<TextView>(R.id.please_wait_text)?.text =
+                resources.getString(R.string.processed_compressed)
+                    .format("0", "0B")
+            val compressedFiles = mutableListOf<MediaFileInfo>()
+            getFilesViewModelObj().compressMediaFiles(
+                toCompress,
+                compressQuality, disableAudio, deletePermanently, {
+                    progressMap ->
+                    requireActivity().runOnUiThread {
+                        val progressText = StringBuffer()
+                        progressMap.forEach {
+                            progressText.append("${it.key}: ${it.value}%\n")
+                        }
+                        progressDialog
+                            .findViewById<TextView>(R.id.loadingProgressText)?.text = progressText
+                            .toString()
+                    }
+                }
+            ) {
+                progressDialog.findViewById<TextView>(R.id.please_wait_text)?.text =
+                    resources.getString(R.string.processed_compressed)
+                        .format(it.first, Formatter.formatFileSize(requireContext(), it.second))
+                if (it.third != null) {
+                    compressedFiles.add(it.third!!)
+                }
+                if (it.first == toCompress.size) {
+                    if (deletePermanently) {
+                        compressedCallback.invoke(toCompress, compressedFiles)
+                    } else {
+                        compressedCallback.invoke(emptyList(), compressedFiles)
+                    }
+                    progressDialog.setCancelable(true)
+                    progressDialog
+                        .findViewById<ProgressBar>(R.id.loadingProgress)?.visibility = View.GONE
+                    progressDialog
+                        .findViewById<TextView>(R.id.loadingProgressText)?.visibility = View.GONE
+                }
+            }
+        }
+        val summaryDialog = summaryDialogBuilder.create()
+        summaryDialog.show()
+        getFilesViewModelObj().getMediaFileListSize(toCompress).observe(viewLifecycleOwner) {
+            sizeRaw ->
+            if (summaryDialog.isShowing) {
+                val size = Formatter.formatFileSize(requireContext(), sizeRaw)
+                summaryDialog.findViewById<TextView>(R.id.compression_message)?.text =
+                    resources.getString(R.string.compress_message)
+                        .format(toCompress.size, size)
             }
         }
     }

@@ -58,7 +58,7 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
     }
 
     override fun uninstallAppCallback(mediaFileInfo: MediaFileInfo) {
-        refreshListAfterTrashCallback(listOf(mediaFileInfo))
+        refreshListAfterTrashCallback(listOf(mediaFileInfo), emptyList())
         requireContext().showToastOnBottom(
             resources
                 .getString(R.string.successfully_deleted)
@@ -197,6 +197,9 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
     }
 
     private fun deleteFromFileViewmodelLists(toDelete: List<MediaFileInfo>) {
+        if (toDelete.isEmpty()) {
+            return
+        }
         val imagesToDelete = toDelete.filter {
             it.extraInfo?.mediaType == MediaFileInfo.MEDIA_TYPE_IMAGE
         }
@@ -212,39 +215,60 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
         val apksToDelete = toDelete.filter {
             it.extraInfo?.mediaType == MediaFileInfo.MEDIA_TYPE_APK
         }
-        if (!imagesToDelete.isNullOrEmpty()) {
+        if (imagesToDelete.isNotEmpty()) {
             filesViewModel.usedImagesSummaryTransformations().observe(viewLifecycleOwner) {
                 if (it != null) {
                     filesViewModel.deleteMediaFilesFromList(it.second, imagesToDelete)
                 }
             }
         }
-        if (!videosToDelete.isNullOrEmpty()) {
+        if (videosToDelete.isNotEmpty()) {
             filesViewModel.usedVideosSummaryTransformations().observe(viewLifecycleOwner) {
                 if (it != null) {
                     filesViewModel.deleteMediaFilesFromList(it.second, videosToDelete)
                 }
             }
         }
-        if (!audioToDelete.isNullOrEmpty()) {
+        if (audioToDelete.isNotEmpty()) {
             filesViewModel.usedAudiosSummaryTransformations().observe(viewLifecycleOwner) {
                 if (it != null) {
                     filesViewModel.deleteMediaFilesFromList(it.second, audioToDelete)
                 }
             }
         }
-        if (!docsToDelete.isNullOrEmpty()) {
+        if (docsToDelete.isNotEmpty()) {
             filesViewModel.usedDocsSummaryTransformations().observe(viewLifecycleOwner) {
                 if (it != null) {
                     filesViewModel.deleteMediaFilesFromList(it.second, docsToDelete)
                 }
             }
         }
-        if (!apksToDelete.isNullOrEmpty()) {
+        if (apksToDelete.isNotEmpty()) {
             // currently no way to distinguish whether user is deleting large apps or unused apps
             // so we clear both
             filesViewModel.unusedAppsLiveData = null
             filesViewModel.largeAppsLiveData = null
+        }
+    }
+    private fun addToFileViewmodelLists(toAdd: List<MediaFileInfo>) {
+        if (toAdd.isEmpty()) {
+            return
+        }
+        when (toAdd[0].extraInfo?.mediaType) {
+            MediaFileInfo.MEDIA_TYPE_IMAGE -> {
+                filesViewModel.usedImagesSummaryTransformations().observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        filesViewModel.addMediaFilesToList(it.second, toAdd)
+                    }
+                }
+            }
+            MediaFileInfo.MEDIA_TYPE_VIDEO -> {
+                filesViewModel.usedVideosSummaryTransformations().observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        filesViewModel.addMediaFilesToList(it.second, toAdd)
+                    }
+                }
+            }
         }
     }
 
@@ -257,7 +281,9 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
                         getMediaFileAdapter()?.checkAll()
                     }
                     R.id.deleteButtonFab -> {
-                        getMediaFileAdapter()?.checkItemsList?.filter { it.mediaFileInfo!=null }?.map { it.mediaFileInfo!! }
+                        getMediaFileAdapter()
+                            ?.checkItemsList?.filter { it.mediaFileInfo != null }
+                            ?.map { it.mediaFileInfo!! }
                             ?.let { toDelete ->
                                 if (getMediaListType() == MediaFileAdapter.MEDIA_TYPE_APKS ||
                                     getMediaListType() == MediaFileAdapter.MEDIA_TYPE_TRASH_BIN
@@ -270,11 +296,27 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
                     }
                     R.id.restoreTrashButtonFab -> {
                         if (getMediaListType() == MediaFileAdapter.MEDIA_TYPE_TRASH_BIN) {
-                            getMediaFileAdapter()?.checkItemsList?.filter { it.mediaFileInfo!=null }?.map { it.mediaFileInfo!! }
+                            getMediaFileAdapter()?.checkItemsList?.filter {
+                                it.mediaFileInfo != null
+                            }?.map { it.mediaFileInfo!! }
                                 ?.let { toRestore ->
                                     performRestoreAction(toRestore)
                                 }
                         }
+                    }
+                    R.id.compressButtonFab -> {
+                        getMediaFileAdapter()?.checkItemsList?.filter {
+                            it.mediaFileInfo != null
+                        }?.map { it.mediaFileInfo!! }
+                            ?.let { toCompress ->
+                                if (getMediaListType() == MediaFileAdapter.MEDIA_TYPE_IMAGES) {
+                                    performCompressImagesAction(toCompress)
+                                } else if (getMediaListType() == MediaFileAdapter
+                                    .MEDIA_TYPE_VIDEO
+                                ) {
+                                    performCompressVideosAction(toCompress)
+                                }
+                            }
                     }
                     R.id.shareButtonFab -> {
                         getMediaFileAdapter()?.checkItemsList?.let {
@@ -355,7 +397,7 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
 
     fun performDeletePermanentlyAction(toDelete: List<MediaFileInfo>) {
         setupDeletePermanentlyButton(toDelete) {
-            refreshListAfterTrashCallback(toDelete)
+            refreshListAfterTrashCallback(toDelete, emptyList())
             getMediaFileAdapter()?.invalidateList(toDelete)
             requireContext().showToastOnBottom(
                 resources
@@ -366,7 +408,7 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
 
     fun performDeleteAction(toDelete: List<MediaFileInfo>) {
         setupDeleteButton(toDelete) {
-            refreshListAfterTrashCallback(toDelete)
+            refreshListAfterTrashCallback(toDelete, emptyList())
             getMediaFileAdapter()?.invalidateList(toDelete)
             requireContext().showToastOnBottom(
                 resources
@@ -377,11 +419,35 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
 
     fun performRestoreAction(toRestore: List<MediaFileInfo>) {
         setupRestoreButton(toRestore) {
-            refreshListAfterTrashCallback(toRestore)
+            refreshListAfterTrashCallback(toRestore, emptyList())
             getMediaFileAdapter()?.invalidateList(toRestore)
             requireContext().showToastOnBottom(
                 resources
                     .getString(R.string.successfully_restored)
+            )
+        }
+    }
+
+    fun performCompressImagesAction(toCompress: List<MediaFileInfo>) {
+        setupCompressImagesButton(toCompress, layoutInflater) {
+            toDelete, toAdd ->
+            refreshListAfterTrashCallback(toDelete, toAdd)
+            getMediaFileAdapter()?.notifyDataSetChanged()
+            requireContext().showToastOnBottom(
+                resources
+                    .getString(R.string.compression_successful_images)
+            )
+        }
+    }
+
+    fun performCompressVideosAction(toCompress: List<MediaFileInfo>) {
+        setupCompressVideosButton(toCompress, layoutInflater) {
+            toDelete, toAdd ->
+            refreshListAfterTrashCallback(toDelete, toAdd)
+            getMediaFileAdapter()?.notifyDataSetChanged()
+            requireContext().showToastOnBottom(
+                resources
+                    .getString(R.string.compression_successful_videos)
             )
         }
     }
@@ -434,7 +500,10 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
         }
     }
 
-    private fun refreshListAfterTrashCallback(toDelete: List<MediaFileInfo>) {
+    private fun refreshListAfterTrashCallback(
+        toDelete: List<MediaFileInfo>,
+        toAdd: List<MediaFileInfo>
+    ) {
         if (getMediaFileAdapter()?.removeChecked() != true) {
             log.warn("Failed to update list after deletion")
             requireContext().showToastOnBottom(
@@ -448,6 +517,7 @@ abstract class ItemsActionBarFragment : AbstractMediaFileInfoOperationsFragment(
         // for fileviewmodels, underlying list isn't passed in adapters beacause of size
         // and because that list is continuously iterated by dupe analysis
         deleteFromFileViewmodelLists(toDelete)
+        addToFileViewmodelLists(toAdd)
 
         // reset interal storage stats so that we recalculate storage remaining
         filesViewModel.internalStorageStatsLiveData = null

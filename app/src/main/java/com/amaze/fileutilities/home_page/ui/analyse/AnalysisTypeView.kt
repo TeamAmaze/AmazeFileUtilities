@@ -119,6 +119,12 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
         gravity = Gravity.CENTER_HORIZONTAL
         setPadding(8.px.toInt(), 8.px.toInt(), 8.px.toInt(), 8.px.toInt())
         background = resources.getDrawable(R.drawable.background_curved)
+
+        var cleanButtonText = a.getString(R.styleable.AnalysisTypeView_cleanButtonText)
+        if (cleanButtonText != null) {
+            cleanButton.text = cleanButtonText
+        }
+        showPreview = a.getBoolean(R.styleable.AnalysisTypeView_showPreview, false)
     }
 
     /**
@@ -171,6 +177,10 @@ class AnalysisTypeView(context: Context, attrs: AttributeSet?) : LinearLayout(co
             }
             imagesListParent.addView(getSummaryView(mediaFileInfoList.size))
         }
+        cleanButtonClickListener(cleanButtonClick)
+    }
+
+    fun cleanButtonClickListener(cleanButtonClick: () -> Unit) {
         cleanButton.setOnClickListener {
             cleanButtonClick.invoke()
         }

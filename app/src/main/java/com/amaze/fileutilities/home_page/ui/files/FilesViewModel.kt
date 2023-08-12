@@ -26,6 +26,7 @@ import android.content.Context.ACTIVITY_SERVICE
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
@@ -41,6 +42,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import com.abedelazizshe.lightcompressorlibrary.CompressionListener
+import com.abedelazizshe.lightcompressorlibrary.VideoCompressor
+import com.abedelazizshe.lightcompressorlibrary.VideoQuality
+import com.abedelazizshe.lightcompressorlibrary.config.Configuration
+import com.abedelazizshe.lightcompressorlibrary.config.SaveLocation
+import com.abedelazizshe.lightcompressorlibrary.config.SharedStorageConfiguration
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.AudioUtils
@@ -81,8 +88,13 @@ import com.amaze.trashbin.MoveFilesCallback
 import com.amaze.trashbin.TrashBin
 import com.amaze.trashbin.TrashBinConfig
 import com.amaze.trashbin.TrashBinFile
+import id.zelory.compressor.Compressor
+import id.zelory.compressor.constraint.destination
+import id.zelory.compressor.constraint.format
+import id.zelory.compressor.constraint.quality
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
@@ -102,6 +114,7 @@ import java.util.Collections
 import java.util.Date
 import java.util.GregorianCalendar
 import java.util.PriorityQueue
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.streams.toList
 
@@ -262,6 +275,30 @@ class FilesViewModel(val applicationContext: Application) :
                     }
                 }*/
                 syncList.removeAll(toDelete)
+            }
+        }
+    }
+
+    fun addMediaFilesToList(
+        mediaFileInfoList: ArrayList<MediaFileInfo>,
+        toAdd: List<MediaFileInfo>
+    ) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val syncList = Collections.synchronizedList(mediaFileInfoList)
+//            val toDeletePaths = toDelete.map { it.path }
+            synchronized(syncList) {
+                /*syncList.forEachIndexed { index, mediaFileInfo ->
+                    if (toDeletePaths.contains(mediaFileInfo.path)) {
+                        syncList.removeAt(index)
+                    }
+                }*/
+                /*while (syncList.iterator().hasNext()) {
+                    val next = syncList.iterator().next()
+                    if (toDeletePaths.contains(next.path)) {
+                        syncList.iterator().remove()
+                    }
+                }*/
+                syncList.addAll(toAdd)
             }
         }
     }
@@ -1051,6 +1088,213 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
+    /**
+     * Process compressed files, returned pair - first refers to compressed files,
+     * second refers to compressed data
+     */
+    fun compressMediaFiles(
+        mediaFileInfoList: List<MediaFileInfo>,
+        compressQuality: Int,
+        qualityFormat: Bitmap.CompressFormat,
+        deleteOriginal: Boolean
+    ): LiveData<Triple<Int, Long, MediaFileInfo?>> {
+        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+            var successProcessedPair = Triple<Int, Long, MediaFileInfo?>(
+                0, 0L,
+                null
+            )
+            mediaFileInfoList.forEach {
+                if (it.extraInfo?.mediaType == MediaFileInfo.MEDIA_TYPE_IMAGE) {
+                    log.info("Compressing image files $mediaFileInfoList")
+                    try {
+                        val file = File(it.path)
+                        val newFile = File(
+                            Environment
+                                .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                            "(COPY) ${file.name}"
+                        )
+                        if (file.exists()) {
+                            val compressedImageFile = Compressor.compress(
+                                applicationContext,
+                                file
+                            ) {
+                                quality(compressQuality)
+                                format(qualityFormat)
+                                destination(newFile)
+                            }
+                            if (deleteOriginal) {
+                                runBlocking {
+                                    moveToBinLightWeight(arrayListOf(it))
+                                }
+                                it.getContentUri(applicationContext)?.let {
+                                    originalUri ->
+                                    FileUtils.scanFile(
+                                        originalUri,
+                                        applicationContext
+                                    )
+                                }
+                                log.info("deleted original image file {}", it.path)
+                            }
+                            val uri = FileProvider.getUriForFile(
+                                applicationContext,
+                                applicationContext.packageName, compressedImageFile
+                            )
+                            FileUtils.scanFile(
+                                uri,
+                                applicationContext
+                            )
+                            successProcessedPair = successProcessedPair.copy(
+                                successProcessedPair.first + 1,
+                                successProcessedPair.second + it.longSize -
+                                    newFile.length(),
+                                MediaFileInfo.fromFile(
+                                    newFile,
+                                    MediaFileInfo.ExtraInfo(
+                                        MediaFileInfo.MEDIA_TYPE_IMAGE,
+                                        null, null, null
+                                    )
+                                )
+                            )
+                            emit(successProcessedPair)
+                        } else {
+                            successProcessedPair = successProcessedPair.copy(
+                                successProcessedPair.first + 1,
+                                successProcessedPair.second, null
+                            )
+                            emit(successProcessedPair)
+                        }
+                    } catch (e: Exception) {
+                        log.warn("failed to compress image file at {}", it.path)
+                        successProcessedPair = successProcessedPair.copy(
+                            successProcessedPair.first + 1,
+                            successProcessedPair.second, null
+                        )
+                        emit(successProcessedPair)
+                    }
+                }
+            }
+        }
+    }
+
+    fun compressMediaFiles(
+        mediaFileInfoList: List<MediaFileInfo>,
+        quality: VideoQuality,
+        disableAudio: Boolean,
+        deleteOriginal: Boolean,
+        onProgressCallback: (ConcurrentHashMap<String, Int>) -> (Unit),
+        onCompleteCallback: (Triple<Int, Long, MediaFileInfo?>) -> (Unit)
+    ) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            log.warn("compressing video failes not supported in version lower than N")
+            return
+        }
+        var successProcessedPair = Triple<Int, Long, MediaFileInfo?>(0, 0L, null)
+        val progressMap = ConcurrentHashMap<String, Int>()
+        mediaFileInfoList.forEach {
+            if (it.extraInfo?.mediaType == MediaFileInfo.MEDIA_TYPE_VIDEO) {
+                log.info("Compressing image files $mediaFileInfoList")
+                try {
+                    it.getContentUri(applicationContext)?.let { contentUri ->
+                        VideoCompressor.start(
+                            applicationContext,
+                            arrayListOf(contentUri),
+                            true,
+                            SharedStorageConfiguration(
+                                saveAt = SaveLocation.movies,
+                            ),
+                            configureWith = Configuration(
+                                videoNames = arrayListOf(it.title),
+                                quality = quality,
+                                isMinBitrateCheckEnabled = false,
+                                disableAudio = disableAudio,
+                                keepOriginalResolution = true
+                            ),
+                            listener = object : CompressionListener {
+                                override fun onProgress(index: Int, percent: Float) {
+                                    runBlocking {
+                                        val currTime = System.currentTimeMillis() / 1000
+                                        progressMap[it.title] = percent.toInt()
+                                        if (currTime % 5 == 0L) {
+                                            // publish update every 5 sec
+                                            onProgressCallback.invoke(progressMap)
+                                        }
+                                    }
+                                }
+
+                                override fun onStart(index: Int) {
+                                    // do nothing
+                                }
+
+                                override fun onSuccess(index: Int, size: Long, path: String?) {
+                                    if (path != null) {
+                                        if (deleteOriginal) {
+                                            runBlocking {
+                                                moveToBinLightWeight(arrayListOf(it))
+                                            }
+                                            FileUtils.scanFile(
+                                                contentUri,
+                                                applicationContext
+                                            )
+                                        }
+                                        val file = File(path)
+                                        val uri = FileProvider.getUriForFile(
+                                            applicationContext,
+                                            applicationContext.packageName, file
+                                        )
+                                        FileUtils.scanFile(
+                                            uri,
+                                            applicationContext
+                                        )
+                                        successProcessedPair = successProcessedPair.copy(
+                                            successProcessedPair.first + 1,
+                                            successProcessedPair.second + it.longSize -
+                                                size,
+                                            MediaFileInfo.fromFile(
+                                                file,
+                                                MediaFileInfo.ExtraInfo(
+                                                    MediaFileInfo.MEDIA_TYPE_VIDEO,
+                                                    null, null,
+                                                    null
+                                                )
+                                            )
+                                        )
+                                    } else {
+                                        successProcessedPair = successProcessedPair.copy(
+                                            successProcessedPair.first + 1,
+                                            successProcessedPair.second + it.longSize -
+                                                size,
+                                            null
+                                        )
+                                    }
+                                    onCompleteCallback.invoke(successProcessedPair)
+                                }
+
+                                override fun onFailure(index: Int, failureMessage: String) {
+                                    successProcessedPair = successProcessedPair.copy(
+                                        successProcessedPair.first + 1,
+                                        successProcessedPair.second, null
+                                    )
+                                    onCompleteCallback.invoke(successProcessedPair)
+                                }
+
+                                override fun onCancelled(index: Int) {
+                                    // do nothing
+                                }
+                            }
+                        )
+                    }
+                } catch (e: Exception) {
+                    log.warn("failed to compress video file at {}", it.path)
+                    successProcessedPair = successProcessedPair.copy(
+                        successProcessedPair.first + 1,
+                        successProcessedPair.second
+                    )
+                    onCompleteCallback.invoke(successProcessedPair)
+                }
+            }
+        }
+    }
+
     fun moveToTrashBin(mediaFileInfoList: List<MediaFileInfo>): LiveData<Pair<Int, Int>> {
         return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             log.info("Moving media files to bin $mediaFileInfoList")
@@ -1093,6 +1337,34 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             )
         }
+    }
+
+    private suspend fun moveToBinLightWeight(mediaFileInfoList: List<MediaFileInfo>) {
+        val trashBinFilesList = mediaFileInfoList.map { it.toTrashBinFile() }
+        getTrashBinInstance().moveToBin(
+            trashBinFilesList, true,
+            object : MoveFilesCallback {
+                override suspend fun invoke(
+                    originalFilePath: String,
+                    trashBinDestination: String
+                ): Boolean {
+                    val source = File(originalFilePath)
+                    val dest = File(trashBinDestination)
+                    if (!source.renameTo(dest)) {
+                        return false
+                    }
+                    val uri = FileProvider.getUriForFile(
+                        applicationContext,
+                        applicationContext.packageName, File(originalFilePath)
+                    )
+                    FileUtils.scanFile(
+                        uri,
+                        applicationContext
+                    )
+                    return true
+                }
+            }
+        )
     }
 
     fun restoreFromBin(mediaFileInfoList: List<MediaFileInfo>): LiveData<Pair<Int, Int>> {

@@ -15,6 +15,7 @@
         <attr name="analysisTitle" format="string" />
         <attr name="showPreview" format="boolean" />
         <attr name="hint" format="string" />
+        <attr name="cleanButtonText" format="string" />
     </declare-styleable>
     <declare-styleable name="CustomToolbar">
         <attr name="toolbarTitle" format="string" localization="suggested" />

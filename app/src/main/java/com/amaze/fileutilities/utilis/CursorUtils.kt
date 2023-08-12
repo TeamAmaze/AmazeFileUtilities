@@ -253,19 +253,23 @@ class CursorUtils {
                     }
                     if (dataColumnIdx >= 0) {
                         val path = cursor.getString(dataColumnIdx)
-                        if (path != null) {
+                        if (path != null && !path.contains(".nomedia")) {
                             val f = File(path)
                             if (d.compareTo(Date(f.lastModified())) != 1 && !f.isDirectory) {
-                                mediaTypeRaw = cursor.getInt(mediaColumnIdxValues.mediaTypeIdx)
-                                val mediaFileInfo = MediaFileInfo.fromFile(
-                                    f,
-                                    queryMetaInfo(
-                                        cursor,
-                                        getMediaTypeFromSystemMediaStoreType(mediaTypeRaw),
-                                        mediaColumnIdxValues
+                                try {
+                                    mediaTypeRaw = cursor.getInt(mediaColumnIdxValues.mediaTypeIdx)
+                                    val mediaFileInfo = MediaFileInfo.fromFile(
+                                        f,
+                                        queryMetaInfo(
+                                            cursor,
+                                            getMediaTypeFromSystemMediaStoreType(mediaTypeRaw),
+                                            mediaColumnIdxValues
+                                        )
                                     )
-                                )
-                                recentFiles.add(mediaFileInfo)
+                                    recentFiles.add(mediaFileInfo)
+                                } catch (e: Exception) {
+                                    log.warn("failed to read media file at {}", path)
+                                }
                             }
                         }
                     }
@@ -308,17 +312,23 @@ class CursorUtils {
                             .getColumnIndex(MediaStore.Files.FileColumns.DATA)
                     }
                     if (dataColumnIdx >= 0) {
-                        val path = cursor.getString(dataColumnIdx)
-                        /*if (path != null && (endsWith.isEmpty()
-                                    || endsWith.stream().anyMatch { path.endsWith(it) })) {*/
-                        if (path != null) {
-                            loadMediaColumnIdx(cursor, mediaType, mediaColumnIdxValues)
-                            val mediaFileInfo = buildMediaFileInfoFromCursor(
-                                context, dataColumnIdx,
-                                cursor, mediaColumnIdxValues, mediaType
-                            )
-                            docs.add(mediaFileInfo)
-                            longSize += mediaFileInfo.longSize
+                        try {
+                            val path = cursor.getString(dataColumnIdx)
+                            /*if (path != null && (endsWith.isEmpty()
+                                        || endsWith.stream().anyMatch { path.endsWith(it) })) {*/
+                            if (path != null && !path.contains(".nomedia")) {
+                                loadMediaColumnIdx(cursor, mediaType, mediaColumnIdxValues)
+                                val mediaFileInfo = buildMediaFileInfoFromCursor(
+                                    context, dataColumnIdx,
+                                    cursor, mediaColumnIdxValues, mediaType
+                                )
+                                mediaFileInfo?.let {
+                                    docs.add(mediaFileInfo)
+                                    longSize += mediaFileInfo.longSize
+                                }
+                            }
+                        } catch (e: Exception) {
+                            log.warn("failed to read media file at {}", dataColumnIdx)
                         }
                     }
                 } while (cursor.moveToNext())
@@ -395,8 +405,10 @@ class CursorUtils {
                             context, dataColumnIdx,
                             cursor, mediaColumnIdxValues, mediaType
                         )
-                        mediaFileInfoFile.add(mediaFileInfo)
-                        longSize += mediaFileInfo.longSize
+                        mediaFileInfo?.let {
+                            mediaFileInfoFile.add(mediaFileInfo)
+                            longSize += mediaFileInfo.longSize
+                        }
                     }
                 } while (cursor.moveToNext())
             }
@@ -490,62 +502,70 @@ class CursorUtils {
             cursor: Cursor,
             mediaColumnIdxValues: MediaColumnIdxValues,
             mediaType: Int
-        ): MediaFileInfo {
-            val path = cursor.getString(dataColumnIdx)
-            var id: Long? = -1L
-            var title: String?
-            var lastModified: Long?
-            var size: Long?
-            var file: File? = null
-            var mediaTypeRaw: Int = -1
-            if (mediaColumnIdxValues.commonIdIdx >= 0) {
-                id = cursor.getLong(mediaColumnIdxValues.commonIdIdx)
-            }
-            if (mediaColumnIdxValues.commonNameIdx >= 0) {
-                title = cursor.getString(mediaColumnIdxValues.commonNameIdx)
-                if (title == null && mediaColumnIdxValues.commonTitleIdx >= 0) {
-                    title = cursor.getString(mediaColumnIdxValues.commonTitleIdx)
+        ): MediaFileInfo? {
+            try {
+                val path = cursor.getString(dataColumnIdx)
+                if (path.contains(".nomedia")) {
+                    return null
                 }
-                if (title == null) {
+                var id: Long? = -1L
+                var title: String?
+                var lastModified: Long?
+                var size: Long?
+                var file: File? = null
+                var mediaTypeRaw: Int = -1
+                if (mediaColumnIdxValues.commonIdIdx >= 0) {
+                    id = cursor.getLong(mediaColumnIdxValues.commonIdIdx)
+                }
+                if (mediaColumnIdxValues.commonNameIdx >= 0) {
+                    title = cursor.getString(mediaColumnIdxValues.commonNameIdx)
+                    if (title == null && mediaColumnIdxValues.commonTitleIdx >= 0) {
+                        title = cursor.getString(mediaColumnIdxValues.commonTitleIdx)
+                    }
+                    if (title == null) {
+                        if (file == null && path != null) {
+                            file = File(path)
+                        }
+                        title = file?.name
+                    }
+                } else {
                     if (file == null && path != null) {
                         file = File(path)
                     }
                     title = file?.name
                 }
-            } else {
-                if (file == null && path != null) {
-                    file = File(path)
+                if (mediaColumnIdxValues.commonLastModifiedIdx >= 0) {
+                    lastModified = cursor.getLong(mediaColumnIdxValues.commonLastModifiedIdx) * 1000
+                } else {
+                    if (file == null && path != null) {
+                        file = File(path)
+                    }
+                    lastModified = file?.lastModified()
                 }
-                title = file?.name
-            }
-            if (mediaColumnIdxValues.commonLastModifiedIdx >= 0) {
-                lastModified = cursor.getLong(mediaColumnIdxValues.commonLastModifiedIdx) * 1000
-            } else {
-                if (file == null && path != null) {
-                    file = File(path)
+                if (mediaColumnIdxValues.commonSizeIdx >= 0) {
+                    size = cursor.getLong(mediaColumnIdxValues.commonSizeIdx)
+                } else {
+                    if (file == null && path != null) {
+                        file = File(path)
+                    }
+                    size = file?.length()
                 }
-                lastModified = file?.lastModified()
-            }
-            if (mediaColumnIdxValues.commonSizeIdx >= 0) {
-                size = cursor.getLong(mediaColumnIdxValues.commonSizeIdx)
-            } else {
-                if (file == null && path != null) {
-                    file = File(path)
+                var mediaTypeNew = mediaType
+                if (mediaColumnIdxValues.mediaTypeIdx >= 0) {
+                    mediaTypeRaw = cursor.getInt(mediaColumnIdxValues.mediaTypeIdx)
+                    mediaTypeNew = getMediaTypeFromSystemMediaStoreType(mediaTypeRaw)
                 }
-                size = file?.length()
+                return MediaFileInfo.fromFile(
+                    mediaTypeNew,
+                    id ?: -1L,
+                    title ?: "", path, lastModified ?: 0L, size ?: 0L,
+                    context,
+                    queryMetaInfo(cursor, mediaTypeNew, mediaColumnIdxValues)
+                )
+            } catch (e: Exception) {
+                log.warn("failed to build media file at cursor column {}", dataColumnIdx)
+                return null
             }
-            var mediaTypeNew = mediaType
-            if (mediaColumnIdxValues.mediaTypeIdx >= 0) {
-                mediaTypeRaw = cursor.getInt(mediaColumnIdxValues.mediaTypeIdx)
-                mediaTypeNew = getMediaTypeFromSystemMediaStoreType(mediaTypeRaw)
-            }
-            return MediaFileInfo.fromFile(
-                mediaTypeNew,
-                id ?: -1L,
-                title ?: "", path, lastModified ?: 0L, size ?: 0L,
-                context,
-                queryMetaInfo(cursor, mediaTypeNew, mediaColumnIdxValues)
-            )
         }
 
         private fun getMediaTypeFromSystemMediaStoreType(systemMediaStoreType: Int): Int {
