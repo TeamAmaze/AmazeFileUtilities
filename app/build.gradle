@@ -139,8 +139,8 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"${OPENSUBTITLES_API_KEY_DEBUG}\""
             debuggable true //For "debug" banner on icon
@@ -218,6 +218,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.core:core:1.7.0'
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.6.1'
@@ -243,7 +244,7 @@ dependencies {
     implementation 'org.zwobble.mammoth:mammoth:1.4.2'
     implementation 'me.zhanghai.android.fastscroll:library:1.1.8'
     implementation "ch.acra:acra-core:5.7.0"
-    implementation 'com.github.TeamAmaze:AmazeTrashBin:1.0.4'
+    implementation 'com.github.TeamAmaze:AmazeTrashBin:1.0.5'
 
     // https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor
     implementation group: 'com.drewnoakes', name: 'metadata-extractor', version: '2.16.0'
@@ -284,8 +285,13 @@ dependencies {
     api "com.caverock:androidsvg:1.4"
     implementation 'com.burhanrashid52:photoeditor:2.0.0'
     implementation 'com.github.CanHub:Android-Image-Cropper:4.3.1'
-    api 'com.github.TeamAmaze:mupdf-android-viewer:1.0.25'
+    api 'com.github.TeamAmaze:mupdf-android-viewer:1.0.26'
     implementation "androidx.documentfile:documentfile:1.0.1"
+    implementation 'id.zelory:compressor:3.0.1'
+    implementation('com.github.AbedElazizShe:LightCompressor:1.3.1') {
+        exclude group: 'androidx.core', module: 'core'
+        exclude group: 'androidx.core', module: 'core-ktx'
+    }
 
     //Detect memory leaks
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'

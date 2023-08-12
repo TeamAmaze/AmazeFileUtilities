@@ -974,4 +974,37 @@
     <string name="successfully_restored">Successfully restored</string>
     <!-- Default button in alert dialogs -->
     <string name="default_alert_dialog">Default</string>
+    <!-- Compressing dialog title -->
+    <string name="compress_title">Compress</string>
+    <!-- Processed dialog summary -->
+    <string name="processed_compressed">Processed: %s \n\nSaved data: %s</string>
+    <!-- Compress dialog summary -->
+    <string name="compress_message">You\'re about to compress these files.
+        Are you sure you want to proceed?\n\n%s Files, %s Size\n\n</string>
+    <!-- Proceed button in alert dialog for compression -->
+    <string name="proceed">Proceed</string>
+    <!-- Compression quality in compression alert dialog -->
+    <string name="compression_quality_title">Quality</string>
+    <!-- Compression delete original files checkbox alert dialog -->
+    <string name="compression_delete_original">Delete original</string>
+    <!-- Compression successful images -->
+    <string name="compression_successful_images">Successfully output compressed files in Pictures directory</string>
+    <!-- Compression successful videos -->
+    <string name="compression_successful_videos">Successfully output compressed files in Movies directory</string>
+    <!-- Compress files title in analysis fragment -->
+    <string name="compress_files_title">Compress Files</string>
+    <!-- Compress format in alert dialog -->
+    <string name="compress_format">Format</string>
+    <!-- Compress disable audio in video compression alert dialog -->
+    <string name="compress_disable_audio">Disable audio</string>
+    <!-- Compress format for video dialog -->
+    <string name="compress_video_bitrate_very_high">Very High</string>
+    <!-- Compress format for video dialog -->
+    <string name="compress_video_bitrate_high">High</string>
+    <!-- Compress format for video dialog -->
+    <string name="compress_video_bitrate_medium">Medium</string>
+    <!-- Compress format for video dialog -->
+    <string name="compress_video_bitrate_low">Low</string>
+    <!-- Compress format for video dialog -->
+    <string name="compress_video_bitrate_very_low">Very Low</string>
 </resources>

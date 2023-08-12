@@ -55,6 +55,16 @@
             android:visibility="gone"
             />
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/compressButtonFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/baseline_compress_24"
+            app:backgroundTint="@color/highlight_yellow"
+            app:tint="@color/black"
+            android:layout_marginBottom="@dimen/material_generic"
+            android:visibility="gone"
+            />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/shareButtonFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

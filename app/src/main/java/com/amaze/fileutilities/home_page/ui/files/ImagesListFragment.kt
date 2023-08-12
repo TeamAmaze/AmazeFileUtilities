@@ -98,10 +98,14 @@ class ImagesListFragment : AbstractMediaInfoListFragment() {
     }
 
     override fun getAllOptionsFAB(): List<FloatingActionButton> {
-        return arrayListOf(
+        val fabList = mutableListOf(
             binding.optionsButtonFab, binding.deleteButtonFab,
             binding.shareButtonFab, binding.locateFileButtonFab
         )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            fabList.add(binding.compressButtonFab)
+        }
+        return fabList
     }
 
     override fun showOptionsCallback() {

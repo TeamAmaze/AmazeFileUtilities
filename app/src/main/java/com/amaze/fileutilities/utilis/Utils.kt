@@ -63,10 +63,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.WindowManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorInt
@@ -80,6 +83,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.GridLayoutManager
+import com.abedelazizshe.lightcompressorlibrary.VideoQuality
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.audio_player.playlist.PlaylistLoader
@@ -468,13 +472,178 @@ class Utils {
             return builder
         }
 
+        fun buildCompressImagesSummaryDialog(
+            context: Context,
+            layoutInflater: LayoutInflater,
+            positiveCallback: (Int, Bitmap.CompressFormat, Boolean) -> Unit
+        ): AlertDialog.Builder {
+            val dialogBuilder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+                .setTitle(R.string.compress_title)
+            val dialogView: View = layoutInflater
+                .inflate(R.layout.compress_images_summary_dialog, null)
+            dialogBuilder.setView(dialogView)
+            val compressionData = arrayListOf("JPEG", "PNG")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                compressionData.add("WEBP (lossy)")
+                compressionData.add("WEBP (lossless)")
+            } else {
+                compressionData.add("WEBP")
+            }
+            val compressionSlider = dialogView.findViewById(R.id.compression_slider) as Slider
+            val compressionValue = dialogView.findViewById<TextView>(R.id.compression_slider_value)
+            val checkBox = dialogView.findViewById<CheckBox>(R.id.delete_original_checkbox)
+            val spinner = dialogView.findViewById<Spinner>(R.id.quality_selection_spinner)
+            val adapter = ArrayAdapter(context, R.layout.spinner_compress_format, compressionData)
+            adapter.setDropDownViewResource(R.layout.spinner_compress_format)
+            spinner.adapter = adapter
+            compressionSlider.valueFrom = 0f
+            compressionSlider.valueTo = 100f
+            compressionSlider.stepSize = 5f
+            compressionSlider.value = 100f
+            compressionValue.text = compressionSlider.value.toString()
+            compressionSlider.addOnChangeListener(
+                Slider.OnChangeListener { _, value, fromUser ->
+                    if (fromUser) {
+                        compressionValue.text = value.toString()
+                    }
+                }
+            )
+            var qualitySelected = Bitmap.CompressFormat.PNG
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    when (compressionData[position]) {
+                        "JPEG" -> {
+                            qualitySelected = Bitmap.CompressFormat.JPEG
+                        }
+                        "PNG" -> {
+                            qualitySelected = Bitmap.CompressFormat.PNG
+                        }
+                        "WEBP (lossy)" -> {
+                            qualitySelected = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                Bitmap.CompressFormat.WEBP_LOSSY
+                            } else {
+                                Bitmap.CompressFormat.WEBP
+                            }
+                        }
+                        "WEBP (lossless)" -> {
+                            qualitySelected = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                Bitmap.CompressFormat.WEBP_LOSSLESS
+                            } else {
+                                Bitmap.CompressFormat.WEBP
+                            }
+                        }
+                        "WEBP" -> {
+                            qualitySelected = Bitmap.CompressFormat.WEBP
+                        }
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    qualitySelected = Bitmap.CompressFormat.PNG
+                }
+            }
+            dialogBuilder.setPositiveButton(
+                R.string.proceed
+            ) { dialog, _ ->
+                positiveCallback.invoke(
+                    compressionSlider.value.toInt(), qualitySelected,
+                    checkBox.isChecked
+                )
+                dialog.dismiss()
+            }
+            dialogBuilder.setNegativeButton(
+                context.resources.getString(R.string.close)
+            ) { dialog, _ ->
+                dialog.dismiss()
+            }
+            return dialogBuilder
+        }
+
+        fun buildCompressVideosSummaryDialog(
+            context: Context,
+            layoutInflater: LayoutInflater,
+            positiveCallback: (VideoQuality, Boolean, Boolean) -> Unit
+        ): AlertDialog.Builder {
+            val dialogBuilder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+                .setTitle(R.string.compress_title)
+            val dialogView: View = layoutInflater
+                .inflate(R.layout.compress_videos_summary_dialog, null)
+            dialogBuilder.setView(dialogView)
+            val compressionData = arrayListOf(
+                context.getString(R.string.compress_video_bitrate_very_high),
+                context.getString(R.string.compress_video_bitrate_high),
+                context.getString(R.string.compress_video_bitrate_medium),
+                context.getString(R.string.compress_video_bitrate_low),
+                context.getString(R.string.compress_video_bitrate_very_low),
+            )
+            val checkBox = dialogView.findViewById<CheckBox>(R.id.delete_original_checkbox)
+            val disableAudioCheckbox = dialogView
+                .findViewById<CheckBox>(R.id.disable_audio_checkbox)
+            val spinner = dialogView.findViewById<Spinner>(R.id.quality_selection_spinner)
+            val adapter = ArrayAdapter(context, R.layout.spinner_compress_format, compressionData)
+            adapter.setDropDownViewResource(R.layout.spinner_compress_format)
+            spinner.adapter = adapter
+            var qualitySelected = VideoQuality.VERY_HIGH
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    when (position) {
+                        0 -> {
+                            qualitySelected = VideoQuality.VERY_HIGH
+                        }
+                        1 -> {
+                            qualitySelected = VideoQuality.HIGH
+                        }
+                        2 -> {
+                            qualitySelected = VideoQuality.MEDIUM
+                        }
+                        3 -> {
+                            qualitySelected = VideoQuality.LOW
+                        }
+                        4 -> {
+                            qualitySelected = VideoQuality.VERY_LOW
+                        }
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    qualitySelected = VideoQuality.VERY_HIGH
+                }
+            }
+            dialogBuilder.setPositiveButton(
+                R.string.proceed
+            ) { dialog, _ ->
+                positiveCallback.invoke(
+                    qualitySelected,
+                    disableAudioCheckbox.isChecked,
+                    checkBox.isChecked
+                )
+                dialog.dismiss()
+            }
+            dialogBuilder.setNegativeButton(
+                context.resources.getString(R.string.close)
+            ) { dialog, _ ->
+                dialog.dismiss()
+            }
+            return dialogBuilder
+        }
+
         fun buildRestoreSummaryDialog(
             context: Context,
             positiveCallback: () -> Unit
         ): AlertDialog.Builder {
             val builder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
             builder
-                .setTitle(R.string.delete_files_title)
+                .setTitle(R.string.trash_bin_restore)
                 .setMessage(R.string.trash_bin_restore_dialog_message)
                 .setPositiveButton(
                     context.resources.getString(R.string.yes)

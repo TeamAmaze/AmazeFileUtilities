@@ -31,6 +31,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentFilesBinding
+import com.amaze.fileutilities.home_page.MainActivity
 import com.amaze.fileutilities.home_page.ui.analyse.ReviewImagesFragment
 import com.amaze.fileutilities.home_page.ui.media_tile.MediaTypeView
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
@@ -329,36 +330,38 @@ class FilesFragment : ItemsActionBarFragment() {
                     binding.recentFilesList.adapter = mediaFileAdapter
                 }
             }
-            progressTrashBinFilesLiveData().observe(
-                viewLifecycleOwner
-            ) { trashBinFiles ->
-                if (trashBinFiles != null) {
-                    binding.trashBinTab.setOnClickListener {
-                        ReviewImagesFragment.newInstance(
-                            ReviewImagesFragment.TYPE_TRASH_BIN,
-                            this@FilesFragment
-                        )
-                    }
-                    val capacity = getTrashBinInstance().getTrashBinMetadata().getCapacity()
-                    if (capacity == -1) {
-                        binding.trashBinTab.setItemsAndHideProgress(
-                            MediaTypeView.MediaTypeContent(
-                                trashBinFiles.size, trashBinFiles.size.toString(), capacity
+            if ((requireActivity() as MainActivity).haveStoragePermissions()) {
+                progressTrashBinFilesLiveData().observe(
+                    viewLifecycleOwner
+                ) { trashBinFiles ->
+                    if (trashBinFiles != null) {
+                        binding.trashBinTab.setOnClickListener {
+                            ReviewImagesFragment.newInstance(
+                                ReviewImagesFragment.TYPE_TRASH_BIN,
+                                this@FilesFragment
                             )
-                        )
+                        }
+                        val capacity = getTrashBinInstance().getTrashBinMetadata().getCapacity()
+                        if (capacity == -1) {
+                            binding.trashBinTab.setItemsAndHideProgress(
+                                MediaTypeView.MediaTypeContent(
+                                    trashBinFiles.size, trashBinFiles.size.toString(), capacity
+                                )
+                            )
+                        } else {
+                            binding.trashBinTab.setProgress(
+                                MediaTypeView.MediaTypeContent(
+                                    trashBinFiles.size, trashBinFiles.size.toString(), capacity
+                                )
+                            )
+                        }
                     } else {
-                        binding.trashBinTab.setProgress(
-                            MediaTypeView.MediaTypeContent(
-                                trashBinFiles.size, trashBinFiles.size.toString(), capacity
+                        binding.trashBinTab.setOnClickListener {
+                            requireContext().showToastInCenter(
+                                resources
+                                    .getString(R.string.please_wait)
                             )
-                        )
-                    }
-                } else {
-                    binding.trashBinTab.setOnClickListener {
-                        requireContext().showToastInCenter(
-                            resources
-                                .getString(R.string.please_wait)
-                        )
+                        }
                     }
                 }
             }

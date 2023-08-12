@@ -4,7 +4,7 @@
     package="com.amaze.fileutilities">
 
     <uses-sdk tools:overrideLibrary="linc.com.amplituda, me.zhanghai.android.fastscroll,
-        org.opencv, com.mikepenz.aboutlibraries" />
+        org.opencv, com.mikepenz.aboutlibraries, com.abedelazizshe.lightcompressorlibrary" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"
