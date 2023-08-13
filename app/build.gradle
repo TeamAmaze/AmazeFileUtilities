@@ -52,8 +52,8 @@ android {
         minSdk 21
         targetSdk 32
 
-        Integer sudoVersionCode = 26
-        String versionNameText = "1.86"
+        Integer sudoVersionCode = 27
+        String versionNameText = "1.87"
 
         String[] abiFilterList = property("abiFilters").toString().split(';')
         Integer minorVersion = 0
@@ -139,8 +139,8 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix ".debug"
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "OPENSUBTITLES_API_KEY", "\"${OPENSUBTITLES_API_KEY_DEBUG}\""
             debuggable true //For "debug" banner on icon
@@ -194,7 +194,7 @@ android {
             //    track.set("internal")
             track.set("production")
             userFraction.set(1.0d)
-            updatePriority.set(1)
+            updatePriority.set(3)
             releaseStatus.set(com.github.triplet.gradle.androidpublisher.ReleaseStatus.COMPLETED)
         }
     }

@@ -158,7 +158,7 @@ class FilesViewModel(val applicationContext: Application) :
 
     private var trashBinConfig: TrashBinConfig? = null
     private val TRASH_BIN_BASE_PATH = Environment.getExternalStorageDirectory()
-        .path + File.separator + ".AmazeTrashBin"
+        .path + File.separator + ".AmazeData"
     private var usedVideosSummaryTransformations: LiveData<Pair<StorageSummary,
             ArrayList<MediaFileInfo>>?>? = null
     private var usedAudiosSummaryTransformations: LiveData<Pair<StorageSummary,

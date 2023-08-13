@@ -1003,4 +1003,8 @@
     <string name="compress_video_bitrate_low">Low</string>
     <!-- Compress format for video dialog -->
     <string name="compress_video_bitrate_very_low">Very Low</string>
+    <!-- Analysis compress images -->
+    <string name="analysis_compress_images">Compress Images</string>
+    <!-- Analysis compress videos -->
+    <string name="analysis_compress_videos">Compress Videos</string>
 </resources>

@@ -7,6 +7,7 @@ Analyse:
 - Group old downloads, recordings or screenshots
 - Group unused / most used / least used installed apps, large apps or games, apps that use most data
 - Clear RAM for better performance
+- Compress media files
 
 Media Files:
 - View / group / sort in list or grid
@@ -30,12 +31,14 @@ Video Player:
 - Lock gestures or orientation
 - Search and download online subtitles within player
 - Change playback aspect ratio, pitch and speed
+- Compress videos to save data
 
 Image Viewer:
 - View, share or delete images
 - Edit using inbuilt image editor
 - Add stickers, text, rotate, crop or draw over images
 - View image histogram or other metadata
+- Compress images to save data
 
 Document Viewer:
 - View pdf, epub, docx, xps, oxps, cbz, fb2 and mobi files using inbuilt viewer
@@ -46,6 +49,10 @@ Document Viewer:
 Transfer:
 - Transfer data between devices through wifi p2p
 - High transfer speeds using android Wifi-direct
+
+Trash bin (Recycle bin):
+- Delete files temporarily to recycle bin
+- Restore / delete permanently based on max number of files / maximum days / maximum size
 
 Contact:
 Telegram - https://t.me/AmazeFileManager
