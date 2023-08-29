@@ -15,15 +15,15 @@
     <!-- Video player dialog intent filter label -->
     <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
+    <string name="video_player_full_screen">Riproduttore Video Amaze (Schermo Intero)</string>
     <!-- Music player activity label -->
-    <string name="amaze_audio_player">Amaze Music Player</string>
+    <string name="amaze_audio_player">Lettore Musicale Di Amaze</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Amaze Pdf Viewer</string>
+    <string name="pdf_viewer">Visualizzatore PDF Amaze</string>
     <!-- Epub activity label -->
-    <string name="epub_viewer">Amaze Epub Viewer</string>
+    <string name="epub_viewer">Visualizzatore Epub Di Amaze</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">Amaze Doc Viewer</string>
+    <string name="docx_viewer">Visualizzatore Doc Di Amaze</string>
     <!-- Image viewer dialog intent filter label -->
     <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
     <!-- Image viewer full screen intent label -->

@@ -83,11 +83,9 @@ import com.amaze.fileutilities.utilis.log
 import com.amaze.fileutilities.utilis.share.ShareAdapter
 import com.amaze.fileutilities.utilis.share.getShareIntents
 import com.amaze.trashbin.DeletePermanentlyCallback
-import com.amaze.trashbin.ListTrashBinFilesCallback
 import com.amaze.trashbin.MoveFilesCallback
 import com.amaze.trashbin.TrashBin
 import com.amaze.trashbin.TrashBinConfig
-import com.amaze.trashbin.TrashBinFile
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.destination
 import id.zelory.compressor.constraint.format
@@ -174,7 +172,7 @@ class FilesViewModel(val applicationContext: Application) :
                 PackageInfo?>>?> = AtomicReference()
 
     var internalStorageStatsLiveData: MutableLiveData<StorageSummary?>? = null
-    var trashBin: TrashBin? = null
+    private var trashBin: TrashBin? = null
 
     fun internalStorageStats(): LiveData<StorageSummary?> {
         if (internalStorageStatsLiveData == null) {
@@ -1029,18 +1027,18 @@ class FilesViewModel(val applicationContext: Application) :
             )
         }
     }
-
     fun deleteMediaFiles(mediaFileInfoList: List<MediaFileInfo>): LiveData<Pair<Int, Int>> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+        val deleteMediaFilesLiveData: MutableLiveData<Pair<Int, Int>> = MutableLiveData()
+        var successProcessedPair = Pair(0, 0)
+        deleteMediaFilesLiveData.value = successProcessedPair
+        viewModelScope.launch(Dispatchers.IO) {
             log.info("Deleting media files $mediaFileInfoList")
-            var successProcessedPair = Pair(0, 0)
-
             val trashBinFilesList = mediaFileInfoList.map { it.toTrashBinFile() }
 
             getTrashBinInstance().deletePermanently(
                 trashBinFilesList,
                 object : DeletePermanentlyCallback {
-                    override suspend fun invoke(deletePath: String): Boolean {
+                    override fun invoke(deletePath: String): Boolean {
                         val mediaFileInfo = mediaFileInfoList.find {
                             it.path == deletePath
                         }
@@ -1079,13 +1077,14 @@ class FilesViewModel(val applicationContext: Application) :
                                 mediaFileInfoList.size
                             )
                         }
-                        emit(successProcessedPair)
+                        deleteMediaFilesLiveData.postValue(successProcessedPair)
                         return true
                     }
                 },
                 true
             )
         }
+        return deleteMediaFilesLiveData
     }
 
     /**
@@ -1185,7 +1184,7 @@ class FilesViewModel(val applicationContext: Application) :
         onCompleteCallback: (Triple<Int, Long, MediaFileInfo?>) -> (Unit)
     ) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            log.warn("compressing video failes not supported in version lower than N")
+            log.warn("compressing video failed not supported in version lower than N")
             return
         }
         var successProcessedPair = Triple<Int, Long, MediaFileInfo?>(0, 0L, null)
@@ -1296,14 +1295,16 @@ class FilesViewModel(val applicationContext: Application) :
     }
 
     fun moveToTrashBin(mediaFileInfoList: List<MediaFileInfo>): LiveData<Pair<Int, Int>> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+        val moveToTrashLiveData: MutableLiveData<Pair<Int, Int>> = MutableLiveData()
+        var successProcessedPair = Pair(0, 0)
+        moveToTrashLiveData.value = successProcessedPair
+        viewModelScope.launch(Dispatchers.IO) {
             log.info("Moving media files to bin $mediaFileInfoList")
-            var successProcessedPair = Pair(0, 0)
             val trashBinFilesList = mediaFileInfoList.map { it.toTrashBinFile() }
             getTrashBinInstance().moveToBin(
                 trashBinFilesList, true,
                 object : MoveFilesCallback {
-                    override suspend fun invoke(
+                    override fun invoke(
                         originalFilePath: String,
                         trashBinDestination: String
                     ): Boolean {
@@ -1314,7 +1315,7 @@ class FilesViewModel(val applicationContext: Application) :
                                 successProcessedPair.first,
                                 successProcessedPair.second + 1
                             )
-                            emit(successProcessedPair)
+                            moveToTrashLiveData.postValue(successProcessedPair)
                             return false
                         } else {
                             successProcessedPair = successProcessedPair.copy(
@@ -1329,7 +1330,7 @@ class FilesViewModel(val applicationContext: Application) :
                                 uri,
                                 applicationContext
                             )
-                            emit(successProcessedPair)
+                            moveToTrashLiveData.postValue(successProcessedPair)
 //                        return@moveToBin true
                             return true
                         }
@@ -1337,14 +1338,15 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             )
         }
+        return moveToTrashLiveData
     }
 
-    private suspend fun moveToBinLightWeight(mediaFileInfoList: List<MediaFileInfo>) {
+    private fun moveToBinLightWeight(mediaFileInfoList: List<MediaFileInfo>) {
         val trashBinFilesList = mediaFileInfoList.map { it.toTrashBinFile() }
         getTrashBinInstance().moveToBin(
             trashBinFilesList, true,
             object : MoveFilesCallback {
-                override suspend fun invoke(
+                override fun invoke(
                     originalFilePath: String,
                     trashBinDestination: String
                 ): Boolean {
@@ -1368,14 +1370,16 @@ class FilesViewModel(val applicationContext: Application) :
     }
 
     fun restoreFromBin(mediaFileInfoList: List<MediaFileInfo>): LiveData<Pair<Int, Int>> {
-        return liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
+        val restoreFromTrashLiveData: MutableLiveData<Pair<Int, Int>> = MutableLiveData()
+        var successProcessedPair = Pair(0, 0)
+        restoreFromTrashLiveData.value = successProcessedPair
+        viewModelScope.launch(Dispatchers.IO) {
             log.info("Moving media files to bin $mediaFileInfoList")
-            var successProcessedPair = Pair(0, 0)
             val trashBinFilesList = mediaFileInfoList.map { it.toTrashBinFile() }
             getTrashBinInstance().restore(
                 trashBinFilesList, true,
                 object : MoveFilesCallback {
-                    override suspend fun invoke(source: String, dest: String): Boolean {
+                    override fun invoke(source: String, dest: String): Boolean {
                         val sourceFile = File(source)
                         val destFile = File(dest)
                         if (!sourceFile.renameTo(destFile)) {
@@ -1383,7 +1387,7 @@ class FilesViewModel(val applicationContext: Application) :
                                 successProcessedPair.first,
                                 successProcessedPair.second + 1
                             )
-                            emit(successProcessedPair)
+                            restoreFromTrashLiveData.postValue(successProcessedPair)
                             return false
                         } else {
                             successProcessedPair = successProcessedPair.copy(
@@ -1398,13 +1402,14 @@ class FilesViewModel(val applicationContext: Application) :
                                 uri,
                                 applicationContext
                             )
-                            emit(successProcessedPair)
+                            restoreFromTrashLiveData.postValue(successProcessedPair)
                             return true
                         }
                     }
                 }
             )
         }
+        return restoreFromTrashLiveData
     }
 
     fun getMediaFileListSize(mediaFileInfoList: List<MediaFileInfo>): LiveData<Long> {
@@ -1645,6 +1650,12 @@ class FilesViewModel(val applicationContext: Application) :
             processNetworkIntensiveApps(applicationContext.packageManager)
         }
         return networkIntensiveAppsLiveData!!
+    }
+
+    fun resetTrashBinConfig() {
+        trashBinConfig = null
+        trashBin = null
+        trashBinFilesLiveData = null
     }
 
     private fun processNetworkIntensiveApps(packageManager: PackageManager) {
@@ -2015,7 +2026,7 @@ class FilesViewModel(val applicationContext: Application) :
                 }
                 allMediaFilesPair?.filter {
                     it.title.startsWith(".")
-                }?.sortedBy { -1 * it.longSize }?.map {
+                }?.sortedByDescending { it.longSize }?.map {
                     it.extraInfo?.mediaType = MediaFileInfo.MEDIA_TYPE_UNKNOWN
                     it
                 }?.let {
@@ -2189,17 +2200,14 @@ class FilesViewModel(val applicationContext: Application) :
             trashBin = TrashBin(
                 getTrashbinConfig(),
                 object : DeletePermanentlyCallback {
-                    override suspend fun invoke(deletePath: String): Boolean {
-                        FileUtils.deleteFileByPath(applicationContext, deletePath)
+                    override fun invoke(deletePath: String): Boolean {
+                        viewModelScope.launch(Dispatchers.IO) {
+                            FileUtils.deleteFileByPath(applicationContext, deletePath)
+                        }
                         return true
                     }
                 },
-                object : ListTrashBinFilesCallback {
-                    override suspend fun invoke(parentTrashBinPath: String): List<TrashBinFile> {
-                        // do nothing
-                        return emptyList()
-                    }
-                }
+                null
             )
         }
         return trashBin!!
@@ -2306,54 +2314,61 @@ class FilesViewModel(val applicationContext: Application) :
 
     private fun loadAllInstalledApps(packageManager: PackageManager) {
         if (allApps.get() == null) {
-            val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-            allApps.set(
-                apps.map {
-                    val info: PackageInfo? = try {
-                        packageManager.getPackageInfo(
-                            it.packageName,
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
-                                PackageManager.GET_SIGNATURES
-                            else PackageManager.GET_SIGNING_CERTIFICATES
-                        )
-                    } catch (e: PackageManager.NameNotFoundException) {
-                        log.warn(
-                            "failed to find package name {} while loading apps list",
-                            it.packageName,
-                            e
-                        )
-                        null
-                    }
-                    Pair(it, info)
-                }.filter {
-                    val androidInfo: PackageInfo?
-                    try {
-                        androidInfo =
+            try {
+                packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+            } catch (e: Exception) {
+                log.warn("failed to load all installed applications", e)
+                null
+            }?.let {
+                apps ->
+                allApps.set(
+                    apps.map {
+                        val info: PackageInfo? = try {
                             packageManager.getPackageInfo(
-                                "android",
+                                it.packageName,
                                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
                                     PackageManager.GET_SIGNATURES
                                 else PackageManager.GET_SIGNING_CERTIFICATES
                             )
-                        !Utils.isAppInSystemPartition(it.first) && (
-                            it.second == null ||
-                                (
-                                    !Utils.isSignedBySystem(it.second, androidInfo) &&
-                                        !it.second!!.packageName
-                                            .equals(applicationContext.packageName)
-                                    )
+                        } catch (e: PackageManager.NameNotFoundException) {
+                            log.warn(
+                                "failed to find package name {} while loading apps list",
+                                it.packageName,
+                                e
                             )
-                    } catch (e: PackageManager.NameNotFoundException) {
-                        log.warn(
-                            "failed to find package name {} while loading apps list",
-                            it.first.packageName,
-                            e
-                        )
-                        true
+                            null
+                        }
+                        Pair(it, info)
+                    }.filter {
+                        val androidInfo: PackageInfo?
+                        try {
+                            androidInfo =
+                                packageManager.getPackageInfo(
+                                    "android",
+                                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
+                                        PackageManager.GET_SIGNATURES
+                                    else PackageManager.GET_SIGNING_CERTIFICATES
+                                )
+                            !Utils.isAppInSystemPartition(it.first) && (
+                                it.second == null ||
+                                    (
+                                        !Utils.isSignedBySystem(it.second, androidInfo) &&
+                                            !it.second!!.packageName
+                                                .equals(applicationContext.packageName)
+                                        )
+                                )
+                        } catch (e: PackageManager.NameNotFoundException) {
+                            log.warn(
+                                "failed to find package name {} while loading apps list",
+                                it.first.packageName,
+                                e
+                            )
+                            true
+                        }
                     }
-                }
-            )
-            insertInstalledApps()
+                )
+                insertInstalledApps()
+            }
         }
     }
 

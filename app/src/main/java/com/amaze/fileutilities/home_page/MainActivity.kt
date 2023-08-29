@@ -308,6 +308,7 @@ class MainActivity :
     override fun onPause() {
         super.onPause()
         UpdateChecker.unregisterListener()
+        getFilesModel().resetTrashBinConfig()
     }
 
     override fun getTransferFragment(): TransferFragment? {
