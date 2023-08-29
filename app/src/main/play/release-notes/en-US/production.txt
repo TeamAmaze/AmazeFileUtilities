@@ -1,4 +1,5 @@
 Changelog:
+- Minor fixes in trash bin
 - Add support for trash bin (recycle bin)
 - Add support for images and videos compression
 - Improve performance
