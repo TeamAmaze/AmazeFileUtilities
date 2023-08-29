@@ -244,7 +244,7 @@ dependencies {
     implementation 'org.zwobble.mammoth:mammoth:1.4.2'
     implementation 'me.zhanghai.android.fastscroll:library:1.1.8'
     implementation "ch.acra:acra-core:5.7.0"
-    implementation 'com.github.TeamAmaze:AmazeTrashBin:1.0.5'
+    implementation 'com.github.TeamAmaze:AmazeTrashBin:1.0.7'
 
     // https://mvnrepository.com/artifact/com.drewnoakes/metadata-extractor
     implementation group: 'com.drewnoakes', name: 'metadata-extractor', version: '2.16.0'

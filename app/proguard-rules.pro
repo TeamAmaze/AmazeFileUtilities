@@ -34,6 +34,7 @@
 -keep class com.google.** { *; }
 -keep class org.opencv.** { *; }
 -keep class com.artifex.mupdf.** { *;}
+-keep class com.amaze.trashbin.** { *; }
 
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep class * extends com.bumptech.glide.module.AppGlideModule {

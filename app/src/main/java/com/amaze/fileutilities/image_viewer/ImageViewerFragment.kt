@@ -582,7 +582,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
 
             // reset interal storage stats so that we recalculate storage remaining
             filesViewModel.internalStorageStatsLiveData = null
-            filesViewModel.trashBinFilesLiveData = null
+            filesViewModel.resetTrashBinConfig()
 
             // deletion complete, no need to check analysis data to remove
             // as it will get deleted lazily while loading analysis lists
