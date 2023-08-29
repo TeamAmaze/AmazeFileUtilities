@@ -1,15 +1,15 @@
-[![GitHub release](https://img.shields.io/github/release/TeamAmaze/AmazeFileUtilities.svg)](https://github.com/TeamAmaze/AmazeFileUtilities/releases)
+[![GitHub release](https://img.shields.io/github/release/TeamAmaze/AmazeFileUtilities.svg?logo=github&logoColor=white&style=for-the-badge)](https://github.com/TeamAmaze/AmazeFileUtilities/releases)
 [![Chat on Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/AmazeFileManager)
-[![XDA Developers](https://img.shields.io/badge/XDA-Developers%20-%23AC6E2F.svg?&style=for-the-badge&logo=XDA-Developers&logoColor=white)](http://forum.xda-developers.com/android/apps-games/app-amaze-file-managermaterial-theme-t2937314)  
-[![Liberapay](https://img.shields.io/liberapay/receives/Team-Amaze.svg?logo=liberapay)](https://liberapay.com/Team-Amaze/donate)
+[![XDA Developers](https://img.shields.io/badge/XDA-Developers%20-%23AC6E2F.svg?&style=for-the-badge&logo=XDA-Developers&logoColor=white)](http://forum.xda-developers.com/android/apps-games/app-amaze-file-managermaterial-theme-t2937314)
+[![Liberapay](https://img.shields.io/liberapay/receives/Team-Amaze.svg?logo=liberapay&logoColor=white&style=for-the-badge)](https://liberapay.com/Team-Amaze/donate)
+
 
 # <a href="https://teamamaze.xyz">Amaze File Utilities</a>
 
 <img src="graphic.png" align="right" width="100%" height="40%"></img>
+&nbsp;
 
-
-Overview
----
+## Overview
 
 <img src="icon.png" align="right" width="40%" height="100%"></img>
 
@@ -82,8 +82,7 @@ https://github.com/TeamAmaze/AmazeFileUtilities-Issue-Tracker/issues
 
 Note: This app is trial based and requires a nominal donation to unlock full version.
 
-Downloads
----
+## Downloads
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
      alt="Get it on F-Droid"
@@ -94,41 +93,40 @@ Downloads
 
 Or download the latest APK from the [Releases Section](https://github.com/TeamAmaze/AmazeFileUtilities/releases/latest).
 
-Contribute
----
+## Contribute
+
 You can contribute via one of the following ways:
 - Help us with the translations of either [Amaze File Manager](https://www.transifex.com/amaze/amaze-file-manager/) or [Amaze Utilities](https://crowdin.com/project/amaze-file-utilities)
 - [Contribute](https://github.com/TeamAmaze/AmazeFileManager/blob/release/4.0/CONTRIBUTING.md) directly to the code, help us in fixing the bugs / implement new features.
 
 _If we feel your contribution is a significant help to us, we'll award you a bounty with any of your preferred mode of payment._
 
-Support
----
+## Support
+
 <a href="https://opencollective.com/TeamAmaze"><img width="20%" alt="OpenCollective" src="opencollective.svg" ></a>
 <a href="https://www.paypal.me/vishalnehra"><img width="20%" src="paypal.svg" alt="PayPal"></a>
 <a href="https://liberapay.com/Team-Amaze/donate"><img src="https://upload.wikimedia.org/wikipedia/commons/2/27/Liberapay_logo_v2_white-on-yellow.svg" alt="Liberapay" width="80px" ></a>  
 Or buy the [Cloud Plugin](https://play.google.com/store/apps/details?id=com.filemanager.amazecloud) supports Google Drive™, Dropbox, OneDrive and Box accounts.
 
-Warning
----
+## Warning
 
 ***Under the license we are not responsible for damages.***
 
 See our [Privacy Policy](https://teamamaze.xyz/privacy-policy-utilities)
 
-Translators
-----
+## Translators
+
 Want to help translate Amaze to your language?
 
 See [Crowdin](https://crowdin.com/project/amaze-file-utilities).
 
-Vendors/Developers
-----
+## Vendors/Developers
+
 The device vendors/ROM developers are free to include Amaze apk pre-installed in system. There is no fee required; *but you must comply with the license* (for more information read the [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.en.html) or newer).
 
 We strongly recommend using apk signed by us (either Play Store version or from AFH link above) so that users would be able to update directly from Play Store after distribution. Furthermore, a change in digital signature will break plug-ins.
 
-### License:
+## License:
 Amaze File Utilities is licenced under [GPLv3](https://teamamaze.xyz/license-agreement-utilities) and anyone wanting to use it (as a base for your own project or even use some of its parts or features) has to adhere to this license completely. Make sure that you are aware of all the licensing terms before creating your own project based on Amaze Utilities.
 
 Here some important points to keep in mind, as to how we handle licensing:
