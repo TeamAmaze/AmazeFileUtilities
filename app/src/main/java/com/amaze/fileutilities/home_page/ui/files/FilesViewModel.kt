@@ -100,6 +100,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
+import java.lang.NullPointerException
 import java.lang.ref.WeakReference
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -2218,14 +2219,20 @@ class FilesViewModel(val applicationContext: Application) :
             trashBinFilesLiveData = MutableLiveData()
             trashBinFilesLiveData?.value = null
             viewModelScope.launch(Dispatchers.IO) {
-                trashBinFilesLiveData?.postValue(
-                    ArrayList(
-                        getTrashBinInstance().listFilesInBin()
-                            .map {
-                                MediaFileInfo.fromTrashBinFile(it, getTrashbinConfig())
-                            }
+                try {
+                    trashBinFilesLiveData?.postValue(
+                        ArrayList(
+                            getTrashBinInstance().listFilesInBin()
+                                .map {
+                                    MediaFileInfo.fromTrashBinFile(it, getTrashbinConfig())
+                                }
+                        )
                     )
-                )
+                } catch (e: NullPointerException) {
+                    log.warn("failed to init trashbin livedata", e)
+                    val metadataPath = File(TRASH_BIN_BASE_PATH, "metadata.json")
+                    metadataPath.delete()
+                }
             }
         }
         return trashBinFilesLiveData!!

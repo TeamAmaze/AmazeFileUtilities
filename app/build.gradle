@@ -52,8 +52,8 @@ android {
         minSdk 21
         targetSdk 32
 
-        Integer sudoVersionCode = 28
-        String versionNameText = "1.88"
+        Integer sudoVersionCode = 29
+        String versionNameText = "1.89"
 
         String[] abiFilterList = property("abiFilters").toString().split(';')
         Integer minorVersion = 0
