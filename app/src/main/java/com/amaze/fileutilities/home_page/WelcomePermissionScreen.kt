@@ -37,6 +37,7 @@ import androidx.core.app.ActivityCompat
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.stephentuso.welcome.WelcomeActivity
+import com.stephentuso.welcome.WelcomeUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -325,6 +326,19 @@ abstract class WelcomePermissionScreen :
 
     private fun isGranted(grantResults: IntArray): Boolean {
         return grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+    }
+
+    /**
+     *  Remove all flags and URI that put into the Intent.
+     *  We are finishing the app here, so any URI provided will not be useful anyway.
+     */
+    override fun cancelWelcomeScreen() {
+        val intent = this.intent
+        intent.flags = -1
+        intent.data = null
+        intent.putExtra(WELCOME_SCREEN_KEY, WelcomeUtils.getKey(this.javaClass))
+        this.setResult(RESULT_CANCELED, intent)
+        finish()
     }
 
     interface OnPermissionGranted {
