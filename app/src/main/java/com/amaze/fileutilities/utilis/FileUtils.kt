@@ -23,6 +23,7 @@ package com.amaze.fileutilities.utilis
 import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
+import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
@@ -344,9 +345,26 @@ class FileUtils {
          * @param uri File's [Uri]
          * @param c [Context]
          */
-        fun scanFile(uri: Uri, c: Context) {
+        fun scanFile(uri: Uri, path: String, c: Context) {
             val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri)
             c.sendBroadcast(mediaScanIntent)
+            scanFile(path, c)
+        }
+
+        /**
+         * Triggers [Intent.ACTION_MEDIA_SCANNER_SCAN_FILE] intent to refresh the media store.
+         *
+         * @param path File's [path]
+         * @param c [Context]
+         */
+        private fun scanFile(path: String, c: Context) {
+            MediaScannerConnection.scanFile(
+                c,
+                arrayOf(path),
+                null
+            ) { path: String, _: Uri? ->
+                log.info("MediaConnectionUtils#scanFile finished scanning path$path")
+            }
         }
 
         fun deleteFileByPath(context: Context, path: String): Boolean {
@@ -361,6 +379,7 @@ class FileUtils {
                         uri ->
                         scanFile(
                             uri,
+                            path,
                             context
                         )
                     }

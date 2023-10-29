@@ -38,6 +38,7 @@ plugins {
     id("com.github.triplet.play") version "3.8.1"
     id 'com.starter.easylauncher'
     id 'com.mikepenz.aboutlibraries.plugin'
+    id 'org.jetbrains.kotlin.android'
 }
 
 android {
