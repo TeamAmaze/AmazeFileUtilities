@@ -196,7 +196,7 @@ class FilesViewModel(val applicationContext: Application) :
                         applicationContext,
                         applicationContext.packageName, file
                     )
-                    FileUtils.scanFile(uri, applicationContext)
+                    FileUtils.scanFile(uri, data.path, applicationContext)
                     val usedSpace = file.totalSpace - file.usableSpace
 
                     val progress = if (file.totalSpace != 0L) {
@@ -1068,6 +1068,7 @@ class FilesViewModel(val applicationContext: Application) :
                                     uri ->
                                     FileUtils.scanFile(
                                         uri,
+                                        mediaFileInfo.path,
                                         applicationContext
                                     )
                                 }
@@ -1130,6 +1131,7 @@ class FilesViewModel(val applicationContext: Application) :
                                     originalUri ->
                                     FileUtils.scanFile(
                                         originalUri,
+                                        it.path,
                                         applicationContext
                                     )
                                 }
@@ -1141,6 +1143,7 @@ class FilesViewModel(val applicationContext: Application) :
                             )
                             FileUtils.scanFile(
                                 uri,
+                                it.path,
                                 applicationContext
                             )
                             successProcessedPair = successProcessedPair.copy(
@@ -1233,6 +1236,7 @@ class FilesViewModel(val applicationContext: Application) :
                                             }
                                             FileUtils.scanFile(
                                                 contentUri,
+                                                path,
                                                 applicationContext
                                             )
                                         }
@@ -1243,6 +1247,7 @@ class FilesViewModel(val applicationContext: Application) :
                                         )
                                         FileUtils.scanFile(
                                             uri,
+                                            path,
                                             applicationContext
                                         )
                                         successProcessedPair = successProcessedPair.copy(
@@ -1329,6 +1334,7 @@ class FilesViewModel(val applicationContext: Application) :
                             )
                             FileUtils.scanFile(
                                 uri,
+                                originalFilePath,
                                 applicationContext
                             )
                             moveToTrashLiveData.postValue(successProcessedPair)
@@ -1362,6 +1368,7 @@ class FilesViewModel(val applicationContext: Application) :
                     )
                     FileUtils.scanFile(
                         uri,
+                        originalFilePath,
                         applicationContext
                     )
                     return true
@@ -1401,6 +1408,7 @@ class FilesViewModel(val applicationContext: Application) :
                             )
                             FileUtils.scanFile(
                                 uri,
+                                dest,
                                 applicationContext
                             )
                             restoreFromTrashLiveData.postValue(successProcessedPair)
