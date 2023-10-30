@@ -46,12 +46,12 @@ android {
         release
     }
 
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.amaze.fileutilities"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
 
         Integer sudoVersionCode = 29
         String versionNameText = "1.89"

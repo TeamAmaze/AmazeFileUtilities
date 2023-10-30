@@ -21,6 +21,7 @@
 package com.amaze.fileutilities
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -54,22 +55,22 @@ open class PermissionsActivity :
      * Invokes permission check when we don't show welcome screen.
      */
     fun invokePermissionCheck() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!checkStoragePermission()) {
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (VERSION.SDK_INT < Build.VERSION_CODES.R && !checkStoragePermission()) {
                 requestStoragePermission(onPermissionGranted, true)
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 requestAllFilesAccess(onPermissionGranted)
             }
         }
     }
 
     fun haveStoragePermissions(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!checkStoragePermission()) {
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (VERSION.SDK_INT < Build.VERSION_CODES.R && !checkStoragePermission()) {
                 return false
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+            if (VERSION.SDK_INT >= Build.VERSION_CODES.R &&
                 !Environment.isExternalStorageManager()
             ) {
                 return false
@@ -176,7 +177,7 @@ open class PermissionsActivity :
     }
 
     fun initLocationResources(onPermissionGranted: OnPermissionGranted) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkLocationPermission()) {
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.M && !checkLocationPermission()) {
             val builder: AlertDialog.Builder = this.let {
                 AlertDialog.Builder(this, R.style.Custom_Dialog_Dark)
             }
@@ -296,7 +297,7 @@ open class PermissionsActivity :
      * @param onPermissionGranted permission granted callback
      */
     private fun requestAllFilesAccess(onPermissionGranted: OnPermissionGranted) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.R &&
             !Environment.isExternalStorageManager()
         ) {
             val builder: AlertDialog.Builder = this.let {
@@ -315,11 +316,23 @@ open class PermissionsActivity :
                         permissionCallbacks[ALL_FILES_PERMISSION] = onPermissionGranted
                         try {
                             val intent =
-                                Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                                Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
                                     .setData(Uri.parse("package:$packageName"))
                             startActivity(intent)
+                        } catch (anf: ActivityNotFoundException) {
+                            // fallback
+                            log.warn("Failed to find activity for all files access", anf)
+                            try {
+                                val intent =
+                                    Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                                        .setData(Uri.parse("package:$packageName"))
+                                startActivity(intent)
+                            } catch (e: Exception) {
+                                log.error("Failed to initial activity to grant all files access", e)
+                                applicationContext.showToastInCenter(getString(R.string.grantfailed))
+                            }
                         } catch (e: Exception) {
-                            log.error("Failed to initial activity to grant all files access", e)
+                            log.error("Failed to grant all files access", e)
                             applicationContext.showToastInCenter(getString(R.string.grantfailed))
                         }
                         dialog.cancel()

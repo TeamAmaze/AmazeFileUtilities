@@ -21,6 +21,7 @@
 package com.amaze.fileutilities.home_page
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -56,7 +57,7 @@ abstract class WelcomePermissionScreen :
 
     fun haveStoragePermissions(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!checkStoragePermission()) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R && !checkStoragePermission()) {
                 return false
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
@@ -311,11 +312,23 @@ abstract class WelcomePermissionScreen :
                         permissionCallbacks[ALL_FILES_PERMISSION] = onPermissionGranted
                         try {
                             val intent =
-                                Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                                Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
                                     .setData(Uri.parse("package:$packageName"))
                             startActivity(intent)
+                        } catch (anf: ActivityNotFoundException) {
+                            // fallback
+                            log.warn("Failed to find activity for all files access", anf)
+                            try {
+                                val intent =
+                                    Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                                        .setData(Uri.parse("package:$packageName"))
+                                startActivity(intent)
+                            } catch (e: Exception) {
+                                log.error("Failed to initial activity to grant all files access", e)
+                                applicationContext.showToastInCenter(getString(R.string.grantfailed))
+                            }
                         } catch (e: Exception) {
-                            log.error("Failed to initial activity to grant all files access", e)
+                            log.error("Failed to grant all files access", e)
                             applicationContext.showToastInCenter(getString(R.string.grantfailed))
                         }
                         dialog.cancel()
