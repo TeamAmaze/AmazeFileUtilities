@@ -61,7 +61,7 @@ class PermissionFragmentWelcome : Fragment() {
             val activity = requireActivity() as WelcomeScreen
             activity.run {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (!checkStoragePermission()) {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R && !checkStoragePermission()) {
                         requestStoragePermission(onPermissionGranted, true)
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
