@@ -1,7 +1,6 @@
 Changelog:
+- Add support for Android 13
 - Minor fixes in trash bin
-- Add support for trash bin (recycle bin)
-- Add support for images and videos compression
 - Improve performance
 - Update translations
 - Other bugfixes
