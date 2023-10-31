@@ -53,8 +53,8 @@ android {
         minSdk 21
         targetSdk 33
 
-        Integer sudoVersionCode = 29
-        String versionNameText = "1.89"
+        Integer sudoVersionCode = 30
+        String versionNameText = "1.90"
 
         String[] abiFilterList = property("abiFilters").toString().split(';')
         Integer minorVersion = 0
@@ -195,7 +195,7 @@ android {
             //    track.set("internal")
             track.set("production")
             userFraction.set(1.0d)
-            updatePriority.set(4)
+            updatePriority.set(2)
             releaseStatus.set(com.github.triplet.gradle.androidpublisher.ReleaseStatus.COMPLETED)
         }
     }
