@@ -29,12 +29,15 @@ import android.location.LocationManager
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import com.amaze.fileutilities.PermissionsActivity
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.stephentuso.welcome.WelcomeActivity
@@ -57,12 +60,7 @@ abstract class WelcomePermissionScreen :
 
     fun haveStoragePermissions(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R && !checkStoragePermission()) {
-                return false
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
-                !Environment.isExternalStorageManager()
-            ) {
+            if (!checkStoragePermission()) {
                 return false
             }
         }
@@ -70,10 +68,11 @@ abstract class WelcomePermissionScreen :
     }
 
     companion object {
-        private const val PERMISSION_LENGTH = 3
+        private const val PERMISSION_LENGTH = 5
         private const val STORAGE_PERMISSION = 0
         private const val ALL_FILES_PERMISSION = 1
         private const val LOCATION_PERMISSION = 2
+        const val NOTIFICATION_PERMISSION = 3
     }
 
     private val permissionCallbacks = arrayOfNulls<OnPermissionGranted>(PERMISSION_LENGTH)
@@ -114,13 +113,28 @@ abstract class WelcomePermissionScreen :
                 permissionCallbacks[LOCATION_PERMISSION]!!.onPermissionGranted(true)
                 permissionCallbacks[LOCATION_PERMISSION] = null
             } else {
-                Toast.makeText(this, R.string.grant_location_failed, Toast.LENGTH_SHORT).show()
-                requestStoragePermission(
-                    permissionCallbacks[LOCATION_PERMISSION]!!,
-                    false
-                )
-                permissionCallbacks[LOCATION_PERMISSION]!!.onPermissionGranted(false)
-                permissionCallbacks[LOCATION_PERMISSION] = null
+                Toast.makeText(
+                    this, R.string.grant_location_failed,
+                    Toast.LENGTH_SHORT
+                ).show()
+                if (VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                    requestCode == NOTIFICATION_PERMISSION
+                ) {
+                    requestNotificationPermission(
+                        permissionCallbacks[NOTIFICATION_PERMISSION]!!,
+                        false
+                    )
+                    permissionCallbacks[NOTIFICATION_PERMISSION]!!
+                        .onPermissionGranted(false)
+                    permissionCallbacks[NOTIFICATION_PERMISSION] = null
+                } else if (requestCode == LOCATION_PERMISSION) {
+                    requestStoragePermission(
+                        permissionCallbacks[LOCATION_PERMISSION]!!,
+                        false
+                    )
+                    permissionCallbacks[LOCATION_PERMISSION]!!.onPermissionGranted(false)
+                    permissionCallbacks[LOCATION_PERMISSION] = null
+                }
             }
         }
     }
@@ -133,13 +147,27 @@ abstract class WelcomePermissionScreen :
 
     fun checkStoragePermission(): Boolean {
         // Verify that all required contact permissions have been granted.
-        return (
-            ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-                == PackageManager.PERMISSION_GRANTED
-            )
+        return if (VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            (
+                ActivityCompat.checkSelfPermission(
+                    this, Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
+                )
+                    == PackageManager.PERMISSION_GRANTED
+                ) || (
+                ActivityCompat.checkSelfPermission(
+                    this, Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
+                )
+                    == PackageManager.PERMISSION_GRANTED
+                ) || Environment.isExternalStorageManager()
+        } else {
+            (
+                ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+                    == PackageManager.PERMISSION_GRANTED
+                )
+        }
     }
 
     fun isLocationEnabled(onPermissionGranted: OnPermissionGranted) {
@@ -227,6 +255,29 @@ abstract class WelcomePermissionScreen :
         requestPermission(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             STORAGE_PERMISSION,
+            builder,
+            onPermissionGranted,
+            isInitialStart
+        )
+    }
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    fun requestNotificationPermission(
+        onPermissionGranted: OnPermissionGranted,
+        isInitialStart: Boolean
+    ) {
+//        Utils.disableScreenRotation(this)
+        val builder: AlertDialog.Builder = this.let {
+            AlertDialog.Builder(it, R.style.Custom_Dialog_Dark)
+        }
+        builder.setMessage(R.string.grant_notification_permission)
+            .setTitle(R.string.grant_permission)
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                finish()
+            }.setCancelable(false)
+        requestPermission(
+            Manifest.permission.POST_NOTIFICATIONS,
+            PermissionsActivity.NOTIFICATION_PERMISSION,
             builder,
             onPermissionGranted,
             isInitialStart
@@ -324,8 +375,16 @@ abstract class WelcomePermissionScreen :
                                         .setData(Uri.parse("package:$packageName"))
                                 startActivity(intent)
                             } catch (e: Exception) {
-                                log.error("Failed to initial activity to grant all files access", e)
-                                applicationContext.showToastInCenter(getString(R.string.grantfailed))
+                                log.error(
+                                    "Failed to initial activity to grant all files access",
+                                    e
+                                )
+                                applicationContext.showToastInCenter(
+                                    getString(
+                                        R.string
+                                            .grantfailed
+                                    )
+                                )
                             }
                         } catch (e: Exception) {
                             log.error("Failed to grant all files access", e)

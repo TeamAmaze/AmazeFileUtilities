@@ -65,6 +65,28 @@
                 android:text="@string/grant"
                 />
 
+            <TextView
+                android:id="@+id/notification_summary_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notification_permission"
+                android:layout_marginTop="@dimen/material_generic"
+                android:textColor="@color/white"
+                android:textSize="@dimen/fourteen_sp"
+                android:visibility="gone"
+                />
+            <Button
+                android:id="@+id/grantNotificationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cornerRadius="@dimen/material_generic"
+                app:backgroundTint="@color/white"
+                android:textColor="@color/navy_blue"
+                android:layout_marginTop="@dimen/material_generic"
+                android:text="@string/grant"
+                android:visibility="gone"
+                />
+
             <!-- remove battery optimization -->
             <LinearLayout
                 android:id="@+id/removeOptimizationsParent"

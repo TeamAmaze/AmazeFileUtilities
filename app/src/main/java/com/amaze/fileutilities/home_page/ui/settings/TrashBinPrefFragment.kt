@@ -41,9 +41,10 @@ class TrashBinPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
         private const val KEY_RETENTION_DAYS = "retention_days"
         private const val KEY_RETENTION_BYTES = "retention_bytes"
         private const val KEY_RETENTION_NUM_OF_FILES = "retention_num_of_files"
+        private const val CLEANUP_INTERVAL = "cleanup_interval"
         private val KEYS = listOf(
             KEY_RETENTION_BYTES, KEY_RETENTION_DAYS,
-            KEY_RETENTION_NUM_OF_FILES
+            KEY_RETENTION_NUM_OF_FILES, CLEANUP_INTERVAL
         )
     }
 
@@ -129,6 +130,27 @@ class TrashBinPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                     prefs.edit().putInt(
                         PreferencesConstants.KEY_TRASH_BIN_RETENTION_NUM_OF_FILES,
                         TrashBinConfig.RETENTION_NUM_OF_FILES
+                    ).apply()
+                }
+            }
+            CLEANUP_INTERVAL -> {
+                val days = prefs.getInt(
+                    PreferencesConstants.KEY_TRASH_BIN_CLEANUP_INTERVAL_HOURS,
+                    TrashBinConfig.INTERVAL_CLEANUP_HOURS
+                )
+                Utils.buildDigitInputDialog(
+                    requireContext(), getString(R.string.cleanup_interval_title),
+                    getString(R.string.cleanup_interval_summary), days.toLong(),
+                    {
+                        prefs.edit().putInt(
+                            PreferencesConstants.KEY_TRASH_BIN_CLEANUP_INTERVAL_HOURS,
+                            it?.toInt() ?: TrashBinConfig.INTERVAL_CLEANUP_HOURS
+                        ).apply()
+                    }
+                ) {
+                    prefs.edit().putInt(
+                        PreferencesConstants.KEY_TRASH_BIN_CLEANUP_INTERVAL_HOURS,
+                        TrashBinConfig.INTERVAL_CLEANUP_HOURS
                     ).apply()
                 }
             }
