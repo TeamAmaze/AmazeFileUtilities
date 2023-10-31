@@ -35,6 +35,8 @@
     <!-- Shown in welcome screen for first time -->
     <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
     <!-- Shown in welcome screen for first time -->
+    <string name="grant_notification_permission">App needs notification permissions for optimal performance.</string>
+    <!-- Shown in welcome screen for first time -->
     <string name="grant_permission">Grant permission</string>
     <!-- Grant permission button for welcome screen -->
     <string name="grant">Grant</string>
@@ -687,6 +689,8 @@
     <string name="welcome_transfer_summary">Transfer data between devices through wifi\nHigh transfer speeds using android wifi direct</string>
     <!-- Welcome screen permission required -->
     <string name="welcome_permission">We need storage permissions to access your media files</string>
+    <!-- Notification screen permission required -->
+    <string name="notification_permission">We need notification permissions to show app operations</string>
     <!-- Welcome screen license agreement page -->
     <string name="before_we_start">Before we start…</string>
     <!-- Welcome screen license agreement page -->
@@ -968,6 +972,10 @@
     <string name="retention_bytes_title">Retention by data size</string>
     <!-- Retention bytes summary in trash bin settings -->
     <string name="retention_bytes_summary">Maximum data (in MBs) trash bin can store</string>
+    <!-- Cleanup trash bin settings -->
+    <string name="cleanup_interval_title">Cleanup interval</string>
+    <!-- Cleanup summary in trash bin settings -->
+    <string name="cleanup_interval_summary">Trigger auto-cleanup interval (hours)</string>
     <!-- Retention days title in trash bin settings -->
     <string name="retention_days_title">Retention by days</string>
     <!-- Retention days summary in trash bin settings -->

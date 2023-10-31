@@ -20,9 +20,13 @@
 
 package com.amaze.fileutilities.home_page
 
+import android.Manifest
 import android.content.ComponentName
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -30,6 +34,8 @@ import android.text.util.Linkify
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.WelcomePermissionPrivacyLayoutBinding
@@ -61,12 +67,24 @@ class PermissionFragmentWelcome : Fragment() {
             val activity = requireActivity() as WelcomeScreen
             activity.run {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R && !checkStoragePermission()) {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R &&
+                        !checkStoragePermission()
+                    ) {
                         requestStoragePermission(onPermissionGranted, true)
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         requestAllFilesAccess(onPermissionGranted)
                     }
+                }
+            }
+        }
+        if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU && !checkNotificationPermission()) {
+            binding.grantNotificationButton.visibility = View.VISIBLE
+            binding.notificationSummaryText.visibility = View.VISIBLE
+            binding.grantNotificationButton.setOnClickListener {
+                val activity = requireActivity() as WelcomeScreen
+                activity.run {
+                    requestNotificationPermission(onPermissionGranted, true)
                 }
             }
         }
@@ -108,5 +126,16 @@ class PermissionFragmentWelcome : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    @RequiresApi(VERSION_CODES.TIRAMISU)
+    fun checkNotificationPermission(): Boolean {
+        return (
+            ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS
+            )
+                == PackageManager.PERMISSION_GRANTED
+            )
     }
 }

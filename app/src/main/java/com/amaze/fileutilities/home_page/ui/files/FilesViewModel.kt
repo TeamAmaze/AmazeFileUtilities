@@ -2207,6 +2207,8 @@ class FilesViewModel(val applicationContext: Application) :
     fun getTrashBinInstance(): TrashBin {
         if (trashBin == null) {
             trashBin = TrashBin(
+                context = applicationContext,
+                true,
                 getTrashbinConfig(),
                 object : DeletePermanentlyCallback {
                     override fun invoke(deletePath: String): Boolean {
@@ -2262,9 +2264,15 @@ class FilesViewModel(val applicationContext: Application) :
                 PreferencesConstants.KEY_TRASH_BIN_RETENTION_NUM_OF_FILES,
                 TrashBinConfig.RETENTION_NUM_OF_FILES
             )
+            val interval = sharedPrefs.getInt(
+                PreferencesConstants.KEY_TRASH_BIN_CLEANUP_INTERVAL_HOURS,
+                TrashBinConfig.INTERVAL_CLEANUP_HOURS
+            )
             trashBinConfig = TrashBinConfig(
                 TRASH_BIN_BASE_PATH, days, bytes,
-                numOfFiles, false, true
+                numOfFiles,
+                interval,
+                false, true
             )
         }
         return trashBinConfig!!

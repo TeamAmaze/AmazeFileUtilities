@@ -15,4 +15,9 @@
         app:title="@string/retention_bytes_title"
         app:summary="@string/retention_bytes_summary"
         />
+    <Preference
+        app:key="cleanup_interval"
+        app:title="@string/cleanup_interval_title"
+        app:summary="@string/cleanup_interval_summary"
+        />
 </PreferenceScreen>
