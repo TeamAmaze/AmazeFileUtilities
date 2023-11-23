@@ -269,8 +269,8 @@ dependencies {
     kapt "androidx.room:room-compiler:$roomVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0"
     implementation "androidx.preference:preference-ktx:1.2.0"
-    playImplementation 'com.google.android.gms:play-services-mlkit-text-recognition:18.0.0'
-    playImplementation 'com.google.android.gms:play-services-mlkit-face-detection:17.0.1'
+    playImplementation 'com.google.android.gms:play-services-mlkit-text-recognition:19.0.0'
+    playImplementation 'com.google.android.gms:play-services-mlkit-face-detection:17.1.0'
 //    implementation 'com.google.mlkit:face-detection:16.1.5'
 
     implementation 'com.afollestad.material-dialogs:files:3.3.0'
@@ -294,6 +294,8 @@ dependencies {
         exclude group: 'androidx.core', module: 'core'
         exclude group: 'androidx.core', module: 'core-ktx'
     }
+    implementation 'com.github.lincollincol:AudioTool:1.2.1'
+    implementation 'com.arthenica:mobile-ffmpeg-full:4.3.1.LTS'
 
     //Detect memory leaks
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'

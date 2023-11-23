@@ -226,6 +226,12 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
                             playbackSpeed, pitch ->
                             audioService.invokePlaybackProperties(playbackSpeed, pitch)
                             audioService.invokePlayPausePlayer()
+                            val file = audioService.getAudioPlaybackInfo()?.
+                            audioModel?.
+                            getUri()?.
+                            getFileFromUri(context)?.let {
+                                getAudioPlayerHandlerViewModel().addEffects(it)
+                            }
                         }, {
                         audioService.invokePlayPausePlayer()
                     }

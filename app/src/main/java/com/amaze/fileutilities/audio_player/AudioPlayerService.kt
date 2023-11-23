@@ -36,6 +36,7 @@ import android.os.CountDownTimer
 import android.os.IBinder
 import android.os.PowerManager
 import android.os.PowerManager.WakeLock
+import android.os.TransactionTooLargeException
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -61,9 +62,9 @@ import java.util.concurrent.atomic.AtomicReference
 
 class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatingCallback {
 
-    var log: Logger = LoggerFactory.getLogger(AudioPlayerService::class.java)
-
     companion object {
+        var log: Logger = LoggerFactory.getLogger(AudioPlayerService::class.java)
+
         const val TAG_BROADCAST_AUDIO_SERVICE_CANCEL = "audio_service_cancel_broadcast"
         const val TAG_BROADCAST_AUDIO_SERVICE_PLAY = "audio_service_play_broadcast"
         const val TAG_BROADCAST_AUDIO_SERVICE_PREVIOUS = "audio_service_previous_broadcast"
@@ -89,7 +90,12 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                 intent.putParcelableArrayListExtra(ARG_URI_LIST, ArrayList(uriList))
             }
             intent.action = action
-            context.startService(intent)
+            try {
+                context.startService(intent)
+            } catch (ttle: TransactionTooLargeException) {
+                log.warn("failed to start audio service", ttle)
+                // fallback to small bundle size
+            }
         }
 
         fun sendCancelBroadcast(context: Context) {

@@ -20,21 +20,29 @@
 
 package com.amaze.fileutilities.audio_player
 
+import android.app.Application
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Environment
 import androidx.core.graphics.drawable.toBitmap
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getSiblingUriFiles
 import com.amaze.fileutilities.utilis.isAudioMimeType
+import java.io.File
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import linc.com.library.AudioTool
+import linc.com.library.types.Echo
 
-class AudioPlayerInterfaceHandlerViewModel : ViewModel() {
+class AudioPlayerInterfaceHandlerViewModel(val applicationContext: Application) :
+    AndroidViewModel(applicationContext) {
     private var localAudioModelList: ArrayList<LocalAudioModel>? = null
 //    var uriList: ArrayList<Uri>? = null
     // approx value if player is playing
@@ -97,6 +105,19 @@ class AudioPlayerInterfaceHandlerViewModel : ViewModel() {
                 fallbackColor
             )
             emit(color)
+        }
+    }
+
+    fun addEffects(file: File) {
+        viewModelScope.launch(Dispatchers.IO) {
+            AudioTool.getInstance(applicationContext)
+                .withAudio(file)
+//                .removeVocal(null)
+                .applyEchoEffect(Echo.ECHO_OPEN_AIR, null)
+                .applyReverbEffect(0.5f, 0.5f, null)
+                .saveCurrentTo("${Environment
+                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)}/(COPY) ${file.name}")
+                .release()
         }
     }
 }

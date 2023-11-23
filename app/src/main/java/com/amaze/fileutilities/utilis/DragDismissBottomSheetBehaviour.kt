@@ -57,7 +57,7 @@ class DragDismissBottomSheetBehaviour<V : View?>(
     private var ignoreUntilClose = false
     override fun onInterceptTouchEvent(
         parent: CoordinatorLayout,
-        child: V,
+        child: V & Any,
         event: MotionEvent
     ): Boolean {
 
@@ -69,7 +69,7 @@ class DragDismissBottomSheetBehaviour<V : View?>(
         }
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                initialY = Math.abs(event.rawY)
+                initialY = abs(event.rawY)
                 downX = event.x
                 downY = event.y
                 return super.onInterceptTouchEvent(parent, child, event)
@@ -110,7 +110,7 @@ class DragDismissBottomSheetBehaviour<V : View?>(
                 } else {
                     val result = (
                         !ignoreUntilClose &&
-                            Math.abs(initialY - Math.abs(event.rawY)) > touchSlop ||
+                            abs(initialY - abs(event.rawY)) > touchSlop ||
                             super.onInterceptTouchEvent(parent, child, event)
                         )
                     if (result) {
