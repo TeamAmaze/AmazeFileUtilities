@@ -35,6 +35,8 @@
     <!-- Shown in welcome screen for first time -->
     <string name="grant_storage_read_permission">Приложению требуется разрешение для чтения хранилища для оптимальной производительности.</string>
     <!-- Shown in welcome screen for first time -->
+    <string name="grant_notification_permission">App needs notification permissions for optimal performance.</string>
+    <!-- Shown in welcome screen for first time -->
     <string name="grant_permission">Предоставьте доступ</string>
     <!-- Grant permission button for welcome screen -->
     <string name="grant">Предоставить</string>
@@ -476,7 +478,7 @@
     <!-- Search subtitles dialog in video player -->
     <string name="rating">Рейтинг</string>
     <!-- Search subtitles dialog in video player -->
-    <string name="cd">CD</string>
+    <string name="cd">КД</string>
     <!-- Uploader info in search subtitles dialog in video player -->
     <string name="uploader">Загрузчик</string>
     <!-- Downloads info in search subtitles dialog in video player -->
@@ -681,6 +683,8 @@
     <string name="welcome_transfer_summary">Передавайте данные между устройствами через Wi-Fi\nВысокая скорость передачи данных с помощью android Wi-Fi Direct</string>
     <!-- Welcome screen permission required -->
     <string name="welcome_permission">Нам нужно разрешение к хранилищу для доступа к вашим медиа-файлам</string>
+    <!-- Notification screen permission required -->
+    <string name="notification_permission">We need notification permissions to show app operations</string>
     <!-- Welcome screen license agreement page -->
     <string name="before_we_start">До начала…</string>
     <!-- Welcome screen license agreement page -->
@@ -918,7 +922,7 @@
     <!-- newly installed apps summary in settings preferences -->
     <string name="newly_installed_apps_summary">Apps newly installed (in days)</string>
     <!-- newly installed apps in settings preferences -->
-    <string name="recently_updated_apps">Recently updated apps</string>
+    <string name="recently_updated_apps"></string>
     <!-- newly installed apps summary in settings preferences -->
     <string name="recently_updated_apps_summary">Apps recently updated (in days)</string>
     <!-- ram usage in analysis -->
@@ -959,6 +963,10 @@
     <string name="retention_bytes_title">Retention by data size</string>
     <!-- Retention bytes summary in trash bin settings -->
     <string name="retention_bytes_summary">Maximum data (in MBs) trash bin can store</string>
+    <!-- Cleanup trash bin settings -->
+    <string name="cleanup_interval_title">Cleanup interval</string>
+    <!-- Cleanup summary in trash bin settings -->
+    <string name="cleanup_interval_summary">Trigger auto-cleanup interval (hours)</string>
     <!-- Retention days title in trash bin settings -->
     <string name="retention_days_title">Retention by days</string>
     <!-- Retention days summary in trash bin settings -->

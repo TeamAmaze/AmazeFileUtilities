@@ -35,6 +35,8 @@
     <!-- Shown in welcome screen for first time -->
     <string name="grant_storage_read_permission">ליישומון דרושה גישה לקרוא מהאחסון לביצועים מיטביים.</string>
     <!-- Shown in welcome screen for first time -->
+    <string name="grant_notification_permission">App needs notification permissions for optimal performance.</string>
+    <!-- Shown in welcome screen for first time -->
     <string name="grant_permission">הענקת הרשאה</string>
     <!-- Grant permission button for welcome screen -->
     <string name="grant">הענקה</string>
@@ -679,6 +681,8 @@
     <string name="welcome_transfer_summary">העברת נתונים בין מכשירים דרך רשת אלחוטית\nמהירויות במהירות גבוהה עם Android Wi-Fi Direct</string>
     <!-- Welcome screen permission required -->
     <string name="welcome_permission">אנחנו צריכים הרשאות לאחסון כדי לגשת לקובצי המדיה שלך</string>
+    <!-- Notification screen permission required -->
+    <string name="notification_permission">We need notification permissions to show app operations</string>
     <!-- Welcome screen license agreement page -->
     <string name="before_we_start">לפני שנתחיל…</string>
     <!-- Welcome screen license agreement page -->
@@ -958,6 +962,10 @@
     <string name="retention_bytes_title">Retention by data size</string>
     <!-- Retention bytes summary in trash bin settings -->
     <string name="retention_bytes_summary">Maximum data (in MBs) trash bin can store</string>
+    <!-- Cleanup trash bin settings -->
+    <string name="cleanup_interval_title">Cleanup interval</string>
+    <!-- Cleanup summary in trash bin settings -->
+    <string name="cleanup_interval_summary">Trigger auto-cleanup interval (hours)</string>
     <!-- Retention days title in trash bin settings -->
     <string name="retention_days_title">Retention by days</string>
     <!-- Retention days summary in trash bin settings -->

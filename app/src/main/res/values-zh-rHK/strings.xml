@@ -35,6 +35,8 @@
     <!-- Shown in welcome screen for first time -->
     <string name="grant_storage_read_permission">為提供最佳效能，App需要授予儲存空間存取權限。</string>
     <!-- Shown in welcome screen for first time -->
+    <string name="grant_notification_permission">App needs notification permissions for optimal performance.</string>
+    <!-- Shown in welcome screen for first time -->
     <string name="grant_permission">授予權限</string>
     <!-- Grant permission button for welcome screen -->
     <string name="grant">授權</string>
@@ -683,6 +685,8 @@
     <string name="welcome_transfer_summary">在裝置之間以 wifi傳送資料\n利用 Android wifi direct嘅高速傳輸</string>
     <!-- Welcome screen permission required -->
     <string name="welcome_permission">我們需要授予儲存空間存取權限以讀取你嘅媒體檔案</string>
+    <!-- Notification screen permission required -->
+    <string name="notification_permission">We need notification permissions to show app operations</string>
     <!-- Welcome screen license agreement page -->
     <string name="before_we_start">喺開始之前…</string>
     <!-- Welcome screen license agreement page -->
@@ -962,6 +966,10 @@
     <string name="retention_bytes_title">Retention by data size</string>
     <!-- Retention bytes summary in trash bin settings -->
     <string name="retention_bytes_summary">Maximum data (in MBs) trash bin can store</string>
+    <!-- Cleanup trash bin settings -->
+    <string name="cleanup_interval_title">Cleanup interval</string>
+    <!-- Cleanup summary in trash bin settings -->
+    <string name="cleanup_interval_summary">Trigger auto-cleanup interval (hours)</string>
     <!-- Retention days title in trash bin settings -->
     <string name="retention_days_title">Retention by days</string>
     <!-- Retention days summary in trash bin settings -->

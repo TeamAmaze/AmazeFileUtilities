@@ -35,6 +35,8 @@
     <!-- Shown in welcome screen for first time -->
     <string name="grant_storage_read_permission">La aplicación necesita permisos de lectura de almacenamiento para un rendimiento óptimo.</string>
     <!-- Shown in welcome screen for first time -->
+    <string name="grant_notification_permission">App needs notification permissions for optimal performance.</string>
+    <!-- Shown in welcome screen for first time -->
     <string name="grant_permission">Otorgar permiso</string>
     <!-- Grant permission button for welcome screen -->
     <string name="grant">Otorgar</string>
@@ -75,7 +77,7 @@
     <!-- Audios title in audios list screen in utilities tab -->
     <string name="audios">Audios</string>
     <!-- Videos title in videos list screen in utilities tab -->
-    <string name="videos">Videos</string>
+    <string name="videos">Video</string>
     <!-- Documents title in documents list screen in utilities tab -->
     <string name="documents">Documentos</string>
     <!-- Number of files in utilities tab individual list screens eg in images / number of images -->
@@ -220,7 +222,7 @@
     <!-- Low light label in analysis -->
     <string name="low_light">Luz Baja</string>
     <!-- Memes label in analysis -->
-    <string name="memes">Memes</string>
+    <string name="memes">Español</string>
     <!-- Sad images label in analysis -->
     <string name="frown">Entrecejo</string>
     <!-- Sad images analysis hint -->
@@ -682,6 +684,8 @@
     <string name="welcome_transfer_summary">Transfer data between devices through wifi\nHigh transfer speeds using android wifi direct</string>
     <!-- Welcome screen permission required -->
     <string name="welcome_permission">We need storage permissions to access your media files</string>
+    <!-- Notification screen permission required -->
+    <string name="notification_permission">We need notification permissions to show app operations</string>
     <!-- Welcome screen license agreement page -->
     <string name="before_we_start">Before we start…</string>
     <!-- Welcome screen license agreement page -->
@@ -961,6 +965,10 @@
     <string name="retention_bytes_title">Retention by data size</string>
     <!-- Retention bytes summary in trash bin settings -->
     <string name="retention_bytes_summary">Maximum data (in MBs) trash bin can store</string>
+    <!-- Cleanup trash bin settings -->
+    <string name="cleanup_interval_title">Cleanup interval</string>
+    <!-- Cleanup summary in trash bin settings -->
+    <string name="cleanup_interval_summary">Trigger auto-cleanup interval (hours)</string>
     <!-- Retention days title in trash bin settings -->
     <string name="retention_days_title">Retention by days</string>
     <!-- Retention days summary in trash bin settings -->
