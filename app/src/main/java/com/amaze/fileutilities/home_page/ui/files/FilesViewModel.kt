@@ -22,6 +22,7 @@ package com.amaze.fileutilities.home_page.ui.files
 
 import android.app.ActivityManager
 import android.app.Application
+import android.content.Context
 import android.content.Context.ACTIVITY_SERVICE
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
@@ -30,6 +31,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
+import android.os.Debug
 import android.os.Environment
 import android.provider.Settings
 import android.text.format.Formatter
@@ -90,17 +92,11 @@ import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.destination
 import id.zelory.compressor.constraint.format
 import id.zelory.compressor.constraint.quality
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
-import java.lang.NullPointerException
 import java.lang.ref.WeakReference
 import java.net.InetSocketAddress
 import java.net.Socket
@@ -116,6 +112,11 @@ import java.util.PriorityQueue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.streams.toList
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class FilesViewModel(val applicationContext: Application) :
     AndroidViewModel(applicationContext) {
@@ -140,6 +141,7 @@ class FilesViewModel(val applicationContext: Application) :
     var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var newlyInstalledAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var recentlyUpdatedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var memoryUsageAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var junkFilesLiveData: MutableLiveData<Pair<ArrayList<MediaFileInfo>, String>?>? = null
     var apksLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var hiddenFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
@@ -1953,6 +1955,57 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
             recentlyUpdatedAppsLiveData?.postValue(ArrayList(result.reversed()))
+        }
+    }
+
+    fun getMemoryUsageApps(): LiveData<ArrayList<MediaFileInfo>?> {
+        if (memoryUsageAppsLiveData == null) {
+            memoryUsageAppsLiveData = MutableLiveData()
+            memoryUsageAppsLiveData?.value = null
+            processMemoryUsageApps(applicationContext.packageManager)
+        }
+        return memoryUsageAppsLiveData!!
+    }
+
+    private fun processMemoryUsageApps(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+            val activityManager = applicationContext.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+            val runningAppProcesses = activityManager.runningAppProcesses
+            val runningAppProcessPackages = runningAppProcesses.filter { it.pkgList.isNotEmpty() }.map {
+                it.pkgList[0]
+            }
+            val result = ArrayList<MediaFileInfo>()
+            allApps.get()?.filter {
+                runningAppProcessPackages.contains(it.second?.packageName)
+            }?.forEach {
+                appPackageInfo ->
+                // all apps that are currently running
+                runningAppProcesses.find {
+                    // find running app pid
+                    appPackageInfo.second?.packageName.equals(it.pkgList[0])
+                }?.let {
+                    runningProcess ->
+                    // map pid to memory usage
+                    val mediaFileInfo = MediaFileInfo.fromApplicationInfo(
+                        applicationContext, appPackageInfo.first,
+                        appPackageInfo.second
+                    )
+                    val apkMetaData = mediaFileInfo?.extraInfo?.apkMetaData
+                    val pid = runningProcess.pid
+                    val memoryInfoArray: Array<Debug.MemoryInfo> =
+                        activityManager.getProcessMemoryInfo(intArrayOf(pid))
+                    val memoryInfo: Debug.MemoryInfo = memoryInfoArray[0]
+                    val totalPss: Int = memoryInfo.totalPss
+                    apkMetaData?.memoryUsage= totalPss
+                    mediaFileInfo?.extraInfo?.apkMetaData = apkMetaData
+                    if (mediaFileInfo != null) {
+                        result.add(mediaFileInfo)
+                    }
+                }
+            }
+            result.sortBy { it.extraInfo?.apkMetaData?.memoryUsage }
+            memoryUsageAppsLiveData?.postValue(ArrayList(result.reversed()))
         }
     }
 

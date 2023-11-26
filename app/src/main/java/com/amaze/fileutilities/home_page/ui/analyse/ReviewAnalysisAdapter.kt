@@ -83,6 +83,13 @@ class ReviewAnalysisAdapter(
                         } else {
                             holder.infoSummary.text = this.mediaFileInfo?.getFormattedSize(context)
                         }
+                    } else if (analysisType == ReviewImagesFragment.TYPE_MEMORY_USAGE) {
+                        val memoryUsage = this.mediaFileInfo?.extraInfo?.apkMetaData?.memoryUsage
+                        if (memoryUsage != null) {
+                            holder.infoSummary.text = FileUtils.formatStorageLength(context, memoryUsage.toLong())
+                        } else {
+                            holder.infoSummary.text = this.mediaFileInfo?.getFormattedSize(context)
+                        }
                     } else {
                         holder.infoSummary.text = this.mediaFileInfo?.getFormattedSize(context)
                     }

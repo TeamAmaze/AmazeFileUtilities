@@ -1038,6 +1038,15 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     )
                 }
             }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+            ) {
+                memoryUsagePreview.setOnClickListener {
+                    ReviewImagesFragment.newInstance(
+                        ReviewImagesFragment.TYPE_MEMORY_USAGE,
+                        this@AnalyseFragment
+                    )
+                }
+            }
         }
     }
 }

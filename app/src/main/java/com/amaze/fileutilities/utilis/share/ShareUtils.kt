@@ -66,6 +66,7 @@ fun getShareIntents(sharingUris: List<Uri>, context: Context): ShareAdapter? {
         val resInfos = packageManager.queryIntentActivities(shareIntent, 0)
         if (!resInfos.isEmpty()) {
             for (resInfo in resInfos) {
+                resInfo.activityInfo
                 val packageName = resInfo.activityInfo.packageName
                 drawables.add(resInfo.loadIcon(packageManager))
                 labels.add(resInfo.loadLabel(packageManager).toString())

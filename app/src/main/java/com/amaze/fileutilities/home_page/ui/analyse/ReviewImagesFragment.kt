@@ -113,6 +113,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         const val TYPE_SIMILAR_IMAGES = 30
         const val TYPE_HIDDEN_FILES = 31
         const val TYPE_TRASH_BIN = 32
+        const val TYPE_MEMORY_USAGE = 33
 
         fun newInstance(type: Int, fragment: Fragment) {
             val analyseFragment = ReviewImagesFragment()
@@ -191,7 +192,7 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
             }
             TYPE_LARGE_APPS, TYPE_UNUSED_APPS, TYPE_MOST_USED_APPS, TYPE_LEAST_USED_APPS,
             TYPE_GAMES_INSTALLED, TYPE_APK_FILES, TYPE_NEWLY_INSTALLED_APPS,
-            TYPE_RECENTLY_UPDATED_APPS, TYPE_NETWORK_INTENSIVE_APPS -> {
+            TYPE_RECENTLY_UPDATED_APPS, TYPE_NETWORK_INTENSIVE_APPS, TYPE_MEMORY_USAGE -> {
                 MediaFileAdapter.MEDIA_TYPE_APKS
             }
             TYPE_TRASH_BIN -> {
@@ -636,6 +637,16 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                         }
                     }
             }
+            TYPE_MEMORY_USAGE -> {
+                filesViewModel.getMemoryUsageApps()
+                    .observe(viewLifecycleOwner) { memoryUsageApps ->
+                        invalidateProcessing(true, false)
+                        memoryUsageApps?.let {
+                            setMediaInfoList(it, false)
+                            invalidateProcessing(false, false)
+                        }
+                    }
+            }
             TYPE_GAMES_INSTALLED -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     filesViewModel.getGamesInstalled()
@@ -677,6 +688,19 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
                             invalidateProcessing(false, false)
                         }
                     }
+            }
+            TYPE_MEMORY_USAGE -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                ) {
+                    filesViewModel.getMemoryUsageApps().observe(viewLifecycleOwner) {
+                            memoryUsageApps ->
+                        invalidateProcessing(true, false)
+                        memoryUsageApps?.let {
+                            setMediaInfoList(it, false)
+                            invalidateProcessing(false, false)
+                        }
+                    }
+                }
             }
         }
     }

@@ -386,7 +386,7 @@ data class MediaFileInfo(
         val audioMetaData: AudioMetaData?,
         val videoMetaData: VideoMetaData?,
         val imageMetaData: ImageMetaData?,
-        val apkMetaData: ApkMetaData? = null,
+        var apkMetaData: ApkMetaData? = null,
         val trashBinData: TrashBinData? = null,
         val extraMetaData: ExtraMetaData? = null
     )
@@ -405,7 +405,8 @@ data class MediaFileInfo(
     data class ApkMetaData(
         val packageName: String,
         val drawable: Drawable?,
-        val networkBytes: Long
+        val networkBytes: Long,
+        var memoryUsage: Int = 0
     )
     data class ExtraMetaData(val checksum: String)
     data class Playlist(var id: Long, var name: String)
