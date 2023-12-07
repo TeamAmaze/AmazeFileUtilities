@@ -44,9 +44,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.documentfile.provider.DocumentFile
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.files.FileFilter
-import com.afollestad.materialdialogs.files.fileChooser
-import com.afollestad.materialdialogs.files.folderChooser
 import com.amaze.fileutilities.audio_player.AudioPlayerService
 import com.amaze.fileutilities.home_page.database.BlurAnalysis
 import com.amaze.fileutilities.home_page.database.BlurAnalysisDao
@@ -62,6 +59,9 @@ import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysis
 import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisDao
 import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisMetadata
 import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisMetadataDao
+import com.amaze.fileutilities.utilis.dialog_picker.FileFilter
+import com.amaze.fileutilities.utilis.dialog_picker.fileChooser
+import com.amaze.fileutilities.utilis.dialog_picker.folderChooser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
