@@ -65,6 +65,7 @@ import com.amaze.fileutilities.utilis.share.getShareIntents
 import com.amaze.fileutilities.utilis.share.showEditImageDialog
 import com.amaze.fileutilities.utilis.share.showShareDialog
 import com.amaze.fileutilities.utilis.showFade
+import com.amaze.fileutilities.utilis.showToastOnBottom
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -314,13 +315,14 @@ class EditImageActivity :
 
     private fun addFilterViews() {
         loadedBitmap?.let {
+            val resizedBitmap = Bitmap.createScaledBitmap(loadedBitmap!!, 100, 100, false)
             supportedFilters.forEach {
                 photoFilter ->
                 val filterItem = layoutInflater.inflate(R.layout.row_filter_view, null)
                 val photoEditorView = filterItem.findViewById<PhotoEditorView>(R.id.imgFilterView)
                 val txtFilterName = filterItem.findViewById<TextView>(R.id.txtFilterName)
                 txtFilterName.text = photoFilter.name.replace("_", " ")
-                photoEditorView.source.setImageBitmap(loadedBitmap)
+                photoEditorView.source.setImageBitmap(resizedBitmap)
                 try {
                     photoEditorView.setFilterEffect(photoFilter)
                 } catch (e: Exception) {
@@ -620,7 +622,12 @@ class EditImageActivity :
     }
 
     override fun onFilterSelected(photoFilter: PhotoFilter?) {
-        mPhotoEditor?.setFilterEffect(photoFilter)
+        try {
+            mPhotoEditor?.setFilterEffect(photoFilter)
+        } catch (e: Exception) {
+            log.error("failed to apply filter on bitmap")
+            this.showToastOnBottom(getString(R.string.operation_failed))
+        }
     }
 
     override fun onToolSelected(toolType: ToolType?) {
