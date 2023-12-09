@@ -37,7 +37,7 @@ import com.amaze.fileutilities.utilis.DbConverters
         SimilarImagesAnalysisMetadata::class
     ],
     exportSchema = true,
-    version = 4
+    version = 5
 )
 @TypeConverters(DbConverters::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -121,6 +121,22 @@ abstract class AppDatabase : RoomDatabase() {
                     "CREATE UNIQUE INDEX IF NOT EXISTS " +
                         "`index_SimilarImagesAnalysisMetadata_file_path_parent_path` " +
                         "ON `SimilarImagesAnalysisMetadata` (`file_path`, `parent_path`)"
+                )
+            }
+        }
+
+        private val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `AppStorageStats` " +
+                        "(`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "`package_id` INTEGER NOT NULL, " + // see `InstalledApps._id`
+                        "`timestamp` LONG NOT NULL, " +
+                        "`package_size` LONG NOT NULL)"
+                )
+                database.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_AppStorageStats_package_id`" +
+                        " ON `AppStorageStats` (`package_id`)"
                 )
             }
         }
