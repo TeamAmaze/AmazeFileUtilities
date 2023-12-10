@@ -658,7 +658,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
         }
         _binding?.let {
             glide.into(it.imageView)
-            Glide.with(this).load(localTypeModel.uri.toString())
+            Glide.with(this).load("https://wh.aimuse.online/preset/jxl_icc_12.bit.jxl")
                 .thumbnail(
                     Glide.with(this).load(
                         resources.getDrawable(R.drawable.ic_outline_image_32)
@@ -678,7 +678,7 @@ class ImageViewerFragment : AbstractMediaFragment() {
             override fun onLoadFailed(
                 e: GlideException?,
                 model: Any?,
-                target: Target<Drawable>?,
+                target: Target<Drawable>,
                 isFirstResource: Boolean
             ): Boolean {
                 // do nothing
@@ -714,13 +714,13 @@ class ImageViewerFragment : AbstractMediaFragment() {
             }
 
             override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: Target<Drawable>?,
-                dataSource: DataSource?,
+                resource: Drawable,
+                model: Any,
+                target: Target<Drawable>,
+                dataSource: DataSource,
                 isFirstResource: Boolean
             ): Boolean {
-                resource?.let {
+                resource.let {
                     filesViewModel.getPaletteColors(it)
                         .observe(this@ImageViewerFragment) {
                             colorPair ->

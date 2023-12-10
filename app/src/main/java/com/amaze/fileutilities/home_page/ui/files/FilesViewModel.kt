@@ -39,8 +39,8 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.liveData
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.abedelazizshe.lightcompressorlibrary.CompressionListener
 import com.abedelazizshe.lightcompressorlibrary.VideoCompressor
@@ -305,7 +305,7 @@ class FilesViewModel(val applicationContext: Application) :
     fun usedImagesSummaryTransformations():
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
         if (usedImagesSummaryTransformations == null) {
-            usedImagesSummaryTransformations = Transformations.switchMap(internalStorageStats()) {
+            usedImagesSummaryTransformations = internalStorageStats().switchMap {
                 input ->
                 getImagesSummaryLiveData(input)
             }
@@ -316,7 +316,7 @@ class FilesViewModel(val applicationContext: Application) :
     fun usedAudiosSummaryTransformations():
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
         if (usedAudiosSummaryTransformations == null) {
-            usedAudiosSummaryTransformations = Transformations.switchMap(internalStorageStats()) {
+            usedAudiosSummaryTransformations = internalStorageStats().switchMap {
                 input ->
                 getAudiosSummaryLiveData(input)
             }
@@ -328,7 +328,7 @@ class FilesViewModel(val applicationContext: Application) :
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
         if (usedPlaylistsSummaryTransformations == null) {
             usedPlaylistsSummaryTransformations =
-                Transformations.switchMap(internalStorageStats()) {
+                internalStorageStats().switchMap {
                     input ->
                     getPlaylistsSummaryLiveData(input)
                 }
@@ -339,7 +339,7 @@ class FilesViewModel(val applicationContext: Application) :
     fun usedVideosSummaryTransformations():
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
         if (usedVideosSummaryTransformations == null) {
-            usedVideosSummaryTransformations = Transformations.switchMap(internalStorageStats()) {
+            usedVideosSummaryTransformations = internalStorageStats().switchMap {
                 input ->
                 getVideosSummaryLiveData(input)
             }
@@ -350,7 +350,7 @@ class FilesViewModel(val applicationContext: Application) :
     fun usedDocsSummaryTransformations():
         LiveData<Pair<StorageSummary, ArrayList<MediaFileInfo>>?> {
         if (usedDocsSummaryTransformations == null) {
-            usedDocsSummaryTransformations = Transformations.switchMap(internalStorageStats()) {
+            usedDocsSummaryTransformations = internalStorageStats().switchMap {
                 input ->
                 getDocumentsSummaryLiveData(input)
             }
@@ -2688,6 +2688,15 @@ class FilesViewModel(val applicationContext: Application) :
             }
             val metaInfoAndSummaryPair = CursorUtils
                 .listImages(applicationContext.applicationContext)
+            val sortingPref = MediaFileListSorter.SortingPreference.newInstance(
+                applicationContext
+                    .getAppCommonSharedPreferences(),
+                MediaFileAdapter.MEDIA_TYPE_IMAGES
+            )
+            MediaFileListSorter.generateMediaFileListHeadersAndSort(
+                applicationContext,
+                metaInfoAndSummaryPair.second, sortingPref
+            )
             setMediaInfoSummary(metaInfoAndSummaryPair.first, storageSummary)
             emit(metaInfoAndSummaryPair)
         }
@@ -2727,6 +2736,15 @@ class FilesViewModel(val applicationContext: Application) :
                         it.path
                     }
                 )
+            val sortingPref = MediaFileListSorter.SortingPreference.newInstance(
+                applicationContext
+                    .getAppCommonSharedPreferences(),
+                MediaFileAdapter.MEDIA_TYPE_AUDIO
+            )
+            MediaFileListSorter.generateMediaFileListHeadersAndSort(
+                applicationContext,
+                metaInfoAndSummaryPair.second, sortingPref
+            )
             setMediaInfoSummary(metaInfoAndSummaryPair.first, storageSummary)
             emit(metaInfoAndSummaryPair)
             metaInfoAndSummaryPair.second.forEach {
@@ -2778,6 +2796,15 @@ class FilesViewModel(val applicationContext: Application) :
             }
             mediaStorageSummary?.let {
                 setMediaInfoSummary(it, storageSummary)
+                val sortingPref = MediaFileListSorter.SortingPreference.newInstance(
+                    applicationContext
+                        .getAppCommonSharedPreferences(),
+                    MediaFileAdapter.MEDIA_TYPE_AUDIO
+                )
+                MediaFileListSorter.generateMediaFileListHeadersAndSort(
+                    applicationContext,
+                    playlistFiles, sortingPref
+                )
                 emit(Pair(it, playlistFiles))
                 playlistFiles.forEach {
                     mediaFileInfo ->
@@ -2803,6 +2830,15 @@ class FilesViewModel(val applicationContext: Application) :
             }
             val metaInfoAndSummaryPair = CursorUtils
                 .listVideos(applicationContext.applicationContext)
+            val sortingPref = MediaFileListSorter.SortingPreference.newInstance(
+                applicationContext
+                    .getAppCommonSharedPreferences(),
+                MediaFileAdapter.MEDIA_TYPE_VIDEO
+            )
+            MediaFileListSorter.generateMediaFileListHeadersAndSort(
+                applicationContext,
+                metaInfoAndSummaryPair.second, sortingPref
+            )
             setMediaInfoSummary(metaInfoAndSummaryPair.first, storageSummary)
             emit(metaInfoAndSummaryPair)
         }
@@ -2839,6 +2875,15 @@ class FilesViewModel(val applicationContext: Application) :
                     mediaFiles.add(mediaFileInfo)
                 }
                 val docsSummary = StorageSummary(size, 0, longSize)
+                val sortingPref = MediaFileListSorter.SortingPreference.newInstance(
+                    applicationContext
+                        .getAppCommonSharedPreferences(),
+                    MediaFileAdapter.MEDIA_TYPE_DOCS
+                )
+                MediaFileListSorter.generateMediaFileListHeadersAndSort(
+                    applicationContext,
+                    mediaFiles, sortingPref
+                )
                 emit(Pair(docsSummary, mediaFiles))
                 setMediaInfoSummary(docsSummary, storageSummary)
             }

@@ -28,9 +28,5 @@ import com.bumptech.glide.module.AppGlideModule
 
 @GlideModule
 class GlideModule : AppGlideModule() {
-    override fun isManifestParsingEnabled() = false
 
-    override fun applyOptions(context: Context, builder: GlideBuilder) {
-        builder.setLogLevel(Log.ERROR)
-    }
 }

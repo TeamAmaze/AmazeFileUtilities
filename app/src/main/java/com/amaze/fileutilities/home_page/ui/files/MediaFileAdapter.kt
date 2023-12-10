@@ -83,10 +83,6 @@ class MediaFileAdapter(
             preloader.clear()
             onlyItemsCounts = 0
             headerListItems.clear()
-            MediaFileListSorter.generateMediaFileListHeadersAndSort(
-                context,
-                mediaFileInfoList, sortingPreference
-            )
             var lastHeader: String? = null
             value.add(ListItem(TYPE_BANNER))
             preloader.addItem("")
