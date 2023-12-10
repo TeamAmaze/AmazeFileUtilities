@@ -37,8 +37,10 @@ public class M3UWriter {
 
   public static File write(File dir, MediaFileInfo.Playlist playlist, List<MediaFileInfo> songs)
       throws IOException {
-    if (!dir.exists()) // noinspection ResultOfMethodCallIgnored
-    dir.mkdirs();
+    if (!dir.exists()) {
+      // noinspection ResultOfMethodCallIgnored
+      dir.mkdirs();
+    }
     File file = new File(dir, playlist.getName().concat("." + EXTENSION));
 
     if (songs.size() > 0) {

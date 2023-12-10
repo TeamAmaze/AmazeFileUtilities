@@ -49,6 +49,7 @@ import com.amaze.fileutilities.utilis.ObtainableServiceBinder
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
+import com.amaze.fileutilities.utilis.startServiceSafely
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -89,7 +90,7 @@ class AudioPlayerService : Service(), ServiceOperationCallback, OnPlayerRepeatin
                 intent.putParcelableArrayListExtra(ARG_URI_LIST, ArrayList(uriList))
             }
             intent.action = action
-            context.startService(intent)
+            context.startServiceSafely(intent, ARG_URI_LIST)
         }
 
         fun sendCancelBroadcast(context: Context) {

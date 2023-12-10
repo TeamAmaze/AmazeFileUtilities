@@ -22,6 +22,7 @@ package com.amaze.fileutilities.utilis
 
 import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.database.Cursor
@@ -30,6 +31,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.os.ParcelFileDescriptor
+import android.os.TransactionTooLargeException
 import android.provider.MediaStore
 import android.util.DisplayMetrics
 import android.view.Gravity
@@ -42,9 +44,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import androidx.documentfile.provider.DocumentFile
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.files.FileFilter
-import com.afollestad.materialdialogs.files.fileChooser
-import com.afollestad.materialdialogs.files.folderChooser
+import com.amaze.fileutilities.audio_player.AudioPlayerService
 import com.amaze.fileutilities.home_page.database.BlurAnalysis
 import com.amaze.fileutilities.home_page.database.BlurAnalysisDao
 import com.amaze.fileutilities.home_page.database.ImageAnalysis
@@ -59,6 +59,9 @@ import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysis
 import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisDao
 import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisMetadata
 import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisMetadataDao
+import com.amaze.fileutilities.utilis.dialog_picker.FileFilter
+import com.amaze.fileutilities.utilis.dialog_picker.fileChooser
+import com.amaze.fileutilities.utilis.dialog_picker.folderChooser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -449,6 +452,35 @@ fun Context.getAppCommonSharedPreferences(): SharedPreferences {
         PreferencesConstants.PREFERENCE_FILE,
         Context.MODE_PRIVATE
     )
+}
+
+fun Context.startServiceSafely(intent: Intent, extraName: String) {
+    try {
+        this.startService(intent)
+    } catch (ttle: TransactionTooLargeException) {
+        // decrease by 10% and try recursively
+        val intentUriList: ArrayList<Uri>? = intent.getParcelableArrayListExtra(extraName)
+        intentUriList?.let {
+            if (intentUriList.isNotEmpty()) {
+                log.warn("failed to start service with extras size ${intentUriList.size}", ttle)
+                val uri = it.take(intentUriList.size - (intentUriList.size / 10))
+                if (uri.isNotEmpty()) {
+                    log.warn("trying to start with new size ${uri.size}")
+                    intent.putParcelableArrayListExtra(
+                        AudioPlayerService.ARG_URI_LIST,
+                        ArrayList(uri)
+                    )
+                    startServiceSafely(intent, extraName)
+                } else {
+                    log.error("couldn't start service safely, returning...", ttle)
+                    return
+                }
+            } else {
+                log.error("couldn't start service safely, returning...", ttle)
+                return
+            }
+        }
+    }
 }
 
 fun ImageAnalysis.invalidate(dao: ImageAnalysisDao): Boolean {

@@ -5,7 +5,7 @@
     <!-- App name in launcher -->
     <string name="app_name_launcher">Amaze Utilities</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
+    <string name="about_app">File. Utility app with inbuilt media players for all your needs.</string>
     <!-- Image viewer activity label -->
     <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
@@ -15,7 +15,7 @@
     <!-- Video player dialog intent filter label -->
     <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
+    <string name="video_player_full_screen"></string>
     <!-- Music player activity label -->
     <string name="amaze_audio_player">Amaze Music Player</string>
     <!-- Pdf viewer activity label -->
@@ -34,6 +34,8 @@
     <string name="grant_location_failed">Location permission not granted</string>
     <!-- Shown in welcome screen for first time -->
     <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
+    <!-- Shown in welcome screen for first time -->
+    <string name="grant_notification_permission">App needs notification permissions for optimal performance.</string>
     <!-- Shown in welcome screen for first time -->
     <string name="grant_permission">Grant permission</string>
     <!-- Grant permission button for welcome screen -->
@@ -681,6 +683,8 @@
     <string name="welcome_transfer_summary">Transfer data between devices through wifi\nHigh transfer speeds using android wifi direct</string>
     <!-- Welcome screen permission required -->
     <string name="welcome_permission">We need storage permissions to access your media files</string>
+    <!-- Notification screen permission required -->
+    <string name="notification_permission">We need notification permissions to show app operations</string>
     <!-- Welcome screen license agreement page -->
     <string name="before_we_start">Before we start…</string>
     <!-- Welcome screen license agreement page -->
@@ -960,6 +964,10 @@
     <string name="retention_bytes_title">Retention by data size</string>
     <!-- Retention bytes summary in trash bin settings -->
     <string name="retention_bytes_summary">Maximum data (in MBs) trash bin can store</string>
+    <!-- Cleanup trash bin settings -->
+    <string name="cleanup_interval_title">Cleanup interval</string>
+    <!-- Cleanup summary in trash bin settings -->
+    <string name="cleanup_interval_summary">Trigger auto-cleanup interval (hours)</string>
     <!-- Retention days title in trash bin settings -->
     <string name="retention_days_title">Retention by days</string>
     <!-- Retention days summary in trash bin settings -->
