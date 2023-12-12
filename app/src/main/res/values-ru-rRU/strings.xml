@@ -1016,4 +1016,12 @@
     <string name="analysis_compress_images">Compress Images</string>
     <!-- Analysis compress videos -->
     <string name="analysis_compress_videos">Compress Videos</string>
+    <!-- list fragments banner options hint -->
+    <string name="index">Index</string>
+    <!-- list fragments banner options hint -->
+    <string name="layout">Layout</string>
+    <!-- list fragments banner options hint -->
+    <string name="group_by">Group By</string>
+    <!-- list fragments banner options hint -->
+    <string name="sort_by">Sort By</string>
 </resources>

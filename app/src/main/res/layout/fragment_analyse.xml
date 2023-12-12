@@ -16,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         >
         <LinearLayout
+            android:id="@+id/analysis_parent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/eight_dp"

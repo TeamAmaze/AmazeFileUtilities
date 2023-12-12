@@ -13,6 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         >
         <LinearLayout
+            android:id="@+id/list_fragment_parent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".home_page.ui.files.FilesFragment"
