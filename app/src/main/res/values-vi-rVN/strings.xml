@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name"></string>
+    <string name="app_name">Amaze File Utilities</string>
     <!-- App name in launcher -->
     <string name="app_name_launcher">Amaze Utilities</string>
     <!-- App info shown in about screen -->

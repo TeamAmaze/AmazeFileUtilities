@@ -35,7 +35,7 @@
     <!-- Shown in welcome screen for first time -->
     <string name="grant_storage_read_permission">La aplicación necesita permisos de lectura de almacenamiento para un rendimiento óptimo.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_notification_permission">.</string>
+    <string name="grant_notification_permission">App needs notification permissions for optimal performance.</string>
     <!-- Shown in welcome screen for first time -->
     <string name="grant_permission">Otorgar permiso</string>
     <!-- Grant permission button for welcome screen -->
