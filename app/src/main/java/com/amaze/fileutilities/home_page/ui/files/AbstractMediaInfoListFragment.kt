@@ -20,6 +20,10 @@
 
 package com.amaze.fileutilities.home_page.ui.files
 
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +41,8 @@ import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader
 import com.bumptech.glide.util.ViewPreloadSizeProvider
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 abstract class AbstractMediaInfoListFragment :
     ItemsActionBarFragment(),
@@ -46,6 +52,7 @@ abstract class AbstractMediaInfoListFragment :
     private var linearLayoutManager: LinearLayoutManager? = null
     private var gridLayoutManager: GridLayoutManager? = null
     private val MAX_PRELOAD = 100
+    private var log: Logger = LoggerFactory.getLogger(AbstractMediaInfoListFragment::class.java)
 
     override fun onDestroyView() {
         getMediaAdapterPreloader().clear()
@@ -227,6 +234,25 @@ abstract class AbstractMediaInfoListFragment :
                 }, {
                     getRecyclerView().clearOnScrollListeners()
                     setupAdapter()
+                }, {
+                    when (getMediaListType()) {
+                        MediaFileAdapter.MEDIA_TYPE_IMAGES -> {
+                            getFilesViewModelObj().usedImagesSummaryTransformations = null
+                        }
+                        MediaFileAdapter.MEDIA_TYPE_DOCS -> {
+                            getFilesViewModelObj().usedDocsSummaryTransformations = null
+                        }
+                        MediaFileAdapter.MEDIA_TYPE_AUDIO -> {
+                            getFilesViewModelObj().usedAudiosSummaryTransformations = null
+                        }
+                        MediaFileAdapter.MEDIA_TYPE_VIDEO -> {
+                            getFilesViewModelObj().usedVideosSummaryTransformations = null
+                        }
+                        else -> {
+                            log.warn("unsupported operation to reset data on banner action")
+                        }
+                    }
+                    reloadFragment()
                 }
                 )
                 getRecyclerView().addOnScrollListener(recyclerViewPreloader)
@@ -246,7 +272,17 @@ abstract class AbstractMediaInfoListFragment :
                 val animator = DefaultItemAnimator()
                 getRecyclerView().itemAnimator = animator
                 getRecyclerView().adapter = mediaFileAdapter
+
+                val slideUpAnimation: Animation =
+                    AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up_fade_in)
+                getRecyclerView().startAnimation(slideUpAnimation)
+                getRecyclerView().visibility = View.VISIBLE
             }
         }
+    }
+    private fun reloadFragment() {
+        val navController = NavHostFragment.findNavController(this)
+        navController.popBackStack()
+        navController.navigate(R.id.navigation_files)
     }
 }

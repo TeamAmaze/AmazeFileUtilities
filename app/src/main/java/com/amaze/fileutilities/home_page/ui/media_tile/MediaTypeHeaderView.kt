@@ -67,10 +67,10 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(
     private val totalMediaFiles: TextView
     private val optionsParentLayout: LinearLayout
     private val optionsItemsScroll: HorizontalScrollView
-    private val optionsIndexImage: ImageView
-    private val optionsSwitchView: ImageView
-    private val optionsGroupView: ImageView
-    private val optionsSortView: ImageView
+    private val optionsIndexImage: LinearLayout
+    private val optionsSwitchView: LinearLayout
+    private val optionsGroupView: LinearLayout
+    private val optionsSortView: LinearLayout
     private val optionsListParent: LinearLayout
     private val optionsRecyclerViewParent: FrameLayout
     private val optionsRecyclerView: RecyclerView
@@ -174,7 +174,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(
         optionsMenuSelected: MediaFileAdapter.OptionsMenuSelected,
         headerListItems: MutableList<AbstractMediaFilesAdapter.ListItem>,
         sortingPreference: MediaFileListSorter.SortingPreference,
-        mediaListType: Int
+        mediaListType: Int,
+        reloadListCallback: () -> Unit
     ) {
         val adapter = MediaTypeViewOptionsListAdapter(
             context, headerListItems,
@@ -193,13 +194,15 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(
         optionsGroupView.setOnClickListener {
             clickOptionsGroupView(
                 optionsMenuSelected, sharedPreferences, sortingPreference,
-                mediaListType
+                mediaListType,
+                reloadListCallback
             )
         }
         optionsSortView.setOnClickListener {
             clickOptionsSortView(
                 optionsMenuSelected, sharedPreferences, sortingPreference,
-                mediaListType
+                mediaListType,
+                reloadListCallback
             )
         }
     }
@@ -227,17 +230,9 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(
                 PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
             )
         ) {
-            optionsSwitchView.setImageDrawable(
-                resources
-                    .getDrawable(R.drawable.ic_round_grid_on_32)
-            )
             listViewButton = getSelectedTextButton(resources.getString(R.string.list_view))
             gridViewButton = getUnSelectedTextButton(resources.getString(R.string.grid_view))
         } else {
-            optionsSwitchView.setImageDrawable(
-                resources
-                    .getDrawable(R.drawable.ic_round_grid_on_32)
-            )
             listViewButton = getUnSelectedTextButton(resources.getString(R.string.list_view))
             gridViewButton = getSelectedTextButton(resources.getString(R.string.grid_view))
         }
@@ -273,7 +268,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(
         optionsMenuSelected: MediaFileAdapter.OptionsMenuSelected,
         sharedPreferences: SharedPreferences,
         sortingPreference: MediaFileListSorter.SortingPreference,
-        mediaListType: Int
+        mediaListType: Int,
+        reloadListCallback: () -> Unit
     ) {
         clearOptionItemsBackgrounds()
         optionsRecyclerViewParent.hideFade(300)
@@ -292,13 +288,16 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(
                 getSelectedTextButton(
                     MediaFileListSorter.getGroupNameByType(
                         groupByType,
+                        isAsc,
                         resources
                     )
                 )
             } else {
                 getUnSelectedTextButton(
+                    // unselected buttons will always show ascending
                     MediaFileListSorter.getGroupNameByType(
                         groupByType,
+                        true,
                         resources
                     )
                 )
@@ -324,6 +323,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(
                 ).commit()
                 sortingPreference.isGroupByAsc = isAsc
                 optionsMenuSelected.groupBy(sortingPreference)
+                reloadListCallback()
             }
             buttonsList.add(button)
         }
@@ -336,7 +336,8 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(
         optionsMenuSelected: MediaFileAdapter.OptionsMenuSelected,
         sharedPreferences: SharedPreferences,
         sortingPreference: MediaFileListSorter.SortingPreference,
-        mediaListType: Int
+        mediaListType: Int,
+        reloadListCallback: () -> Unit
     ) {
         clearOptionItemsBackgrounds()
         optionsRecyclerViewParent.hideFade(300)
@@ -355,13 +356,16 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(
                 getSelectedTextButton(
                     MediaFileListSorter.getSortNameByType(
                         sortByType,
+                        isAsc,
                         resources
                     )
                 )
             } else {
                 getUnSelectedTextButton(
+                    // unselected buttons will always show ascending
                     MediaFileListSorter.getSortNameByType(
                         sortByType,
+                        true,
                         resources
                     )
                 )
@@ -387,6 +391,7 @@ class MediaTypeHeaderView(context: Context, attrs: AttributeSet?) : FrameLayout(
                 ).apply()
                 sortingPreference.isSortByAsc = isAsc
                 optionsMenuSelected.sortBy(sortingPreference)
+                reloadListCallback()
             }
             buttonsList.add(button)
         }
