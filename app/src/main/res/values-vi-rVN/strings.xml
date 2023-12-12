@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Amaze File Utilities</string>
+    <string name="app_name"></string>
     <!-- App name in launcher -->
     <string name="app_name_launcher">Amaze Utilities</string>
     <!-- App info shown in about screen -->
@@ -1017,4 +1017,12 @@
     <string name="analysis_compress_images">Compress Images</string>
     <!-- Analysis compress videos -->
     <string name="analysis_compress_videos">Compress Videos</string>
+    <!-- list fragments banner options hint -->
+    <string name="index">Index</string>
+    <!-- list fragments banner options hint -->
+    <string name="layout">Layout</string>
+    <!-- list fragments banner options hint -->
+    <string name="group_by">Group By</string>
+    <!-- list fragments banner options hint -->
+    <string name="sort_by">Sort By</string>
 </resources>

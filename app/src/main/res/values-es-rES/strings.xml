@@ -35,7 +35,7 @@
     <!-- Shown in welcome screen for first time -->
     <string name="grant_storage_read_permission">La aplicación necesita permisos de lectura de almacenamiento para un rendimiento óptimo.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_notification_permission">App needs notification permissions for optimal performance.</string>
+    <string name="grant_notification_permission">.</string>
     <!-- Shown in welcome screen for first time -->
     <string name="grant_permission">Otorgar permiso</string>
     <!-- Grant permission button for welcome screen -->
@@ -1018,4 +1018,12 @@
     <string name="analysis_compress_images">Compress Images</string>
     <!-- Analysis compress videos -->
     <string name="analysis_compress_videos">Compress Videos</string>
+    <!-- list fragments banner options hint -->
+    <string name="index">Index</string>
+    <!-- list fragments banner options hint -->
+    <string name="layout">Layout</string>
+    <!-- list fragments banner options hint -->
+    <string name="group_by">Group By</string>
+    <!-- list fragments banner options hint -->
+    <string name="sort_by">Sort By</string>
 </resources>

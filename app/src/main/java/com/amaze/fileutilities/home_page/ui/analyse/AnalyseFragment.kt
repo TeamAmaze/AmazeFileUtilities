@@ -29,6 +29,8 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
@@ -659,6 +661,10 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     analyseViewModel.fragmentScrollPosition = null
                 }, 1000)
             }
+            val slideUpAnimation: Animation =
+                AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up_fade_in)
+            binding.analysisParent.startAnimation(slideUpAnimation)
+            binding.analysisParent.visibility = View.VISIBLE
         }
         return root
     }
