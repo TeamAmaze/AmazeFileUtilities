@@ -181,26 +181,28 @@ class MediaFileListSorter(private val sortingPreference: SortingPreference) :
             Collections.sort(mediaFileList, MediaFileListSorter(sortingPreference))
         }
 
-        fun getGroupNameByType(groupType: Int, resources: Resources): String {
-            return when (groupType) {
+        fun getGroupNameByType(groupType: Int, isAsc: Boolean, resources: Resources): String {
+            val text = when (groupType) {
                 GROUP_PARENT -> resources.getString(R.string.parent)
                 GROUP_NAME -> resources.getString(R.string.name)
                 GROUP_DATE -> resources.getString(R.string.date)
                 GROUP_ALBUM -> resources.getString(R.string.album)
                 GROUP_ARTIST -> resources.getString(R.string.artist)
                 GROUP_PLAYLISTS -> resources.getString(R.string.playlists)
-                else -> ""
+                else -> return ""
             }
+            return text.plus(if (!isAsc) " ↑" else " ↓")
         }
 
-        fun getSortNameByType(sortBy: Int, resources: Resources): String {
-            return when (sortBy) {
+        fun getSortNameByType(sortBy: Int, isAsc: Boolean, resources: Resources): String {
+            val text = when (sortBy) {
                 SORT_NAME -> resources.getString(R.string.name)
                 SORT_SIZE -> resources.getString(R.string.size)
                 SORT_MODIF -> resources.getString(R.string.date)
                 SORT_LENGTH -> resources.getString(R.string.duration)
-                else -> ""
+                else -> return ""
             }
+            return text.plus(if (!isAsc) " ↑" else " ↓")
         }
     }
 

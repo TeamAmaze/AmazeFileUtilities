@@ -144,42 +144,96 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_gravity="bottom|center_horizontal"
-            android:gravity="center_horizontal"
             android:layout_marginTop="@dimen/material_generic_medium"
             android:layout_marginBottom="@dimen/material_generic"
             android:paddingLeft="@dimen/material_generic"
             android:paddingRight="@dimen/material_generic"
             android:weightSum="1"
             >
-            <ImageView
+            <LinearLayout
                 android:id="@+id/index_image"
-                android:layout_width="@dimen/zero_dp"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_round_playlist_add_circle_32"
-                android:layout_weight="0.25"
-                />
-            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="0.25">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_round_playlist_add_circle_32"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/twelve_sp"
+                    android:textColor="@color/white"
+                    android:text="@string/index"
+                    android:gravity="center_horizontal"
+                    />
+            </LinearLayout>
+            <LinearLayout
                 android:id="@+id/switch_view"
-                android:layout_width="@dimen/zero_dp"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_round_grid_on_32"
-                android:layout_weight="0.25"
-                />
-            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="0.25">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_round_grid_on_32"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/twelve_sp"
+                    android:textColor="@color/white"
+                    android:text="@string/layout"
+                    android:gravity="center_horizontal"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/group_view"
-                android:layout_width="@dimen/zero_dp"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_baseline_group_work_32"
-                android:layout_weight="0.25"
-                />
-            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_gravity="bottom|center_horizontal"
+                android:gravity="center_horizontal"
+                android:layout_weight="0.25">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_baseline_group_work_32"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/twelve_sp"
+                    android:textColor="@color/white"
+                    android:text="@string/group_by"
+                    android:gravity="center_horizontal"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/sort_view"
-                android:layout_width="@dimen/zero_dp"
-                android:layout_height="wrap_content"
-                app:srcCompat="@drawable/ic_round_sort_32"
-                android:layout_weight="0.25"
-                />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="0.25">
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@drawable/ic_round_sort_32"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/twelve_sp"
+                    android:textColor="@color/white"
+                    android:text="@string/sort_by"
+                    android:gravity="center_horizontal"
+                    />
+            </LinearLayout>
         </LinearLayout>
 
         <FrameLayout

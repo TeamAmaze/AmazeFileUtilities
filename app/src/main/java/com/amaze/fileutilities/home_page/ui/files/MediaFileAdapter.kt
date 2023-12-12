@@ -57,7 +57,8 @@ class MediaFileAdapter(
         ((item: MenuItem, actionItems: List<MediaFileInfo>) -> Unit)?,
     // callback called if we want to refresh data when user tries to switch groupping / sorting
     // eg. in case of audio player we would want to utilise different dataset for playlists
-    private val invalidateDataCallback: (() -> Unit)?
+    private val invalidateDataCallback: (() -> Unit)?,
+    private val reloadListCallback: () -> Unit
 ) : AbstractMediaFilesAdapter(
     context,
     preloader, isGrid, listItemPressedCallback, toggleCheckCallback
@@ -83,10 +84,6 @@ class MediaFileAdapter(
             preloader.clear()
             onlyItemsCounts = 0
             headerListItems.clear()
-            MediaFileListSorter.generateMediaFileListHeadersAndSort(
-                context,
-                mediaFileInfoList, sortingPreference
-            )
             var lastHeader: String? = null
             value.add(ListItem(TYPE_BANNER))
             preloader.addItem("")
@@ -375,7 +372,9 @@ class MediaFileAdapter(
         holder.mediaTypeHeaderView.initOptionsItems(
             optionsMenuSelected, headerListItems,
             sortingPreference, mediaListType
-        )
+        ) {
+            reloadListCallback()
+        }
         drawBannerCallback.invoke(holder.mediaTypeHeaderView)
     }
 
