@@ -130,9 +130,10 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL(
                     "CREATE TABLE IF NOT EXISTS `AppStorageStats` " +
                         "(`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                        "`package_id` INTEGER NOT NULL, " + // see `InstalledApps._id`
                         "`timestamp` LONG NOT NULL, " +
-                        "`package_size` LONG NOT NULL)"
+                        "`package_size` LONG NOT NULL," +
+                        "FOREIGN KEY(`package_id`) REFERENCES `InstalledApps`(`_id`) ON UPDATE " +
+                        "CASCADE ON DELETE NO ACTION)"
                 )
                 database.execSQL(
                     "CREATE INDEX IF NOT EXISTS `index_AppStorageStats_package_id`" +

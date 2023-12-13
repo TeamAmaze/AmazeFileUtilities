@@ -24,6 +24,7 @@ import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.ForeignKey.CASCADE
 import androidx.room.ForeignKey.NO_ACTION
 import androidx.room.Ignore
 import androidx.room.Index
@@ -37,7 +38,8 @@ import java.util.Date
             entity = InstalledApps::class,
             parentColumns = ["_id"],
             childColumns = ["package_id"],
-            onDelete = NO_ACTION
+            onDelete = NO_ACTION,
+            onUpdate = CASCADE
         )
     ]
 )
