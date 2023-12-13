@@ -34,7 +34,7 @@ import com.amaze.fileutilities.utilis.DbConverters
         ImageAnalysis::class, InternalStorageAnalysis::class, PathPreferences::class,
         BlurAnalysis::class, LowLightAnalysis::class, MemeAnalysis::class, VideoPlayerState::class,
         Trial::class, Lyrics::class, InstalledApps::class, SimilarImagesAnalysis::class,
-        SimilarImagesAnalysisMetadata::class
+        SimilarImagesAnalysisMetadata::class, AppStorageStats::class
     ],
     exportSchema = true,
     version = 5

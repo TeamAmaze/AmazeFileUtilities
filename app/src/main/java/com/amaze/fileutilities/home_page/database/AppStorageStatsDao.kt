@@ -28,25 +28,25 @@ import androidx.room.Transaction
 import java.util.Date
 
 @Dao
-interface AppStorageStatsDao {
-    fun installedAppsDao(): InstalledAppsDao
+abstract class AppStorageStatsDao(database: AppDatabase) {
+    private val installedAppsDao: InstalledAppsDao = database.installedAppsDao()
 
     @Query("SELECT * FROM AppStorageStats")
-    fun findAll(): List<AppStorageStats>
+    abstract fun findAll(): List<AppStorageStats>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(appStorageStats: List<AppStorageStats>)
+    abstract fun insert(appStorageStats: List<AppStorageStats>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(appStorageStats: AppStorageStats)
+    abstract fun insert(appStorageStats: AppStorageStats)
 
     /**
      * Inserts a new [AppStorageStats] associated with the [packageName] and containing [timestamp]
      * and [size]
      */
     @Transaction
-    fun insert(packageName: String, timestamp: Date, size: Long) {
-        val app = installedAppsDao().findByPackageName(packageName)
+    open fun insert(packageName: String, timestamp: Date, size: Long) {
+        val app = installedAppsDao.findByPackageName(packageName)
         if (app != null) {
             val appStorageStats = AppStorageStats(app.uid, timestamp, size)
             insert(appStorageStats)
@@ -54,5 +54,5 @@ interface AppStorageStatsDao {
     }
 
     @Query("DELETE FROM AppStorageStats WHERE timestamp < :date")
-    fun deleteOlderThan(date: Date)
+    abstract fun deleteOlderThan(date: Date)
 }
