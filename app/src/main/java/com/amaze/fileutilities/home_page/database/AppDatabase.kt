@@ -136,8 +136,8 @@ abstract class AppDatabase : RoomDatabase() {
                         "CASCADE ON DELETE NO ACTION)"
                 )
                 database.execSQL(
-                    "CREATE INDEX IF NOT EXISTS `index_AppStorageStats_package_id`" +
-                        " ON `AppStorageStats` (`package_id`)"
+                    "CREATE INDEX IF NOT EXISTS `index_AppStorageStats_timestamp_package_id`" +
+                        " ON `AppStorageStats` (`timestamp`,`package_id`)"
                 )
             }
         }
