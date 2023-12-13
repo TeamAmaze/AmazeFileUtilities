@@ -20,30 +20,11 @@
 
 package com.amaze.fileutilities.home_page.database
 
-import androidx.room.Dao
-import androidx.room.Query
-import androidx.room.Transaction
+import androidx.room.ColumnInfo
 import java.util.Date
 
-@Dao
-interface StorageStatsPerAppDao {
-    @Transaction
-    @Query("SELECT * FROM InstalledApps")
-    fun findAll(): List<StorageStatsPerApp>
-
-    @Transaction
-    @Query("SELECT * FROM InstalledApps WHERE package_name=:packageName")
-    fun findByPackageName(packageName: String): StorageStatsPerApp?
-
-    @Transaction
-    fun findByDay(dayStart: Date, dayEnd: Date): List<StorageStatsPerApp> {
-        val all = findAll()
-        return all.map { storageStatsPerApp ->
-            storageStatsPerApp.copy(
-                appStorageStats = storageStatsPerApp.appStorageStats.filter {
-                    it.timestamp.after(dayStart) && it.timestamp.before(dayEnd)
-                }
-            )
-        }
-    }
-}
+data class StorageStatToAppName(
+    @ColumnInfo(name = "package_name") val packageName: String,
+    @ColumnInfo(name = "timestamp") val timestamp: Date,
+    @ColumnInfo(name = "package_size") val packageSize: Long
+)
