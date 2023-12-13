@@ -72,6 +72,7 @@ import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.home_page.ui.options.Billing
 import com.amaze.fileutilities.utilis.CursorUtils
 import com.amaze.fileutilities.utilis.FileUtils
+import com.amaze.fileutilities.utilis.FixedSizePriorityQueue
 import com.amaze.fileutilities.utilis.ImgUtils
 import com.amaze.fileutilities.utilis.MLUtils
 import com.amaze.fileutilities.utilis.PreferencesConstants
@@ -112,7 +113,6 @@ import java.util.Calendar
 import java.util.Collections
 import java.util.Date
 import java.util.GregorianCalendar
-import java.util.PriorityQueue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.streams.toList
@@ -1671,7 +1671,7 @@ class FilesViewModel(val applicationContext: Application) :
         viewModelScope.launch(Dispatchers.IO) {
             loadAllInstalledApps(packageManager)
 
-            val priorityQueue = PriorityQueue<MediaFileInfo>(
+            val priorityQueue = FixedSizePriorityQueue<MediaFileInfo>(
                 50
             ) { o1, o2 ->
                 o2.extraInfo?.apkMetaData?.networkBytes?.let {
@@ -1681,10 +1681,7 @@ class FilesViewModel(val applicationContext: Application) :
                 } ?: 0
             }
 
-            allApps.get()?.forEachIndexed { index, applicationInfo ->
-                if (index > 49 && priorityQueue.isNotEmpty()) {
-                    priorityQueue.remove()
-                }
+            allApps.get()?.forEach { applicationInfo ->
                 MediaFileInfo.fromApplicationInfo(
                     applicationContext, applicationInfo.first,
                     applicationInfo.second
@@ -1832,14 +1829,11 @@ class FilesViewModel(val applicationContext: Application) :
         viewModelScope.launch(Dispatchers.IO) {
             loadAllInstalledApps(packageManager)
 
-            val priorityQueue = PriorityQueue<MediaFileInfo>(
+            val priorityQueue = FixedSizePriorityQueue<MediaFileInfo>(
                 50
             ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
 
-            allApps.get()?.forEachIndexed { index, applicationInfo ->
-                if (index > 49 && priorityQueue.isNotEmpty()) {
-                    priorityQueue.remove()
-                }
+            allApps.get()?.forEach { applicationInfo ->
                 MediaFileInfo.fromApplicationInfo(
                     applicationContext, applicationInfo.first,
                     applicationInfo.second
@@ -1876,7 +1870,7 @@ class FilesViewModel(val applicationContext: Application) :
                 PreferencesConstants.DEFAULT_NEWLY_INSTALLED_APPS_DAYS
             )
             val pastDate = LocalDateTime.now().minusDays(days.toLong())
-            val priorityQueue = PriorityQueue<MediaFileInfo>(
+            val priorityQueue = FixedSizePriorityQueue<MediaFileInfo>(
                 50
             ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
 
@@ -1885,10 +1879,7 @@ class FilesViewModel(val applicationContext: Application) :
                 val installDateTime = Instant.ofEpochMilli(it.second?.firstInstallTime!!)
                     .atZone(ZoneId.systemDefault()).toLocalDate()
                 installDateTime.isAfter(pastDate.toLocalDate())
-            }?.forEachIndexed { index, applicationInfo ->
-                if (index > 49 && priorityQueue.isNotEmpty()) {
-                    priorityQueue.remove()
-                }
+            }?.forEach { applicationInfo ->
                 MediaFileInfo.fromApplicationInfo(
                     applicationContext, applicationInfo.first,
                     applicationInfo.second
@@ -1925,7 +1916,7 @@ class FilesViewModel(val applicationContext: Application) :
                 PreferencesConstants.DEFAULT_RECENTLY_UPDATED_APPS_DAYS
             )
             val pastDate = LocalDateTime.now().minusDays(days.toLong())
-            val priorityQueue = PriorityQueue<MediaFileInfo>(
+            val priorityQueue = FixedSizePriorityQueue<MediaFileInfo>(
                 50
             ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
 
@@ -1934,10 +1925,7 @@ class FilesViewModel(val applicationContext: Application) :
                 val updateDateTime = Instant.ofEpochMilli(it.second?.lastUpdateTime!!)
                     .atZone(ZoneId.systemDefault()).toLocalDate()
                 updateDateTime.isAfter(pastDate.toLocalDate())
-            }?.forEachIndexed { index, applicationInfo ->
-                if (index > 49 && priorityQueue.isNotEmpty()) {
-                    priorityQueue.remove()
-                }
+            }?.forEach { applicationInfo ->
                 MediaFileInfo.fromApplicationInfo(
                     applicationContext, applicationInfo.first,
                     applicationInfo.second
@@ -2169,7 +2157,7 @@ class FilesViewModel(val applicationContext: Application) :
         paths: List<String>,
         limit: Int
     ): ArrayList<MediaFileInfo> {
-        val priorityQueue = PriorityQueue(limit, sortBy)
+        val priorityQueue = FixedSizePriorityQueue(limit, sortBy)
         if (allMediaFilesPair == null) {
             allMediaFilesPair = CursorUtils.listAll(applicationContext)
         }
@@ -2179,9 +2167,6 @@ class FilesViewModel(val applicationContext: Application) :
                 it.path.contains(pathPref, true)
             }
         }?.forEach {
-            if (priorityQueue.isNotEmpty() && priorityQueue.size > limit - 1) {
-                priorityQueue.remove()
-            }
             priorityQueue.add(it)
         }
 

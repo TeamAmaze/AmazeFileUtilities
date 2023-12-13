@@ -39,6 +39,7 @@ import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysis
 import com.amaze.fileutilities.home_page.database.SimilarImagesAnalysisDao
 import com.amaze.fileutilities.home_page.ui.files.MediaFileInfo
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
+import com.amaze.fileutilities.utilis.FixedSizePriorityQueue
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.invalidate
 import kotlinx.coroutines.Dispatchers
@@ -287,13 +288,10 @@ class AnalyseViewModel : ViewModel() {
 
     private fun processLargeVideos(videosList: List<MediaFileInfo>) {
         viewModelScope.launch(Dispatchers.IO) {
-            val priorityQueue = PriorityQueue<MediaFileInfo>(
+            val priorityQueue = FixedSizePriorityQueue<MediaFileInfo>(
                 100
             ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
-            videosList.forEachIndexed { index, mediaFileInfo ->
-                if (index > 99) {
-                    priorityQueue.remove()
-                }
+            videosList.forEach { mediaFileInfo ->
                 priorityQueue.add(mediaFileInfo)
             }
             val result = ArrayList<MediaFileInfo>()
