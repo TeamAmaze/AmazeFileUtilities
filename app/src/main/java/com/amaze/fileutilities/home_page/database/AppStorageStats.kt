@@ -44,7 +44,7 @@ import java.util.Date
     ]
 )
 @Keep
-data class AppStorageStat(
+data class AppStorageStats(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
     val uid: Int,
