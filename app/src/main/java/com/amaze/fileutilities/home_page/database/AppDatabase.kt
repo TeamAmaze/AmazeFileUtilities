@@ -53,6 +53,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun trialValidatorDao(): TrialValidatorDao
     abstract fun installedAppsDao(): InstalledAppsDao
     abstract fun lyricsDao(): LyricsDao
+    abstract fun appStorageStatsDao(): AppStorageStatsDao
+    abstract fun storageStatsPerAppDao(): StorageStatToAppNameDao
 
     companion object {
         private var appDatabase: AppDatabase? = null
