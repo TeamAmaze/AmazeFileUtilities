@@ -154,6 +154,19 @@ data class MediaFileInfo(
             if (applicationInfo.sourceDir == null) {
                 return null
             }
+            val size = Utils.findApplicationInfoSize(context, applicationInfo)
+            return fromApplicationInfoWithSize(context, applicationInfo, packageInfo, size)
+        }
+
+        fun fromApplicationInfoWithSize(
+            context: Context,
+            applicationInfo: ApplicationInfo,
+            packageInfo: PackageInfo?,
+            size: Long
+        ): MediaFileInfo? {
+            if (applicationInfo.sourceDir == null) {
+                return null
+            }
             try {
                 val apkFile = File(applicationInfo.sourceDir)
                 val packageManager = context.packageManager
@@ -162,7 +175,8 @@ data class MediaFileInfo(
                     applicationInfo.loadLabel(packageManager) as String,
                     applicationInfo.sourceDir,
                     apkFile.lastModified(),
-                    Utils.findApplicationInfoSize(context, applicationInfo), false
+                    size,
+                    false
                 )
                 val extraInfo = ExtraInfo(
                     MEDIA_TYPE_APK,
