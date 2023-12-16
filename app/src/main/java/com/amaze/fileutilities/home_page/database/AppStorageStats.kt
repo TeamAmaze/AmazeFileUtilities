@@ -32,7 +32,10 @@ import androidx.room.PrimaryKey
 import java.util.Date
 
 @Entity(
-    indices = [Index(value = ["timestamp", "package_id"], unique = false)],
+    indices = [
+        Index(value = ["timestamp", "package_id"], unique = false),
+        Index(value = ["package_id"], unique = false) // separate index because it is foreign key
+    ],
     foreignKeys = [
         ForeignKey(
             entity = InstalledApps::class,

@@ -65,7 +65,7 @@ abstract class AppDatabase : RoomDatabase() {
                     applicationContext,
                     AppDatabase::class.java, "amaze-utils"
                 ).allowMainThreadQueries()
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                     .build()
             }
             return appDatabase!!
@@ -132,14 +132,19 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL(
                     "CREATE TABLE IF NOT EXISTS `AppStorageStats` " +
                         "(`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                        "`timestamp` LONG NOT NULL, " +
-                        "`package_size` LONG NOT NULL," +
+                        "`package_id` INTEGER NOT NULL, " +
+                        "`timestamp` INTEGER NOT NULL, " +
+                        "`package_size` INTEGER NOT NULL," +
                         "FOREIGN KEY(`package_id`) REFERENCES `InstalledApps`(`_id`) ON UPDATE " +
                         "CASCADE ON DELETE NO ACTION)"
                 )
                 database.execSQL(
                     "CREATE INDEX IF NOT EXISTS `index_AppStorageStats_timestamp_package_id`" +
                         " ON `AppStorageStats` (`timestamp`,`package_id`)"
+                )
+                database.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_AppStorageStats_package_id`" +
+                        " ON `AppStorageStats` (`package_id`)"
                 )
             }
         }
