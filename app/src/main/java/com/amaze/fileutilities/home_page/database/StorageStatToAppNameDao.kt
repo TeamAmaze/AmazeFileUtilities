@@ -63,5 +63,5 @@ interface StorageStatToAppNameDao {
         packageName: String,
         periodStart: Date,
         periodEnd: Date
-    ): StorageStatToAppName
+    ): StorageStatToAppName?
 }
