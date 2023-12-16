@@ -72,6 +72,10 @@ class FilesFragment : ItemsActionBarFragment() {
             false
         )
         val root: View = binding.root
+        val slideUpAnimation: Animation =
+            AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up_fade_in)
+        binding.listFragmentParent.startAnimation(slideUpAnimation)
+        binding.listFragmentParent.visibility = View.VISIBLE
         // needed to avoid NPE in progress library when closing activity
         binding.storagePercent.isSaveEnabled = false
         filesViewModel.run {
@@ -370,10 +374,6 @@ class FilesFragment : ItemsActionBarFragment() {
         }
 
         binding.storagePercent.setAdaptiveColorProvider(colorProvider)
-        val slideUpAnimation: Animation =
-            AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up_fade_in)
-        binding.listFragmentParent.startAnimation(slideUpAnimation)
-        binding.listFragmentParent.visibility = View.VISIBLE
         return root
     }
 
