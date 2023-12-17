@@ -38,6 +38,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.WifiP2PActivity
@@ -56,6 +59,7 @@ import com.amaze.fileutilities.home_page.ui.settings.PreferenceActivity
 import com.amaze.fileutilities.home_page.ui.transfer.TransferFragment
 import com.amaze.fileutilities.utilis.ItemsActionBarFragment
 import com.amaze.fileutilities.utilis.PreferencesConstants
+import com.amaze.fileutilities.utilis.QueryAppSizeWorker
 import com.amaze.fileutilities.utilis.UpdateChecker
 import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
@@ -70,6 +74,7 @@ import com.stephentuso.welcome.WelcomeHelper
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.Date
+import java.util.concurrent.TimeUnit
 
 class MainActivity :
     WifiP2PActivity(),
@@ -250,6 +255,15 @@ class MainActivity :
                 .edit().putLong(PreferencesConstants.KEY_INSTALL_DATE, Date().time)
                 .apply()
         }
+
+        // schedule PeriodicWorkRequest to store the size of each app in the database every day
+        val periodicWorkRequest = PeriodicWorkRequestBuilder<QueryAppSizeWorker>(
+            24,
+            TimeUnit.HOURS
+        ).build()
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            QueryAppSizeWorker.NAME, ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
