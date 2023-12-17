@@ -109,6 +109,7 @@ import java.nio.charset.Charset
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.Calendar
 import java.util.Collections
 import java.util.Date
@@ -140,6 +141,7 @@ class FilesViewModel(val applicationContext: Application) :
     var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var newlyInstalledAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var recentlyUpdatedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var largeSizeDiffAppsLiveData: MutableLiveData<MutableList<MediaFileInfo>?>? = null
     var junkFilesLiveData: MutableLiveData<Pair<ArrayList<MediaFileInfo>, String>?>? = null
     var apksLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var hiddenFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
@@ -1941,6 +1943,63 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
             recentlyUpdatedAppsLiveData?.postValue(ArrayList(result.reversed()))
+        }
+    }
+
+    fun getLargeSizeDiffApps(): LiveData<MutableList<MediaFileInfo>?> {
+        if (largeSizeDiffAppsLiveData == null) {
+            largeSizeDiffAppsLiveData = MutableLiveData()
+            largeSizeDiffAppsLiveData?.value = null
+            processLargeSizeDiffApps(applicationContext.packageManager)
+        }
+        return largeSizeDiffAppsLiveData!!
+    }
+
+    private fun processLargeSizeDiffApps(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+            val sharedPrefs = applicationContext.getAppCommonSharedPreferences()
+            val days = sharedPrefs.getInt(
+                PreferencesConstants.KEY_LARGE_SIZE_DIFF_APPS_DAYS,
+                PreferencesConstants.DEFAULT_LARGE_SIZE_DIFF_APPS_DAYS
+            )
+            val pastDate = LocalDateTime.now().minusDays(days.toLong()).toLocalDate()
+            val periodStart = Date.from(pastDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+            val periodEnd = Date.from(ZonedDateTime.now().toInstant())
+
+            val dao = AppDatabase.getInstance(applicationContext).storageStatsPerAppDao()
+
+            val priorityQueue = FixedSizePriorityQueue<MediaFileInfo>(50) { o1, o2 ->
+                val diff1 = o1.extraInfo?.apkMetaData?.sizeDiff ?: 0
+                val diff2 = o2.extraInfo?.apkMetaData?.sizeDiff ?: 0
+                diff1.compareTo(diff2)
+            }
+
+            allApps.get()?.forEach { (applicationInfo, packageInfo) ->
+                val storageStatToAppName = dao.findOldestWithinPeriod(
+                    applicationInfo.packageName,
+                    periodStart,
+                    periodEnd
+                )
+                if (storageStatToAppName != null) {
+                    val currentPackageSize =
+                        Utils.findApplicationInfoSize(applicationContext, applicationInfo)
+                    val sizeDiff = currentPackageSize - storageStatToAppName.packageSize
+                    if (sizeDiff > 0) {
+                        MediaFileInfo
+                            .fromApplicationInfo(
+                                applicationContext,
+                                applicationInfo,
+                                packageInfo,
+                                sizeDiff
+                            )
+                            ?.let { priorityQueue.add(it) }
+                    }
+                }
+            }
+
+            val result = priorityQueue.reversed()
+            largeSizeDiffAppsLiveData?.postValue(result.toMutableList())
         }
     }
 
