@@ -1959,12 +1959,16 @@ class FilesViewModel(val applicationContext: Application) :
         viewModelScope.launch(Dispatchers.IO) {
             loadAllInstalledApps(packageManager)
             val sharedPrefs = applicationContext.getAppCommonSharedPreferences()
+            // Get the number of days which the analysis should consider
             val days = sharedPrefs.getInt(
                 PreferencesConstants.KEY_LARGE_SIZE_DIFF_APPS_DAYS,
                 PreferencesConstants.DEFAULT_LARGE_SIZE_DIFF_APPS_DAYS
             )
             val pastDate = LocalDateTime.now().minusDays(days.toLong()).toLocalDate()
+            // The start of the last number of days as specified in the preferences
+            // It is the start of the search period
             val periodStart = Date.from(pastDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+            // The end of the search period is now
             val periodEnd = Date.from(ZonedDateTime.now().toInstant())
 
             val dao = AppDatabase.getInstance(applicationContext).storageStatsPerAppDao()
@@ -1976,16 +1980,19 @@ class FilesViewModel(val applicationContext: Application) :
             }
 
             allApps.get()?.forEach { (applicationInfo, packageInfo) ->
+                // Find the oldest entry for the app within the last number of days
                 val storageStatToAppName = dao.findOldestWithinPeriod(
                     applicationInfo.packageName,
                     periodStart,
                     periodEnd
                 )
                 if (storageStatToAppName != null) {
+                    // Calculate the size difference compared to the app size now
                     val currentPackageSize =
                         Utils.findApplicationInfoSize(applicationContext, applicationInfo)
                     val sizeDiff = currentPackageSize - storageStatToAppName.packageSize
                     if (sizeDiff > 0) {
+                        // If the app size grew, add it to the priority queue
                         MediaFileInfo
                             .fromApplicationInfo(
                                 applicationContext,

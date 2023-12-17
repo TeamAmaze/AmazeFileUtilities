@@ -92,7 +92,9 @@ class ReviewAnalysisAdapter(
                                     .formatStorageLength(context, sizeDiff)
                                 }"
                             val extra = "${context.getString(R.string.size_total)}: $totalSize"
+                            // Show the size increase in `infoSummary`
                             holder.infoSummary.text = summary
+                            // Show total size in `extraInfo`
                             holder.extraInfo.text = extra
                         } else {
                             holder.infoSummary.text = totalSize

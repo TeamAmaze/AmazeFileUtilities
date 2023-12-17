@@ -96,6 +96,8 @@ class PreferencesConstants {
         const val DEFAULT_RECENTLY_UPDATED_APPS_DAYS = 7
         const val DEFAULT_LARGE_SIZE_DIFF_APPS_DAYS = 7
 
+        // max days that the size is stored in database and
+        // therefore the max days that the size diff can be calculated
         const val MAX_LARGE_SIZE_DIFF_APPS_DAYS = 180
     }
 }
