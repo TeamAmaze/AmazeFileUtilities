@@ -613,6 +613,18 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     }
                 }
             }
+            filesViewModel.getLargeSizeDiffApps()
+                .observe(viewLifecycleOwner) { mediaFileInfoList ->
+                    largeSizeDiffAppsPreview.invalidateProgress(true, null)
+                    mediaFileInfoList?.let {
+                        largeSizeDiffAppsPreview.invalidateProgress(false, null)
+                        largeSizeDiffAppsPreview.loadPreviews(mediaFileInfoList) {
+                            cleanButtonClick(it, true) {
+                                filesViewModel.largeSizeDiffAppsLiveData = null
+                            }
+                        }
+                    }
+                }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 gamesPreview.visibility = View.VISIBLE
@@ -1019,6 +1031,13 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 shouldCallbackAppUninstall = false
                 ReviewImagesFragment.newInstance(
                     ReviewImagesFragment.TYPE_RECENTLY_UPDATED_APPS,
+                    this@AnalyseFragment
+                )
+            }
+            largeSizeDiffAppsPreview.setOnClickListener {
+                shouldCallbackAppUninstall = false
+                ReviewImagesFragment.newInstance(
+                    ReviewImagesFragment.TYPE_LARGE_SIZE_DIFF_APPS,
                     this@AnalyseFragment
                 )
             }
