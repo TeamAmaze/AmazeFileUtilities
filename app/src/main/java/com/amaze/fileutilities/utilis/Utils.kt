@@ -1239,12 +1239,17 @@ class Utils {
             summary: String,
             days: Long,
             callback: (Long?) -> Unit,
-            neutralCallback: () -> Unit
+            max: Long? = null,
+            neutralCallback: (() -> Unit)? = null
         ) {
             val inputEditTextViewPair = getEditTextViewForDialog(context, "$days")
             inputEditTextViewPair.second.inputType = InputType.TYPE_CLASS_NUMBER
             inputEditTextViewPair.second.setText("$days")
-            val dialog = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            if (max != null) {
+                inputEditTextViewPair.second.filters = arrayOf(InputFilterMinMaxLong(1, max))
+            }
+
+            val dialogBuilder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
                 .setTitle(title)
                 .setMessage(summary)
                 .setView(inputEditTextViewPair.first)
@@ -1258,10 +1263,14 @@ class Utils {
                     R.string.cancel
                 ) { dialog, _ ->
                     dialog.dismiss()
-                }.setNeutralButton(R.string.default_alert_dialog) { dialog, _ ->
+                }
+            if (neutralCallback != null) {
+                dialogBuilder.setNeutralButton(R.string.default_alert_dialog) { dialog, _ ->
                     neutralCallback.invoke()
                     dialog.dismiss()
-                }.create()
+                }
+            }
+            val dialog = dialogBuilder.create()
             dialog.show()
         }
 
