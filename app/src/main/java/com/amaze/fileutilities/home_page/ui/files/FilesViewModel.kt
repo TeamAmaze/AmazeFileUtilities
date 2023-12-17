@@ -2387,7 +2387,7 @@ class FilesViewModel(val applicationContext: Application) :
                 InstalledApps(it.first.packageName, listOf(it.first.sourceDir, it.first.dataDir))
             }
             val dao = AppDatabase.getInstance(applicationContext).installedAppsDao()
-            dao.insert(installedApps)
+            dao.updateOrInsert(installedApps)
         }
     }
 

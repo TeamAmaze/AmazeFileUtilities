@@ -136,7 +136,7 @@ abstract class AppDatabase : RoomDatabase() {
                         "`timestamp` INTEGER NOT NULL, " +
                         "`package_size` INTEGER NOT NULL," +
                         "FOREIGN KEY(`package_id`) REFERENCES `InstalledApps`(`_id`) ON UPDATE " +
-                        "CASCADE ON DELETE NO ACTION)"
+                        "CASCADE ON DELETE CASCADE)"
                 )
                 database.execSQL(
                     "CREATE INDEX IF NOT EXISTS `index_AppStorageStats_timestamp_package_id`" +
