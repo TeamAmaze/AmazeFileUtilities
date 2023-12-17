@@ -938,6 +938,10 @@
     <string name="large_size_diff_apps">Growing apps</string>
     <!-- apps with large size increase summary in settings preferences -->
     <string name="large_size_diff_apps_summary">Apps with large size increase in the last number of days</string>
+    <!-- size change in analysis -->
+    <string name="size_diff">Change</string>
+    <!-- size change in analysis -->
+    <string name="size_total">Total</string>
     <!-- ram usage in analysis -->
     <string name="ram_usage">Memory (RAM) Usage</string>
     <!-- ram usage in analysis -->

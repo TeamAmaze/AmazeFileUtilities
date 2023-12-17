@@ -83,6 +83,20 @@ class ReviewAnalysisAdapter(
                         } else {
                             holder.infoSummary.text = this.mediaFileInfo?.getFormattedSize(context)
                         }
+                    } else if (analysisType == ReviewImagesFragment.TYPE_LARGE_SIZE_DIFF_APPS) {
+                        val sizeDiff = this.mediaFileInfo?.extraInfo?.apkMetaData?.sizeDiff
+                        val totalSize = this.mediaFileInfo?.getFormattedSize(context)
+                        if (sizeDiff != null) {
+                            val summary =
+                                "${context.getString(R.string.size_diff)}: ${FileUtils
+                                    .formatStorageLength(context, sizeDiff)
+                                }"
+                            val extra = "${context.getString(R.string.size_total)}: $totalSize"
+                            holder.infoSummary.text = summary
+                            holder.extraInfo.text = extra
+                        } else {
+                            holder.infoSummary.text = totalSize
+                        }
                     } else {
                         holder.infoSummary.text = this.mediaFileInfo?.getFormattedSize(context)
                     }
