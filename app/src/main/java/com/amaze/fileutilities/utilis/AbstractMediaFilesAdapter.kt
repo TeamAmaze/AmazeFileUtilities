@@ -214,6 +214,7 @@ abstract class AbstractMediaFilesAdapter(
                     holder.infoTitle.text = mediaFileInfo.title
                     Utils.marqueeAfterDelay(3000, holder.infoTitle)
                     Utils.marqueeAfterDelay(3000, holder.infoSummary)
+                    Utils.marqueeAfterDelay(3000, holder.infoSubSummary)
                     Glide.with(superContext).clear(holder.iconView)
                     superPreloader.loadImage(mediaFileInfo, holder.iconView, isGrid)
                     if (isChecked) {
@@ -232,6 +233,9 @@ abstract class AbstractMediaFilesAdapter(
                             holder.root.background =
                                 superContext.resources.getDrawable(R.drawable.ripple)
                         }
+                    }
+                    if (!isGrid) {
+                        holder.infoSubSummary.text = mediaFileInfo.path
                     }
                     holder.root.setOnLongClickListener {
                         toggleChecked(this, position)
@@ -305,13 +309,14 @@ abstract class AbstractMediaFilesAdapter(
         formattedDate: String,
         formattedSize: String
     ) {
-        holder.infoSummary.text = if (mediaFileInfo.extraInfo?.imageMetaData?.width != null) {
-            "${mediaFileInfo.extraInfo!!.imageMetaData?.width}" +
+        if (mediaFileInfo.extraInfo?.imageMetaData?.width != null) {
+            holder.infoSummary.visibility = View.GONE
+            holder.extraInfo.text = "${mediaFileInfo.extraInfo!!.imageMetaData?.width}" +
                 "x${mediaFileInfo.extraInfo!!.imageMetaData?.height}"
         } else {
-            "$formattedDate | $formattedSize"
+            holder.infoSummary.text = "$formattedDate | $formattedSize"
+            holder.extraInfo.visibility = View.GONE
         }
-        holder.extraInfo.text = ""
     }
 
     private fun processAudioMediaInfo(
@@ -320,7 +325,7 @@ abstract class AbstractMediaFilesAdapter(
         formattedDate: String,
         formattedSize: String
     ) {
-        if (mediaFileInfo.extraInfo?.audioMetaData?.duration != null) {
+        if (mediaFileInfo.extraInfo?.audioMetaData != null) {
             holder.infoSummary.text = "${mediaFileInfo.extraInfo!!.audioMetaData?.albumName} " +
                 "| ${mediaFileInfo.extraInfo!!.audioMetaData?.artistName}"
             mediaFileInfo.extraInfo!!.audioMetaData?.duration?.let {
@@ -328,7 +333,7 @@ abstract class AbstractMediaFilesAdapter(
             }
         } else {
             holder.infoSummary.text = "$formattedDate | $formattedSize"
-            holder.extraInfo.text = ""
+            holder.extraInfo.visibility = View.GONE
         }
     }
 
@@ -338,7 +343,7 @@ abstract class AbstractMediaFilesAdapter(
         formattedDate: String,
         formattedSize: String
     ) {
-        if (mediaFileInfo.extraInfo?.videoMetaData?.duration != null) {
+        if (mediaFileInfo.extraInfo?.videoMetaData != null) {
             holder.infoSummary.text =
                 "${mediaFileInfo.extraInfo!!.videoMetaData?.width}" +
                 "x${mediaFileInfo.extraInfo!!.videoMetaData?.height}"
@@ -347,7 +352,7 @@ abstract class AbstractMediaFilesAdapter(
             }
         } else {
             holder.infoSummary.text = "$formattedDate | $formattedSize"
-            holder.extraInfo.text = ""
+            holder.extraInfo.visibility = View.GONE
         }
     }
 
