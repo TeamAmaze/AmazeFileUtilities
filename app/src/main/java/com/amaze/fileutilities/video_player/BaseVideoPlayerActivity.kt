@@ -78,6 +78,7 @@ import com.amaze.fileutilities.utilis.dialog_picker.FileFilter
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.amaze.fileutilities.utilis.getExternalStorageDirectory
 import com.amaze.fileutilities.utilis.getFileFromUri
+import com.amaze.fileutilities.utilis.getScreenBrightness
 import com.amaze.fileutilities.utilis.hideFade
 import com.amaze.fileutilities.utilis.isNetworkAvailable
 import com.amaze.fileutilities.utilis.removeExtension
@@ -990,7 +991,16 @@ abstract class BaseVideoPlayerActivity :
 
     private fun invalidateBrightness() {
         val layout = window.attributes
-        layout.screenBrightness = videoPlayerViewModel?.brightnessLevel ?: 0.3f
+        val systemBrightness = this.getScreenBrightness()
+        layout.screenBrightness = if (videoPlayerViewModel != null &&
+            videoPlayerViewModel?.brightnessLevel != 0.3f
+        ) {
+            videoPlayerViewModel!!.brightnessLevel
+        } else if (systemBrightness != -1f) {
+            systemBrightness
+        } else {
+            0.3f
+        }
         window.attributes = layout
     }
 

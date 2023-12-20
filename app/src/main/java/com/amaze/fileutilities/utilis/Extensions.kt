@@ -33,6 +33,7 @@ import android.os.Environment
 import android.os.ParcelFileDescriptor
 import android.os.TransactionTooLargeException
 import android.provider.MediaStore
+import android.provider.Settings
 import android.util.DisplayMetrics
 import android.view.Gravity
 import android.view.View
@@ -685,4 +686,16 @@ fun View.fadInAnimation(duration: Long = 300, completion: (() -> Unit)? = null) 
                 it()
             }
         }
+}
+
+fun Context.getScreenBrightness(): Float {
+    var brightness = 0
+    try {
+        val contentResolver = this.contentResolver
+        brightness = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS)
+    } catch (e: Exception) {
+        log.warn("failed to get system brightness", e)
+        return -1f
+    }
+    return (brightness / 255).toFloat()
 }
