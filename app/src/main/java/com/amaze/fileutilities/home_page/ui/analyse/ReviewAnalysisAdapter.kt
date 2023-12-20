@@ -107,12 +107,14 @@ class ReviewAnalysisAdapter(
         }
     }
 
+    /** Returns the number of items. There might be dummy items, that are also counted here */
     override fun getItemCount(): Int {
         return mediaFileListItems.size
     }
 
+    /** Returns the number of actual items. Dummy items are not counted. */
     override fun getOnlyItemsCount(): Int {
-        return mediaFileListItems.size
+        return mediaFileListItems.size - 1
     }
 
     override fun getItemViewType(position: Int): Int {
