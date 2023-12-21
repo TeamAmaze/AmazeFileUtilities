@@ -1972,6 +1972,12 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
+    /**
+     * installedAppsDao contains all the apps installed at a given instance, the list gets updated each time we fetch all apps.
+     * We fetch list of installed apps right now here again, and compare with the installedAppsDao list
+     * apps installed right now will be a subset of installedAppsDao
+     * We find the difference first, then for apps that aren't installed now, we check to see if there is any data directory present or not.
+     */
     fun getJunkFilesLiveData(): LiveData<Pair<ArrayList<MediaFileInfo>, String>?> {
         if (junkFilesLiveData == null) {
             junkFilesLiveData = MutableLiveData()
@@ -1985,38 +1991,39 @@ class FilesViewModel(val applicationContext: Application) :
         viewModelScope.launch(Dispatchers.IO) {
             loadAllInstalledApps(packageManager)
             val dao = AppDatabase.getInstance(applicationContext).installedAppsDao()
-            val savedInstalledApps = dao.findAll().filter {
-                savedAppData ->
-                allApps.get()?.any {
-                    !it.first.packageName.equals(savedAppData.packageName)
-                } == false
-            }
-            log.info("found following apps not installed {}", savedInstalledApps)
-            val result = ArrayList<MediaFileInfo>()
-            savedInstalledApps.forEach {
-                savedApp ->
-                savedApp.dataDirs.forEach {
-                    result.add(
-                        MediaFileInfo.fromFile(
-                            File(it),
-                            MediaFileInfo.ExtraInfo(
-                                MediaFileInfo.MEDIA_TYPE_UNKNOWN,
-                                null, null, null
+            val savedInstalledApps = dao.findAll()
+            allApps.get()?.map { it.first.packageName }?.toSet()?.let {
+                installedAppsPackageNames ->
+                val difference = savedInstalledApps.filter {
+                    it.packageName !in installedAppsPackageNames
+                }
+                log.info("found following apps not installed {}", difference)
+                val result = ArrayList<MediaFileInfo>()
+                difference.forEach {
+                    savedApp ->
+                    savedApp.dataDirs.forEach {
+                        result.add(
+                            MediaFileInfo.fromFile(
+                                File(it),
+                                MediaFileInfo.ExtraInfo(
+                                    MediaFileInfo.MEDIA_TYPE_UNKNOWN,
+                                    null, null, null
+                                )
                             )
                         )
-                    )
+                    }
                 }
-            }
-            var size = 0L
-            result.forEach {
-                size += it.longSize
-            }
-            junkFilesLiveData?.postValue(
-                Pair(
-                    result,
-                    Formatter.formatFileSize(applicationContext, size)
+                var size = 0L
+                result.forEach {
+                    size += it.longSize
+                }
+                junkFilesLiveData?.postValue(
+                    Pair(
+                        result,
+                        Formatter.formatFileSize(applicationContext, size)
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -2415,7 +2422,13 @@ class FilesViewModel(val applicationContext: Application) :
         allApps.get()?.let {
             infoListPair ->
             val installedApps = infoListPair.map {
-                InstalledApps(it.first.packageName, listOf(it.first.sourceDir, it.first.dataDir))
+                InstalledApps(
+                    it.first.packageName,
+                    listOf(
+                        it.first.sourceDir,
+                        it.first.dataDir, it.first.publicSourceDir
+                    )
+                )
             }
             val dao = AppDatabase.getInstance(applicationContext).installedAppsDao()
             dao.insert(installedApps)
