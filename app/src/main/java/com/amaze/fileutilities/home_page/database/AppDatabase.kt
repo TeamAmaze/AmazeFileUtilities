@@ -54,7 +54,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun installedAppsDao(): InstalledAppsDao
     abstract fun lyricsDao(): LyricsDao
     abstract fun appStorageStatsDao(): AppStorageStatsDao
-    abstract fun storageStatsPerAppDao(): StorageStatToAppNameDao
 
     companion object {
         private var appDatabase: AppDatabase? = null
@@ -132,19 +131,14 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL(
                     "CREATE TABLE IF NOT EXISTS `AppStorageStats` " +
                         "(`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
-                        "`package_id` INTEGER NOT NULL, " +
+                        "`package_name` TEXT NOT NULL, " +
                         "`timestamp` INTEGER NOT NULL, " +
-                        "`package_size` INTEGER NOT NULL," +
-                        "FOREIGN KEY(`package_id`) REFERENCES `InstalledApps`(`_id`) ON UPDATE " +
-                        "CASCADE ON DELETE CASCADE)"
+                        "`package_size` INTEGER NOT NULL)"
                 )
                 database.execSQL(
-                    "CREATE INDEX IF NOT EXISTS `index_AppStorageStats_timestamp_package_id`" +
-                        " ON `AppStorageStats` (`timestamp`,`package_id`)"
-                )
-                database.execSQL(
-                    "CREATE INDEX IF NOT EXISTS `index_AppStorageStats_package_id`" +
-                        " ON `AppStorageStats` (`package_id`)"
+                    "CREATE UNIQUE INDEX IF NOT EXISTS " +
+                        "`index_AppStorageStats_timestamp_package_id` " +
+                        "ON `AppStorageStats` (`timestamp`,`package_name`)"
                 )
             }
         }

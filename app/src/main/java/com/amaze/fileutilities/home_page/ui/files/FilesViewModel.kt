@@ -1971,7 +1971,7 @@ class FilesViewModel(val applicationContext: Application) :
             // The end of the search period is now
             val periodEnd = Date.from(ZonedDateTime.now().toInstant())
 
-            val dao = AppDatabase.getInstance(applicationContext).storageStatsPerAppDao()
+            val dao = AppDatabase.getInstance(applicationContext).appStorageStatsDao()
 
             val priorityQueue = FixedSizePriorityQueue<MediaFileInfo>(50) { o1, o2 ->
                 val diff1 = o1.extraInfo?.apkMetaData?.sizeDiff ?: 0

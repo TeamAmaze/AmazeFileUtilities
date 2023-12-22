@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "09c5ff70859c472f6f1cb4ea43b43003",
+    "identityHash": "7ce3d27f8810a242aa5248f0eb1d4e1f",
     "entities": [
       {
         "tableName": "ImageAnalysis",
@@ -632,7 +632,7 @@
       },
       {
         "tableName": "AppStorageStats",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `package_id` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, `package_size` INTEGER NOT NULL, FOREIGN KEY(`package_id`) REFERENCES `InstalledApps`(`_id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `package_name` TEXT NOT NULL, `timestamp` INTEGER NOT NULL, `package_size` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "uid",
@@ -641,9 +641,9 @@
             "notNull": true
           },
           {
-            "fieldPath": "packageId",
-            "columnName": "package_id",
-            "affinity": "INTEGER",
+            "fieldPath": "packageName",
+            "columnName": "package_name",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -667,44 +667,23 @@
         },
         "indices": [
           {
-            "name": "index_AppStorageStats_timestamp_package_id",
-            "unique": false,
+            "name": "index_AppStorageStats_timestamp_package_name",
+            "unique": true,
             "columnNames": [
               "timestamp",
-              "package_id"
+              "package_name"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_AppStorageStats_timestamp_package_id` ON `${TABLE_NAME}` (`timestamp`, `package_id`)"
-          },
-          {
-            "name": "index_AppStorageStats_package_id",
-            "unique": false,
-            "columnNames": [
-              "package_id"
-            ],
-            "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_AppStorageStats_package_id` ON `${TABLE_NAME}` (`package_id`)"
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_AppStorageStats_timestamp_package_name` ON `${TABLE_NAME}` (`timestamp`, `package_name`)"
           }
         ],
-        "foreignKeys": [
-          {
-            "table": "InstalledApps",
-            "onDelete": "CASCADE",
-            "onUpdate": "CASCADE",
-            "columns": [
-              "package_id"
-            ],
-            "referencedColumns": [
-              "_id"
-            ]
-          }
-        ]
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '09c5ff70859c472f6f1cb4ea43b43003')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7ce3d27f8810a242aa5248f0eb1d4e1f')"
     ]
   }
 }

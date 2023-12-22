@@ -40,6 +40,7 @@ class AppStorageStatsDaoTest {
     private lateinit var appEntry: InstalledApps
 
     private val appName = "testApp"
+    private val appName2 = "testApp2"
 
     @Before
     fun createDb() {
@@ -73,7 +74,9 @@ class AppStorageStatsDaoTest {
             "Did not contain correct entry with packageId ${appEntry.uid}, timestamp $date " +
                 "and packageSize $size: $allAppStorageStats",
             allAppStorageStats.find {
-                it.packageSize == size && it.timestamp == date && it.packageId == appEntry.uid
+                it.packageSize == size &&
+                    it.timestamp == date &&
+                    it.packageName == appEntry.packageName
             }
         )
     }
@@ -100,7 +103,62 @@ class AppStorageStatsDaoTest {
         Assert.assertNotNull(
             "Database did not contain expected entry with timestamp $laterDate " +
                 "but was $allStorageStats",
-            allStorageStats.find { it.timestamp == laterDate && appEntry.uid == it.packageId }
+            allStorageStats.find {
+                it.timestamp == laterDate && appEntry.packageName == it.packageName
+            }
         )
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun findByPackageNameTest() {
+        val range = LongRange(0, 3)
+        val appNames = listOf(appName, appName2)
+        for (i in range) {
+            for (name in appNames) {
+                appStorageStatsDao.insert(name, Date(i), i)
+            }
+        }
+
+        val storageStats = appStorageStatsDao.findByPackageName(appNames.last())
+        Assert.assertTrue(
+            "Returned storage stats that were not associated to ${appNames.last()}: $storageStats",
+            storageStats.all { it.packageName == appNames.last() }
+        )
+        Assert.assertEquals(
+            "Did not return expected number of entries: $storageStats",
+            range.count(),
+            storageStats.size
+        )
+        for (i in range) {
+            Assert.assertNotNull(
+                "Did not find expected entry with packageSize $i and timestamp ${Date(i)}: " +
+                    "$storageStats",
+                storageStats.find {
+                    it.packageSize == i && it.timestamp == Date(i)
+                }
+            )
+        }
+    }
+
+    @Test
+    @Throws(IOException::class)
+    fun findOldestInPeriodTest() {
+        val range = LongProgression.fromClosedRange(0, 30, 10)
+        val appNames = listOf(appName, appName2)
+        for (i in range) {
+            for (name in appNames) {
+                appStorageStatsDao.insert(name, Date(i), i)
+            }
+        }
+        val periodStart = Date(4)
+        val periodEnd = Date(43)
+        val entry = appStorageStatsDao.findOldestWithinPeriod(
+            appNames.first(), periodStart, periodEnd
+        )
+        Assert.assertNotNull(entry)
+        val statToAppName = entry!!
+        Assert.assertEquals(appNames.first(), statToAppName.packageName)
+        Assert.assertEquals(Date(10), statToAppName.timestamp)
     }
 }

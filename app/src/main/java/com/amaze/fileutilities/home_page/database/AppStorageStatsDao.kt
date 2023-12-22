@@ -28,31 +28,43 @@ import androidx.room.Transaction
 import java.util.Date
 
 @Dao
-abstract class AppStorageStatsDao(database: AppDatabase) {
-    private val installedAppsDao: InstalledAppsDao = database.installedAppsDao()
+interface AppStorageStatsDao {
 
     @Query("SELECT * FROM AppStorageStats")
-    abstract fun findAll(): List<AppStorageStats>
+    fun findAll(): List<AppStorageStats>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insert(appStorageStats: List<AppStorageStats>)
+    fun insert(appStorageStats: List<AppStorageStats>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insert(appStorageStats: AppStorageStats)
+    fun insert(appStorageStats: AppStorageStats)
 
     /**
      * Inserts a new [AppStorageStats] associated with the [packageName] and containing [timestamp]
      * and [size]
      */
     @Transaction
-    open fun insert(packageName: String, timestamp: Date, size: Long) {
-        val app = installedAppsDao.findByPackageName(packageName)
-        if (app != null) {
-            val appStorageStats = AppStorageStats(app.uid, timestamp, size)
-            insert(appStorageStats)
-        }
+    fun insert(packageName: String, timestamp: Date, size: Long) {
+        val appStorageStats = AppStorageStats(packageName, timestamp, size)
+        insert(appStorageStats)
     }
 
     @Query("DELETE FROM AppStorageStats WHERE timestamp < :date")
-    abstract fun deleteOlderThan(date: Date)
+    fun deleteOlderThan(date: Date)
+
+    @Query("SELECT * FROM AppStorageStats WHERE package_name=:packageName")
+    fun findByPackageName(packageName: String): List<AppStorageStats>
+
+    @Query(
+        "SELECT * FROM AppStorageStats " +
+            "WHERE package_name = :packageName " +
+            "AND timestamp >= :periodStart " + // Ensure that timestamp is after `periodStart`
+            "AND timestamp < :periodEnd " + // Ensure that timestamp is before `periodEnd`
+            "ORDER BY timestamp ASC LIMIT 1" // Get the oldest entry based on timestamp
+    )
+    fun findOldestWithinPeriod(
+        packageName: String,
+        periodStart: Date,
+        periodEnd: Date
+    ): AppStorageStats?
 }

@@ -23,8 +23,6 @@ package com.amaze.fileutilities.home_page.database
 import androidx.annotation.Keep
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -32,17 +30,7 @@ import java.util.Date
 
 @Entity(
     indices = [
-        Index(value = ["timestamp", "package_id"], unique = false),
-        Index(value = ["package_id"], unique = false) // separate index because it is foreign key
-    ],
-    foreignKeys = [
-        ForeignKey(
-            entity = InstalledApps::class,
-            parentColumns = ["_id"],
-            childColumns = ["package_id"],
-            onDelete = CASCADE,
-            onUpdate = CASCADE
-        )
+        Index(value = ["timestamp", "package_name"], unique = true)
     ]
 )
 @Keep
@@ -50,14 +38,14 @@ data class AppStorageStats(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "_id")
     val uid: Int,
-    @ColumnInfo(name = "package_id") val packageId: Int,
+    @ColumnInfo(name = "package_name") val packageName: String,
     @ColumnInfo(name = "timestamp") val timestamp: Date,
     @ColumnInfo(name = "package_size") val packageSize: Long
 ) {
     @Ignore
     constructor(
-        packageId: Int,
+        packageName: String,
         timestamp: Date,
         packageSize: Long
-    ) : this(0, packageId, timestamp, packageSize)
+    ) : this(0, packageName, timestamp, packageSize)
 }
