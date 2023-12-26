@@ -40,7 +40,7 @@ import java.util.Collections
 
 abstract class AbstractMediaFilesAdapter(
     private val superContext: Context,
-    private val superPreloader: MediaAdapterPreloader,
+    private val superPreloader: MediaAdapterPreloader<MediaFileInfo>,
     private val isGrid: Boolean,
     private val listItemPressedCallback: ((mediaFileInfo: MediaFileInfo) -> Unit)?,
     private val toggleCheckCallback: (
@@ -216,7 +216,7 @@ abstract class AbstractMediaFilesAdapter(
                     Utils.marqueeAfterDelay(3000, holder.infoSummary)
                     Utils.marqueeAfterDelay(3000, holder.infoSubSummary)
                     Glide.with(superContext).clear(holder.iconView)
-                    superPreloader.loadImage(mediaFileInfo, holder.iconView, isGrid)
+                    superPreloader.loadImage(mediaFileInfo, holder.iconView)
                     if (isChecked) {
                         if (isGrid) {
                             holder.checkIconGrid.visibility = View.VISIBLE

@@ -53,9 +53,10 @@ abstract class AbstractMediaInfoListFragment :
     private var gridLayoutManager: GridLayoutManager? = null
     private val MAX_PRELOAD = 100
     private var log: Logger = LoggerFactory.getLogger(AbstractMediaInfoListFragment::class.java)
+    private var mediaPreloader: MediaAdapterPreloader<MediaFileInfo>? = null
 
     override fun onDestroyView() {
-        getMediaAdapterPreloader().clear()
+        mediaPreloader?.clear()
         super.onDestroyView()
     }
 
@@ -83,7 +84,7 @@ abstract class AbstractMediaInfoListFragment :
     abstract fun getFileStorageSummaryAndMediaFileInfoPair():
         Pair<FilesViewModel.StorageSummary, List<MediaFileInfo>?>?
 
-    abstract fun getMediaAdapterPreloader(): MediaAdapterPreloader
+    abstract fun getMediaAdapterPreloader(isGrid: Boolean): MediaAdapterPreloader<MediaFileInfo>
 
     abstract fun getRecyclerView(): RecyclerView
 
@@ -116,21 +117,22 @@ abstract class AbstractMediaInfoListFragment :
                     storageSummary.totalUsedSpace!!
                 )
                 // set list adapter
-                val sizeProvider = ViewPreloadSizeProvider<String>()
-                val recyclerViewPreloader = RecyclerViewPreloader(
-                    Glide.with(requireActivity()),
-                    getMediaAdapterPreloader(),
-                    sizeProvider,
-                    MAX_PRELOAD
-                )
+                val sizeProvider = ViewPreloadSizeProvider<MediaFileInfo>()
                 val isList = requireContext()
                     .getAppCommonSharedPreferences().getBoolean(
                         "${getMediaListType()}_${PreferencesConstants.KEY_MEDIA_LIST_TYPE}",
                         PreferencesConstants.DEFAULT_MEDIA_LIST_TYPE
                     )
+                mediaPreloader = getMediaAdapterPreloader(!isList)
+                val recyclerViewPreloader = RecyclerViewPreloader(
+                    Glide.with(requireActivity()),
+                    mediaPreloader!!,
+                    sizeProvider,
+                    MAX_PRELOAD
+                )
                 mediaFileAdapter = MediaFileAdapter(
                     requireActivity(),
-                    getMediaAdapterPreloader(),
+                    mediaPreloader!!,
                     this@AbstractMediaInfoListFragment, !isList,
                     MediaFileListSorter.SortingPreference.newInstance(
                         requireContext()
