@@ -63,6 +63,7 @@
     <style name="Theme.AmazeFileUtilities.FullScreen.Dark" parent="Theme.AmazeFileUtilities.Dark">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/black</item>
     </style>
 
     <style name="BottomNavigationTheme" parent="Theme.AppCompat.Light">
@@ -86,6 +87,8 @@
         <item name="android:textColor">@color/white</item>
         <item name="popupMenuBackground">@drawable/popup_background</item>
         <item name="android:gravity">center_vertical</item>
+        <item name="android:itemBackground">@drawable/popup_item_background</item>
+        <item name="itemBackground">@drawable/popup_item_background</item>
     </style>
 
     <style name="Custom.Dialog.Dark" parent="Theme.AppCompat.Dialog.Alert">
