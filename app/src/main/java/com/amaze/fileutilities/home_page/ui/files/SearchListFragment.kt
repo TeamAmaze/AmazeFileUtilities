@@ -55,8 +55,8 @@ class SearchListFragment :
     private var searchEditText: AutoCompleteTextView? = null
 
     private var mediaFileAdapter: RecentMediaFilesAdapter? = null
-    private var preloader: MediaAdapterPreloader? = null
-    private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
+    private var preloader: MediaAdapterPreloader<MediaFileInfo>? = null
+    private var recyclerViewPreloader: RecyclerViewPreloader<MediaFileInfo>? = null
     private var linearLayoutManager: LinearLayoutManager? = null
     private val searchQueryInput: SearchQueryInput =
         SearchQueryInput(AggregatedMediaFileInfoObserver.AggregatedMediaFiles(), SearchFilter())
@@ -117,9 +117,10 @@ class SearchListFragment :
         searchEditText?.requestFocus()
         preloader = MediaAdapterPreloader(
             requireContext(),
-            R.drawable.ic_outline_insert_drive_file_32
+            R.drawable.ic_outline_insert_drive_file_32,
+            false
         )
-        val sizeProvider = ViewPreloadSizeProvider<String>()
+        val sizeProvider = ViewPreloadSizeProvider<MediaFileInfo>()
         recyclerViewPreloader = RecyclerViewPreloader(
             Glide.with(requireContext()),
             preloader!!,

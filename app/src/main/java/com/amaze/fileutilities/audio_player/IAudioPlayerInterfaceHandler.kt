@@ -261,7 +261,7 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             override fun onLoadFailed(
                 e: GlideException?,
                 model: Any?,
-                target: Target<Drawable>?,
+                target: Target<Drawable>,
                 isFirstResource: Boolean
             ): Boolean {
                 // do nothing
@@ -274,15 +274,15 @@ interface IAudioPlayerInterfaceHandler : OnPlaybackInfoUpdate, LifecycleOwner {
             }
 
             override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
+                resource: Drawable,
+                model: Any,
                 target: Target<Drawable>?,
-                dataSource: DataSource?,
+                dataSource: DataSource,
                 isFirstResource: Boolean
             ): Boolean {
                 getContextWeakRef().get()?.let {
                     context ->
-                    resource?.let {
+                    resource.let {
                         getAudioPlayerHandlerViewModel().getPaletteColor(
                             it,
                             context.getColor(R.color.navy_blue_alt_3)

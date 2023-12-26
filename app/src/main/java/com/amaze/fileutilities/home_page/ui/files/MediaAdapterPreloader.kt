@@ -30,6 +30,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.ListPreloader.PreloadModelProvider
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners
@@ -37,48 +38,44 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 
-class MediaAdapterPreloader(private val context: Context, private val loadingDrawable: Int) :
-    PreloadModelProvider<String> {
-    private var request: RequestBuilder<Drawable> = Glide.with(context).asDrawable().fitCenter()
-    private var items: MutableList<String>? = null
+class MediaAdapterPreloader<T : MediaFileInfo>(
+    private val context: Context,
+    private val loadingDrawable: Int,
+    private val isGrid: Boolean
+) :
+    PreloadModelProvider<T> {
+    private var request: RequestBuilder<Drawable> = initRequestBuilder()
+    private var items: MutableList<T?>? = null
 
-    fun addItem(item: String) {
+    fun addItem(item: T?) {
         if (items == null) {
             items = arrayListOf()
         }
         items!!.add(item)
     }
 
+    // be sure to call clear once you're done with this, to avoid memory leaks
     fun clear() {
         items?.clear()
     }
 
-    override fun getPreloadItems(position: Int): List<String> {
-        if (items == null) return emptyList()
+    override fun getPreloadItems(position: Int): List<T?> {
+        if (items == null || items!![position] == null) return emptyList()
         return listOf(items!![position])
     }
 
-    override fun getPreloadRequestBuilder(item: String): RequestBuilder<*> {
-        return request.clone().fallback(R.drawable.ic_outline_broken_image_24)
-            .placeholder(loadingDrawable).load(item)
+    override fun getPreloadRequestBuilder(item: T): RequestBuilder<*> {
+//        return request.clone().fallback(R.drawable.ic_outline_broken_image_24)
+//            .placeholder(loadingDrawable).load(item)
+//        return request.load(item)
+        return getReadyRequestBuilder(item)
     }
 
-    fun loadImage(item: MediaFileInfo, view: ImageView, isGrid: Boolean) {
-        val toLoadPath: String = item.path
-        val toLoadBitmap: Bitmap? = item.extraInfo?.audioMetaData?.albumArt
-        val toLoadDrawable = item.extraInfo?.apkMetaData?.drawable
-        var transformedRequest = request.fallback(R.drawable.ic_outline_broken_image_24)
-            .placeholder(loadingDrawable).load(toLoadDrawable ?: toLoadBitmap ?: toLoadPath)
-        if (toLoadBitmap == null) {
-            // apply size constraint when we don't have bitmap, as bitmap already is resized see CursorUtils
-            transformedRequest = transformedRequest
-                .apply(
-                    RequestOptions().override(
-                        if (isGrid) 500 else 100,
-                        if (isGrid) 500 else 100
-                    )
-                )
-        }
+    private fun initRequestBuilder(): RequestBuilder<Drawable> {
+        var transformedRequest = Glide.with(context).asDrawable()
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+            .fallback(R.drawable.ic_outline_broken_image_24)
+            .placeholder(loadingDrawable).fitCenter()
         transformedRequest = if (isGrid) {
             transformedRequest.centerCrop()
                 .transform(CenterCrop(), GranularRoundedCorners(24.px, 24.px, 0f, 0f))
@@ -91,25 +88,54 @@ class MediaAdapterPreloader(private val context: Context, private val loadingDra
             override fun onLoadFailed(
                 e: GlideException?,
                 model: Any?,
-                target: Target<Drawable>?,
+                target: Target<Drawable>,
                 isFirstResource: Boolean
             ): Boolean {
                 if (isGrid) {
-                    view.setPadding(16.px.toInt(), 16.px.toInt(), 16.px.toInt(), 16.px.toInt())
+                    // fallback drawable in case image fails to load.
+                    // we add padding because svg placeholder is too big and looks ugly.
+//                    view.setPadding(16.px.toInt(), 16.px.toInt(), 16.px.toInt(), 16.px.toInt())
                 }
                 return false
             }
 
             override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
+                resource: Drawable,
+                model: Any,
                 target: Target<Drawable>?,
-                dataSource: DataSource?,
+                dataSource: DataSource,
                 isFirstResource: Boolean
             ): Boolean {
                 // do nothing
                 return false
             }
-        }).into(view)
+        })
+        return transformedRequest
+    }
+
+    private fun getReadyRequestBuilder(item: MediaFileInfo): RequestBuilder<Drawable> {
+        var transformedRequest = request.load(getLoadingModel(item))
+        if (item.extraInfo?.audioMetaData?.albumArt == null) {
+            // apply size constraint when we don't have bitmap, as bitmap already is resized see CursorUtils
+            transformedRequest = transformedRequest
+                .apply(
+                    RequestOptions().override(
+                        if (isGrid) 250 else 100,
+                        if (isGrid) 250 else 100
+                    ).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                )
+        }
+        return transformedRequest
+    }
+
+    private fun getLoadingModel(mediaFileInfo: MediaFileInfo): Any {
+        val toLoadPath: String = mediaFileInfo.path
+        val toLoadBitmap: Bitmap? = mediaFileInfo.extraInfo?.audioMetaData?.albumArt
+        val toLoadDrawable = mediaFileInfo.extraInfo?.apkMetaData?.drawable
+        return toLoadDrawable ?: toLoadBitmap ?: toLoadPath
+    }
+
+    fun loadImage(item: MediaFileInfo, view: ImageView) {
+        getReadyRequestBuilder(item).into(view)
     }
 }
