@@ -4,5 +4,6 @@
         <item name="android:windowLayoutInDisplayCutoutMode">always</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/black</item>
     </style>
 </resources>
