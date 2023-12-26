@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-sdk tools:overrideLibrary="linc.com.amplituda, me.zhanghai.android.fastscroll,
-        org.opencv, com.mikepenz.aboutlibraries, com.abedelazizshe.lightcompressorlibrary" />
+        org.opencv, com.mikepenz.aboutlibraries, com.abedelazizshe.lightcompressorlibrary,
+        com.awxkee.avif.glide, com.github.awxkee.avifcoil, com.github.awxkee.avifcoder, androidx.emoji2" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE"

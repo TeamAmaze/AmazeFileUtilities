@@ -1,8 +1,8 @@
 buildscript {
     ext {
         jacocoVersion = "0.8.7"
-        androidXLifecycleVersion = "2.3.1"
-        glideVersion = '4.11.0'
+        androidXLifecycleVersion = "2.6.1"
+        glideVersion = '4.16.0'
         fragment_version = "1.3.6"
         roomVersion = "2.4.0"
         billing_version = "6.0.1"
@@ -39,6 +39,7 @@ plugins {
     id 'com.starter.easylauncher'
     id 'com.mikepenz.aboutlibraries.plugin'
     id 'org.jetbrains.kotlin.android'
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -47,12 +48,12 @@ android {
         release
     }
 
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.amaze.fileutilities"
         minSdk 21
-        targetSdk 33
+        targetSdk 34
 
         Integer sudoVersionCode = 31
         String versionNameText = "1.91"
@@ -220,7 +221,7 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.core:core:1.7.0'
+    implementation 'androidx.core:core:1.9.0'
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.3.1'
     implementation 'com.google.android.material:material:1.6.1'
@@ -231,12 +232,15 @@ dependencies {
     implementation 'androidx.palette:palette:1.0.0'
     //Glide: loads icons seemlessly
     implementation "com.github.bumptech.glide:glide:$glideVersion"
+    ksp("com.github.bumptech.glide:ksp:$glideVersion")
     implementation ("com.github.bumptech.glide:recyclerview-integration:$glideVersion") {
         // Excludes the support library because it's already included by Glide.
         transitive = false
     }
+    implementation("com.github.bumptech.glide:compose:1.0.0-alpha.5")
     playImplementation 'com.google.android.play:core-ktx:1.8.1'
-    kapt "com.github.bumptech.glide:compiler:$glideVersion"
+    implementation 'com.github.awxkee:avif-coder-glide:1.5.7'
+//    kapt "com.github.bumptech.glide:compiler:$glideVersion"
     implementation 'androidx.webkit:webkit:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'

@@ -91,7 +91,7 @@ class MediaAdapterPreloader(private val context: Context, private val loadingDra
             override fun onLoadFailed(
                 e: GlideException?,
                 model: Any?,
-                target: Target<Drawable>?,
+                target: Target<Drawable>,
                 isFirstResource: Boolean
             ): Boolean {
                 if (isGrid) {
@@ -101,10 +101,10 @@ class MediaAdapterPreloader(private val context: Context, private val loadingDra
             }
 
             override fun onResourceReady(
-                resource: Drawable?,
-                model: Any?,
-                target: Target<Drawable>?,
-                dataSource: DataSource?,
+                resource: Drawable,
+                model: Any,
+                target: Target<Drawable>,
+                dataSource: DataSource,
                 isFirstResource: Boolean
             ): Boolean {
                 // do nothing
