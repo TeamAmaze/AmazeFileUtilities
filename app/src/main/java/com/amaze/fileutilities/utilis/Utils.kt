@@ -83,6 +83,9 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
@@ -1514,6 +1517,19 @@ class Utils {
             }
             inputStream.close()
             return hexString.toString()
+        }
+
+        /**
+         * Schedules PeriodicWorkRequest to store the size of each app in the database every day
+         */
+        fun scheduleQueryAppSizeWorker(context: Context, policy: ExistingPeriodicWorkPolicy) {
+            val periodicWorkRequest = PeriodicWorkRequestBuilder<QueryAppSizeWorker>(
+                24,
+                TimeUnit.HOURS
+            ).build()
+            WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+                QueryAppSizeWorker.NAME, policy, periodicWorkRequest
+            )
         }
 
         private fun findApplicationInfoSizeFallback(applicationInfo: ApplicationInfo): Long {

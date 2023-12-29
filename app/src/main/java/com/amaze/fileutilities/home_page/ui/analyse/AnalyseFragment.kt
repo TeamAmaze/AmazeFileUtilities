@@ -35,6 +35,7 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
+import androidx.work.ExistingPeriodicWorkPolicy
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentAnalyseBinding
@@ -483,9 +484,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     unusedAppsPreview.loadRequireElevatedPermission({
                         val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
                         startActivity(intent)
-                    }, {
-                        reloadFragment()
-                    })
+                    }, ::usageStatsPermissionReload)
                 } else {
                     filesViewModel.getUnusedApps().observe(viewLifecycleOwner) {
                         mediaFileInfoList ->
@@ -509,15 +508,11 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     mostUsedAppsPreview.loadRequireElevatedPermission({
                         val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
                         startActivity(intent)
-                    }, {
-                        reloadFragment()
-                    })
+                    }, ::usageStatsPermissionReload)
                     leastUsedAppsPreview.loadRequireElevatedPermission({
                         val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
                         startActivity(intent)
-                    }, {
-                        reloadFragment()
-                    })
+                    }, ::usageStatsPermissionReload)
                 } else {
                     filesViewModel.getMostUsedApps().observe(viewLifecycleOwner) {
                         mediaFileInfoList ->
@@ -557,9 +552,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 networkIntensiveAppsPreview.loadRequireElevatedPermission({
                     val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
                     startActivity(intent)
-                }, {
-                    reloadFragment()
-                })
+                }, ::usageStatsPermissionReload)
             } else {
                 filesViewModel.getNetworkIntensiveApps().observe(viewLifecycleOwner) {
                     mediaFileInfoList ->
@@ -613,18 +606,29 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     }
                 }
             }
-            filesViewModel.getLargeSizeDiffApps()
-                .observe(viewLifecycleOwner) { mediaFileInfoList ->
-                    largeSizeDiffAppsPreview.invalidateProgress(true, null)
-                    mediaFileInfoList?.let {
-                        largeSizeDiffAppsPreview.invalidateProgress(false, null)
-                        largeSizeDiffAppsPreview.loadPreviews(mediaFileInfoList) {
-                            cleanButtonClick(it, true) {
-                                filesViewModel.largeSizeDiffAppsLiveData = null
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+                !isUsageStatsPermissionGranted()
+            ) {
+                // Starting with version O, the PACKAGE_USAGE_STATS permission is necessary to query
+                // the size of other apps
+                largeSizeDiffAppsPreview.loadRequireElevatedPermission({
+                    val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                    startActivity(intent)
+                }, ::usageStatsPermissionReload)
+            } else {
+                filesViewModel.getLargeSizeDiffApps()
+                    .observe(viewLifecycleOwner) { mediaFileInfoList ->
+                        largeSizeDiffAppsPreview.invalidateProgress(true, null)
+                        mediaFileInfoList?.let {
+                            largeSizeDiffAppsPreview.invalidateProgress(false, null)
+                            largeSizeDiffAppsPreview.loadPreviews(mediaFileInfoList) {
+                                cleanButtonClick(it, true) {
+                                    filesViewModel.largeSizeDiffAppsLiveData = null
+                                }
                             }
                         }
                     }
-                }
+            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 gamesPreview.visibility = View.VISIBLE
@@ -745,6 +749,16 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 reloadFragment()
             }
         }
+    }
+
+    private fun usageStatsPermissionReload() {
+        // When the permission is given, the worker is reenqueued to store the size of
+        // each app in the database for the analysis
+        Utils.scheduleQueryAppSizeWorker(
+            requireContext(),
+            ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE
+        )
+        reloadFragment()
     }
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
