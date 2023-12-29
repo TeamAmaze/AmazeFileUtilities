@@ -23,6 +23,7 @@ package com.amaze.fileutilities.utilis
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.amaze.fileutilities.home_page.database.AppDatabase
@@ -38,6 +39,13 @@ class QueryAppSizeWorker(
     workerParameters: WorkerParameters
 ) : CoroutineWorker(context, workerParameters) {
     override suspend fun doWork(): Result {
+        if (
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+            !isUsageStatsPermissionGranted(this.applicationContext)
+        ) {
+            return Result.failure()
+        }
+
         val appStorageStatsDao = AppDatabase.getInstance(applicationContext).appStorageStatsDao()
         val packageManager = applicationContext.packageManager
         // Get all currently installed apps
@@ -65,6 +73,15 @@ class QueryAppSizeWorker(
         appStorageStatsDao.deleteOlderThan(minDate)
 
         return Result.success()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
+    private fun isUsageStatsPermissionGranted(context: Context): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Utils.checkUsageStatsPermission(context)
+        } else {
+            Utils.getAppsUsageStats(context, 30).isNotEmpty()
+        }
     }
 
     companion object {
