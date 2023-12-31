@@ -305,6 +305,14 @@
                 app:showPreview="true"
                 android:layout_marginTop="@dimen/material_generic"
                 />
+            <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
+                android:id="@+id/large_size_diff_apps_preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:analysisTitle="@string/large_size_diff_apps"
+                app:showPreview="true"
+                android:layout_marginTop="@dimen/material_generic"
+                />
 
             <com.amaze.fileutilities.home_page.ui.analyse.AnalysisTypeView
                 android:id="@+id/games_preview"

@@ -51,12 +51,14 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
         private const val KEY_LEAST_USED_APPS = "least_used_apps"
         private const val KEY_NEWLY_INSTALLED_APPS = "newly_installed_apps"
         private const val KEY_RECENTLY_UPDATED_APPS = "recently_updated_apps"
+        private const val KEY_LARGE_SIZE_DIFF_APPS = "large_size_diff_apps"
         private const val KEY_WHATSAPP_MEDIA = "whatsapp_media"
         private val KEYS = listOf(
             KEY_DUPLICATES, KEY_MEMES, KEY_BLUR, KEY_LOW_LIGHT, KEY_FEATURES,
             KEY_SIMILAR_IMAGES, KEY_DOWNLOAD,
             KEY_RECORDING, KEY_SCREENSHOT, KEY_UNUSED_APPS, KEY_MOST_USED_APPS, KEY_LEAST_USED_APPS,
-            KEY_NEWLY_INSTALLED_APPS, KEY_RECENTLY_UPDATED_APPS, KEY_WHATSAPP_MEDIA, KEY_TELEGRAM
+            KEY_NEWLY_INSTALLED_APPS, KEY_RECENTLY_UPDATED_APPS, KEY_WHATSAPP_MEDIA, KEY_TELEGRAM,
+            KEY_LARGE_SIZE_DIFF_APPS
         )
     }
 
@@ -252,6 +254,26 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                         it?.toInt() ?: PreferencesConstants.DEFAULT_RECENTLY_UPDATED_APPS_DAYS
                     ).apply()
                 }
+            }
+            KEY_LARGE_SIZE_DIFF_APPS -> {
+                val days = prefs.getInt(
+                    PreferencesConstants.KEY_LARGE_SIZE_DIFF_APPS_DAYS,
+                    PreferencesConstants.DEFAULT_LARGE_SIZE_DIFF_APPS_DAYS
+                )
+                Utils.buildDigitInputDialog(
+                    requireContext(),
+                    getString(R.string.large_size_diff_apps),
+                    getString(R.string.large_size_diff_apps_summary) +
+                        " (max. ${PreferencesConstants.MAX_LARGE_SIZE_DIFF_APPS_DAYS} days)",
+                    days.toLong(),
+                    {
+                        prefs.edit().putInt(
+                            PreferencesConstants.KEY_LARGE_SIZE_DIFF_APPS_DAYS,
+                            it?.toInt() ?: PreferencesConstants.DEFAULT_LARGE_SIZE_DIFF_APPS_DAYS
+                        ).apply()
+                    },
+                    max = PreferencesConstants.MAX_LARGE_SIZE_DIFF_APPS_DAYS.toLong()
+                )
             }
         }
         return true

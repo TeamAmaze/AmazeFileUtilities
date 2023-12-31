@@ -72,6 +72,7 @@ import com.amaze.fileutilities.home_page.ui.AggregatedMediaFileInfoObserver
 import com.amaze.fileutilities.home_page.ui.options.Billing
 import com.amaze.fileutilities.utilis.CursorUtils
 import com.amaze.fileutilities.utilis.FileUtils
+import com.amaze.fileutilities.utilis.FixedSizePriorityQueue
 import com.amaze.fileutilities.utilis.ImgUtils
 import com.amaze.fileutilities.utilis.MLUtils
 import com.amaze.fileutilities.utilis.PreferencesConstants
@@ -108,11 +109,11 @@ import java.nio.charset.Charset
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.ZonedDateTime
 import java.util.Calendar
 import java.util.Collections
 import java.util.Date
 import java.util.GregorianCalendar
-import java.util.PriorityQueue
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.streams.toList
@@ -140,6 +141,7 @@ class FilesViewModel(val applicationContext: Application) :
     var largeAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var newlyInstalledAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var recentlyUpdatedAppsLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
+    var largeSizeDiffAppsLiveData: MutableLiveData<MutableList<MediaFileInfo>?>? = null
     var junkFilesLiveData: MutableLiveData<Pair<ArrayList<MediaFileInfo>, String>?>? = null
     var apksLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
     var hiddenFilesLiveData: MutableLiveData<ArrayList<MediaFileInfo>?>? = null
@@ -1687,7 +1689,7 @@ class FilesViewModel(val applicationContext: Application) :
         viewModelScope.launch(Dispatchers.IO) {
             loadAllInstalledApps(packageManager)
 
-            val priorityQueue = PriorityQueue<MediaFileInfo>(
+            val priorityQueue = FixedSizePriorityQueue<MediaFileInfo>(
                 50
             ) { o1, o2 ->
                 o2.extraInfo?.apkMetaData?.networkBytes?.let {
@@ -1697,10 +1699,7 @@ class FilesViewModel(val applicationContext: Application) :
                 } ?: 0
             }
 
-            allApps.get()?.forEachIndexed { index, applicationInfo ->
-                if (index > 49 && priorityQueue.isNotEmpty()) {
-                    priorityQueue.remove()
-                }
+            allApps.get()?.forEach { applicationInfo ->
                 MediaFileInfo.fromApplicationInfo(
                     applicationContext, applicationInfo.first,
                     applicationInfo.second
@@ -1848,14 +1847,11 @@ class FilesViewModel(val applicationContext: Application) :
         viewModelScope.launch(Dispatchers.IO) {
             loadAllInstalledApps(packageManager)
 
-            val priorityQueue = PriorityQueue<MediaFileInfo>(
+            val priorityQueue = FixedSizePriorityQueue<MediaFileInfo>(
                 50
             ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
 
-            allApps.get()?.forEachIndexed { index, applicationInfo ->
-                if (index > 49 && priorityQueue.isNotEmpty()) {
-                    priorityQueue.remove()
-                }
+            allApps.get()?.forEach { applicationInfo ->
                 MediaFileInfo.fromApplicationInfo(
                     applicationContext, applicationInfo.first,
                     applicationInfo.second
@@ -1892,7 +1888,7 @@ class FilesViewModel(val applicationContext: Application) :
                 PreferencesConstants.DEFAULT_NEWLY_INSTALLED_APPS_DAYS
             )
             val pastDate = LocalDateTime.now().minusDays(days.toLong())
-            val priorityQueue = PriorityQueue<MediaFileInfo>(
+            val priorityQueue = FixedSizePriorityQueue<MediaFileInfo>(
                 50
             ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
 
@@ -1901,10 +1897,7 @@ class FilesViewModel(val applicationContext: Application) :
                 val installDateTime = Instant.ofEpochMilli(it.second?.firstInstallTime!!)
                     .atZone(ZoneId.systemDefault()).toLocalDate()
                 installDateTime.isAfter(pastDate.toLocalDate())
-            }?.forEachIndexed { index, applicationInfo ->
-                if (index > 49 && priorityQueue.isNotEmpty()) {
-                    priorityQueue.remove()
-                }
+            }?.forEach { applicationInfo ->
                 MediaFileInfo.fromApplicationInfo(
                     applicationContext, applicationInfo.first,
                     applicationInfo.second
@@ -1941,7 +1934,7 @@ class FilesViewModel(val applicationContext: Application) :
                 PreferencesConstants.DEFAULT_RECENTLY_UPDATED_APPS_DAYS
             )
             val pastDate = LocalDateTime.now().minusDays(days.toLong())
-            val priorityQueue = PriorityQueue<MediaFileInfo>(
+            val priorityQueue = FixedSizePriorityQueue<MediaFileInfo>(
                 50
             ) { o1, o2 -> o1.longSize.compareTo(o2.longSize) }
 
@@ -1950,10 +1943,7 @@ class FilesViewModel(val applicationContext: Application) :
                 val updateDateTime = Instant.ofEpochMilli(it.second?.lastUpdateTime!!)
                     .atZone(ZoneId.systemDefault()).toLocalDate()
                 updateDateTime.isAfter(pastDate.toLocalDate())
-            }?.forEachIndexed { index, applicationInfo ->
-                if (index > 49 && priorityQueue.isNotEmpty()) {
-                    priorityQueue.remove()
-                }
+            }?.forEach { applicationInfo ->
                 MediaFileInfo.fromApplicationInfo(
                     applicationContext, applicationInfo.first,
                     applicationInfo.second
@@ -1969,6 +1959,70 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
             recentlyUpdatedAppsLiveData?.postValue(ArrayList(result.reversed()))
+        }
+    }
+    
+    fun getLargeSizeDiffApps(): LiveData<MutableList<MediaFileInfo>?> {
+        if (largeSizeDiffAppsLiveData == null) {
+            largeSizeDiffAppsLiveData = MutableLiveData()
+            largeSizeDiffAppsLiveData?.value = null
+            processLargeSizeDiffApps(applicationContext.packageManager)
+        }
+        return largeSizeDiffAppsLiveData!!
+    }
+
+    private fun processLargeSizeDiffApps(packageManager: PackageManager) {
+        viewModelScope.launch(Dispatchers.IO) {
+            loadAllInstalledApps(packageManager)
+            val sharedPrefs = applicationContext.getAppCommonSharedPreferences()
+            // Get the number of days which the analysis should consider
+            val days = sharedPrefs.getInt(
+                PreferencesConstants.KEY_LARGE_SIZE_DIFF_APPS_DAYS,
+                PreferencesConstants.DEFAULT_LARGE_SIZE_DIFF_APPS_DAYS
+            )
+            val pastDate = LocalDateTime.now().minusDays(days.toLong()).toLocalDate()
+            // The start of the last number of days as specified in the preferences
+            // It is the start of the search period
+            val periodStart = Date.from(pastDate.atStartOfDay(ZoneId.systemDefault()).toInstant())
+            // The end of the search period is now
+            val periodEnd = Date.from(ZonedDateTime.now().toInstant())
+
+            val dao = AppDatabase.getInstance(applicationContext).appStorageStatsDao()
+
+            val priorityQueue = FixedSizePriorityQueue<MediaFileInfo>(50) { o1, o2 ->
+                val diff1 = o1.extraInfo?.apkMetaData?.sizeDiff ?: 0
+                val diff2 = o2.extraInfo?.apkMetaData?.sizeDiff ?: 0
+                diff1.compareTo(diff2)
+            }
+
+            allApps.get()?.forEach { (applicationInfo, packageInfo) ->
+                // Find the oldest entry for the app within the last number of days
+                val storageStatToAppName = dao.findOldestWithinPeriod(
+                    applicationInfo.packageName,
+                    periodStart,
+                    periodEnd
+                )
+                if (storageStatToAppName != null) {
+                    // Calculate the size difference compared to the app size now
+                    val currentPackageSize =
+                        Utils.findApplicationInfoSize(applicationContext, applicationInfo)
+                    val sizeDiff = currentPackageSize - storageStatToAppName.packageSize
+                    if (sizeDiff > 0) {
+                        // If the app size grew, add it to the priority queue
+                        MediaFileInfo
+                            .fromApplicationInfo(
+                                applicationContext,
+                                applicationInfo,
+                                packageInfo,
+                                sizeDiff
+                            )
+                            ?.let { priorityQueue.add(it) }
+                    }
+                }
+            }
+
+            val result = priorityQueue.reversed()
+            largeSizeDiffAppsLiveData?.postValue(result.toMutableList())
         }
     }
 
@@ -2192,7 +2246,7 @@ class FilesViewModel(val applicationContext: Application) :
         paths: List<String>,
         limit: Int
     ): ArrayList<MediaFileInfo> {
-        val priorityQueue = PriorityQueue(limit, sortBy)
+        val priorityQueue = FixedSizePriorityQueue(limit, sortBy)
         if (allMediaFilesPair == null) {
             allMediaFilesPair = CursorUtils.listAll(applicationContext)
         }
@@ -2202,9 +2256,6 @@ class FilesViewModel(val applicationContext: Application) :
                 it.path.contains(pathPref, true)
             }
         }?.forEach {
-            if (priorityQueue.isNotEmpty() && priorityQueue.size > limit - 1) {
-                priorityQueue.remove()
-            }
             priorityQueue.add(it)
         }
 
@@ -2431,7 +2482,7 @@ class FilesViewModel(val applicationContext: Application) :
                 )
             }
             val dao = AppDatabase.getInstance(applicationContext).installedAppsDao()
-            dao.insert(installedApps)
+            dao.updateOrInsert(installedApps)
         }
     }
 

@@ -83,6 +83,9 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.abedelazizshe.lightcompressorlibrary.VideoQuality
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
@@ -1239,12 +1242,17 @@ class Utils {
             summary: String,
             days: Long,
             callback: (Long?) -> Unit,
-            neutralCallback: () -> Unit
+            max: Long? = null,
+            neutralCallback: (() -> Unit)? = null
         ) {
             val inputEditTextViewPair = getEditTextViewForDialog(context, "$days")
             inputEditTextViewPair.second.inputType = InputType.TYPE_CLASS_NUMBER
             inputEditTextViewPair.second.setText("$days")
-            val dialog = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
+            if (max != null) {
+                inputEditTextViewPair.second.filters = arrayOf(InputFilterMinMaxLong(1, max))
+            }
+
+            val dialogBuilder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
                 .setTitle(title)
                 .setMessage(summary)
                 .setView(inputEditTextViewPair.first)
@@ -1258,10 +1266,14 @@ class Utils {
                     R.string.cancel
                 ) { dialog, _ ->
                     dialog.dismiss()
-                }.setNeutralButton(R.string.default_alert_dialog) { dialog, _ ->
+                }
+            if (neutralCallback != null) {
+                dialogBuilder.setNeutralButton(R.string.default_alert_dialog) { dialog, _ ->
                     neutralCallback.invoke()
                     dialog.dismiss()
-                }.create()
+                }
+            }
+            val dialog = dialogBuilder.create()
             dialog.show()
         }
 
@@ -1505,6 +1517,19 @@ class Utils {
             }
             inputStream.close()
             return hexString.toString()
+        }
+
+        /**
+         * Schedules PeriodicWorkRequest to store the size of each app in the database every day
+         */
+        fun scheduleQueryAppSizeWorker(context: Context, policy: ExistingPeriodicWorkPolicy) {
+            val periodicWorkRequest = PeriodicWorkRequestBuilder<QueryAppSizeWorker>(
+                24,
+                TimeUnit.HOURS
+            ).build()
+            WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+                QueryAppSizeWorker.NAME, policy, periodicWorkRequest
+            )
         }
 
         private fun findApplicationInfoSizeFallback(applicationInfo: ApplicationInfo): Long {

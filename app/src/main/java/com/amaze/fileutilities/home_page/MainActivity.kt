@@ -38,6 +38,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.ExistingPeriodicWorkPolicy
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.WifiP2PActivity
@@ -250,6 +251,8 @@ class MainActivity :
                 .edit().putLong(PreferencesConstants.KEY_INSTALL_DATE, Date().time)
                 .apply()
         }
+
+        Utils.scheduleQueryAppSizeWorker(this, ExistingPeriodicWorkPolicy.KEEP)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

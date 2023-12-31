@@ -149,7 +149,8 @@ data class MediaFileInfo(
         fun fromApplicationInfo(
             context: Context,
             applicationInfo: ApplicationInfo,
-            packageInfo: PackageInfo?
+            packageInfo: PackageInfo?,
+            sizeDiff: Long = -1
         ): MediaFileInfo? {
             if (applicationInfo.sourceDir == null) {
                 return null
@@ -162,7 +163,8 @@ data class MediaFileInfo(
                     applicationInfo.loadLabel(packageManager) as String,
                     applicationInfo.sourceDir,
                     apkFile.lastModified(),
-                    Utils.findApplicationInfoSize(context, applicationInfo), false
+                    Utils.findApplicationInfoSize(context, applicationInfo),
+                    false
                 )
                 val extraInfo = ExtraInfo(
                     MEDIA_TYPE_APK,
@@ -170,7 +172,8 @@ data class MediaFileInfo(
                     ApkMetaData(
                         applicationInfo.packageName,
                         packageManager.getApplicationIcon(applicationInfo.packageName),
-                        Utils.getApplicationNetworkBytes(context, applicationInfo)
+                        Utils.getApplicationNetworkBytes(context, applicationInfo),
+                        sizeDiff
                     )
                 )
                 mediaFileInfo.extraInfo = extraInfo
@@ -405,7 +408,8 @@ data class MediaFileInfo(
     data class ApkMetaData(
         val packageName: String,
         val drawable: Drawable?,
-        val networkBytes: Long
+        val networkBytes: Long,
+        val sizeDiff: Long = -1
     )
     data class ExtraMetaData(val checksum: String)
     data class Playlist(var id: Long, var name: String)

@@ -30,6 +30,11 @@
         app:title="@string/recently_updated_apps"
         android:summary="@string/recently_updated_apps_summary"
         />
+    <Preference
+        app:key="large_size_diff_apps"
+        app:title="@string/large_size_diff_apps"
+        android:summary="@string/large_size_diff_apps_summary"
+        />
     <PreferenceCategory
         app:title="@string/paths_included">
         <Preference

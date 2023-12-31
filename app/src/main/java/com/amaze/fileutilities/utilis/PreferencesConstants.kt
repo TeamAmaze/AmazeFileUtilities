@@ -52,6 +52,7 @@ class PreferencesConstants {
         const val KEY_LEAST_USED_APPS_DAYS = "least_used_apps_days"
         const val KEY_NEWLY_INSTALLED_APPS_DAYS = "newly_installed_apps_days"
         const val KEY_RECENTLY_UPDATED_APPS_DAYS = "recently_updated_apps_days"
+        const val KEY_LARGE_SIZE_DIFF_APPS_DAYS = "large_size_diff_apps_days"
         const val KEY_TRASH_BIN_RETENTION_DAYS = "trash_bin_retention_days"
         const val KEY_TRASH_BIN_RETENTION_BYTES = "trash_bin_retention_bytes"
         const val KEY_TRASH_BIN_RETENTION_NUM_OF_FILES = "trash_bin_retention_num_of_files"
@@ -93,5 +94,10 @@ class PreferencesConstants {
         const val DEFAULT_LEAST_USED_APPS_DAYS = 7
         const val DEFAULT_NEWLY_INSTALLED_APPS_DAYS = 7
         const val DEFAULT_RECENTLY_UPDATED_APPS_DAYS = 7
+        const val DEFAULT_LARGE_SIZE_DIFF_APPS_DAYS = 7
+
+        // max days that the size is stored in database and
+        // therefore the max days that the size diff can be calculated
+        const val MAX_LARGE_SIZE_DIFF_APPS_DAYS = 180
     }
 }
