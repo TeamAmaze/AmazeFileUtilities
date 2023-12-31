@@ -44,7 +44,7 @@ import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 
 class MediaFileAdapter(
     val context: Context,
-    private val preloader: MediaAdapterPreloader,
+    private val preloader: MediaAdapterPreloader<MediaFileInfo>,
     private val optionsMenuSelected: OptionsMenuSelected,
     isGrid: Boolean,
     private var sortingPreference: MediaFileListSorter.SortingPreference,
@@ -86,11 +86,11 @@ class MediaFileAdapter(
             headerListItems.clear()
             var lastHeader: String? = null
             value.add(ListItem(TYPE_BANNER))
-            preloader.addItem("")
+            preloader.addItem(null)
             for (i in 0 until mediaFileInfoList.size) {
                 if (lastHeader == null || mediaFileInfoList[i].listHeader != lastHeader) {
                     value.add(ListItem(TYPE_HEADER, mediaFileInfoList[i].listHeader))
-                    preloader.addItem("")
+                    preloader.addItem(null)
                     headerListItems.add(
                         ListItem(
                             TYPE_HEADER, mediaFileInfoList[i].listHeader.trim()
@@ -105,10 +105,10 @@ class MediaFileAdapter(
                         header = mediaFileInfoList[i].listHeader
                     )
                 )
-                preloader.addItem(mediaFileInfoList[i].path)
+                preloader.addItem(mediaFileInfoList[i])
                 onlyItemsCounts++
             }
-            preloader.addItem("")
+            preloader.addItem(null)
             value.add(ListItem(EMPTY_LAST_ITEM))
             field = value
         }

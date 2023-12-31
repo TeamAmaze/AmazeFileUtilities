@@ -38,6 +38,9 @@ class MediaInfoRecyclerViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     val infoSummary: TextView = view.findViewById(R.id.info_summary)
 
     @JvmField
+    val infoSubSummary: TextView = view.findViewById(R.id.info_sub_summary)
+
+    @JvmField
     val extraInfo: TextView = view.findViewById(R.id.extra_info)
 
     @JvmField

@@ -25,8 +25,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -52,8 +50,8 @@ class FilesFragment : ItemsActionBarFragment() {
     private val filesViewModel: FilesViewModel by activityViewModels()
     private var _binding: FragmentFilesBinding? = null
     private var mediaFileAdapter: RecentMediaFilesAdapter? = null
-    private var preloader: MediaAdapterPreloader? = null
-    private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
+    private var preloader: MediaAdapterPreloader<MediaFileInfo>? = null
+    private var recyclerViewPreloader: RecyclerViewPreloader<MediaFileInfo>? = null
     private var linearLayoutManager: LinearLayoutManager? = null
     private val MAX_PRELOAD = 100
 
@@ -297,9 +295,10 @@ class FilesFragment : ItemsActionBarFragment() {
                     }
                     preloader = MediaAdapterPreloader(
                         applicationContext,
-                        R.drawable.ic_outline_insert_drive_file_32
+                        R.drawable.ic_outline_insert_drive_file_32,
+                        false
                     )
-                    val sizeProvider = ViewPreloadSizeProvider<String>()
+                    val sizeProvider = ViewPreloadSizeProvider<MediaFileInfo>()
                     recyclerViewPreloader = RecyclerViewPreloader(
                         Glide.with(applicationContext),
                         preloader!!,
@@ -370,10 +369,6 @@ class FilesFragment : ItemsActionBarFragment() {
         }
 
         binding.storagePercent.setAdaptiveColorProvider(colorProvider)
-        val slideUpAnimation: Animation =
-            AnimationUtils.loadAnimation(requireContext(), R.anim.slide_up_fade_in)
-        binding.listFragmentParent.startAnimation(slideUpAnimation)
-        binding.listFragmentParent.visibility = View.VISIBLE
         return root
     }
 

@@ -68,8 +68,8 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
     private lateinit var viewModel: AnalyseViewModel
     private var gridLayoutManager: GridLayoutManager? = GridLayoutManager(context, 3)
     private var mediaFileAdapter: ReviewAnalysisAdapter? = null
-    private var preloader: MediaAdapterPreloader? = null
-    private var recyclerViewPreloader: RecyclerViewPreloader<String>? = null
+    private var preloader: MediaAdapterPreloader<MediaFileInfo>? = null
+    private var recyclerViewPreloader: RecyclerViewPreloader<MediaFileInfo>? = null
     private val MAX_PRELOAD = 50
     private var analysisType: Int? = null
 
@@ -146,9 +146,10 @@ class ReviewImagesFragment : ItemsActionBarFragment() {
         // set list adapter
         preloader = MediaAdapterPreloader(
             requireContext(),
-            R.drawable.ic_outline_insert_drive_file_32
+            R.drawable.ic_outline_insert_drive_file_32,
+            true
         )
-        val sizeProvider = ViewPreloadSizeProvider<String>()
+        val sizeProvider = ViewPreloadSizeProvider<MediaFileInfo>()
         recyclerViewPreloader = RecyclerViewPreloader(
             Glide.with(requireActivity()),
             preloader!!,

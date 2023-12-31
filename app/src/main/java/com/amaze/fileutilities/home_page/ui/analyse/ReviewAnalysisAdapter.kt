@@ -35,7 +35,7 @@ import java.lang.ref.WeakReference
 class ReviewAnalysisAdapter(
     val context: Context,
     val analysisType: Int?,
-    private val preloader: MediaAdapterPreloader,
+    private val preloader: MediaAdapterPreloader<MediaFileInfo>,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
     toggleCheckCallback: (
         checkedSize: Int,
@@ -55,10 +55,10 @@ class ReviewAnalysisAdapter(
             value.clear()
             for (i in mediaFileInfoList.indices) {
                 value.add(ListItem(mediaFileInfo = mediaFileInfoList[i]))
-                preloader.addItem(mediaFileInfoList[i].path)
+                preloader.addItem(mediaFileInfoList[i])
             }
             if (mediaFileInfoList.size != 0) {
-                preloader.addItem("")
+                preloader.addItem(null)
                 value.add(ListItem(EMPTY_LAST_ITEM))
             }
             field = value

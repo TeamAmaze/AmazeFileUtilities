@@ -28,7 +28,7 @@ import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 
 class RecentMediaFilesAdapter(
     val context: Context,
-    val preloader: MediaAdapterPreloader,
+    val preloader: MediaAdapterPreloader<MediaFileInfo>,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
     toggleCheckCallback: (Int, Int, String) -> Unit,
 ) :
@@ -42,10 +42,10 @@ class RecentMediaFilesAdapter(
             value.clear()
             mediaFileInfoList.forEach {
                 value.add(ListItem(mediaFileInfo = it))
-                preloader.addItem(it.path)
+                preloader.addItem(it)
             }
             if (mediaFileInfoList.size != 0) {
-                preloader.addItem("")
+                preloader.addItem(null)
                 value.add(ListItem(EMPTY_LAST_ITEM))
             }
             field = value
