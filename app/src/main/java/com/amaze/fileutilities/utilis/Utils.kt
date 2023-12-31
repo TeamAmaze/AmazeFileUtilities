@@ -1242,14 +1242,20 @@ class Utils {
             summary: String,
             days: Long,
             callback: (Long?) -> Unit,
-            max: Long? = null,
+            lowerBound: Long? = null,
+            upperBound: Long? = null,
             neutralCallback: (() -> Unit)? = null
         ) {
             val inputEditTextViewPair = getEditTextViewForDialog(context, "$days")
             inputEditTextViewPair.second.inputType = InputType.TYPE_CLASS_NUMBER
             inputEditTextViewPair.second.setText("$days")
-            if (max != null) {
-                inputEditTextViewPair.second.filters = arrayOf(InputFilterMinMaxLong(1, max))
+            if (upperBound != null) {
+                inputEditTextViewPair.second.filters = arrayOf(InputFilterMinMaxLong(1, upperBound))
+            }
+            if (lowerBound != null) {
+                inputEditTextViewPair.second.filters = arrayOf(InputFilterMinMaxLong(lowerBound,
+                    Integer.MAX_VALUE.toLong()
+                ))
             }
 
             val dialogBuilder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)

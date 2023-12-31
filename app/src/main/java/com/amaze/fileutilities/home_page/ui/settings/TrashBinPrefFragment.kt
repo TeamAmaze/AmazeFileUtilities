@@ -82,7 +82,8 @@ class TrashBinPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                             PreferencesConstants.KEY_TRASH_BIN_RETENTION_DAYS,
                             it?.toInt() ?: TrashBinConfig.RETENTION_DAYS_INFINITE
                         ).apply()
-                    }
+                    },
+                    lowerBound = 1
                 ) {
                     prefs.edit().putInt(
                         PreferencesConstants.KEY_TRASH_BIN_RETENTION_DAYS,
@@ -91,10 +92,13 @@ class TrashBinPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                 }
             }
             KEY_RETENTION_BYTES -> {
-                val bytes = prefs.getLong(
+                var bytes = prefs.getLong(
                     PreferencesConstants.KEY_TRASH_BIN_RETENTION_BYTES,
                     TrashBinConfig.RETENTION_BYTES_INFINITE
                 )
+                if (bytes != TrashBinConfig.RETENTION_BYTES_INFINITE) {
+                    bytes = bytes.div(1024).div(1024)
+                }
                 Utils.buildDigitInputDialog(
                     requireContext(), getString(R.string.retention_bytes_title),
                     getString(R.string.retention_bytes_summary), bytes,
@@ -104,7 +108,8 @@ class TrashBinPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                             PreferencesConstants.KEY_TRASH_BIN_RETENTION_BYTES,
                             bytesInput ?: TrashBinConfig.RETENTION_BYTES_INFINITE
                         ).apply()
-                    }
+                    },
+                    lowerBound = 1
                 ) {
                     prefs.edit().putLong(
                         PreferencesConstants.KEY_TRASH_BIN_RETENTION_BYTES,
@@ -125,7 +130,8 @@ class TrashBinPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                             PreferencesConstants.KEY_TRASH_BIN_RETENTION_NUM_OF_FILES,
                             it?.toInt() ?: TrashBinConfig.RETENTION_NUM_OF_FILES
                         ).apply()
-                    }
+                    },
+                    lowerBound = 1
                 ) {
                     prefs.edit().putInt(
                         PreferencesConstants.KEY_TRASH_BIN_RETENTION_NUM_OF_FILES,
@@ -146,7 +152,8 @@ class TrashBinPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                             PreferencesConstants.KEY_TRASH_BIN_CLEANUP_INTERVAL_HOURS,
                             it?.toInt() ?: TrashBinConfig.INTERVAL_CLEANUP_HOURS
                         ).apply()
-                    }
+                    },
+                    lowerBound = 1
                 ) {
                     prefs.edit().putInt(
                         PreferencesConstants.KEY_TRASH_BIN_CLEANUP_INTERVAL_HOURS,

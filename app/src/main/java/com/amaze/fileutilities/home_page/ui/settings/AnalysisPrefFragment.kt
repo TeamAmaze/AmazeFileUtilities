@@ -272,7 +272,7 @@ class AnalysisPrefFragment : PreferenceFragmentCompat(), Preference.OnPreference
                             it?.toInt() ?: PreferencesConstants.DEFAULT_LARGE_SIZE_DIFF_APPS_DAYS
                         ).apply()
                     },
-                    max = PreferencesConstants.MAX_LARGE_SIZE_DIFF_APPS_DAYS.toLong()
+                    upperBound = PreferencesConstants.MAX_LARGE_SIZE_DIFF_APPS_DAYS.toLong()
                 )
             }
         }
