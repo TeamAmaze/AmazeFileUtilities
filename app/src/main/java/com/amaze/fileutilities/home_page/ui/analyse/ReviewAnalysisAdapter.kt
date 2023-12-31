@@ -35,7 +35,7 @@ import java.lang.ref.WeakReference
 class ReviewAnalysisAdapter(
     val context: Context,
     val analysisType: Int?,
-    private val preloader: MediaAdapterPreloader,
+    private val preloader: MediaAdapterPreloader<MediaFileInfo>,
     private val mediaFileInfoList: MutableList<MediaFileInfo>,
     toggleCheckCallback: (
         checkedSize: Int,
@@ -55,10 +55,10 @@ class ReviewAnalysisAdapter(
             value.clear()
             for (i in mediaFileInfoList.indices) {
                 value.add(ListItem(mediaFileInfo = mediaFileInfoList[i]))
-                preloader.addItem(mediaFileInfoList[i].path)
+                preloader.addItem(mediaFileInfoList[i])
             }
             if (mediaFileInfoList.size != 0) {
-                preloader.addItem("")
+                preloader.addItem(null)
                 value.add(ListItem(EMPTY_LAST_ITEM))
             }
             field = value
@@ -123,12 +123,14 @@ class ReviewAnalysisAdapter(
         }
     }
 
+    /** Returns the number of items. There might be dummy items, that are also counted here */
     override fun getItemCount(): Int {
         return mediaFileListItems.size
     }
 
+    /** Returns the number of actual items. Dummy items are not counted. */
     override fun getOnlyItemsCount(): Int {
-        return mediaFileListItems.size
+        return mediaFileListItems.size - 1
     }
 
     override fun getItemViewType(position: Int): Int {

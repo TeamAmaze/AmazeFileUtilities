@@ -22,6 +22,7 @@ package com.amaze.fileutilities.home_page.ui.analyse
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -483,6 +484,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 if (!isUsageStatsPermissionGranted()) {
                     unusedAppsPreview.loadRequireElevatedPermission({
                         val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                        intent.data = Uri.parse("package:${requireActivity().packageName}")
                         startActivity(intent)
                     }, ::usageStatsPermissionReload)
                 } else {
@@ -507,10 +509,12 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 if (!isUsageStatsPermissionGranted()) {
                     mostUsedAppsPreview.loadRequireElevatedPermission({
                         val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                        intent.data = Uri.parse("package:${requireActivity().packageName}")
                         startActivity(intent)
                     }, ::usageStatsPermissionReload)
                     leastUsedAppsPreview.loadRequireElevatedPermission({
                         val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                        intent.data = Uri.parse("package:${requireActivity().packageName}")
                         startActivity(intent)
                     }, ::usageStatsPermissionReload)
                 } else {
@@ -551,6 +555,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             ) {
                 networkIntensiveAppsPreview.loadRequireElevatedPermission({
                     val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+                    intent.data = Uri.parse("package:${requireActivity().packageName}")
                     startActivity(intent)
                 }, ::usageStatsPermissionReload)
             } else {

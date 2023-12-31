@@ -50,6 +50,18 @@
             android:fadingEdge="horizontal"
             />
         <TextView
+            android:id="@+id/info_sub_summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/twelve_sp"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/gray_text"
+            android:singleLine="true"
+            android:fadingEdge="horizontal"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            />
+        <TextView
             android:id="@+id/info_summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,7 +76,7 @@
     </LinearLayout>
     <TextView
         android:id="@+id/extra_info"
-        android:layout_width="@dimen/minimal_icon_size"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/minimal_icon_size"
         android:gravity="center_vertical|center_horizontal"
         android:layout_alignParentEnd="true"

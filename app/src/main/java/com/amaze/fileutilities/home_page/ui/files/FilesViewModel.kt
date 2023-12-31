@@ -659,6 +659,22 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
+    /**
+     * We find histogram for a given image, divide it in 256/8 windows.
+     * For each window of this histogram, we find the red, green and blue channel peaks individually, along with it's position for a given window.
+     * All these data points are then saved in database table for all images.
+     * This process starts as soon as app starts and keeps running in background (ofcourse there are multiple optimisations done so as to not fill up RAM, for all the background running analysis in the app).
+     * Then once we have all the histograms data (all analysis resumes from last point in case user closes the app, or users take new images till the time we have processed all the images), so however multiple runs the app takes, once we have all the histogram data, it's time to figure out the similar images.
+     * To figure out the similar images, we compare the peaks of the rgb channel of each window, once we have x number of windows that matches, say 6 out of 8 windows, we can say that image may be similar (the number was decided based on multiple tests in real life).
+     * In order to make results more realistic, we also compare the position of peak along with the peak rgb channel for a given window. Ofcourse, you can't have the exact same pixel position for a peak, so a normalization was also done.
+     * Finally, when we have a matching image that satisfies above criteria, we take a checksum of all the rgb channel windows along with it's parent path (this is done so that we only match similar images in the same directory, as chances are, similar images will be in the same directory and helps to minimize false positives), and then save checksum value of all the images in the table.
+     * This second part of the analysis is also done in the background.
+     * So till here we have figured out the similar images and can uniquely identify them from their checksum, so that we don't have to repeat the second step at the runtime.
+     * Finally when a user opens the analysis section of the app, all we have to do is to group images by same checksum and list them to the user.
+     * Ofcourse there may be some false positives in this (or any other) analysis algorithm in the app, so we already have a feature where all user have to do is select the analysis result, and press the thumbs down button at top of the screen, and then that analysis will be marked false positive in the database and will not be shown to user again.
+     * Phew, this was something, I had to write this down so that I don't forget in future again instead of going through the code.
+     * I know there are multiple algorithms online, too complicated for me to understand and write from scratch in java (they're native functions in python). So I had to resort to write on my own.
+     */
     fun analyseSimilarImages(
         mediaFileInfoList: List<MediaFileInfo>,
         pathPreferencesList: List<PathPreferences>
@@ -1945,7 +1961,7 @@ class FilesViewModel(val applicationContext: Application) :
             recentlyUpdatedAppsLiveData?.postValue(ArrayList(result.reversed()))
         }
     }
-
+    
     fun getLargeSizeDiffApps(): LiveData<MutableList<MediaFileInfo>?> {
         if (largeSizeDiffAppsLiveData == null) {
             largeSizeDiffAppsLiveData = MutableLiveData()
@@ -2010,6 +2026,12 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
+    /**
+     * installedAppsDao contains all the apps installed at a given instance, the list gets updated each time we fetch all apps.
+     * We fetch list of installed apps right now here again, and compare with the installedAppsDao list
+     * apps installed right now will be a subset of installedAppsDao
+     * We find the difference first, then for apps that aren't installed now, we check to see if there is any data directory present or not.
+     */
     fun getJunkFilesLiveData(): LiveData<Pair<ArrayList<MediaFileInfo>, String>?> {
         if (junkFilesLiveData == null) {
             junkFilesLiveData = MutableLiveData()
@@ -2023,38 +2045,39 @@ class FilesViewModel(val applicationContext: Application) :
         viewModelScope.launch(Dispatchers.IO) {
             loadAllInstalledApps(packageManager)
             val dao = AppDatabase.getInstance(applicationContext).installedAppsDao()
-            val savedInstalledApps = dao.findAll().filter {
-                savedAppData ->
-                allApps.get()?.any {
-                    !it.first.packageName.equals(savedAppData.packageName)
-                } == false
-            }
-            log.info("found following apps not installed {}", savedInstalledApps)
-            val result = ArrayList<MediaFileInfo>()
-            savedInstalledApps.forEach {
-                savedApp ->
-                savedApp.dataDirs.forEach {
-                    result.add(
-                        MediaFileInfo.fromFile(
-                            File(it),
-                            MediaFileInfo.ExtraInfo(
-                                MediaFileInfo.MEDIA_TYPE_UNKNOWN,
-                                null, null, null
+            val savedInstalledApps = dao.findAll()
+            allApps.get()?.map { it.first.packageName }?.toSet()?.let {
+                installedAppsPackageNames ->
+                val difference = savedInstalledApps.filter {
+                    it.packageName !in installedAppsPackageNames
+                }
+                log.info("found following apps not installed {}", difference)
+                val result = ArrayList<MediaFileInfo>()
+                difference.forEach {
+                    savedApp ->
+                    savedApp.dataDirs.forEach {
+                        result.add(
+                            MediaFileInfo.fromFile(
+                                File(it),
+                                MediaFileInfo.ExtraInfo(
+                                    MediaFileInfo.MEDIA_TYPE_UNKNOWN,
+                                    null, null, null
+                                )
                             )
                         )
-                    )
+                    }
                 }
-            }
-            var size = 0L
-            result.forEach {
-                size += it.longSize
-            }
-            junkFilesLiveData?.postValue(
-                Pair(
-                    result,
-                    Formatter.formatFileSize(applicationContext, size)
+                var size = 0L
+                result.forEach {
+                    size += it.longSize
+                }
+                junkFilesLiveData?.postValue(
+                    Pair(
+                        result,
+                        Formatter.formatFileSize(applicationContext, size)
+                    )
                 )
-            )
+            }
         }
     }
 
@@ -2450,7 +2473,13 @@ class FilesViewModel(val applicationContext: Application) :
         allApps.get()?.let {
             infoListPair ->
             val installedApps = infoListPair.map {
-                InstalledApps(it.first.packageName, listOf(it.first.sourceDir, it.first.dataDir))
+                InstalledApps(
+                    it.first.packageName,
+                    listOf(
+                        it.first.sourceDir,
+                        it.first.dataDir, it.first.publicSourceDir
+                    )
+                )
             }
             val dao = AppDatabase.getInstance(applicationContext).installedAppsDao()
             dao.updateOrInsert(installedApps)

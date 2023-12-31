@@ -47,7 +47,7 @@ class VideosListFragment : AbstractMediaInfoListFragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
-    private var preloader: MediaAdapterPreloader? = null
+    private var preloader: MediaAdapterPreloader<MediaFileInfo>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,11 +79,12 @@ class VideosListFragment : AbstractMediaInfoListFragment() {
             fileStorageSummaryAndMediaFileInfo else null
     }
 
-    override fun getMediaAdapterPreloader(): MediaAdapterPreloader {
+    override fun getMediaAdapterPreloader(isGrid: Boolean): MediaAdapterPreloader<MediaFileInfo> {
         if (preloader == null) {
             preloader = MediaAdapterPreloader(
                 requireContext(),
-                R.drawable.ic_outline_video_library_32
+                R.drawable.ic_outline_video_library_32,
+                isGrid
             )
         }
         return preloader!!

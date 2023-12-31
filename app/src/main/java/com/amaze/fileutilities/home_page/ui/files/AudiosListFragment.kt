@@ -72,8 +72,8 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         Pair<FilesViewModel.StorageSummary, List<MediaFileInfo>?>? = null
 
     private lateinit var audioPlaybackServiceConnection: AudioPlaybackServiceConnection
-    private var filesPreloader: MediaAdapterPreloader? = null
-    private var playlistsPreloader: MediaAdapterPreloader? = null
+    private var filesPreloader: MediaAdapterPreloader<MediaFileInfo>? = null
+    private var playlistsPreloader: MediaAdapterPreloader<MediaFileInfo>? = null
     private var isWaveformProcessing = false
     private var lastPaletteColor: Int = 0
     private var lastLyrics: String? = null
@@ -368,7 +368,7 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
         }
     }
 
-    override fun getMediaAdapterPreloader(): MediaAdapterPreloader {
+    override fun getMediaAdapterPreloader(isGrid: Boolean): MediaAdapterPreloader<MediaFileInfo> {
         val sharedPrefs = requireContext().getAppCommonSharedPreferences()
         val groupByPref = sharedPrefs.getInt(
             MediaFileListSorter.SortingPreference.getGroupByKey(MediaFileAdapter.MEDIA_TYPE_AUDIO),
@@ -378,7 +378,8 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
             if (filesPreloader == null) {
                 filesPreloader = MediaAdapterPreloader(
                     requireContext(),
-                    R.drawable.ic_outline_audio_file_32
+                    R.drawable.ic_outline_audio_file_32,
+                    isGrid
                 )
             }
             return filesPreloader!!
@@ -386,7 +387,8 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
             if (playlistsPreloader == null) {
                 playlistsPreloader = MediaAdapterPreloader(
                     requireContext(),
-                    R.drawable.ic_outline_audio_file_32
+                    R.drawable.ic_outline_audio_file_32,
+                    isGrid
                 )
             }
             return playlistsPreloader!!

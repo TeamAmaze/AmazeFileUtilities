@@ -3,6 +3,6 @@
     android:shape="oval">
 
     <size
-        android:width="1dp"
-        android:height="1dp"/>
+        android:width="@dimen/minimal_icon_size"
+        android:height="@dimen/minimal_icon_size"/>
 </shape>
