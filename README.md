@@ -21,9 +21,15 @@ An open source alternative to Google Files android app.
 Analyse:
 - Analyse storage for junk files to delete
 - Group similar images, memes, low-light images, blurred images, selfies or group images
-- Group large or duplicate files in storage
+- Group large, duplicate or hidden files in storage
+- Group cluttered media files (uses algorithms to identify videos that may not be useful)
 - Group old downloads, recordings or screenshots
 - Group unused / most used / least used installed apps, large apps or games, apps that use most data
+- Group Whatsapp / Telegram media files
+- Group apps that use most Mobile / Wifi network data
+- Clean junk data of uninstalled apps
+- Group list of apps growing in size
+- Group apk files in storage that may not be useful
 - Clear RAM for better performance
 - Compress media files
 
@@ -33,6 +39,7 @@ Media Files:
 - Open using inbuilt player
 - Jump to any date instantly
 - Search for any media file instantly
+- Compress images / video files
 - Cast on tv
 
 Music Player:
@@ -40,12 +47,13 @@ Music Player:
 - View waveform data for better insight of song
 - Change playback pitch or speed
 - Add, remove songs to playlists
+- Search for lyrics online, play along with the song
 
 Video Player:
 - Play videos with gestures to skip, manage volume, brightness within player
 - View in picture-in-picture mode
 - Supports gesture to play, pause, skip, change brightness or volume within player
-- Play in background
+- Play in background or PIP (picture-in-picture) window
 - Lock gestures or orientation
 - Search and download online subtitles within player
 - Change playback aspect ratio, pitch and speed
@@ -137,10 +145,10 @@ Here some important points to keep in mind, as to how we handle licensing:
 - We will ALWAYS use all our legal options, if you do not strictly adhere to these licencing terms.
 
 
-    Copyright (C) 2021-2022 Arpit Khurana <arpitkh96@gmail.com>
-    Copyright (C) 2021-2022 Vishal Nehra <vishalmeham2@gmail.com>
-    Copyright (C) 2021-2022 Emmanuel Messulam <emmanuelbendavid@gmail.com>
-    Copyright (C) 2021-2022 Raymond Lai <airwave209gt at gmail.com>
+    Copyright (C) 2021-2024 Arpit Khurana <arpitkh96@gmail.com>
+    Copyright (C) 2021-2024 Vishal Nehra <vishalmeham2@gmail.com>
+    Copyright (C) 2021-2024 Emmanuel Messulam <emmanuelbendavid@gmail.com>
+    Copyright (C) 2021-2024 Raymond Lai <airwave209gt at gmail.com>
     This file is part of Amaze File Utilities.
     Amaze File Utilities is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

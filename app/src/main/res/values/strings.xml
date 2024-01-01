@@ -113,7 +113,7 @@
     <!-- About screen title -->
     <string name="about">About</string>
     <!-- Copyright dialog content in about section -->
-    <string name="rights_reserved">Copyright © 2021–2022 Team Amaze\nAll Rights Reserved</string>
+    <string name="rights_reserved">Copyright © 2021–2024 Team Amaze\nAll Rights Reserved</string>
     <!-- Open source licenses in about section -->
     <string name="open_source_licenses">Open-source licenses</string>
     <!-- Privacy policy label in about section -->
