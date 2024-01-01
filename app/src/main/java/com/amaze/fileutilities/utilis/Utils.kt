@@ -1255,9 +1255,12 @@ class Utils {
                 inputEditTextViewPair.second.filters = arrayOf(InputFilterMinMaxLong(1, upperBound))
             }
             if (lowerBound != null) {
-                inputEditTextViewPair.second.filters = arrayOf(InputFilterMinMaxLong(lowerBound,
-                    Integer.MAX_VALUE.toLong()
-                ))
+                inputEditTextViewPair.second.filters = arrayOf(
+                    InputFilterMinMaxLong(
+                        lowerBound,
+                        Integer.MAX_VALUE.toLong()
+                    )
+                )
             }
 
             val dialogBuilder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)
