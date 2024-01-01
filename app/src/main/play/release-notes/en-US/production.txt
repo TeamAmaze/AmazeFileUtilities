@@ -1,6 +1,7 @@
 Changelog:
 - Add support for Android 13
-- Minor fixes in trash bin
-- Improve performance
+- Bugfixes in video and audio players
+- Analyse list of apps growing in size
+- Improved performance
 - Update translations
 - Other bugfixes
