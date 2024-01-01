@@ -1,121 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">أدوات مدير الملفات Amaze</string>
+    <string name="app_name">Amaze File Utilities</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">أدوات Amaze</string>
+    <string name="app_name_launcher">Amaze Utilities</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">تطبيق مدير الملفات متضمن مشغلات وسائط لجميع احتياجاتك.</string>
+    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">عارض صور Amaze</string>
+    <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">عارض الصور</string>
+    <string name="image_viewer_normal">Image Viewer</string>
     <!-- Video player activity label -->
-    <string name="video_player">مشغل الفيديو Amaze</string>
+    <string name="video_player">Amaze Video Player</string>
     <!-- Video player dialog intent filter label -->
-    <string name="video_player_dialog">مشغل الفيديو Amaze (نافذة صغيرة)</string>
+    <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">مشغل فيديو Amaze (ملء الشاشة)</string>
+    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
     <!-- Music player activity label -->
-    <string name="amaze_audio_player">مشغل موسيقى Amaze</string>
+    <string name="amaze_audio_player">Amaze Music Player</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">عارض بي دي اف Amaze</string>
+    <string name="pdf_viewer">Amaze Pdf Viewer</string>
     <!-- Epub activity label -->
-    <string name="epub_viewer">عارض Epub</string>
+    <string name="epub_viewer">Amaze Epub Viewer</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">مستعرض Doc</string>
+    <string name="docx_viewer">Amaze Doc Viewer</string>
     <!-- Image viewer dialog intent filter label -->
-    <string name="intent_image_viewer_dialog">عارض صور Amaze (نافذة صغيرة)</string>
+    <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
     <!-- Image viewer full screen intent label -->
-    <string name="intent_image_viewer_full_screen">عارض صور Amaze (ملء الشاشة)</string>
+    <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
     <!-- User didn't accept all storage permissions -->
-    <string name="grantfailed">أذن التخزين غير ممنوح</string>
+    <string name="grantfailed">Storage permission not granted</string>
     <!-- User didn't accept location permission for transfer files tab -->
-    <string name="grant_location_failed">أذن الموقع غير ممنوح</string>
+    <string name="grant_location_failed">Location permission not granted</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_storage_read_permission">يحتاج التطبيق لأذونات قراءة الذاكرة لتحقيق الأداء الأمثل.</string>
+    <string name="grant_storage_read_permission">App needs storage read permissions for optimal performance.</string>
     <!-- Shown in welcome screen for first time -->
     <string name="grant_notification_permission">App needs notification permissions for optimal performance.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_permission">منح الأذن</string>
+    <string name="grant_permission">Grant permission</string>
     <!-- Grant permission button for welcome screen -->
-    <string name="grant">منح</string>
+    <string name="grant">Grant</string>
     <!-- Cancel button in dialogs mainly to cancel any operation -->
-    <string name="cancel">إلغاء</string>
+    <string name="cancel">Cancel</string>
     <!-- Play button label in music player notification -->
-    <string name="play">تشغيل</string>
+    <string name="play">Play</string>
     <!-- Shuffle button label in music player notification -->
-    <string name="shuffle">خلط</string>
+    <string name="shuffle">Shuffle</string>
     <!-- Repeat button label in music player notification -->
-    <string name="repeat">إعادة</string>
+    <string name="repeat">Repeat</string>
     <!-- Previous button label in music player notification -->
-    <string name="previous">السابق</string>
+    <string name="previous">Previous</string>
     <!-- Next button label in music player notification -->
-    <string name="next">التالي</string>
+    <string name="next">Next</string>
     <!-- Not allowed to perform any operation -->
-    <string name="not_allowed">غير مسموح</string>
+    <string name="not_allowed">Not allowed</string>
     <!-- Audio player notification channel description -->
-    <string name="audio_player_service_description">يشغل أصوات أدوات مدير الملفات Amaze</string>
+    <string name="audio_player_service_description">Plays audio for Amaze File Utilities</string>
     <!-- Invert colors in document / pdf viewer -->
-    <string name="invert_colors">عكس الألوان</string>
+    <string name="invert_colors">Invert colors</string>
     <!-- Location any list eg. images or videos list -->
-    <string name="loading">جاري التحميل…</string>
+    <string name="loading">Loading…</string>
     <!-- Analyse tab on app main screen bottom tab -->
-    <string name="title_analyse">تحليل</string>
+    <string name="title_analyse">Analyse</string>
     <!-- Utilities tab on app main screen bottom tab -->
-    <string name="title_utilities">أدوات</string>
+    <string name="title_utilities">Utilities</string>
     <!-- Transfer files tab on app main screen bottom tab -->
-    <string name="title_transfer">نقل</string>
+    <string name="title_transfer">Transfer</string>
     <!-- Scan nearby connections button in transfer tab -->
-    <string name="title_scan">مسح ضوئي</string>
+    <string name="title_scan">Scan</string>
     <!-- Stop scan nearby devices in transfer tab -->
-    <string name="title_stop_scan">إيقاف</string>
+    <string name="title_stop_scan">Stop</string>
     <!-- Internal storage on app main screen -->
-    <string name="internal_storage">ذاكرة التخزين الداخلية</string>
+    <string name="internal_storage">Internal Storage</string>
     <!-- Images title in images list screen in utilities tab -->
-    <string name="images">صور</string>
+    <string name="images">Images</string>
     <!-- Audios title in audios list screen in utilities tab -->
-    <string name="audios">صوتيات</string>
+    <string name="audios">Audios</string>
     <!-- Videos title in videos list screen in utilities tab -->
-    <string name="videos">مقاطع الفيديو</string>
+    <string name="videos">Videos</string>
     <!-- Documents title in documents list screen in utilities tab -->
-    <string name="documents">المستندات</string>
+    <string name="documents">Documents</string>
     <!-- Number of files in utilities tab individual list screens eg in images / number of images -->
-    <string name="num_of_files">%s ملف</string>
+    <string name="num_of_files">%s Files</string>
     <!-- Number of total media files on main screen -->
-    <string name="num_of_media_files">%s ملف وسائط</string>
+    <string name="num_of_media_files">%s Media Files</string>
     <!-- Used space in utilties tab in individual lists screen eg in images - Used: 300 MB / 1 GB -->
-    <string name="used_space">المستخدم: %s</string>
+    <string name="used_space">Used: %s</string>
     <!-- Send file in transfer tab -->
-    <string name="send">إرسال</string>
+    <string name="send">Send</string>
     <!-- Receive file in transfer tab -->
-    <string name="receive">استقبال</string>
+    <string name="receive">Receive</string>
     <!-- Stop receiving file in transfer tab -->
-    <string name="stop_receiving">إيقاف الإستقبال</string>
+    <string name="stop_receiving">Stop Receiving</string>
     <!-- Calculating number of media files in utilities tab on app startup -->
-    <string name="calculating">جاري الحساب…</string>
+    <string name="calculating">Calculating…</string>
     <!-- Recent files on utilities tab main screen -->
-    <string name="recent_files">الملفات الأخيرة</string>
+    <string name="recent_files">Recent Files</string>
     <!-- No files found after searching media files -->
-    <string name="no_files">لايوجد ملفات</string>
+    <string name="no_files">No files</string>
     <!-- Number of media files in utilities tab in individual list screen eg in images / number of total files -->
-    <string name="media_files_subs">ملفات الوسائط: %s</string>
+    <string name="media_files_subs">Media Files: %s</string>
     <!-- Search screen title bar hint -->
-    <string name="action_bar_search_hint">البحث عن الملفات…</string>
+    <string name="action_bar_search_hint">Search for files…</string>
     <!-- Generic message shown when loading results of list or operation -->
-    <string name="please_wait">الرجاء الانتظار…</string>
+    <string name="please_wait">Please wait…</string>
     <!-- No search results found -->
-    <string name="its_quiet_here">لايوجد شيء هنا…</string>
+    <string name="its_quiet_here">It\'s quiet in here…</string>
     <!-- Settings screen title -->
-    <string name="settings">الإعدادات</string>
+    <string name="settings">Settings</string>
     <!-- About screen title -->
-    <string name="about">حول التطبيق</string>
+    <string name="about">About</string>
     <!-- Copyright dialog content in about section -->
-    <string name="rights_reserved">Copyright © 2021–2022 e\nجميع الحقوق محفوظة</string>
+    <string name="rights_reserved">Copyright © 2021–2024 Team Amaze\nAll Rights Reserved</string>
     <!-- Open source licenses in about section -->
-    <string name="open_source_licenses">تراخيص مفتوحة المصدر</string>
+    <string name="open_source_licenses">Open-source licenses</string>
     <!-- Privacy policy label in about section -->
-    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="privacy_policy">Privacy Policy</string>
     <!-- Licenses label in about section -->
     <string name="licenses">Licenses</string>
     <!-- Information about a pdf / doc file -->
@@ -219,63 +219,63 @@
     <!-- Blurred images label in analysis -->
     <string name="blurred_pics">Blurred</string>
     <!-- Low light label in analysis -->
-    <string name="low_light">إضاءة خافتة</string>
+    <string name="low_light">Low-Light</string>
     <!-- Memes label in analysis -->
-    <string name="memes">ميمز</string>
+    <string name="memes">Memes</string>
     <!-- Sad images label in analysis -->
-    <string name="frown">عابس</string>
+    <string name="frown">Frown</string>
     <!-- Sad images analysis hint -->
-    <string name="frown_hint">الصور التي لا تحتوي على وجوه مبتسمة</string>
+    <string name="frown_hint">Images that doesn\'t have smiling faces</string>
     <!-- Closed eyes analysis label -->
-    <string name="closed_eyes">عيون مغلقة</string>
+    <string name="closed_eyes">Closed Eyes</string>
     <!-- Closed eyes analysis hint -->
-    <string name="closed_eyes_hint">الصور التي تحتوي على أشخاص ذوي عيون مغلقة</string>
+    <string name="closed_eyes_hint">Images that have people with closed eyes</string>
     <!-- Distracted images analysis label -->
-    <string name="distracted">مشتتة</string>
+    <string name="distracted">Distracted</string>
     <!-- Distracted images analysis hint -->
-    <string name="distracted_hint">الصور التي تحتوي على أشخاص ينظرون بعيداً عن الكاميرا</string>
+    <string name="distracted_hint">Images that have people looking elsewhere</string>
     <!-- Selfie images analysis label -->
-    <string name="selfie">سيلفي</string>
+    <string name="selfie">Selfies</string>
     <!-- Group images analysis label -->
-    <string name="group_pics">صور لمجموعة أشخاص</string>
+    <string name="group_pics">Group Pics</string>
     <!-- Memes analysis hint -->
-    <string name="memes_hint">الميمز هي صور يوجد فيها كتابة</string>
+    <string name="memes_hint">Memes are images that have something prominent written over them</string>
     <!-- Duplicate files analysis label -->
-    <string name="duplicates">الملفات المكررة</string>
+    <string name="duplicates">Duplicate files</string>
     <!-- App caches analysis labels -->
-    <string name="cache">ذاكرة التخزين المؤقتة للتطبيق</string>
+    <string name="cache">App Cache</string>
     <!-- Large videos analysis label -->
-    <string name="large_videos">مقاطع فيديو كبيرة</string>
+    <string name="large_videos">Large videos</string>
     <!-- Large downloads analysis label -->
-    <string name="large_downloads">التنزيلات الكبيرة</string>
+    <string name="large_downloads">Large downloads</string>
     <!-- Old screenshots analysis label -->
-    <string name="old_screenshots">لقطات الشاشة القديمة</string>
+    <string name="old_screenshots">Old Screenshots</string>
     <!-- Old downloads analysis label -->
-    <string name="old_downloads">التنزيلات القديمة</string>
+    <string name="old_downloads">Old downloads</string>
     <!-- Old recordings analysis label -->
-    <string name="old_recordings">التسجيلات القديمة</string>
+    <string name="old_recordings">Old recordings</string>
     <!-- Empty files analysis label -->
     <string name="empty_files">Empty files / folders</string>
     <!-- Junk files analysis label -->
-    <string name="junk_files">الملفات غير المرغوب فيها</string>
+    <string name="junk_files">Junk files</string>
     <!-- Junk files analysis hint -->
-    <string name="junk_files_hint">الملفات الغير مرغوب فيها هي ملفات متبقية من تطبيقات محذوفة</string>
+    <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
     <!-- Telegram analysis label -->
     <string name="telegram_files">Telegram Media</string>
     <!-- More optimisations coming at analysis tab bottom -->
-    <string name="more_to_come">المزيد من التحسين قادم!</string>
+    <string name="more_to_come">More optimizations to come!</string>
     <!-- View all analysed content analysis tab -->
-    <string name="view_all">عرض الكل</string>
+    <string name="view_all">View all</string>
     <!-- Analysis settings title -->
-    <string name="analysis">تحليل</string>
+    <string name="analysis">Analysis</string>
     <!-- Analysis settings hint -->
-    <string name="analysis_hint">التحكم في إعدادات تبويب التحليل مثل المسارات لتضمين التحليل من ، إظهار / إخفاء مختلف التحليلات</string>
+    <string name="analysis_hint">Control analysis tab settings such as paths to include analysis from, show / hide various analysis</string>
     <!-- Exclude paths from scan for music player -->
-    <string name="exclusions">استبعاد</string>
+    <string name="exclusions">Exclusions</string>
     <!-- Exclude paths from scan for music player summary -->
-    <string name="exclusions_summary">المسارات التي يجب استبعادها أثناء مسح الوسائط</string>
+    <string name="exclusions_summary">Paths to exclude while scanning media</string>
     <!-- Audio player settings title -->
-    <string name="audio_player">مشغل الصوت</string>
+    <string name="audio_player">Audio Player</string>
     <!-- Audio player settings summary -->
     <string name="audio_player_hint">Control audio player settings such as paths to exclude</string>
     <!-- Image viewer settings title -->
@@ -926,6 +926,14 @@
     <string name="recently_updated_apps">Recently updated apps</string>
     <!-- newly installed apps summary in settings preferences -->
     <string name="recently_updated_apps_summary">Apps recently updated (in days)</string>
+    <!-- apps with large size increase in settings preferences -->
+    <string name="large_size_diff_apps">Growing apps</string>
+    <!-- apps with large size increase summary in settings preferences -->
+    <string name="large_size_diff_apps_summary">Apps with large size increase in the last number of days</string>
+    <!-- size change in analysis -->
+    <string name="size_diff">Change</string>
+    <!-- size change in analysis -->
+    <string name="size_total">Total</string>
     <!-- ram usage in analysis -->
     <string name="ram_usage">Memory (RAM) Usage</string>
     <!-- ram usage in analysis -->

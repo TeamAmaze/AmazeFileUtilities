@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Amate File Utilisti</string>
+    <string name="app_name">Amaze File Utilities</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">Amate Utilisti</string>
+    <string name="app_name_launcher">Amaze Utilities</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">App File Utility con lettori multimediali integrati per tutte le tue esigenze.</string>
+    <string name="about_app">File Utility app with inbuilt media players for all your needs.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">Vis or de Amatene Amate</string>
+    <string name="image_viewer">Amaze Image Viewer</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">Resim Görüntüleyici</string>
+    <string name="image_viewer_normal">Image Viewer</string>
     <!-- Video player activity label -->
-    <string name="video_player">Reproductor de Video Amaze</string>
+    <string name="video_player">Amaze Video Player</string>
     <!-- Video player dialog intent filter label -->
     <string name="video_player_dialog">Amaze Video Player (Dialog)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">Riproduttore Video Amaze (Schermo Intero)</string>
+    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
     <!-- Music player activity label -->
-    <string name="amaze_audio_player">Lettore Musicale Di Amaze</string>
+    <string name="amaze_audio_player">Amaze Music Player</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Visualizzatore PDF Amaze</string>
+    <string name="pdf_viewer">Amaze Pdf Viewer</string>
     <!-- Epub activity label -->
-    <string name="epub_viewer">Visualizzatore Epub Di Amaze</string>
+    <string name="epub_viewer">Amaze Epub Viewer</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">Visualizzatore Doc Di Amaze</string>
+    <string name="docx_viewer">Amaze Doc Viewer</string>
     <!-- Image viewer dialog intent filter label -->
     <string name="intent_image_viewer_dialog">Amaze Image Viewer (Dialog)</string>
     <!-- Image viewer full screen intent label -->
@@ -111,7 +111,7 @@
     <!-- About screen title -->
     <string name="about">About</string>
     <!-- Copyright dialog content in about section -->
-    <string name="rights_reserved">Copyright © 2021–2022 Team Amaze\nAll Rights Reserved</string>
+    <string name="rights_reserved">Copyright © 2021–2024 Team Amaze\nAll Rights Reserved</string>
     <!-- Open source licenses in about section -->
     <string name="open_source_licenses">Open-source licenses</string>
     <!-- Privacy policy label in about section -->
@@ -926,6 +926,14 @@
     <string name="recently_updated_apps">Recently updated apps</string>
     <!-- newly installed apps summary in settings preferences -->
     <string name="recently_updated_apps_summary">Apps recently updated (in days)</string>
+    <!-- apps with large size increase in settings preferences -->
+    <string name="large_size_diff_apps">Growing apps</string>
+    <!-- apps with large size increase summary in settings preferences -->
+    <string name="large_size_diff_apps_summary">Apps with large size increase in the last number of days</string>
+    <!-- size change in analysis -->
+    <string name="size_diff">Change</string>
+    <!-- size change in analysis -->
+    <string name="size_total">Total</string>
     <!-- ram usage in analysis -->
     <string name="ram_usage">Memory (RAM) Usage</string>
     <!-- ram usage in analysis -->

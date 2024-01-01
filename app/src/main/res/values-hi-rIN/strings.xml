@@ -63,9 +63,9 @@
     <!-- Analyse tab on app main screen bottom tab -->
     <string name="title_analyse">Analyse</string>
     <!-- Utilities tab on app main screen bottom tab -->
-    <string name="title_utilities">उपयोगिताएँ</string>
+    <string name="title_utilities">Utilities</string>
     <!-- Transfer files tab on app main screen bottom tab -->
-    <string name="title_transfer">स्थानांतरण</string>
+    <string name="title_transfer">Transfer</string>
     <!-- Scan nearby connections button in transfer tab -->
     <string name="title_scan">Scan</string>
     <!-- Stop scan nearby devices in transfer tab -->
@@ -111,7 +111,7 @@
     <!-- About screen title -->
     <string name="about">About</string>
     <!-- Copyright dialog content in about section -->
-    <string name="rights_reserved">Copyright © 2021–2022 Team Amaze\nAll Rights Reserved</string>
+    <string name="rights_reserved">Copyright © 2021–2024 Team Amaze\nAll Rights Reserved</string>
     <!-- Open source licenses in about section -->
     <string name="open_source_licenses">Open-source licenses</string>
     <!-- Privacy policy label in about section -->
@@ -926,6 +926,14 @@
     <string name="recently_updated_apps">Recently updated apps</string>
     <!-- newly installed apps summary in settings preferences -->
     <string name="recently_updated_apps_summary">Apps recently updated (in days)</string>
+    <!-- apps with large size increase in settings preferences -->
+    <string name="large_size_diff_apps">Growing apps</string>
+    <!-- apps with large size increase summary in settings preferences -->
+    <string name="large_size_diff_apps_summary">Apps with large size increase in the last number of days</string>
+    <!-- size change in analysis -->
+    <string name="size_diff">Change</string>
+    <!-- size change in analysis -->
+    <string name="size_total">Total</string>
     <!-- ram usage in analysis -->
     <string name="ram_usage">Memory (RAM) Usage</string>
     <!-- ram usage in analysis -->
