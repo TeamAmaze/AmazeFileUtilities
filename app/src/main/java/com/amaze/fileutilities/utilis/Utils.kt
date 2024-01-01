@@ -123,6 +123,7 @@ class Utils {
         var log: Logger = LoggerFactory.getLogger(Utils::class.java)
 
         const val URL_PRIVACY_POLICY = "https://teamamaze.xyz/privacy-policy-utilities"
+        const val URL_SUBSCRIPTION_TERMS = "https://teamamaze.xyz/subscription-terms-utilities"
         const val URL_LICENSE_AGREEMENT =
             "https://github.com/TeamAmaze/AmazeFileUtilities/blob/main/LICENSE.txt"
         const val URL_GITHUB_ISSUES =
@@ -147,6 +148,7 @@ class Utils {
         fun openURL(url: String?, context: Context) {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.data = Uri.parse(url)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             try {
                 context.startActivity(intent)
             } catch (e: ActivityNotFoundException) {
@@ -740,9 +742,9 @@ class Utils {
                     dialog.dismiss()
                 }
                 .setNegativeButton(
-                    context.resources.getString(R.string.close)
-                ) { dialog, _ ->
-                    dialog.dismiss()
+                    context.resources.getString(R.string.terms_and_conditions)
+                ) { _, _ ->
+                    openURL(URL_SUBSCRIPTION_TERMS, context)
                 }
             return builder
         }
@@ -1253,9 +1255,12 @@ class Utils {
                 inputEditTextViewPair.second.filters = arrayOf(InputFilterMinMaxLong(1, upperBound))
             }
             if (lowerBound != null) {
-                inputEditTextViewPair.second.filters = arrayOf(InputFilterMinMaxLong(lowerBound,
-                    Integer.MAX_VALUE.toLong()
-                ))
+                inputEditTextViewPair.second.filters = arrayOf(
+                    InputFilterMinMaxLong(
+                        lowerBound,
+                        Integer.MAX_VALUE.toLong()
+                    )
+                )
             }
 
             val dialogBuilder = AlertDialog.Builder(context, R.style.Custom_Dialog_Dark)

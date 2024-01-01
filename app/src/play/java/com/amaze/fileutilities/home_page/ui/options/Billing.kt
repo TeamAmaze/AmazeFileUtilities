@@ -556,6 +556,9 @@ class Billing(val context: Context, private var uniqueId: String) :
                     .setTitle(R.string.subscribe)
                     .setNegativeButton(R.string.close) { dialog, _ ->
                         dialog.dismiss()
+                    }.setNeutralButton(context.getString(R.string.terms_and_conditions)) {
+                        _, _ ->
+                        Utils.openURL(Utils.URL_SUBSCRIPTION_TERMS, context)
                     }
                 val inflater = activity.layoutInflater
                 val dialogView: View = inflater
