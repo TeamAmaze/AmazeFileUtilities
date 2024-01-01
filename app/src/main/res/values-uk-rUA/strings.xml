@@ -1033,4 +1033,6 @@
     <string name="group_by">Group By</string>
     <!-- list fragments banner options hint -->
     <string name="sort_by">Sort By</string>
+    <!-- subscription terms in purchase dialog -->
+    <string name="terms_and_conditions">Terms and Conditions</string>
 </resources>
