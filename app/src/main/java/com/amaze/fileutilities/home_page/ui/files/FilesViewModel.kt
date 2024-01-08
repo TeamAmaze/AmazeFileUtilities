@@ -2021,8 +2021,12 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
 
-            val result = priorityQueue.reversed()
-            largeSizeDiffAppsLiveData?.postValue(result.toMutableList())
+            val result = mutableListOf<MediaFileInfo>()
+            while (priorityQueue.isNotEmpty()) {
+                result.add(priorityQueue.remove())
+            }
+
+            largeSizeDiffAppsLiveData?.postValue(result.asReversed())
         }
     }
 
