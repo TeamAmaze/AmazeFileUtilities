@@ -134,7 +134,7 @@ The device vendors/ROM developers are free to include Amaze apk pre-installed in
 
 We strongly recommend using apk signed by us (either Play Store version or from AFH link above) so that users would be able to update directly from Play Store after distribution. Furthermore, a change in digital signature will break plug-ins.
 
-## License:
+## License
 Amaze File Utilities is licenced under [GPLv3](https://teamamaze.xyz/license-agreement-utilities) and anyone wanting to use it (as a base for your own project or even use some of its parts or features) has to adhere to this license completely. Make sure that you are aware of all the licensing terms before creating your own project based on Amaze Utilities.
 
 Here some important points to keep in mind, as to how we handle licensing:
