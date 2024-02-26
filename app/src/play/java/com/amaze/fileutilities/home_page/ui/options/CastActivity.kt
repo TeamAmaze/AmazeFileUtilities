@@ -344,41 +344,6 @@ abstract class CastActivity :
                 )
             }
         }
-        /*remoteMediaClient.registerCallback(object : RemoteMediaClient.Callback() {
-            override fun onStatusUpdated() {
-                val intent = Intent(
-                    this@MainActivity,
-                    ExpandedControlsActivity::class.java
-                )
-                startActivity(intent)
-                remoteMediaClient.unregisterCallback(this)
-            }
-        })*/
-//        val mediaItem = MediaQueueItem.Builder(mediaInfo).build()
-//        remoteMediaClient.queueLoad(arrayOf(mediaItem), 0, 1, JSONObject())
-//        remoteMediaClient.play()
-
-        /*if (castPlayer == null) {
-            castPlayer = CastPlayer(mCastContext!!)
-            castPlayer?.setSessionAvailabilityListener(this)
-        }
-        val metadata = com.google.android.exoplayer2.MediaMetadata.Builder()
-            .setTitle("Title").setSubtitle("Subtitle").build()
-//        metadata.addImage(WebImage(Uri.parse("any-image-url")))
-
-        val mediaInfo = MediaInfo.Builder(CloudStreamer.URL +
-                Uri.fromFile(File(mediaFileInfo.path)).encodedPath)
-            .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
-            .setContentType(MimeTypes.VIDEO_MP4)
-//            .setMetadata(metadata)
-            .build()
-        val mediaItem = MediaItem.Builder().setMimeType(MimeTypes.VIDEO_MP4)
-            .setUri(uri).setMediaMetadata(metadata).build()
-//        val mediaItem = MediaQueueItem.Builder(mediaInfo).build()
-        castPlayer?.setMediaItem(mediaItem)
-        castPlayer?.prepare()
-        castPlayer?.playWhenReady = true
-        castPlayer?.play()*/
     }
 
     private fun clearCastResources() {

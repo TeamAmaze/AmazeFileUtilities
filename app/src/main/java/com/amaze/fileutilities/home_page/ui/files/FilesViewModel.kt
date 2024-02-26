@@ -173,7 +173,7 @@ class FilesViewModel(val applicationContext: Application) :
                 PackageInfo?>>?> = AtomicReference()
 
     var internalStorageStatsLiveData: MutableLiveData<StorageSummary?>? = null
-    private var trashBin: TrashBin? = null
+
 
     fun internalStorageStats(): LiveData<StorageSummary?> {
         if (internalStorageStatsLiveData == null) {
@@ -216,6 +216,7 @@ class FilesViewModel(val applicationContext: Application) :
         }
     }
 
+    private var trashBin: TrashBin? = null
     val initAnalysisMigrations: LiveData<Boolean> =
         liveData(context = viewModelScope.coroutineContext + Dispatchers.IO) {
             emit(false)

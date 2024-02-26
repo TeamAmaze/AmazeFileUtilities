@@ -23,12 +23,14 @@ package com.amaze.fileutilities.home_page
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.speech.RecognizerIntent
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AutoCompleteTextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBar
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -96,6 +98,7 @@ class MainActivity :
         const val UPDATE_REQUEST_CODE = 123234
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this).get(FilesViewModel::class.java)
         setTheme(R.style.Theme_AmazeFileUtilities)
