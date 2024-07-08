@@ -94,7 +94,7 @@
         <activity
             android:name=".image_viewer.ImageViewerActivity"
             android:label="@string/image_viewer"
-            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark"
+            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark.Fallback"
             android:exported="true"
             >
             <intent-filter
@@ -111,7 +111,7 @@
         <activity
             android:name=".image_viewer.editor.EditImageActivity"
             android:label="@string/image_editor"
-            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark"
+            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark.Fallback"
             android:exported="true"
             >
             <intent-filter
@@ -159,7 +159,7 @@
             android:supportsPictureInPicture="true"
             android:resizeableActivity="true"
             android:taskAffinity="com.amaze.fileutilitiespip"
-            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark"
+            android:theme="@style/Theme.AmazeFileUtilities.FullScreen.Dark.Fallback"
             android:exported="true">
             <intent-filter
                 android:label="@string/video_player_full_screen"
