@@ -20,6 +20,7 @@
 
 package com.amaze.fileutilities.image_viewer
 
+import android.os.Build
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
@@ -28,9 +29,10 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.GenericPagerViewerActivityBinding
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.amaze.fileutilities.utilis.showToastInCenter
+import java.io.File
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.File
+
 
 class ImageViewerActivity : PermissionsActivity() {
 
@@ -42,6 +44,14 @@ class ImageViewerActivity : PermissionsActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            try {
+                setTheme(R.style.Theme_AmazeFileUtilities_FullScreen_Dark)
+            } catch (e: Exception) {
+                log.warn("failed to set theme Theme_AmazeFileUtilities_FullScreen_Dark")
+                setTheme(R.style.Theme_AmazeFileUtilities_FullScreen_Dark_Fallback)
+            }
+        }
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
 

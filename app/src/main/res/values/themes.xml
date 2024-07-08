@@ -66,6 +66,12 @@
         <item name="android:windowBackground">@color/black</item>
     </style>
 
+    <style name="Theme.AmazeFileUtilities.FullScreen.Dark.Fallback" parent="Theme.AmazeFileUtilities.Dark">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
     <style name="BottomNavigationTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/blue</item>
         <item name="android:textColorSecondary">@color/blue</item>
