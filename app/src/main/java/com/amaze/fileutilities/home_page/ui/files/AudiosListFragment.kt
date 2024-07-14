@@ -579,14 +579,16 @@ class AudiosListFragment : AbstractMediaInfoListFragment(), IAudioPlayerInterfac
                 val selectedSongList = getMediaFileAdapter()?.checkItemsList
                 if (selectedSongList?.size == 1) {
                     selectedSongList[0].mediaFileInfo?.getContentUri(requireContext())?.let { it1 ->
-                        audioPlaybackServiceConnection
-                            .getAudioServiceInstance()?.insertPlayNextSong(
-                                it1
-                            )
-                        Toast.makeText(
-                            requireContext(), R.string.play_next_success,
-                            Toast.LENGTH_LONG
-                        ).show()
+                        if (::audioPlaybackServiceConnection.isInitialized) {
+                            audioPlaybackServiceConnection
+                                .getAudioServiceInstance()?.insertPlayNextSong(
+                                    it1
+                                )
+                            Toast.makeText(
+                                requireContext(), R.string.play_next_success,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
                 }
                 hideActionBar()

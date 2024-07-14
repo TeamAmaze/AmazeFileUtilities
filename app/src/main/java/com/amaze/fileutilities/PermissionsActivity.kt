@@ -209,7 +209,12 @@ open class PermissionsActivity :
             .setPositiveButton(
                 resources.getString(R.string.yes)
             ) { dialog, _ ->
-                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                try {
+                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                } catch (anfe: ActivityNotFoundException) {
+                    log.warn("failed to find location settings activity", anfe)
+                    this.showToastInCenter(getString(R.string.grantfailed))
+                }
                 dialog.cancel()
             }
             .setNegativeButton(
