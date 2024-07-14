@@ -41,7 +41,6 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import com.amaze.fileutilities.BuildConfig
 import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.FragmentAnalyseBinding
-import com.amaze.fileutilities.home_page.WelcomePermissionScreen
 import com.amaze.fileutilities.home_page.database.AppDatabase
 import com.amaze.fileutilities.home_page.database.PathPreferences
 import com.amaze.fileutilities.home_page.ui.files.FilesViewModel
@@ -52,9 +51,9 @@ import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
 import com.amaze.fileutilities.utilis.showToastInCenter
 import com.amaze.fileutilities.utilis.showToastOnBottom
-import kotlin.concurrent.thread
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import kotlin.concurrent.thread
 
 class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
 
@@ -1092,6 +1091,5 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
             log.warn("usage access activity not found", anfe)
             requireContext().showToastInCenter(getString(R.string.grantfailed))
         }
-
     }
 }
