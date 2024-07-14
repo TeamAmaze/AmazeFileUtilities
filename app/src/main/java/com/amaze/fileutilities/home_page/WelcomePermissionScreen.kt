@@ -147,27 +147,35 @@ abstract class WelcomePermissionScreen :
 
     fun checkStoragePermission(): Boolean {
         // Verify that all required contact permissions have been granted.
-        return if (VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            (
-                ActivityCompat.checkSelfPermission(
-                    this, Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
-                )
-                    == PackageManager.PERMISSION_GRANTED
-                ) || (
-                ActivityCompat.checkSelfPermission(
-                    this, Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
-                )
-                    == PackageManager.PERMISSION_GRANTED
-                ) || Environment.isExternalStorageManager()
-        } else {
-            (
-                ActivityCompat.checkSelfPermission(
-                    this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-                    == PackageManager.PERMISSION_GRANTED
-                )
+        var isFound = false
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                isFound = (
+                        ActivityCompat.checkSelfPermission(
+                            this, Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
+                        )
+                                == PackageManager.PERMISSION_GRANTED
+                        ) || (
+                        ActivityCompat.checkSelfPermission(
+                            this, Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
+                        )
+
+                                == PackageManager.PERMISSION_GRANTED
+                        ) || Environment.isExternalStorageManager()
+            } catch (anfe: ActivityNotFoundException) {
+                log.warn("all files access permission activity missing, fallback to default",anfe)
+            }
         }
+        if (!isFound) {
+            isFound = (
+                    ActivityCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                            == PackageManager.PERMISSION_GRANTED
+                    )
+        }
+        return isFound
     }
 
     fun isLocationEnabled(onPermissionGranted: OnPermissionGranted) {
