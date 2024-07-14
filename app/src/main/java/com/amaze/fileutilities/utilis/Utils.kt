@@ -1543,6 +1543,13 @@ class Utils {
             )
         }
 
+        fun convertMillisToHoursMinutes(millis: Long): String {
+            val hours = TimeUnit.MILLISECONDS.toHours(millis)
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(millis) % 60
+
+            return String.format("%02d:%02d", hours, minutes)
+        }
+
         private fun findApplicationInfoSizeFallback(applicationInfo: ApplicationInfo): Long {
             var cacheSize = 0L
             File(applicationInfo.sourceDir).parentFile?.let {

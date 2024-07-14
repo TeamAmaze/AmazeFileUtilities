@@ -29,10 +29,9 @@ import com.amaze.fileutilities.R
 import com.amaze.fileutilities.databinding.GenericPagerViewerActivityBinding
 import com.amaze.fileutilities.utilis.Utils.Companion.showProcessingDialog
 import com.amaze.fileutilities.utilis.showToastInCenter
-import java.io.File
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-
+import java.io.File
 
 class ImageViewerActivity : PermissionsActivity() {
 
