@@ -19,7 +19,7 @@
     <!-- Music player activity label -->
     <string name="amaze_audio_player">Amaze Music Player</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">Amaze Pdf Viewer</string>
+    <string name="pdf_viewer">Amaze Image Viewer</string>
     <!-- Epub activity label -->
     <string name="epub_viewer">Amaze Epub Viewer</string>
     <!-- Docx viewer activity label -->
@@ -1035,4 +1035,10 @@
     <string name="sort_by">Sort By</string>
     <!-- subscription terms in purchase dialog -->
     <string name="terms_and_conditions">Terms and Conditions</string>
+    <!-- usage app opened in most used apps analysis -->
+    <string name="usage">Usage (hrs)</string>
+    <!-- confirm before exit app in general settings -->
+    <string name="confirm_before_exit">Confirm before exit</string>
+    <!-- general app settings summary -->
+    <string name="general_summary">Control general app behaviour</string>
 </resources>
