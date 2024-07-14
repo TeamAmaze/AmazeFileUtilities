@@ -30,7 +30,9 @@ import com.amaze.fileutilities.home_page.ui.files.MediaInfoRecyclerViewHolder
 import com.amaze.fileutilities.utilis.AbstractMediaFilesAdapter
 import com.amaze.fileutilities.utilis.EmptyViewHolder
 import com.amaze.fileutilities.utilis.FileUtils
+import com.amaze.fileutilities.utilis.Utils
 import java.lang.ref.WeakReference
+import java.util.concurrent.TimeUnit
 
 class ReviewAnalysisAdapter(
     val context: Context,
@@ -99,6 +101,11 @@ class ReviewAnalysisAdapter(
                         } else {
                             holder.infoSummary.text = totalSize
                         }
+                    } else if (analysisType == ReviewImagesFragment.TYPE_MOST_USED_APPS) {
+                        val timeForeground = Utils.convertMillisToHoursMinutes(this.mediaFileInfo?.extraInfo?.apkMetaData?.timeForeground ?: 0L)
+                        val size =  this.mediaFileInfo?.getFormattedSize(context)
+                        holder.infoSummary.text = "${context.getString(R.string.size)}: $size"
+                        holder.extraInfo.text = "${context.getString(R.string.usage)}: $timeForeground"
                     } else {
                         holder.infoSummary.text = this.mediaFileInfo?.getFormattedSize(context)
                     }

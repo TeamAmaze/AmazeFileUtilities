@@ -1043,4 +1043,6 @@
     <string name="sort_by">Sort By</string>
     <!-- subscription terms in purchase dialog -->
     <string name="terms_and_conditions">Terms and Conditions</string>
+    <!-- usage app opened in most used apps analysis -->
+    <string name="usage">Usage (hrs)</string>
 </resources>

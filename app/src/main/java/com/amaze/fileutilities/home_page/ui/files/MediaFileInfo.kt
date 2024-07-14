@@ -150,7 +150,8 @@ data class MediaFileInfo(
             context: Context,
             applicationInfo: ApplicationInfo,
             packageInfo: PackageInfo?,
-            sizeDiff: Long = -1
+            sizeDiff: Long = -1,
+            timeForeground: Long = 0L
         ): MediaFileInfo? {
             if (applicationInfo.sourceDir == null) {
                 return null
@@ -173,7 +174,7 @@ data class MediaFileInfo(
                         applicationInfo.packageName,
                         packageManager.getApplicationIcon(applicationInfo.packageName),
                         Utils.getApplicationNetworkBytes(context, applicationInfo),
-                        sizeDiff
+                        sizeDiff, timeForeground
                     )
                 )
                 mediaFileInfo.extraInfo = extraInfo
@@ -409,7 +410,8 @@ data class MediaFileInfo(
         val packageName: String,
         val drawable: Drawable?,
         val networkBytes: Long,
-        val sizeDiff: Long = -1
+        val sizeDiff: Long = -1,
+        val timeForeground: Long = 0
     )
     data class ExtraMetaData(val checksum: String)
     data class Playlist(var id: Long, var name: String)
