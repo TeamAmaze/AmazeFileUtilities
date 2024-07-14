@@ -1,281 +1,281 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">أدوات مدير الملفات Amaze</string>
+    <string name="app_name">Amaze File Utilities</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher">أدوات Amaze</string>
+    <string name="app_name_launcher">Amaze Utilities</string>
     <!-- App info shown in about screen -->
-    <string name="about_app">تطبيق مدير الملفات متضمن مشغلات وسائط لجميع احتياجاتك.</string>
+    <string name="about_app">Aplikasi Utilitas File dengan pemutar media bawaan untuk semua kebutuhan Anda.</string>
     <!-- Image viewer activity label -->
-    <string name="image_viewer">عارض صور Amaze</string>
+    <string name="image_viewer">Penampil Gambar Amaze</string>
     <!-- Image viewer label in settings -->
-    <string name="image_viewer_normal">عارض الصور</string>
+    <string name="image_viewer_normal">Image Viewer</string>
     <!-- Video player activity label -->
-    <string name="video_player">مشغل الفيديو Amaze</string>
+    <string name="video_player">Amaze Video Player</string>
     <!-- Video player dialog intent filter label -->
-    <string name="video_player_dialog">مشغل الفيديو Amaze (نافذة صغيرة)</string>
+    <string name="video_player_dialog">Pemutar Video Amaze (Dialog)</string>
     <!-- Video player fill screen intent label -->
-    <string name="video_player_full_screen">مشغل فيديو Amaze (ملء الشاشة)</string>
+    <string name="video_player_full_screen">Amaze Video Player (Full Screen)</string>
     <!-- Music player activity label -->
-    <string name="amaze_audio_player">مشغل موسيقى Amaze</string>
+    <string name="amaze_audio_player">Amaze Music Player</string>
     <!-- Pdf viewer activity label -->
-    <string name="pdf_viewer">عارض بي دي اف Amaze</string>
+    <string name="pdf_viewer">Amaze Pdf Viewer</string>
     <!-- Epub activity label -->
-    <string name="epub_viewer">عارض Epub</string>
+    <string name="epub_viewer">Amaze Epub Viewer</string>
     <!-- Docx viewer activity label -->
-    <string name="docx_viewer">مستعرض Doc</string>
+    <string name="docx_viewer">Amaze Doc Viewer</string>
     <!-- Image viewer dialog intent filter label -->
-    <string name="intent_image_viewer_dialog">عارض صور Amaze (نافذة صغيرة)</string>
+    <string name="intent_image_viewer_dialog">Penampil Gambar Amaze (Dialog)</string>
     <!-- Image viewer full screen intent label -->
-    <string name="intent_image_viewer_full_screen">عارض صور Amaze (ملء الشاشة)</string>
+    <string name="intent_image_viewer_full_screen">Amaze Image Viewer (Full Screen)</string>
     <!-- User didn't accept all storage permissions -->
-    <string name="grantfailed">أذن التخزين غير ممنوح</string>
+    <string name="grantfailed">Izin penyimpanan tidak diberikan</string>
     <!-- User didn't accept location permission for transfer files tab -->
-    <string name="grant_location_failed">أذن الموقع غير ممنوح</string>
+    <string name="grant_location_failed">Izin lokasi tidak diberikan</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_storage_read_permission">يحتاج التطبيق لأذونات قراءة الذاكرة لتحقيق الأداء الأمثل.</string>
+    <string name="grant_storage_read_permission">Aplikasi memerlukan izin baca penyimpanan untuk kinerja optimal.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_notification_permission">.</string>
+    <string name="grant_notification_permission">App needs notification permissions for optimal performance.</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_permission">منح الأذن</string>
+    <string name="grant_permission">Berikan izin</string>
     <!-- Grant permission button for welcome screen -->
-    <string name="grant">منح</string>
+    <string name="grant">Izinkan</string>
     <!-- Cancel button in dialogs mainly to cancel any operation -->
-    <string name="cancel">إلغاء</string>
+    <string name="cancel">Batal</string>
     <!-- Play button label in music player notification -->
-    <string name="play">تشغيل</string>
+    <string name="play">Play</string>
     <!-- Shuffle button label in music player notification -->
-    <string name="shuffle">خلط</string>
+    <string name="shuffle">Shuffle</string>
     <!-- Repeat button label in music player notification -->
-    <string name="repeat">إعادة</string>
+    <string name="repeat">Ulangi</string>
     <!-- Previous button label in music player notification -->
-    <string name="previous">السابق</string>
+    <string name="previous">Previous</string>
     <!-- Next button label in music player notification -->
-    <string name="next">التالي</string>
+    <string name="next">Next</string>
     <!-- Not allowed to perform any operation -->
-    <string name="not_allowed">غير مسموح</string>
+    <string name="not_allowed">Not allowed</string>
     <!-- Audio player notification channel description -->
-    <string name="audio_player_service_description">يشغل أصوات أدوات مدير الملفات Amaze</string>
+    <string name="audio_player_service_description">Memutar audio untuk Amaze File Utilities</string>
     <!-- Invert colors in document / pdf viewer -->
-    <string name="invert_colors">عكس الألوان</string>
+    <string name="invert_colors">Invert colors</string>
     <!-- Location any list eg. images or videos list -->
-    <string name="loading">جاري التحميل…</string>
+    <string name="loading">Memuat…</string>
     <!-- Analyse tab on app main screen bottom tab -->
-    <string name="title_analyse">تحليل</string>
+    <string name="title_analyse">Analisis</string>
     <!-- Utilities tab on app main screen bottom tab -->
-    <string name="title_utilities">أدوات</string>
+    <string name="title_utilities">Utilitas</string>
     <!-- Transfer files tab on app main screen bottom tab -->
-    <string name="title_transfer">نقل</string>
+    <string name="title_transfer">Transfer</string>
     <!-- Scan nearby connections button in transfer tab -->
-    <string name="title_scan">مسح ضوئي</string>
+    <string name="title_scan">Pindai</string>
     <!-- Stop scan nearby devices in transfer tab -->
-    <string name="title_stop_scan">إيقاف</string>
+    <string name="title_stop_scan">Setop</string>
     <!-- Internal storage on app main screen -->
-    <string name="internal_storage">ذاكرة التخزين الداخلية</string>
+    <string name="internal_storage">Penyimpanan Internal</string>
     <!-- Images title in images list screen in utilities tab -->
-    <string name="images">صور</string>
+    <string name="images">Gambar</string>
     <!-- Audios title in audios list screen in utilities tab -->
-    <string name="audios">صوتيات</string>
+    <string name="audios">Audio</string>
     <!-- Videos title in videos list screen in utilities tab -->
-    <string name="videos">مقاطع الفيديو</string>
+    <string name="videos">Video</string>
     <!-- Documents title in documents list screen in utilities tab -->
-    <string name="documents">المستندات</string>
+    <string name="documents">Dokumen</string>
     <!-- Number of files in utilities tab individual list screens eg in images / number of images -->
-    <string name="num_of_files">%s ملف</string>
+    <string name="num_of_files">%s Berkas</string>
     <!-- Number of total media files on main screen -->
-    <string name="num_of_media_files">%s ملف وسائط</string>
+    <string name="num_of_media_files">%s Berkas Media</string>
     <!-- Used space in utilties tab in individual lists screen eg in images - Used: 300 MB / 1 GB -->
-    <string name="used_space">المستخدم: %s</string>
+    <string name="used_space">Terpakai: %s</string>
     <!-- Send file in transfer tab -->
-    <string name="send">إرسال</string>
+    <string name="send">Kirim</string>
     <!-- Receive file in transfer tab -->
-    <string name="receive">استقبال</string>
+    <string name="receive">Terima</string>
     <!-- Stop receiving file in transfer tab -->
-    <string name="stop_receiving">إيقاف الإستقبال</string>
+    <string name="stop_receiving">Setop Menerima</string>
     <!-- Calculating number of media files in utilities tab on app startup -->
-    <string name="calculating">جاري الحساب…</string>
+    <string name="calculating">Menghitung…</string>
     <!-- Recent files on utilities tab main screen -->
-    <string name="recent_files">الملفات الأخيرة</string>
+    <string name="recent_files">Berkas Terbaru</string>
     <!-- No files found after searching media files -->
-    <string name="no_files">لايوجد ملفات</string>
+    <string name="no_files">Tidak ada berkas</string>
     <!-- Number of media files in utilities tab in individual list screen eg in images / number of total files -->
-    <string name="media_files_subs">ملفات الوسائط: %s</string>
+    <string name="media_files_subs">Berkas Media: %s</string>
     <!-- Search screen title bar hint -->
-    <string name="action_bar_search_hint">البحث عن الملفات…</string>
+    <string name="action_bar_search_hint">Search for files…</string>
     <!-- Generic message shown when loading results of list or operation -->
-    <string name="please_wait">الرجاء الانتظار…</string>
+    <string name="please_wait">Please wait…</string>
     <!-- No search results found -->
-    <string name="its_quiet_here">لايوجد شيء هنا…</string>
+    <string name="its_quiet_here">It\'s quiet in here…</string>
     <!-- Settings screen title -->
-    <string name="settings">الإعدادات</string>
+    <string name="settings">Settings</string>
     <!-- About screen title -->
-    <string name="about">حول التطبيق</string>
+    <string name="about">About</string>
     <!-- Copyright dialog content in about section -->
-    <string name="rights_reserved"></string>
+    <string name="rights_reserved">Copyright © 2021–2024 Team Amaze\nAll Rights Reserved</string>
     <!-- Open source licenses in about section -->
-    <string name="open_source_licenses">تراخيص مفتوحة المصدر</string>
+    <string name="open_source_licenses">Open-source licenses</string>
     <!-- Privacy policy label in about section -->
-    <string name="privacy_policy">سياسة الخصوصية</string>
+    <string name="privacy_policy">Privacy Policy</string>
     <!-- Licenses label in about section -->
-    <string name="licenses">التراخيص</string>
+    <string name="licenses">Licenses</string>
     <!-- Information about a pdf / doc file -->
-    <string name="information">المعلومات</string>
+    <string name="information">Information</string>
     <!-- Unable to open pdf / doc / video / image file -->
-    <string name="unsupported_content">محتوى غير مدعوم</string>
+    <string name="unsupported_content">Konten yang tidak didukung</string>
     <!-- Group utilities list eg images / videos by parent folder -->
-    <string name="parent">الأصل</string>
+    <string name="parent">Parent</string>
     <!-- Group utilities list eg images / videos by date -->
-    <string name="date">التاريخ</string>
+    <string name="date">Date</string>
     <!-- Group utilities list eg iamges / videos by name -->
-    <string name="name">الاسم</string>
+    <string name="name">Name</string>
     <!-- Show utilities list by list view -->
-    <string name="list_view"> عرض القائمة</string>
+    <string name="list_view">List View</string>
     <!-- Show utilities list by grid view -->
-    <string name="grid_view">عرض شبكي</string>
+    <string name="grid_view">Grid View</string>
     <!-- Sort utilities by size -->
-    <string name="size">‮الحجم</string>
+    <string name="size">Size</string>
     <!-- Group audio utilities list by album names  -->
-    <string name="album">الألبوم</string>
+    <string name="album">Album</string>
     <!-- Group audio utilities list by artist name -->
-    <string name="artist">الفنان</string>
+    <string name="artist">Artist</string>
     <!-- Sort audio / video utilities list by duration -->
-    <string name="duration">المدة</string>
+    <string name="duration">Duration</string>
     <!-- Crash fallback screen title -->
     <string name="sorry_string">Sorry, that should not have happened.</string>
     <!-- Crash fallback screen report by email -->
-    <string name="error_report_button_text"></string>
+    <string name="error_report_button_text">Report this error via e-mail</string>
     <!-- Crash fallback screen report by telegram -->
     <string name="error_report_button_telegram">Report this error via telegram</string>
     <!-- Crash fallback screen copy report -->
-    <string name="copy_for_github">Copy formatted report</string>
+    <string name="copy_for_github">Salin laporan berformat</string>
     <!-- Crash fallback screen report on github -->
-    <string name="error_report_open_issue_button_text">Report on GitHub</string>
+    <string name="error_report_open_issue_button_text">Laporkan di Github</string>
     <!-- Crash fallback screen info -->
-    <string name="error_report_open_github_notice">Please check whether an issue discussing your crash already exists.</string>
+    <string name="error_report_open_github_notice">Harap periksa apakah diskusi yang membahas masalah Anda sudah ada atau belum.</string>
     <!-- Toast shown when we failed to display crash fallback screen -->
     <string name="error_snackbar_message">Sorry, something went wrong.</string>
     <!-- Crash fallback screen report -->
-    <string name="error_snackbar_action">Report</string>
+    <string name="error_snackbar_action">Laporkan</string>
     <!-- Crash fallback screen info about device -->
     <string name="what_device_headline">Info:</string>
     <!-- Crash fallback screen info about crash -->
-    <string name="what_happened_headline">What happened:</string>
+    <string name="what_happened_headline">Apa yang terjadi:</string>
     <!-- Crash fallback screen info about device -->
-    <string name="info_labels">What:\\nRequest:\\nGMT Time:\\nPackage:\\nVersion:\\nOS version:\\nDevice:\\nModel:\\nProduct:\\nDevice ID:</string>
+    <string name="info_labels">Apa:\\nPermintaan:\\nWaktu GMT:\\nPaket:\\nVersi:\\nVersi OS:\\nPerangkat:\\nModel:\\nProduk:\\nID Perangkat:</string>
     <!-- Crash fallback screen ask user input -->
-    <string name="your_comment">Your comment (in English):</string>
+    <string name="your_comment">Komentar Anda (dalam Bahasa Inggris):</string>
     <!-- Crash fallback screen show more details -->
-    <string name="error_details_headline">Details:</string>
+    <string name="error_details_headline">Detail:</string>
     <!-- Crash fallback screen info -->
     <string name="app_ui_crash">App/UI crashed</string>
     <!-- Crash fallback screen title -->
     <string name="error_report_title">Error report</string>
     <!-- Crash fallback screen crash report copied -->
-    <string name="crash_report_copied">Crash report copied to clipboard</string>
+    <string name="crash_report_copied">Laporan kerusakan disalin ke clipboard</string>
     <!-- Crash fallback screen report copied to clipboard -->
-    <string name="clipboard_path_copy">Path copied to clipboard</string>
+    <string name="clipboard_path_copy">Jalur disalin ke clipboard</string>
     <!-- Pdf activity password prompt -->
-    <string name="pdf_password_title">Password required</string>
+    <string name="pdf_password_title">Membutuhkan sandi</string>
     <!-- Pdf activity password required info -->
-    <string name="pdf_password_required">Please enter the password to open this document</string>
+    <string name="pdf_password_required">Silakan masukkan sandi untuk membuka dokumen ini</string>
     <!-- Generic ok button in dialogs -->
-    <string name="ok">OK</string>
+    <string name="ok">OKE</string>
     <!-- Pdf activity wrong password entered -->
-    <string name="wrong_password">Wrong password</string>
+    <string name="wrong_password">Sandi salah</string>
     <!-- Generic message for any operation not supported -->
-    <string name="unsupported_operation">Unsupported Operation</string>
+    <string name="unsupported_operation">Tindakan tidak didukung</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>Since Android 11, Google requests File Managers to request user permission for managing all files on the device. Details <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">here</a>.
+    <string name="grant_all_files_permission"><html><body>Since Android 11, Google requests File Managers to request user permission for managing all files on the device. Details <a href='https://developer.android.com/training/data-storage/manage-all-files' target='_blank'>here</a>.
         \n\nAmaze File Utilities needs this permission too. After pressing &quot;Grant&quot;here, please select <b>Allow access to manage all files</b> option on the next screen.
-        \n\n<font color="#ff6347"><i>Canceling this dialog will exit the app.</i></font></body></html></string>
+        \n\n<font color='#ff6347'><i>Canceling this dialog will exit the app.</i></font></body></html></string>
     <!-- Pdf activity copy page content title -->
-    <string name="copy_page">Copy page</string>
+    <string name="copy_page">Salin halaman</string>
     <!-- Pdf activity view bookmarks -->
-    <string name="bookmarks">Bookmarks</string>
+    <string name="bookmarks">Markah</string>
     <!-- Pdf activity pdf title -->
-    <string name="title">Title</string>
+    <string name="title">Judul</string>
     <!-- Pdf activity pdf author -->
-    <string name="author">Author</string>
+    <string name="author">Penulis</string>
     <!-- Pdf activity pdf creator -->
-    <string name="creator">Creator</string>
+    <string name="creator">Pembuat</string>
     <!-- Pdf activity pdf creation date -->
-    <string name="creation_date">Creation date</string>
+    <string name="creation_date">Tanggal dibuat</string>
     <!-- Pdf activity pdf modification date -->
-    <string name="modification_date">Modification Date</string>
+    <string name="modification_date">Tanggal diubah</string>
     <!-- Pdf activity pdf subject -->
-    <string name="subject">Subject</string>
+    <string name="subject">Subyek</string>
     <!-- Pdf activity pdf keywords -->
-    <string name="keywords">Keywords</string>
+    <string name="keywords">Kata kunci</string>
     <!-- Pdf activity pdf producer -->
-    <string name="producer">Producer</string>
+    <string name="producer">Produser</string>
     <!-- Generic dialog close button -->
-    <string name="close">Close</string>
+    <string name="close">Tutup</string>
     <!-- Analysing internal storage shown in analysis tab -->
-    <string name="analysing">Analysing…</string>
+    <string name="analysing">Menganalisis…</string>
     <!-- Pdf activity page content copied -->
-    <string name="page_copied_to_clipboard">Page content copied to clipboard</string>
+    <string name="page_copied_to_clipboard">Isi halaman disalin ke clipboard</string>
     <!-- Clean button in analysis tab to clean junk files -->
-    <string name="clean">Clean</string>
+    <string name="clean">Hapus</string>
     <!-- Blurred images label in analysis -->
-    <string name="blurred_pics">Blurred</string>
+    <string name="blurred_pics">Buram</string>
     <!-- Low light label in analysis -->
-    <string name="low_light">إضاءة خافتة</string>
+    <string name="low_light">Rendah cahaya</string>
     <!-- Memes label in analysis -->
-    <string name="memes">ميمز</string>
+    <string name="memes">Meme</string>
     <!-- Sad images label in analysis -->
-    <string name="frown">عابس</string>
+    <string name="frown">Cemberut</string>
     <!-- Sad images analysis hint -->
-    <string name="frown_hint">الصور التي لا تحتوي على وجوه مبتسمة</string>
+    <string name="frown_hint">Gambar yang tidak memiliki wajah tersenyum</string>
     <!-- Closed eyes analysis label -->
-    <string name="closed_eyes">عيون مغلقة</string>
+    <string name="closed_eyes">Mata Tertutup</string>
     <!-- Closed eyes analysis hint -->
-    <string name="closed_eyes_hint">الصور التي تحتوي على أشخاص ذوي عيون مغلقة</string>
+    <string name="closed_eyes_hint">Gambar yang menampilkan orang dengan mata tertutup</string>
     <!-- Distracted images analysis label -->
-    <string name="distracted">مشتتة</string>
+    <string name="distracted">Alih Perhatian</string>
     <!-- Distracted images analysis hint -->
-    <string name="distracted_hint">الصور التي تحتوي على أشخاص ينظرون بعيداً عن الكاميرا</string>
+    <string name="distracted_hint">Gambar yang menampilkan orang melihat ke arah lain</string>
     <!-- Selfie images analysis label -->
-    <string name="selfie">سيلفي</string>
+    <string name="selfie">Swafoto</string>
     <!-- Group images analysis label -->
-    <string name="group_pics">صور لمجموعة أشخاص</string>
+    <string name="group_pics">Foto Grup</string>
     <!-- Memes analysis hint -->
-    <string name="memes_hint">الميمز هي صور يوجد فيها كتابة</string>
+    <string name="memes_hint">Meme adalah gambar yang memiliki tulisan yang menonjol di atasnya</string>
     <!-- Duplicate files analysis label -->
-    <string name="duplicates">الملفات المكررة</string>
+    <string name="duplicates">Berkas duplikat</string>
     <!-- App caches analysis labels -->
-    <string name="cache">ذاكرة التخزين المؤقتة للتطبيق</string>
+    <string name="cache">App Cache</string>
     <!-- Large videos analysis label -->
-    <string name="large_videos">مقاطع فيديو كبيرة</string>
+    <string name="large_videos">Large videos</string>
     <!-- Large downloads analysis label -->
-    <string name="large_downloads">التنزيلات الكبيرة</string>
+    <string name="large_downloads">Large downloads</string>
     <!-- Old screenshots analysis label -->
-    <string name="old_screenshots">لقطات الشاشة القديمة</string>
+    <string name="old_screenshots">Old Screenshots</string>
     <!-- Old downloads analysis label -->
-    <string name="old_downloads">التنزيلات القديمة</string>
+    <string name="old_downloads">Old downloads</string>
     <!-- Old recordings analysis label -->
-    <string name="old_recordings">التسجيلات القديمة</string>
+    <string name="old_recordings">Old recordings</string>
     <!-- Empty files analysis label -->
     <string name="empty_files">Empty files / folders</string>
     <!-- Junk files analysis label -->
-    <string name="junk_files">الملفات غير المرغوب فيها</string>
+    <string name="junk_files">Junk files</string>
     <!-- Junk files analysis hint -->
-    <string name="junk_files_hint">الملفات الغير مرغوب فيها هي ملفات متبقية من تطبيقات محذوفة</string>
+    <string name="junk_files_hint">Junk files are files that are left over from uninstalled apps</string>
     <!-- Telegram analysis label -->
     <string name="telegram_files">Telegram Media</string>
     <!-- More optimisations coming at analysis tab bottom -->
-    <string name="more_to_come">المزيد من التحسين قادم!</string>
+    <string name="more_to_come">More optimizations to come!</string>
     <!-- View all analysed content analysis tab -->
-    <string name="view_all">عرض الكل</string>
+    <string name="view_all">View all</string>
     <!-- Analysis settings title -->
-    <string name="analysis">تحليل</string>
+    <string name="analysis">Analysis</string>
     <!-- Analysis settings hint -->
-    <string name="analysis_hint">التحكم في إعدادات تبويب التحليل مثل المسارات لتضمين التحليل من ، إظهار / إخفاء مختلف التحليلات</string>
+    <string name="analysis_hint">Control analysis tab settings such as paths to include analysis from, show / hide various analysis</string>
     <!-- Exclude paths from scan for music player -->
-    <string name="exclusions">استبعاد</string>
+    <string name="exclusions">Exclusions</string>
     <!-- Exclude paths from scan for music player summary -->
-    <string name="exclusions_summary">المسارات التي يجب استبعادها أثناء مسح الوسائط</string>
+    <string name="exclusions_summary">Paths to exclude while scanning media</string>
     <!-- Audio player settings title -->
-    <string name="audio_player">مشغل الصوت</string>
+    <string name="audio_player">Audio Player</string>
     <!-- Audio player settings summary -->
     <string name="audio_player_hint">Control audio player settings such as paths to exclude</string>
     <!-- Image viewer settings title -->
@@ -354,72 +354,72 @@
     <!-- Tv cast session ended -->
     <string name="cast_ended">Cast session ended</string>
     <!-- Open image/ videos/ audios with either cast on tv or open in mobile -->
-    <string name="open_with">Open with…</string>
+    <string name="open_with">Buka dengan…</string>
     <!-- Open images / videos/ audios using inbuilt player -->
-    <string name="inbuilt_player">In-built player</string>
+    <string name="inbuilt_player">Pemutar bawaan</string>
     <!-- Tv Cast notification title server running -->
-    <string name="cast_notification_title">Server running…</string>
+    <string name="cast_notification_title">Server berjalan…</string>
     <!-- tv casting content notification content -->
     <string name="cast_notification_summary">Casting content on TV</string>
     <!-- stop tv cast server notification button -->
-    <string name="stop">Stop</string>
+    <string name="stop">Setop</string>
     <!-- Service description to cast media files to tv -->
     <string name="cloud_streamer_service_description">Casts media for Amaze File Utilities</string>
     <!-- Failed to handshake for transfer files in transfer tab -->
     <string name="failed_to_handshake">Failed to establish connection with remote device. Please try reconnecting to Wifi network</string>
     <!-- Connection successful to transfer files in tranfer tab -->
-    <string name="connection_successful">Connection successful</string>
+    <string name="connection_successful">Koneksi berhasil</string>
     <!-- Failed to send files in transfer tab -->
     <string name="failed_filename_send">Failed to send, please ensure remote is set to receive file</string>
     <!-- Failed to send files in transfer tab -->
-    <string name="failed_filename_send_reconnecct">Failed to send, please reconnect</string>
+    <string name="failed_filename_send_reconnecct">Gagal mengirim, silakan sambungkan ulang</string>
     <!-- Failed to receive files in transfer tab -->
-    <string name="failed_filename_receive">Failed to receive</string>
+    <string name="failed_filename_receive">Gagal menerima</string>
     <!-- Failed to receive files in transfer tab -->
-    <string name="failed_filename_receive_reconnecct">Failed to receive, please reconnect</string>
+    <string name="failed_filename_receive_reconnecct">Gagal menerima, silakan sambungkan ulang</string>
     <!-- Transfer complete in transfer tab -->
-    <string name="transfer_complete">File transferred</string>
+    <string name="transfer_complete">Berkas ditransfer</string>
     <!-- Need extra permissions for transfer tab -->
-    <string name="grant_location_permission">App needs location permission to connect with nearby devices.</string>
+    <string name="grant_location_permission">Aplikasi membutuhkan akses lokasi untuk tersambung ke perangkat di sekitar.</string>
     <!-- Need extra permissions for transfer tab -->
-    <string name="location_permission_not_granted">Please grant storage permission to connect with nearby devices.</string>
+    <string name="location_permission_not_granted">Harap berikan izin penyimpanan untuk tersambung ke perangkat di sekitar.</string>
     <!-- Waiting for permissions in transfer tab -->
-    <string name="waiting_for_permissions">Waiting for permissions…</string>
+    <string name="waiting_for_permissions">Menunggu perizinan…</string>
     <!-- Enable gps for transfer tab -->
-    <string name="gps_disabled">Your GPS seems to be disabled, please enable to proceed</string>
+    <string name="gps_disabled">GPS Anda sepertinya dinonaktifkan, silakan aktifkan untuk melanjutkan</string>
     <!-- Enable location to scan nearby devices in transfer tab -->
-    <string name="enable_location">Please enable location to scan.</string>
+    <string name="enable_location">Silakan aktifkan lokasi untuk memindai.</string>
     <!-- generic yes -->
-    <string name="yes">Yes</string>
+    <string name="yes">Iya</string>
     <!-- generic no -->
-    <string name="no">No</string>
+    <string name="no">Tidak</string>
     <!-- Enable location / wifi in transfer tab -->
-    <string name="enable">Enable</string>
+    <string name="enable">Aktifkan</string>
     <!-- No nearby devices found in transfer tab -->
-    <string name="no_devices_found">No devices found nearby,
-        please make sure your device is connected to same network and have WiFi-Direct enabled in settings</string>
+    <string name="no_devices_found">Tidak ada perangkat disekitar yang ditemukan,
+        pastikan perangkat Anda tersambung ke jaringan yang sama dan WiFi-Direct aktif di dalam pengaturan</string>
     <!-- Failed to stop discovery in transfer tab -->
     <string name="failed_to_stop_peer_discovery">Failed to stop peer discovery</string>
     <!-- Resetting network discovery in transfer tab -->
     <string name="resetting_network_discovery">Resetting network discovery</string>
     <!-- Disconnected in transfer tab -->
-    <string name="disconnected">Disconnected</string>
+    <string name="disconnected">Terputus</string>
     <!-- Disconnect from connection in transfer tab -->
-    <string name="disconnect">Disconnect</string>
+    <string name="disconnect">Putuskan</string>
     <!-- Already connected to a device in transfer tab -->
-    <string name="existing_connection">Existing connection exists, please disconnect first!</string>
+    <string name="existing_connection">Terdapat sambungan aktif, silakan putuskan terlebih dahulu!</string>
     <!-- Connecting to nearby device in transfer tab -->
-    <string name="connecting">Connecting…</string>
+    <string name="connecting">Menyambungkan…</string>
     <!-- Aspect ratio of video in video player -->
-    <string name="aspect_ratio">Aspect ratio</string>
+    <string name="aspect_ratio">Rasio aspek</string>
     <!-- Playback speed dialog for video / audio player -->
-    <string name="playback_speed">Playback Speed</string>
+    <string name="playback_speed">Kecepatan Pemutaran</string>
     <!-- Playback pitch in video / audio player -->
     <string name="pitch_speed">Pitch (semitones)</string>
     <!-- Add subtitles in video player -->
-    <string name="subtitles">Subtitles</string>
+    <string name="subtitles">Subtitel</string>
     <!-- Video info dialog in video player -->
-    <string name="file">File</string>
+    <string name="file">Berkas</string>
     <!-- Video info dialog in video player -->
     <string name="media">Media</string>
     <!-- Video info dialog in video player -->
@@ -427,15 +427,15 @@
     <!-- Video info dialog in video player -->
     <string name="video">Video</string>
     <!-- Video info dialog in video player -->
-    <string name="file_path">Path</string>
+    <string name="file_path">Jalur</string>
     <!-- Video info dialog in video player -->
-    <string name="last_modified">Last Modified</string>
+    <string name="last_modified">Terakhir Diubah</string>
     <!-- Video info dialog in video player -->
-    <string name="description">Description</string>
+    <string name="description">Deskripsi</string>
     <!-- Video info dialog in video player -->
-    <string name="recording_date">Recording month/year</string>
+    <string name="recording_date">Bulan/tahun perekaman</string>
     <!-- Video info dialog in video player -->
-    <string name="release_date">Release month/year</string>
+    <string name="release_date">Bulan/tahun rilis</string>
     <!-- Video info dialog in video player -->
     <string name="bitrate">Bitrate</string>
     <!-- Video info dialog in video player -->
@@ -504,34 +504,34 @@
     <!-- Failed to extract logs to share in about section -->
     <string name="failed_to_extract_logs">Failed to extract logs file</string>
     <!-- Continue playing button in video player when video was previously played and we want to resume -->
-    <string name="continue_playing">Continue playing</string>
+    <string name="continue_playing">Lanjutkan pemutaran</string>
     <!-- No language selected for subtitles download in video player -->
-    <string name="no_language_selected">No language selected</string>
+    <string name="no_language_selected">Tidak ada bahasa yang dipilih</string>
     <!-- No item selected to delete in analysis tab -->
-    <string name="no_item_selected">No item selected</string>
+    <string name="no_item_selected">Tidak ada item yang dipilih</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
     <string name="analysis_updated">Updated analysis</string>
     <!-- Failed to share pdf/ video/audio files  -->
-    <string name="failed_to_share">Failed to share files</string>
+    <string name="failed_to_share">Gagal berbagi berkas</string>
     <!-- Transfer tab connected hint -->
-    <string name="connected_send_receive_hint">Connected… before you start sending, 
-        make sure to enable receiver on the other device</string>
+    <string name="connected_send_receive_hint">Tersambung… sebelum Anda mulai mengirim, 
+        pastikan penerima aktif pada perangkat lainnya</string>
     <!-- Transfer tab receiving files -->
-    <string name="receiving">Receiving…</string>
+    <string name="receiving">Menerima…</string>
     <!-- Transfer tab hint for connection -->
     <string name="devices_present_select">Make sure to initiate connection only from one device not both.</string>
     <!-- Transfer tab hint for connection -->
     <string name="start_scan_both_devices">Make sure to start scan on both the devices</string>
     <!-- Transfer tab connecting countdown -->
-    <string name="connecting_please_wait">Connecting… (%s secs)</string>
+    <string name="connecting_please_wait">Menyambungkan… (%s detik)</string>
     <!-- Transfer tab enable wifi to continue -->
-    <string name="enable_wifi_to_continue">Please enable Wifi to continue</string>
+    <string name="enable_wifi_to_continue">Silakan aktifkan Wifi untuk melanjutkan</string>
     <!-- Transfer tab my device info -->
-    <string name="my_device">My device: %s</string>
+    <string name="my_device">Perangkat saya: %s</string>
     <!-- Transfer tab my device status -->
     <string name="device_status">Status: %s</string>
     <!-- Transfer tab progress -->
-    <string name="transfer_in_progress_title">Transfer in progress</string>
+    <string name="transfer_in_progress_title">Transfer sedang berjalan</string>
     <!-- Transfer tab transfer in progress but user trying to leave the screen -->
     <string name="transfer_in_progress_summary">There is a P2P transfer currently in progress,
         it is recommended that you don\'t leave this screen,
@@ -541,72 +541,72 @@
     <!-- Transfer app stay in progress -->
     <string name="stay">Stay</string>
     <!-- Image viewer edit image -->
-    <string name="edit">Edit</string>
+    <string name="edit">Sunting</string>
     <!-- Image viewer set image as wallpaper -->
-    <string name="set_as">Set as…</string>
+    <string name="set_as">Tetapkan sebagai…</string>
     <!-- Image viewer delete image -->
-    <string name="delete">Delete</string>
+    <string name="delete">Hapus</string>
     <!-- Image viewer details of image -->
-    <string name="details">Details</string>
+    <string name="details">Detail</string>
     <!-- Image viewer manufacturer of camera lens -->
     <string name="make">Make</string>
     <!-- Image viewer model of camera lens -->
     <string name="model">Model</string>
     <!-- Image viewer camera aperture -->
-    <string name="aperture">Aperture</string>
+    <string name="aperture">Apertur</string>
     <!-- Image viewer iso of image -->
     <string name="iso">ISO</string>
     <!-- Image viewer shutter time -->
-    <string name="shutter_time">Shutter time</string>
+    <string name="shutter_time">Kecepatan rana</string>
     <!-- Image viewer image location -->
-    <string name="location">Location</string>
+    <string name="location">Lokasi</string>
     <!-- Image viewer gps -->
     <string name="gps">GPS</string>
     <!-- Image viewer image latitude -->
-    <string name="latitude">Latitude</string>
+    <string name="latitude">Lintang</string>
     <!-- Image viewer image longitude -->
-    <string name="longitude">Longitude</string>
+    <string name="longitude">Bujur</string>
     <!-- Image viewer image file name -->
-    <string name="file_name">File Name</string>
+    <string name="file_name">Nama Berkas</string>
     <!-- Image viewer image path -->
-    <string name="path">Path</string>
+    <string name="path">Jalur</string>
     <!-- Image viewer open image location in map -->
-    <string name="open_in_maps">Open in Map</string>
+    <string name="open_in_maps">Buka di Peta</string>
     <!-- Share image / video -->
-    <string name="share">Share</string>
+    <string name="share">Bagikan</string>
     <!-- Share / document no app found to open -->
-    <string name="no_app_found">No App found to open this file</string>
+    <string name="no_app_found">Tidak ada aplikasi untuk membuka berkas ini</string>
     <!-- File not found while opening -->
-    <string name="file_not_found">File not found</string>
+    <string name="file_not_found">Berkas tidak ditemukan</string>
     <!-- Delete file -->
-    <string name="delete_files_title">Delete</string>
+    <string name="delete_files_title">Hapus</string>
     <!-- Delete file permanently summary in trashbin and app uninstall -->
-    <string name="delete_files_message">You\'re about to permanently delete these files.
-        Are you sure you want to proceed?\n\n%s Files, %s Size</string>
+    <string name="delete_files_message">Anda akan menghapus berkas ini secara permanen.
+        Apakah Anda yakin ingin melanjutkan?\n\nBerkas %s, Ukuran %s</string>
     <!-- Delete file progress -->
-    <string name="deleted_progress">Deleted %s of %s</string>
+    <string name="deleted_progress">Menghapus %s dari %s</string>
     <!-- Delete file successful -->
-    <string name="successfully_deleted">Successfully deleted</string>
+    <string name="successfully_deleted">Berhasil dihapus</string>
     <!-- Delete file failure -->
-    <string name="failed_to_update_list_reopen">Failed to update list, please restart the app</string>
+    <string name="failed_to_update_list_reopen">Gagal memperbarui daftar, silakan mulai ulang aplikasi</string>
     <!-- Device id in about section -->
-    <string name="device_id">Device ID</string>
+    <string name="device_id">ID Perangkat</string>
     <!-- Subscription status in about section -->
-    <string name="subscription_status">Subscription status</string>
+    <string name="subscription_status">Status langganan</string>
     <!-- Device id copied in about section -->
-    <string name="device_id_copied">Device ID copied to clipboard</string>
+    <string name="device_id_copied">ID Perangkat disalin ke clipboard</string>
     <!-- App version in about section -->
-    <string name="version_title">Version</string>
+    <string name="version_title">Versi</string>
     <!-- License title in about section -->
-    <string name="license">License</string>
+    <string name="license">Lisensi</string>
     <!-- Submit issue in about section -->
-    <string name="submit_issue">Submit Issue</string>
+    <string name="submit_issue">Kirim Masalah</string>
     <!-- Contact us in about section -->
-    <string name="contact_us">Contact Us</string>
+    <string name="contact_us">Hubungi Kami</string>
     <!-- Translate in about section -->
-    <string name="translate_title">Translate</string>
+    <string name="translate_title">Terjemahkan</string>
     <!-- Translate summary in about section -->
-    <string name="translate_summary">Help us translate Amaze in your language</string>
+    <string name="translate_summary">Bantu kami menerjemahkan Amaze ke dalam bahasa Anda</string>
     <!-- About app screen title -->
     <string name="about_app_title">About app</string>
     <!-- Made in india about section -->
@@ -726,43 +726,43 @@
     <!-- Settings page appearance -->
     <string name="appearance">Appearance</string>
     <!-- Settings page appearance summary -->
-    <string name="appearance_summary">App appearance settings</string>
+    <string name="appearance_summary">Pengaturan tampilan aplikasi</string>
     <!-- Settings page general settings -->
-    <string name="general">General</string>
+    <string name="general">Umum</string>
     <!-- Playback properties in video player -->
-    <string name="playback_properties">Playback properties</string>
+    <string name="playback_properties">Properti pemutaran</string>
     <!-- Apply dialog button in apply playback settings -->
-    <string name="apply">Apply</string>
+    <string name="apply">Terapkan</string>
     <!-- Playback settings dialog pitch settings info -->
     <string name="pitch_hint_text">A value of zero means that the key is not changed.\nOne full step corresponds to one semitone.\nA change of -12 semitones means that the song is played one octave lower.</string>
     <!-- Playback settings dialog reset settings -->
-    <string name="reset">Reset</string>
+    <string name="reset">Setel ulang</string>
     <!-- Settings page extract music player background color from album -->
-    <string name="audio_player_enable_palette">Extract palette color from album</string>
+    <string name="audio_player_enable_palette">Ekstrak palet warna dari album</string>
     <!-- Settings page extract music player background color from album info -->
-    <string name="audio_player_enable_palette_summary">Sets background color for audio player</string>
+    <string name="audio_player_enable_palette_summary">Atur warna latar untuk pemutar audio</string>
     <!-- Settings page extract image viewer background color from image -->
-    <string name="image_viewer_enable_palette">Extract palette color from image</string>
+    <string name="image_viewer_enable_palette">Ekstrak palet warna dari gambar</string>
     <!-- Settings page extract image viewer background color from image summary -->
-    <string name="image_viewer_enable_palette_summary">Sets background color for Image Viewer</string>
+    <string name="image_viewer_enable_palette_summary">Atur warna latar untuk Penilik Gambar</string>
     <!-- Unused apps in analysis tab -->
-    <string name="unused_apps">Unused apps</string>
+    <string name="unused_apps">Apl tidak digunakan</string>
     <!-- Most used apps in analysis tab -->
-    <string name="most_used_apps">Most used apps</string>
+    <string name="most_used_apps">Apl sering digunakan</string>
     <!-- Least used apps in analysis tab -->
-    <string name="least_used_apps">Least used apps</string>
+    <string name="least_used_apps">Apl jarang digunakan</string>
     <!-- Large apps in analysis tab -->
-    <string name="large_apps">Large apps</string>
+    <string name="large_apps">Apl besar</string>
     <!-- Games installed in analysis tab -->
-    <string name="games_installed">Games</string>
+    <string name="games_installed">Permainan</string>
     <!-- Games installed hint in analysis tab -->
-    <string name="games_installed_hint">Games currently installed on this device</string>
+    <string name="games_installed_hint">Permainan yang terpasang pada perangkat ini</string>
     <!-- Required elevated permission for analysis in analysis tab -->
-    <string name="require_permission">Required elevated permissions for this analysis</string>
+    <string name="require_permission">Membutuhkan izin lanjutan untuk analisis ini</string>
     <!-- Already granted analysis permission, ask user to refresh -->
-    <string name="granted_permission_refresh">Already granted?</string>
+    <string name="granted_permission_refresh">Sudah diizinkan?</string>
     <!-- Refresh button in analysis after permission granted -->
-    <string name="refresh">Refresh</string>
+    <string name="refresh">Segarkan</string>
     <!-- Unused apps preference dialog message -->
     <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
     <!-- Most used apps preference dialog message -->
@@ -776,21 +776,21 @@
     <!-- Remove battery optimizations hint on welcome screen and settings page -->
     <string name="remove_battery_optimizations_hint">Please remove battery optimizations for music player to function properly in background</string>
     <!-- Apk listing in analysis -->
-    <string name="apk_files">APK files</string>
+    <string name="apk_files">Berkas APK</string>
     <!-- Image editor tools -->
-    <string name="shape">Shape</string>
+    <string name="shape">Bentuk</string>
     <!-- Apk listing in analysis -->
-    <string name="text">Text</string>
+    <string name="text">Teks</string>
     <!-- Apk listing in analysis -->
-    <string name="eraser">Eraser</string>
+    <string name="eraser">Penghapus</string>
     <!-- Apk listing in analysis -->
     <string name="filter">Filter</string>
     <!-- Apk listing in analysis -->
     <string name="emoji">Emoji</string>
     <!-- Apk listing in analysis -->
-    <string name="sticker">Sticker</string>
+    <string name="sticker">Stiker</string>
     <!-- Apk listing in analysis -->
-    <string name="rotate">Rotate</string>
+    <string name="rotate">Rotasi</string>
     <!-- Apk listing in analysis -->
     <string name="flip_horizontal">Flip-H</string>
     <!-- Apk listing in analysis -->
@@ -852,11 +852,11 @@
     <!-- lyrics type dialog -->
     <string name="added_lyrics">Added lyrics</string>
     <!-- whatsapp images in analysis section -->
-    <string name="whatsapp_images">Whatsapp Images</string>
+    <string name="whatsapp_images">Gambar WhatsApp</string>
     <!-- whatsapp videos in analysis section -->
-    <string name="whatsapp_videos">Whatsapp Videos</string>
+    <string name="whatsapp_videos">Video WhatApp</string>
     <!-- whatsapp analysis in settings -->
-    <string name="whatsapp_media">Whatsapp Media</string>
+    <string name="whatsapp_media">Media WhatApp</string>
     <!-- large files in analysis tab -->
     <string name="large_files">Large Files</string>
     <!-- purchase fdroid subscription -->
@@ -887,33 +887,33 @@
     <!-- options in floating action button -->
     <string name="options">Options</string>
     <!-- options in floating action button to locate the file -->
-    <string name="locate">Locate</string>
+    <string name="locate">Temukan</string>
     <!-- options in floating action button to add to playlist -->
-    <string name="playlist">Playlist</string>
+    <string name="playlist">Daftar Putar</string>
     <!-- options in media headers when playlist is enabled -->
-    <string name="delete_playlist">Delete Playlist</string>
+    <string name="delete_playlist">Hapus Daftar Putar</string>
     <!-- options in media headers when playlist is enabled -->
-    <string name="rename_playlist">Rename Playlist</string>
+    <string name="rename_playlist">Ubah Nama Daftar Putar</string>
     <!-- Delete playlist summary dialog -->
-    <string name="delete_playlist_message">You\'re about to permanently delete playlist %s.
-        Are you sure you want to proceed?</string>
+    <string name="delete_playlist_message">Anda akan menghapus daftar putar %s secara permanen.
+        Apakah Anda yakin ingin melanjutkan?</string>
     <!-- Rename playlist summary dialog -->
-    <string name="rename_playlist_message">Please enter new playlist name</string>
+    <string name="rename_playlist_message">Silakan masukkan nama daftar putar baru</string>
     <!-- Rename playlist summary dialog button -->
-    <string name="rename">Rename</string>
+    <string name="rename">Ubah Nama</string>
     <!-- create playlist dialog in audio fragment -->
-    <string name="create_new_playlist">Create New</string>
+    <string name="create_new_playlist">Buat Baru</string>
     <!-- remove from playlist dialog in audio fragment -->
-    <string name="remove">Remove</string>
+    <string name="remove">Hapus</string>
     <!-- Remove from playlist summary dialog -->
-    <string name="remove_from_playlist_message">You\'re about to remove selected songs from playlist(s).
-        Are you sure you want to proceed?</string>
+    <string name="remove_from_playlist_message">Anda akan menghapus lagu terpilih dari daftar putar.
+        Apakah Anda yakin ingin melanjutkan?</string>
     <!-- add to playlist dialog in audio fragment -->
-    <string name="add_to_playlist">Add to Playlist</string>
+    <string name="add_to_playlist">Tambahkan ke Daftar Putar</string>
     <!-- create dialog in audio fragment -->
-    <string name="create">Create</string>
+    <string name="create">Buat</string>
     <!-- removed songs from playlist in audio fragment -->
-    <string name="removed_from_playlist">Removed from playlist(s)</string>
+    <string name="removed_from_playlist">Dihapus dari daftar putar</string>
     <!-- play next song button in options in audio fragment -->
     <string name="play_next">PLAY NEXT</string>
     <!-- play next song button in options in audio fragment -->

@@ -63,9 +63,9 @@
     <!-- Analyse tab on app main screen bottom tab -->
     <string name="title_analyse">Analyse</string>
     <!-- Utilities tab on app main screen bottom tab -->
-    <string name="title_utilities">Utilities</string>
+    <string name="title_utilities">उपयोगिताएँ</string>
     <!-- Transfer files tab on app main screen bottom tab -->
-    <string name="title_transfer">Transfer</string>
+    <string name="title_transfer">स्थानांतरण</string>
     <!-- Scan nearby connections button in transfer tab -->
     <string name="title_scan">Scan</string>
     <!-- Stop scan nearby devices in transfer tab -->
@@ -1035,4 +1035,10 @@
     <string name="sort_by">Sort By</string>
     <!-- subscription terms in purchase dialog -->
     <string name="terms_and_conditions">Terms and Conditions</string>
+    <!-- usage app opened in most used apps analysis -->
+    <string name="usage">Usage (hrs)</string>
+    <!-- confirm before exit app in general settings -->
+    <string name="confirm_before_exit">Confirm before exit</string>
+    <!-- general app settings summary -->
+    <string name="general_summary">Control general app behaviour</string>
 </resources>

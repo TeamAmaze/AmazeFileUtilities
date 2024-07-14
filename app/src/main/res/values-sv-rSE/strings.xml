@@ -41,7 +41,7 @@
     <!-- Grant permission button for welcome screen -->
     <string name="grant">Grant</string>
     <!-- Cancel button in dialogs mainly to cancel any operation -->
-    <string name="cancel">Cancel</string>
+    <string name="cancel">Avbryt</string>
     <!-- Play button label in music player notification -->
     <string name="play">Play</string>
     <!-- Shuffle button label in music player notification -->
@@ -51,7 +51,7 @@
     <!-- Previous button label in music player notification -->
     <string name="previous">Previous</string>
     <!-- Next button label in music player notification -->
-    <string name="next">Next</string>
+    <string name="next">Nästa</string>
     <!-- Not allowed to perform any operation -->
     <string name="not_allowed">Not allowed</string>
     <!-- Audio player notification channel description -->
@@ -73,15 +73,15 @@
     <!-- Internal storage on app main screen -->
     <string name="internal_storage">Internal Storage</string>
     <!-- Images title in images list screen in utilities tab -->
-    <string name="images">Images</string>
+    <string name="images">Bilder</string>
     <!-- Audios title in audios list screen in utilities tab -->
     <string name="audios">Audios</string>
     <!-- Videos title in videos list screen in utilities tab -->
     <string name="videos">Videos</string>
     <!-- Documents title in documents list screen in utilities tab -->
-    <string name="documents">Documents</string>
+    <string name="documents">Dokument</string>
     <!-- Number of files in utilities tab individual list screens eg in images / number of images -->
-    <string name="num_of_files">%s Files</string>
+    <string name="num_of_files">%s filer</string>
     <!-- Number of total media files on main screen -->
     <string name="num_of_media_files">%s Media Files</string>
     <!-- Used space in utilties tab in individual lists screen eg in images - Used: 300 MB / 1 GB -->
@@ -97,27 +97,27 @@
     <!-- Recent files on utilities tab main screen -->
     <string name="recent_files">Recent Files</string>
     <!-- No files found after searching media files -->
-    <string name="no_files">No files</string>
+    <string name="no_files">Inga filer</string>
     <!-- Number of media files in utilities tab in individual list screen eg in images / number of total files -->
     <string name="media_files_subs">Media Files: %s</string>
     <!-- Search screen title bar hint -->
-    <string name="action_bar_search_hint">Search for files…</string>
+    <string name="action_bar_search_hint">Sök efter filer…</string>
     <!-- Generic message shown when loading results of list or operation -->
     <string name="please_wait">Please wait…</string>
     <!-- No search results found -->
     <string name="its_quiet_here">It\'s quiet in here…</string>
     <!-- Settings screen title -->
-    <string name="settings">Settings</string>
+    <string name="settings">Inställningar</string>
     <!-- About screen title -->
-    <string name="about">About</string>
+    <string name="about">Om</string>
     <!-- Copyright dialog content in about section -->
-    <string name="rights_reserved">Copyright © 2021–2024 Team Amaze\nAll Rights Reserved</string>
+    <string name="rights_reserved">Copyright © 2021 – 2024 Team Amaze\nAlla rättigheter förbehållna</string>
     <!-- Open source licenses in about section -->
     <string name="open_source_licenses">Open-source licenses</string>
     <!-- Privacy policy label in about section -->
-    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy">Integritetspolicy</string>
     <!-- Licenses label in about section -->
-    <string name="licenses">Licenses</string>
+    <string name="licenses">Licenser</string>
     <!-- Information about a pdf / doc file -->
     <string name="information">Information</string>
     <!-- Unable to open pdf / doc / video / image file -->
@@ -125,15 +125,15 @@
     <!-- Group utilities list eg images / videos by parent folder -->
     <string name="parent">Parent</string>
     <!-- Group utilities list eg images / videos by date -->
-    <string name="date">Date</string>
+    <string name="date">Datum</string>
     <!-- Group utilities list eg iamges / videos by name -->
-    <string name="name">Name</string>
+    <string name="name">Namn</string>
     <!-- Show utilities list by list view -->
-    <string name="list_view">List View</string>
+    <string name="list_view">Listvy</string>
     <!-- Show utilities list by grid view -->
-    <string name="grid_view">Grid View</string>
+    <string name="grid_view">Rutnätsvy</string>
     <!-- Sort utilities by size -->
-    <string name="size">Size</string>
+    <string name="size">Storlek</string>
     <!-- Group audio utilities list by album names  -->
     <string name="album">Album</string>
     <!-- Group audio utilities list by artist name -->
@@ -149,7 +149,7 @@
     <!-- Crash fallback screen copy report -->
     <string name="copy_for_github">Copy formatted report</string>
     <!-- Crash fallback screen report on github -->
-    <string name="error_report_open_issue_button_text">Report on GitHub</string>
+    <string name="error_report_open_issue_button_text">Rapportera på GitHub</string>
     <!-- Crash fallback screen info -->
     <string name="error_report_open_github_notice">Please check whether an issue discussing your crash already exists.</string>
     <!-- Toast shown when we failed to display crash fallback screen -->
@@ -163,7 +163,7 @@
     <!-- Crash fallback screen info about device -->
     <string name="info_labels">What:\\nRequest:\\nGMT Time:\\nPackage:\\nVersion:\\nOS version:\\nDevice:\\nModel:\\nProduct:\\nDevice ID:</string>
     <!-- Crash fallback screen ask user input -->
-    <string name="your_comment">Your comment (in English):</string>
+    <string name="your_comment">Din kommentar (på Engelska):</string>
     <!-- Crash fallback screen show more details -->
     <string name="error_details_headline">Details:</string>
     <!-- Crash fallback screen info -->
@@ -181,7 +181,7 @@
     <!-- Generic ok button in dialogs -->
     <string name="ok">OK</string>
     <!-- Pdf activity wrong password entered -->
-    <string name="wrong_password">Wrong password</string>
+    <string name="wrong_password">Felaktigt lösenord</string>
     <!-- Generic message for any operation not supported -->
     <string name="unsupported_operation">Unsupported Operation</string>
     <!-- Grant storage permission more info -->
@@ -191,7 +191,7 @@
     <!-- Pdf activity copy page content title -->
     <string name="copy_page">Copy page</string>
     <!-- Pdf activity view bookmarks -->
-    <string name="bookmarks">Bookmarks</string>
+    <string name="bookmarks">Bokmärken</string>
     <!-- Pdf activity pdf title -->
     <string name="title">Title</string>
     <!-- Pdf activity pdf author -->
@@ -209,7 +209,7 @@
     <!-- Pdf activity pdf producer -->
     <string name="producer">Producer</string>
     <!-- Generic dialog close button -->
-    <string name="close">Close</string>
+    <string name="close">Stäng</string>
     <!-- Analysing internal storage shown in analysis tab -->
     <string name="analysing">Analysing…</string>
     <!-- Pdf activity page content copied -->
@@ -265,7 +265,7 @@
     <!-- More optimisations coming at analysis tab bottom -->
     <string name="more_to_come">More optimizations to come!</string>
     <!-- View all analysed content analysis tab -->
-    <string name="view_all">View all</string>
+    <string name="view_all">Visa alla</string>
     <!-- Analysis settings title -->
     <string name="analysis">Analysis</string>
     <!-- Analysis settings hint -->
@@ -302,7 +302,7 @@
     <string name="delete_pref_override_message">You\'re about to override an existing path.
         This will reset the existing analysis data for that path.</string>
     <!-- Generic message to confirm -->
-    <string name="confirm">Confirm</string>
+    <string name="confirm">Bekräfta</string>
     <!-- Images features group name in analysis settings -->
     <string name="image_features">Image Features</string>
     <!-- Images features group hint in analysis settings -->
@@ -322,9 +322,9 @@
     <!-- Unknown artist / album for music player -->
     <string name="unknown_artist">&lt;UNKNOWN&gt;</string>
     <!-- Search for nearby connections in transfer tab -->
-    <string name="searching">Searching…</string>
+    <string name="searching">Söker…</string>
     <!-- Searching for nearby connections with timer in transfer tab -->
-    <string name="searching_timer">Searching… (%s secs)</string>
+    <string name="searching_timer">Söker… (%s sek)</string>
     <!-- Enable wifi prompt to scan nearby connections in transfer tab -->
     <string name="enable_wifi">Please enable your Wi-Fi</string>
     <!-- Failed to discover nearby devices in transfer tab -->
@@ -332,7 +332,7 @@
     <!-- Receiving files in transfer tab -->
     <string name="receiving_files">Receiving files</string>
     <!-- Search for nearby devices in transfer tab -->
-    <string name="search_devices">Search for devices…</string>
+    <string name="search_devices">Sök efter enheter…</string>
     <!-- Enable waveform bar for music player in settings -->
     <string name="enable_waveform">Enable waveform seekbar</string>
     <!-- Failed to start cast session when trying to cast images / videos from their list pages -->
@@ -354,7 +354,7 @@
     <!-- Tv cast session ended -->
     <string name="cast_ended">Cast session ended</string>
     <!-- Open image/ videos/ audios with either cast on tv or open in mobile -->
-    <string name="open_with">Open with…</string>
+    <string name="open_with">Öppna med…</string>
     <!-- Open images / videos/ audios using inbuilt player -->
     <string name="inbuilt_player">In-built player</string>
     <!-- Tv Cast notification title server running -->
@@ -390,9 +390,9 @@
     <!-- Enable location to scan nearby devices in transfer tab -->
     <string name="enable_location">Please enable location to scan.</string>
     <!-- generic yes -->
-    <string name="yes">Yes</string>
+    <string name="yes">Ja</string>
     <!-- generic no -->
-    <string name="no">No</string>
+    <string name="no">Nej</string>
     <!-- Enable location / wifi in transfer tab -->
     <string name="enable">Enable</string>
     <!-- No nearby devices found in transfer tab -->
@@ -419,11 +419,11 @@
     <!-- Add subtitles in video player -->
     <string name="subtitles">Subtitles</string>
     <!-- Video info dialog in video player -->
-    <string name="file">File</string>
+    <string name="file">Fil</string>
     <!-- Video info dialog in video player -->
     <string name="media">Media</string>
     <!-- Video info dialog in video player -->
-    <string name="audio">Audio</string>
+    <string name="audio">Ljud</string>
     <!-- Video info dialog in video player -->
     <string name="video">Video</string>
     <!-- Video info dialog in video player -->
@@ -431,7 +431,7 @@
     <!-- Video info dialog in video player -->
     <string name="last_modified">Last Modified</string>
     <!-- Video info dialog in video player -->
-    <string name="description">Description</string>
+    <string name="description">Beskrivning</string>
     <!-- Video info dialog in video player -->
     <string name="recording_date">Recording month/year</string>
     <!-- Video info dialog in video player -->
@@ -457,11 +457,11 @@
     <!-- Open existing subtitles file in video player -->
     <string name="open">Open</string>
     <!-- Search for subtitles file online dialog button in video player -->
-    <string name="search">Search</string>
+    <string name="search">Sök</string>
     <!-- Search for subtitles file online dialog title in video player -->
     <string name="search_online">Search online</string>
     <!-- Synchronize subtitles list item in video player -->
-    <string name="synchronize">Synchronize</string>
+    <string name="synchronize">Synkronisera</string>
     <!-- Download subtitles in video player -->
     <string name="download_subtitles">Download subtitles</string>
     <!-- Download subtitles info in video player -->
@@ -484,7 +484,7 @@
     <!-- Downloads info in search subtitles dialog in video player -->
     <string name="downloads">Downloads</string>
     <!-- Language info in search subtitles dialog in video player -->
-    <string name="language">Language</string>
+    <string name="language">Språk</string>
     <!-- No subtitles found in video player -->
     <string name="no_results_subtitles">No results, please try with different keywords…</string>
     <!-- Download subtitles in video player -->
@@ -498,7 +498,7 @@
     <!-- Share file dialog -->
     <string name="bluetooth">Bluetooth</string>
     <!-- Share logs in about section -->
-    <string name="share_logs">Share logs</string>
+    <string name="share_logs">Dela loggar</string>
     <!-- No app found in share dialog -->
     <string name="no_apps_found_to_share">No apps found to share</string>
     <!-- Failed to extract logs to share in about section -->
@@ -527,7 +527,7 @@
     <!-- Transfer tab enable wifi to continue -->
     <string name="enable_wifi_to_continue">Please enable Wifi to continue</string>
     <!-- Transfer tab my device info -->
-    <string name="my_device">My device: %s</string>
+    <string name="my_device">Min enhet: %s</string>
     <!-- Transfer tab my device status -->
     <string name="device_status">Status: %s</string>
     <!-- Transfer tab progress -->
@@ -537,15 +537,15 @@
         it is recommended that you don\'t leave this screen,
         otherwise you\'ll not be able to track the transfer</string>
     <!-- Transfer tab leave in progress -->
-    <string name="leave">Leave</string>
+    <string name="leave">Lämna</string>
     <!-- Transfer app stay in progress -->
     <string name="stay">Stay</string>
     <!-- Image viewer edit image -->
-    <string name="edit">Edit</string>
+    <string name="edit">Redigera</string>
     <!-- Image viewer set image as wallpaper -->
     <string name="set_as">Set as…</string>
     <!-- Image viewer delete image -->
-    <string name="delete">Delete</string>
+    <string name="delete">Radera</string>
     <!-- Image viewer details of image -->
     <string name="details">Details</string>
     <!-- Image viewer manufacturer of camera lens -->
@@ -563,9 +563,9 @@
     <!-- Image viewer gps -->
     <string name="gps">GPS</string>
     <!-- Image viewer image latitude -->
-    <string name="latitude">Latitude</string>
+    <string name="latitude">Latitud</string>
     <!-- Image viewer image longitude -->
-    <string name="longitude">Longitude</string>
+    <string name="longitude">Longitud</string>
     <!-- Image viewer image file name -->
     <string name="file_name">File Name</string>
     <!-- Image viewer image path -->
@@ -573,13 +573,13 @@
     <!-- Image viewer open image location in map -->
     <string name="open_in_maps">Open in Map</string>
     <!-- Share image / video -->
-    <string name="share">Share</string>
+    <string name="share">Dela</string>
     <!-- Share / document no app found to open -->
     <string name="no_app_found">No App found to open this file</string>
     <!-- File not found while opening -->
     <string name="file_not_found">File not found</string>
     <!-- Delete file -->
-    <string name="delete_files_title">Delete</string>
+    <string name="delete_files_title">Radera</string>
     <!-- Delete file permanently summary in trashbin and app uninstall -->
     <string name="delete_files_message">You\'re about to permanently delete these files.
         Are you sure you want to proceed?\n\n%s Files, %s Size</string>
@@ -598,13 +598,13 @@
     <!-- App version in about section -->
     <string name="version_title">Version</string>
     <!-- License title in about section -->
-    <string name="license">License</string>
+    <string name="license">Licens</string>
     <!-- Submit issue in about section -->
     <string name="submit_issue">Submit Issue</string>
     <!-- Contact us in about section -->
     <string name="contact_us">Contact Us</string>
     <!-- Translate in about section -->
-    <string name="translate_title">Translate</string>
+    <string name="translate_title">Översätt</string>
     <!-- Translate summary in about section -->
     <string name="translate_summary">Help us translate Amaze in your language</string>
     <!-- About app screen title -->
@@ -670,9 +670,9 @@
     <string name="not_connected_trial_message">Hey There! Thank you for choosing Amaze File Utilities.\n
         We\'re not able to validate your license, please connect to internet and restart the app.</string>
     <!-- Subscribe button in dialog -->
-    <string name="subscribe">Subscribe</string>
+    <string name="subscribe">Prenumerera</string>
     <!-- Generic don't show dialog again -->
-    <string name="dont_show_again">Don\'t show again</string>
+    <string name="dont_show_again">Visa inte igen</string>
     <!-- Welcome screen title -->
     <string name="welcome_media_title">Manage media files</string>
     <!-- Welcome screen summary -->
@@ -696,7 +696,7 @@
     <!-- Subscription dialog failed to fetch subscriptions -->
     <string name="error_fetching_google_play_product_list">Error fetching product list from Google Play.</string>
     <!-- Welcome screen done with the wizard -->
-    <string name="done">Done</string>
+    <string name="done">Klar</string>
     <!-- Unable to find cast for tv framework -->
     <string name="cast_framework_unavailable">Unable to initialize cast framework, please update Google Play services</string>
     <!-- Updating app from in app updater -->
@@ -716,9 +716,9 @@
     <!-- Subscription dialog renewal cycle info -->
     <string name="renewal_cycle">Renewal cycle - %s</string>
     <!-- Subscription dialog lifetime membership -->
-    <string name="lifetime_membership">Lifetime Membership</string>
+    <string name="lifetime_membership">Livstidsmedlemskap</string>
     <!-- Subscription dialog one year membership -->
-    <string name="one_year">1 Year</string>
+    <string name="one_year">1 år</string>
     <!-- Generic operation failed -->
     <string name="operation_failed">Operation failed</string>
     <!-- Settings page number of columns for media lists grid view -->
@@ -736,7 +736,7 @@
     <!-- Playback settings dialog pitch settings info -->
     <string name="pitch_hint_text">A value of zero means that the key is not changed.\nOne full step corresponds to one semitone.\nA change of -12 semitones means that the song is played one octave lower.</string>
     <!-- Playback settings dialog reset settings -->
-    <string name="reset">Reset</string>
+    <string name="reset">Återställ</string>
     <!-- Settings page extract music player background color from album -->
     <string name="audio_player_enable_palette">Extract palette color from album</string>
     <!-- Settings page extract music player background color from album info -->
@@ -754,7 +754,7 @@
     <!-- Large apps in analysis tab -->
     <string name="large_apps">Large apps</string>
     <!-- Games installed in analysis tab -->
-    <string name="games_installed">Games</string>
+    <string name="games_installed">Spel</string>
     <!-- Games installed hint in analysis tab -->
     <string name="games_installed_hint">Games currently installed on this device</string>
     <!-- Required elevated permission for analysis in analysis tab -->
@@ -762,7 +762,7 @@
     <!-- Already granted analysis permission, ask user to refresh -->
     <string name="granted_permission_refresh">Already granted?</string>
     <!-- Refresh button in analysis after permission granted -->
-    <string name="refresh">Refresh</string>
+    <string name="refresh">Uppdatera</string>
     <!-- Unused apps preference dialog message -->
     <string name="unused_apps_pref_message">Number of days an app\'s not been opened</string>
     <!-- Most used apps preference dialog message -->
@@ -828,13 +828,13 @@
     <!-- In Image editor to add picture to edit -->
     <string name="select_picture">Select Picture</string>
     <!-- In Image editor saving modified image -->
-    <string name="saving">Saving…</string>
+    <string name="saving">Sparar…</string>
     <!-- In Image editor -->
     <string name="image_saved">Image saved successfully</string>
     <!-- In Image editor -->
     <string name="failed_image_save">Failed to save image</string>
     <!-- In Image editor to save edited image -->
-    <string name="save">Save</string>
+    <string name="save">Spara</string>
     <!-- In Image editor to discard saving image -->
     <string name="discard">Discard</string>
     <!-- Image editor activity label -->
@@ -867,7 +867,7 @@
         Please donate using one of the options below.
         Once done please contact us through telegram / email by sharing your device ID and we\'ll unlock the subscription for you.</string>
     <!-- purchase fdroid subscription paypal -->
-    <string name="purchase_fdroid_paypal">Paypal</string>
+    <string name="purchase_fdroid_paypal">PayPal</string>
     <!-- purchase fdroid subscription liberapay -->
     <string name="purchase_fdroid_liberapay">Liberapay</string>
     <!-- header summary in media list fragments -->
@@ -883,15 +883,15 @@
     <!-- playlist in audio fragment -->
     <string name="failed_remove_songs_playlist">Failed to remove songs</string>
     <!-- playlists header in audio fragment grouping -->
-    <string name="playlists">Playlists</string>
+    <string name="playlists">Spellistor</string>
     <!-- options in floating action button -->
-    <string name="options">Options</string>
+    <string name="options">Alternativ</string>
     <!-- options in floating action button to locate the file -->
     <string name="locate">Locate</string>
     <!-- options in floating action button to add to playlist -->
-    <string name="playlist">Playlist</string>
+    <string name="playlist">Spellista</string>
     <!-- options in media headers when playlist is enabled -->
-    <string name="delete_playlist">Delete Playlist</string>
+    <string name="delete_playlist">Radera spellista</string>
     <!-- options in media headers when playlist is enabled -->
     <string name="rename_playlist">Rename Playlist</string>
     <!-- Delete playlist summary dialog -->
@@ -902,7 +902,7 @@
     <!-- Rename playlist summary dialog button -->
     <string name="rename">Rename</string>
     <!-- create playlist dialog in audio fragment -->
-    <string name="create_new_playlist">Create New</string>
+    <string name="create_new_playlist">Skapa ny</string>
     <!-- remove from playlist dialog in audio fragment -->
     <string name="remove">Remove</string>
     <!-- Remove from playlist summary dialog -->
@@ -911,7 +911,7 @@
     <!-- add to playlist dialog in audio fragment -->
     <string name="add_to_playlist">Add to Playlist</string>
     <!-- create dialog in audio fragment -->
-    <string name="create">Create</string>
+    <string name="create">Skapa</string>
     <!-- removed songs from playlist in audio fragment -->
     <string name="removed_from_playlist">Removed from playlist(s)</string>
     <!-- play next song button in options in audio fragment -->
@@ -953,9 +953,9 @@
     <!-- hidden files in analysis fragment -->
     <string name="hidden_files">Hidden Files</string>
     <!-- trash bin in main screen -->
-    <string name="trash_bin">Trash Bin</string>
+    <string name="trash_bin">Papperskorg</string>
     <!-- trash bin restore in options menu -->
-    <string name="trash_bin_restore">Restore</string>
+    <string name="trash_bin_restore">Återställ</string>
     <!-- Delete file temporarily summary -->
     <string name="delete_files_temporarily_message">You\'re about to delete these files.
         Are you sure you want to proceed?\n\n%s Files, %s Size</string>
@@ -1032,7 +1032,13 @@
     <!-- list fragments banner options hint -->
     <string name="group_by">Group By</string>
     <!-- list fragments banner options hint -->
-    <string name="sort_by">Sort By</string>
+    <string name="sort_by">Sortera efter</string>
     <!-- subscription terms in purchase dialog -->
     <string name="terms_and_conditions">Terms and Conditions</string>
+    <!-- usage app opened in most used apps analysis -->
+    <string name="usage">Usage (hrs)</string>
+    <!-- confirm before exit app in general settings -->
+    <string name="confirm_before_exit">Confirm before exit</string>
+    <!-- general app settings summary -->
+    <string name="general_summary">Control general app behaviour</string>
 </resources>
