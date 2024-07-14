@@ -429,7 +429,11 @@ class MainActivity :
     }
 
     private fun exit() {
-        if (getFilesModel().backPressedToExitOnce) {
+        val confirmBeforeExitPref = getAppCommonSharedPreferences().getBoolean(
+            PreferencesConstants.KEY_CONFIRM_BEFORE_EXIT,
+            PreferencesConstants.DEFAULT_CONFIRM_BEFORE_EXIT
+        )
+        if (!confirmBeforeExitPref || getFilesModel().backPressedToExitOnce) {
             finish()
         } else {
             getFilesModel().backPressedToExitOnce = true

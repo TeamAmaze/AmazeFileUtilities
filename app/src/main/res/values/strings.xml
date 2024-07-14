@@ -1045,4 +1045,8 @@
     <string name="terms_and_conditions">Terms and Conditions</string>
     <!-- usage app opened in most used apps analysis -->
     <string name="usage">Usage (hrs)</string>
+    <!-- confirm before exit app in general settings -->
+    <string name="confirm_before_exit">Confirm before exit</string>
+    <!-- general app settings summary -->
+    <string name="general_summary">Control general app behaviour</string>
 </resources>

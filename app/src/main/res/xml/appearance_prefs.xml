@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        app:key="pref_confirm_before_exit"
+        app:title="@string/confirm_before_exit"
+        app:defaultValue="true"
+        />
     <PreferenceCategory
-        app:title="@string/general">
+        app:title="@string/appearance">
         <Preference
             app:key="columns"
             app:title="@string/columns_grid_title"

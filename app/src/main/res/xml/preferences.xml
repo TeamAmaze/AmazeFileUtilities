@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference
         app:key="appearance"
-        app:title="@string/appearance"
-        android:summary="@string/appearance_summary"
+        app:title="@string/general"
+        android:summary="@string/general_summary"
         app:icon="@drawable/ic_pref_appearance"
         />
     <Preference
