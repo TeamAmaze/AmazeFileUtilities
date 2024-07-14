@@ -1742,7 +1742,7 @@ class FilesViewModel(val applicationContext: Application) :
             usageStats.filter {
                 it.lastTimeUsed != 0L
             }.forEach {
-                var timeForeground =  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                var timeForeground = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
                     it.totalTimeVisible else it.totalTimeInForeground
                 if (freqMap[it.packageName] != null) {
                     timeForeground += freqMap[it.packageName]!!
