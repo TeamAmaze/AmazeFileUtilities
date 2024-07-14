@@ -163,8 +163,9 @@ class Billing(val context: Context, private var uniqueId: String) :
                 response.responseCode,
                 purchases?.size,
             )
-            if (::activity.isInitialized && !activity.isFinishing
-                && !activity.isDestroyed) {
+            if (::activity.isInitialized && !activity.isFinishing &&
+                !activity.isDestroyed
+            ) {
                 activity.getString(R.string.operation_failed).let { activity.showToastInCenter(it) }
             }
         }
@@ -229,8 +230,9 @@ class Billing(val context: Context, private var uniqueId: String) :
                 } catch (e: Exception) {
                     log.warn("failed to update subscription state for trial validation", e)
                 }
-                if (::activity.isInitialized && !activity.isFinishing
-                    && !activity.isDestroyed) {
+                if (::activity.isInitialized && !activity.isFinishing &&
+                    !activity.isDestroyed
+                ) {
                     activity.runOnUiThread {
                         purchaseDialog?.dismiss()
                         Utils.buildSubscriptionPurchasedDialog(activity).show()
@@ -245,11 +247,11 @@ class Billing(val context: Context, private var uniqueId: String) :
                     purchaseToken,
                 )
                 activity.getString(R.string.operation_failed).let {
-                    if (::activity.isInitialized && !activity.isFinishing
-                        && !activity.isDestroyed) {
+                    if (::activity.isInitialized && !activity.isFinishing &&
+                        !activity.isDestroyed
+                    ) {
                         activity.showToastInCenter(it)
                     }
-
                 }
             }
         }
@@ -494,8 +496,9 @@ class Billing(val context: Context, private var uniqueId: String) :
             val billingFlowParams = BillingFlowParams.newBuilder().setProductDetailsParamsList(
                 listOf(productDetailsParams)
             ).build()
-            if (::activity.isInitialized && !activity.isFinishing
-                && !activity.isDestroyed) {
+            if (::activity.isInitialized && !activity.isFinishing &&
+                !activity.isDestroyed
+            ) {
                 activity.let {
                     billingClient.launchBillingFlow(it, billingFlowParams)
                 }
@@ -561,8 +564,9 @@ class Billing(val context: Context, private var uniqueId: String) :
      *
      *
      */
-        if (::activity.isInitialized && !activity.isFinishing
-            && !activity.isDestroyed) {
+        if (::activity.isInitialized && !activity.isFinishing &&
+            !activity.isDestroyed
+        ) {
             activity.runOnUiThread {
                 val dialogBuilder = AlertDialog.Builder(activity, R.style.Custom_Dialog_Dark)
                     .setTitle(R.string.subscribe)
