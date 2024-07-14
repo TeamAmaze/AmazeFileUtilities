@@ -1355,7 +1355,6 @@ class Utils {
                     log.warn("failed to find ignore battery optimizations screen", anfe)
                     context.showToastInCenter(context.getString(R.string.grantfailed))
                 }
-
             }
         }
 

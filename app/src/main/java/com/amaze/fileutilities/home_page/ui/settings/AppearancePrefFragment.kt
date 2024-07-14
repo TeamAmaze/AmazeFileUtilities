@@ -24,6 +24,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.preference.CheckBoxPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import com.amaze.fileutilities.R
@@ -35,6 +36,7 @@ class AppearancePrefFragment : PreferenceFragmentCompat(), Preference.OnPreferen
 
     companion object {
         private const val KEY_COLUMNS = "columns"
+        private const val KEY_CONFIRM_ON_EXIT = "pref_confirm_before_exit"
         private val KEYS = listOf(
             KEY_COLUMNS
         )
@@ -43,6 +45,21 @@ class AppearancePrefFragment : PreferenceFragmentCompat(), Preference.OnPreferen
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.appearance_prefs)
+        val sharedPrefs = requireContext().getAppCommonSharedPreferences()
+        val enableConfirmOnExitChange = Preference.OnPreferenceChangeListener { pref, newValue ->
+            sharedPrefs.edit().putBoolean(
+                PreferencesConstants.KEY_CONFIRM_BEFORE_EXIT, newValue as Boolean
+            ).apply()
+            true
+        }
+        val confirmOnExitCheckbox = findPreference<CheckBoxPreference>(KEY_CONFIRM_ON_EXIT)
+        confirmOnExitCheckbox?.setDefaultValue(
+            sharedPrefs.getBoolean(
+                PreferencesConstants.KEY_CONFIRM_BEFORE_EXIT,
+                PreferencesConstants.DEFAULT_CONFIRM_BEFORE_EXIT
+            )
+        )
+        confirmOnExitCheckbox?.onPreferenceChangeListener = enableConfirmOnExitChange
         KEYS.forEach {
             findPreference<Preference>(it)?.onPreferenceClickListener = this
         }

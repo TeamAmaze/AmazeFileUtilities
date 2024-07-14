@@ -1,5 +1,4 @@
 Changelog:
-- Add support for Android 13
 - Bugfixes in video and audio players
 - Analyse list of apps growing in size
 - Improved performance
