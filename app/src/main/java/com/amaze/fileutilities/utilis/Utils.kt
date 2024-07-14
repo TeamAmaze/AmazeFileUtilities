@@ -1347,9 +1347,14 @@ class Utils {
             val pwrm = context.applicationContext.getSystemService(POWER_SERVICE) as PowerManager
             val name = context.applicationContext.packageName
             if (!pwrm.isIgnoringBatteryOptimizations(name)) {
-                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                intent.data = Uri.parse("package:$name")
-                context.startActivity(intent)
+                try {
+                    intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                    intent.data = Uri.parse("package:$name")
+                    context.startActivity(intent)
+                } catch (anfe: ActivityNotFoundException) {
+                    log.warn("failed to find ignore battery optimizations screen", anfe)
+                    context.showToastInCenter(context.getString(R.string.grantfailed))
+                }
             }
         }
 
@@ -1541,6 +1546,13 @@ class Utils {
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(
                 QueryAppSizeWorker.NAME, policy, periodicWorkRequest
             )
+        }
+
+        fun convertMillisToHoursMinutes(millis: Long): String {
+            val hours = TimeUnit.MILLISECONDS.toHours(millis)
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(millis) % 60
+
+            return String.format("%02d:%02d", hours, minutes)
         }
 
         private fun findApplicationInfoSizeFallback(applicationInfo: ApplicationInfo): Long {

@@ -30,6 +30,7 @@ import android.graphics.Bitmap
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.MotionEvent
@@ -143,6 +144,14 @@ class EditImageActivity :
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            try {
+                setTheme(R.style.Theme_AmazeFileUtilities_FullScreen_Dark)
+            } catch (e: Exception) {
+                log.warn("failed to set theme Theme_AmazeFileUtilities_FullScreen_Dark")
+                setTheme(R.style.Theme_AmazeFileUtilities_FullScreen_Dark_Fallback)
+            }
+        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_image)
         initViews()

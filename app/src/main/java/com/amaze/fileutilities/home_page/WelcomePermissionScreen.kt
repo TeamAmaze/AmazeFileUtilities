@@ -147,20 +147,27 @@ abstract class WelcomePermissionScreen :
 
     fun checkStoragePermission(): Boolean {
         // Verify that all required contact permissions have been granted.
-        return if (VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            (
-                ActivityCompat.checkSelfPermission(
-                    this, Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
-                )
-                    == PackageManager.PERMISSION_GRANTED
-                ) || (
-                ActivityCompat.checkSelfPermission(
-                    this, Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
-                )
-                    == PackageManager.PERMISSION_GRANTED
-                ) || Environment.isExternalStorageManager()
-        } else {
-            (
+        var isFound = false
+        if (VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                isFound = (
+                    ActivityCompat.checkSelfPermission(
+                        this, Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
+                    )
+                        == PackageManager.PERMISSION_GRANTED
+                    ) || (
+                    ActivityCompat.checkSelfPermission(
+                        this, Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION
+                    )
+
+                        == PackageManager.PERMISSION_GRANTED
+                    ) || Environment.isExternalStorageManager()
+            } catch (anfe: ActivityNotFoundException) {
+                log.warn("all files access permission activity missing, fallback to default", anfe)
+            }
+        }
+        if (!isFound) {
+            isFound = (
                 ActivityCompat.checkSelfPermission(
                     this,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -168,6 +175,7 @@ abstract class WelcomePermissionScreen :
                     == PackageManager.PERMISSION_GRANTED
                 )
         }
+        return isFound
     }
 
     fun isLocationEnabled(onPermissionGranted: OnPermissionGranted) {
@@ -187,7 +195,12 @@ abstract class WelcomePermissionScreen :
             .setPositiveButton(
                 resources.getString(R.string.yes)
             ) { dialog, _ ->
-                startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                try {
+                    startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+                } catch (anfe: ActivityNotFoundException) {
+                    log.warn("failed to find location settings activity", anfe)
+                    this.showToastInCenter(getString(R.string.grantfailed))
+                }
                 dialog.cancel()
             }
             .setNegativeButton(

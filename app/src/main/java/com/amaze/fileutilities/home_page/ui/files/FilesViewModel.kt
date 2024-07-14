@@ -1665,7 +1665,7 @@ class FilesViewModel(val applicationContext: Application) :
                     !usageStatsPackages.contains(it.first.packageName)
                 }?.mapNotNull {
                     MediaFileInfo.fromApplicationInfo(applicationContext, it.first, it.second)
-                }
+                }?.sortedByDescending { it.longSize }
             unusedAppsLiveData?.postValue(unusedAppsList?.let { ArrayList(it) })
         }
     }
@@ -1742,14 +1742,12 @@ class FilesViewModel(val applicationContext: Application) :
             usageStats.filter {
                 it.lastTimeUsed != 0L
             }.forEach {
-                if (!freqMap.contains(it.packageName)) {
-                    freqMap[it.packageName] = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                        it.totalTimeVisible else it.totalTimeInForeground
-                } else {
-                    freqMap[it.packageName] = freqMap[it.packageName]!! +
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                            it.totalTimeVisible else it.totalTimeInForeground
+                var timeForeground = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+                    it.totalTimeVisible else it.totalTimeInForeground
+                if (freqMap[it.packageName] != null) {
+                    timeForeground += freqMap[it.packageName]!!
                 }
+                freqMap[it.packageName] = timeForeground
             }
             val mostUsedAppsListRaw = arrayListOf<String>()
             freqMap.entries.stream()
@@ -1765,7 +1763,8 @@ class FilesViewModel(val applicationContext: Application) :
                 }?.let {
                     MediaFileInfo.fromApplicationInfo(
                         applicationContext,
-                        it.first, it.second
+                        it.first, it.second,
+                        timeForeground = freqMap[appName] ?: 0L,
                     )?.let {
                         mediaFileInfo ->
                         mostUsedApps.add(mediaFileInfo)
@@ -2021,8 +2020,12 @@ class FilesViewModel(val applicationContext: Application) :
                 }
             }
 
-            val result = priorityQueue.reversed()
-            largeSizeDiffAppsLiveData?.postValue(result.toMutableList())
+            val result = mutableListOf<MediaFileInfo>()
+            while (priorityQueue.isNotEmpty()) {
+                result.add(priorityQueue.remove())
+            }
+
+            largeSizeDiffAppsLiveData?.postValue(result.asReversed())
         }
     }
 
@@ -2361,7 +2364,7 @@ class FilesViewModel(val applicationContext: Application) :
                 Utils.applicationIsGame(it.first)
             }?.mapNotNull {
                 MediaFileInfo.fromApplicationInfo(applicationContext, it.first, it.second)
-            }?.let {
+            }?.sortedByDescending { it.longSize }?.let {
                 gamesInstalledLiveData?.postValue(ArrayList(it))
             }
         }

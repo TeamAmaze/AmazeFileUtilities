@@ -20,6 +20,7 @@
 
 package com.amaze.fileutilities.home_page.ui.analyse
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
@@ -48,10 +49,15 @@ import com.amaze.fileutilities.utilis.AbstractMediaFileInfoOperationsFragment
 import com.amaze.fileutilities.utilis.PreferencesConstants
 import com.amaze.fileutilities.utilis.Utils
 import com.amaze.fileutilities.utilis.getAppCommonSharedPreferences
+import com.amaze.fileutilities.utilis.showToastInCenter
 import com.amaze.fileutilities.utilis.showToastOnBottom
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import kotlin.concurrent.thread
 
 class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
+
+    private var log: Logger = LoggerFactory.getLogger(AnalyseFragment::class.java)
 
     private lateinit var analyseViewModel: AnalyseViewModel
     private val filesViewModel: FilesViewModel by activityViewModels()
@@ -483,9 +489,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 unusedAppsPreview.visibility = View.VISIBLE
                 if (!isUsageStatsPermissionGranted()) {
                     unusedAppsPreview.loadRequireElevatedPermission({
-                        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
-                        intent.data = Uri.parse("package:${requireActivity().packageName}")
-                        startActivity(intent)
+                        launchUsageAccessScreen()
                     }, ::usageStatsPermissionReload)
                 } else {
                     filesViewModel.getUnusedApps().observe(viewLifecycleOwner) {
@@ -508,14 +512,10 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 leastUsedAppsPreview.visibility = View.VISIBLE
                 if (!isUsageStatsPermissionGranted()) {
                     mostUsedAppsPreview.loadRequireElevatedPermission({
-                        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
-                        intent.data = Uri.parse("package:${requireActivity().packageName}")
-                        startActivity(intent)
+                        launchUsageAccessScreen()
                     }, ::usageStatsPermissionReload)
                     leastUsedAppsPreview.loadRequireElevatedPermission({
-                        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
-                        intent.data = Uri.parse("package:${requireActivity().packageName}")
-                        startActivity(intent)
+                        launchUsageAccessScreen()
                     }, ::usageStatsPermissionReload)
                 } else {
                     filesViewModel.getMostUsedApps().observe(viewLifecycleOwner) {
@@ -554,9 +554,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 !isUsageStatsPermissionGranted()
             ) {
                 networkIntensiveAppsPreview.loadRequireElevatedPermission({
-                    val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
-                    intent.data = Uri.parse("package:${requireActivity().packageName}")
-                    startActivity(intent)
+                    launchUsageAccessScreen()
                 }, ::usageStatsPermissionReload)
             } else {
                 filesViewModel.getNetworkIntensiveApps().observe(viewLifecycleOwner) {
@@ -617,8 +615,7 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                 // Starting with version O, the PACKAGE_USAGE_STATS permission is necessary to query
                 // the size of other apps
                 largeSizeDiffAppsPreview.loadRequireElevatedPermission({
-                    val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
-                    startActivity(intent)
+                    launchUsageAccessScreen()
                 }, ::usageStatsPermissionReload)
             } else {
                 filesViewModel.getLargeSizeDiffApps()
@@ -1082,6 +1079,17 @@ class AnalyseFragment : AbstractMediaFileInfoOperationsFragment() {
                     )
                 }
             }
+        }
+    }
+
+    private fun launchUsageAccessScreen() {
+        try {
+            val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+            intent.data = Uri.parse("package:${requireActivity().packageName}")
+            startActivity(intent)
+        } catch (anfe: ActivityNotFoundException) {
+            log.warn("usage access activity not found", anfe)
+            requireContext().showToastInCenter(getString(R.string.grantfailed))
         }
     }
 }

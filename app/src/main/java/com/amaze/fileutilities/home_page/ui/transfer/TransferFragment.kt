@@ -20,6 +20,7 @@
 
 package com.amaze.fileutilities.home_page.ui.transfer
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.wifi.WifiManager
 import android.net.wifi.WpsInfo
@@ -100,8 +101,13 @@ class TransferFragment : Fragment(), WifiP2pManager.ConnectionInfoListener, Peer
             )
         if (!wifiManager.isWifiEnabled) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val intent = Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY)
-                mainActivity!!.startActivity(intent)
+                try {
+                    val intent = Intent(Settings.Panel.ACTION_INTERNET_CONNECTIVITY)
+                    mainActivity!!.startActivity(intent)
+                } catch (anfe: ActivityNotFoundException) {
+                    log.warn("failed to find internet connectivity panel", anfe)
+                    requireContext().showToastInCenter(getString(R.string.grantfailed))
+                }
             } else {
                 wifiManager.isWifiEnabled = true
             }

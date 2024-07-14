@@ -57,6 +57,7 @@ class PreferencesConstants {
         const val KEY_TRASH_BIN_RETENTION_BYTES = "trash_bin_retention_bytes"
         const val KEY_TRASH_BIN_RETENTION_NUM_OF_FILES = "trash_bin_retention_num_of_files"
         const val KEY_TRASH_BIN_CLEANUP_INTERVAL_HOURS = "trash_bin_cleanup_interval_hours"
+        const val KEY_CONFIRM_BEFORE_EXIT = "pref_confirm_before_exit"
 
         const val VAL_SEARCH_DUPLICATES_MEDIA_STORE = 0
         const val VAL_SEARCH_DUPLICATES_INTERNAL_SHALLOW = 1
@@ -95,6 +96,7 @@ class PreferencesConstants {
         const val DEFAULT_NEWLY_INSTALLED_APPS_DAYS = 7
         const val DEFAULT_RECENTLY_UPDATED_APPS_DAYS = 7
         const val DEFAULT_LARGE_SIZE_DIFF_APPS_DAYS = 7
+        const val DEFAULT_CONFIRM_BEFORE_EXIT = true
 
         // max days that the size is stored in database and
         // therefore the max days that the size diff can be calculated

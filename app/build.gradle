@@ -55,8 +55,8 @@ android {
         minSdk 21
         targetSdk 33
 
-        Integer sudoVersionCode = 33
-        String versionNameText = "1.92"
+        Integer sudoVersionCode = 34
+        String versionNameText = "1.93"
 
         String[] abiFilterList = property("abiFilters").toString().split(';')
         Integer minorVersion = 0
@@ -202,7 +202,7 @@ android {
             //    track.set("internal")
             track.set("production")
             userFraction.set(1.0d)
-            updatePriority.set(2)
+            updatePriority.set(4)
             releaseStatus.set(com.github.triplet.gradle.androidpublisher.ReleaseStatus.COMPLETED)
         }
     }
@@ -263,7 +263,7 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.google.android.exoplayer:exoplayer:2.16.0'
     implementation 'com.google.android.exoplayer:extension-mediasession:2.16.0'
-    implementation 'com.ramijemli.percentagechartview:percentagechartview:0.3.1'
+    implementation 'com.github.DroidsOnRoids:PercentageChartView:5a6836bd0d'
     implementation 'com.github.massoudss:waveformSeekBar:5.0.1'
     implementation 'com.github.lincollincol:amplituda:2.1.6'
     //Simple library show

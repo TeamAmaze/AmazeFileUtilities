@@ -27,6 +27,7 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import android.view.WindowManager
+import com.amaze.fileutilities.R
 
 class VideoPlayerActivity : BaseVideoPlayerActivity() {
 
@@ -39,6 +40,14 @@ class VideoPlayerActivity : BaseVideoPlayerActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            try {
+                setTheme(R.style.Theme_AmazeFileUtilities_FullScreen_Dark)
+            } catch (e: Exception) {
+                log.warn("failed to set theme Theme_AmazeFileUtilities_FullScreen_Dark", e)
+                setTheme(R.style.Theme_AmazeFileUtilities_FullScreen_Dark_Fallback)
+            }
+        }
         initLocalVideoModel(intent)
         super.onCreate(savedInstanceState)
         handleVideoPlayerActivityResources()
