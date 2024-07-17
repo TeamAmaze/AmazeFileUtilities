@@ -35,8 +35,6 @@
     <!-- Shown in welcome screen for first time -->
     <string name="grant_storage_read_permission">為提供最佳效能，App需要授予儲存空間存取權限。</string>
     <!-- Shown in welcome screen for first time -->
-    <string name="grant_notification_permission"></string>
-    <!-- Shown in welcome screen for first time -->
     <string name="grant_permission">授予權限</string>
     <!-- Grant permission button for welcome screen -->
     <string name="grant">授權</string>
@@ -554,8 +552,6 @@
     <string name="model">型號</string>
     <!-- Image viewer camera aperture -->
     <string name="aperture">光圈</string>
-    <!-- Image viewer iso of image -->
-    <string name="iso"></string>
     <!-- Image viewer shutter time -->
     <string name="shutter_time">快門</string>
     <!-- Image viewer image location -->
