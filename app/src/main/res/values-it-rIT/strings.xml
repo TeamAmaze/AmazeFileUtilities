@@ -160,8 +160,6 @@
     <string name="what_device_headline">Info:</string>
     <!-- Crash fallback screen info about crash -->
     <string name="what_happened_headline">Cos\'è successo:</string>
-    <!-- Crash fallback screen info about device -->
-    <string name="info_labels"></string>
     <!-- Crash fallback screen ask user input -->
     <string name="your_comment">La tua segnalazione (scrivere in inglese):</string>
     <!-- Crash fallback screen show more details -->
