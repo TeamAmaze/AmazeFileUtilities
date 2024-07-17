@@ -134,7 +134,7 @@
     <string name="grid_view">Gitteransicht</string>
     <!-- Sort utilities by size -->
     <string name="size">Größe</string>
-    <!-- Group audio utilities list by album names  -->
+    <!-- Group audio utilities list by album names -->
     <string name="album">Album</string>
     <!-- Group audio utilities list by artist name -->
     <string name="artist">Interpret</string>
@@ -185,9 +185,21 @@
     <!-- Generic message for any operation not supported -->
     <string name="unsupported_operation">Nicht unterstützter Vorgang</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>Seit Android 11 wird seitens Google verlangt, dass Dateiverwalter Berechtigungen zum Verwalten aller Dateien auf dem Gerät anfordern. Mehr Details <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">hier</a>.\n\n
-Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &quot;Erlauben&quot; bitte die Option <b>Zugriff zum Verwalten aller Dateien zulassen</b> auf der nächsten Seite zulassen.
-\n\n<font color="#ff6347"><i>Das Abbrechen dieser Anfrage wird die App beenden.</i></font></body></html></string>
+    <string name="grant_all_files_permission">
+        <html>
+            <body>
+                Seit Android 11 wird seitens Google verlangt, dass Dateiverwalter Berechtigungen zum Verwalten aller Dateien auf dem Gerät anfordern. Mehr Details
+                <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">hier</a>.\n\n
+                Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &quot;Erlauben&quot; bitte die Option
+                <b>Zugriff zum Verwalten aller Dateien zulassen</b>
+                auf der nächsten Seite zulassen.
+                \n\n
+                <font color="#ff6347">
+                    <i>Das Abbrechen dieser Anfrage wird die App beenden.</i>
+                </font>
+            </body>
+        </html>
+    </string>
     <!-- Pdf activity copy page content title -->
     <string name="copy_page">Seite kopieren</string>
     <!-- Pdf activity view bookmarks -->
@@ -465,7 +477,15 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <!-- Download subtitles in video player -->
     <string name="download_subtitles">Untertitel herunterladen</string>
     <!-- Download subtitles info in video player -->
-    <string name="download_subtitles_info">Gib Stichwörter ein und wähle die Sprache, um nach Untertiteln auf <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html> zu suchen</string>
+    <string name="download_subtitles_info">
+        Gib Stichwörter ein und wähle die Sprache, um nach Untertiteln auf
+        <html>
+            <body>
+                <font color="#FF4287f5">opensubtitles.org</font>
+            </body>
+        </html>
+        zu suchen
+    </string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
     <string name="amaze_fm_redirect">Du wirst zum Amaze Dateimanager weitergeleitet. Es ist unser Open-Source-Angebot, mit über 2 Millionen Downloads und einer Bewertung von 4,3 im Play Store, das alle Funktionen eines modernen Dateimanagers bietet und völlig kostenlos ist.</string>
     <!-- Download button in dialog prompt -->
@@ -511,7 +531,7 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <string name="no_item_selected">Kein Element ausgewählt</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
     <string name="analysis_updated">Analyse aktualisiert</string>
-    <!-- Failed to share pdf/ video/audio files  -->
+    <!-- Failed to share pdf/ video/audio files -->
     <string name="failed_to_share">Teilen der Dateien fehlgeschlagen</string>
     <!-- Transfer tab connected hint -->
     <string name="connected_send_receive_hint">Connected… before you start sending,
@@ -643,8 +663,8 @@ Amaze Fle Utilitys benötigt diese Berechtigung ebenfalls. Nach drücken auf &qu
     <string name="trial_inactive_message">Hallo! Vielen Dank, dass du dich für Amaze File Utilities entschieden hast.\n
         Deine Testversion ist inaktiv somit bist du kein exklusives Mitglied mehr.
         Wir hoffen, dass dir unsere Software gefallen hat, und wir freuen uns, wenn du einen kleinen Obolus leistest.\n
-        
-Wir sind ein Team von Open-Source-Entwicklern, die hart daran arbeiten, ein werbefreies Erlebnis zu bieten
+
+        Wir sind ein Team von Open-Source-Entwicklern, die hart daran arbeiten, ein werbefreies Erlebnis zu bieten
         und wir brauchen Mittel, um uns über Wasser zu halten.\n
         Gerne kannst du mit uns Kontakt aufnehmen, wenn der Testzeitraum noch etwas verlängert werden soll.</string>
     <!-- Subscription dialog subscription purchased title -->

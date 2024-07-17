@@ -134,7 +134,7 @@
     <string name="grid_view">Ver cuadrícula</string>
     <!-- Sort utilities by size -->
     <string name="size">Tamaño</string>
-    <!-- Group audio utilities list by album names  -->
+    <!-- Group audio utilities list by album names -->
     <string name="album">Álbum</string>
     <!-- Group audio utilities list by artist name -->
     <string name="artist">Artista</string>
@@ -185,10 +185,22 @@
     <!-- Generic message for any operation not supported -->
     <string name="unsupported_operation">Acción incompatible</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>Para Android 11, Google solicita a los administradores pedir permiso para tratar todos los archivos del dispositivo. Más detalles <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">aquí</a>.
-        \n\nAmaze File Utilities también necesita estos permisos. Despues de prulsar
- &quot;Grant&quot;aquí, por favor selecciones<b>Permitir el acceso a todos los archivos </b>Opción disponible en la siguien pantalla.
-        \n\n<font color="#ff6347"><i>Si cancela este dialogo saldrá de la aplicación.</i></font></body></html></string>
+    <string name="grant_all_files_permission">
+        <html>
+            <body>
+                Para Android 11, Google solicita a los administradores pedir permiso para tratar todos los archivos del dispositivo. Más detalles
+                <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">aquí</a>.
+                \n\nAmaze File Utilities también necesita estos permisos. Despues de prulsar
+                &quot;Grant&quot;aquí, por favor selecciones
+                <b>Permitir el acceso a todos los archivos </b>
+                Opción disponible en la siguien pantalla.
+                \n\n
+                <font color="#ff6347">
+                    <i>Si cancela este dialogo saldrá de la aplicación.</i>
+                </font>
+            </body>
+        </html>
+    </string>
     <!-- Pdf activity copy page content title -->
     <string name="copy_page">Copiar página</string>
     <!-- Pdf activity view bookmarks -->
@@ -466,7 +478,14 @@
     <!-- Download subtitles in video player -->
     <string name="download_subtitles">Download subtitles</string>
     <!-- Download subtitles info in video player -->
-    <string name="download_subtitles_info">Enter keywords and select your language to search subtitles from <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
+    <string name="download_subtitles_info">
+        Enter keywords and select your language to search subtitles from
+        <html>
+            <body>
+                <font color="#FF4287f5">opensubtitles.org</font>
+            </body>
+        </html>
+    </string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
     <string name="amaze_fm_redirect">You\'re being redirected to Amaze File Manager. It\'s our open source offering that has all features a modern file manager has completely free of cost with over 2M downloads and 4.3 rating on Play Store.</string>
     <!-- Download button in dialog prompt -->
@@ -512,7 +531,7 @@
     <string name="no_item_selected">No item selected</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
     <string name="analysis_updated">Updated analysis</string>
-    <!-- Failed to share pdf/ video/audio files  -->
+    <!-- Failed to share pdf/ video/audio files -->
     <string name="failed_to_share">Failed to share files</string>
     <!-- Transfer tab connected hint -->
     <string name="connected_send_receive_hint">Connected… before you start sending,

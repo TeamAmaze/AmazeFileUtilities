@@ -134,7 +134,7 @@
     <string name="grid_view">В виде сетки</string>
     <!-- Sort utilities by size -->
     <string name="size">Размер</string>
-    <!-- Group audio utilities list by album names  -->
+    <!-- Group audio utilities list by album names -->
     <string name="album">Альбом</string>
     <!-- Group audio utilities list by artist name -->
     <string name="artist">Исполнитель</string>
@@ -185,9 +185,21 @@
     <!-- Generic message for any operation not supported -->
     <string name="unsupported_operation">Неподдерживаемая операция</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>С версии Android 11, Google просит Файловые менеджеры запрашивать разрещение пользователя на управление всеми файлами на устройстве. Подробнее <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">здесь</a>.
-        \n\nAmaze File Utilities тоже необходимо это разрешение. После нажатия &quot;Предоставить&quot;здесь, пожалуйста выберете <b>Разрешить доступ для управления всеми файлами</b> на следующем экране.
-        \n\n<font color="#ff6347"><i>Отмена этого диалога закроет приложение.</i></font></body></html></string>
+    <string name="grant_all_files_permission">
+        <html>
+            <body>
+                С версии Android 11, Google просит Файловые менеджеры запрашивать разрещение пользователя на управление всеми файлами на устройстве. Подробнее
+                <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">здесь</a>.
+                \n\nAmaze File Utilities тоже необходимо это разрешение. После нажатия &quot;Предоставить&quot;здесь, пожалуйста выберете
+                <b>Разрешить доступ для управления всеми файлами</b>
+                на следующем экране.
+                \n\n
+                <font color="#ff6347">
+                    <i>Отмена этого диалога закроет приложение.</i>
+                </font>
+            </body>
+        </html>
+    </string>
     <!-- Pdf activity copy page content title -->
     <string name="copy_page">Копировать страницу</string>
     <!-- Pdf activity view bookmarks -->
@@ -465,7 +477,14 @@
     <!-- Download subtitles in video player -->
     <string name="download_subtitles">Скачать субтитры</string>
     <!-- Download subtitles info in video player -->
-    <string name="download_subtitles_info">Введите ключевые слова и выберите язык для поиска субтитров из <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
+    <string name="download_subtitles_info">
+        Введите ключевые слова и выберите язык для поиска субтитров из
+        <html>
+            <body>
+                <font color="#FF4287f5">opensubtitles.org</font>
+            </body>
+        </html>
+    </string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
     <string name="amaze_fm_redirect">Вы будете перенаправлены на Amaze Файловый Менеджер. Это наш открытый исходный код, который предлагает все возможности современного файлового менеджера абсолютно бесплатно с более чем 2M загрузками и рейтингом 4.3 в Play Маркет.</string>
     <!-- Download button in dialog prompt -->
@@ -511,10 +530,10 @@
     <string name="no_item_selected">Ничего не выбрано</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
     <string name="analysis_updated">Обновленный анализ</string>
-    <!-- Failed to share pdf/ video/audio files  -->
+    <!-- Failed to share pdf/ video/audio files -->
     <string name="failed_to_share">Не удалось поделиться файлами</string>
     <!-- Transfer tab connected hint -->
-    <string name="connected_send_receive_hint">Подключено… перед отправкой, 
+    <string name="connected_send_receive_hint">Подключено… перед отправкой,
         убедитесь, что приёмник включен на другом устройстве</string>
     <!-- Transfer tab receiving files -->
     <string name="receiving">Получение…</string>

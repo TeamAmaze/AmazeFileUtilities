@@ -134,7 +134,7 @@
     <string name="grid_view">Visualizzazione a griglia</string>
     <!-- Sort utilities by size -->
     <string name="size">Dimensione</string>
-    <!-- Group audio utilities list by album names  -->
+    <!-- Group audio utilities list by album names -->
     <string name="album">Album</string>
     <!-- Group audio utilities list by artist name -->
     <string name="artist">Artista</string>
@@ -183,9 +183,21 @@
     <!-- Generic message for any operation not supported -->
     <string name="unsupported_operation">Operazione non supportata</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>A partire da Android 11, per permettere ai File Manager l\'accesso ai file, Google richiede l\'autorizzazione utente per la gestione di tutti i file sul dispositivo. Dettagli <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">qui</a>.
-        \n\nanche Amaze File Utilities ha bisogno di questa autorizzazione. Dopo aver premuto &quot;Concedi&quot;qui, seleziona l\'opzione <b>Consenti l\'accesso per gestire tutti i file</b> nella schermata successiva.
-        \n\n<font color="#ff6347"><i>L\'annullamento di questa finestra di dialogo uscirà dall\'app.</i></font></body></html></string>
+    <string name="grant_all_files_permission">
+        <html>
+            <body>
+                A partire da Android 11, per permettere ai File Manager l\'accesso ai file, Google richiede l\'autorizzazione utente per la gestione di tutti i file sul dispositivo. Dettagli
+                <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">qui</a>.
+                \n\nanche Amaze File Utilities ha bisogno di questa autorizzazione. Dopo aver premuto &quot;Concedi&quot;qui, seleziona l\'opzione
+                <b>Consenti l\'accesso per gestire tutti i file</b>
+                nella schermata successiva.
+                \n\n
+                <font color="#ff6347">
+                    <i>L\'annullamento di questa finestra di dialogo uscirà dall\'app.</i>
+                </font>
+            </body>
+        </html>
+    </string>
     <!-- Pdf activity copy page content title -->
     <string name="copy_page">Copia pagina</string>
     <!-- Pdf activity view bookmarks -->
@@ -463,7 +475,14 @@
     <!-- Download subtitles in video player -->
     <string name="download_subtitles">Scarica sottotitoli</string>
     <!-- Download subtitles info in video player -->
-    <string name="download_subtitles_info">Inserisci parole chiave e seleziona la tua lingua per cercare sottotitoli da <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
+    <string name="download_subtitles_info">
+        Inserisci parole chiave e seleziona la tua lingua per cercare sottotitoli da
+        <html>
+            <body>
+                <font color="#FF4287f5">opensubtitles.org</font>
+            </body>
+        </html>
+    </string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
     <string name="amaze_fm_redirect">Sei stato reindirizzato a Amaze File Manager. È la nostra offerta open source che ha tutte le caratteristiche di un file manager moderno ha completamente gratuito con oltre 2 milioni di download e 4 🌟 di valutazione sul Play Store.</string>
     <!-- Download button in dialog prompt -->
@@ -509,10 +528,10 @@
     <string name="no_item_selected">Nessun elemento selezionato</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
     <string name="analysis_updated">Analisi aggiornata</string>
-    <!-- Failed to share pdf/ video/audio files  -->
+    <!-- Failed to share pdf/ video/audio files -->
     <string name="failed_to_share">Condivisione file non riuscita</string>
     <!-- Transfer tab connected hint -->
-    <string name="connected_send_receive_hint">Connesso… prima di iniziare l\'invio, 
+    <string name="connected_send_receive_hint">Connesso… prima di iniziare l\'invio,
         assicurarsi di abilitare il ricevitore sull\'altro dispositivo</string>
     <!-- Transfer tab receiving files -->
     <string name="receiving">Ricezione…</string>
@@ -684,7 +703,8 @@
     <string name="privacy_title">Ci teniamo alla tua privacy!</string>
     <!-- Welcome screen license agreement page -->
     <string name="privacy_summary">Non ti piacciono gli annunci? Nemmeno noi, apprezziamo i tuoi dati quanto te.\n
-        Vi assicuriamo che non raccogliamo alcuna delle vostre informazioni private.\nQuesto è un software open source.\nSiamo un gruppo di sviluppatori open source e gestiamo le app per dispositivi mobili di Amaze da circa 8 anni.\n\nNon vediamo l\'ora di averti tra gli abbonati.    </string>
+        Vi assicuriamo che non raccogliamo alcuna delle vostre informazioni private.\nQuesto è un software open source.\nSiamo un gruppo di sviluppatori open source e gestiamo le app per dispositivi mobili di Amaze da circa 8 anni.\n\nNon vediamo l\'ora di averti tra gli abbonati.
+    </string>
     <!-- Subscription dialog failed to fetch subscriptions -->
     <string name="error_fetching_google_play_product_list">Errore nel recupero della lista dei prodotti da Google Play.</string>
     <!-- Welcome screen done with the wizard -->

@@ -132,7 +132,7 @@
     <string name="grid_view">Exibição em grade</string>
     <!-- Sort utilities by size -->
     <string name="size">Tamanho</string>
-    <!-- Group audio utilities list by album names  -->
+    <!-- Group audio utilities list by album names -->
     <string name="album">Álbum</string>
     <!-- Group audio utilities list by artist name -->
     <string name="artist">Artista</string>
@@ -183,9 +183,21 @@
     <!-- Generic message for any operation not supported -->
     <string name="unsupported_operation">Operação não suportada</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>Desde o Android 11, o Google solicita para os Gerenciadores de Arquivos a permissão de usuário para gerenciar todos os arquivos no dispositivo. Detalhes <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">aqui</a>.
-        \n\nAmaze File Utilities também precisa desta permissão. Após pressionar &quot;Aceitar&quot;aqui, selecione <b>Permitir acesso para gerenciar todos os arquivos</b> opção na próxima tela.
-        \n\n<font color="#ff6347"><i>Cancelar este diálogo, sairá do aplicativo.</i></font></body></html></string>
+    <string name="grant_all_files_permission">
+        <html>
+            <body>
+                Desde o Android 11, o Google solicita para os Gerenciadores de Arquivos a permissão de usuário para gerenciar todos os arquivos no dispositivo. Detalhes
+                <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">aqui</a>.
+                \n\nAmaze File Utilities também precisa desta permissão. Após pressionar &quot;Aceitar&quot;aqui, selecione
+                <b>Permitir acesso para gerenciar todos os arquivos</b>
+                opção na próxima tela.
+                \n\n
+                <font color="#ff6347">
+                    <i>Cancelar este diálogo, sairá do aplicativo.</i>
+                </font>
+            </body>
+        </html>
+    </string>
     <!-- Pdf activity copy page content title -->
     <string name="copy_page">Copiar página</string>
     <!-- Pdf activity view bookmarks -->
@@ -463,7 +475,14 @@
     <!-- Download subtitles in video player -->
     <string name="download_subtitles">Baixar legendas</string>
     <!-- Download subtitles info in video player -->
-    <string name="download_subtitles_info">Digite palavras-chave e selecione seu idioma para pesquisar legendas de <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
+    <string name="download_subtitles_info">
+        Digite palavras-chave e selecione seu idioma para pesquisar legendas de
+        <html>
+            <body>
+                <font color="#FF4287f5">opensubtitles.org</font>
+            </body>
+        </html>
+    </string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
     <string name="amaze_fm_redirect">Você está sendo redirecionado para o Gerenciador de Arquivos Amaze. É a nossa oferta de código aberto que tem todos os recursos de um gerenciador de arquivos moderno, é completamente livre com mais de 2M de downloads e classificação de 4.3 na Play Store.</string>
     <!-- Download button in dialog prompt -->
@@ -509,7 +528,7 @@
     <string name="no_item_selected">Nenhum item selecionado</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
     <string name="analysis_updated">Análise atualizada</string>
-    <!-- Failed to share pdf/ video/audio files  -->
+    <!-- Failed to share pdf/ video/audio files -->
     <string name="failed_to_share">Falha ao compartilhar arquivos</string>
     <!-- Transfer tab connected hint -->
     <string name="connected_send_receive_hint">Conectado… antes de começar a enviar,
@@ -613,11 +632,11 @@
     <string name="trial_started_title">Teste iniciado (%s dias)</string>
     <!-- Trial dialog trial started content -->
     <string name="trial_started_message">Obrigado por escolher o Amaze File Utilities.\n
-         Somos uma equipe de desenvolvedores de código aberto que trabalha duro para fornecer uma experiência sem anúncios,
-         e sua compra realmente ajudará a nos manter vivos.\n
-         A qualquer momento, se precisar de ajuda, sinta-se à vontade para nos contatar na seção Sobre.
-         Você poderá entrar em contato diretamente com nossa equipe no Telegram.\n
-         Experimente também nosso aplicativo gerenciador de arquivos de código aberto \'Amaze File Manager\' para uma experiência de gerenciamento de arquivos perfeita.</string>
+        Somos uma equipe de desenvolvedores de código aberto que trabalha duro para fornecer uma experiência sem anúncios,
+        e sua compra realmente ajudará a nos manter vivos.\n
+        A qualquer momento, se precisar de ajuda, sinta-se à vontade para nos contatar na seção Sobre.
+        Você poderá entrar em contato diretamente com nossa equipe no Telegram.\n
+        Experimente também nosso aplicativo gerenciador de arquivos de código aberto \'Amaze File Manager\' para uma experiência de gerenciamento de arquivos perfeita.</string>
     <!-- Trial dialog trial ending last day title -->
     <string name="trial_last_day_title">Teste prestes a expirar</string>
     <!-- Trial dialog trial ending last day summary -->
@@ -641,16 +660,16 @@
         \nO seu teste vai expirar amanhã, nós esperamos que você tenha gostado do nosso software, e esperamos que você faça um pagamento nominal.
         \nSomos uma equipe de desenvolvedores de código aberto que trabalham duro para oferecer uma experiência livre de anúncios,
         e precisamos de fundos para nos mantermos à tona.\n
-Você pode nos escrever se quiser estender o período de avaliação um pouco mais.</string>
+        Você pode nos escrever se quiser estender o período de avaliação um pouco mais.</string>
     <!-- Subscription dialog subscription purchased title -->
     <string name="subscription_purchased_title">Inscrito</string>
     <!-- Subscription dialog subscription purchased summary -->
     <string name="subscription_purchased_message">Obrigado por escolher o Amaze File Utilities.\n
-         Somos uma equipe de desenvolvedores de código aberto que trabalha duro para fornecer uma experiência sem anúncios,
-         e sua compra realmente ajudará a nos manter vivos.\n
-         A qualquer momento, se precisar de ajuda, sinta-se à vontade para nos contatar na seção Sobre.
-         Você poderá entrar em contato diretamente com nossa equipe no Telegram.\n
-         Experimente também o nosso aplicativo gerenciador de arquivos de código aberto \'Amaze File Manager\' para uma experiência de gerenciamento de arquivos perfeita.</string>
+        Somos uma equipe de desenvolvedores de código aberto que trabalha duro para fornecer uma experiência sem anúncios,
+        e sua compra realmente ajudará a nos manter vivos.\n
+        A qualquer momento, se precisar de ajuda, sinta-se à vontade para nos contatar na seção Sobre.
+        Você poderá entrar em contato diretamente com nossa equipe no Telegram.\n
+        Experimente também o nosso aplicativo gerenciador de arquivos de código aberto \'Amaze File Manager\' para uma experiência de gerenciamento de arquivos perfeita.</string>
     <!-- Subscription dialog yearly subscription expired title -->
     <string name="subscription_expired_title">Inscrição expirada</string>
     <!-- Subscription dialog yearly subscription expired summary -->
@@ -658,7 +677,7 @@ Você pode nos escrever se quiser estender o período de avaliação um pouco ma
         \nO seu teste vai expirar amanhã, nós esperamos que você tenha gostado do nosso software, e esperamos que você faça um pagamento nominal.
         \nSomos uma equipe de desenvolvedores de código aberto que trabalham duro para oferecer uma experiência livre de anúncios,
         e precisamos de fundos para nos mantermos à tona.\n
-Você pode nos escrever se quiser estender o período de avaliação um pouco mais.</string>
+        Você pode nos escrever se quiser estender o período de avaliação um pouco mais.</string>
     <!-- Trial validation dialog failed to validate -->
     <string name="not_connected_trial_title">Falha ao validar</string>
     <!-- Trial validation dialog failed to validate summary -->

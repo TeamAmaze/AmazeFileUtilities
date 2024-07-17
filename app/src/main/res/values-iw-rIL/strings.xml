@@ -134,7 +134,7 @@
     <string name="grid_view">תצוגת רשת</string>
     <!-- Sort utilities by size -->
     <string name="size">גודל</string>
-    <!-- Group audio utilities list by album names  -->
+    <!-- Group audio utilities list by album names -->
     <string name="album">אלבום</string>
     <!-- Group audio utilities list by artist name -->
     <string name="artist">יוצר</string>
@@ -185,9 +185,21 @@
     <!-- Generic message for any operation not supported -->
     <string name="unsupported_operation">פעולה לא נתמכת</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>מאז Android 11, גוגל מבקשת ממנהלי הקבצים לבקש הרשאת משתמש לניהול כל הקבצים במכשיר.  פרטים <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">כאן</a>.
-         \n\nAmaze File Utilities זקוקה גם להרשאה זו.  לאחר הקשה על &quot;הענקה&quot;כאן, אנא בחר באפשרות <b>אפשר גישה לניהול כל הקבצים</b> במסך הבא.
-         \n\n<font color="#ff6347"><i>ביטול דו-שיח זה יגרום ליציאה מהאפליקציה.</i></font></body></html></string>
+    <string name="grant_all_files_permission">
+        <html>
+            <body>
+                מאז Android 11, גוגל מבקשת ממנהלי הקבצים לבקש הרשאת משתמש לניהול כל הקבצים במכשיר. פרטים
+                <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">כאן</a>.
+                \n\nAmaze File Utilities זקוקה גם להרשאה זו. לאחר הקשה על &quot;הענקה&quot;כאן, אנא בחר באפשרות
+                <b>אפשר גישה לניהול כל הקבצים</b>
+                במסך הבא.
+                \n\n
+                <font color="#ff6347">
+                    <i>ביטול דו-שיח זה יגרום ליציאה מהאפליקציה.</i>
+                </font>
+            </body>
+        </html>
+    </string>
     <!-- Pdf activity copy page content title -->
     <string name="copy_page">העתקת דף</string>
     <!-- Pdf activity view bookmarks -->
@@ -465,7 +477,14 @@
     <!-- Download subtitles in video player -->
     <string name="download_subtitles">הורדת כתוביות</string>
     <!-- Download subtitles info in video player -->
-    <string name="download_subtitles_info">נא למלא מילות מפתח ולבחור את השפה שלך כדי לחפש כתוביות ב־<html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
+    <string name="download_subtitles_info">
+        נא למלא מילות מפתח ולבחור את השפה שלך כדי לחפש כתוביות ב־
+        <html>
+            <body>
+                <font color="#FF4287f5">opensubtitles.org</font>
+            </body>
+        </html>
+    </string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
     <string name="amaze_fm_redirect">אתה מופנה מחדש למנהל הקבצים של Amaze. זוהי הצעת הקוד הפתוח שלנו הכוללת את כל התכונות שיש למנהל קבצים מודרני ללא עלות לחלוטין עם למעלה מ-2 מיליון הורדות ודירוג 4.3 בחנות Play.</string>
     <!-- Download button in dialog prompt -->
@@ -511,11 +530,11 @@
     <string name="no_item_selected">לא נבחרו פריטים</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
     <string name="analysis_updated">ניתוח מעודכן</string>
-    <!-- Failed to share pdf/ video/audio files  -->
+    <!-- Failed to share pdf/ video/audio files -->
     <string name="failed_to_share">שיתוף הקבצים נכשל</string>
     <!-- Transfer tab connected hint -->
     <string name="connected_send_receive_hint">מחובר... לפני שתתחיל לשלוח,
-         הקפד להפעיל את המקלט במכשיר השני</string>
+        הקפד להפעיל את המקלט במכשיר השני</string>
     <!-- Transfer tab receiving files -->
     <string name="receiving">מתקבל…</string>
     <!-- Transfer tab hint for connection -->
@@ -534,8 +553,8 @@
     <string name="transfer_in_progress_title">מתבצעת העברה</string>
     <!-- Transfer tab transfer in progress but user trying to leave the screen -->
     <string name="transfer_in_progress_summary">כרגע מתבצעת העברה P2P,
-         מומלץ לא לעזוב את המסך הזה,
-         אחרת לא תוכל לעקוב אחר ההעברה</string>
+        מומלץ לא לעזוב את המסך הזה,
+        אחרת לא תוכל לעקוב אחר ההעברה</string>
     <!-- Transfer tab leave in progress -->
     <string name="leave">לעזוב</string>
     <!-- Transfer app stay in progress -->
@@ -582,7 +601,7 @@
     <string name="delete_files_title">מחיקה</string>
     <!-- Delete file permanently summary in trashbin and app uninstall -->
     <string name="delete_files_message">אתה עומד למחוק לצמיתות את הקבצים האלה.
-         האם אתה בטוח שברצונך להמשיך?\n\n%s קבצים, %s גודל</string>
+        האם אתה בטוח שברצונך להמשיך?\n\n%s קבצים, %s גודל</string>
     <!-- Delete file progress -->
     <string name="deleted_progress">נמחקו %s מתוך %s</string>
     <!-- Delete file successful -->
@@ -615,58 +634,60 @@
     <string name="trial_started_title">תקופת ההתנסות החלה (%s ימים)</string>
     <!-- Trial dialog trial started content -->
     <string name="trial_started_message">תודה שבחרת ב-Amaze File Utilities.\n
-         אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
-         והרכישה שלך באמת תעזור לנו לשמור על זה ככה.\n
-         בכל שלב אם אתה זקוק לעזרה כלשהי, אל תהסס לפנות אלינו בקטע אודות.
-         תוכל ליצור קשר ישירות עם הצוות שלנו בטלגרם.\n
-         אנא נסה גם את אפליקציית מנהל הקבצים בקוד פתוח שלנו \'Amaze File Manager\' לחוויית ניהול קבצים חלקה.</string>
+        אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
+        והרכישה שלך באמת תעזור לנו לשמור על זה ככה.\n
+        בכל שלב אם אתה זקוק לעזרה כלשהי, אל תהסס לפנות אלינו בקטע אודות.
+        תוכל ליצור קשר ישירות עם הצוות שלנו בטלגרם.\n
+        אנא נסה גם את אפליקציית מנהל הקבצים בקוד פתוח שלנו \'Amaze File Manager\' לחוויית ניהול קבצים חלקה.</string>
     <!-- Trial dialog trial ending last day title -->
     <string name="trial_last_day_title">תקופת ההתנסות עומדת לפוג</string>
     <!-- Trial dialog trial ending last day summary -->
-    <string name="trial_last_day_message">שלום!  תודה שבחרת ב-Amaze File Utilities.
-         \nתקופת הניסיון שלך עומדת להסתיים מחר, אנו מקווים שנהנית מהתוכנה שלנו, ואנו מצפים שתשלם תשלום סמלי.
-         \nאנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
-         ואנחנו זקוקים לכספים כדי לשמור עלינו.\nתוכל לכתוב לנו אם אתה רוצה להאריך עוד קצת את תקופת הניסיון.    </string>
+    <string name="trial_last_day_message">שלום! תודה שבחרת ב-Amaze File Utilities.
+        \nתקופת הניסיון שלך עומדת להסתיים מחר, אנו מקווים שנהנית מהתוכנה שלנו, ואנו מצפים שתשלם תשלום סמלי.
+        \nאנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
+        ואנחנו זקוקים לכספים כדי לשמור עלינו.\nתוכל לכתוב לנו אם אתה רוצה להאריך עוד קצת את תקופת הניסיון.
+    </string>
     <!-- Trial expired title -->
     <string name="trial_expired_title">תקופת הנסיון הסתיימה</string>
     <!-- Trial expired summary -->
-    <string name="trial_expired_message">שלום!  תודה שבחרת ב-Amaze File Utilities.\n
-         תקופת הניסיון שלך פג, אנו מקווים שנהנית מהתוכנה שלנו, ואנו מצפים שתשלם תשלום סמלי.\n
-         אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
-         ואנחנו צריכים כספים כדי לשמור את המוצר במצב הזה.\n
-         אתה יכול לכתוב לנו אם אתה רוצה להאריך עוד קצת את תקופת הניסיון.    </string>
+    <string name="trial_expired_message">שלום! תודה שבחרת ב-Amaze File Utilities.\n
+        תקופת הניסיון שלך פג, אנו מקווים שנהנית מהתוכנה שלנו, ואנו מצפים שתשלם תשלום סמלי.\n
+        אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
+        ואנחנו צריכים כספים כדי לשמור את המוצר במצב הזה.\n
+        אתה יכול לכתוב לנו אם אתה רוצה להאריך עוד קצת את תקופת הניסיון.
+    </string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
     <string name="trial_inactive_title">ניסיון לא פעיל</string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
-    <string name="trial_inactive_message">שלום!  תודה שבחרת ב-Amaze File Utilities.\n
-         תקופת הניסיון שלך אינה פעילה ואתה כבר לא חבר בלעדי,
-         אנו מקווים שנהנית מהתוכנה שלנו, ואנו מצפים שתשלם תשלום סמלי.\n
-         אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
-         ואנחנו צריכים כספים כדי לשמור את המוצר בצורה הזאת.\n
-         אתה יכול לכתוב לנו אם אתה רוצה להאריך עוד קצת את תקופת הניסיון.</string>
+    <string name="trial_inactive_message">שלום! תודה שבחרת ב-Amaze File Utilities.\n
+        תקופת הניסיון שלך אינה פעילה ואתה כבר לא חבר בלעדי,
+        אנו מקווים שנהנית מהתוכנה שלנו, ואנו מצפים שתשלם תשלום סמלי.\n
+        אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
+        ואנחנו צריכים כספים כדי לשמור את המוצר בצורה הזאת.\n
+        אתה יכול לכתוב לנו אם אתה רוצה להאריך עוד קצת את תקופת הניסיון.</string>
     <!-- Subscription dialog subscription purchased title -->
     <string name="subscription_purchased_title">יש מינוי</string>
     <!-- Subscription dialog subscription purchased summary -->
     <string name="subscription_purchased_message">תודה שבחרת ב-Amaze File Utilities.\n
-         אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
-         והמנוי שלך באמת יעזור לנו בפיתוח.\n
-         בכל שלב אם אתה זקוק לעזרה כלשהי, אל תהסס לפנות אלינו בקטע אודות.
-         תוכל ליצור קשר ישירות עם הצוות שלנו בטלגרם.\n
-         אנא נסה גם את אפליקציית מנהל הקבצים בקוד פתוח \'Amaze File Manager\' לחוויית ניהול קבצים בכיף ובפרטיות.</string>
+        אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
+        והמנוי שלך באמת יעזור לנו בפיתוח.\n
+        בכל שלב אם אתה זקוק לעזרה כלשהי, אל תהסס לפנות אלינו בקטע אודות.
+        תוכל ליצור קשר ישירות עם הצוות שלנו בטלגרם.\n
+        אנא נסה גם את אפליקציית מנהל הקבצים בקוד פתוח \'Amaze File Manager\' לחוויית ניהול קבצים בכיף ובפרטיות.</string>
     <!-- Subscription dialog yearly subscription expired title -->
     <string name="subscription_expired_title">פג תוקף המינוי</string>
     <!-- Subscription dialog yearly subscription expired summary -->
-    <string name="subscription_expired_message">שלום!  תודה שבחרת ב-Amaze File Utilities.\n
-         פג תוקף המנוי שלך,
-         אנו מקווים שנהנית מהתוכנה שלנו, ואנו מצפים שתשלם תשלום סמלי.\n
-         אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
-         ואנחנו צריכים כספים כדי לשמור את האפליקציה כזאת.\n
-         אתה יכול לכתוב לנו אם אתה רוצה להאריך עוד קצת את תקופת הניסיון.</string>
+    <string name="subscription_expired_message">שלום! תודה שבחרת ב-Amaze File Utilities.\n
+        פג תוקף המנוי שלך,
+        אנו מקווים שנהנית מהתוכנה שלנו, ואנו מצפים שתשלם תשלום סמלי.\n
+        אנחנו צוות של מפתחי קוד פתוח שעובד קשה כדי לספק חוויה ללא פרסומות,
+        ואנחנו צריכים כספים כדי לשמור את האפליקציה כזאת.\n
+        אתה יכול לכתוב לנו אם אתה רוצה להאריך עוד קצת את תקופת הניסיון.</string>
     <!-- Trial validation dialog failed to validate -->
     <string name="not_connected_trial_title">האימות נכשל</string>
     <!-- Trial validation dialog failed to validate summary -->
-    <string name="not_connected_trial_message">שלום!  תודה שבחרת ב-Amaze File Utilities.\n
-         אין לנו אפשרות לאמת את הרישיון שלך, אנא התחבר לאינטרנט והפעל מחדש את האפליקציה.</string>
+    <string name="not_connected_trial_message">שלום! תודה שבחרת ב-Amaze File Utilities.\n
+        אין לנו אפשרות לאמת את הרישיון שלך, אנא התחבר לאינטרנט והפעל מחדש את האפליקציה.</string>
     <!-- Subscribe button in dialog -->
     <string name="subscribe">הרשמה למינוי</string>
     <!-- Generic don't show dialog again -->
@@ -861,9 +882,9 @@
     <string name="purchase_fdroid_title">לרכוש</string>
     <!-- purchase fdroid subscription summary -->
     <string name="purchase_fdroid_message">אתה מפעיל גירסת Fdroid.
-         אתה יכול לפתוח מנוי לכל החיים על ידי תרומה של כל סכום שתבחר.
-         אנא תרמו באמצעות אחת מהאפשרויות למטה.
-         לאחר שתסיים, אנא צור איתנו קשר באמצעות טלגרם / אימייל על ידי שיתוף מזהה המכשיר שלך ואנו נבטל את נעילת המנוי עבורך.</string>
+        אתה יכול לפתוח מנוי לכל החיים על ידי תרומה של כל סכום שתבחר.
+        אנא תרמו באמצעות אחת מהאפשרויות למטה.
+        לאחר שתסיים, אנא צור איתנו קשר באמצעות טלגרם / אימייל על ידי שיתוף מזהה המכשיר שלך ואנו נבטל את נעילת המנוי עבורך.</string>
     <!-- purchase fdroid subscription paypal -->
     <string name="purchase_fdroid_paypal">פייפאל</string>
     <!-- purchase fdroid subscription liberapay -->
@@ -894,7 +915,7 @@
     <string name="rename_playlist">שנה שם לרשימת ההשמעה</string>
     <!-- Delete playlist summary dialog -->
     <string name="delete_playlist_message">אתה עומד למחוק לצמיתות את רשימת ההשמעה %s.
-         האם אתה בטוח שאתה רוצה להמשיך?</string>
+        האם אתה בטוח שאתה רוצה להמשיך?</string>
     <!-- Rename playlist summary dialog -->
     <string name="rename_playlist_message">נא להזין שם רשימת השמעה חדשה</string>
     <!-- Rename playlist summary dialog button -->
@@ -905,7 +926,7 @@
     <string name="remove">הסר</string>
     <!-- Remove from playlist summary dialog -->
     <string name="remove_from_playlist_message">אתה עומד להסיר שירים נבחרים מרשימה(ות) השמעה.
-         האם אתה בטוח שאתה רוצה להמשיך?</string>
+        האם אתה בטוח שאתה רוצה להמשיך?</string>
     <!-- add to playlist dialog in audio fragment -->
     <string name="add_to_playlist">הוסף לרשימת ההשמעה</string>
     <!-- create dialog in audio fragment -->

@@ -134,7 +134,7 @@
     <string name="grid_view">Izgara Görünümü</string>
     <!-- Sort utilities by size -->
     <string name="size">Boyut</string>
-    <!-- Group audio utilities list by album names  -->
+    <!-- Group audio utilities list by album names -->
     <string name="album">Albüm</string>
     <!-- Group audio utilities list by artist name -->
     <string name="artist">Sanatçı</string>
@@ -185,12 +185,22 @@
     <!-- Generic message for any operation not supported -->
     <string name="unsupported_operation">Desteklenmeyen İşlem</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission">    <html>
-      <body>Android 11 \'den bu yana Google, Dosya Yöneticilerinden cihazdaki tüm dosyaları yönetmek için kullanıcı izni istemelerini istemektedir. Detaylar <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">buradan</a>.
-        \n\ nAmaze Dosya Yardımcı Programlarının da bu izne ihtiyacı var. Burada \"İzin ver\" e bastıktan sonra, lütfen <b>Tüm dosyaları yönetmek için erişime izin ver</b> bir sonraki ekrandaki seçenek.
-        \n\n<font color="#ff6347"><i>Bu iletişim kutusu iptal edildiğinde uygulamadan çıkılır.</i></font></body>
-    </html>
-  </string>
+    <string name="grant_all_files_permission">
+        <html>
+            <body>
+                Android 11 \'den bu yana Google, Dosya Yöneticilerinden cihazdaki tüm dosyaları yönetmek için kullanıcı izni istemelerini istemektedir. Detaylar
+                <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">buradan</a>
+                .
+                \n\ nAmaze Dosya Yardımcı Programlarının da bu izne ihtiyacı var. Burada \"İzin ver\" e bastıktan sonra, lütfen
+                <b>Tüm dosyaları yönetmek için erişime izin ver</b>
+                bir sonraki ekrandaki seçenek.
+                \n\n
+                <font color="#ff6347">
+                    <i>Bu iletişim kutusu iptal edildiğinde uygulamadan çıkılır.</i>
+                </font>
+            </body>
+        </html>
+    </string>
     <!-- Pdf activity copy page content title -->
     <string name="copy_page">Sayfayı kopyala</string>
     <!-- Pdf activity view bookmarks -->
@@ -468,7 +478,14 @@
     <!-- Download subtitles in video player -->
     <string name="download_subtitles">Altyazıları indir</string>
     <!-- Download subtitles info in video player -->
-    <string name="download_subtitles_info">Anahtar kelimeleri girin ve altyazı aramak için dilinizi seçin <html><body><font color="#FF4287f5">opensubtitles.org</font></body></html></string>
+    <string name="download_subtitles_info">
+        Anahtar kelimeleri girin ve altyazı aramak için dilinizi seçin
+        <html>
+            <body>
+                <font color="#FF4287f5">opensubtitles.org</font>
+            </body>
+        </html>
+    </string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
     <string name="amaze_fm_redirect">Amaze Dosya Yöneticisi\'ne yönlendiriliyorsunuz. Modern bir dosya yöneticisinin Play Store\'da 2 milyondan fazla indirme ve 4,3 puanlama ile tamamen ücretsiz olarak sahip olduğu tüm özelliklere sahip açık kaynak teklifimizdir.</string>
     <!-- Download button in dialog prompt -->
@@ -514,10 +531,10 @@
     <string name="no_item_selected">Öğe seçilmedi</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
     <string name="analysis_updated">Güncellenmiş analiz</string>
-    <!-- Failed to share pdf/ video/audio files  -->
+    <!-- Failed to share pdf/ video/audio files -->
     <string name="failed_to_share">Dosyalar paylaşılamadı</string>
     <!-- Transfer tab connected hint -->
-    <string name="connected_send_receive_hint">Bağlandı… göndermeye başlamadan önce, 
+    <string name="connected_send_receive_hint">Bağlandı… göndermeye başlamadan önce,
         diğer cihazda alıcıyı etkinleştirdiğinizden emin olun</string>
     <!-- Transfer tab receiving files -->
     <string name="receiving">Alınıyor...</string>

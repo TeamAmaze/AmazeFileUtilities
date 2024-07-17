@@ -134,7 +134,7 @@
     <string name="grid_view">格狀檢視</string>
     <!-- Sort utilities by size -->
     <string name="size">大小</string>
-    <!-- Group audio utilities list by album names  -->
+    <!-- Group audio utilities list by album names -->
     <string name="album">專輯</string>
     <!-- Group audio utilities list by artist name -->
     <string name="artist">演出者</string>
@@ -185,9 +185,21 @@
     <!-- Generic message for any operation not supported -->
     <string name="unsupported_operation">唔支持嘅操作</string>
     <!-- Grant storage permission more info -->
-    <string name="grant_all_files_permission"><html><body>從 Android 11開始，Google要求檔案管理 app向用戶請求授予管理裝置上所有檔案嘅權限。詳情請睇<a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">呢度</a>。
-        \n\nAmaze 檔案工具程式同樣需要授予此權限。喺呢度撳咗&quot;授予&quot;之後，請喺下一個畫面選擇<b>允許管理所有檔案</b>選項。
-        \n\n<font color="#ff6347"><i>關閉呢個對話框將會退出此程式。</i></font></body></html></string>
+    <string name="grant_all_files_permission">
+        <html>
+            <body>
+                從 Android 11開始，Google要求檔案管理 app向用戶請求授予管理裝置上所有檔案嘅權限。詳情請睇
+                <a href="https://developer.android.com/training/data-storage/manage-all-files" target="_blank">呢度</a>。
+                \n\nAmaze 檔案工具程式同樣需要授予此權限。喺呢度撳咗&quot;授予&quot;之後，請喺下一個畫面選擇
+                <b>允許管理所有檔案</b>
+                選項。
+                \n\n
+                <font color="#ff6347">
+                    <i>關閉呢個對話框將會退出此程式。</i>
+                </font>
+            </body>
+        </html>
+    </string>
     <!-- Pdf activity copy page content title -->
     <string name="copy_page">複製呢頁</string>
     <!-- Pdf activity view bookmarks -->
@@ -465,7 +477,15 @@
     <!-- Download subtitles in video player -->
     <string name="download_subtitles">下載字幕</string>
     <!-- Download subtitles info in video player -->
-    <string name="download_subtitles_info"><html><body>輸入關鍵詞同選擇語言，以在<font color="#FF4287f5">opensubtitles.org</font>搵字幕</body></html></string>
+    <string name="download_subtitles_info">
+        <html>
+            <body>
+                輸入關鍵詞同選擇語言，以在
+                <font color="#FF4287f5">opensubtitles.org</font>
+                搵字幕
+            </body>
+        </html>
+    </string>
     <!-- Download amaze file manager when press on internal storage in main screen -->
     <string name="amaze_fm_redirect">我哋帶緊你去 Amaze檔案管理器。呢個係我們嘅開源 app，擁有所有現今檔案管理 app嘅所有功能，而且完全免費。在 Play Store已經有超過 200萬次下載及 4.3嘅評分。</string>
     <!-- Download button in dialog prompt -->
@@ -511,7 +531,7 @@
     <string name="no_item_selected">未選擇任何項目</string>
     <!-- Updated analysis when user press on thumbs down in case he didn't like the analysis -->
     <string name="analysis_updated">更新後嘅分析</string>
-    <!-- Failed to share pdf/ video/audio files  -->
+    <!-- Failed to share pdf/ video/audio files -->
     <string name="failed_to_share">分享檔案失敗</string>
     <!-- Transfer tab connected hint -->
     <string name="connected_send_receive_hint">連線成功…但喺你開始傳輸之前，
@@ -638,7 +658,8 @@
         我哋希望你鍾意我哋嘅 App，也希望你隨緣樂助，課少少金俾我哋。\n
         我哋係一群開源程式開發者，致力為用戶提供無廣告嘅使用體驗，
         但我哋亦需要一些經費以維持我哋嘅服務。\n
-        如果你需要多一些試用時間，歡迎跟我哋聯絡。    </string>
+        如果你需要多一些試用時間，歡迎跟我哋聯絡。
+    </string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
     <string name="trial_inactive_title">試用期未啟動</string>
     <!-- Trial inactive in case exclusive license was removed / user got refund -->
