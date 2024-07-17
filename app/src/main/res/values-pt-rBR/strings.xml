@@ -2,8 +2,6 @@
 <resources>
     <!-- App name -->
     <string name="app_name">سیب</string>
-    <!-- App name in launcher -->
-    <string name="app_name_launcher"></string>
     <!-- App info shown in about screen -->
     <string name="about_app">Aplicativo utilitário de arquivos com reprodutores de mídia embutidos para todas as suas necessidades.</string>
     <!-- Image viewer activity label -->

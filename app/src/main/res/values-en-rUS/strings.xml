@@ -3,7 +3,7 @@
     <!-- App name -->
     <string name="app_name">File Utilities</string>
     <!-- App name in launcher -->
-    <string name="app_name_launcher"></string>
+    <string name="app_name_launcher">Amaze Utilities</string>
     <!-- App info shown in about screen -->
     <string name="about_app">File. Utility app with inbuilt media players for all your needs.</string>
     <!-- Image viewer activity label -->
