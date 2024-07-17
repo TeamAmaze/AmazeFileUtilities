@@ -47,4 +47,9 @@ spotless {
         indentWithSpaces()
         endWithNewline()
     }
+
+    format 'xml', {
+        target 'app/src/main/res/values*/strings.xml'
+        eclipseWtp('xml').configFile('spotless.xml.prefs')
+    }
 }
