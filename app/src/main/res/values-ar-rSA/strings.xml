@@ -110,8 +110,6 @@
     <string name="settings">الإعدادات</string>
     <!-- About screen title -->
     <string name="about">حول التطبيق</string>
-    <!-- Copyright dialog content in about section -->
-    <string name="rights_reserved"></string>
     <!-- Open source licenses in about section -->
     <string name="open_source_licenses">تراخيص مفتوحة المصدر</string>
     <!-- Privacy policy label in about section -->
@@ -142,8 +140,6 @@
     <string name="duration">المدة</string>
     <!-- Crash fallback screen title -->
     <string name="sorry_string">Sorry, that should not have happened.</string>
-    <!-- Crash fallback screen report by email -->
-    <string name="error_report_button_text"></string>
     <!-- Crash fallback screen report by telegram -->
     <string name="error_report_button_telegram">Report this error via telegram</string>
     <!-- Crash fallback screen copy report -->

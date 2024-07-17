@@ -921,8 +921,6 @@
     <string name="newly_installed_apps">Newly installed apps</string>
     <!-- newly installed apps summary in settings preferences -->
     <string name="newly_installed_apps_summary">Apps newly installed (in days)</string>
-    <!-- newly installed apps in settings preferences -->
-    <string name="recently_updated_apps"></string>
     <!-- newly installed apps summary in settings preferences -->
     <string name="recently_updated_apps_summary">Apps recently updated (in days)</string>
     <!-- apps with large size increase in settings preferences -->
