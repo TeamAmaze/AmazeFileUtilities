@@ -1,0 +1,37 @@
+start =
+    element resources {
+#        element string {
+#            attribute name { xsd:NCName },
+#            attribute translatable { xsd:boolean }?,
+#            (
+#                xsd:string { minLength = "1" }
+#            )
+#        }+ |
+        element string {
+            attribute name { xsd:NCName },
+            attribute translatable { xsd:boolean }?,
+            (
+            ( xsd:string { minLength = "1" } )
+            | element html {
+                   element body {
+                       (text
+                        | element a {
+                              attribute href { xsd:anyURI },
+                              attribute target { xsd:NCName },
+                              xsd:NCName
+                          }
+                        | element b { text }
+                        | element font {
+                              attribute color { text },
+                              (text
+                               | element i { text })+
+                          })+
+                   }
+               })+
+        }+
+    }
+
+
+#attribute text {
+#  xsd:string { maxLength = "25" }
+#}
