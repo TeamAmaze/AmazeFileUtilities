@@ -1,4 +1,6 @@
-<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" ns="" xmlns="http://relaxng.org/ns/structure/1.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" ns=""
+    xmlns="http://relaxng.org/ns/structure/1.0">
     <start>
         <element name="resources">
             <oneOrMore>
@@ -11,9 +13,43 @@
                             <data type="boolean" />
                         </attribute>
                     </optional>
-                    <data type="string">
-                        <param name="minLength">1</param>
-                    </data>
+                    <oneOrMore>
+                        <choice>
+                            <text />
+                            <element name="html">
+                                <element name="body">
+                                    <oneOrMore>
+                                        <choice>
+                                            <text />
+                                            <element name="a">
+                                                <attribute name="href">
+                                                    <data type="anyURI" />
+                                                </attribute>
+                                                <attribute name="target">
+                                                    <data type="NCName" />
+                                                </attribute>
+                                                <data type="NCName" />
+                                            </element>
+                                            <element name="b">
+                                                <text />
+                                            </element>
+                                            <element name="font">
+                                                <attribute name="color" />
+                                                <oneOrMore>
+                                                    <choice>
+                                                        <text />
+                                                        <element name="i">
+                                                            <text />
+                                                        </element>
+                                                    </choice>
+                                                </oneOrMore>
+                                            </element>
+                                        </choice>
+                                    </oneOrMore>
+                                </element>
+                            </element>
+                        </choice>
+                    </oneOrMore>
                 </element>
             </oneOrMore>
         </element>
