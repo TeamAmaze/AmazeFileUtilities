@@ -1,0 +1,21 @@
+<grammar datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes" ns="" xmlns="http://relaxng.org/ns/structure/1.0">
+    <start>
+        <element name="resources">
+            <oneOrMore>
+                <element name="string">
+                    <attribute name="name">
+                        <data type="NCName" />
+                    </attribute>
+                    <optional>
+                        <attribute name="translatable">
+                            <data type="boolean" />
+                        </attribute>
+                    </optional>
+                    <data type="string">
+                        <param name="minLength">1</param>
+                    </data>
+                </element>
+            </oneOrMore>
+        </element>
+    </start>
+</grammar>
